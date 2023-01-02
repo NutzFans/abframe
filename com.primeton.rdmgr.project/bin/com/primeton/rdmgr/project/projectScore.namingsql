@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.rdmgr.project.projectScore">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="STAFFSCOREID" javaType="decimal" property="staffscoreid"/>
+        <result column="TOTAL" javaType="decimal" property="total"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="PROJECTID" javaType="decimal" property="projectid"/>
+        <result column="PROJECTNO" javaType="string" property="projectno"/>
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="ORGID" javaType="decimal" property="orgid"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="daynum" javaType="int" property="daynum"/>
+        <result column="pennum" javaType="int" property="pennum"/>
+        <result column="ACTHOURS" javaType="decimal" property="acthours"/>
+        <result column="OTWHOURS" javaType="decimal" property="otwhours"/>
+        <result column="year" javaType="string" property="year"/>
+        <result column="month" javaType="string" property="month"/>
+        <result column="remark" javaType="string" property="remark"/>
+    </resultMap>
+    <select id="queryEmpsByProjectId" parameterClass="java.util.HashMap" resultMap="resultMap">
+		select t.USERID,x.EMPNAME,t.STAFFSCOREID,t.TOTAL,#year# as year,#month# as month,t.PROJECTID,t.PROJECTNO,t.PROJECTNAME,y.ORGID,y.ORGNAME,t.daynum,t.pennum,t.ACTHOURS,t.OTWHOURS,t.remark from (
+		select a.USER_ID as USERID,c.STAFFSCOREID,c.TOTAL,b.PROJECT_ID PROJECTID,b.PROJECT_NO PROJECTNO,b.PROJECT_NAME PROJECTNAME,
+		COUNT(DISTINCT LABOR_DATE) daynum,COUNT(LABOR_DETAIL_ID) pennum,sum(ACT_HOURS)ACTHOURS,sum(OTW_HOURS) OTWHOURS,c.remark
+		from RD_LABOR_DETAIL a
+		LEFT JOIN RD_PROJECT b on a.PROJECT_ID=b.PROJECT_ID 
+		LEFT JOIN RD_PROJ_STAFF_SCORE c on a.USER_ID=c.USERID and b.PROJECT_NO=c.projectno and year(a.LABOR_DATE)=c.year and month(a.LABOR_DATE)=c.month
+		where  1=1
+				<isNotNull property="year">and year(LABOR_DATE)=#year#</isNotNull>
+        <isNotNull property="month">and month(LABOR_DATE)=#month#</isNotNull>
+        <isNotNull property="projectId">and a.PROJECT_ID=#projectId#</isNotNull>
+        <isNotNull property="userid">and a.USER_ID=#userid#</isNotNull>
+		GROUP BY a.USER_ID,b.PROJECT_ID,b.PROJECT_NO,b.PROJECT_NAME,c.STAFFSCOREID,c.TOTAL,c.remark
+		UNION
+		select a.USERID,a.STAFFSCOREID,a.TOTAL,b.PROJECT_ID PROJECTID,b.PROJECT_NO PROJECTNO,b.PROJECT_NAME PROJECTNAME,
+		COUNT(DISTINCT LABOR_DATE) daynum,COUNT(LABOR_DETAIL_ID) pennum,sum(ACT_HOURS)ACTHOURS,sum(OTW_HOURS) OTWHOURS,a.remark
+		from RD_PROJ_STAFF_SCORE a
+		LEFT JOIN RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO
+		LEFT JOIN RD_LABOR_DETAIL c on a.USERID=c.USER_ID and b.PROJECT_ID=c.PROJECT_ID and a.[YEAR]=year(c.LABOR_DATE) and a.[MONTH]=month(c.LABOR_DATE)
+		where 1=1
+				<isNotNull property="year">and a.[YEAR]=#year#</isNotNull>
+        <isNotNull property="month">and a.[MONTH]=#month#</isNotNull>
+        <isNotNull property="projectId">and b.PROJECT_ID=#projectId#</isNotNull>
+        <isNotNull property="userid">and a.USERID=#userid#</isNotNull>
+		GROUP BY a.USERID,b.PROJECT_ID,b.PROJECT_NO,b.PROJECT_NAME,a.STAFFSCOREID,a.TOTAL,a.remark
+		) t
+		LEFT JOIN OM_EMPLOYEE x on t.USERID=x.USERID
+		LEFT JOIN OM_ORGANIZATION y on x.ORGID=y.ORGID
+		WHERE t.USERID !=#manager#
+		ORDER BY t.TOTAL DESC,t.ACTHOURS DESC
+    </select>
+    <select id="queryprojectScores" parameterClass="java.util.HashMap" remapResults="true" resultClass="commonj.sdo.DataObject">select t.* from (
+			select a.*,b.USERID,b.PROJECTNO,b.SCORE from 
+			(select SCOREITEMID,ASSESSITEM,ASSESSCONTENT,WEIGHT,SORTNO from RD_PROJ_SCOREITEM where STATUS=1) a
+			LEFT JOIN (
+			select b.USERID,b.PROJECTNO,a.SCOREITEMID,a.SCORE
+			from RD_PROJ_SCOREDETAIL a,RD_PROJ_STAFF_SCORE b
+			where a.STAFFSCOREID=b.STAFFSCOREID
+			and b.PROJECTNO=#projectno# and b.[YEAR]=#year# and b.[MONTH]=#month#
+			) b on a.SCOREITEMID=b.SCOREITEMID
+			) c
+			PIVOT(sum(c.SCORE) FOR [USERID] IN($userids$)) AS T
+			ORDER BY t.sortno</select>
+</sqlMap>

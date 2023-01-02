@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_common.seal.QuerySealConfigure">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,stuff((select ','+EMPNAME  from (select a.*,b.EMPNAME from (
+select a.confid,EXAMUSERID=substring(a.EXAMUSERID,b.number,charindex(',',a.EXAMUSERID+',',b.number)-b.number) from MIS_SEAL_CONFIGURE a
+join master.dbo.spt_values b on b.type='P' where charindex(',',','+a.EXAMUSERID,b.number)=b.number) a,OM_EMPLOYEE b where a.EXAMUSERID=b.USERID) b 
+WHERE b.CONFID = a.CONFID for xml path('')),1,1,'') as exname,
+stuff((select ','+EMPNAME  from (select a.*,b.EMPNAME from (
+select a.confid,ADMINUSERID=substring(a.ADMINUSERID,b.number,charindex(',',a.ADMINUSERID+',',b.number)-b.number) from MIS_SEAL_CONFIGURE a
+join master.dbo.spt_values b on b.type='P' where charindex(',',','+a.ADMINUSERID,b.number)=b.number) a,OM_EMPLOYEE b where a.ADMINUSERID=b.USERID) b 
+WHERE b.CONFID = a.CONFID for xml path('')),1,1,'') as adname
+FROM MIS_SEAL_CONFIGURE a]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.seal.QuerySeal">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*, c.empname AS applyname,
+	d.CUSTJC,
+	d.CUSTNAME,
+	e.EMPNAME AS OPERATORER,
+	f.ORGNAME,
+	stuff((select ','+sealname  from (select a.*,b.sealname from (
+	select a.sealid,sealtype=substring(a.sealtype,b.number,charindex(',',a.sealtype+',',b.number)-b.number) from MIS_SEAL a
+	join master.dbo.spt_values b on b.type='P' where charindex(',',','+a.sealtype,b.number)=b.number) a,MIS_SEAL_CONFIGURE b where a.sealtype=b.confid) b 
+	WHERE b.sealid = a.sealid for xml path('')),1,1,'') as sealname
+FROM
+	MIS_SEAL a
+LEFT JOIN MIS_SEAL_CONFIGURE b ON a.SEALTYPE = b.CONFID
+LEFT JOIN OM_EMPLOYEE c ON a.APPLYNO = c.USERID
+LEFT JOIN MIS_CUSTINFO d ON a.CUSTNO = d.CUSTID
+LEFT JOIN OM_EMPLOYEE e ON a.OPERATOR = e.USERID
+LEFT JOIN OM_ORGANIZATION f ON a.ORGID = f.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.seal.QueryMisCustInfo">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT a.*,(CASE WHEN (b.num is null) or (b.num = '0') THEN 0 else 1 end) as ishave FROM MIS_CUSTINFO a
+LEFT JOIN (
+	select count(d.CUSTID) as num , d.CUSTID FROM CS_CONTRACT d GROUP BY d.CUSTID
+) b on a.CUSTID = b.CUSTID]]></config>
+    </QueryEntity>
+</QueryEntityList>

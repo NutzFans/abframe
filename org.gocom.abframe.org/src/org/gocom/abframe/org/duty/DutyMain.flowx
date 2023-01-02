@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="DutyMain.flowx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="职务维护页面流" title="朱江&#x9;09-1-13 下午5:47">
+    <location x="30" y="345"/>
+    <size height="100" width="149"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" description="" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="begin" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <location x="91" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/org/duty/sub_duty_list.jsp">
+    <targetConnections>link5</targetConnections>
+    <location x="615" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="93" y="186"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="617" y="186"/>
+    <figSize height="12" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="分页查询职务" displayName="queryDutyByCriteriaEntityWithPage" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="276" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.duty.DutyManager.queryDutyByCriteriaEntityWithPage</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+        <process:inputVariable id="1" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="subDuty" type="query" value="org.gocom.abframe.dataset.organization.OmDuty[]" valueType="DataObject">subDuty</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="253" y="185"/>
+    <figSize height="12" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="link9" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="276" y="30"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">page/count</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">parentDutyID</process:from>
+      <process:to type="query">f:parentDutyID</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">parentDutytype</process:from>
+      <process:to type="query">f:parentDutytype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">f:parentDutyID</process:from>
+      <process:to type="query">criteria/_expr[2]/omDuty.dutyid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">f:parentDutytype</process:from>
+      <process:to type="query">criteria/_expr[2]/dutytype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="278" y="66"/>
+    <figSize height="12" width="25"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="link1" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="183" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">page/begin</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">duty/dutyid</process:from>
+      <process:to type="query">f:parentDutyID</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">org.gocom.abframe.dataset.organization.OmDuty</process:from>
+      <process:to type="query">criteria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">duty/dutytype</process:from>
+      <process:to type="query">f:parentDutytype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">duty/dutyid</process:from>
+      <process:to type="query">criteria/_expr[1]/omDuty.dutyid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">duty/dutytype</process:from>
+      <process:to type="query">criteria/_expr[2]/dutytype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="185" y="186"/>
+    <figSize height="12" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="职务列表页面" displayName="sub_duty_list.jsp" collapsed="false" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/duty/sub_duty_list.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link4" name="link4" lineType="reference" isDefault="false" type="action" actionName="pageQuery" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link5" name="link5" lineType="reference" isDefault="true" type="action" actionName="end" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link10" name="link10" lineType="reference" type="action" actionName="insert" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link12" name="link12" lineType="reference" type="action" actionName="update" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link16" name="link16" displayName="link13" lineType="reference" type="action" actionName="insertRoot" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="411" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="职务信息" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmDuty" name="duty"/>
+      <process:parameter description="父职务编号" historyStateLocation="client" isArray="false" name="parentDutyID" primitiveType="String"/>
+      <process:parameter description="父职务类别" historyStateLocation="client" isArray="false" name="parentDutytype" primitiveType="String"/>
+      <process:parameter description="查询条件" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+      <process:parameter description="分页条件" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="386" y="186"/>
+    <figSize height="12" width="73"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="link6" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="407" y="352"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">f:dutyVar/dutyname</process:from>
+      <process:to type="query">duty/omDuty/dutyname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">f:dutyVar/dutyid</process:from>
+      <process:to type="query">duty/omDuty/dutyid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="409" y="388"/>
+    <figSize height="12" width="25"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="link12" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="link6" displayName="连接线" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">f:dutyVar/dutyid</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="276" y="253"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">parentDutyID</process:from>
+      <process:to type="query">f:dutyVar/dutyid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="278" y="289"/>
+    <figSize height="12" width="25"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="职务新增页面" displayName="结束" nodeType="common" type="end" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/duty/duty_add.jsp" variableUri="false">
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link14</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="615" y="352"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="593" y="388"/>
+    <figSize height="12" width="73"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="扩展父职务信息" displayName="expandEntity" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="link13" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="276" y="352"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.tools.CommonUtil.expandEntity</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="dsName" type="literal" value="String" valueType="Primitive" pattern="reference">default</process:inputVariable>
+        <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">f:dutyVar</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java">f:dutyVar</process:outputVariable>
+        <process:outputVariable id="1" name="count" type="query" value="Int" valueType="Primitive">arg0</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="247" y="387"/>
+    <figSize height="12" width="85"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="378" y="288"/>
+    <figSize height="12" width="85"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="扩展子职务信息" displayName="expandEntity" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="link7" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="407" y="253"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.tools.CommonUtil.expandEntity</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="dsName" type="literal" value="String" valueType="Primitive" pattern="reference">default</process:inputVariable>
+        <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">duty</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java">duty</process:outputVariable>
+        <process:outputVariable id="1" name="count" type="query" value="Int" valueType="Primitive">arg0</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="朱江" createTime="2009-01-13 17:47:04" date="2009-01-13Z" description="" name="职务维护主页面流" version="6.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmDuty" name="dutyVar"/>
+  </process:variables>
+  <process:inputParameters>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmDuty" name="duty"/>
+  </process:inputParameters>
+</process:tPageFlow>

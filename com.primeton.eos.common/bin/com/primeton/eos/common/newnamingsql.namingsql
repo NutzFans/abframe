@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.common.newnamingsql">
+    <resultMap class="commonj.sdo.DataObject" id="orgsAndemps">
+        <result column="id" javaType="string" property="id"/>
+        <result column="name" javaType="string" property="name"/>
+        <result column="pid" javaType="string" property="pid"/>
+        <result column="folder" javaType="int" property="folder"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="orgs">
+        <result column="id" javaType="string" property="id"/>
+        <result column="name" javaType="string" property="name"/>
+        <result column="pid" javaType="string" property="pid"/>
+        <result column="folder" javaType="int" property="folder"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapCust">
+        <result column="CUSTID" javaType="int" property="custid"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="customertype" javaType="string" property="customertype"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapTest">
+        <result column="CUSTID" javaType="int" property="custid"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="ORGID" javaType="string" property="ORGID"/>
+        <result column="ORGSEQ" javaType="string" property="ORGSEQ"/>
+        <result column="ORGNAME" javaType="string" property="ORGNAME"/>
+        <result column="MANAGERID" javaType="string" property="MANAGERID"/>
+        <result column="EMPNAME" javaType="string" property="EMPNAME"/>
+        <result column="OEMAIL" javaType="string" property="OEMAIL"/>
+        <result column="OEMAIL1" javaType="string" property="OEMAIL1"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="ORGNAME1" javaType="string" property="orgname1"/>
+        <result column="PARENTORGID" javaType="int" property="parentorgid"/>
+        <result column="ORGSEQ" javaType="string" property="orgseq"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap12">
+        <result column="USERID" javaType="string" property="USERID"/>
+        <result column="EMPNAME" javaType="string" property="EMPNAME"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap13">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="ORGNAME" javaType="string" property="firstDept"/>
+        <result column="BIRTHDATE" javaType="string" property="birthday"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap14">
+        <result column="EMPCODE" javaType="string" property="empcode"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="ORGNAME" javaType="string" property="firstDept"/>
+        <result column="VERIEND" javaType="string" property="veriend"/>
+        <result column="VERIRESULT" javaType="string" property="veriresult"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap15">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="ORGNAME" javaType="string" property="firstDept"/>
+        <result column="POSITION" javaType="string" property="position"/>
+        <result column="CONTEND" javaType="date" property="contend"/>
+        <result column="CONTSTATUS" javaType="string" property="contstatus"/>
+    </resultMap>
+    <select id="getAllDeptManager" resultMap="resultMap"><![CDATA[
+    	select a.ORGID,a.ORGSEQ,a.ORGNAME,a.MANAGERID,b.EMPNAME,b.OEMAIL,d.OEMAIL as OEMAIL1 
+    	from OM_ORGANIZATION a,OM_EMPLOYEE b,OM_ORGANIZATION c left join OM_EMPLOYEE d on c.MANAGERID=d.EMPID
+		where a.ORGTYPE in ('3','4') and a.ORGID not in (select PARENTORGID from OM_ORGANIZATION where PARENTORGID is not null)
+		and a.MANAGERID=b.EMPID and a.PARENTORGID=c.ORGID and b.OEMAIL is not null
+    ]]></select>
+    <select id="getAllOrg" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+    	select ORGID,(case when ORGLEVEL=2 then '| -'+ORGNAME when ORGLEVEL=3 then '| | -'+ORGNAME when ORGLEVEL=4 then '| | | -'+ORGNAME when ORGLEVEL=5 then '| | | | -'+ORGNAME when ORGLEVEL=6 then '| | | | | -'+ORGNAME else ORGNAME end) as ORGNAME,orgname as orgname1,PARENTORGID,ORGSEQ 
+		from OM_ORGANIZATION where STATUS='running' order by ORGSEQ
+    ]]></select>
+    <select id="getAllSorg" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+     	select a.orgid,(b.orgname+'---'+a.orgname) as orgname,a.orgname as orgname1,a.parentorgid,a.ORGSEQ from OM_ORGANIZATION a,OM_ORGANIZATION b
+		where a.parentorgid=b.orgid and 
+		a.orgid not in (select parentorgid from OM_ORGANIZATION where parentorgid is not null) and a.STATUS='running' order by a.orgseq
+	]]></select>
+    <select id="getUserid" parameterClass="java.util.HashMap" resultMap="resultMap12"><![CDATA[
+     	select c.userid,c.empname from om_employee c,om_organization d 
+		where substring(d.orgseq,4,CHARINDEX('.',d.orgseq,4)-CHARINDEX('.',d.orgseq,2)-1) in ($orgseq$) and d.orgid!=1 and d.orgtype = 3 and c.orgid =d.orgid
+	]]></select>
+    <select id="getBirthdayForWeek" resultMap="resultMap13"><![CDATA[
+     	SELECT t.EMPNAME,b.ORGNAME,t.BIRTHDATE FROM OM_EMPLOYEE t
+		LEFT JOIN OM_ORGANIZATION a on t.ORGID=a.ORGID
+		LEFT JOIN OM_ORGANIZATION b on b.orgid = (case when a.ORGSEQ like '.1.14.%' then SUBSTRING(a.ORGSEQ,CHARINDEX('.', a.ORGSEQ,4)+1,CHARINDEX('.',a.ORGSEQ,8)-CHARINDEX('.',a.ORGSEQ,4)-1) else substring(a.orgseq,4,charindex('.',a.orgseq,4)-charindex('.',a.orgseq,2)-1) end)
+		WHERE  t.EMPSTATUS = 'on' AND (dateadd(year,DATEDIFF(year,BIRTHDATE,getdate()),BIRTHDATE)) BETWEEN getdate() AND getdate()+6
+		ORDER BY month(t.BIRTHDATE),day(t.BIRTHDATE)
+	]]></select>
+    <select id="getShakedownPeriod" resultMap="resultMap14"><![CDATA[
+     	SELECT t.EMPCODE,t.EMPNAME,b.ORGNAME,v.VERIEND,v.VERIRESULT  FROM OM_EMPLOYEE t
+		LEFT JOIN OM_ORGANIZATION a on t.ORGID=a.ORGID
+		LEFT JOIN OM_ORGANIZATION b on b.orgid = (case when a.ORGSEQ like '.1.14.%' then SUBSTRING(a.ORGSEQ,CHARINDEX('.', a.ORGSEQ,4)+1,CHARINDEX('.',a.ORGSEQ,8)-CHARINDEX('.',a.ORGSEQ,4)-1) else substring(a.orgseq,4,charindex('.',a.orgseq,4)-charindex('.',a.orgseq,2)-1) end)
+		LEFT JOIN OM_EMP_VERIFY v on t.EMPID= v.EMPID
+		WHERE  t.EMPSTATUS = 'on' AND VERIEND BETWEEN getdate() AND getdate()+6
+		ORDER BY month(v.VERIEND),day(v.VERIEND) 
+	]]></select>
+    <select id="getContract" resultMap="resultMap15"><![CDATA[
+     	select t.EMPNAME,t.ORGNAME,t.[POSITION],t.CONTEND,t.CONTSTATUS from (
+		SELECT t.EMPID,t.EMPNAME,b.ORGNAME,c.[POSITION],d.CONTEND,d.CONTSTATUS FROM OM_EMPLOYEE t
+				LEFT JOIN OM_ORGANIZATION a on t.ORGID=a.ORGID
+				LEFT JOIN OM_ORGANIZATION b on b.orgid = (case when a.ORGSEQ like '.1.14.%' then SUBSTRING(a.ORGSEQ,CHARINDEX('.', a.ORGSEQ,4)+1,CHARINDEX('.',a.ORGSEQ,8)-CHARINDEX('.',a.ORGSEQ,4)-1) else substring(a.orgseq,4,charindex('.',a.orgseq,4)-charindex('.',a.orgseq,2)-1) end)
+				LEFT JOIN OM_EMP_CONTRACT c on t.EMPID= c.EMPID
+				LEFT JOIN OM_EMP_CONTRACT d on c.EMPID=d.EMPID
+				WHERE t.EMPSTATUS = 'on' AND c.CONTEND BETWEEN getdate() AND getdate()+6
+		) t where t.CONTSTATUS !=6
+		ORDER BY month(t.CONTEND),day(t.CONTEND)
+	]]></select>
+    <!--通过userId获取邮件信息-->
+    <select id="getEmps" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT EMPID,EMPNAME,EMPNAME+'&lt; '+OEMAIL+'&gt;' as EMPNAMES,MOBILENO,EMPCODE,USERID,OEMAIL
+		FROM OM_EMPLOYEE
+      	WHERE EMPSTATUS='on' and USERID in  (#userId#)</select>
+    <!--校验部门费用-->
+    <select id="checkDeparttypeCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DEPTEXPTYPEID as exptypeid
+			FROM ERPRPT_T_DeptExpType
+            WHERE  deptExpTypeID = #exptypeid#
+			UNION ALL
+			SELECT deptGroupTypeID as exptypeid FROM ERPRPT_T_DeptGroupType
+			WHERE deptGroupTypeID = #exptypeid#</select>
+    <select id="checkDeparttypeCode1" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DEPTGROUPTYPEID
+			FROM ERPRPT_T_DeptGroupType
+			WHERE deptgrouptypeid = #exptypeid#</select>
+    <!--校验部门费用关联关系-->
+    <select id="checkDeparttypeCode2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT deptExpTypeID FROM [dbo].[ERPRPT_T_DeptExpVsExpType] where deptExpTypeID=#exptypeid#
+		UNION ALL
+		SELECT deptExpTypeID FROM [dbo].[ERPRPT_T_DeptBudget] where deptExpTypeID=#exptypeid#</select>
+    <select id="checkDeparttypeCode3" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT deptGroupTypeID FROM ERPRPT_T_DeptExpType WHERE deptGroupTypeID=#exptypeid#</select>
+    <!--校验公共费用-->
+    <select id="checkDeparttypeCode4" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT comExpTypeID as comexptypeid
+			FROM ERPRPT_T_CommExpType
+            WHERE comExpTypeID = #comExpTypeID#
+			UNION ALL
+			SELECT comGroupTypeID as comexptypeid FROM ERPRPT_T_CommGroupType
+			WHERE comGroupTypeID = #comExpTypeID#</select>
+    <select id="checkDeparttypeCode5" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT comGroupTypeID
+			FROM ERPRPT_T_CommGroupType
+			WHERE comgrouptypeid = #comExpTypeID#</select>
+    <!--校验公共费用关联关系-->
+    <select id="checkDeparttypeCode6" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT comExpTypeID FROM [dbo].[ERPRPT_T_CommExpVsExpType] where comExpTypeID=#exptypeid#
+			UNION ALL
+			SELECT comExpTypeID FROM [dbo].[ERPRPT_T_CommBudget_NEW] where comExpTypeID=#exptypeid#</select>
+    <select id="checkDeparttypeCode7" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT comGroupTypeID FROM ERPRPT_T_CommExpType WHERE comGroupTypeID=#exptypeid#</select>
+    <select id="queryPurSuppliers" resultMap="resultMapTest">SELECT CUSTID,CUSTNAME FROM PUR_SUPPLIER</select>
+    <select id="queryPurSuppliersIsqualified" resultMap="resultMapTest">SELECT CUSTID,CUSTNAME FROM PUR_SUPPLIER WHERE CUSTTYPE in ('3','4')  OR isqualified in ('1','2');</select>
+    <select id="queryCusts" resultMap="resultMapCust">SELECT CUSTID,CUSTNAME,customertype FROM MIS_CUSTINFO</select>
+    <select id="selectOrgsAndEmps" resultMap="orgsAndemps">SELECT CONCAT(oo.ORGID, '_o') as id,oo.ORGNAME as name,CONCAT(oo.PARENTORGID, '_o') as pid, CASE oo.ORGID WHEN 4 THEN 1 WHEN 3 THEN 1 ELSE 0 END AS folder FROM OM_ORGANIZATION oo where oo.ORGLEVEL = 2 UNION 
+			SELECT CONCAT(e.USERID, '_e') as id, e.EMPNAME as name, CONCAT(e.ORGID, '_o') as pid, 0 as folder FROM OM_EMPLOYEE e, OM_EMPORG o where e.EMPID = o.EMPID and o.ORGID = 4 UNION 
+			SELECT CONCAT(e.USERID, '_e') as id, e.EMPNAME as name, CONCAT(e.ORGID, '_o') as pid, 0 as folder FROM OM_EMPLOYEE e, OM_EMPORG o where e.EMPID = o.EMPID and o.ORGID = 3</select>
+    <select id="selectOrgsAndEmps2" resultMap="orgs">SELECT CONCAT(oo.ORGID, '_o') as id,oo.ORGNAME as name,CONCAT(oo.PARENTORGID, '_o') as pid, 0 AS folder FROM OM_ORGANIZATION oo where oo.ORGLEVEL = 2</select>
+</sqlMap>

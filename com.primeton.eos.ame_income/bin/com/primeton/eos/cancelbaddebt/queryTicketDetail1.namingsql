@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.cancelbaddebt.queryTicketDetail1">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="billprocinstid" javaType="Decimal" property="billprocinstid"/>
+    </resultMap>
+    <select id="queryCsGatherfcSelects" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    select a.billprocinstid from CS_GATHER_FC a where a.BILLPROCINSTID  in ($result$) and a.contnum=#contnum#
+    
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="money" javaType="Decimal" property="money"/>
+        <result column="ticketid" javaType="Decimal" property="ticketid"/>
+        <result column="tax" javaType="Decimal" property="tax"/>
+        <result column="billdate" javaType="date" property="billdate"/>
+        <result column="notax" javaType="Decimal" property="notax"/>
+        <result column="processinstid" javaType="Decimal" property="processinstid"/>
+        <result column="isrecover" javaType="string" property="isrecover"/>
+        <result column="billno" javaType="string" property="billno"/>
+        <result column="gatherno" javaType="string" property="gatherno"/>
+    </resultMap>
+    <select id="queryTicketByProcessinstid1" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+   select d.TICKETID ,d.MONEY as MONEY ,d.TAX,b.BILLDATE as BILLDATE,(d.MONEY-d.TAX)as NOTAX,b.PROCESSINSTID,d.isrecover,d.billno,a.gatherno
+
+    from CS_GATHER_FC a
+    LEFT JOIN CS_NEWBILL b on a.BILLPROCINSTID=b.PROCESSINSTID
+    LEFT JOIN CS_BILL_TICKET c on b.BILLID=c.BILLID
+    LEFT JOIN CS_TICKET d on c.TICKETID=d.TICKETID
+    where d.PROCESSINSTID in ($result1$) 
+    
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap8">
+        <result column="gatherno" javaType="string" property="gatherno"/>
+        <result column="status" javaType="string" property="status"/>
+        <result column="maconfirmday" javaType="date" property="maconfirmday"/>
+        <result column="confirmday" javaType="date" property="confirmday"/>
+        <result column="billstatus" javaType="string" property="billstatus"/>
+        <result column="gathertype" javaType="string" property="gathertype"/>
+        <result column="productsum" javaType="Decimal" property="productsum"/>
+        <result column="fcsum" javaType="Decimal" property="fcsum"/>
+        <result column="servicesum" javaType="Decimal" property="servicesum"/>
+        <result column="gatherid" javaType="Decimal" property="gatherid"/>
+    </resultMap>
+    <select id="queryCsGatherFcByContnum" parameterClass="java.util.HashMap" resultMap="resultMap8"><![CDATA[
+   select a.gatherid,a.gatherno ,a.status ,a.maconfirmday,a.confirmday,a.billstatus,a.gathertype,a.productsum,a.fcsum,a.servicesum
+
+    from CS_GATHER_FC a
+    
+    where a.CONTNUM =#contnum# and a.gatherno in ($gatherno$)
+    ORDER BY a.gatherid asc
+    ]]></select>
+    <select id="queryTicketByProcessinstid" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+   select  DISTINCT d.BILLNO,d.TICKETID ,d.MONEY as MONEY ,d.TAX,b.BILLDATE as BILLDATE,(d.MONEY-d.TAX)as NOTAX,b.PROCESSINSTID,d.isrecover,
+a.gatherno
+    from CS_GATHER_FC a
+    LEFT JOIN CS_NEWBILL b on a.BILLPROCINSTID=b.PROCESSINSTID
+    LEFT JOIN CS_BILL_TICKET c on b.BILLID=c.BILLID
+    LEFT JOIN CS_TICKET d on c.TICKETID=d.TICKETID
+    
+    where b.PROCESSINSTID in ($result1$)  and b.billtype1='1' and d.MONEY>0
+    
+    ]]></select>
+    <update id="updateTicketByid" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_TICKET 
+     SET
+    PROCESSINSTID=#processinstid#,ISRECOVER=#isrecover#
+      where ticketid=#ticketid#
+    
+    ]]></update>
+    <update id="updateBadDebtDetailGathernoByid" parameterClass="java.util.HashMap"><![CDATA[
+      UPDATE AME_BADDEBTDETAILS
+     SET
+     gatherno=#gatherno#
+      where PROCESSINSTID=#PROCESSINSTID# 
+    
+    
+    ]]></update>
+    <update id="updateApplyByid1" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE AME_BCANCELL_APPLY
+     SET
+    APPLYREASON=#applyreason#,CANCELLTYPE=#cancelltype#,GATHERNO=#gatherno#
+      where cancellapplyid=#cancellapplyid#
+    
+    ]]></update>
+    <update id="updateApplyByid" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE AME_BCANCELL_APPLY
+     SET
+    APPLYREASON=#applyreason#,CANCELLTYPE=#cancelltype#
+      where cancellapplyid=#cancellapplyid#
+    
+    ]]></update>
+    <update id="updategatherFcById" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,CONFIRMDAY=#confirmday#,MACONFIRMDAY=#maconfirmday#,ACTSUM=#actsum#,ACTPRODUCTSUM=#actproductsum#,ACTPRODUCTSUM2=#actproductsum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById-1" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,MACONFIRMDAY=#maconfirmday#,ACTSUM=#actsum#,ACTPRODUCTSUM=#actproductsum#,ACTPRODUCTSUM2=#actproductsum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById-2" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,CONFIRMDAY=#confirmday#,ACTSUM=#actsum#,ACTPRODUCTSUM=#actproductsum#,ACTPRODUCTSUM2=#actproductsum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById1" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,CONFIRMDAY=#confirmday#,MACONFIRMDAY=#maconfirmday#,ACTSUM2=#actsum2#,ACTSERVICESUM=#actservicesum#,ACTSERVICESUM2=#actservicesum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById1-1" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,MACONFIRMDAY=#maconfirmday#,ACTSUM2=#actsum2#,ACTSERVICESUM=#actservicesum#,ACTSERVICESUM2=#actservicesum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById1-2" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,CONFIRMDAY=#confirmday#,ACTSUM2=#actsum2#,ACTSERVICESUM=#actservicesum#,ACTSERVICESUM2=#actservicesum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById2" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,CONFIRMDAY=#confirmday#,MACONFIRMDAY=#maconfirmday#,ACTSUM=#actsum#,ACTPRODUCTSUM=#actproductsum#,ACTPRODUCTSUM2=#actproductsum2#
+     ,ACTSUM2=#actsum2#,ACTSERVICESUM=#actservicesum#,ACTSERVICESUM2=#actservicesum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById2-1" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,MACONFIRMDAY=#maconfirmday#,ACTSUM=#actsum#,ACTPRODUCTSUM=#actproductsum#,ACTPRODUCTSUM2=#actproductsum2#
+     ,ACTSUM2=#actsum2#,ACTSERVICESUM=#actservicesum#,ACTSERVICESUM2=#actservicesum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updategatherFcById2-2" parameterClass="java.util.HashMap"><![CDATA[
+     UPDATE CS_GATHER_FC
+     SET
+     STATUS=#status#,CONFIRMDAY=#confirmday#,ACTSUM=#actsum#,ACTPRODUCTSUM=#actproductsum#,ACTPRODUCTSUM2=#actproductsum2#
+     ,ACTSUM2=#actsum2#,ACTSERVICESUM=#actservicesum#,ACTSERVICESUM2=#actservicesum2#
+   where gatherid=#gatherid#
+    ]]></update>
+    <update id="updateTicketByTicket" parameterClass="java.util.HashMap"><![CDATA[
+      UPDATE CS_TICKET 
+     SET
+  PROCESSINSTID=null,ACCOUNTAGE=null,CANCELLDATE=null
+      where ticketid=#ticketid#
+
+    
+    ]]></update>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="userid" javaType="string" property="userid"/>
+    </resultMap>
+    <select id="queryManager1" parameterClass="java.lang.String" resultMap="resultMap2"><![CDATA[
+    select  e.empname ,e.userid from OM_EMPLOYEE a
+	LEFT JOIN OM_ORGANIZATION b on a.ORGID=b.ORGID
+	LEFT JOIN OM_ORGANIZATION c on b.ORGSEQ like c.ORGSEQ+'%' and c.ORGLEVEL=3
+   LEFT JOIN OM_EMPLOYEE e on c.MANAGERID=e.EMPID
+	 where a.ORGID=#orgid#
+ 
+
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="BADDEBTDETAILID" javaType="Decimal" property="baddebtdetailid"/>
+        <result column="PROCESSINSTID" javaType="Decimal" property="processinstid"/>
+        <result column="INCOMECONTIME" javaType="string" property="incomecontime"/>
+        <result column="CANCELLDATE" javaType="Date" property="cancelldate"/>
+        <result column="CANCELLMONEY" javaType="Decimal" property="cancellmoney"/>
+        <result column="REMARK" javaType="string" property="remark"/>
+        <result column="CANCELLTYPE" javaType="string" property="cancelltype"/>
+        <result column="ACCOUNTAGE" javaType="string" property="accountage"/>
+        <result column="GATHERNO" javaType="string" property="gatherno"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="PRODUCTSUM" javaType="Decimal" property="productsum"/>
+        <result column="GATHERTYPE" javaType="Decimal" property="gathertype"/>
+        <result column="SERVICESUM" javaType="Decimal" property="servicesum"/>
+        <result column="SERVICERATE" javaType="Decimal" property="servicerate"/>
+        <result column="PRODUCTRATE" javaType="Decimal" property="productrate"/>
+        <result column="GATHERID" javaType="Decimal" property="gatherid"/>
+        <result column="BADDEBTDETAILID" javaType="Decimal" property="baddebtdetailid"/>
+    </resultMap>
+    <select id="querybaddetailfinal8" parameterClass="java.lang.String" resultMap="resultMap3"><![CDATA[
+ SELECT a.baddebtdetailid,	c.gatherid, c.gathertype,c.productsum,c.servicesum, c.gatherno,c.contnum,a.baddebtdetailid,a.processinstid,a.incomecontime,a.cancelldate,a.cancellmoney,a.remark,a.cancelltype,a.accountage
+		, case when c.servicerate is null then d.DICTNAME else c.SERVICERATE end servicerate,
+		
+			case when c.PRODUCTRATE is null then e.DICTNAME else c.PRODUCTRATE  end productrate,
+	c.status
+		
+		 from AME_BADDEBTDETAILS a
+	
+		LEFT join CS_GATHER_FC c ON a.GATHERID=c.GATHERID
+		LEFT JOIN EOS_DICT_ENTRY d on d.dictid='servicerate' and d.DICTTYPEID='AME_SYSCONF'
+		LEFT JOIN EOS_DICT_ENTRY e on e.dictid='productrate' and e.DICTTYPEID='AME_SYSCONF'
+
+where a.processinstid=#processinstid#
+
+	order by c.gatherno asc
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap66">
+        <result column="GATHERID" javaType="Decimal" property="gatherid"/>
+    </resultMap>
+    <select id="queryGatherid" parameterClass="java.util.HashMap" resultMap="resultMap66"><![CDATA[
+       SELECT gatherid from CS_GATHER_FC where GATHERNO=#gatherno# and CONTNUM=#contnum#
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap13">
+        <result column="BADDEBTDETAILID" javaType="Decimal" property="baddebtdetailid"/>
+        <result column="PROCESSINSTID" javaType="Decimal" property="processinstid"/>
+        <result column="CANCELLDATE" javaType="Date" property="cancelldate"/>
+        <result column="CANCELLMONEY" javaType="Decimal" property="cancellmoney"/>
+        <result column="REMARK" javaType="string" property="remark"/>
+        <result column="CANCELLTYPE" javaType="string" property="cancelltype"/>
+        <result column="ACCOUNTAGE" javaType="string" property="accountage"/>
+        <result column="GATHERID" javaType="Decimal" property="gatherid"/>
+        <result column="INCOMECONTIME" javaType="Date" property="incomecontime"/>
+    </resultMap>
+    <select id="querybaddetailfinal9" parameterClass="java.util.HashMap" resultMap="resultMap13"><![CDATA[
+  
+   		
+			SELECT	a.baddebtdetailid, a.gatherid,a.processinstid,a.incomecontime,a.cancelldate,a.cancellmoney,a.remark,a.cancelltype,a.accountage
+		
+		
+		 from AME_BADDEBTDETAILS a
+	where a.processinstid=#processinstid# and a.cancelltype='baddebt'
+	order by a.baddebtdetailid 
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="ID" javaType="string" property="id"/>
+        <result column="NAME" javaType="string" property="name"/>
+        <result column="TYPE" javaType="string" property="type"/>
+    </resultMap>
+    <select id="queryVp1" parameterClass="java.lang.String" resultMap="resultMap3"><![CDATA[
+     
+	select t.REPLEADER as id,b.EMPNAME as name,'vp' as type from (
+	select REPLEADER=substring(t.REPLEADER,b.number,charindex(',',t.REPLEADER+',',b.number)-b.number) from (
+	select a.USERID,a.EMPNAME,(CASE when c.REPLEADER is null then e.USERID else c.REPLEADER END) REPLEADER 
+	from OM_EMPLOYEE a
+	LEFT JOIN OM_ORGANIZATION b on a.ORGID=b.ORGID
+	LEFT JOIN OM_ORGANIZATION c on b.ORGSEQ like c.ORGSEQ+'%' and c.ORGLEVEL=3
+	LEFT JOIN OM_ORGANIZATION d on b.ORGSEQ like d.ORGSEQ+'%' and d.ORGLEVEL=2
+	LEFT JOIN OM_EMPLOYEE e on d.MANAGERID=e.EMPID
+	where a.USERID=#userid#
+	) t join master.dbo.spt_values b on b.type='P' 
+	where  charindex(',',','+t.REPLEADER,b.number)=b.number
+	) t LEFT JOIN OM_EMPLOYEE b on t.REPLEADER=b.USERID
+
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="OPERATORNAME" javaType="string" property="operatorname"/>
+        <result column="WORKITEMNAME" javaType="string" property="workitemname"/>
+        <result column="AUDITOPINION" javaType="string" property="auditopinion"/>
+    </resultMap>
+    <select id="queryBadDebtOpinion" parameterClass="java.lang.String" resultMap="resultMap5"><![CDATA[
+  
+		
+
+ 		select  DISTINCT a.activitydefid, a.OPERATORNAME ,(case
+			
+		 when a.workitemname = '发起坏账/减值核销审批流程' then '申请人'
+		 when a.workitemname='销售确认' then '销售'
+		  when a.workitemname='事业部总经理审批' then '事业部负责人'
+		
+		  when a.WORKITEMNAME='VP审批'then '事业群VP'
+		
+		
+		 when a.WORKITEMNAME='CFO审批' then 'CFO' end  ) as WORKITEMNAME  , (case when AUDITOPINION is null then '同意' else '同意' END) as AUDITOPINION 
+		   from MIS_OPINION  a
+		 where a.WORKITEMNAME in ('事业部总经理审批','销售确认','VP审批','CFO审批','发起坏账/减值核销审批流程') AND
+		 PROCESSINSTID= #processinstid#  and a.AUDITSTATUS in(1,3)
+		order by a.activitydefid asc
+
+    ]]></select>
+</sqlMap>

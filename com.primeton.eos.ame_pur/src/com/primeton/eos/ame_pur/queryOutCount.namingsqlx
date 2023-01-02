@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:yaoyi -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    
+    
+     <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="dictname" javaType="string" property="dictname"/>
+    </resultMap>
+    
+	 <select id="querySybByProj" parameterClass="string" resultMap="resultMap3">
+		select v.dictname from (select a.orgid,(case when d.dictid is null then '5' else d.DICTID end) as DICTID ,(case when d.dictid is null then '其他' else d.DICTNAME end) as dictname,(case when d.dictid is null then 18 else d.SORTNO end) as SORTNO 
+		from om_organization a ,om_organization b,om_organization c left join EOS_DICT_ENTRY d on c.orgname=d.DICTNAME and d.DICTTYPEID='CONT_ORG'
+		where a.orgid not in (select distinct(p.orgid) from om_organization t,om_organization p 
+		where t.parentorgid = p.orgid) and a.parentorgid=b.orgid and
+		(case when (a.orgseq like '.1.14.%') then SUBSTRING(a.ORGSEQ, 7, CHARINDEX('.', a.ORGSEQ, 7) - CHARINDEX('.', a.ORGSEQ, 4) - 1) else SUBSTRING(a.ORGSEQ, 4, CHARINDEX('.', a.ORGSEQ, 4) - CHARINDEX('.', a.ORGSEQ, 2) - 1) end)= c.orgid
+		union 
+		select 236 as orgid,'6' as DICTID,'软件产品部' as dictname,14 as sortno) v WHERE v.orgid=(select FIN_UNIT_ID FROM RD_PROJECT WHERE PROJECT_NO = #projectno#);
+     </select>
+</sqlMap>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:朱海翔 -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="USERID" javaType="string" property="managerid"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    
+    <select id="getsyqLeader" parameterClass="java.lang.String" resultMap="resultMap"><![CDATA[
+    	SELECT c.USERID,c.EMPNAME FROM OM_ORGANIZATION a
+		LEFT JOIN OM_ORGANIZATION b ON a.ORGSEQ LIKE b.ORGSEQ+'%' AND b.ORGLEVEL = '3'
+		LEFT JOIN OM_EMPLOYEE c ON b.MANAGERID = c.EMPID
+		WHERE a.ORGID=#orgid#
+	]]></select>
+</sqlMap>

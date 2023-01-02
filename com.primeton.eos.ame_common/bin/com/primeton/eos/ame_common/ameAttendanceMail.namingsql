@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.ameAttendanceMail">
+    <!-- 
+		获取外包考勤人员数据
+		查询结果：日期、人员、所属供应商、考勤项目、项目编号、考勤时间、签到时间、是否迟到、
+		签到位置、签到位置距离、签退时间、是否早退、签退位置、签退位置距离（需要考勤但没有打卡记录的也需要显示） 
+	-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="OUTPERNO" javaType="long" property="outperno"/>
+        <result column="OUTPERNAME" javaType="string" property="outpername"/>
+        <result column="CUSTID" javaType="long" property="custid"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="SUPPLIERSNAME" javaType="string" property="suppliersname"/>
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="PROJECT_NO" javaType="string" property="projectNo"/>
+        <result column="RULEDETAIL" javaType="string" property="ruledetail"/>
+        <result column="SIGNINFLAG" javaType="string" property="signinflag"/>
+        <result column="SIGNINTIME" javaType="date" property="signintime"/>
+        <result column="SIGNINLOCATION" javaType="string" property="signinlocation"/>
+        <result column="SIGNINDISTANCE" javaType="decimal" property="signindistance"/>
+        <result column="SIGNOUTFLAG" javaType="string" property="signoutflag"/>
+        <result column="SIGNOUTTIME" javaType="date" property="signouttime"/>
+        <result column="SIGNOUTLOCATION" javaType="string" property="signoutlocation"/>
+        <result column="SIGNOUTDISTANCE" javaType="decimal" property="signoutdistance"/>
+    </resultMap>
+    <select id="getAttendances" parameterClass="java.util.HashMap" resultMap="resultMap">select x.OUTPERNO,x.OUTPERNAME,x.CUSTID,x.CUSTNAME,x.SUPPLIERSNAME,x.PROJECT_NO,x.PROJECT_NAME,y.CLOCKDATE,y.RULEDETAIL,
+		(case when y.SIGNINFLAG='1' then '是' when y.SIGNINFLAG='0' then '否' end) as SIGNINFLAG,
+		y.SIGNINTIME,y.SIGNINLOCATION,y.SIGNINDISTANCE,
+		(case when y.SIGNOUTFLAG='2' then '是' when y.SIGNOUTFLAG='0' then '否' end) as SIGNOUTFLAG,
+		y.SIGNOUTTIME,y.SIGNOUTLOCATION,y.SIGNOUTDISTANCE 
+		from 
+		(select DISTINCT a.MANAGER,b.OUTPERNO,b.LINKTEL,b.OUTPERNAME,b.WXNO,c.CUSTID,c.CUSTNAME,c.SUPPLIERSNAME,
+					d.PROJECT_NO,d.PROJECT_NAME 
+					from PUR_PROJ_OUTPER a 
+					left join PUR_OUTPERSON b on a.OUTPERNO = b.OUTPERNO 
+					left join PUR_SUPPLIER c on b.CUSTID=c.CUSTID
+					left join RD_PROJECT d on a.PROJECTNO=d.PROJECT_NO
+					where a.MANAGER = #manager# and a.CURRENTSTATUS != '0' and a.WHETHERATTENDANCE = '1') x 
+		left join (
+		select a.CLOCKDATE,a.PERSONID,e.OUTPERNAME,f.CUSTID,f.CUSTNAME,f.SUPPLIERSNAME,h.ORGNAME,g.PROJECT_NAME,
+		g.PROJECT_NO,
+		j.EMPNAME as MANAGERNAME,j.USERID as MANAGERID,k.EMPNAME  as MANAGERNAME1,
+		m.STARTTIME+'-'+m.ENDTIME as RULEDETAIL,
+		b.INTIME as SIGNINTIME,b.OUTTIME as SIGNOUTTIME,
+		b.INFLAG as SIGNINFLAG,
+		B.OUTFLAG as SIGNOUTFLAG,
+		b.INLOCATION as SIGNINLOCATION,B.OUTLOCATION as SIGNOUTLOCATION,
+		b.INDISTANCE as SIGNINDISTANCE,B.OUTDISTANCE as SIGNOUTDISTANCE
+		from (
+		select DISTINCT PERSONID,CONVERT(varchar(10),SIGNDATE,120) as CLOCKDATE,CUSTID,PROJECTNO,RULENO from AME_ATTENDANCE_DETAILS) a
+		left join AME_ATTENDANCE_DETAILS b on a.PERSONID=b.PERSONID and a.CLOCKDATE=CONVERT(varchar(10),b.SIGNDATE,120)
+		left join PUR_OUTPER_OPERATOR d on a.PERSONID=d.userid
+		left join PUR_OUTPERSON e on d.outperno=e.outperno
+		left join PUR_SUPPLIER f on a.CUSTID=f.CUSTID
+		left join RD_PROJECT g on a.PROJECTNO=g.PROJECT_NO
+		left join OM_ORGANIZATION h on g.FIN_UNIT_ID=h.ORGID
+		left join OM_EMPLOYEE j on g.MANAGER=j.USERID
+		left join OM_EMPLOYEE k on b.REPORTTOPID=k.USERID
+		left join AME_ATTENDANCE_RULE m on a.RULENO=m.RULENO 
+		where (b.SIGNDATE &gt;= #clocktime1# and b.SIGNDATE &lt; #clocktime2#) 
+		and k.USERID = #manager# ) y on x.WXNO=y.PERSONID and x.PROJECT_NO=y.PROJECT_NO
+		order by x.PROJECT_NAME DESC,x.SUPPLIERSNAME DESC</select>
+    <!-- 查询需要发送邮件的汇报对象们 -->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="OEMAIL" javaType="string" property="oemail"/>
+    </resultMap>
+    <select id="getNeedSendMailManager" parameterClass="java.util.HashMap" resultMap="resultMap2">select USERID,EMPNAME,OEMAIL from OM_EMPLOYEE 
+    	where USERID in (select DISTINCT MANAGER from PUR_PROJ_OUTPER a where a.CURRENTSTATUS != '0' 
+			and a.MANAGER is not NULL)</select>
+</sqlMap>

@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="getAmeContract" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.1">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokeService0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link38" name="link38" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">workItemID</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" type="end">
+    <targetConnections>link91</targetConnections>
+    <targetConnections>link92</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="com.primeton.mis.contract.contractApproval.AmeCsContract" name="cscontract" type="query" valueType="DataObject">cscontract</process:return>
+      <process:return id="1" language="com.eos.workflow.data.WFWorkItem" name="workitem" type="query" valueType="DataObject">workitem</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService0" name="查工作项" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" isDefault="true" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>assign18</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>invokeService0label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.queryWorkItemDetail4SDO</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="workItemID" type="query" value="long" valueType="Java" pattern="reference">workItemID</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject" valueType="Java">workitem</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>invokeService0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" collapsed="false" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link36" name="link36" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign15</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign16</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">processInstID</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link38</targetConnections>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <figSize height="17" width="37"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign15" name="赋值15" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" isDefault="true" type="transition">
+      <sourceNode>assign15</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <targetConnections>link36</targetConnections>
+    <nodeLabel>assign15label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">processInstID</process:from>
+      <process:to type="query">cscontract/processinstid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign15label" name="label" nodeType="label">
+    <figSize height="17" width="39"/>
+    <node>assign15</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign16" name="赋值16" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link41" name="link41" isDefault="true" type="transition">
+      <sourceNode>assign16</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <targetConnections>link37</targetConnections>
+    <nodeLabel>assign16label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">contractid</process:from>
+      <process:to type="query">cscontract/contractid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign16label" name="label" nodeType="label">
+    <figSize height="17" width="39"/>
+    <node>assign16</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign18" name="赋值17" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" isDefault="true" type="transition">
+      <sourceNode>assign18</sourceNode>
+      <targetNode>subprocess4</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <nodeLabel>assign18label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem/processInstID</process:from>
+      <process:to type="query">cscontract/processinstid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign18label" name="label" nodeType="label">
+    <figSize height="17" width="39"/>
+    <node>assign18</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link75</targetConnections>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <figSize height="17" width="44"/>
+    <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign24" name="赋值24" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link92" name="link92" isDefault="false" type="transition">
+      <bendPoint heightToEnd="-50" heightToStart="-50" widthToEnd="-90" widthToStart="75"/>
+      <sourceNode>assign24</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">workItemID</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
+      <sourceNode>assign24</sourceNode>
+      <targetNode>invokeService1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">workItemID</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>assign24label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">cscontractsales</process:from>
+      <process:to type="query">cscontract/cscontractsales</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">csGatherFcs</process:from>
+      <process:to type="query">cscontract/csGatherFcs</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">csReveForecasts</process:from>
+      <process:to type="query">cscontract/csReveForecasts</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">ameCsContBacks</process:from>
+      <process:to type="query">cscontract/ameCsContBacks</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">ameCsContDeps</process:from>
+      <process:to type="query">cscontract/ameCsContDeps</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">ameCsContTypes</process:from>
+      <process:to type="query">cscontract/ameCsContTypes</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">csContLicenses</process:from>
+      <process:to type="query">cscontract/csContLicenses</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign24label" name="label" nodeType="label">
+    <figSize height="17" width="39"/>
+    <node>assign24</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService1" name="是否提供预算" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link90" name="link90" isDefault="true" type="transition">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>invokeService2</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <nodeLabel>invokeService1label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.RelativeDataComponent/RelativeDataManagerService.getRelativeData</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">cscontract/processinstid</process:inputVariable>
+      <process:inputVariable id="1" name="path" type="literal" value="java.lang.String" valueType="Java" pattern="reference">isProBudget</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object" valueType="Java">isProBudget</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService1label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>invokeService1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess2" name="退回列表" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link91" name="link91" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_pur.purContractProcess.queryBackActivity</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="workItemID" type="query" value="Long" valueType="Primitive" pattern="reference">workItemID</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="activityInsts" type="query" value="commonj.sdo.DataObject[]" valueType="Java">cscontract/backList</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign29" name="赋值29" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link75" name="link75" isDefault="true" type="transition">
+      <sourceNode>assign29</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link35</targetConnections>
+    <nodeLabel>assign29label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdproject</process:from>
+      <process:to type="query">cscontract/rdproject</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget</process:from>
+      <process:to type="query">cscontract/budget</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget1</process:from>
+      <process:to type="query">cscontract/budget1</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign29label" name="label" nodeType="label">
+    <figSize height="17" width="39"/>
+    <node>assign29</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService2" name="审批人" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" isDefault="true" type="transition">
+      <sourceNode>invokeService2</sourceNode>
+      <targetNode>invokeService3</targetNode>
+    </sourceConnections>
+    <targetConnections>link90</targetConnections>
+    <nodeLabel>invokeService2label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.RelativeDataComponent/RelativeDataManagerService.getRelativeData</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">cscontract/processinstid</process:inputVariable>
+      <process:inputVariable id="1" name="path" type="literal" value="java.lang.String" valueType="Java" pattern="reference">leaders</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object" valueType="Java">leaders</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService2label" name="label" nodeType="label">
+    <figSize height="17" width="37"/>
+    <node>invokeService2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService3" name="邮件信息" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link89" name="link89" isDefault="true" type="transition">
+      <sourceNode>invokeService3</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <nodeLabel>invokeService3label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.RelativeDataComponent/RelativeDataManagerService.getRelativeData</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">cscontract/processinstid</process:inputVariable>
+      <process:inputVariable id="1" name="path" type="literal" value="java.lang.String" valueType="Java" pattern="reference">email</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object" valueType="Java">email</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService3label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>invokeService3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess4" name="获取合同信息" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link56" name="link56" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>subprocess5</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="项目编号为空" type="transition">
+      <bendPoint heightToEnd="-75" heightToStart="-74" widthToEnd="-106" widthToStart="104"/>
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>switch1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">cscontract/projectno</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link42</targetConnections>
+    <targetConnections>link41</targetConnections>
+    <targetConnections>link40</targetConnections>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getAmeCstractDetail</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="cscontract" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContract" valueType="DataObject" pattern="reference">cscontract</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="cscontract" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContract" valueType="DataObject">cscontract</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess5" name="查询项目" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link35" name="link35" isDefault="true" type="transition">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>assign29</targetNode>
+    </sourceConnections>
+    <targetConnections>link56</targetConnections>
+    <nodeLabel>subprocess5label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getAmeCsContProj</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="projectno" type="query" value="String" valueType="Primitive" pattern="reference">cscontract/projectno</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="rdproject" type="query" value="com.primeton.rdmgr.data.rd.RdProject" valueType="DataObject">rdproject</process:outputVariable>
+        <process:outputVariable id="1" name="budget" type="query" value="com.primeton.eos.ame_budget.ame_budget.PrjBugdetVer" valueType="DataObject">budget</process:outputVariable>
+        <process:outputVariable id="2" name="budget1" type="query" value="com.primeton.eos.ame_budget.ame_budget.PrjBugdetVer" valueType="DataObject">budget1</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess5label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>subprocess5</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="获取销售信息" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getAmeCsContSales</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="contractid" type="query" value="String" valueType="Primitive" pattern="reference">cscontract/contractid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="cscontractsales" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContractsale[]" valueType="DataObject">cscontractsales</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess1" name="获取收款及保函保证金" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getAmeCsContGatherFc</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="contractid" type="query" value="String" valueType="Primitive" pattern="reference">cscontract/contractid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="csGatherFcs" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsGatherFc[]" valueType="DataObject">csGatherFcs</process:outputVariable>
+        <process:outputVariable id="1" name="ameCsContBacks" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContBackDep[]" valueType="DataObject">ameCsContBacks</process:outputVariable>
+        <process:outputVariable id="2" name="ameCsContDeps" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContBackDep[]" valueType="DataObject">ameCsContDeps</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <figSize height="17" width="121"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess3" name="获取收入信息" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>subprocess6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">workItemID</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getAmeCsReveForecast</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="contractid" type="query" value="String" valueType="Primitive" pattern="reference">cscontract/contractid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="csReveForecasts" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsReveForecast[]" valueType="DataObject">csReveForecasts</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link89</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">isProBudget</process:from>
+      <process:to type="query">cscontract/isProBudget</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">leaders</process:from>
+      <process:to type="query">cscontract/leaders</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">email</process:from>
+      <process:to type="query">cscontract/email</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess6" name="获取合同业务分类" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" isDefault="true" type="transition">
+      <sourceNode>subprocess6</sourceNode>
+      <targetNode>subprocess7</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>subprocess6label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getCsContractType</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="contractid" type="query" value="String" valueType="Primitive" pattern="reference">cscontract/contractid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="ameCsContTypes" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContractType[]" valueType="DataObject">ameCsContTypes</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
+    <figSize height="17" width="97"/>
+    <node>subprocess6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess7" name="产品清单" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
+      <sourceNode>subprocess7</sourceNode>
+      <targetNode>assign24</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <nodeLabel>subprocess7label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getAmeContLicense</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="contractid" type="query" value="String" valueType="Primitive" pattern="reference">cscontract/contractid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="csContLicenses" type="query" value="com.primeton.mis.contract.contractApproval.AmeCsContLicense[]" valueType="DataObject">csContLicenses</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess7label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>subprocess7</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.1"/>
+  <process:variables>
+    <process:variable historyStateLocation="client" isArray="false" name="contnum" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.mis.contract.contractApproval.AmeCsContractProduct" name="tempContProd"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.mis.contract.contractApproval.AmeCsContractsale" name="cscontractsales"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.mis.contract.contractApproval.AmeCsGatherFc" name="csGatherFcs"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.mis.contract.contractApproval.AmeCsReveForecast" name="csReveForecasts"/>
+    <process:variable historyStateLocation="client" isArray="false" name="isProBudget" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.mis.contract.contractApproval.AmeCsReveForecast" name="temp3"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.rdmgr.data.rd.RdProject" name="rdproject"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.PrjBugdetVer" name="budget"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.PrjBugdetVer" name="budget1"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteriabudget"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.eos.workflow.data.WFParticipant" name="leaders"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.mis.contract.contractApproval.AmeCsContBackDep" name="ameCsContBacks"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.mis.contract.contractApproval.AmeCsContBackDep" name="ameCsContDeps"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.mis.contract.contractApproval.AmeCsContractType" name="ameCsContTypes"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input isArray="false" name="workItemID" primitiveType="String"/>
+    <process:input isArray="false" name="processInstID" primitiveType="String"/>
+    <process:input isArray="false" name="contractid" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" modelType="com.primeton.mis.contract.contractApproval.AmeCsContract" name="cscontract"/>
+    <process:output description="" isArray="false" modelType="com.eos.workflow.data.WFWorkItem" name="workitem"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

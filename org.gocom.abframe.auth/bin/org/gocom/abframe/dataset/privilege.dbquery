@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.AcFunctionExtend">
+        <config db="default" type="sql"><![CDATA[SELECT F.FUNCCODE,F.FUNCGROUPID,F.FUNCNAME,F.FUNCDESC,F.FUNCACTION,F.PARAINFO,F.ISCHECK,F.FUNCTYPE,F.ISMENU,
+FG.FUNCGROUPNAME, A.APPID, A.APPNAME
+ FROM   AC_FUNCTION F LEFT OUTER JOIN AC_FUNCGROUP FG ON F.FUNCGROUPID = FG.FUNCGROUPID 
+ LEFT OUTER JOIN AC_APPLICATION A ON FG.APPID = A.APPID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.AcOpershortcutQuery">
+        <config db="default" type="sql"><![CDATA[SELECT
+AC_OPERSHORTCUT.OPERATORID,AC_OPERSHORTCUT.FUNCCODE,AC_OPERSHORTCUT.APPID,AC_OPERSHORTCUT.FUNCGROUPID,
+AC_OPERSHORTCUT.ORDERNO,AC_OPERSHORTCUT.IMAGEPATH,AC_APPLICATION.APPNAME,AC_FUNCGROUP.FUNCGROUPNAME,
+AC_FUNCTION.FUNCNAME,AC_FUNCTION.FUNCACTION FROM AC_OPERSHORTCUT LEFT OUTER JOIN AC_APPLICATION ON AC_OPERSHORTCUT.APPID=AC_APPLICATION.APPID
+ LEFT OUTER JOIN AC_FUNCGROUP ON AC_OPERSHORTCUT.FUNCGROUPID=AC_FUNCGROUP.FUNCGROUPID 
+ LEFT OUTER JOIN AC_FUNCTION ON AC_OPERSHORTCUT.FUNCCODE=AC_FUNCTION.FUNCCODE]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.AppFuncGroup">
+        <config db="default" type="sql"><![CDATA[SELECT 
+       T.FUNCGROUPID,
+       T.APPID,
+       T.FUNCGROUPNAME,
+       T.PARENTGROUP,
+       T.GROUPLEVEL,
+       T.FUNCGROUPSEQ,
+       T.ISLEAF,T.SUBCOUNT
+FROM AC_FUNCGROUP T]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.AppFunction">
+        <config db="default" type="sql"><![CDATA[SELECT 
+      T.FUNCCODE,
+      T.FUNCGROUPID,
+      T.FUNCNAME,
+      T.FUNCTYPE ,
+      T1.APPID
+FROM AC_FUNCTION T,AC_FUNCGROUP T1
+WHERE T.FUNCGROUPID = T1.FUNCGROUPID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.OmOperRolefuncView">
+        <config db="default" type="sql"><![CDATA[SELECT RF.ROLEID,RF.FUNCCODE,RF.APPID,RF.FUNCGROUPID,
+F.FUNCNAME,A.APPNAME,FG.FUNCGROUPNAME,PR.OPERATORID 
+FROM AC_ROLEFUNC RF LEFT OUTER JOIN AC_FUNCTION F 
+ON RF.FUNCCODE=F.FUNCCODE 
+LEFT OUTER JOIN AC_APPLICATION A 
+ON RF.APPID=A.APPID 
+LEFT OUTER JOIN AC_FUNCGROUP FG
+ON RF.FUNCGROUPID=FG.FUNCGROUPID 
+INNER JOIN AC_OPERATORROLE PR 
+ON RF.ROLEID=PR.ROLEID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.QueryNewMenu">
+        <config db="default" type="sql"><![CDATA[select '0' as MENUID,'应用管理' as MENUNAME,'0' MENUSEQ,null as PARENTSID,
+'0' as ISLEAF, 'application_home' AS IMAGEPATH,null AS EXPANDPATH,null AS MENULABEL,
+null AS DISPLAYORDER,null AS SUBCOUNT,null AS MENULEVEL,null AS OPENMODE,null AS FUNCCODE,
+null AS MENUCODE
+UNION all
+select a.MENUID as MENUID,a.MENUNAME as MENUNAME ,a.MENUSEQ MENUSEQ,
+(CASE WHEN a.PARENTSID is null  THEN '0' else a.PARENTSID END) as PARENTSID,
+a.ISLEAF as ISLEAF,a.IMAGEPATH as IMAGEPATH,a.EXPANDPATH EXPANDPATH,a.MENULABEL MENULABEL,
+a.DISPLAYORDER DISPLAYORDER,a.SUBCOUNT SUBCOUNT,a.MENULEVEL MENULEVEL,a.OPENMODE OPENMODE,
+a.FUNCCODE FUNCCODE,a.MENUCODE MENUCODE
+from AC_MENU a 
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.QueryFunTree">
+        <config db="default" type="sql"><![CDATA[SELECT 'a'+CONVERT(VARCHAR(10),a.APPID) as APPID,a.APPNAME,null as PARENTID,'n' as ISLEAF,'application' AS imagepath,0 AS FUNCGROUPID, 0 AS APPID1 from AC_APPLICATION a 
+UNION all 
+SELECT 'b'+CONVERT(VARCHAR(10),b.FUNCGROUPID) as APPID,b.FUNCGROUPNAME as APPNAME,
+(CASE WHEN b.PARENTGROUP is null  THEN 'a'+CONVERT(VARCHAR(10),b.APPID) else 'b'+CONVERT(VARCHAR(10),b.PARENTGROUP) END) PARENTID
+,'n' as ISLEAF,'bricks' AS imagepath,0 AS FUNCGROUPID, b.APPID AS APPID1 from AC_FUNCGROUP b
+UNION all 
+SELECT 'c'+c.FUNCCODE as APPID,c.FUNCNAME AS APPNAME,'b'+CONVERT(VARCHAR(10),c.FUNCGROUPID) as PARENTID,'y' as ISLEAF,'application_form' as imagepath,c.FUNCGROUPID AS FUNCGROUPID,d.APPID AS appid1 FROM AC_FUNCTION c
+LEFT JOIN AC_FUNCGROUP d on c.FUNCGROUPID = d.FUNCGROUPID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.QueryMyFunc">
+        <config db="default" type="sql"><![CDATA[SELECT RF.ROLEID,'c'+RF.FUNCCODE AS FUNCCODE,RF.APPID,RF.FUNCGROUPID,
+F.FUNCNAME,A.APPNAME,FG.FUNCGROUPNAME
+FROM AC_ROLEFUNC RF LEFT OUTER JOIN AC_FUNCTION F 
+ON RF.FUNCCODE=F.FUNCCODE 
+LEFT OUTER JOIN AC_APPLICATION A 
+ON RF.APPID=A.APPID 
+LEFT OUTER JOIN AC_FUNCGROUP FG
+ON RF.FUNCGROUPID=FG.FUNCGROUPID ]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.RoleOperator">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	c.EMPCODE,b.USERID,b.OPERATORNAME,b.STATUS,d.orgid,d.ORGNAME,
+	a.OPERATORID,a.ROLEID,e.ROLENAME
+FROM
+	AC_OPERATORROLE a
+LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.QueryOperatorRole">
+        <config db="default" type="sql"><![CDATA[SELECT A.OPERATORID,A.USERID ,A.OPERATORNAME AS EMPNAME, B.EMPSTATUS,c.ORGNAME,B.EMPCODE
+		FROM AC_OPERATOR A LEFT OUTER JOIN OM_EMPLOYEE B ON A.OPERATORID = B.OPERATORID LEFT JOIN OM_ORGANIZATION C ON c.ORGID=b.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.queryNewAppTree">
+        <config db="default" type="sql"><![CDATA[SELECT '0' AS APPID, 'null' as SEQ ,'应用功能管理' AS APPNAME ,'0' as PARENTID,'n' as ISLEAF,'null' AS imagepath,0 AS FUNCGROUPID, 0 AS APPID1 ,null AS SUBCOUNT ,NULL AS FUNCGROUPSEQ,NULL AS GROUPLEVEL
+UNION all 
+SELECT CONVERT(VARCHAR(10),a.APPID) as APPID, 'a'+CONVERT(VARCHAR(10),a.APPID) as SEQ,a.APPNAME,null as PARENTID,'n' as ISLEAF,'application' AS imagepath,0 AS FUNCGROUPID, 0 AS APPID1 ,null AS SUBCOUNT ,NULL AS FUNCGROUPSEQ , NULL AS GROUPLEVEL from AC_APPLICATION a 
+UNION all 
+SELECT CONVERT(VARCHAR(10),b.FUNCGROUPID) as APPID, 'b'+CONVERT(VARCHAR(10),b.FUNCGROUPID) as SEQ,b.FUNCGROUPNAME as APPNAME,
+(CASE WHEN b.PARENTGROUP is null  THEN 'a'+CONVERT(VARCHAR(10),b.APPID) else 'b'+CONVERT(VARCHAR(10),b.PARENTGROUP) END) PARENTID
+,'n' as ISLEAF,'bricks' AS imagepath,b.FUNCGROUPID AS FUNCGROUPID, b.APPID AS APPID1 , SUBCOUNT,FUNCGROUPSEQ ,GROUPLEVEL from AC_FUNCGROUP b
+UNION all 
+SELECT  c.FUNCCODE as APPID, 'c'+c.FUNCCODE as SEQ,c.FUNCNAME AS APPNAME,'b'+CONVERT(VARCHAR(10),c.FUNCGROUPID) as PARENTID,'y' as ISLEAF,'application_form' as imagepath,c.FUNCGROUPID AS FUNCGROUPID,d.APPID AS appid1 ,null AS SUBCOUNT ,NULL AS FUNCGROUPSEQ ,NULL AS GROUPLEVEL FROM AC_FUNCTION c
+LEFT JOIN AC_FUNCGROUP d on c.FUNCGROUPID = d.FUNCGROUPID]]></config>
+    </QueryEntity>
+    <QueryEntity name="org.gocom.abframe.dataset.privilege.QueryOrgUsers">
+        <config db="default" type="sql"><![CDATA[select DISTINCT a.EMPCODE,a.USERID,a.EMPNAME,a.EMPSTATUS,a.ORGID,b.ORGNAME,b.ORGSEQ
+from OM_EMPLOYEE a LEFT JOIN OM_ORGANIZATION b on a.orgid=b.ORGID]]></config>
+    </QueryEntity>
+</QueryEntityList>

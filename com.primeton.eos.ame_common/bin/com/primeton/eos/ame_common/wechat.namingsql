@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.wechat">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="FUNCACTION" javaType="string" property="FUNCACTION"/>
+        <result column="FUNCNAME" javaType="string" property="FUNCNAME"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="LABOR_DATE" javaType="Date" property="LABOR_DATE"/>
+        <result column="ACT_HOURS" javaType="double" property="ACT_HOURS"/>
+        <result column="OTW_HOURS" javaType="double" property="OTW_HOURS"/>
+        <result column="STATUS" javaType="string" property="STATUS"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="projectid" property="projectid"/>
+        <result column="projectname" property="projectname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="PARENTORGID" javaType="int" property="parentorgid"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="minDate" javaType="date" property="minDate"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="ISWORKDAY" javaType="string" property="IsWorkDay"/>
+        <result column="weekday" javaType="string" property="WeekDay"/>
+        <result column="isneed" javaType="string" property="IsNeed"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="custMap">
+        <result column="CUSTID" javaType="long" property="custid"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="detailtMap">
+        <result column="LABOR_DETAIL_ID" javaType="int" property="laborDetailId"/>
+        <result column="LABOR_DATE" javaType="String" property="laborDate"/>
+        <result column="ACT_HOURS" javaType="double" property="actHours"/>
+        <result column="OTW_HOURS" javaType="double" property="otwHours"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="ORGNAME" javaType="string" property="salesName"/>
+        <result column="TASKNAME" javaType="string" property="taskname"/>
+        <result column="REP_CONTENT" javaType="string" property="repContent"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="STATUSNAME" javaType="string" property="statusname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="confirmMap">
+        <result column="LABOR_DETAIL_ID" javaType="int" property="laborDetailId"/>
+        <result column="LABOR_DATE" javaType="String" property="laborDate"/>
+        <result column="ACT_HOURS" javaType="double" property="actHours"/>
+        <result column="OTW_HOURS" javaType="double" property="otwHours"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="ORGNAME" javaType="string" property="salesName"/>
+        <result column="TASKNAME" javaType="string" property="taskname"/>
+        <result column="REP_CONTENT" javaType="string" property="repContent"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="BENEFCONFQ" javaType="string" property="benefconfq"/>
+        <result column="benefitid" javaType="string" property="benefitid"/>
+        <result column="MANAGER" javaType="string" property="manager"/>
+    </resultMap>
+    <select id="checkPermission" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    	SELECT distinct d.FUNCACTION,d.FUNCNAME 
+    	FROM AC_OPERATOR a,AC_OPERATORROLE b,AC_ROLEFUNC c,AC_FUNCTION d
+		WHERE a.OPERATORID = b.OPERATORID 
+			and b.ROLEID = c.ROLEID 
+			and c.FUNCCODE = #funcCode#
+			and a.USERID = #userID#
+			and c.FUNCCODE = d.FUNCCODE
+    ]]></select>
+    <select id="getLaborDate" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+    	SELECT DISTINCT LABOR_DATE, sum(ACT_HOURS) as ACT_HOURS,	sum(OTW_HOURS) as OTW_HOURS ,
+	case when '0' in (select status from RD_LABOR_DETAIL b where b.USER_ID=a.USER_ID and b.labor_date=a.LABOR_DATE)  OR
+	'2' in (select status from RD_LABOR_DETAIL b where b.USER_ID=a.USER_ID and b.labor_date=a.LABOR_DATE)  then 0 else 1 end as STATUS
+	    	FROM RD_LABOR_DETAIL a where 
+	    	USER_ID = #userid#
+			and MONTH(LABOR_DATE) =  #month# 
+    	and year(labor_date) = #year#  group by LABOR_DATE ,USER_ID;
+    ]]></select>
+    <select id="getRdProject" parameterClass="java.util.HashMap" resultMap="resultMap2"><![CDATA[
+    	select t.projectid,t.projectname from
+		(
+		SELECT DISTINCT P1.PROJECT_ID as projectid,P1.PROJECT_NAME as projectname,P1.CUSTID
+		    	FROM RD_EMP_PROJ P2,RD_PROJECT P1 left join OM_ORGANIZATION a on P1.FIN_UNIT_ID=a.ORGID 
+WHERE P1.PROJECT_STATUS in ('1','2') AND P1.PROJECT_ID=P2.PROJECT_ID AND USERID=#userid#
+		    	union SELECT DISTINCT P1.PROJECT_ID as projectid,P1.PROJECT_NAME as projectname,
+(case when P1.PROJECT_ID=1 then 1 when P1.PROJECT_ID=2 then 2 end) as CUSTID
+		    	FROM RD_PROJECT P1 left join OM_ORGANIZATION a on P1.FIN_UNIT_ID=a.ORGID 
+WHERE P1.PROJECT_STATUS not in ('9','N') AND P1.IS_PUBLIC = 'Y' 
+		) t  where t.CUSTID=#custid# ORDER BY t.projectname;
+    ]]></select>
+    <select id="getorg" parameterClass="java.util.HashMap" resultMap="resultMap3"><![CDATA[
+     	select a.orgid,(b.orgname+'---'+a.orgname) as orgname,a.parentorgid from OM_ORGANIZATION a,OM_ORGANIZATION b,RD_PROJECT c
+			where a.parentorgid=b.orgid and c.FIN_UNIT_ID=a.ORGID and
+			a.orgid not in (select parentorgid from OM_ORGANIZATION where parentorgid is not null)
+		    and c.PROJECT_ID=#projectID#
+		 order by a.orgseq
+	]]></select>
+    <select id="getAllCusts" parameterClass="java.lang.String" resultMap="custMap">select case when p3.CUSTID='0' then '1' else p3.CUSTID end as CUSTID,p3.CUSTNAME 
+		from MIS_CUSTINFO p3
+		where (p3.CUSTNAME like #custname#
+	    or p3.CUSTJC like #custname#) or p3.CUSTID=0
+	    and #custname# is not null and #custname# !=''
+	    order by p3.CUSTID</select>
+    <select id="getLaborDetail" parameterClass="java.util.HashMap" resultMap="detailtMap"><![CDATA[
+    	select a.LABOR_DETAIL_ID,CONVERT(varchar(10), a.LABOR_DATE, 120) as LABOR_DATE,a.ACT_HOURS,a.OTW_HOURS,case when b.CUSTNAME is null or b.CUSTNAME='' then '无客户对应' else b.CUSTNAME end as CUSTNAME,c.PROJECT_NAME,d.ORGNAME,e.TASKNAME,a.REP_CONTENT,a.STATUS,f.DICTNAME as STATUSNAME
+		from RD_LABOR_DETAIL a left join MIS_CUSTINFO b on a.CUSTID=b.CUSTID
+		left join RD_PROJECT c on a.PROJECT_ID=c.PROJECT_ID
+		left join OM_ORGANIZATION d on a.SALES_NAME=d.ORGID
+		left join RD_TASKLIST e on a.TASKLIST=e.TASKLIST
+    LEFT JOIN EOS_DICT_ENTRY f on f.DICTTYPEID='AME_LABOR_STATUS' and f.DICTID=a.STATUS
+		where USER_ID=#userid# and LABOR_DATE BETWEEN #startdate# and #enddate#
+		ORDER BY a.LABOR_DATE
+    ]]></select>
+    <select id="getLaborConfirm" parameterClass="java.util.HashMap" resultMap="confirmMap"><![CDATA[
+    	select a.LABOR_DETAIL_ID,CONVERT(varchar(10), a.LABOR_DATE, 120) as LABOR_DATE,a.ACT_HOURS,a.OTW_HOURS,case when b.CUSTNAME is null or b.CUSTNAME='' then '无客户对应' else b.CUSTNAME end as CUSTNAME,f.EMPNAME,
+		       case when c.PROJECT_NAME is null then '' else c.PROJECT_NAME END
+		       +case when c.PROJECT_NO is null then '' else  '('+c.PROJECT_NO+')' END as PROJECT_NAME,
+		       d.ORGNAME,e.TASKNAME,a.REP_CONTENT,a.STATUS,a.BENEFCONFQ,g.USERID as benefitid,c.MANAGER
+		from RD_LABOR_DETAIL a left join MIS_CUSTINFO b on a.CUSTID=b.CUSTID
+		left join RD_PROJECT c on a.PROJECT_ID=c.PROJECT_ID
+		left join OM_ORGANIZATION d on a.SALES_NAME=d.ORGID
+		left join RD_TASKLIST e on a.TASKLIST=e.TASKLIST
+	    LEFT JOIN OM_EMPLOYEE f on f.USERID=a.USER_ID
+			left join OM_EMPLOYEE g on g.EMPID=d.MANAGERID
+	    where a.LABOR_DETAIL_ID=#laborDetailId#
+		ORDER BY a.LABOR_DATE
+    ]]></select>
+    <select id="getsalesorg" parameterClass="java.util.HashMap" resultMap="resultMap3"><![CDATA[
+     	select a.orgid,(b.orgname+'---'+a.orgname) as orgname,a.parentorgid from OM_ORGANIZATION a,OM_ORGANIZATION b
+		where a.parentorgid=b.orgid and 
+		a.orgid not in (select parentorgid from OM_ORGANIZATION where parentorgid is not null) and a.STATUS='running'
+		order by a.orgseq
+	]]></select>
+    <select id="getminDate" resultMap="resultMap4"><![CDATA[
+     	select DATEADD(dd, -cast(DICTNAME as int)+1, CONVERT(varchar(100), GETDATE(), 23)) as minDate
+		from EOS_DICT_ENTRY where DICTTYPEID='AME_SYSCONF' and DICTID='LABOR_DATE_LIMIT'
+	]]></select>
+    <select id="getIsWorkDay" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+    	select x.ISWORKDAY,datename(weekday,y.labordate) as weekday,
+		case when ((datename(weekday,y.labordate) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+		 or (datename(weekday,y.labordate) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null))) then 1 else 0 end as isneed
+		from
+		(select #labordate# as labordate) y LEFT JOIN MIS_ISWORKDAY x on  x.MODDATE=y.labordate
+    ]]></select>
+    <select id="getTBorg" parameterClass="java.util.HashMap" resultMap="resultMap3"><![CDATA[
+    	select a.orgid,(b.orgname+'---'+a.orgname) as orgname,a.parentorgid from OM_ORGANIZATION a,OM_ORGANIZATION b,OM_EMPORG c,OM_EMPLOYEE d
+		where a.parentorgid=b.orgid and c.ORGID=a.ORGID and c.EMPID=d.EMPID and d.USERID=#userid# and a.STATUS='running' order by a.orgseq
+	]]></select>
+    <update id="upErpPsOut"><![CDATA[UPDATE ERP_PS_OUT set TRANSCOSTS = #servicestaticcost#/#laborcost#*costs ,CONRATIO=#transconf# 
+									   where pk_corp in (1,2) and MONTH=#month# and YEAR=#year#]]></update>
+</sqlMap>

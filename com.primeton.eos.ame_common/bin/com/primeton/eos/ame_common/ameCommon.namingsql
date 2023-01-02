@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.ameCommon">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="PROJECT_ID" javaType="string" property="projectid"/>
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="PROJECT_NO" javaType="string" property="projectNo"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="EXPENDDATE" javaType="date" property="expenddate"/>
+        <result column="ENDDATE" javaType="date" property="enddate"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="ORGSEQ" javaType="string" property="orgseq"/>
+        <result column="ORGID" javaType="string" property="orgid"/>
+        <result column="SYBID" javaType="string" property="sybid"/>
+        <result column="SYBNAME" javaType="string" property="sybname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="ORGID" javaType="string" property="orgid"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="parentorgid" javaType="int" property="parentorgid"/>
+        <result column="orgseq" javaType="string" property="orgseq"/>
+    </resultMap>
+    <select id="selectProid" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    	SELECT t.PROJECT_ID,t.PROJECT_NAME,t.PROJECT_NO,b.CUSTNAME,c.ORGNAME,d.EMPNAME,t.EXPENDDATE,t.ENDDATE  FROM RD_PROJECT t 
+		LEFT JOIN CS_CONTRACT a on t.CONTNUM = a.CONTNUM
+		LEFT JOIN MIS_CUSTINFO b on t.CUSTID = b.CUSTID
+		LEFT JOIN OM_ORGANIZATION c on t.FIN_UNIT_ID = c.ORGID
+		LEFT JOIN OM_EMPLOYEE d on t.MANAGER = d.USERID
+		WHERE (SELECT actsum/a.contsum FROM(SELECT sum(actsum) as actsum,max(confirmday) as confirmday FROM CS_REVE_FORECAST where status = '3' and CONTNUM = a.contnum ) t where 
+		confirmday between #date1# and #date2#) >= 0.9
+	]]></select>
+    <!-- 根据userid获取其所在部门信息（可能存在多个） -->
+    <select id="selectOrgsByid" parameterClass="java.util.HashMap" resultClass="org.gocom.abframe.dataset.organization.OmOrganization"><![CDATA[
+    	SELECT b.* FROM OM_EMPORG a,OM_ORGANIZATION b
+		where EMPID = (SELECT EMPID FROM OM_EMPLOYEE where userid = #userid#) and a.ORGID = b.ORGID
+	]]></select>
+    <!-- 根据orgseq获取其所有orgid -->
+    <select id="selectOrgids" parameterClass="java.util.HashMap" resultMap="resultMap2"><![CDATA[
+    	select stuff((
+		select ','+CAST(ORGID as VARCHAR)
+		from OM_ORGANIZATION WHERE ORGSEQ LIKE (SELECT ORGSEQ FROM OM_ORGANIZATION where ORGID=#orgid#)+'%' for xml path('')),1,1,'') as ORGID
+	]]></select>
+    <!-- 根据orgseq获取其所有orgid -->
+    <select id="selectAuthOrgs" parameterClass="java.util.HashMap" resultMap="resultMap3">
+    	select orgid, orgname,parentorgid,orgseq 
+		from om_organization where 1=1
+    	<isNotNull property="cond">and ($cond$)</isNotNull>
+    	order by orglevel ,orgseq,sortno asc
+	</select>
+    <!-- 根据orgseq获取其所有orgid -->
+    <select id="selectAuthOrgs1" parameterClass="java.util.HashMap" resultMap="resultMap3">
+    	select t.orgid, t.parentorgid,t.orgseq,
+    	(case when t.orglevel=2 then '| -'+t.orgname when t.orglevel=3 then '| | -'+t.orgname when t.orglevel=4 then '| | | -'+
+    	t.orgname when t.orglevel=5 then '| | | | -'+t.orgname when t.orglevel=6 then '| | | | | -'+t.orgname else t.orgname end) as orgname
+FROM(
+SELECT t.*,u.sortno as sortno1,s.sortno as sortno2 
+from om_organization t
+		LEFT JOIN (select orgseq,orglevel,sortno from om_organization) u on t.orgseq like u.ORGSEQ+'%' and u.ORGLEVEL = '2'
+		LEFT JOIN (select orgseq,orglevel,sortno from om_organization) s on  t.orgseq like s.ORGSEQ+'%' and s.ORGLEVEL = '3')  t
+		 where 1=1
+<isNotNull property="cond">and ($cond$)</isNotNull>
+    	order by SORTNO1,SORTNO2,ORGSEQ
+	</select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="id" javaType="String" property="id"/>
+        <result column="name" javaType="String" property="name"/>
+        <result column="OEMAIL" javaType="String" property="oemail"/>
+    </resultMap>
+    <select id="getVpByOrgid" resultMap="resultMap4">
+        <!--根据人员userid获取主管 --><![CDATA[
+		
+	WITH CTE AS(
+    	SELECT doc = CONVERT(xml,'<v>'+REPLACE(orgseq,'.','</v><v>')+'</v>') FROM OM_ORGANIZATION where orgid = (SELECT ORGID FROM OM_EMPLOYEE WHERE USERID =#userid#)
+	)
+	,CTE2 AS(
+	    SELECT A.x.value('.','varchar(10)') org FROM CTE CROSS APPLY doc.nodes('//v') AS A(x)
+	)
+	SELECT userid as id,empname as name, OEMAIL FROM OM_EMPLOYEE WHERE empid = 
+	(SELECT managerid FROM OM_ORGANIZATION WHERE orgid in (SELECT CAST (org as int ) FROM cte2) AND ORGDEGREE = #orgdegree#)
+    ]]></select>
+    <select id="getVpByOrg" resultMap="resultMap4">
+        <!--根据人员orgid获取主管 --><![CDATA[
+		
+	WITH CTE AS(
+    	SELECT doc = CONVERT(xml,'<v>'+REPLACE(orgseq,'.','</v><v>')+'</v>') FROM OM_ORGANIZATION where orgid = #orgid#
+	)
+	,CTE2 AS(
+	    SELECT A.x.value('.','varchar(10)') org FROM CTE CROSS APPLY doc.nodes('//v') AS A(x)
+	)
+	SELECT userid as id,empname as name, OEMAIL FROM OM_EMPLOYEE WHERE empid = 
+	(SELECT managerid FROM OM_ORGANIZATION WHERE orgid in (SELECT CAST (org as int ) FROM cte2) AND ORGDEGREE = #orgdegree#)
+    ]]></select>
+    <update id="moveCheckUpdateLevelAndSeq" parameterClass="java.util.HashMap"><![CDATA[
+    UPDATE CS_INCOMECHECKLIST
+	SET [LEVEL] = [LEVEL] +#toCheckLevel#-#fromCkeckLevel#, SEQ =#toCheckSeq# + SUBSTRING (
+		SEQ,
+		LEN(#fromCheckSeq#) + 1,
+		LEN(SEQ) - LEN(#fromCheckSeq#)
+	)
+	WHERE
+		SEQ LIKE #checkSeq#+ '%'
+    ]]></update>
+    <update id="moveTopCheckUpdateLevelAndSeq" parameterClass="java.util.HashMap"><![CDATA[
+    UPDATE CS_INCOMECHECKLIST SET [LEVEL]=[LEVEL]+#toCheckLevel#,SEQ=#toCheckSeq#+SEQ WHERE SEQ LIKE #checkSeq#+'%'
+    ]]></update>
+    <resultMap class="commonj.sdo.DataObject" id="resultMaprole">
+        <result column="rolename" javaType="String" property="rolename"/>
+    </resultMap>
+    <!--根据角色id，获取角色类型-->
+    <select id="getRolename" parameterClass="java.lang.String" resultMap="resultMaprole"><![CDATA[
+			SELECT  rolename = STUFF(( 
+			SELECT ',' + rolename FROM   AC_ROLE where   PATINDEX('%,' + RTRIM(roleid) + ',%',',' + cast(#roles# as varchar) + ',')>0
+                 ORDER BY PATINDEX('%,' + RTRIM(roleid) + ',%',',' + cast(#roles# as varchar) + ',') FOR XML PATH('')), 1, 1,'');
+			
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapOrg">
+        <result column="orgid" javaType="int" property="orgid"/>
+    </resultMap>
+    <!--根据empid获取有权得机构(机构主管及业务合伙人)-->
+    <select id="getAuthOrgById" parameterClass="java.util.HashMap" resultMap="resultMapOrg"><![CDATA[
+			WITH CTE AS(
+		    	SELECT doc = CONVERT(xml,'<v>'+REPLACE(BUSIPARTER,',','</v><v>')+'</v>'),ORGID,MANAGERID FROM OM_ORGANIZATION 
+			)
+
+		,CTE2 AS(
+		    SELECT A.x.value('.','varchar(10)') userid,orgid FROM CTE CROSS APPLY doc.nodes('//v') AS A(x)
+		)
+		SELECT DISTINCT a.ORGID FROM OM_ORGANIZATION a
+		LEFT JOIN cte2 on a.ORGID = cte2.orgid WHERE a.MANAGERID = #empid# or CTE2.userid = (SELECT userid FROM OM_EMPLOYEE WHERE empid = #empid#)
+	
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapOrg1">
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="ORGSEQ" javaType="string" property="orgseq"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+    </resultMap>
+    <!--获取机构主管最低审批机构-->
+    <select id="getSpOrg" parameterClass="java.util.HashMap" resultMap="resultMapOrg1"><![CDATA[
+			
+
+WITH CTE AS(
+		    	SELECT doc = CONVERT(xml,'<v>'+REPLACE(REPLEADER,',','</v><v>')+'</v>'),ORGID,MANAGERID,ORGLEVEL FROM OM_ORGANIZATION 
+WHERE #orgseq# like orgseq+'%'
+			)
+
+		,CTE2 AS(
+		    SELECT A.x.value('.','varchar(10)') userid,orgid,ORGLEVEL FROM CTE CROSS APPLY doc.nodes('//v') AS A(x)
+		)
+
+,CTE3 AS (
+	SELECT min(orglevel) as orglevel FROM CTE WHERE MANAGERID = (SELECT empid FROM OM_EMPLOYEE WHERE userid = #userid#)
+)
+,CTE4 AS (
+	SELECT min(orglevel) as orglevel FROM CTE2 WHERE userid = #userid#
+)
+,CTE5 AS (
+SELECT CASE WHEN (SELECT ORGLEVEL FROM CTE3) is NULL THEN (SELECT ORGLEVEL FROM CTE4) 
+ WHEN (SELECT ORGLEVEL FROM CTE4) is NULL THEN (SELECT ORGLEVEL FROM CTE3) 
+ WHEN (SELECT ORGLEVEL FROM CTE4) is NOT NULL and (SELECT ORGLEVEL FROM CTE3) is NOT NULL AND
+(SELECT ORGLEVEL FROM CTE4)<(SELECT ORGLEVEL FROM CTE3)
+ THEN (SELECT ORGLEVEL FROM CTE4) ELSE (SELECT ORGLEVEL FROM CTE3) end as ORGLEVEL,
+ CASE WHEN (SELECT ORGLEVEL FROM CTE3) is NULL THEN 'fg'
+ WHEN (SELECT ORGLEVEL FROM CTE4) is NULL THEN 'zg' 
+ WHEN (SELECT ORGLEVEL FROM CTE4) is NOT NULL and (SELECT ORGLEVEL FROM CTE3) is NOT NULL AND
+(SELECT ORGLEVEL FROM CTE4)<(SELECT ORGLEVEL FROM CTE3)
+ THEN 'fg' ELSE 'zg' end as flag
+)
+	SELECT ORGID,ORGSEQ,ORGNAME FROM OM_ORGANIZATION WHERE ORGID =
+			(SELECT CASE WHEN b.flag='fg' THEN PARENTORGID  WHEN b.flag='zg' and a.repleader is not null then ORGID 
+WHEN b.flag='zg' and a.repleader is null then PARENTORGID 
+ END as orgid FROM OM_ORGANIZATION a,CTE5 b 
+WHERE ORGID in (SELECT ORGID FROM cte) 
+			and a.ORGLEVEL = b.orglevel)
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapDict">
+        <result column="FILTER1" javaType="string" property="filter1"/>
+        <result column="FILTER2" javaType="string" property="filter2"/>
+    </resultMap>
+    <!--根据业务字典类型和业务字典代码查询filter1，filter2-->
+    <select id="getDictFilter" parameterClass="java.util.HashMap" resultMap="resultMapDict"><![CDATA[
+			SELECT FILTER1,FILTER2 FROM EOS_DICT_ENTRY WHERE DICTTYPEID = #dicttypeid# AND DICTID = #dictid#
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapEMp">
+        <result column="empname" javaType="string" property="empname"/>
+    </resultMap>
+    <!--根据逗号拼接的userid获取拼接的empname-->
+    <select id="getEmpname" parameterClass="java.util.HashMap" resultMap="resultMapEMp"><![CDATA[
+			SELECT stuff((select ',' + empname from OM_EMPLOYEE WHERE userid in ($userid$) order by CHARINDEX(ltrim(userid),#userid# ) for xml path('')),1,1,'') as empname
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapEMp1">
+        <result column="oemail" javaType="string" property="oemail"/>
+    </resultMap>
+    <!--根据逗号拼接的userid获取拼接的邮箱-->
+    <select id="getEmpEmail" parameterClass="java.util.HashMap" resultMap="resultMapEMp1"><![CDATA[
+			SELECT stuff((select ',' + oemail from OM_EMPLOYEE WHERE userid in ($userid$) for xml path('')),1,1,'') as oemail
+    	]]></select>
+    <!--查询在职人员-->
+    <select id="getAllEmp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	 SELECT EMPID,EMPNAME+'('+EMPCODE+')' as EMPNAME,MOBILENO,EMPCODE,USERID
+			FROM OM_EMPLOYEE
+            WHERE empstatus = 'on'
+			<isNotNull property="name">and EMPNAME like '%'+#name#+'%'</isNotNull>
+    </select>
+    <!--查询所有人员-->
+    <select id="getEmp1" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	SELECT userid,empname,MOBILENO,EMPCODE,oemail,b.ORGNAME
+			FROM OM_EMPLOYEE a 
+			left join OM_ORGANIZATION b on a.ORGID=b.ORGID
+      		WHERE 1=1
+            <isNotNull property="userId">and EMPID in  ($userId$)</isNotNull>
+        <isNotNull property="name">and EMPNAME like '%'+#name#+'%'</isNotNull>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapSale">
+        <result column="flag" javaType="string" property="flag"/>
+    </resultMap>
+    <!--判断机构是否是销售-->
+    <select id="isSale" parameterClass="java.lang.Integer" resultMap="resultMapSale"><![CDATA[
+			SELECT CASE WHEN ORGTYPE = '2' and (SELECT count(*) FROM OM_ORGANIZATION WHERE PARENTORGID=#orgid#)=0 then 1 else 0 end as flag
+ FROM OM_ORGANIZATION WHERE ORGID= #orgid#
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapfunc">
+        <result column="FUNCCODE" javaType="string" property="funccode"/>
+    </resultMap>
+    <!--获取有权限的操作功能按钮-->
+    <select id="getOperatorButton" parameterClass="java.util.HashMap" resultMap="resultMapfunc"><![CDATA[
+			SELECT DISTINCT t.FUNCCODE FROM AC_FUNCTION t
+			WHERE t.FUNCCODE NOT in (SELECT DISTINCT a.FUNCCODE FROM AC_FUNCTION a
+			LEFT JOIN AC_ROLEFUNC b on a.FUNCCODE = b.FUNCCODE
+			LEFT JOIN AC_OPERATORROLE c ON b.ROLEID = c.ROLEID
+			LEFT JOIN OM_EMPLOYEE d on c.OPERATORID = d.OPERATORID
+			WHERE d.USERID = #userid# and a.FUNCCODE in($funccode$)
+			and a.functype = '4') and t.FUNCCODE in($funccode$)
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultorgid">
+        <result column="orgid" javaType="string" property="orgid"/>
+    </resultMap>
+    <!--根据机构id获取对应二级部门-->
+    <select id="getEjOrg" parameterClass="java.lang.String" resultMap="resultorgid"><![CDATA[
+			SELECT b.ORGID FROM OM_ORGANIZATION a,OM_ORGANIZATION b 
+			WHERE a.ORGSEQ like b.ORGSEQ+'%' and b.ORGLEVEL = '2' and a.ORGID = #orgid#
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultpart">
+        <result column="ROELPART" javaType="string" property="rolepart"/>
+        <result column="EMPPART" javaType="string" property="emppart"/>
+    </resultMap>
+    <!--获取流程活动参与者设置-->
+    <select id="getWfpartiSet" parameterClass="java.util.HashMap" resultMap="resultpart"><![CDATA[
+			SELECT aa.ROELPART,aa.EMPPART FROM AME_FLOW_ACT_PARTI aa LEFT JOIN
+				OM_ORGANIZATION bb on aa.USEORG = bb.orgid
+				LEFT JOIN OM_ORGANIZATION cc on cc.orgseq like bb.orgseq +''+'%'
+				WHERE cc.orgid = (SELECT ORGID FROM OM_EMPLOYEE WHERE userid = #userid#) and PROCESSDEFNAME= #processDef# and ACTIVITYDEFID=#activeDef# AND bb.ORGLEVEL=
+
+(SELECT max (bb.orglevel) FROM AME_FLOW_ACT_PARTI aa LEFT JOIN
+				OM_ORGANIZATION bb on aa.USEORG = bb.orgid
+				LEFT JOIN OM_ORGANIZATION cc on cc.orgseq like bb.orgseq +''+'%'
+				WHERE cc.orgid = (SELECT ORGID FROM OM_EMPLOYEE WHERE userid = #userid#) and PROCESSDEFNAME=#processDef# and ACTIVITYDEFID=#activeDef#)
+
+    	]]></select>
+</sqlMap>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_pur.purSub.QueryPurSubCont">
+        <config db="default" type="sql"><![CDATA[select a.*,c.orgid,c.ORGSEQ,d.CUSTNAME,e.PROJECT_NAME linProjectname,b.EMPNAME applyempname from PUR_SUBCONT a
+LEFT JOIN OM_EMPLOYEE b on a.APPLYEMP=b.USERID
+LEFT JOIN OM_ORGANIZATION c on b.ORGID=c.ORGID
+LEFT JOIN MIS_CUSTINFO d on a.CUSTID=d.CUSTID
+LEFT JOIN RD_PROJECT e on a.PROJECTNO=e.PROJECT_NO
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.purSub.QueryPurReportForm">
+        <config db="default" type="sql"><![CDATA[	SELECT
+	a.id,
+	a.pro_app_code,
+	a.pro_app_name,
+	c.orgname proAppOrgName,
+	a.plan_id,
+	a.pro_app_obj_type,
+	b.contract_no,
+	b.contract_name,
+	b.act_contract_sum/10000 actContractSum,
+	b.signatory,
+	b.signing_date,
+	b.issupagreement,
+	e.package_type,
+	d.type,
+	a.pro_app_apply_price,
+	a.cost_from,
+	g.EMPNAME agentName,
+	h.EMPNAME chargeName,
+	i.ORGNAME proAppAppOrgname,
+	a.CREATED_TIME,
+	a.pro_app_impl_time,
+	e.package_code,
+	d.purchase_number,
+	a.status,
+	j.CUSTNAME AS signatoryname,
+	j.isgroupqualified,
+	k.codes,
+	l.sums,
+	p.electron,
+	concat(round(cast(isnull(cast(p.electron*1.0/l.sums as decimal(10,6)),0)*100 as decimal(10,2)),2),'%') as focusrate,
+	q.prices,
+	concat(round(cast(isnull(cast(q.prices*1.0/l.sums as decimal(10,6)),0)*100 as decimal(10,2)),2),'%') as electronrate,
+	r.publics,
+	concat(round(cast(isnull(cast(r.publics*1.0/l.sums as decimal(10,6)),0)*100 as decimal(10,2)),2),'%') as publicrate
+FROM
+	zh_project_approval a
+	LEFT JOIN zh_pay_contract b ON a.id= b.pro_app_id 
+	AND b.issupagreement = '0'
+	LEFT JOIN OM_ORGANIZATION c ON a.pro_app_org_id= c.ORGCODE
+	LEFT JOIN zh_purchase_plan d ON a.plan_id = d.id
+	LEFT JOIN zh_purchase_package e ON e.proapp_id = a.id
+	LEFT JOIN RD_PROJECT f ON f.project_id = a.project_id
+	LEFT JOIN OM_EMPLOYEE g ON a.pro_app_agent_userid= g.empcode
+	LEFT JOIN OM_EMPLOYEE h ON a.pro_app_charge_userid= h.empcode
+	LEFT JOIN OM_ORGANIZATION i ON a.approval_org_id= i.ORGCODE
+	LEFT JOIN PUR_SUPPLIER j ON b.signatory= j.CUSTID
+	LEFT JOIN 
+	(SELECT zp.plan_id,stuff(
+	( 
+		SELECT ','+code FROM zh_purchase_plan_item zp1 WHERE zp1.plan_id=zp.plan_id for xml path('')
+	),1,1,'')
+as codes FROM zh_purchase_plan_item zp GROUP BY zp.plan_id) as k ON a.plan_id = k.plan_id
+,
+(
+	SELECT sum(cast(pro_app_apply_price as decimal(10,6))) as sums FROM zh_project_approval
+) as l,
+(
+	SELECT sum(cast(budget_amount as decimal(10,6))) as electron  FROM
+	(SELECT m.type,m.budget_amount from zh_project_approval n
+	LEFT join  zh_purchase_plan m on n.plan_id = m.id) as o
+	WHERE type in('1','2')
+) as p,
+(SELECT sum(cast(price as decimal(10,6))) as prices from zh_purchase_package WHERE package_type in('电子商城采购')) as q,
+(SELECT sum(cast(price as decimal(10,6))) as publics from zh_purchase_package WHERE is_electric_mining in('1')) as r]]></config>
+    </QueryEntity>
+</QueryEntityList>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.ameRedEnvelope">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="AMOUNT" javaType="Decimal" property="amount"/>
+        <result column="ACTNAME" javaType="string" property="actname"/>
+        <result column="REMARK" javaType="string" property="remark"/>
+        <result column="RETURNCODE" javaType="string" property="returncode"/>
+        <result column="TDATE" javaType="DATE" property="tdate"/>
+        <result column="OPERATORNAME" javaType="string" property="operatorname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="ID" javaType="string" property="id"/>
+        <result column="BILLNO" javaType="string" property="billno"/>
+        <result column="NONCE" javaType="string" property="nonce"/>
+        <result column="SIGN" javaType="string" property="sign"/>
+        <result column="WXAPPID" javaType="string" property="wxappid"/>
+        <result column="OPENID" javaType="string" property="openid"/>
+        <result column="AGENTID" javaType="string" property="agentid"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="AMOUNT" javaType="Decimal" property="amount"/>
+        <result column="NUM" javaType="int" property="num"/>
+        <result column="SENDNAME" javaType="string" property="sendname"/>
+        <result column="WISHING" javaType="string" property="wishing"/>
+        <result column="CLIENTIP" javaType="string" property="clientip"/>
+        <result column="ACTNAME" javaType="string" property="actname"/>
+        <result column="REMARK" javaType="string" property="remark"/>
+        <result column="RETURNCODE" javaType="string" property="returncode"/>
+        <result column="TDATE" javaType="DATE" property="tdate"/>
+        <result column="ERRORDES" javaType="string" property="errordes"/>
+        <result column="TEMPLATEID" javaType="Long" property="templateid"/>
+        <result column="CHANNEL" javaType="string" property="channel"/>
+        <result column="OPERATORNAME" javaType="string" property="operatorname"/>
+    </resultMap>
+    <!--微信红包记录查询
+    tdateMax需要转化，因为nui传过来的参数，不包含时分秒的，所以需要转化。
+    -->
+    <select id="queryRedEnvelope" parameterClass="java.util.HashMap" resultMap="resultMap1">
+    	SELECT c.OPERATORNAME, a.USERID, convert(decimal(8,2),round(a.AMOUNT/100.00,2)) AS AMOUNT, a.ACTNAME, a.REMARK, a.RETURNCODE, a.TDATE
+ 		FROM AME_RED_ENVELOPES a LEFT JOIN AC_OPERATOR c ON a.USERID=c.USERID
+ 		WHERE 1=1
+ 			<isNotNull property="sendname">and a.SENDNAME like '%'+ #sendname# +'%'</isNotNull>
+        <isNotNull property="actname">and a.ACTNAME like '%'+ #actname# +'%'</isNotNull>
+        <isNotNull property="wishing">and a.WISHING like '%'+ #wishing# +'%'</isNotNull>
+        <isNotNull property="tdateMin"><![CDATA[and a.TDATE >= #tdateMin#]]></isNotNull>
+        <isNotNull property="tdateMax"><![CDATA[ and CONVERT(varchar(100), a.TDATE, 23) <= #tdateMax#]]></isNotNull>
+        <isNotNull property="username">and c.OPERATORNAME like '%'+ #username# +'%'</isNotNull>
+        <isNotNull property="userid">and a.USERID like '%'+ #userid# +'%'</isNotNull>
+        <isNotNull property="returncode">and a.RETURNCODE = #returncode#</isNotNull>
+  		ORDER BY A.ID DESC
+    </select>
+    <!--查询今天是否通过该模板成功发过红包 -->
+    <select id="checkRedEnvelope" parameterClass="java.util.HashMap" resultMap="resultMap">SELECT a.ID, a.BILLNO, a.NONCE, a.SIGN, a.WXAPPID, a.OPENID, a.AGENTID, a.USERID, 
+    		a.AMOUNT, a.NUM, a.SENDNAME, a.WISHING, a.CLIENTIP, a.ACTNAME, a.REMARK, a.RETURNCODE, 
+    		a.TDATE, a.ERRORDES, a.TEMPLATEID, a.CHANNEL,'' as OPERATORNAME
+ 		FROM AME_RED_ENVELOPES a
+ 		WHERE a.USERID = #userid#
+ 		     and a.TEMPLATEID = #tempid#
+ 		     AND DATEDIFF(DAY,a.TDATE,GETDATE())=0
+ 		     AND a.RETURNCODE='SUCCESS'</select>
+</sqlMap>

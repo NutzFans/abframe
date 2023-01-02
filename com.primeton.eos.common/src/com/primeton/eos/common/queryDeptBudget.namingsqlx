@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:mengyy -->
+<sqlMap>
+    <resultMap class="com.bos.mp.common.performance.ErprptTDeptbudget" id="resultMap">
+    	<result column="companyNo" javaType="string" property="companyid"/>
+    	<result column="deptno" javaType="string" property="deptno"/>
+    	<result column="deptexptypeid" javaType="string" property="erprptTDeptexptype/deptexptypeid"/>
+    	<result column="year" javaType="string" property="year"/>
+    	<result column="month" javaType="string" property="month"/>
+    	<result column="actamt" javaType="Decimal" property="actamt"/>
+    </resultMap>
+    <!-- 1、加载日常、差旅报销单（按报销部门加载其所有报销费用）b.checkFlg='4'表示“财务已记账”，b.checkinfo='2'按受益部门记账，其他按报销部门记账 
+    	 1.1、查询按报销部门记账的报销单，checkinfo is null checkinfo !='2'
+    	 1.2、查询按受益部门记账的报销单，checkinfo ='2'，单受益部门
+    	 1.3、查询按受益部门记账的报销单，checkinfo ='2'，多受益部门 
+    	 2、deptExpTypeID:311,加载外包服务数据，增加一个采购计提的来源，取记账日期在当月的采购计提的含税金额数据 
+    	 3、deptExpTypeID:2011,加载并统计日常、差旅报销单中的“国内差旅(部门差旅)”费用,记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门=受益部门,记账方式为“按受益部门记账”
+    	 3.1、记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门=受益部门
+    	 3.2、记账方式为“按受益部门记账”(b.checkinfo ='2')
+    	 4、deptExpTypeID:2012,加载并统计日常、差旅报销单中的“国内差旅(可出售差旅)”费用,记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门
+    	 5、deptExpTypeID:5001,加载并统计日常、差旅报销单中的“外部买入结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	 6、deptExpTypeID:500101,加载并统计日常、差旅报销单中的“外部买入产品部费用”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	 7、deptExpTypeID:500102,加载并统计日常、差旅报销单中的“其他外部买入结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	 8、deptExpTypeID:5003,加载并统计工时中的“外部买入结算”，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	 9、deptExpTypeID:500301,加载并统计工时中的“外部买入产品部结算”，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	 10、deptExpTypeID:500302,加载并统计工时中的“其他外部买入结算”，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	 11、加载部门费用手工调整表
+    	 12、用于区域级公共费用分摊
+    -->
+    <select id="queryDeptBudgetbyexp" parameterClass="java.util.HashMap" resultMap="resultMap">
+   	select t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,sum(t.actAmt) actAmt,flag from (
+	select t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,sum(t.actAmt) actAmt, 
+	(CASE when (SELECT COUNT(*) from dbo.ERPRPT_T_DeptBudget where deptNo =t.deptNo and year=t.year and month=t.month and deptExpTypeID=t.deptExpTypeID and companyID=t.companyNo)=1
+	then 1 else 0 end) as flag
+	from (
+		select companyNo,deptNo,deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+	    	select '1' companyNo,b.EXPNO,d.FINTYPE,a.EXPORGID deptNo,c.deptExpTypeID,d.CONFMON amt
+	    	from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,ERPRPT_T_DeptExpVsExpType c
+	    	where a.REIID=b.REIID and b.EXPID=d.EXPID and d.FINTYPE=c.expTypeID
+        	and (a.CHECKINFO is null or a.checkinfo !='2') and Year(a.acctDate)=#year# and Month(a.acctDate)=#month#
+			and a.EXPTYPE in (1,2,'C','E')
+	    	union all
+	        select '1' companyNo,b.EXPNO,e.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,e.CONFMON amt
+	        from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,EXP_REIDETAIL e,ERPRPT_T_DeptExpVsExpType c
+	        where a.EXPID=b.EXPID and b.REIID=d.REIID and b.EXPID=e.EXPID and e.FINTYPE=c.expTypeID and d.EXPTYPE in (1,2,'C','E')
+	        and d.ISMULTI='0' and d.checkinfo ='2' and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# 
+	  		union all
+	  	    select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and a.FINTYPE=c.expTypeID and d.EXPTYPE in (1,2,'C','E')
+	    	and d.ISMULTI='1' and d.checkinfo ='2' and Year(d.acctDate)=#year# and Month(d.acctDate)=#month#    
+    	) main
+	    group by  companyNo,deptNo,deptExpTypeID
+		UNION ALL
+		select companyNo,deptNo,'311' as deptExpTypeID,#year# as year,#month# as month,sum(ACCRUEDMONEY) actAmt from (
+			select '2' as companyNo,SALESID as deptNo,ACCRUEDMONEY  from PUR_PRESETTLE where YEAR(ACCTDATE)=#year# and month(ACCTDATE)=#month#
+	  	) main
+	  	group by  companyNo,deptNo
+		UNION ALL
+		select companyNo,deptNo,'2011' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+	    	select '1' companyNo,b.EXPNO,e.FINTYPE,d.EXPORGID as DEPTNO,c.deptExpTypeID,e.CONFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,EXP_REIDETAIL e,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and b.EXPID=e.EXPID and e.FINTYPE=c.expTypeID and c.deptExpTypeID = 201 and d.EXPORGID = a.BENEFORGID
+	    	and (d.checkinfo is null or d.checkinfo !='2') and d.ISMULTI=0 and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# and d.EXPTYPE in (1,2,'C','E')
+	    	union all      
+			select '1' companyNo,b.EXPNO,a.FINTYPE,d.EXPORGID as DEPTNO,c.deptExpTypeID,a.BENEFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and a.FINTYPE=c.expTypeID and c.deptExpTypeID = 201 and d.EXPORGID = a.BENEFORGID
+	    	and (d.checkinfo is null or d.checkinfo !='2') and d.ISMULTI=1 and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# and d.EXPTYPE in (1,2,'C','E')
+			union all 
+			select '1' companyNo,b.EXPNO,e.FINTYPE,a.BENEFORGID as DEPTNO,c.deptExpTypeID,e.CONFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,EXP_REIDETAIL e,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and b.EXPID=e.EXPID and e.FINTYPE=c.expTypeID and c.deptExpTypeID = 201 
+			and d.checkinfo ='2' and d.ISMULTI=0 and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# and d.EXPTYPE in (1,2,'C','E')
+			union all
+			select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID as DEPTNO,c.deptExpTypeID,a.BENEFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and a.FINTYPE=c.expTypeID and c.deptExpTypeID = 201
+	  		and d.checkinfo ='2' and d.ISMULTI=1 and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# and d.EXPTYPE in (1,2,'C','E')  
+	  	) main
+	  	group by  companyNo,deptNo
+		UNION ALL
+		select companyNo,deptNo,'2012' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+			select '1' companyNo,b.EXPNO,e.FINTYPE,d.EXPORGID as DEPTNO,c.deptExpTypeID,e.CONFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,EXP_REIDETAIL e,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and b.EXPID=e.EXPID and e.FINTYPE=c.expTypeID and c.deptExpTypeID = 201 and d.EXPORGID != a.BENEFORGID
+	    	and (d.checkinfo is null or d.checkinfo !='2') and d.ISMULTI=0 and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# and d.EXPTYPE in (1,2,'C','E')
+	    	union all      
+			select '1' companyNo,b.EXPNO,a.FINTYPE,d.EXPORGID as DEPTNO,c.deptExpTypeID,a.BENEFMON amt
+	    	from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI d,ERPRPT_T_DeptExpVsExpType c
+	    	where a.EXPID=b.EXPID and b.REIID=d.REIID and a.FINTYPE=c.expTypeID and c.deptExpTypeID = 201 and d.EXPORGID != a.BENEFORGID
+	    	and (d.checkinfo is null or d.checkinfo !='2') and d.ISMULTI=1 and Year(d.acctDate)=#year# and Month(d.acctDate)=#month# and d.EXPTYPE in (1,2,'C','E')
+	  	) main
+	  	group by companyNo,deptNo
+		UNION ALL
+		select companyNo,deptNo,'5001' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+			select '1' companyNo,b.EXPNO,g.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+			and(f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+			and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+			k.orgid != y.orgid
+			union all
+			select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+			and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+			and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+			k.orgid != y.orgid
+		) main
+	  	group by companyNo,deptNo
+		UNION ALL
+		select companyNo,deptNo,'500101' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+			select '1' companyNo,b.EXPNO,g.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+			and(f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+			and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+			k.orgid != y.orgid
+			and d.ORGSEQ like '.1.14.%' and d.ORGID!=28
+			union all
+			select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+			and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+			and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+			k.orgid != y.orgid
+			and d.ORGSEQ like '.1.14.%' and d.ORGID!=28
+		) main
+	  	group by companyNo,deptNo
+		UNION ALL
+		select companyNo,deptNo,'500102' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt  from (
+			select '1' companyNo,b.EXPNO,g.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+			and(f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+			and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+			k.orgid != y.orgid
+			and (d.orgseq not like '.1.14.%' or d.orgid=28)
+			union all
+			select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+			and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+			and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+			k.orgid != y.orgid
+			and (d.orgseq not like '.1.14.%' or d.orgid=28)
+		) main
+	  	group by companyNo,deptNo
+	 	UNION ALL
+		select '1' as companyNo,SALES_NAME as deptNo,'5003' as deptExpTypeID,#year# as year,#month# as month,sum(costs) actAmt from(
+			select a.SALES_NAME,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME!=a.USER_ORG_ID and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+			and k.orgid != y.orgid
+	  	) a group by SALES_NAME
+		UNION ALL
+		select '1' as companyNo,SALES_NAME as deptNo,'500301' as deptExpTypeID,#year# as year,#month# as month,sum(costs) actAmt from(
+			select a.SALES_NAME,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME!=a.USER_ORG_ID and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+			and k.orgid != y.orgid
+			and e.orgseq like '.1.14.%' and e.orgID!=28
+	  	) a group by SALES_NAME
+		UNION ALL
+		select '1' as companyNo,SALES_NAME as deptNo,'500302' as deptExpTypeID,#year# as year,#month# as month,sum(costs) actAmt from(
+			select a.SALES_NAME,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+			LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+			,om_organization e
+			LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+			LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+			LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+			where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME!=a.USER_ORG_ID and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+			and k.orgid != y.orgid
+			and (e.orgseq not like '.1.14.%' or e.ORGID=28)
+	  	) a group by SALES_NAME
+		UNION ALL
+		select '1' as companyNo,deptNo,deptExpTypeID,#year# as year,#month# as month,sum(addAmt) actAmt
+	  	from ERPRPT_T_DeptExpChange where year=#year# and month=#month#
+	  	group by deptNo,deptExpTypeID
+		UNION ALL
+		select '1',deptNo,deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+		select a.deptNo,null as costTypeID,(case a.regionID when '1' then '401' when '2' then '402' when '3' then '403' when '4' then '404' when '5' then '405' when '6' then '406' when '7' then '407' when '8' then '408' when '11' then '411' end) as deptExpTypeID,
+		(CASE when a.regionID ='1' and a.orgid ='3' THEN  cast(round(29330.29/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='3' THEN  cast(round(26563.77/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='3' and a.orgid ='3' THEN  cast(round(17774.77/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='4' and a.orgid ='3' THEN  cast(round(12417.01/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='5' and a.orgid ='3' THEN  cast(round(17045.95/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='6' and a.orgid ='3' THEN  cast(round(4016.57/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='8' and a.orgid ='3' THEN  cast(round(27255.42/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='6' THEN  cast(round(80392.26/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='6' THEN  cast(round(13059.29/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='3' and a.orgid ='6' THEN  cast(round(15414.06/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='4' and a.orgid ='6' THEN  cast(round(2483.4/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='6' and a.orgid ='6' THEN  cast(round(25820.8/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='925' THEN  cast(round(15982.47/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='101216' THEN  cast(round(15982.47/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='926' THEN  cast(round(15982.47/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='102103' THEN  cast(round(15982.47/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='228' THEN  cast(round(17392.59/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='101260' THEN  cast(round(17392.59/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='927' THEN  cast(round(8696.3/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='3' and a.orgid ='944' THEN  cast(round(8470.79/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='3' and a.orgid ='229' THEN  cast(round(8470.79/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='4' and b.empsum is not null THEN  cast(round(b.empsum/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='5' and b.empsum is not null and b.orgtype='2' then b.empsum
+				when a.regionID ='5' and b.empsum is not null and b.orgtype!='2' then cast(round(b.empsum/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='6' and b.empsum is not null THEN  cast(round(b.empsum/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='14' THEN  cast(round(14665.15/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='14' THEN  cast(round(91415.00/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='4' and a.orgid ='14' THEN  cast(round(38078.83/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='1' and a.orgid ='13' THEN  cast(round(27997.1/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='2' and a.orgid ='13' THEN  cast(round(132204.07/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='3' and a.orgid ='13' THEN  cast(round(1527.52/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='4' and a.orgid ='13' THEN  cast(round(827.8/b.totalNum*a.empNum,2) as numeric(20,2))
+				when a.regionID ='5' and a.orgid ='13' THEN  cast(round(1420.5/b.totalNum*a.empNum,2) as numeric(20,2)) end) as amt from 
+		(select DISTINCT a.deptNo,a.empNum,a.[month],a.[year],a.regionID,3 as ORGTYPE,
+		(case when b.ORGSEQ like '.1.3.%' then '3' when b.ORGSEQ like '.1.6.%' then '6'
+				when b.ORGSEQ like '.1.5.36.925.%' then '925' when b.ORGSEQ like '.1.5.17.101216.%' then '101216' 
+				when b.ORGSEQ like '.1.5.103.926.%' then '926' when b.ORGSEQ like '.1.5.102103.%' then '102103' 
+				when b.ORGSEQ like '.1.5.310.228.%' then '228' when b.ORGSEQ like '.1.5.309.101260.%' then '101260' 
+				when b.ORGSEQ like '.1.5.16.927.%' then '927' when b.ORGSEQ like '.1.5.19.943.%' then '943' 
+				when b.ORGSEQ like '.1.5.308.944.%' then '944' when b.ORGSEQ like '.1.5.15.229.%' then '229'
+				when b.ORGSEQ like '.1.14.%' then '14' when b.ORGSEQ like '.1.13.%' then '13' else '1' end) orgid
+		from ERPORG_T_DeptEmpNum a,OM_ORGANIZATION b where a.deptNo=b.ORGID and a.empNum is not NULL and a.YEAR =#year# and a.month =#month#
+		UNION ALL
+		select DISTINCT b.deptno,b.empNum,a.month,a.year,a.regionID,3 as orgtype,a.ORGID from (
+		select a.*,d.ORGID from ERPORG_T_DeptEmpNum a LEFT JOIN OM_ORGANIZATION c on a.deptNo=c.orgid 
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3 where  a.empNum is not null and a.regionID in (4,5,6)
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and a.YEAR =#year# and a.month =#month#
+		)a,(
+		select a.deptno,a.empNum ,d.ORGID,year,month from ERPORG_T_DeptEmpNum a left JOIN OM_ORGANIZATION c  on a.deptNo=c.orgid and c.ORGTYPE =2
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3  where a.empNum is not null 
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%'  and YEAR =#year# and a.month =#month#
+		) b where a.ORGID=b.ORGID and a.year=b.[year] and a.month=b.[month]
+		UNION ALL
+		select DISTINCT b.deptno,b.empNum,a.month,a.year,a.regionID,b.orgtype,a.ORGID from (
+		select a.*,d.ORGID from ERPORG_T_DeptEmpNum a LEFT JOIN OM_ORGANIZATION c on a.deptNo=c.orgid 
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3 where  a.empNum is not null and a.regionID in (4,5,6)
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and a.YEAR =#year# and a.month =#month#
+		)a,(
+		select a.deptno,a.empNum ,d.ORGID,year,month,a.regionID,c.ORGTYPE from ERPORG_T_DeptEmpNum a left JOIN OM_ORGANIZATION c  on a.deptNo=c.orgid and c.ORGTYPE =2
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3  where a.empNum is not null  and a.regionID in(4,5,6)
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%'  and YEAR =#year# and a.month =#month#
+		) b where a.ORGID=b.ORGID and a.year=b.[year] and a.month=b.[month] and a.regionID=b.regionID
+	) a, 	
+	(select sum(t.empNum) as totalNum,t.YEAR,t.MONTH,t.regionID,t.ORGID,null as empsum,3 orgtype from (
+		select empNum,[year],month,regionID,b.ORGTYPE,
+		(case when b.ORGSEQ like '.1.3.%' then '3' when b.ORGSEQ like '.1.6.%' then '6'
+				when b.ORGSEQ like '.1.5.36.925.%' then '925' when b.ORGSEQ like '.1.5.17.101216.%' then '101216' 
+				when b.ORGSEQ like '.1.5.103.926.%' then '926' when b.ORGSEQ like '.1.5.102103.%' then '102103' 
+				when b.ORGSEQ like '.1.5.310.228.%' then '228' when b.ORGSEQ like '.1.5.309.101260.%' then '101260' 
+				when b.ORGSEQ like '.1.5.16.927.%' then '927' when b.ORGSEQ like '.1.5.19.943.%' then '943' 
+				when b.ORGSEQ like '.1.5.308.944.%' then '944' when b.ORGSEQ like '.1.5.15.229.%' then '229'
+				when b.ORGSEQ like '.1.14.%' then '14' when b.ORGSEQ like '.1.13.%' then '13' else '1' end) ORGID from ERPORG_T_DeptEmpNum a,OM_ORGANIZATION b
+		where a.deptNo=b.ORGID and a.empNum is not null
+		) t where t.year=#year# and t.month=#month#
+		GROUP BY [year],[month],regionID ,orgid
+		UNION ALL
+		select b.totalNum,a.year,a.month,a.regionID,a.orgid,sum(a.empsum) empsum,a.orgtype from (
+		select a.deptNo,a.[year],a.[month],a.regionID,a.ORGID,a.empNum,b.emptotal,a.orgtype,
+		(CASE when a.regionID='4' then cast(round(827.8/b.emptotal*a.empNum,2) as numeric(20,2))
+					when a.regionID='5' then cast(round(1420.5/b.emptotal*a.empNum,2) as numeric(20,2))
+					when a.regionID='6' then cast(round(573.8/b.emptotal*a.empNum,2) as numeric(20,2)) END) empsum from (
+		select a.empNum,a.[year],a.deptNo,a.[month],a.regionID,d.ORGID,c.ORGTYPE from ERPORG_T_DeptEmpNum a LEFT JOIN OM_ORGANIZATION c on a.deptNo=c.orgid 
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3 where  a.empNum is not null and a.regionID in (4,5,6)
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and [year]=#year# and month=#month#
+		)a,		
+		(select SUM(a.empNum) emptotal,[year],[month],regionID from ERPORG_T_DeptEmpNum a LEFT JOIN OM_ORGANIZATION c on a.deptNo=c.orgid
+		where a.empNum is not null and regionID in(4,5,6) and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and [year]=#year# and month=#month#
+		GROUP BY [year],[month],regionID
+		)b where a.year=b.[year] and a.month=b.month and a.regionID=b.regionID																
+		)a,(
+		select sum(a.empNum)as totalNum,d.ORGID,year,month,3 as ORGTYPE from ERPORG_T_DeptEmpNum a left JOIN OM_ORGANIZATION c  on a.deptNo=c.orgid and c.ORGTYPE =2
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3  where a.empNum is not null 
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and [year]=#year# and month=#month#
+		GROUP BY d.ORGID,year,month
+		) b where a.ORGID=b.ORGID and a.year=b.[year] and a.month=b.[month] and a.orgtype=b.ORGTYPE 
+		and a.year=#year# and a.month=#month#
+		GROUP BY a.year,a.month,a.regionID,a.orgid,b.totalNum,a.orgtype
+	UNION ALL
+		select b.totalNum,a.year,a.month,a.regionID,a.orgid,sum(a.empsum) empsum,a.orgtype from (
+		select a.deptNo,a.[year],a.[month],a.regionID,a.ORGID,a.empNum,b.emptotal,a.orgtype,
+		(CASE when a.regionID='4' then cast(round(827.8/b.emptotal*a.empNum,2) as numeric(20,2))
+					when a.regionID='5' then cast(round(1420.5/b.emptotal*a.empNum,2) as numeric(20,2))
+					when a.regionID='6' then cast(round(573.8/b.emptotal*a.empNum,2) as numeric(20,2)) END) empsum from (
+		select a.empNum,a.[year],a.deptNo,a.[month],a.regionID,d.ORGID,c.ORGTYPE from ERPORG_T_DeptEmpNum a LEFT JOIN OM_ORGANIZATION c on a.deptNo=c.orgid 
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3 where  a.empNum is not null and a.regionID in (4,5,6)
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and [year]=#year# and month=#month#
+		)a,		
+		(select SUM(a.empNum) emptotal,[year],[month],regionID from ERPORG_T_DeptEmpNum a LEFT JOIN OM_ORGANIZATION c on a.deptNo=c.orgid
+		where a.empNum is not null and regionID in(4,5,6) and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  and c.orgseq not like '.1.5.101586.%' and [year]=#year# and month=#month#
+		GROUP BY [year],[month],regionID
+		)b where a.year=b.[year] and a.month=b.month and a.regionID=b.regionID																
+		)a,(
+		select sum(a.empNum)as totalNum,d.ORGID,year,month,regionID,c.ORGTYPE from ERPORG_T_DeptEmpNum a 
+		left JOIN OM_ORGANIZATION c  on a.deptNo=c.orgid and c.ORGTYPE =2
+		LEFT JOIN OM_ORGANIZATION d on c.orgseq like d.ORGSEQ+'%'and d.ORGLEVEL=3  where a.empNum is not null
+		and regionID in (4,5,6)
+		and c.orgseq like '.1.5.%' and c.orgseq not like '.1.5.102103.%'  
+		and c.orgseq not like '.1.5.101586.%' and [year]=#year# and month=#month#
+		GROUP BY d.ORGID,year,month,regionID,c.ORGTYPE
+		) b where a.ORGID=b.ORGID and a.year=b.[year] and a.month=b.[month] and a.orgtype=b.ORGTYPE 
+		and a.regionID=b.regionID and a.year=#year# and a.month=#month#
+		GROUP BY a.year,a.month,a.regionID,a.orgid,b.totalNum,a.orgtype
+		) b where a.[year]=b.[year] and a.[month]=b.[month] and a.regionID=b.regionID and a.ORGTYPE=b.orgtype and a.orgid=b.ORGID and a.orgid !=1 and a.[year]=#year# and a.[month]=#month#
+		union
+		select deptNo,a.costTypeID,b.deptExpTypeID,amt
+		from ERPRPT_T_DeptCost a, ERPRPT_T_DeptCostType b
+		where b.deptExpTypeID is not null and a.costTypeID=b.costTypeID and a.year=#year# and a.month=#month# and a.costTypeID!='11'
+		union 
+		select deptNo,a.costTypeID,b.deptExpTypeID,amt
+		from ERPRPT_T_DeptCostType b,ERPRPT_T_DeptCost a
+		where b.deptExpTypeID is not null and a.costTypeID=b.costTypeID and a.year=#year# and a.month=#month#
+		and a.deptNo not in (select saleorgid from ERPRPT_T_SalaryRatio) and a.costTypeID='11'
+		union 
+		select c.saleprojectid as deptNo,a.costTypeID,b.deptExpTypeID,amt*c.rate2 as amt
+		from ERPRPT_T_DeptCostType b,ERPRPT_T_DeptCost a,ERPRPT_T_SalaryRatio c
+		where b.deptExpTypeID is not null and a.costTypeID=b.costTypeID and a.year=#year# and a.month=#month#
+		and a.deptNo=c.saleorgid and a.costTypeID='11'
+		) t where t.amt is not NULL
+		GROUP BY deptNo,deptExpTypeID
+	) t 
+	GROUP BY t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month
+	) t where t.flag=#flag#
+	GROUP BY t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,t.flag
+    </select>
+    <!--
+    	1、deptExpTypeID:5002,加载并统计日常、差旅报销单中的“外部卖出结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	2、deptExpTypeID:500201,加载并统计日常、差旅报销单中的“外部卖出产品结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	3、deptExpTypeID:500202,加载并统计日常、差旅报销单中的“其他外部卖出结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	4、deptExpTypeID:5004,加载并统计工时中的“外部卖出结算”，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	5、deptExpTypeID:500401,加载并统计工时中的“外部卖出产品部结算”，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	6、deptExpTypeID:500402,加载并统计工时中的“其他外部卖出结算”，且报销部门!=受益部门，且报销事业部!=受益事业部
+    	7、deptExpTypeID:501,加载并统计日常、差旅报销单中的“内部买入结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门
+    	8、deptExpTypeID:503,加载并统计工时中的“内部买入结算”，且报销部门！=受益部门
+    	9、deptExpTypeID:502,加载并统计日常、差旅报销单中的“内部卖出结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门
+    	10、deptExpTypeID:504,加载并统计工时中的“内部卖出结算”，且报销部门！=受益部门
+     -->
+    <select id="queryDeptBudgetbyexpOrRdlabor" parameterClass="java.util.HashMap" resultMap="resultMap">
+    select t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,sum(t.actAmt) actAmt,flag from (
+	select t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,sum(t.actAmt) actAmt, 
+	(CASE when (SELECT COUNT(*) from dbo.ERPRPT_T_DeptBudget where deptNo =t.deptNo and year=t.year and month=t.month and deptExpTypeID=t.deptExpTypeID and companyID=t.companyNo)=1
+	then 1 else 0 end) as flag
+	from (
+	select companyNo,deptNo,'5002' as deptExpTypeID,#year# as year,#month# as month,(0-sum(amt)) actAmt from (
+		select '1' companyNo,b.EXPNO,g.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid != y.orgid 
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid != y.orgid 
+	) main
+	group by companyNo,deptNo
+	UNION ALL
+	select companyNo,deptNo,'500201' as deptExpTypeID,#year# as year,#month# as month,(0-sum(amt)) actAmt from (
+		select '1' companyNo,b.EXPNO,g.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid != y.orgid 
+		and d.orgseq like '.1.14.%' and d.orgid!=28
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid != y.orgid 
+		and d.orgseq like '.1.14.%' and d.orgid!=28
+	) main
+	group by companyNo,deptNo
+	UNION ALL
+	select companyNo,deptNo,'500202' as deptExpTypeID,#year# as year,#month# as month,(0-sum(amt)) actAmt from (
+		select '1' companyNo,b.EXPNO,g.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid != y.orgid 
+		and (d.orgseq not like '.1.14.%' or d.orgid=28)
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid != y.orgid 
+		and (d.orgseq not like '.1.14.%' or d.orgid=28)
+	) main
+	group by companyNo,deptNo
+	UNION ALL
+	select '1' as companyNo,emp_orgcode as deptNo,'5004' as deptExpTypeID,#year# as year,#month# as month,(0-sum(costs)) actAmt from(
+		select a.USER_ORG_ID as emp_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME!=a.USER_ORG_ID and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid != y.orgid 
+	) a group by a.emp_orgcode
+	UNION ALL
+	select '1' as companyNo,emp_orgcode as deptNo,'500401' as deptExpTypeID,#year# as year,#month# as month,(0-sum(costs)) actAmt from(
+		select a.USER_ORG_ID as emp_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME!=a.USER_ORG_ID and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid != y.orgid 
+		AND e.orgseq like '.1.14.%' and e.ORGID!=28
+	) a group by a.emp_orgcode
+	UNION ALL
+	select '1' as companyNo,emp_orgcode as deptNo,'500402' as deptExpTypeID,#year# as year,#month# as month,(0-sum(costs)) actAmt from(
+		select a.USER_ORG_ID as emp_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME!=a.USER_ORG_ID and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid != y.orgid 
+		AND (e.orgseq not like '.1.14.%' or e.orgID=28)
+	) a group by a.emp_orgcode
+	UNION ALL
+	select companyNo,deptNo,'501' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+	    select '1' companyNo,b.EXPNO,g.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+	    from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+	    where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and f.EXPORGID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+		)
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and f.EXPORGID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+		)
+	) main
+	group by companyNo,deptNo
+	UNION ALL
+	select '1' as companyNo,buy_orgcode as deptNo,'503' as deptExpTypeID,#year# as year,#month# as month,sum(costs) actAmt from(
+		select a.SALES_NAME as buy_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month#  and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME != a.USER_ORG_ID 
+		and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid = y.orgid 
+		and a.USER_ORG_ID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.SALES_NAME and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.SALES_NAME) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid= a.SALES_NAME and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.SALES_NAME) and x.expinnerorgid is not null
+		)
+	) a group by a.buy_orgcode
+	UNION ALL
+	select companyNo,deptNo,'502' as deptExpTypeID,#year# as year,#month# as month,(0-sum(amt)) actAmt from (
+		select '1' companyNo,b.EXPNO,g.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+	    from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+	    where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+	    and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and a.BENEFORGID not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=f.EXPORGID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=f.EXPORGID) and x.expoutorgid is not null
+		)
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+    	and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and a.BENEFORGID not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=f.EXPORGID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=f.EXPORGID) and x.expoutorgid is not null
+		)
+	) main
+	group by  companyNo,deptNo
+	UNION ALL 
+	select '1' as companyNo,emp_orgcode as deptNo,'504' as deptExpTypeID,#year# as year,#month# as month,(0-sum(costs)) actAmt from(
+		select a.USER_ORG_ID as emp_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME !=a.USER_ORG_ID 
+		and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid = y.orgid 
+		and a.SALES_NAME not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.USER_ORG_ID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.USER_ORG_ID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=a.USER_ORG_ID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.USER_ORG_ID) and x.expoutorgid is not null
+		)
+	) a group by a.emp_orgcode
+	) t
+	GROUP BY t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month
+	) t where t.flag=#flag#
+	GROUP BY t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,t.flag
+    </select>
+    <!--
+    	1、deptExpTypeID:50101,加载并统计日常、差旅报销单中的“智慧数据武汉研发中心买入结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门，受益部门=武汉研发中心，且事业群为普元智慧
+    	2、deptExpTypeID:50102,加载并统计日常、差旅报销单中的“智慧数据其他内部买入结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门，受益部门!=武汉研发中心，且事业群为普元智慧
+    	3、deptExpTypeID:50301,加载并统计工时中的“智慧数据武汉研发中心买入结算”，且报销部门！=受益部门,受益部门=武汉研发中心，且事业群为普元智慧
+    	4、deptExpTypeID:50302,加载并统计工时中的“智慧数据其他内部买入结算”，且报销部门！=受益部门,受益部门!=武汉研发中心，且事业群为普元智慧
+    	5、deptExpTypeID:50201,加载并统计日常、差旅报销单中的“智慧数据武汉研发中心卖出结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门,报销部门=武汉研发中心，且事业群为普元智慧
+    	6、deptExpTypeID:50202,加载并统计日常、差旅报销单中的“智慧数据其他内部卖出结算”费用，记账方式为“按报销部门记账”(b.checkinfo is null or b.checkinfo !='2')，且报销部门！=受益部门,报销部门!=武汉研发中心，且事业群为普元智慧
+    	7、deptExpTypeID:50401,加载并统计工时中的“智慧数据武汉研发中心卖出结算”，且报销部门！=受益部门，报销部门=武汉研发中心，且事业群为普元智慧
+    	7、deptExpTypeID:50402,加载并统计工时中的“智慧数据其他内部卖出结算”，且报销部门！=受益部门，报销部门=武汉研发中心，且事业群为普元智慧
+     -->
+    <select id="queryInnerDeptBudgetbyexpOrRdlabor" parameterClass="java.util.HashMap" resultMap="resultMap">
+    select t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,sum(t.actAmt) actAmt,flag from (
+	select t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,sum(t.actAmt) actAmt, 
+	(CASE when (SELECT COUNT(*) from dbo.ERPRPT_T_DeptBudget where deptNo =t.deptNo and year=t.year and month=t.month and deptExpTypeID=t.deptExpTypeID and companyID=t.companyNo)=1
+	then 1 else 0 end) as flag
+	from (
+	select companyNo,deptNo,'50101' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+	    select '1' companyNo,b.EXPNO,g.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+	    from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+	    where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid 
+		and f.EXPORGID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+		) and d.orgseq like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and f.EXPORGID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+		) and d.orgseq like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+	) main
+	group by companyNo,deptNo
+	UNION ALL
+	select companyNo,deptNo,'50102' as deptExpTypeID,#year# as year,#month# as month,sum(amt) actAmt from (
+	    select '1' companyNo,b.EXPNO,g.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+	    from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+	    where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid 
+		and f.EXPORGID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+		) and d.orgseq not like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,a.BENEFORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+		and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and f.EXPORGID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=a.BENEFORGID and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.BENEFORGID) and x.expinnerorgid is not null
+		) and d.orgseq not like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+	) main
+	group by companyNo,deptNo
+	UNION ALL
+	select '1' as companyNo,buy_orgcode as deptNo,'50301' as deptExpTypeID,#year# as year,#month# as month,sum(costs) actAmt from(
+		select a.SALES_NAME as buy_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month#  and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME != a.USER_ORG_ID 
+		and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid = y.orgid
+		and a.USER_ORG_ID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.SALES_NAME and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.SALES_NAME) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid= a.SALES_NAME and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.SALES_NAME) and x.expinnerorgid is not null
+		) and e.orgseq like '.1.6.360.350402.%' and d.orgseq like '.1.6.%'
+	) a group by a.buy_orgcode
+	UNION ALL
+	select '1' as companyNo,buy_orgcode as deptNo,'50302' as deptExpTypeID,#year# as year,#month# as month,sum(costs) actAmt from(
+		select a.SALES_NAME as buy_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month#  and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME != a.USER_ORG_ID 
+		and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid = y.orgid
+		and a.USER_ORG_ID not in (
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.SALES_NAME and x.expinnerorgid is not null
+			union 
+			select x.expinnerorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.SALES_NAME) and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid= a.SALES_NAME and x.expinnerorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expinnerorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.SALES_NAME) and x.expinnerorgid is not null
+		) and e.orgseq NOT like '.1.6.360.350402.%' and d.orgseq like '.1.6.%'
+	) a group by a.buy_orgcode
+	UNION ALL
+	select companyNo,deptNo,'50201' as deptExpTypeID,#year# as year,#month# as month,(0-sum(amt)) actAmt from (
+		select '1' companyNo,b.EXPNO,g.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+	    from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+	    where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+	    and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and a.BENEFORGID not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=f.EXPORGID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=f.EXPORGID) and x.expoutorgid is not null
+		)  and d.orgseq like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+    	and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and a.BENEFORGID not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=f.EXPORGID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=f.EXPORGID) and x.expoutorgid is not null
+		)  and d.orgseq like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+	) main
+	group by  companyNo,deptNo
+	UNION ALL
+	select companyNo,deptNo,'50202' as deptExpTypeID,#year# as year,#month# as month,(0-sum(amt)) actAmt from (
+		select '1' companyNo,b.EXPNO,g.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,g.CONFMON amt
+	    from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,EXP_REIDETAIL g,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+	    where a.EXPID=b.EXPID and b.REIID=f.REIID and b.EXPID=g.EXPID and g.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+	    and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=0 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and a.BENEFORGID not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=f.EXPORGID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=f.EXPORGID) and x.expoutorgid is not null
+		)  and d.orgseq NOT like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+		union all
+		select '1' companyNo,b.EXPNO,a.FINTYPE,f.EXPORGID deptNo,c.deptExpTypeID,a.BENEFMON amt
+		from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI f,ERPRPT_T_DeptExpVsExpType c,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where a.EXPID=b.EXPID and b.REIID=f.REIID and a.FINTYPE=c.expTypeID and f.EXPORGID != a.BENEFORGID
+    	and (f.checkinfo is null or f.checkinfo !='2') and f.ISMULTI=1 and Year(f.acctDate)=#year# and Month(f.acctDate)=#month# and f.EXPTYPE in (1,2,'C','E')
+		and f.EXPORGID=d.orgid and a.BENEFORGID=e.orgid and d.orgid!=1 and e.orgid!=1 and 
+		k.orgid = y.orgid
+		and a.BENEFORGID not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=f.EXPORGID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=f.EXPORGID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=f.EXPORGID) and x.expoutorgid is not null
+		)  and d.orgseq NOT like '.1.6.360.350402.%' and e.orgseq like '.1.6.%'
+	) main
+	group by  companyNo,deptNo
+	UNION ALL
+	select '1' as companyNo,emp_orgcode as deptNo,'50401' as deptExpTypeID,#year# as year,#month# as month,(0-sum(costs)) actAmt from(
+		select a.USER_ORG_ID as emp_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME !=a.USER_ORG_ID 
+		and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid = y.orgid
+		and a.SALES_NAME not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.USER_ORG_ID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.USER_ORG_ID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=a.USER_ORG_ID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.USER_ORG_ID) and x.expoutorgid is not null
+		) and e.orgseq like '.1.6.360.350402.%' and d.orgseq like '.1.6.%'
+	) a group by a.emp_orgcode
+	UNION ALL
+	select '1' as companyNo,emp_orgcode as deptNo,'50402' as deptExpTypeID,#year# as year,#month# as month,(0-sum(costs)) actAmt from(
+		select a.USER_ORG_ID as emp_orgcode,a.COST as costs from RD_LABOR_DETAIL a ,om_organization d
+		LEFT JOIN OM_ORGANIZATION j on d.orgseq like j.ORGSEQ+'%' and j.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION k on d.orgseq LIKE k.ORGSEQ+'%' and k.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION kk on d.orgseq LIKE kk.ORGSEQ+'%' and kk.ORGLEVEL=4
+		,om_organization e
+		LEFT JOIN OM_ORGANIZATION z on e.orgseq like z.ORGSEQ+'%' and z.ORGLEVEL=2
+		LEFT JOIN OM_ORGANIZATION y on e.orgseq LIKE y.ORGSEQ+'%' and y.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION yy on e.orgseq LIKE yy.ORGSEQ+'%' and yy.ORGLEVEL=4
+		where year(a.FINCOSTDATE)=#year# and month(a.FINCOSTDATE)=#month# and a.STATUS='4' and a.PROJECT_ID !=1 and a.SALES_NAME !=a.USER_ORG_ID 
+		and a.SALES_NAME=d.orgid and a.USER_ORG_ID=e.orgid and d.orgid!=1 and e.orgid!=1 
+		and k.orgid = y.orgid
+		and a.SALES_NAME not in (
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=a.USER_ORG_ID and x.expoutorgid is not null
+			union 
+			select x.expoutorgid from dbo.ERPRPT_T_DeptBudget_EXPCond x where x.orgid=(select y.parentorgid from om_organization y where y.orgid=a.USER_ORG_ID) and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=a.USER_ORG_ID and x.expoutorgid is not null
+			union 
+			select y.orgid from ERPRPT_T_DeptBudget_EXPCond x,om_organization y where x.expoutorgid=y.parentorgid and x.orgid=(select z.parentorgid from om_organization z where z.orgid=a.USER_ORG_ID) and x.expoutorgid is not null
+		) and e.orgseq not like '.1.6.360.350402.%' and d.orgseq like '.1.6.%'
+	) a group by a.emp_orgcode
+	) t
+	GROUP BY t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month
+	) t where t.flag=#flag#
+	GROUP BY t.companyNo,t.deptNo,t.deptExpTypeID,t.year,t.month,t.flag
+    </select>
+    <update id="updateErprptdeptbudget"><![CDATA[
+    	update ERPRPT_T_DeptBudget set actAmt=0 where year=#year# and month=#month#
+    ]]></update>
+</sqlMap>

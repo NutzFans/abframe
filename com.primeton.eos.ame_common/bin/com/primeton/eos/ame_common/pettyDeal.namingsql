@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.pettyDeal">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="itmno" javaType="string" property="itmno"/>
+        <result column="date" javaType="date" property="date"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="billtypeid" javaType="string" property="billtypeid"/>
+        <result column="expgroupid" javaType="string" property="expgroupid"/>
+        <result column="expgroupname" javaType="string" property="expgroupname"/>
+        <result column="exptypeid" javaType="string" property="exptypeid"/>
+        <result column="exptypename" javaType="string" property="exptypename"/>
+        <result column="confamt1" javaType="double" property="confamt1"/>
+        <result column="confamt2" javaType="double" property="confamt2"/>
+        <result column="confamt3" javaType="double" property="confamt3"/>
+        <result column="confamt4" javaType="double" property="confamt4"/>
+        <result column="confamt5" javaType="double" property="confamt5"/>
+        <result column="confamt6" javaType="double" property="confamt6"/>
+        <result column="confamt7" javaType="double" property="confamt7"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="year" javaType="string" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="CUSTID" javaType="string" property="custid"/>
+        <result column="custjc" javaType="string" property="custjc"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="saleQuota">
+        <result column="REIID" javaType="String" property="reiid"/>
+        <result column="EXPUSERID" javaType="String" property="expuserid"/>
+        <result column="EMPNAME" javaType="String" property="empname"/>
+        <result column="EXPORGID" javaType="String" property="exporgid"/>
+        <result column="EXPORGNAME" javaType="String" property="exporgname"/>
+        <result column="ACCTDATE" javaType="String" property="acctdate"/>
+        <result column="COST_QUOTA" javaType="String" property="costQuota"/>
+        <result column="BENEFORGID" javaType="String" property="beneforgid"/>
+        <result column="BENEFORGNAME" javaType="String" property="beneforgname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="saleQuotadeTail">
+        <result column="type" javaType="string" property="type"/>
+        <result column="cost1" javaType="double" property="cost1"/>
+        <result column="cost2" javaType="double" property="cost2"/>
+        <result column="cost3" javaType="double" property="cost3"/>
+        <result column="cost4" javaType="double" property="cost4"/>
+        <result column="cost5" javaType="double" property="cost5"/>
+        <result column="cost6" javaType="double" property="cost6"/>
+        <result column="cost7" javaType="double" property="cost7"/>
+        <result column="cost8" javaType="double" property="cost8"/>
+        <result column="cost9" javaType="double" property="cost9"/>
+        <result column="cost10" javaType="double" property="cost10"/>
+        <result column="cost11" javaType="double" property="cost11"/>
+        <result column="cost12" javaType="double" property="cost12"/>
+        <result column="total" javaType="double" property="total"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="reiQuotaTotal">
+        <result column="ORGID" javaType="String" property="orgid"/>
+        <result column="ORGNAME" javaType="String" property="orgname"/>
+        <result column="NUM" javaType="Decimal" property="num"/>
+        <result column="NUM2" javaType="Decimal" property="num2"/>
+        <result column="NUM1" javaType="Decimal" property="num1"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="checkSaleOrg">
+        <result column="ORGID" javaType="String" property="orgid"/>
+        <result column="ORGNAME" javaType="String" property="orgname"/>
+    </resultMap>
+    <select id="checkSaleOrg" resultMap="checkSaleOrg">
+        <!--判断登陆的销售是否属于一个销售部门--><![CDATA[
+			SELECT b.ORGID,a.ORGNAME FROM OM_ORGANIZATION a
+			LEFT JOIN OM_EMPORG b on a.ORGID = b.ORGID 
+			WHERE b.EMPID = #empid# 
+		 ]]></select>
+    <select id="saleQuotadetail" resultMap="saleQuotadeTail">
+        <!--销售额度明细--><![CDATA[
+		(SELECT '本月可使用销售额度' type,(s1.cost1+s2.cost1+s3.cost1) AS cost1,(s1.cost2+s2.cost2+s3.cost2) AS cost2,(s1.cost3+s2.cost3+s3.cost3) AS cost3,(s1.cost4+s2.cost4+s3.cost4) AS cost4,
+(s1.cost5+s2.cost5+s3.cost5) AS cost5,(s1.cost6+s2.cost6+s3.cost6) AS cost6,(s1.cost7+s2.cost7+s3.cost7) AS cost7,(s1.cost8+s2.cost8+s3.cost8) AS cost8,
+(s1.cost9+s2.cost9+s3.cost9) AS cost9,(s1.cost10+s2.cost10+s3.cost10) AS cost10,(s1.cost11+s2.cost11+s3.cost11) AS cost11,(s1.cost12+s2.cost12+s3.cost12) AS cost12,
+(s1.total+s2.total+s3.total) AS total FROM 
+(SELECT s1.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT h.orgid,'本月销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                   ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12
+     FROM(
+					SELECT t.ORGID, (SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS total,t.month	FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month) m
+		PIVOT (SUM(total) FOR m.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS h)s1)s1
+LEFT JOIN 
+  (SELECT s2.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT f.orgid,'上月剩余额度' type,0 AS cost1,f.money1 AS cost2,(f.money1+f.money2) AS cost3,
+		(f.money1+f.money2+f.money3)AS cost4,(f.money1+f.money2+f.money3+f.money4)AS cost5,
+		(f.money1+f.money2+f.money3+f.money4+f.money5)AS cost6,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6)AS cost7,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7)AS cost8,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8)AS cost9,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9)AS cost10,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9+f.money10)AS cost11,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9+f.money10+f.money11)AS cost12
+		FROM(
+		SELECT h.orgid,h.year,(h.cost1-p.cost1)as money1,(h.cost2-p.cost2)as money2,(h.cost3-p.cost3)as money3,(h.cost4-p.cost4)as money4,(h.cost5-p.cost5)as money5,
+		(h.cost6-p.cost6)as money6,(h.cost7-p.cost7)as money7,(h.cost8-p.cost8)as money8,(h.cost9-p.cost9)as money9,(h.cost10-p.cost10)as money10,(h.cost11-p.cost11)as money11,(h.cost12-p.cost12)as money12 
+		FROM (SELECT h.orgid,h.year,'本月销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+												ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12
+					FROM(
+							SELECT t.ORGID, t.year,(SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS total,t.month	FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month,t.year) m
+					PIVOT (SUM(total) FOR m.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS h) h
+		LEFT JOIN 
+				(SELECT p.orgid,p.year,'已出款销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+												ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+				SELECT t.ORGID,t.year, e.COST_QUOTA AS total,t.month
+				FROM AME_SALEQUOTA t LEFT JOIN EXP_REIBENEF e ON t.ORGID = e.BENEFORGID
+														 LEFT JOIN EXP_REI_LIST s ON e.EXPID = s.EXPID  
+														 LEFT JOIN EXP_REI z ON  s.REIID = z.REIID                  
+				where t.year = #year# AND t.ORGID = #orgid# AND z.EXPSTATUS in ('3','5') AND year(z.CHECKDATE)=#year#
+				GROUP BY t.ORGID,t.month,e.COST_QUOTA,t.year ) n
+				PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12]))AS p) p
+		 ON (h.orgid = p.orgid AND h.year = p.year)  
+
+			) f)s2)s2 ON s1.orgid = s2.orgid
+		LEFT JOIN 
+    (SELECT s3.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT m.orgid,'特批额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                    ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+		SELECT t.ORGID, SUM(SPEQUOTA) AS total,t.month FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month) n
+		PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS m )s3)s3 ON s2.orgid = s3.orgid
+)
+
+union all
+
+		(SELECT s.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT '本月销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                    ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12
+     FROM(
+					SELECT t.ORGID, (SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS total,t.month	FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month) m
+		PIVOT (SUM(total) FOR m.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS h)s)		
+   	union all
+
+		(SELECT s.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT'上月剩余额度' type,0 AS cost1,f.money1 AS cost2,(f.money1+f.money2) AS cost3,
+		(f.money1+f.money2+f.money3)AS cost4,(f.money1+f.money2+f.money3+f.money4)AS cost5,
+		(f.money1+f.money2+f.money3+f.money4+f.money5)AS cost6,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6)AS cost7,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7)AS cost8,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8)AS cost9,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9)AS cost10,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9+f.money10)AS cost11,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9+f.money10+f.money11)AS cost12
+		FROM(
+		SELECT h.orgid,h.year,(h.cost1-p.cost1)as money1,(h.cost2-p.cost2)as money2,(h.cost3-p.cost3)as money3,(h.cost4-p.cost4)as money4,(h.cost5-p.cost5)as money5,
+		(h.cost6-p.cost6)as money6,(h.cost7-p.cost7)as money7,(h.cost8-p.cost8)as money8,(h.cost9-p.cost9)as money9,(h.cost10-p.cost10)as money10,(h.cost11-p.cost11)as money11,(h.cost12-p.cost12)as money12 
+		FROM (SELECT h.orgid,h.year,'本月销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+												ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12
+					FROM(
+							SELECT t.ORGID, t.year,(SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS total,t.month	FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month,t.year) m
+					PIVOT (SUM(total) FOR m.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS h) h
+
+		LEFT JOIN 
+
+				(SELECT p.orgid,p.year,'已出款销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+												ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+				SELECT t.ORGID,t.year, e.COST_QUOTA AS total,t.month
+				FROM AME_SALEQUOTA t LEFT JOIN EXP_REIBENEF e ON t.ORGID = e.BENEFORGID
+														 LEFT JOIN EXP_REI_LIST s ON e.EXPID = s.EXPID  
+														 LEFT JOIN EXP_REI z ON  s.REIID = z.REIID                  
+				where t.year = #year# AND t.ORGID = #orgid# AND z.EXPSTATUS in ('3','5') AND year(z.CHECKDATE)=#year#
+				GROUP BY t.ORGID,t.month,e.COST_QUOTA,t.year ) n
+				PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12]))AS p) p
+		 ON (h.orgid = p.orgid AND h.year = p.year)  
+
+			) f)s
+		)
+		union all
+
+		(SELECT s.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT '特批额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                    ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+		SELECT t.ORGID, SUM(SPEQUOTA) AS total,t.month FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month) n
+		PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS m )s) 
+
+    union all
+   (SELECT s.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+    SELECT '已出款销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                    ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+		SELECT t.ORGID, e.COST_QUOTA AS total,t.month
+		FROM AME_SALEQUOTA t LEFT JOIN EXP_REIBENEF e ON t.ORGID = e.BENEFORGID
+                         LEFT JOIN EXP_REI_LIST s ON e.EXPID = s.EXPID  
+                         LEFT JOIN EXP_REI z ON  s.REIID = z.REIID                  
+    where t.year = #year# AND t.ORGID = #orgid# AND z.EXPSTATUS in ('3','5') AND year(z.CHECKDATE)=#year#
+    GROUP BY t.ORGID,t.month,e.COST_QUOTA ) n
+		PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS p)s ) 
+	
+	union all
+(SELECT '本月可报销剩余额度' type,(m.cost1-s.cost1)AS cost1,(m.cost2-s.cost2)AS cost2,(m.cost3-s.cost3)AS cost3,(m.cost4-s.cost4)AS cost4,(m.cost5-s.cost5)AS cost5,
+(m.cost6-s.cost6)AS cost6,(m.cost7-s.cost7)AS cost7,(m.cost8-s.cost8)AS cost8,(m.cost9-s.cost9)AS cost9,(m.cost10-s.cost10)AS cost10,(m.cost11-s.cost11)AS cost11,
+(m.cost12-s.cost12)AS cost12,(m.total-s.total)AS total FROM 
+(SELECT s1.orgid,'本月可使用销售额度' type,(s1.cost1+s2.cost1+s3.cost1) AS cost1,(s1.cost2+s2.cost2+s3.cost2) AS cost2,(s1.cost3+s2.cost3+s3.cost3) AS cost3,(s1.cost4+s2.cost4+s3.cost4) AS cost4,
+(s1.cost5+s2.cost5+s3.cost5) AS cost5,(s1.cost6+s2.cost6+s3.cost6) AS cost6,(s1.cost7+s2.cost7+s3.cost7) AS cost7,(s1.cost8+s2.cost8+s3.cost8) AS cost8,
+(s1.cost9+s2.cost9+s3.cost9) AS cost9,(s1.cost10+s2.cost10+s3.cost10) AS cost10,(s1.cost11+s2.cost11+s3.cost11) AS cost11,(s1.cost12+s2.cost12+s3.cost12) AS cost12,
+(s1.total+s2.total+s3.total) AS total FROM 
+(SELECT s1.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT h.orgid,'本月销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                   ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12
+     FROM(
+					SELECT t.ORGID, (SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS total,t.month	FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month) m
+		PIVOT (SUM(total) FOR m.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS h)s1)s1
+LEFT JOIN 
+  (SELECT s2.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT f.orgid,'上月剩余额度' type,0 AS cost1,f.money1 AS cost2,(f.money1+f.money2) AS cost3,
+		(f.money1+f.money2+f.money3)AS cost4,(f.money1+f.money2+f.money3+f.money4)AS cost5,
+		(f.money1+f.money2+f.money3+f.money4+f.money5)AS cost6,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6)AS cost7,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7)AS cost8,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8)AS cost9,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9)AS cost10,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9+f.money10)AS cost11,
+		(f.money1+f.money2+f.money3+f.money4+f.money5+f.money6+f.money7+f.money8+f.money9+f.money10+f.money11)AS cost12
+		FROM(
+		SELECT h.orgid,h.year,(h.cost1-p.cost1)as money1,(h.cost2-p.cost2)as money2,(h.cost3-p.cost3)as money3,(h.cost4-p.cost4)as money4,(h.cost5-p.cost5)as money5,
+		(h.cost6-p.cost6)as money6,(h.cost7-p.cost7)as money7,(h.cost8-p.cost8)as money8,(h.cost9-p.cost9)as money9,(h.cost10-p.cost10)as money10,(h.cost11-p.cost11)as money11,(h.cost12-p.cost12)as money12 
+		FROM (SELECT h.orgid,h.year,'本月销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+												ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12
+					FROM(
+							SELECT t.ORGID, t.year,(SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS total,t.month	FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month,t.year) m
+					PIVOT (SUM(total) FOR m.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS h) h
+		LEFT JOIN 
+				(SELECT p.orgid,p.year,'已出款销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+												ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+				SELECT t.ORGID,t.year, e.COST_QUOTA AS total,t.month
+				FROM AME_SALEQUOTA t LEFT JOIN EXP_REIBENEF e ON t.ORGID = e.BENEFORGID
+														 LEFT JOIN EXP_REI_LIST s ON e.EXPID = s.EXPID  
+														 LEFT JOIN EXP_REI z ON  s.REIID = z.REIID                  
+				where t.year = #year# AND t.ORGID = #orgid# AND z.EXPSTATUS in ('3','5') AND year(z.CHECKDATE)=#year#
+				GROUP BY t.ORGID,t.month,e.COST_QUOTA,t.year ) n
+				PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12]))AS p) p
+		 ON (h.orgid = p.orgid AND h.year = p.year)  
+
+			) f)s2)s2 ON s1.orgid = s2.orgid
+		LEFT JOIN 
+    (SELECT s3.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+     SELECT m.orgid,'特批额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                    ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+		SELECT t.ORGID, SUM(SPEQUOTA) AS total,t.month FROM AME_SALEQUOTA t where t.year = #year# and t.orgid = #orgid# GROUP BY t.ORGID,t.month) n
+		PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS m )s3)s3 ON s2.orgid = s3.orgid )m
+LEFT JOIN 
+(SELECT s.*,(cost1+cost2+cost3+cost4+cost5+cost6+cost7+cost8+cost9+cost10+cost11+cost12)AS total FROM (
+    SELECT p.orgid,'已出款销售费用额度' type,ISNULL([01],0) as cost1,ISNULL([02],0) as cost2,ISNULL([03],0) as cost3,ISNULL([04],0) as cost4,ISNULL([05],0) as cost5,ISNULL([06],0) as cost6,ISNULL([07],0) as cost7,ISNULL([08],0) as cost8,ISNULL([09],0) as cost9,
+                    ISNULL([10],0) as cost10,ISNULL([11],0) as cost11,ISNULL([12],0) as cost12 FROM(
+		SELECT t.ORGID, e.COST_QUOTA AS total,t.month
+		FROM AME_SALEQUOTA t LEFT JOIN EXP_REIBENEF e ON t.ORGID = e.BENEFORGID
+                         LEFT JOIN EXP_REI_LIST s ON e.EXPID = s.EXPID  
+                         LEFT JOIN EXP_REI z ON  s.REIID = z.REIID                  
+    where t.year = #year# AND t.ORGID = #orgid# AND z.EXPSTATUS in ('3','5') AND year(z.CHECKDATE)=#year#
+    GROUP BY t.ORGID,t.month,e.COST_QUOTA ) n
+		PIVOT (SUM(total) FOR n.MONTH IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])) AS p)s)s ON m.orgid = s.orgid 
+
+)
+		  
+		 ]]></select>
+    <select id="reiQuotaTotal" resultMap="reiQuotaTotal">
+        <!--我的销售费用额度汇总--><![CDATA[
+		SELECT c.orgid,c.ORGNAME,c.num,c.num2,(c.num-c.num2) as num1 FROM(
+   			SELECT a.orgid, case when a.ORGNAME is null then b.ORGNAME else a.ORGNAME end as ORGNAME,
+   			   case when a.num is NULL then 0 else a.num END AS num, 
+   			   case when b.num2 is NULL then 0 else b.num2 END AS num2 FROM (
+			   select case when a.orgid is null then b.orgid else a.orgid end as orgid,case when a.ORGNAME is null then b.ORGNAME else a.ORGNAME end as ORGNAME, ISNULL(a.num2, 0)-b.num1 as num
+  				from 
+				(SELECT m.ORGID,g.ORGNAME,(SUM(BASEQUOTA)+SUM(SPEQUOTA)) AS num2 
+				FROM OM_EMPORG m  LEFT JOIN OM_ORGANIZATION g ON m.ORGID = g.ORGID LEFT JOIN AME_SALEQUOTA t ON m.ORGID = t.ORGID 
+        		WHERE (t.YEAR=#thisYear# AND t.MONTH <= #thisMonth# AND m.EMPID =#empid# )
+					GROUP BY m.ORGID,g.ORGNAME
+				) a full join
+			(SELECT f.ORGID,m.ORGNAME, case when sum(c.COST_QUOTA) is NULL then 0 else sum(c.COST_QUOTA) END AS num1
+				FROM EXP_REI a LEFT JOIN EXP_REI_LIST b ON a.REIID = b.REIID LEFT JOIN EXP_REIBENEF c ON b.EXPID = c.EXPID 
+       			 LEFT JOIN OM_EMPORG f ON f.ORGID = c.BENEFORGID LEFT JOIN OM_ORGANIZATION m ON m.ORGID = f.ORGID 
+      		  WHERE ((a.EXPSTATUS ='5' OR a.EXPSTATUS ='3') AND a.CHECKDATE <= #today# AND f.EMPID =#empid#) 
+       		 GROUP BY f.ORGID,m.ORGNAME ) b on a.ORGID = b.ORGID) a
+			full join 
+			(SELECT d.ORGID,h.ORGNAME, case when sum(BENEFMON) is NULL then 0 else sum(BENEFMON) END AS num2 
+			FROM EXP_REI a LEFT JOIN EXP_REI_LIST b ON a.REIID = b.REIID LEFT JOIN EXP_REIBENEF c ON b.EXPID = c.EXPID 
+			LEFT JOIN  OM_EMPORG d ON	d.ORGID = c.BENEFORGID LEFT JOIN  OM_ORGANIZATION h ON h.ORGID = d.ORGID 
+			WHERE a.EXPSTATUS !='5' AND a.EXPSTATUS !='3' AND a.EXPSTATUS !='-2' AND d.empid =#empid# GROUP BY  d.ORGID, h.ORGNAME) b on a.ORGID  = b.ORGID 
+			) c
+
+		 ]]></select>
+    <!-- 报销单列表 （已出款\流程中）-->
+    <select id="getExps" resultMap="saleQuota">
+		SELECT e.REIID,e.EXPUSERID,c.EMPNAME,e.EXPORGID,D.ORGNAME AS EXPORGNAME,e.ACCTDATE, b.COST_QUOTA,
+		b.BENEFORGID,f.ORGNAME AS BENEFORGNAME
+      FROM  EXP_REI e  LEFT JOIN  EXP_REI_LIST r ON e.REIID = r.REIID  
+      LEFT JOIN  EXP_REIBENEF b ON r.EXPID = b.EXPID 
+      LEFT JOIN OM_EMPLOYEE c ON c.userid = e.expuserid
+      LEFT JOIN OM_ORGANIZATION d ON d.orgid = e.EXPORGID
+      LEFT JOIN OM_ORGANIZATION f ON b.BENEFORGID = f.ORGID
+     WHERE b.BENEFORGID =#orgid#
+	   <isNotNull property="year">AND year(e.checkdate) = #year#</isNotNull>
+        <isNotNull property="month">AND month(e.checkdate) = #month#</isNotNull>
+        <isEqual compareValue="yck" prepend="AND" property="type">b.isquota = '1' AND (e.EXPSTATUS ='5' OR e.EXPSTATUS ='3')</isEqual>
+        <isEqual compareValue="lcz" prepend="AND" property="type">e.EXPSTATUS not in ('-2','3','5')</isEqual>
+    </select>
+    <select id="getQuota" parameterClass="java.util.Date" resultMap="resultMap2"><![CDATA[
+    	select datepart(yyyy,#acctdate#) as year,datepart(mm,#acctdate#) as month
+    ]]></select>
+    <select id="getCustByOrgid" parameterClass="java.lang.Long" resultMap="resultMap3"><![CDATA[
+    	select 0 as CUSTID,'无客户对应' as CUSTNAME,'无客户对应' as custjc UNION select distinct b.CUSTID,c.CUSTNAME,c.custjc from RD_PROJECT b left JOIN MIS_CUSTINFO c on b.CUSTID=c.CUSTID where b.PROJECT_STATUS in ('1','2','4') and FIN_UNIT_ID is not null and b.CUSTID is not null and b.FIN_UNIT_ID=#orgid#
+    ]]></select>
+    <select id="getAllCustByOrgid" parameterClass="java.lang.Long" resultMap="resultMap3"><![CDATA[
+    	select 0 as CUSTID,'无客户对应' as CUSTNAME,'无客户对应' as custjc UNION select distinct b.CUSTID,c.CUSTNAME,c.custjc from RD_PROJECT b left JOIN MIS_CUSTINFO c on b.CUSTID=c.CUSTID where FIN_UNIT_ID is not null and b.CUSTID is not null and b.FIN_UNIT_ID=#orgid#
+    ]]></select>
+</sqlMap>

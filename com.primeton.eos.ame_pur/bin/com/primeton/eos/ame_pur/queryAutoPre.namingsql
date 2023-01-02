@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_pur.queryAutoPre">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="OUTPERNO" javaType="int" property="outperno"/>
+        <result column="MAXACCUENDDATE" javaType="date" property="maxaccuenddate"/>
+    </resultMap>
+    <select id="queryMaxAccuenddate" parameterClass="java.util.HashMap" resultMap="resultMap3">
+    	select max(a.ACCUENDDATE) MAXACCUENDDATE,a.OUTPERNO from PUR_PROJ_OUTPER a 
+    	<isNotNull property="outperno">where a.OUTPERNO=#outperno#</isNotNull>
+    		group by a.OUTPERNO
+    </select>
+</sqlMap>

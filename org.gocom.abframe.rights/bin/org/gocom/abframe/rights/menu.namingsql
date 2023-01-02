@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="org.gocom.abframe.rights.menu">
+    <update id="moveMenuUpdateLevelAndSeq" parameterClass="java.util.HashMap"><![CDATA[
+    UPDATE AC_MENU SET MENULEVEL=MENULEVEL+#toMenuLevel#-#fromMenuLevel#,MENUSEQ=#toMenuSeq#+SUBSTRING(MENUSEQ,LEN(#fromMenuSeq#)+1,LEN(MENUSEQ)-LEN(#fromMenuSeq#)) WHERE MENUSEQ LIKE #menuSeq#+'%'
+    ]]></update>
+    <update id="moveTopMenuUpdateLevelAndSeq" parameterClass="java.util.HashMap"><![CDATA[
+    UPDATE AC_MENU SET MENULEVEL=MENULEVEL+#toMenuLevel#,MENUSEQ=#toMenuSeq#+MENUSEQ WHERE MENUSEQ LIKE #menuSeq#+'%'
+    ]]></update>
+    <update id="moveCustMenuUpdateLevelAndSeq" parameterClass="java.util.HashMap"><![CDATA[
+    UPDATE AC_OPERCUSTMENU T SET T.MENULEVEL=T.MENULEVEL+#toMenuLevel#-#fromMenuLevel#,T.MENUSEQ=#toMenuSeq#+SUBSTRING(T.MENUSEQ,LEN(#fromMenuSeq#)+1,LEN(MENUSEQ)-LEN(#fromMenuSeq#)) WHERE T.MENUSEQ LIKE #menuSeq#+'%' AND T.OPERATORID=#operatorid#
+    ]]></update>
+    <update id="moveTopCustMenuUpdateLevelAndSeq" parameterClass="java.util.HashMap"><![CDATA[
+    UPDATE AC_OPERCUSTMENU T SET T.MENULEVEL=T.MENULEVEL+#toMenuLevel#,T.MENUSEQ=#toMenuSeq#+T.MENUSEQ WHERE T.MENUSEQ LIKE #menuSeq#+'%' AND T.OPERATORID=#operatorid#
+    ]]></update>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.AcMenu" id="parentMenuMap">
+        <parameter javaType="string" jdbcType="VARCHAR" property="menuseq"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.privilege.AcMenu" id="parentMenuResultMap">
+        <result column="menulevel" property="menulevel"/>
+    </resultMap>
+    <select id="selectMaxMenulevel" parameterMap="parentMenuMap" resultMap="parentMenuResultMap"><![CDATA[
+        SELECT MAX(MENULEVEL) AS MENULEVEL FROM AC_MENU WHERE MENUSEQ LIKE ?+'%'
+     ]]></select>
+    <!-- 查询角色对应的菜单功能编号，采用$替换字符串方法实现in的操作 -->
+    <resultMap class="java.lang.String" id="funccode-result">
+        <result column="FUNCCODE" property="value"/>
+    </resultMap>
+    <select id="loadRoleFunccodeMenu" parameterClass="java.lang.String" resultMap="funccode-result">SELECT distinct       
+      A.FUNCCODE        
+	  FROM AC_ROLEFUNC A
+	  LEFT OUTER JOIN AC_FUNCTION B ON A.FUNCCODE = B.FUNCCODE
+	  WHERE B.ISMENU='y'	  
+	        AND A.ROLEID IN ($roleids$)</select>
+    <resultMap class="commonj.sdo.DataObject" id="result1">
+        <result column="ROLEID" javaType="string" property="roleid"/>
+        <result column="ROLENAME" javaType="string" property="rolename"/>
+        <result column="ROLETYPE" javaType="string" property="roletype"/>
+    </resultMap>
+    <!-- -->
+    <select id="queryRoleMenu" parameterClass="java.util.HashMap" resultMap="result1">SELECT c.ROLEID,c.ROLENAME,c.ROLETYPE FROM AC_ROLE c WHERE c.ROLEID in(select b.ROLEID from AC_ROLEFUNC b WHERE FUNCCODE=(SELECT a.FUNCCODE FROM AC_MENU a WHERE a.menuid = #menuid#) GROUP BY b.roleid)</select>
+    <select id="queryRoleMenu11" parameterClass="java.util.HashMap" resultMap="result1">SELECT c.ROLEID,c.ROLENAME,c.ROLETYPE FROM AC_ROLE c 
+		WHERE c.ROLEID in(select b.ROLEID from AC_ROLEFUNC b 
+		WHERE FUNCCODE=#code# GROUP BY b.roleid)</select>
+    <resultMap class="commonj.sdo.DataObject" id="result11">
+        <result column="MENUNAME" javaType="string" property="menuname"/>
+    </resultMap>
+    <select id="queryRoleMenu12" parameterClass="java.util.HashMap" resultMap="result11">select menuname from AC_MENU a where a.funccode =#funccode#</select>
+    <resultMap class="commonj.sdo.DataObject" id="result12">
+        <result column="ISCONTROLCONFIG" javaType="string" property="iscontrolconfig"/>
+    </resultMap>
+    <select id="queryRoleMenu13" parameterClass="java.util.HashMap" resultMap="result12">select iscontrolconfig from AC_FUNCTION where funccode=#funccode#</select>
+    <resultMap class="commonj.sdo.DataObject" id="myRole">
+        <result column="ROLEID" javaType="string" property="roleid"/>
+    </resultMap>
+    <!-- 查询自己所有的角色-->
+    <select id="queryMyRole" parameterClass="java.util.HashMap" resultMap="myRole">select stuff((
+		select ','+g.ROLEID
+		from (
+			SELECT a.ROLEID FROM AC_ROLE a 
+			LEFT JOIN AC_OPERATORROLE b ON a.ROLEID = b.ROLEID  
+			LEFT JOIN OM_EMPLOYEE c ON b.OPERATORID = c.OPERATORID 
+			WHERE c.USERID = #userid#
+		) g for xml path('')),1,1,'') as ROLEID</select>
+    <resultMap class="commonj.sdo.DataObject" id="getIndexWindow">
+        <result column="WINDOWID" javaType="string" property="windowid"/>
+        <result column="ISAPPER" javaType="string" property="isapper"/>
+        <result column="WINDOWSORT" javaType="string" property="windowsort"/>
+        <result column="WINDOWNAME" javaType="string" property="windowname"/>
+        <result column="WINDOWURL" javaType="string" property="windowurl"/>
+        <result column="WINDOWTYPE" javaType="string" property="windowtype"/>
+        <result column="IWID" javaType="string" property="iwid"/>
+        <result column="windowwidth" javaType="string" property="windowwidth"/>
+    </resultMap>
+    <!--查询首页窗口 -->
+    <select id="queryIndexWindow" parameterClass="java.util.HashMap" resultMap="getIndexWindow">
+		WITH CTE AS(
+		    SELECT WINDOWID,ISAPPER,WINDOWSORT,WINDOWNAME,windowurl,windowtype,windowwidth,
+		        doc = CONVERT(xml,'&lt;v&gt;'+REPLACE(WINDOWROLE,',','&lt;/v&gt;&lt;v&gt;')+'&lt;/v&gt;'),
+		        doc2 = CONVERT(xml,'&lt;v&gt;'+REPLACE(WINDOWEMPTYPE,',','&lt;/v&gt;&lt;v&gt;')+'&lt;/v&gt;')
+		    FROM AC_INDEX_SETING WHERE isapper = '1'
+		)
+		,CTE2 AS(
+		    SELECT WINDOWID,ISAPPER,WINDOWSORT,WINDOWNAME,windowurl,windowtype,windowwidth,A.x.value('.','varchar(200)') WINDOWROLE FROM CTE CROSS APPLY doc.nodes('//v') AS A(x)
+		),
+		CTE3 AS(
+				SELECT WINDOWID,A.x.value('.','varchar(100)') WINDOWEMPTYPE FROM CTE CROSS APPLY doc2.nodes('//v') AS A(x)
+		)
+		SELECT DISTINCT s.* FROM  (
+			SELECT  DISTINCT a.WINDOWID ,a.WINDOWURL,a.WINDOWTYPE,b.IWID,a.windowwidth,
+			CASE WHEN b.ISAPPER IS NULL THEN a.ISAPPER ELSE b.ISAPPER END AS ISAPPER,CASE WHEN b.WINDOWSORT IS NULL THEN a.WINDOWSORT ELSE b.WINDOWSORT END AS WINDOWSORT , 
+			CASE WHEN b.WINDOWNAME IS NULL THEN a.WINDOWNAME ELSE b.WINDOWNAME END AS WINDOWNAME  FROM  cte2  a  
+			LEFT JOIN (SELECT * FROM AC_INDEX_COFIG d WHERE d.WINDOWUSER = #userid#) b ON a.WINDOWID = b.WINDOWID
+			WHERE a.WINDOWROLE IN ($roleList$)
+			<isEqual compareValue="1" property="isIndex">and (b.isapper = '1' or b.isapper is null)</isEqual>
+  		) s
+		LEFT JOIN CTE3 ON CTE3.WINDOWID = s.WINDOWID 
+		WHERE CTE3.WINDOWEMPTYPE = #degree#
+  		ORDER BY WINDOWSORT asc
+	</select>
+</sqlMap>

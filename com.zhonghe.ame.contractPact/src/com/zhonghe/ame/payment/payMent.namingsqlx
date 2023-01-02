@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:huangqj -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
+    
+    <select id="queryPaidByContractNo" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.payment.payMent.ZhPayment">
+    	select contract_id,apply_pay_contract_sum from zh_payment  where contract_id = #contractNo# and app_status = '2'
+    </select>
+    
+    
+    <select id="queryPayPlan" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.annualPlan.annualPlan.AnnualPaymentPlan">
+    	select * from annual_payment_plan w where w.pay_id = #payId#
+    </select>
+    
+    
+    <select id="queryChargePlan" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.annualPlan.annualPlan.AnnualPaymentPlan">
+    	select * from annual_payment_plan w where w.charge_id = #chargeId#;
+    </select>
+    
+    
+    <select id="queryOrg" parameterClass = "java.util.HashMap" resultClass = "com.zhonghe.ame.payment.payMent.OmOrganization">
+    	SELECT ORGID,ORGNAME,ORGLEVEL,PARENTORGID FROM OM_ORGANIZATION WHERE ORGID = #orgid#
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="processMap">
+    	<result column="endtime" property="endtime"/>
+    </resultMap>
+    
+    <select id="queryProcessInstById" parameterClass="java.lang.String" resultMap="processMap">
+	
+		select endtime from wfprocessinst  where PROCESSINSTID = #processinstid#
+
+    </select>
+    
+    <update id="updatePayMent" parameterClass="java.util.HashMap">
+  	   update zh_payment set end_time = #endtime# where processid = #processinstId#
+  </update>
+  
+  <select id="queryPayMentByProcessId" parameterClass="java.lang.String" resultClass="com.zhonghe.ame.payment.payMent.ZhPayment">
+	
+		select * from zh_payment  where processid = #processinstid#
+
+    </select>
+    
+      <update id="updateContractBalance" parameterClass="java.util.HashMap">
+  	   update zh_pay_contract set contract_balance = #contractBalance# where contract_no = #contractNo#
+	  </update>
+	  
+	  
+    <update id="updateInvoice" parameterClass="java.util.HashMap">
+  	   update zh_invoice set create_time = #endtime# where processId = #processid#
+  </update>
+  
+  
+  <select id="queryInvoiceByProcessId" parameterClass="java.lang.String" resultClass="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice">
+	
+		select * from zh_invoice  where processId = #processid#
+
+    </select>
+    
+    
+    <select id="querySignatoryName" parameterClass = "java.util.HashMap" resultClass = "com.zhonghe.ame.payContract.payContract.PurSupplier">
+    	select * from PUR_SUPPLIER where CUSTNAME = #CUSTNAME#
+    </select>
+    
+    <select id="querySignatoryIdByName" parameterClass = "java.util.HashMap" resultClass = "com.zhonghe.ame.chargeContract.chargeContract.MisCustinfo">
+    	select * from MIS_CUSTINFO  where CUSTNAME = #CUSTNAME#
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMapDict">
+        <result column="DICTID" javaType="string" property="DICTID"/>
+    </resultMap>
+    <select id="queryDict" parameterClass = "java.util.HashMap" resultMap="resultMapDict">
+    	select DICTID from EOS_DICT_ENTRY where DICTTYPEID = #DICTTYPEID# and DICTNAME = #DICTNAME#
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMapOrganization">
+        <result column="ORGID" javaType="string" property="ORGID"/>
+    </resultMap>
+    <select id="queryOrganizationId" parameterClass = "java.util.HashMap" resultMap="resultMapOrganization">
+    	select ORGID from OM_ORGANIZATION where ORGNAME = #ORGNAME#
+    </select>
+    
+    <delete id="deletePlanForNo" parameterClass="java.util.Map">
+    	delete from annual_payment_plan where pay_id = #payId#
+    </delete> 
+    
+     <delete id="deletePlanForNo1" parameterClass="java.util.Map">
+    	delete from annual_payment_plan where charge_id = #chargeId#
+    </delete> 
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMapBid">
+        <result column="apply_pay_contract_sum" javaType="string" property="apply_pay_contract_sum"/>
+    </resultMap>
+    
+    <select id="queryBid" parameterClass = "java.util.HashMap" resultMap="resultMapBid">
+    	select apply_pay_contract_sum from zh_payment where contract_id = #contractId# and app_status in ('1','2') 
+    	AND create_time  between CONVERT(varchar(100), #startDate#, 23) 
+    	AND  CONVERT(varchar(100), #endDate#, 23);
+    </select>
+    
+     <select id="queryPlan" parameterClass = "java.util.HashMap" resultClass = "com.zhonghe.ame.annualPlan.annualPlan.AnnualPaymentPlan">
+    	select * from annual_payment_plan 
+    	WHERE 1= 1 
+    	<isNotEmpty property="contractId">  
+				AND contract_no = #contractId#
+		</isNotEmpty>
+		<isNotEmpty property="years">  
+				and years = #years#
+		</isNotEmpty>
+    </select>
+</sqlMap>

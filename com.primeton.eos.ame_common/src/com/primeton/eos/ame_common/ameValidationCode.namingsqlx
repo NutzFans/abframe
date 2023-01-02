@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:shihao -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+    	<result column="CODEID" javaType="int" property="codeid"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="TELPHONE" javaType="string" property="telphone"/>
+        <result column="NAME" javaType="string" property="name"/>
+        <result column="CODE" javaType="string" property="code"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="DEADLINE" javaType="java.sql.Timestamp" property="deadline"/>
+        <result column="CREATEDATE" javaType="java.sql.Timestamp" property="createdate"/>
+    </resultMap>
+    
+    <!--查询上次验证码未使用的数据 
+    	
+    -->
+    <select id="getLastCode" parameterClass="java.util.HashMap" resultMap="resultMap">
+    <![CDATA[
+    	SELECT CODEID, USERID, NAME, TELPHONE, CODE, STATUS, DEADLINE, CREATEDATE
+    	   FROM AME_VALIDATION_CODE
+    	    WHERE STATUS = '0'
+			    and DEADLINE >  DateAdd(MINUTE,4,GETDATE())
+			    and USERID = #userId#
+			    and TELPHONE = #telphone#
+			ORDER BY CODEID DESC
+    ]]>
+    </select>
+    <!-- 更新已经发送，但是未做校验的-->
+    <update id="updateValidStatus" parameterClass="java.util.HashMap">
+        UPDATE AME_VALIDATION_CODE SET STATUS='1'
+		WHERE STATUS ='0'
+		     AND USERID=#userId#
+			AND NAME =#userName#
+			AND DEADLINE > GETDATE()
+	</update>
+    
+   <!--查询上次验证码未使用的数据 
+    	
+    -->
+    <select id="getValidCode" parameterClass="java.util.HashMap" resultMap="resultMap">
+    
+    	SELECT CODEID, USERID, NAME, TELPHONE, CODE, STATUS, DEADLINE, CREATEDATE
+    	   FROM AME_VALIDATION_CODE
+    	    WHERE STATUS = '0'
+			   <![CDATA[ and DEADLINE >  GETDATE() ]]>
+			    and USERID = #userId#
+			    and TELPHONE = #telphone#
+			ORDER BY CODEID DESC
+    
+    </select>
+    
+    
+      <!--查询上次验证码未使用的数据 -->
+    <select id="getValidationCode" parameterClass="java.util.HashMap" resultMap="resultMap">
+    <![CDATA[
+    	SELECT CODEID, USERID, NAME, TELPHONE, CODE, STATUS, DEADLINE, CREATEDATE
+    	   FROM AME_VALIDATION_CODE
+    	    WHERE STATUS = '0'
+			    and USERID = #userId#
+			    and TELPHONE = #telphone#
+			    and CODE = #code#
+			ORDER BY CREATEDATE DESC
+    ]]>
+    </select>
+    
+      <!--查询验证码未使用,并已经过期的数据 -->
+    <select id="getOutDateCode" parameterClass="java.util.HashMap" resultMap="resultMap">
+    	SELECT CODEID, USERID, NAME, TELPHONE, CODE, STATUS, DEADLINE, CREATEDATE
+    	   FROM AME_VALIDATION_CODE
+    	    WHERE STATUS = '0'
+			    and USERID = #userId#
+			    <![CDATA[ and  GETDATE() > DEADLINE ]]>
+			    and TELPHONE = #telphone#
+			    and CODE = #code#
+			ORDER BY CREATEDATE DESC
+    
+    </select>
+    
+    <!-- 更新已经校验通过后的验证码状态-->
+    <update id="updateStatus" parameterClass="java.util.HashMap">
+        UPDATE AME_VALIDATION_CODE SET STATUS='1'
+		WHERE STATUS ='0'
+		     AND USERID=#userId#
+			AND CODE = #code#
+			AND TELPHONE = #telphone#
+	</update>
+</sqlMap>

@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="QueryResList" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="资源编号和资源名称选择时调用的lookUp页面流，通过lookUp的returnValue把资源名称、资源编号返回到选择页面" title="杨文强&#x9;08-8-22 下午6:20">
+    <location x="45" y="560"/>
+    <size height="91" width="207"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="type" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="56" y="250"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="58" y="286"/>
+    <figSize height="15" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="查询角色资源" displayName="queryResourceId" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <bendPoint heightToEnd="48" heightToStart="49" widthToEnd="-95" widthToStart="113"/>
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="183" y="450"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.RestrictManager.queryRoleResource</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="role" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="roleList" type="query" value="org.gocom.abframe.dataset.privilege.AcRole[]" valueType="DataObject">roleList</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="160" y="485"/>
+    <figSize height="15" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="角色列表" displayName="role_reslist.jsp" type="view" contributionName="org.gocom.abframe.tools" uri="/abframe/rights/restrict/role_reslist.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link3" name="link3" lineType="reference" type="action" actionName="rolePageQuery" dataConvertClass="">
+      <bendPoint heightToEnd="-52" heightToStart="-53" widthToEnd="109" widthToStart="-99"/>
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link12" name="link12" lineType="reference" type="action" actionName="roleQuery" dataConvertClass="">
+      <bendPoint heightToEnd="-1" heightToStart="-1" widthToEnd="103" widthToStart="-17"/>
+      <bendPoint heightToEnd="-2" heightToStart="-4" widthToEnd="24" widthToStart="-69"/>
+      <sourceNode>view0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="428" y="450"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="415" y="486"/>
+    <figSize height="15" width="49"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link4" name="角色" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="职务" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">duty</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link11" name="岗位" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">position</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link14" name="机构" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">organization</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link17" name="员工" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">employee</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link19" name="工作组" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">workgroup</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link29" name="功能" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view7</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">function</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="182" y="250"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="184" y="286"/>
+    <figSize height="15" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束" displayName="结束" type="end" contextPath="" method="forward" uri="/abframe/rights/restrict/emp_reslist.jsp">
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link26</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="571" y="250"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="573" y="286"/>
+    <figSize height="15" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view1" name="员工信息列表" displayName="emp_reslist.jsp" type="view" contextPath="" method="forward" uri="/abframe/rights/restrict/emp_reslist.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link18" name="link18" lineType="reference" isDefault="true" type="action" actionName="action6">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link24" name="link24" lineType="reference" type="action" actionName="empPageQuery" dataConvertClass="">
+      <bendPoint heightToEnd="54" heightToStart="53" widthToEnd="102" widthToStart="-106"/>
+      <sourceNode>view1</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link6" name="link6" lineType="reference" type="action" actionName="empQuery" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="393" y="74"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="368" y="110"/>
+    <figSize height="15" width="73"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="查询员工" displayName="queryEmpResource" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <bendPoint heightToEnd="-56" heightToStart="-55" widthToEnd="-97" widthToStart="111"/>
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link24</targetConnections>
+    <location x="183" y="74"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.RestrictManager.queryEmpResource</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="emp" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="empList" type="query" value="org.gocom.abframe.dataset.organization.OmEmployee[]" valueType="DataObject">empList</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">emp</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="172" y="109"/>
+    <figSize height="15" width="49"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view7" name="功能树" displayName="appfunc_tree.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.rights" method="forward" uri="/abframe/rights/application/appfunc_tree.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link7" name="link7" lineType="reference" isDefault="true" type="action" actionName="action2">
+      <sourceNode>view7</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <location x="393" y="368"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view7label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view7label" name="label" nodeType="label">
+    <location x="386" y="404"/>
+    <figSize height="15" width="37"/>
+    <node>view7</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view5" name="职务树" displayName="duty_tree.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/duty/duty_tree.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link26" name="link26" lineType="reference" isDefault="true" type="action" actionName="action3">
+      <sourceNode>view5</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="393" y="250"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view5label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view5label" name="label" nodeType="label">
+    <location x="386" y="286"/>
+    <figSize height="15" width="37"/>
+    <node>view5</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view2" name="岗位树" displayName="position_tree.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/position/position_tree.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link13" name="link13" lineType="reference" isDefault="true" type="action" actionName="action4">
+      <sourceNode>view2</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="393" y="304"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view2label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view2label" name="label" nodeType="label">
+    <location x="386" y="340"/>
+    <figSize height="15" width="37"/>
+    <node>view2</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view3" name="机构树" displayName="org_tree_select.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/organization/org_tree_select.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link16" name="link16" lineType="reference" isDefault="true" type="action" actionName="action5">
+      <sourceNode>view3</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="393" y="197"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view3label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view3label" name="label" nodeType="label">
+    <location x="386" y="233"/>
+    <figSize height="15" width="37"/>
+    <node>view3</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view4" name="工作组树" displayName="group_tree_select.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/workgroup/group_tree_select.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link5" name="link5" lineType="reference" isDefault="true" type="action" actionName="action7">
+      <sourceNode>view4</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="393" y="137"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view4label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view4label" name="label" nodeType="label">
+    <location x="380" y="173"/>
+    <figSize height="15" width="49"/>
+    <node>view4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="286" y="74"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="285" y="110"/>
+    <figSize height="15" width="31"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="297" y="450"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="296" y="486"/>
+    <figSize height="15" width="31"/>
+    <node>assign2</node>
+  </nodes>
+  <topRuler>
+    <guides position="-21" horizontal="true"/>
+  </topRuler>
+  <leftRuler/>
+  <process:info author="杨文强" createTime="2008-08-21 15:55:28" date="2008-08-21Z" description="" name="查询约束资源" version="6.0"/>
+  <process:variables/>
+</process:tPageFlow>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zhonghe.ame.marketInfo.myCreatedBid.MyCreateBid">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
+    <select id="queryOrg" parameterClass="java.util.HashMap" resultClass="com.zhonghe.ame.payment.payMent.OmOrganization">SELECT ORGID,ORGNAME FROM OM_ORGANIZATION WHERE ORGNAME = #ORGNAME#</select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapUser">
+        <result column="USERID" javaType="string" property="USERID"/>
+        <result column="EMPNAME" javaType="string" property="EMPNAME"/>
+    </resultMap>
+    <select id="queryUserId" parameterClass="java.util.HashMap" resultMap="resultMapUser">select USERID,EMPNAME from OM_EMPLOYEE where EMPNAME = #EMPNAME#</select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapDict">
+        <result column="DICTID" javaType="string" property="DICTID"/>
+    </resultMap>
+    <select id="queryDict" parameterClass="java.util.HashMap" resultMap="resultMapDict">select DICTID from EOS_DICT_ENTRY where DICTTYPEID = #DICTTYPEID# and DICTNAME = #DICTNAME#</select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapCompetitor">
+        <result column="CUSTID" javaType="string" property="CUSTID"/>
+    </resultMap>
+    <select id="queryCompetitor" parameterClass="java.util.HashMap" resultMap="resultMapCompetitor">select CUSTID from ZH_COMPETITOR where CUSTNAME = #CUSTNAME#</select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapProject">
+        <result column="id" javaType="string" property="id"/>
+    </resultMap>
+    <select id="queryProject" parameterClass="java.util.HashMap" resultMap="resultMapProject">select id from ZH_BIDINFO where project_name = #projectName#</select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapBid">
+        <result column="id" javaType="string" property="id"/>
+        <result column="projectName" javaType="string" property="projectName"/>
+        <result column="party_name" javaType="string" property="partyName"/>
+        <result column="scopeService" javaType="string" property="scopeService"/>
+        <result column="major" javaType="string" property="major"/>
+        <result column="serviceType" javaType="string" property="serviceType"/>
+        <result column="bidResult" javaType="string" property="bidResult"/>
+        <result column="priceModel" javaType="string" property="priceModel"/>
+        <result column="equivalent" javaType="string" property="equivalent"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="opentime" javaType="date" jdbcType="DATE" property="opentime"/>
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="externalType" javaType="string" property="externalType"/>
+        <result column="investmentAmount" javaType="string" property="investmentAmount"/>
+        <result column="matterAmount" javaType="string" property="matterAmount"/>
+        <result column="projectlocal" javaType="string" property="projectlocal"/>
+        <result column="headquarterGroup" javaType="string" property="headquarterGroup"/>
+        <result column="characteristics" javaType="string" property="characteristics"/>
+        <result column="features" javaType="string" property="features"/>
+        <result column="contractType" javaType="string" property="contractType"/>
+        <result column="procurementType" javaType="string" property="procurementType"/>
+        <result column="remake" javaType="string" property="remake"/>
+    </resultMap>
+    <select id="queryBid" parameterClass="java.util.HashMap" resultMap="resultMapBid">
+    	SELECT 
+    		a.id AS id,
+			a.project_name AS projectName,
+			a.party_name AS party_name,
+			a.scope_service as scopeService,
+			a.major as major,
+			a.service_type as serviceType,
+			a.bid_result as bidResult,
+			a.price_model as priceModel,
+			a.equivalent as equivalent,
+			d.orgname as orgname,
+			CONVERT(varchar(100), a.bid_open_time, 23) AS opentime,
+			f.EMPNAME as empname,
+			a.external_type as externalType,
+			a.investment_amount as investmentAmount,
+			a.matter_amount as matterAmount,
+			a.project_local as projectlocal,
+			a.headquarter_group as headquarterGroup,
+			a.characteristics as characteristics,
+			a.features as features,
+			a.contract_type as contractType,
+			a.procurement_type as procurementType,
+			a.remake as remake
+    	 FROM ZH_BIDINFO a
+			LEFT JOIN ZH_BIDINFO_COMPETITOR b ON a.id = b.bid_id
+			LEFT JOIN ZH_COMPETITOR c ON b.compet_id = c.CUSTID 
+			LEFT JOIN OM_ORGANIZATION d ON d.ORGID = a.org_id
+			LEFT JOIN OM_EMPLOYEE f ON a.creat_userid = f.USERID
+		WHERE 1= 1
+			and c.CUSTID = #custName#
+			<isNotEmpty property="orgname">AND d.orgname = #orgname#</isNotEmpty>
+        <isNotEmpty property="partyName">AND a.party_name = #partyName#</isNotEmpty>
+        <isNotEmpty property="projectName">AND a.project_name = #projectName#</isNotEmpty>
+        <isNotEmpty property="investmentAmount">AND a.investment_amount = #investmentAmount#</isNotEmpty>
+        <isNotEmpty property="matterAmount">AND a.matter_amount = #matterAmount#</isNotEmpty>
+        <isNotEmpty property="projectlocal">AND a.project_local = #projectlocal#</isNotEmpty>
+        <isNotEmpty property="headquarterGroup">AND a.headquarter_group = #headquarterGroup#</isNotEmpty>
+        <isNotEmpty property="characteristics">AND a.characteristics = #characteristics#</isNotEmpty>
+        <isNotEmpty property="serviceType">AND a.service_type = #serviceType#</isNotEmpty>
+        <isNotEmpty property="major">AND a.major = #major#</isNotEmpty>
+        <isNotEmpty property="scopeService">AND a.scope_service = #scopeService#</isNotEmpty>
+        <isNotEmpty property="features">AND a.features = #features#</isNotEmpty>
+        <isNotEmpty property="contractType">AND a.contract_type = #contractType#</isNotEmpty>
+        <isNotEmpty property="procurementType">AND a.procurement_type = #procurementType#</isNotEmpty>
+        <isNotEmpty property="priceModel">AND a.price_model = #priceModel#</isNotEmpty>
+        <isNotEmpty property="equivalent">AND a.equivalent = #equivalent#</isNotEmpty>
+        <isNotEmpty property="bdResult">AND a.bid_result = #bdResult#</isNotEmpty>
+        <isNotEmpty property="externalType">AND a.external_type = #externalType#</isNotEmpty>
+        <isNotEmpty property="opentimeMin">AND a.bid_open_time  between CONVERT(varchar(100), #opentimeMin#, 23)</isNotEmpty>
+        <isNotEmpty property="opentimeMax">AND  CONVERT(varchar(100), #opentimeMax#, 23)</isNotEmpty>
+    </select>
+</sqlMap>

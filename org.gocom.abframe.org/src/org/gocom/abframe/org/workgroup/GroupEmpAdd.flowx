@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="GroupEmpAdd" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="描述：为工作组添加员工，首先查询可以添加到某工作组的员工列表，然后选择一个或多个添加" title="周维&#x9;08-8-21 下午9:27">
+    <location x="102" y="374"/>
+    <size height="100" width="289"/>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="link1" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="180" y="170"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">f:page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">f:page/begin</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">10</process:from>
+      <process:to type="query">f:page/length</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">groupid</process:from>
+      <process:to type="query">f:empGroup/omGroup/groupid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">groupid</process:from>
+      <process:to type="query">f:groupID</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="182" y="206"/>
+    <figSize height="12" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="员工查询页面" displayName="group_emp_query.jsp" collapsed="false" type="view" contextPath="" contributionName="org.gocom.abframe.position" method="forward" uri="/abframe/org/workgroup/group_emp_query.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link1" name="link1" displayName="link4" lineType="reference" isDefault="true" type="action" actionName="pageQuery" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" displayName="link9" lineType="reference" isDefault="false" type="action" actionName="insert" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link3" name="link3" displayName="link5" lineType="reference" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="464" y="170"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="选择的人员" historyStateLocation="client" isArray="true" modelType="org.gocom.abframe.dataset.organization.OmEmployee" name="select_objs"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="439" y="206"/>
+    <figSize height="12" width="73"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" collapsed="false" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link7" name="link7" displayName="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="groupid" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="80" y="170"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="82" y="206"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="link3" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="272" y="57"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="271" y="93"/>
+    <figSize height="12" width="31"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束" displayName="结束" collapsed="false" type="end" contextPath="" method="forward" uri="/abframe/org/workgroup/group_emp_query.jsp" variableUri="false">
+    <targetConnections>link3</targetConnections>
+    <location x="585" y="170"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="587" y="206"/>
+    <figSize height="12" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="增加工作组员工" displayName="addGroupEmps" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="link10" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="461" y="57"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.workgroup.WorkgroupManager.addGroupEmps</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="emps" type="query" value="org.gocom.abframe.dataset.organization.OmEmployee[]" valueType="DataObject" pattern="reference">select_objs</process:inputVariable>
+        <process:inputVariable id="1" name="groupid" type="query" value="String" valueType="Primitive" pattern="reference">f:groupID</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="432" y="92"/>
+    <figSize height="12" width="85"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="分页查询员工" displayName="queryGroupEmp" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="272" y="170"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.workgroup.WorkgroupManager.queryGroupEmp</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">f:page</process:inputVariable>
+        <process:inputVariable id="1" name="emp" type="query" value="org.gocom.abframe.dataset.organization.OmEmpgroup" valueType="DataObject" pattern="reference">f:empGroup</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="emps" type="query" value="org.gocom.abframe.dataset.organization.OmEmpgroup[]" valueType="DataObject">empGroups</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="249" y="205"/>
+    <figSize height="12" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="周维" createTime="2008-08-21 20:26:11" date="2008-08-21Z" description="" name="工作组增加员工" version="6.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmEmpgroup" name="empGroup"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="groupID" primitiveType="String"/>
+  </process:variables>
+  <process:inputParameters/>
+</process:tPageFlow>

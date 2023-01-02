@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.income.queryTimesAndConfMoney">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="sumMoney" javaType="string" property="sumMoney"/>
+        <result column="times" javaType="int" property="times"/>
+    </resultMap>
+    <select id="queryTimesAndMoney" resultMap="resultMap"><![CDATA[
+			select sum(ACTSUM) as sumMoney,count(*) as times from cs_reve_forecast where contnum =#contnum# and STATUS in ('3','7')
+		]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="activityInstName" javaType="String" property="activityInstName"/>
+        <result column="partiName" javaType="String" property="partiName"/>
+        <result column="activityDefID" javaType="String" property="activityDefID"/>
+        <result column="processInstID" javaType="String" property="processInstID"/>
+        <result column="processDefName" javaType="String" property="processDefName"/>
+    </resultMap>
+    <select id="getactivityInstNameByProcessinstid" resultMap="resultMap1">
+        <!--获取流程实例的当前活动环节和参与者--><![CDATA[
+			select a.activityInstName,b.partiName,a.activityDefID,b.processDefName,b.processInstID from WFActivityInst a,
+ WFWorkItem b where  a.processInstID=b.processInstID
+and  a.processInstID =#processinstid# and a.currentState =2 and (b.currentState =10 or b.currentState =4);
+		]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="setend" javaType="string" property="setend"/>
+    </resultMap>
+    <select id="getenddate" resultMap="resultMap2">
+        <!--结束日期戈斯华--><![CDATA[
+			select CONVERT(varchar(6) , #confirmday#, 112 ) as setend
+		]]></select>
+</sqlMap>

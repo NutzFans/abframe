@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryTreeEmp">
+        <config db="default" type="sql"><![CDATA[select a.empid,a.empname,a.userid,a.orgid,a.empcode,b.orgid as orgid1 from om_employee a,om_emporg b where a.empid=b.empid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.AmeErptimecost">
+        <config db="default" type="sql"><![CDATA[select case WHEN t.pk_corp='1' then '项目定额' when t.pk_corp='2' then '售前定额' end as type,
+t.pk_corp,sum(t.costs) as costs,t.[year],t.[month]
+from ERP_PS_OUT t where t.pk_corp in ('1','2') GROUP BY t.pk_corp,t.[year],t.[month]]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryAmeFlowAttention">
+        <config db="default" type="sql"><![CDATA[select a.userName,c.processChName,b.processInstName,b.currentState,b.startTime,b.endTime,d.activityInstName,a.attentionTime,a.processInstID
+from WFProcessInst b,WFProcessDefine c,AME_FLOW_ATTENTION a
+left join (select processInstID, activityInstName = (stuff((select ',' + activityInstName from WFActivityInst where processInstID=x.processInstID and currentState='2' for xml path('')),1,1,'')) 
+from WFActivityInst x where currentState='2' group by x.processInstID) d on a.processInstID=d.processInstID
+where a.processInstID=b.processInstID and b.processDefID=c.processDefID and a.status='0']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryProcessChName">
+        <config db="default" type="sql"><![CDATA[select DISTINCT a.processChName from WFProcessDefine a LEFT JOIN WFProcessInst b on a.processDefID=b.processDefID 
+where b.currentState=7]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.OmOrganizationView">
+        <config db="default" type="view"><![CDATA[OM_ORGANIZATION_VIEW]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryAuthConfig">
+        <config db="default" type="sql"><![CDATA[SELECT  *
+        ,rolename = STUFF(( SELECT ',' + rolename FROM   AC_ROLE where   PATINDEX('%,' + RTRIM(roleid) + ',%',',' + a.ROLE + ',')>0
+                         ORDER BY PATINDEX('%,' + RTRIM(roleid) + ',%',',' + a.ROLE + ',') FOR XML PATH('')), 1, 1,'')
+				,orgname = STUFF(( SELECT ',' + orgname FROM   OM_ORGANIZATION where   PATINDEX('%,' + RTRIM(orgid) + ',%',',' + a.ORG + ',')>0
+                         ORDER BY PATINDEX('%,' + RTRIM(ORGID) + ',%',',' + a.ORG + ',') FOR XML PATH('')), 1, 1,'')
+				,empname = STUFF(( SELECT ',' + empname FROM   OM_EMPLOYEE where   PATINDEX('%,' + RTRIM(USERID) + ',%',',' + a.USERID + ',')>0
+                         ORDER BY PATINDEX('%,' + RTRIM(USERID) + ',%',',' + a.USERID + ',') FOR XML PATH('')), 1, 1,'')
+FROM  AME_AUTHCONFIG  a]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryMisOpinion">
+        <config db="default" type="sql"><![CDATA[SELECT   a.*,b.catalogName,c.processChName,b.processInstName,d.EMPNAME
+
+FROM
+	MIS_OPINION a
+LEFT JOIN WFProcessInst b ON a.PROCESSINSTID = b.processInstID
+LEFT JOIN WFProcessDefine c ON c.processDefID = b.processDefID
+LEFT JOIN OM_EMPLOYEE d ON b.creator = d.USERID
+LEFT JOIN WFWIParticipant  e ON  a.PROCESSINSTID = e.PROCESSINSTID
+
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryContOrder">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,b.CONTNUM,b.CONTRACTTYPE,b.SALENAME FROM CS_CONT_ORDER a 
+LEFT JOIN CS_CONTRACT b on a.CONTRACTID = b.CONTRACTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryIncomecheckAct">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	a.*, b.processChName,
+	b.activityInstName
+FROM
+	CS_INCOMECHECK_ACT a
+LEFT JOIN WFWorkItem b ON a.PROCESSDEFNAME = b.processDefName
+AND a.ACTIVITYDEFID = b.activityDefID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryWhiteList">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,f.ORGNAME as syqname,f.ORGID as syqid,d.ORGID as sybid,d.ORGNAME as sybname,e.ORGNAME,e.ORGID,e.ORGSEQ,b.EMPSTATUS
+FROM
+	AME_WHITE_LIST a
+LEFT JOIN OM_EMPLOYEE b ON a.USERID = b.USERID
+LEFT JOIN OM_EMPORG c ON b.EMPID = c.EMPID AND c.ISMAIN='y'
+LEFT JOIN OM_ORGANIZATION e ON c.ORGID = e.ORGID
+LEFT JOIN OM_ORGANIZATION f ON e.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL=2
+LEFT JOIN OM_ORGANIZATION d ON e.ORGSEQ like d.ORGSEQ+'%' and d.ORGLEVEL=3]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.Queryschedule">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.DESCRIPTION,
+	a.IS_DURABLE,
+	a.IS_STATEFUL,
+	a.IS_VOLATILE,
+	a.JOB_CLASS_NAME,
+	a.JOB_GROUP,
+	a.JOB_NAME,
+	a.REQUESTS_RECOVERY,
+	a.JOB_RELNAME,
+b.TRIGGER_STATE,
+	(CASE WHEN b.TRIGGER_STATE = 'WAITING' THEN '0' WHEN b.TRIGGER_STATE = 'PAUSED' THEN '1' WHEN b.TRIGGER_STATE = 'MISFIRED' THEN '3' ELSE '2' END ) AS TASK_STATE,
+	c.CRON_EXPRESSION
+FROM
+	EOS_QRTZ_JOB_DETAILS a
+LEFT JOIN EOS_QRTZ_TRIGGERS b ON a.JOB_GROUP = b.JOB_GROUP AND a.JOB_NAME = b.JOB_NAME
+LEFT JOIN EOS_QRTZ_CRON_TRIGGERS c ON c.TRIGGER_NAME = b.TRIGGER_NAME AND c.TRIGGER_GROUP = b.TRIGGER_GROUP
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryMisOp">
+        <config db="default" type="sql"><![CDATA[select PROCESSFLOWID,USERID,OPERATORNAME,a.ORGID, CASE when charindex(OPERATORNAME,a.ORGNAME)>0 then c.ORGNAME else a.ORGNAME end as ORGNAME,
+TIME,PROCESSINSTID,WORKITEMID,WORKITEMNAME,AUDITOPINION,AUDITSTATUS,ACTIVITYDEFID 
+from MIS_OPINION a 
+LEFT JOIN OM_ORGANIZATION b on a.ORGID=b.ORGID
+LEFT JOIN OM_ORGANIZATION c on b.PARENTORGID=c.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryAmeFlowActParti">
+        <config db="default" type="sql"><![CDATA[SELECT  a.*
+       			 ,rolename = STUFF(( SELECT ',' + rolename FROM   AC_ROLE where   PATINDEX('%,' + RTRIM(roleid) + ',%',',' + 
+a.ROELPART + ',')>0
+                         ORDER BY PATINDEX('%,' + RTRIM(roleid) + ',%',',' + a.ROELPART + ',') FOR XML PATH('')), 1, 1,'')
+				,empname = STUFF(( SELECT ',' + empname FROM   OM_EMPLOYEE where   PATINDEX('%,' + RTRIM(USERID) + ',%',',' + a.EMPPART + ',')>0
+                         ORDER BY PATINDEX('%,' + RTRIM(USERID) + ',%',',' + a.EMPPART + ',') FOR XML PATH('')), 1, 1,'')
+				,useorgname=(SELECT orgname from OM_ORGANIZATION where a.USEORG=orgid),b.processDefID,b.processChName as processdefnames
+FROM  AME_FLOW_ACT_PARTI a LEFT JOIN WFProcessDefine b on a.PROCESSDEFNAME=b.processDefName and b.currentState='3']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryReport">
+        <config db="default" type="sql"><![CDATA[SELECT  *,rolename = STUFF(( SELECT ',' + rolename FROM AC_ROLE where PATINDEX('%,' + RTRIM(roleid) + ',%',',' + a.ROLEID + ',')>0
+ORDER BY PATINDEX('%,' + RTRIM(roleid) + ',%',',' + a.ROLEID + ',') FOR XML PATH('')), 1, 1,'') 
+FROM  AME_REPORT  a]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_common.QueryReportQuota">
+        <config db="default" type="sql"><![CDATA[SELECT r.REPORTCODE,r.REPORTNAME,q.REPORTQUOTACODE,x.REPORTQUOTANAME as PARENTQUOTANAME,q.PARENTQUOTACODE,
+q.REPORTQUOTANAME,q.QUOTAACCESSTYPE,q.QUOTASORT,q.ISSHOW,q.QUOTAREMARK
+FROM AME_REPORT r
+INNER JOIN AME_REPORTQUOTA q ON r.REPORTCODE = q.REPORTCODE 
+LEFT JOIN AME_REPORTQUOTA x on x.QUOTASEQ=q.PARENTQUOTACODE AND x.REPORTCODE = q.REPORTCODE
+]]></config>
+    </QueryEntity>
+</QueryEntityList>

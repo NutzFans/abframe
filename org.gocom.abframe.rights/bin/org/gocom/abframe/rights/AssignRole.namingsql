@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="org.gocom.abframe.rights.AssignRole">
+    <parameterMap class="commonj.sdo.DataObject" id="positionParam">
+        <parameter javaType="string" jdbcType="varchar2" property="roleid"/>
+        <parameter javaType="string" jdbcType="varchar2" property="posiname"/>
+        <parameter javaType="string" jdbcType="varchar2" property="positype"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="positionResult">
+        <result column="POSITIONID" javaType="string" property="positionid"/>
+        <result column="POSINAME" javaType="string" property="posiname"/>
+        <result column="POSITYPE" javaType="string" property="positype"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+    </resultMap>
+    <!-- 查询角色可分配的岗位信息 -->
+    <select id="selectPosition" parameterMap="positionParam" resultMap="positionResult">
+   	   SELECT 
+    		OM_POSITION.POSITIONID,
+    		OM_POSITION.POSINAME,
+    		OM_POSITION.POSITYPE,
+    		OM_POSITION.STATUS,
+    		OM_ORGANIZATION.ORGNAME
+  	   FROM OM_POSITION LEFT OUTER JOIN OM_ORGANIZATION ON OM_POSITION.ORGID = OM_ORGANIZATION.ORGID 
+       WHERE OM_POSITION.POSITIONID NOT IN (SELECT PARTYID FROM OM_PARTYROLE WHERE PARTYTYPE ='position' AND ROLEID =#roleid# ) 
+       <isNotNull property="posiname">AND OM_POSITION.POSINAME LIKE #posiname#</isNotNull>
+        <isNotNull property="positype">AND OM_POSITION.POSITYPE LIKE #positype#</isNotNull>
+    </select>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.EnRoleRelation" id="organMap">
+        <parameter javaType="string" jdbcType="varchar2" property="roleid"/>
+        <parameter javaType="string" jdbcType="varchar2" property="orgname"/>
+        <parameter javaType="string" jdbcType="varchar2" property="orgtype"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.VcOrganization" id="organResultMap">
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="ORGCODE" javaType="string" property="orgcode"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="ORGTYPE" javaType="string" property="orgtype"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="AREA" javaType="string" property="area"/>
+    </resultMap>
+    <!-- 查询角色可分配的机构信息 -->
+    <select id="selectOrgan" parameterMap="organMap" resultMap="organResultMap">
+	   SELECT
+		      OM_ORGANIZATION.ORGID,
+		      OM_ORGANIZATION.ORGCODE,
+		      OM_ORGANIZATION.ORGNAME,
+		      OM_ORGANIZATION.ORGTYPE,
+		      OM_ORGANIZATION.STATUS,
+		      OM_ORGANIZATION.AREA 
+	  FROM OM_ORGANIZATION 
+	  WHERE OM_ORGANIZATION.ORGID NOT IN (SELECT PARTYID FROM OM_PARTYROLE WHERE PARTYTYPE='organization' AND ROLEID=#roleid#)
+	  <isNotNull property="orgname">AND OM_ORGANIZATION.ORGNAME LIKE #orgname#</isNotNull>
+        <isNotNull property="orgtype">AND (OM_ORGANIZATION.ORGTYPE LIKE #orgtype# OR OM_ORGANIZATION.ORGTYPE IS NULL OR OM_ORGANIZATION.ORGTYPE='')</isNotNull>
+    </select>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.EnRoleRelation" id="dutyParam">
+        <parameter javaType="string" jdbcType="varchar2" property="roleid"/>
+        <parameter javaType="string" jdbcType="varchar2" property="dutyname"/>
+        <parameter javaType="string" jdbcType="varchar2" property="dutytype"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="dutyResult">
+        <result column="DUTYNAME" javaType="string" property="dutyname"/>
+        <result column="DUTYCODE" javaType="string" property="dutycode"/>
+        <result column="DUTYTYPE" javaType="string" property="dutytype"/>
+        <result column="DUTYID" javaType="int" property="dutyid"/>
+    </resultMap>
+    <!-- 查询角色可分配的职务信息 -->
+    <select id="selectDuty" parameterMap="dutyParam" resultMap="dutyResult">
+    	SELECT
+          OM_DUTY.DUTYNAME,
+          OM_DUTY.DUTYID,
+          OM_DUTY.DUTYCODE,
+          OM_DUTY.DUTYTYPE
+        FROM OM_DUTY WHERE OM_DUTY.DUTYID NOT IN (SELECT PARTYID FROM OM_PARTYROLE WHERE PARTYTYPE = 'duty' AND ROLEID =#roleid# ) 
+        <isNotNull property="dutyname">AND OM_DUTY.DUTYNAME LIKE #dutyname#</isNotNull>
+        <isNotNull property="dutytype">AND OM_DUTY.DUTYTYPE LIKE #dutytype#</isNotNull>
+    </select>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.EnRoleRelation" id="workgroupParameter">
+        <parameter javaType="string" jdbcType="varchar2" property="roleid"/>
+        <parameter javaType="string" jdbcType="varchar2" property="groupname"/>
+        <parameter javaType="string" jdbcType="varchar2" property="grouptype"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="workgroupResultMap">
+        <result column="GROUPID" javaType="string" property="groupid"/>
+        <result column="GROUPNAME" javaType="string" property="groupname"/>
+        <result column="GROUPTYPE" javaType="string" property="grouptype"/>
+        <result column="GROUPSTATUS" javaType="string" property="groupstatus"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+    </resultMap>
+    <!-- 查询角色可分配的工作组信息 -->
+    <select id="selectWorkGroup" parameterMap="workgroupParameter" resultMap="workgroupResultMap">
+    	SELECT 
+      		OM_GROUP.GROUPID,
+      		OM_GROUP.GROUPNAME,
+      		OM_GROUP.GROUPTYPE,
+      		OM_GROUP.GROUPSTATUS,
+      		OM_ORGANIZATION.ORGNAME
+	  	  FROM OM_GROUP LEFT OUTER JOIN OM_ORGANIZATION ON OM_GROUP.ORGID = OM_ORGANIZATION.ORGID 
+          WHERE OM_GROUP.GROUPID NOT IN (SELECT PARTYID FROM OM_PARTYROLE WHERE PARTYTYPE = 'workgroup' AND ROLEID=#roleid#)
+        <isNotNull property="groupname">AND OM_GROUP.GROUPNAME LIKE #groupname#</isNotNull>
+        <isNotNull property="grouptype">AND OM_GROUP.GROUPTYPE LIKE #grouptype#</isNotNull>
+    </select>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.AcOperatorrole" id="operParameterMap">
+        <parameter javaType="string" jdbcType="varchar" property="acRole/roleid"/>
+        <parameter javaType="string" jdbcType="varchar" property="acOperator/userid"/>
+        <parameter javaType="string" jdbcType="varchar" property="acOperator/operatorname"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmEmployee" id="operResultMap">
+        <result column="OPERATORID" javaType="long" property="operatorid"/>
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="EMPCODE" javaType="string" property="empcode"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="EMPSTATUS" javaType="string" property="empstatus"/>
+    </resultMap>
+    <!-- 查询角色可分配的操作员信息 -->
+    <select id="selectOper" parameterMap="operParameterMap" resultMap="operResultMap">
+	  	SELECT A.OPERATORID,A.USERID ,A.OPERATORNAME AS EMPNAME, B.EMPSTATUS,B.ORGID,B.EMPCODE
+		FROM AC_OPERATOR A LEFT OUTER JOIN OM_EMPLOYEE B ON A.OPERATORID = B.OPERATORID
+	    WHERE A.OPERATORID NOT IN (SELECT OPERATORID FROM AC_OPERATORROLE WHERE ROLEID=#acRole/roleid#)
+	    <isNotNull property="acOperator/userid">AND A.USERID LIKE #acOperator/userid#</isNotNull>
+        <isNotNull property="acOperator/operatorname">AND A.OPERATORNAME LIKE #acOperator/operatorname#</isNotNull>
+    </select>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.AcRole" id="operRoleParameterMap">
+        <parameter javaType="string" jdbcType="varchar" property="roleid"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmEmployee" id="operRoleResultMap">
+        <result column="OPERATORID" javaType="long" property="operatorid"/>
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="EMPCODE" javaType="string" property="empcode"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="STATUS" javaType="string" property="status"/>
+    </resultMap>
+    <!-- 查询角色拥有的操作员信息 -->
+    <select id="selectOperRole" parameterMap="operRoleParameterMap" resultMap="operRoleResultMap"><![CDATA[
+    	SELECT O.OPERATORID,O.USERID,E.EMPCODE,E.ORGID,O.OPERATORNAME AS EMPNAME,O.STATUS FROM AC_OPERATOR O INNER JOIN AC_OPERATORROLE R
+		ON O.OPERATORID = R.OPERATORID LEFT OUTER JOIN  OM_EMPLOYEE E ON O.OPERATORID = E.OPERATORID
+		WHERE  R.ROLEID = ?
+    ]]></select>
+</sqlMap>

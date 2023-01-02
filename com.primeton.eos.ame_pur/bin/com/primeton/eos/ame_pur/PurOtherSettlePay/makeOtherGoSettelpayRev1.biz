@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="makeOtherGoSettelpayRev1" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="model:Note" id="node3" name="注释3" collapsed="false" nodeType="note" type="note" title="xuqq&#x9;17-2-8 下午4:44"/>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" collapsed="false" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link265" name="link265" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>transactionbegin0</targetNode>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" collapsed="false" type="end">
+    <targetConnections>link262</targetConnections>
+    <targetConnections>link269</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="result" type="query" valueType="Primitive">result</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" collapsed="false" type="transactionbegin">
+    <sourceConnections xsi:type="process:tLink" id="link261" name="link261" isDefault="true" type="transition">
+      <sourceNode>transactionbegin0</sourceNode>
+      <targetNode>invokeService4</targetNode>
+    </sourceConnections>
+    <targetConnections>link265</targetConnections>
+    <nodeLabel>transactionbegin0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionbegin0label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>transactionbegin0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link258" name="link258" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link240</targetConnections>
+    <targetConnections>link248</targetConnections>
+    <targetConnections>link253</targetConnections>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitemid</process:from>
+      <process:to type="query">misOpinion/workitemid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem/workItemName</process:from>
+      <process:to type="query">misOpinion/workitemname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem/processInstID</process:from>
+      <process:to type="query">misOpinion/processinstid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">misOpinion/isshow</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <figSize height="17" width="32"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" collapsed="false" type="transactioncommit">
+    <sourceConnections xsi:type="process:tLink" id="link257" name="link257" isDefault="true" type="transition">
+      <sourceNode>transactioncommit0</sourceNode>
+      <targetNode>assign9</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link251</targetConnections>
+    <targetConnections>link259</targetConnections>
+    <targetConnections>link267</targetConnections>
+    <nodeLabel>transactioncommit0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactioncommit0label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>transactioncommit0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService0" name="backActivity" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link259" name="link259" isDefault="true" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <targetConnections>link242</targetConnections>
+    <nodeLabel>invokeService0label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.special.RollbackActivityManagerComponent/RollbackActivityManagerService.backActivity</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="currentActInstID" type="query" value="long" valueType="Java" pattern="reference">workitem/activityInstID</process:inputVariable>
+      <process:inputVariable id="1" name="destActDefID" type="query" value="java.lang.String" valueType="Java" pattern="reference">misOpinion/backTo</process:inputVariable>
+      <process:inputVariable id="2" name="rollBackStrategy" type="literal" value="java.lang.String" valueType="Java" pattern="reference">simple</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
+    <figSize height="17" width="69"/>
+    <node>invokeService0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService1" name="结束当前工作项" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link267" name="link267" isDefault="true" type="transition">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <targetConnections>link256</targetConnections>
+    <nodeLabel>invokeService1label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.finishWorkItem</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="workItemID" type="query" value="long" valueType="Java" pattern="reference">workitemid</process:inputVariable>
+      <process:inputVariable id="1" name="transactionSpan" type="literal" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService1label" name="label" nodeType="label">
+    <figSize height="17" width="85"/>
+    <node>invokeService1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService2" name="终止流程" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link251" name="link251" isDefault="true" type="transition">
+      <sourceNode>invokeService2</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link260</targetConnections>
+    <nodeLabel>invokeService2label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.terminateProcessInstance</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">purSettle/processinstid</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService2label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>invokeService2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch9" name="空操作9" collapsed="false" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link241" name="link241" isDefault="true" type="transition">
+      <sourceNode>switch9</sourceNode>
+      <targetNode>subprocess5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link242" name="退回" isDefault="false" type="transition">
+      <sourceNode>switch9</sourceNode>
+      <targetNode>invokeService0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">misOpinion/backTo</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link246" name="link246" isDefault="false" type="transition">
+      <bendPoint heightToEnd="-59" heightToStart="59" widthToEnd="11" widthToStart="11"/>
+      <sourceNode>switch9</sourceNode>
+      <targetNode>subprocess6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">purSettle/save</process:leftOperand>
+          <process:rightOperand type="literal">stop</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link247" name="link247" type="transition">
+      <sourceNode>switch9</sourceNode>
+      <targetNode>subprocess6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">misOpinion/auditstatus</process:leftOperand>
+          <process:rightOperand type="literal">2</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link266</targetConnections>
+    <nodeLabel>switch9label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch9label" name="label" nodeType="label">
+    <figSize height="17" width="44"/>
+    <node>switch9</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign9" name="赋值7" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link262" name="link262" isDefault="true" type="transition">
+      <sourceNode>assign9</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand/>
+          <process:rightOperand/>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link263" name="link263" type="transition">
+      <sourceNode>assign9</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">purSettle/save</process:leftOperand>
+          <process:rightOperand type="literal">app</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link257</targetConnections>
+    <nodeLabel>assign9label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">creator</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign9label" name="label" nodeType="label">
+    <figSize height="17" width="32"/>
+    <node>assign9</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess2" name="发邮件提醒销售" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link269" name="link269" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link263</targetConnections>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.mailremind</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="processInstID" type="query" value="Long" valueType="Primitive" pattern="reference">misOpinion/processinstid</process:inputVariable>
+        <process:inputVariable id="1" name="creatorid" type="query" value="String" valueType="Primitive" pattern="reference">creator</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="result" type="query" value="String" valueType="Primitive">result</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <figSize height="17" width="85"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="添加流程关注" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link253" name="link253" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link237</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_common.flowAttention.addAttention</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="processInstID" type="query" value="Long" valueType="Primitive" pattern="reference">wfWorkItem/processInstID</process:inputVariable>
+        <process:inputVariable id="1" name="activityInstName" type="query" value="String" valueType="Primitive" pattern="reference">wfWorkItem/activityInstName</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess1" name="检查流程关注" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link237" name="流程未关注" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link240" name="流程已关注" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">flag</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link249</targetConnections>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_common.flowAttention.checkAttention</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="processInstID" type="query" value="Long" valueType="Primitive" pattern="reference">wfWorkItem/processInstID</process:inputVariable>
+        <process:inputVariable id="1" name="userID" type="query" value="String" valueType="Primitive" pattern="reference">m:userObject/userId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="flag" type="query" value="String" valueType="Primitive">flag</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess4" name="保存审批意见" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link252" name="link252" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link258</targetConnections>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_common.misOpinions.saveMisopinion4process</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="misOpinion" type="query" value="com.primeton.eos.ame_common.ame_common.MisOpinion" valueType="DataObject" pattern="reference">misOpinion</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <figSize height="17" width="73"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokePojo0" name="流程描述" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link264" name="link264" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>assign53</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link254</targetConnections>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="joinString" type="literal" value="java.lang.String" valueType="Java" pattern="reference"/>
+      <process:inputVariable id="1" name="strings" type="query" value="java.lang.String" valueType="Java" pattern="reference">m:userObject/userName</process:inputVariable>
+      <process:inputVariable id="2" name="param1" type="literal" value="java.lang.String" valueType="Java" pattern="reference">发起</process:inputVariable>
+      <process:inputVariable id="3" name="param2" type="query" value="java.lang.String" valueType="Java" pattern="reference">purSettle/suppliersname</process:inputVariable>
+      <process:inputVariable id="4" name="param3" type="literal" value="java.lang.String" valueType="Java" pattern="reference">金额为</process:inputVariable>
+      <process:inputVariable id="5" name="param4" type="query" value="java.lang.String" valueType="Java" pattern="reference">purSettle/setamount</process:inputVariable>
+      <process:inputVariable id="6" name="param5" type="literal" value="java.lang.String" valueType="Java" pattern="reference">的非外包采购结算付款流程</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">processInstDesc</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign53" name="赋值49" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link268" name="link268" isDefault="true" type="transition">
+      <sourceNode>assign53</sourceNode>
+      <targetNode>invokeService3</targetNode>
+    </sourceConnections>
+    <targetConnections>link264</targetConnections>
+    <nodeLabel>assign53label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">processInstDesc</process:from>
+      <process:to type="query">map/description</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">processInstDesc</process:from>
+      <process:to type="query">map/name</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign53label" name="label" nodeType="label">
+    <figSize height="17" width="39"/>
+    <node>assign53</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService3" name="设置流程实例名称和描述" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link250" name="link250" isDefault="true" type="transition">
+      <sourceNode>invokeService3</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <targetConnections>link268</targetConnections>
+    <nodeLabel>invokeService3label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.setProcessInstAttributeBatch</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">purSettle/processinstid</process:inputVariable>
+      <process:inputVariable id="1" name="attrubuteMap" type="query" value="java.util.Map&lt;java.lang.String,java.lang.Object>" valueType="Java" pattern="reference">map</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService3label" name="label" nodeType="label">
+    <figSize height="17" width="133"/>
+    <node>invokeService3</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService4" name="查工作项" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link254" name="暂存重新发起" isDefault="false" type="transition">
+      <sourceNode>invokeService4</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">wfWorkItem/activityDefID</process:leftOperand>
+          <process:rightOperand type="literal">manualActivity</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link255" name="link255" isDefault="true" type="transition">
+      <sourceNode>invokeService4</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link261</targetConnections>
+    <nodeLabel>invokeService4label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.queryWorkItemDetail</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="workItemID" type="query" value="long" valueType="Java" pattern="reference">workitemid</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="com.eos.workflow.data.WFWorkItem" valueType="Java">workitem</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService4label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>invokeService4</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" collapsed="false" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link248" name="link248" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link249" name="关注流程" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">purSettle/guanzhu</process:leftOperand>
+          <process:rightOperand type="literal">true</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link250</targetConnections>
+    <targetConnections>link255</targetConnections>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <figSize height="17" width="37"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess3" name="设置流程相关数据" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link266" name="link266" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>switch9</targetNode>
+    </sourceConnections>
+    <targetConnections>link252</targetConnections>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.setOtherSettlePayRelatData</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="workitemid" type="query" value="String" valueType="Primitive" pattern="reference">workitemid</process:inputVariable>
+        <process:inputVariable id="1" name="purSettle" type="query" value="com.primeton.eos.ame_pur.ame.PurSettle" valueType="DataObject" pattern="reference">purSettle</process:inputVariable>
+        <process:inputVariable id="2" name="misOpinion" type="query" value="com.primeton.eos.ame_common.ame_common.MisOpinion" valueType="DataObject" pattern="reference">misOpinion</process:inputVariable>
+        <process:inputVariable id="3" name="checkername" type="query" value="String" valueType="Primitive" pattern="reference">checkername</process:inputVariable>
+        <process:inputVariable id="4" name="checkerid" type="query" value="String" valueType="Primitive" pattern="reference">checkerid</process:inputVariable>
+        <process:inputVariable id="5" name="purOutcost" type="query" value="com.primeton.eos.ame_pur.ame.PurOutcost" valueType="DataObject" pattern="reference">purOutcost</process:inputVariable>
+        <process:inputVariable id="6" name="backflag" type="query" value="String" valueType="Primitive" pattern="reference">backflag</process:inputVariable>
+        <process:inputVariable id="7" name="ishavaTicket" type="query" value="String" valueType="Primitive" pattern="reference">ishavaTicket</process:inputVariable>
+        <process:inputVariable id="8" name="ticket" type="query" value="com.primeton.eos.ame_pur.ame.PurTicket" valueType="DataObject" pattern="reference">ticket</process:inputVariable>
+        <process:inputVariable id="9" name="purOutcosts" type="query" value="com.primeton.eos.ame_pur.ame.PurOutcost[]" valueType="DataObject" pattern="reference">purOutcosts</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <figSize height="17" width="97"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess5" name="处理业务数据信息" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link256" name="link256" isDefault="true" type="transition">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>invokeService1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link241</targetConnections>
+    <nodeLabel>subprocess5label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.saveOtBussData</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="expReidetail" type="query" value="com.primeton.eos.ame_fee.expRei.ExpReidetail" valueType="DataObject" pattern="reference">expReidetail</process:inputVariable>
+        <process:inputVariable id="1" name="expReiList" type="query" value="com.primeton.eos.ame_fee.expRei.ExpReiList" valueType="DataObject" pattern="reference">expReiList</process:inputVariable>
+        <process:inputVariable id="2" name="purSettle" type="query" value="com.primeton.eos.ame_pur.ame.PurSettle" valueType="DataObject" pattern="reference">purSettle</process:inputVariable>
+        <process:inputVariable id="3" name="expReiList1" type="query" value="com.primeton.eos.ame_fee.expRei.ExpReiList" valueType="DataObject" pattern="reference">expReiList1</process:inputVariable>
+        <process:inputVariable id="4" name="workitem" type="query" value="com.eos.workflow.data.WFWorkItem" valueType="Java" pattern="reference">workitem</process:inputVariable>
+        <process:inputVariable id="5" name="purOutcost" type="query" value="com.primeton.eos.ame_pur.ame.PurOutcost" valueType="DataObject" pattern="reference">purOutcost</process:inputVariable>
+        <process:inputVariable id="6" name="amePostservice" type="query" value="com.primeton.eos.ame_common.ame_common.AmePostservice" valueType="DataObject" pattern="reference">amePostservice</process:inputVariable>
+        <process:inputVariable id="7" name="purOutcosts" type="query" value="com.primeton.eos.ame_pur.ame.PurOutcost[]" valueType="DataObject" pattern="reference">purOutcosts</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess5label" name="label" nodeType="label">
+    <figSize height="17" width="97"/>
+    <node>subprocess5</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess6" name="终止流程数据处理" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link260" name="link260" isDefault="true" type="transition">
+      <sourceNode>subprocess6</sourceNode>
+      <targetNode>invokeService2</targetNode>
+    </sourceConnections>
+    <targetConnections>link246</targetConnections>
+    <targetConnections>link247</targetConnections>
+    <nodeLabel>subprocess6label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.processStop</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="processInstID" type="query" value="String" valueType="Primitive" pattern="reference">workitem/processInstID</process:inputVariable>
+        <process:inputVariable id="1" name="expReiList" type="query" value="com.primeton.eos.ame_fee.expRei.ExpReiList" valueType="DataObject" pattern="reference">expReiList</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
+    <figSize height="17" width="97"/>
+    <node>subprocess6</node>
+  </nodes>
+  <topRuler>
+    <guides position="11" horizontal="true"/>
+  </topRuler>
+  <leftRuler/>
+  <process:info version="7.0.0.0"/>
+  <process:variables>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="user"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.rdmgr.data.csomsData.CsContract" name="csContractTem"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.rdmgr.data.csomsData.CsContract" name="csContract"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurPresettle" name="purPresettleUpdate5"/>
+    <process:variable historyStateLocation="client" isArray="false" name="creator" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="true" modelType="com.primeton.eos.ame_pur.ame.PurSettle" name="purSettles"/>
+    <process:variable historyStateLocation="client" isArray="false" name="date" primitiveType="Date"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurPresettle" name="purPresettleUpdate6"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurPresettle" name="purPresettleUpdate7"/>
+    <process:variable historyStateLocation="client" isArray="false" name="a" primitiveType="Int"/>
+    <process:variable historyStateLocation="client" isArray="false" name="tax" primitiveType="Double"/>
+    <process:variable historyStateLocation="client" isArray="false" name="setamount" primitiveType="Double"/>
+    <process:variable anyType="java.text.DecimalFormat" historyStateLocation="client" isArray="false" name="dfdouble"/>
+    <process:variable historyStateLocation="client" isArray="false" name="setamountDouble" primitiveType="Double"/>
+    <process:variable historyStateLocation="client" isArray="false" name="setamountStr" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="setamountDecimal" primitiveType="Decimal"/>
+    <process:variable historyStateLocation="client" isArray="false" name="stockdate" primitiveType="Date"/>
+    <process:variable historyStateLocation="client" isArray="false" name="costmemo" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="count1" primitiveType="Int"/>
+    <process:variable historyStateLocation="client" isArray="false" name="enddate" primitiveType="Date"/>
+    <process:variable historyStateLocation="client" isArray="false" name="dateStr" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="nowyear" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="nowmonth" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="nowmonthint" primitiveType="Int"/>
+    <process:variable historyStateLocation="client" isArray="false" name="settlementno" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="firstPart" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurProjCont" name="purProjCont"/>
+    <process:variable historyStateLocation="client" isArray="false" name="flag" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_fee.expRei.ExpRei" name="expRei"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_fee.expRei.ExpReibenef" name="expReibenef"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_fee.expRei.ExpReiList" name="expReiList1"/>
+    <process:variable historyStateLocation="client" isArray="false" name="m" primitiveType="Date"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_fee.expRei.ExpReidetail" name="expReidetail1"/>
+    <process:variable historyStateLocation="client" isArray="false" name="i" primitiveType="Int"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurPresettle" name="purPresettle1"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurPresettle" name="purPresettleUpdate8"/>
+    <process:variable historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurPresettle" name="purPresettleUpdate9"/>
+    <process:variable historyStateLocation="client" isArray="true" name="tic" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="processInstDesc" primitiveType="String"/>
+    <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="map"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input isArray="false" name="workitemid" primitiveType="String"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurSettle" name="purSettle"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_common.ame_common.MisOpinion" name="misOpinion"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_fee.expRei.ExpReiList" name="expReiList"/>
+    <process:input isArray="false" name="checkername" primitiveType="String"/>
+    <process:input isArray="false" name="checkerid" primitiveType="String"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_common.ame_common.AmePostservice" name="amePostservice"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurOutcost" name="purOutcost"/>
+    <process:input isArray="false" name="backflag" primitiveType="String"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_fee.expRei.ExpReidetail" name="expReidetail"/>
+    <process:input isArray="false" name="ishavaTicket" primitiveType="String"/>
+    <process:input isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurTicket" name="ticket"/>
+    <process:input isArray="true" modelType="com.primeton.eos.ame_pur.ame.PurOutcost" name="purOutcosts"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" name="result" primitiveType="String"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

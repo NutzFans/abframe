@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryOutPerson">
+        <config db="default" type="sql"><![CDATA[SELECT x.SIGNUSERID,
+	t5.outperno,
+	t5.outpername,
+	t5.outpercartno,
+	t5.degree,
+	t5.gradudate,
+	t5.linktel,
+	t5.linkemail,
+	t5.gender,
+	t5.memo,
+	t5.createdate,
+	t5.wxno,
+	x.COSTENDDATE,
+	x.userid,
+	x.projectno,
+	x.startdate,
+	x.WORKUNIT,
+	x.price,
+	x.CURRENTSTATUS,
+	x.expenddate,
+	x.actenddate,
+	x.PCPROTYPE,
+	x.purorderid,
+	x.FIN_UNIT_ID salesid,
+	x.custid,
+	x.custname,
+	t7.CUSTID AS RYZJGLCUSTID,
+	t7.CUSTNAME AS RYZJGLCUSTNAME,
+	t7.SUPPLIERSNAME AS RYZJGLSUPPLIERSNAME,
+	x.PROJECT_NAME projectname,
+	x.SIGNDATE
+FROM
+	PUR_OUTPERSON t5
+LEFT JOIN (
+	SELECT b.SIGNUSERID,
+		a.OUTPERNO,
+		a.COSTENDDATE,
+		b.PURORDERID,
+		b.SIGNDATE,
+		a.USERID,
+		a.projectno,
+		a.startdate,
+		b.PURCONTID,
+		a.WORKUNIT,
+		a.price,
+		a.CURRENTSTATUS,
+		a.expenddate,
+		a.actenddate,
+		a.PCPROTYPE,
+		e.CUSTID,
+		e.CUSTNAME,
+		f.FIN_UNIT_ID,
+		f.PROJECT_NAME
+	FROM
+		PUR_ORDER_OUTPER a,
+		PUR_ORDER b,
+		PUR_CONTRACT d,
+		PUR_SUPPLIER e,
+		RD_PROJECT f,
+		(
+			SELECT
+				t4.OUTPERNO,
+				MAX (t3.SIGNDATE) AS SIGNDATE
+			FROM
+				PUR_ORDER_OUTPER t4
+			LEFT JOIN PUR_ORDER t3 ON t3.PURORDERID = t4.PURORDERID
+			WHERE
+				t3.SIGNDATE IS NOT NULL
+			GROUP BY
+				t4.OUTPERNO
+		) c
+	WHERE
+		a.PURORDERID = b.PURORDERID
+	AND b.SIGNDATE = c.SIGNDATE
+	AND a.OUTPERNO = c.OUTPERNO
+	AND b.PURCONTID = d.PURCONTID
+	AND d.CUSTID = e.CUSTID
+	AND a.PROJECTNO = f.PROJECT_NO
+) x ON t5.OUTPERNO = x.OUTPERNO
+LEFT JOIN PUR_SUPPLIER t7 ON t5.CUSTID = t7.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryOutPersonToSettle">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	t5.outperno,
+	t5.outpername,
+	t5.outpercartno,
+	t5.degree,
+	t5.gradudate,
+	t5.linktel,
+	t5.linkemail,
+	t5.gender,
+	t5.memo,
+	t5.createdate,
+	x.userid,
+	x.projectno,
+	x.startdate,
+	x.price,
+	x.CURRENTSTATUS,
+	x.expenddate,
+	x.actenddate,
+	x.PCPROTYPE,
+	x.purorderid,
+	x.PURORDERNUM,
+	x.PURSTATUS,
+	x.FIN_UNIT_ID,
+	x.custid,
+	x.custname,
+	t7.CUSTID AS RYZJGLCUSTID,
+	t7.CUSTNAME AS RYZJGLCUSTNAME,
+	x.PROJECT_NAME projectname,
+	x.SIGNDATE,x.PURCONTID
+FROM
+	PUR_OUTPERSON t5
+LEFT JOIN (
+	SELECT
+		a.OUTPERNO,
+		b.PURORDERID,
+		b.SIGNDATE,
+		b.PURORDERNUM,
+		b.PURSTATUS,
+		a.USERID,
+		a.projectno,
+		a.startdate,
+		b.PURCONTID,
+		a.price,
+		a.CURRENTSTATUS,
+		a.expenddate,
+		a.actenddate,
+		a.PCPROTYPE,
+		e.CUSTID,
+		e.CUSTNAME,
+		f.FIN_UNIT_ID,
+		f.PROJECT_NAME
+	FROM
+		PUR_ORDER_OUTPER a,
+		PUR_ORDER b,
+		PUR_CONTRACT d,
+		PUR_SUPPLIER e,
+		RD_PROJECT f,
+		(
+			SELECT
+				t4.OUTPERNO,t4.PURORDERID,
+				MAX (t3.SIGNDATE) AS SIGNDATE
+			FROM
+				PUR_ORDER_OUTPER t4
+			LEFT JOIN PUR_ORDER t3 ON t3.PURORDERID = t4.PURORDERID
+			WHERE
+				t3.SIGNDATE IS NOT NULL
+			GROUP BY
+				t4.OUTPERNO,t4.PURORDERID
+		) c
+	WHERE
+		a.PURORDERID = b.PURORDERID
+	AND b.SIGNDATE = c.SIGNDATE
+	AND a.OUTPERNO = c.OUTPERNO
+	AND b.PURCONTID = d.PURCONTID
+	AND d.CUSTID = e.CUSTID
+	AND a.PROJECTNO = f.PROJECT_NO
+) x ON t5.OUTPERNO = x.OUTPERNO
+LEFT JOIN PUR_SUPPLIER t7 ON t5.CUSTID = t7.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryMisCust">
+        <config db="default" type="sql"><![CDATA[select DISTINCT f.CUSTID MISCUSTID,f.CUSTNAME MISCUSTNAME,d.PROJECT_NO,d.PROJECT_NAME,a.CUSTID,a.CUSTNAME,a.SUPPLIERSNAME,d.FIN_UNIT_ID,o.ORGNAME
+from PUR_SUPPLIER a LEFT JOIN PUR_CONTRACT b ON a.CUSTID=b.CUSTID 
+LEFT JOIN PUR_ORDER c ON b.PURCONTID=c.PURCONTID 
+LEFT JOIN PUR_ORDER_OUTPER g ON c.PURORDERID=g.PURORDERID 
+LEFT JOIN RD_PROJECT d ON g.PROJECTNO=d.PROJECT_NO 
+LEFT JOIN MIS_CUSTINFO f ON d.CUSTID=f.CUSTID 
+LEFT JOIN OM_ORGANIZATION o ON o.ORGID=d.FIN_UNIT_ID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QuerySettles">
+        <config db="default" type="sql"><![CDATA[select a.BENEFITID,a.CUSTNO,a.PROJECTNO,a.STARTDATE,a.ENDDATE,a.PETTYEXPNO,a.PROCESSINSTID,a.SETAMOUNT,a.COSTTYPE,a.NOTAXMON,
+a.SETSTATUS,a.SETTLEMENTID,a.SUBDATE,a.WORKAMOUNT,a.WORKUNIT,a.CONFPER,a.COMMENT,a.CONFIRMDATE,a.CONTNUM as CWCONTNUM,a.PAYDATE,
+c.PURORDERID,c.PURORDERNUM,c.PURSTATUS,a.PURCONTID,d.PURCONTNAME,d.PURCONTNUM,e.CUSTID,e.CUSTNAME,e.suppliersname,
+f.orgid,f.orgname,f.syb,f.sybid,f.sybywzd,g.CUSTNAME custnamemis,h.PROJECT_NAME,j.EMPNAME,stuff((select ','+contnum  from RD_PROJ_CONT WHERE project_no = h.project_no ORDER BY contnum asc for xml path('')),1,1,'') as contnum,a.SETTLEMENTNO,d.PURTYPE,
+l.creator,m.EMPNAME as creatorname
+from PUR_SETTLE a 
+left join PUR_SETTLE_ORDER b on a.SETTLEMENTID=b.SETTLEMENTID 
+left join PUR_ORDER c on b.PURORDERID=c.PURORDERID 
+left join PUR_CONTRACT d on a.PURCONTID=d.PURCONTID
+left join PUR_SUPPLIER e on a.CUSTID=e.CUSTID
+left join MIS_CUSTINFO g on a.CUSTNO=g.CUSTID
+left join RD_PROJECT h on a.PROJECTNO=h.PROJECT_NO 
+left join WFProcessInst i on a.PROCESSINSTID=i.processInstID 
+left join OM_EMPLOYEE j on i.creator=j.EMPCODE
+left join (select a.orgname,a.orgid,b.orgname as parentname,b.orgid as parentid,c.orgname as syb,c.orgid as sybid,
+(case when d.dictid is null then '5' else d.DICTID end) as sybywzd 
+from om_organization a ,om_organization b,om_organization c left join EOS_DICT_ENTRY d on c.orgname=d.DICTNAME and d.DICTTYPEID='CONT_ORG'
+where a.orgid not in (select distinct t.parentorgid from om_organization t 
+where t.parentorgid is not null) and a.orgid!=1 and a.parentorgid=b.orgid and
+(case when a.ORGID=2904 or a.ORGID=999999999 then 2 else 3 end) = c.orglevel and a.orgseq LIKE c.orgseq+'%') 
+f on a.BENEFITID=f.orgid 
+left join WFProcessInst l on a.PROCESSINSTID=l.processInstID 
+left join OM_EMPLOYEE m on l.creator=m.USERID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryProCustToAutoPre">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	t.PROJECTNO,
+	b.CUSTID,
+	c.CUSTNAME,
+	t.STARTDATE,
+	t.EXPENDDATE,
+	t.ACTENDDATE,
+	d.PROJECT_NAME PROJECTNAME,
+	d.CUSTID MISCUSTID,
+	d.PROJECT_ID PROJECTID,
+	d.MANAGER
+FROM
+	PUR_ORDER_OUTPER t,
+	PUR_ORDER a,
+	PUR_CONTRACT b,
+	PUR_SUPPLIER c,
+	RD_PROJECT d
+WHERE
+	t.PURORDERID = a.PURORDERID
+AND a.PURCONTID = b.PURCONTID
+AND b.CUSTID = c.CUSTID
+AND t.PROJECTNO = d.PROJECT_NO
+AND t.PROJECTNO IS NOT NULL]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryProjectToMunaulPresettle">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	t.PROJECTNO,
+	d.PROJECT_ID PROJECTID,
+	d.PROJECT_NAME PROJECTNAME,
+	d.FIN_UNIT_ID FINUNITID,
+	d.STARTDATE,
+	d.ENDDATE,d.CUSTID,m.CUSTNAME
+FROM
+	PUR_PROJ_OUTPER t
+LEFT JOIN RD_PROJECT d ON t.PROJECTNO = d.PROJECT_NO
+LEFT JOIN MIS_CUSTINFO m ON d.CUSTID = m.CUSTID
+WHERE
+	t.PROJECTNO IS NOT NULL]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QuerySupplierToMunaulPresettle">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	c.CUSTID,
+	c.CUSTNUM,
+	c.SUPPLIERSNAME,
+	c.CUSTNAME
+FROM
+	PUR_ORDER_OUTPER t
+LEFT JOIN PUR_ORDER a ON t.PURORDERID = a.PURORDERID
+LEFT JOIN PUR_CONTRACT b ON a.PURCONTID = b.PURCONTID
+LEFT JOIN PUR_SUPPLIER c ON b.CUSTID = c.CUSTID
+WHERE
+	c.CUSTID IS NOT NULL]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryProCustToAutoPreByProj">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	t.PROJECTNO,b.CUSTID,
+	c.CUSTNAME,
+	t.STARTDATE,
+	t.EXPENDDATE,
+	t.ACTENDDATE,
+	t.WHETHERATTENDANCE,
+	d.PROJECT_NAME PROJECTNAME,
+	d.CUSTID MISCUSTID,
+	d.PROJECT_ID PROJECTID,
+	d.MANAGER
+FROM
+	PUR_PROJ_OUTPER t 
+	LEFT JOIN PUR_OUTPERSON b on t.OUTPERNO = b.OUTPERNO 
+	LEFT JOIN PUR_SUPPLIER c on b.CUSTID = c.CUSTID 
+	LEFT JOIN RD_PROJECT d on t.PROJECTNO = d.PROJECT_NO 
+WHERE t.PROJECTNO IS NOT NULL]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryOutPersonToSettleByProj">
+        <config db="default" type="sql"><![CDATA[SELECT a.OUTPERNO,a.OUTPERNAME,a.OUTPERCARTNO,a.DEGREE,a.GRADUDATE,a.LINKTEL,a.LINKEMAIL,a.GENDER,a.MEMO,a.CREATEDATE,a.CUSTID,
+b.PROJECTNO,b.STARTDATE,b.PRICE,b.CURRENTSTATUS,b.EXPENDDATE,b.ACTENDDATE,b.PURORDERID,b.PURCONTID,
+c.PURORDERNUM,c.PURSTATUS,d.CUSTNAME,e.FIN_UNIT_ID,e.PROJECT_NAME AS PROJECTNAME  
+FROM PUR_OUTPERSON a LEFT JOIN PUR_PROJ_OUTPER b ON a.OUTPERNO=b.OUTPERNO 
+LEFT JOIN PUR_ORDER c ON b.PURORDERID=c.PURORDERID 
+LEFT JOIN PUR_SUPPLIER d ON a.CUSTID=d.CUSTID 
+LEFT JOIN RD_PROJECT e ON b.PROJECTNO=e.PROJECT_NO ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryMisCustByProj">
+        <config db="default" type="sql"><![CDATA[select DISTINCT f.CUSTID MISCUSTID,f.CUSTNAME MISCUSTNAME,f.CUSTJC,d.PROJECT_NO,d.PROJECT_NAME,d.PROJECT_STATUS,e.CONTRACTID,
+a.CUSTID,a.CUSTNAME,a.SUPPLIERSNAME,a.LINKMAN,a.LINKTEL,d.FIN_UNIT_ID,o.ORGNAME
+from PUR_SUPPLIER a LEFT JOIN PUR_CONTRACT b ON a.CUSTID=b.CUSTID 
+LEFT JOIN PUR_ORDER c ON b.PURCONTID=c.PURCONTID 
+LEFT JOIN PUR_PROJ_OUTPER g ON c.PURORDERID=g.PURORDERID 
+LEFT JOIN RD_PROJECT d ON g.PROJECTNO=d.PROJECT_NO 
+LEFT JOIN MIS_CUSTINFO f ON d.CUSTID=f.CUSTID
+LEFT JOIN RD_PROJ_CONT h ON h.PROJECT_NO=d.PROJECT_NO 
+LEFT JOIN CS_CONTRACT e on h.CONTNUM=e.CONTNUM
+LEFT JOIN OM_ORGANIZATION o ON o.ORGID=d.FIN_UNIT_ID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryOutPersonToSettleByList">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT a.OUTPERNO,a.OUTPERNAME,b.SETTLEMENTID,b.SETDETAILID,b.PURORDERID,b.SETSTARTDATE,b.SETENDDATE,b.DAYS,b.MONTHS,
+	b.PERPRICE AS PRICE,b.SETFEE,b.OTHFEE,b.TOTALFEE,b.SCORE,b.EVALUATE,d.PURORDERNUM,d.PURSTATUS,a.CUSTID,c.PROJECTNO 
+FROM PUR_OUTPERSON a LEFT JOIN PUR_SETTLE_LIST b ON a.OUTPERNO=b.OUTPERNO 
+LEFT JOIN PUR_SETTLE c ON c.SETTLEMENTID=b.SETTLEMENTID 
+LEFT JOIN PUR_ORDER d ON b.PURORDERID=d.PURORDERID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QuerySale">
+        <config db="default" type="sql"><![CDATA[select b.USERID,a.ORGID from OM_ORGANIZATION a LEFT join OM_EMPLOYEE b on a.MANAGERID=b.EMPID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPurPresettle">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,(CASE WHEN a.CONTNUM IS not NULL AND a.SWCONTNUM is not NULL and CHARINDEX(a.CONTNUM, a.SWCONTNUM) !=0  THEN '1' WHEN (a.CONTNUM is NULL AND a.SWCONTNUM is NULL) THEN '1' ELSE '0' END) AS ISSAME FROM (
+select a.CONFIRMDATE,a.ACCRUEDDATE,a.ACCRUEDID,a.ACCRUEDMONEY,a.ACCRUEDSTATUS,a.COMMENT,a.CONTNUM,f.CONTSUM,j.ACTRATE,
+f.CONTRACTTYPE,k.CONFIRMDAY,a.COSTTYPE,a.CUSTID,a.ENDDATE,a.LASTUPDATETIME,a.NOTAXMONEY,a.OPERNAME,a.OUTPER,
+a.PREMONTH,a.PROJECTNO,a.PURCONTNUM,a.PURORDERID,a.SALESID,a.SETTLEMENTID,a.STARTDATE,a.SYB,a.TAXRATE,a.WORKAMOUNT,
+a.ACCTDATE,(CASE when a.ACCTDATE is NULL then '0' ELSE '1' end) as isAcct,
+a.WORKUNIT,b.CUSTNAME,b.SUPPLIERSNAME,c.ORGNAME,d.PROJECT_NAME AS projectname,e.CUSTID as custid1,e.CUSTNAME as custname1,
+d.PROJECT_ID AS projectid,f.CONTRACTID,h.EMPNAME AS BENEFITNAME,stuff((select ','+contnum  from RD_PROJ_CONT WHERE project_no = d.project_no for xml path('')),1,1,'') AS SWCONTNUM,stuff((select ','+CAST(q.CONTRACTID as VARCHAR(20)) from RD_PROJ_CONT p LEFT JOIN CS_CONTRACT q ON p.CONTNUM = q.CONTNUM WHERE p.project_no = d.project_no for xml path('')),1,1,'') AS SWCONTRACTID,m.PURTYPE,l.CUSTNO,
+n.PURCONTID
+from PUR_PRESETTLE a 
+left join PUR_CONTRACT n on a.PURCONTNUM=n.PURCONTNUM
+left join PUR_SUPPLIER b on a.CUSTID=b.CUSTID 
+left join OM_ORGANIZATION c on a.SALESID=c.ORGID 
+left join RD_PROJECT d on a.PROJECTNO=d.PROJECT_NO 
+left join MIS_CUSTINFO e on d.CUSTID=e.CUSTID 
+left join CS_CONTRACT f on a.CONTNUM=f.CONTNUM 
+LEFT JOIN OM_ORGANIZATION g ON d.FIN_UNIT_ID=g.ORGID 
+LEFT JOIN OM_EMPLOYEE h ON g.MANAGERID=h.EMPID 
+left join (select x.CONTNUM,sum(x.ACTSUM)/y.CONTSUM as ACTRATE from CS_REVE_FORECAST x 
+left join CS_CONTRACT y on x.CONTNUM=y.CONTNUM and x.STATUS='3' 
+where y.CONTSUM is not null and y.CONTSUM != 0 group by x.CONTNUM,y.CONTSUM) j on j.CONTNUM=f.CONTNUM 
+left join (select x.CONTNUM,max(x.MACONFIRMDAY) as CONFIRMDAY from CS_REVE_FORECAST x 
+left join CS_CONTRACT y on x.CONTNUM=y.CONTNUM and x.STATUS='3' 
+where y.CONTSUM is not null and y.CONTSUM != 0 group by x.CONTNUM) k on k.CONTNUM=f.CONTNUM 
+left join PUR_SETTLE l on a.SETTLEMENTID=l.SETTLEMENTID
+left join PUR_CONTRACT m on l.PURCONTID=m.PURCONTID
+) a]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryMisCustByProjSettle">
+        <config db="default" type="sql"><![CDATA[select DISTINCT f.CUSTID MISCUSTID,f.CUSTNAME MISCUSTNAME,f.CUSTJC,d.PROJECT_NO,d.PROJECT_NAME,c.CONTRACTID,
+a.CUSTID,a.CUSTNAME,a.SUPPLIERSNAME,a.ACCOUTNAME,a.ACCOUTBANK,a.accountid,a.LINKMAN,a.LINKTEL,d.FIN_UNIT_ID
+from PUR_SUPPLIER a 
+LEFT JOIN PUR_CONTRACT g ON a.CUSTID=g.CUSTID 
+left join PUR_PROJ_CONT b on b.PURCONTID=g.PURCONTID
+LEFT JOIN RD_PROJECT d ON b.projectno=d.PROJECT_NO 
+LEFT JOIN RD_PROJ_CONT e ON e.PROJECT_NO=d.PROJECT_NO
+left join CS_CONTRACT c on e.CONTNUM=c.CONTNUM
+LEFT JOIN MIS_CUSTINFO f ON d.CUSTID=f.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryProjectOutpersonRealation">
+        <config db="default" type="sql"><![CDATA[SELECT b.PROJECTNO,b.MANAGER,d.MANAGER as PROJECTMANAGER,d.PROJECT_NAME AS PROJECTNAME,d.PROJECT_ID AS PROJECTID,c.CUSTID,c.CUSTNAME,c.SUPPLIERSNAME,
+h.ORGNAME as DICTNAME,d.FIN_UNIT_ID,g.EMPNAME,f.MANAGERID,e.CUSTID AS MISCUSTID,e.CUSTNAME AS MISCUSTNAME,a.OUTPERNAME,
+a.OUTPERNO,a.GENDER,a.OUTPERCARTNO,a.DEGREE,a.GRADUDATE,a.LINKTEL,a.LINKEMAIL,b.CURRENTSTATUS,b.STARTDATE,b.EXPENDDATE,
+b.ACTENDDATE,b.COSTENDDATE,b.ACCUENDDATE,b.PRICE,b.INPUTRATIO,b.PURORDERID,i.SIGNUSERID,j.EMPNAME AS SIGNUSERNAME,
+k.EMPNAME AS MANAGERNAME,f.ORGNAME,g.EMPNAME AS BENEFITNAME,g.USERID,l.EMPNAME AS REPORTINGMANAGER,b.WHETHERATTENDANCE,
+a.FILINGMANID,m.EMPNAME AS FILINGMANNAME,a.FILINGDATE,b.PROJOUTID 
+FROM PUR_OUTPERSON a LEFT JOIN PUR_PROJ_OUTPER b ON a.OUTPERNO=b.OUTPERNO 
+LEFT JOIN PUR_SUPPLIER c ON a.CUSTID=c.CUSTID 
+LEFT JOIN RD_PROJECT d ON b.PROJECTNO=d.PROJECT_NO 
+LEFT JOIN MIS_CUSTINFO e ON d.CUSTID=e.CUSTID 
+LEFT JOIN OM_ORGANIZATION f ON d.FIN_UNIT_ID=f.ORGID 
+LEFT JOIN OM_EMPLOYEE g ON f.MANAGERID=g.EMPID
+LEFT JOIN OM_ORGANIZATION h ON f.ORGSEQ like h.ORGSEQ+'%' and h.ORGLEVEL=3
+LEFT JOIN PUR_ORDER i ON i.PURORDERID=b.PURORDERID 
+LEFT JOIN OM_EMPLOYEE j ON i.SIGNUSERID=j.USERID 
+LEFT JOIN OM_EMPLOYEE k ON d.MANAGER=k.USERID 
+LEFT JOIN OM_EMPLOYEE l ON b.MANAGER=l.USERID
+LEFT JOIN OM_EMPLOYEE m ON a.FILINGMANID=m.USERID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryOutcost">
+        <config db="default" type="sql"><![CDATA[SELECT
+	f.CUSTID as CUSTNO,
+	d.PURTYPE,
+	a.CONTNUM,
+	(case when a.SETTLEMENTID is null then null 
+				when charindex(',',a.SETTLEMENTID)=0 then (select SETTLEMENTNO from PUR_SETTLE x where x.SETTLEMENTID=a.SETTLEMENTID) 
+        else (select SETTLEMENTNO = (stuff((select ',' + SETTLEMENTNO from (select y.OUTCOSTID,x.SETTLEMENTNO from PUR_SETTLE x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) p where p.OUTCOSTID = q.OUTCOSTID for xml path('')),1,1,'')) 
+from (select y.OUTCOSTID,x.SETTLEMENTNO from PUR_SETTLE x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) q group by q.OUTCOSTID) end) as SETTLEMENTNO,
+(case when a.SETTLEMENTID is null and a.ACCRUEDID is null then null when charindex(',',a.SETTLEMENTID)=0 then 
+(select PROJECTNO from PUR_SETTLE x where x.SETTLEMENTID=a.SETTLEMENTID) when charindex(',',a.ACCRUEDID)=0 then 
+(select PROJECTNO from PUR_PRESETTLE x where x.ACCRUEDID=a.ACCRUEDID) else
+(select PROJECTNO = (stuff((select ',' + PROJECTNO from (select y.OUTCOSTID,x.PROJECTNO from PUR_SETTLE x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) p where p.OUTCOSTID = q.OUTCOSTID for xml path('')),1,1,'')) 
+from (select y.OUTCOSTID,x.PROJECTNO from PUR_SETTLE x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) q group by q.OUTCOSTID) end) as PROJECTNO,
+
+(case when a.SETTLEMENTID is null and a.ACCRUEDID is null then null when charindex(',',a.SETTLEMENTID)=0 then 
+(select PROJECT_ID from (select a.SETTLEMENTID,CONVERT(VARCHAR(200),b.PROJECT_ID) as PROJECT_ID from PUR_SETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x where x.SETTLEMENTID=a.SETTLEMENTID) when charindex(',',a.ACCRUEDID)=0 then 
+(select PROJECT_ID from (select a.ACCRUEDID,CONVERT(VARCHAR(200),b.PROJECT_ID) as PROJECT_ID from PUR_PRESETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x where x.ACCRUEDID=a.ACCRUEDID) else
+(select PROJECT_ID = (stuff((select ',' + PROJECT_ID from (select y.OUTCOSTID,CONVERT(VARCHAR(200),x.PROJECT_ID) as PROJECT_ID from (select a.SETTLEMENTID,b.PROJECT_ID from PUR_SETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) p where p.OUTCOSTID = q.OUTCOSTID for xml path('')),1,1,'')) 
+from (select y.OUTCOSTID,CONVERT(VARCHAR(200),x.PROJECT_ID) as PROJECT_ID from (select a.SETTLEMENTID,b.PROJECT_ID from PUR_SETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) q group by q.OUTCOSTID) end) as PROJECT_ID,
+
+(case when a.SETTLEMENTID is null and a.ACCRUEDID is null then null when charindex(',',a.SETTLEMENTID)=0 then 
+(select COSTTYPE from (select a.SETTLEMENTID,a.COSTTYPE from PUR_SETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x where x.SETTLEMENTID=a.SETTLEMENTID) when charindex(',',a.ACCRUEDID)=0 then 
+(select COSTTYPE from (select a.ACCRUEDID,a.COSTTYPE from PUR_PRESETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x where x.ACCRUEDID=a.ACCRUEDID) else
+(select COSTTYPE  = (stuff((select ',' + COSTTYPE from (select DISTINCT y.OUTCOSTID,COSTTYPE from (select DISTINCT a.SETTLEMENTID,a.COSTTYPE from PUR_SETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) p where p.OUTCOSTID = q.OUTCOSTID for xml path('')),1,1,'')) 
+from (select DISTINCT y.OUTCOSTID,COSTTYPE from (select DISTINCT a.SETTLEMENTID,a.COSTTYPE from PUR_SETTLE a left join RD_PROJECT b on a.PROJECTNO=b.PROJECT_NO) x,PUR_OUTCOST y
+where charindex(','+ltrim(x.SETTLEMENTID)+',',','+  y.SETTLEMENTID+',' )>0
+and y.OUTCOSTID=a.OUTCOSTID) q group by q.OUTCOSTID) end) as COSTTYPE,
+
+	a.OUTCOSTID,
+	a.CONFIRMDATE,
+	a.NOTAXMON,
+	a.TAXMON,
+	a.TAX,
+	a.PZHS,
+	f.CONTRACTID,
+	a.OUTCOSTTYPE,
+	a.SETTLEMENTID,
+	a.ACCRUEDID,
+	a.STARTDATE,
+	a.ENDDATE,
+	a.SUPPLIERID,
+	a.OUTCOSTSTATUS,
+	a.INSERTDATE,
+	a.SETTLEMON,
+	a.ACCRUEDMON,
+	a.PURCONTNO,
+	a.PURORDERNO,
+	a.FILEDATE,
+	a.FILEOPER,
+	a.AUDITOR,
+	a.COSTMEMO,
+	a.BENEFORGID,
+	a.STOCKDATE,
+	a.WORKAMOUNT,
+	a.WORKUNIT,
+	c.CUSTNAME,
+	c.SUPPLIERSNAME,
+	d.PURCONTID,
+	g.ORGID,
+	g.ORGNAME,
+	h.orgid as sybid,
+	h.orgname as syb,
+	i.custjc,
+  a.MARK,d.COSTTYPE as COSTTYPE1
+FROM
+	PUR_OUTCOST a
+LEFT JOIN PUR_SUPPLIER c ON a.SUPPLIERID = c.CUSTID
+LEFT JOIN PUR_CONTRACT d ON a.PURCONTNO = PURCONTNUM
+LEFT JOIN CS_CONTRACT f ON a.CONTNUM = f.CONTNUM
+LEFT JOIN OM_ORGANIZATION g ON a.BENEFORGID = g.ORGID
+LEFT JOIN OM_ORGANIZATION h ON h.ORGID = (case when (g.orgseq like '.1.14.%') then SUBSTRING(g.ORGSEQ, 7, CHARINDEX('.', g.ORGSEQ, 7) - CHARINDEX('.', g.ORGSEQ, 4) - 1) else SUBSTRING(g.ORGSEQ, 4, CHARINDEX('.', g.ORGSEQ, 4) - CHARINDEX('.', g.ORGSEQ, 2) - 1) end)
+LEFT JOIN MIS_CUSTINFO i on i.CUSTID = f.CUSTID ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QuerySettles2">
+        <config db="default" type="sql"><![CDATA[select a.BENEFITID,a.CUSTNO,a.PROJECTNO,h.PROJECT_ID as PROJECTID,a.STARTDATE,a.ENDDATE,a.PETTYEXPNO,a.PROCESSINSTID,a.SETAMOUNT,a.COSTTYPE,a.NOTAXMON,
+a.SETSTATUS,a.SETTLEMENTID,a.SUBDATE,a.WORKAMOUNT,a.WORKUNIT,a.CONFPER,a.COMMENT,a.CONFIRMDATE,a.CONTNUM as CWCONTNUM,l.CONTRACTID as CWCONTRACTID,a.PAYDATE,
+c.PURORDERID,c.PURORDERNUM,c.PURSTATUS,d.PURCONTNAME,d.PURCONTNUM,e.CUSTID,e.CUSTNAME,e.suppliersname,
+y1.orgid,y1.orgname,y2.orgname as syb,y2.orgid as sybid,(case when y3.DICTID is null then '5' else y3.DICTID end) as sybywzd,g.CUSTNAME custnamemis,h.PROJECT_NAME,stuff((select ','+contnum  from RD_PROJ_CONT WHERE project_no = h.project_no ORDER BY contnum asc for xml path('')),1,1,'') as contnum,a.SETTLEMENTNO,d.PURTYPE,
+i.creator,j.EMPNAME as creatorname,n.OUTPERNAME
+from PUR_SETTLE a 
+left join PUR_SETTLE_ORDER b on a.SETTLEMENTID=b.SETTLEMENTID 
+left join PUR_ORDER c on b.PURORDERID=c.PURORDERID 
+left join PUR_CONTRACT d on a.PURCONTID=d.PURCONTID
+left join PUR_SUPPLIER e on a.CUSTID=e.CUSTID
+left join MIS_CUSTINFO g on a.CUSTNO=g.CUSTID
+left join RD_PROJECT h on a.PROJECTNO=h.PROJECT_NO 
+left join WFProcessInst i on a.PROCESSINSTID=i.processInstID 
+left join OM_EMPLOYEE j on i.creator=j.USERID
+left join OM_ORGANIZATION y1 on y1.orgid =a.BENEFITID
+ LEFT JOIN OM_ORGANIZATION y2 on y2.orgid=(case when y1.ORGID=2904 or y1.ORGID=999999999 then substring(y1.orgseq,4,charindex('.',y1.orgseq,4)-charindex('.',y1.orgseq,2)-1) else SUBSTRING(y1.ORGSEQ,CHARINDEX('.', y1.ORGSEQ,4)+1,CHARINDEX('.',y1.ORGSEQ,8)-CHARINDEX('.',y1.ORGSEQ,4)-1) end)
+ LEFT JOIN EOS_DICT_ENTRY y3 on y3.DICTNAME=y2.orgname AND y3.dicttypeid ='CONT_ORG'
+left join (select SETTLEMENTID,OUTPERNAME = (stuff((select ',' + OUTPERNAME 
+	from (select a.SETTLEMENTID,b.OUTPERNAME from PUR_SETTLE_LIST a left join PUR_OUTPERSON b on a.OUTPERNO=b.OUTPERNO) x
+	where x.SETTLEMENTID = y.SETTLEMENTID for xml path('')),1,1,'')) 
+from (select a.SETTLEMENTID,b.OUTPERNAME from PUR_SETTLE_LIST a left join PUR_OUTPERSON b on a.OUTPERNO=b.OUTPERNO) y group by y.SETTLEMENTID) n on a.SETTLEMENTID=n.SETTLEMENTID 
+left join CS_CONTRACT l on l.CONTNUM=a.CONTNUM]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPurProjCont">
+        <config db="default" type="sql"><![CDATA[select  a.purprojcontid,
+a.projectno,a.purcontid,(case when a.PURMONEY is null then 0 else a.PURMONEY end) PURMONEY,a.status,a.comment,
+stuff((select DISTINCT ','+contnum  from RD_PROJ_CONT WHERE project_no = a.projectno for xml path('')),1,1,'') as contnum,
+b.PURCONTNUM,b.COSTTYPE,b.OUTCONTNUM,b.PURCONTNAME,c.PROJECT_ID,c.PROJECT_NAME,c.CUSTID,e.CUSTNAME,e.CUSTJC,c.FIN_UNIT_ID,f.ORGNAME,c.PROJECT_STATUS
+from PUR_PROJ_CONT a 
+left join PUR_CONTRACT b on a.PURCONTID=b.PURCONTID 
+left join RD_PROJECT c on a.projectno=c.PROJECT_NO 
+LEFT JOIN MIS_CUSTINFO e on c.CUSTID=e.CUSTID 
+LEFT JOIN OM_ORGANIZATION f on c.FIN_UNIT_ID=f.ORGID ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QuerySalesByPurcontid">
+        <config db="default" type="sql"><![CDATA[select 
+stuff((select DISTINCT ','+contnum  from RD_PROJ_CONT WHERE project_no = c.project_no for xml path('')),1,1,'') AS CONTNUM,
+stuff((select DISTINCT ','+CAST(q.CONTRACTID as VARCHAR(20)) from RD_PROJ_CONT p LEFT JOIN CS_CONTRACT q ON p.CONTNUM = q.CONTNUM WHERE p.project_no = c.project_no for xml path('')),1,1,'') AS CONTRACTID,
+b.purcontid,a.projectno,a.purprojcontid,a.purmoney,
+b.PURCONTNUM,c.PROJECT_ID,c.PROJECT_NAME,c.CUSTID,c.FIN_UNIT_ID,c.PROJECT_STATUS,f.userid as SALEID,f.empname salename
+from PUR_PROJ_CONT a 
+left join PUR_CONTRACT b on a.PURCONTID=b.PURCONTID 
+left join RD_PROJECT c on a.projectno=c.PROJECT_NO
+left join OM_ORGANIZATION e1 on c.FIN_UNIT_ID=e1.orgid
+left join om_employee f on e1.MANAGERID=f.empid
+UNION
+select 
+stuff((select DISTINCT ','+contnum  from RD_PROJ_CONT WHERE project_no = c.project_no for xml path('')),1,1,'') AS CONTNUM,
+stuff((select DISTINCT ','+CAST(q.CONTRACTID as VARCHAR(20)) from RD_PROJ_CONT p LEFT JOIN CS_CONTRACT q ON p.CONTNUM = q.CONTNUM WHERE p.project_no = c.project_no for xml path('')),1,1,'') AS CONTRACTID,
+b.purcontid,a.projectno,a.purprojcontid,a.purmoney,
+b.PURCONTNUM,c.PROJECT_ID,c.PROJECT_NAME,c.CUSTID,c.FIN_UNIT_ID,c.PROJECT_STATUS,f.userid as SALEID,f.empname salename
+from PUR_PROJ_CONT a 
+left join PUR_CONTRACT b on a.PURCONTID=b.PURCONTID 
+left join RD_PROJECT c on a.projectno=c.PROJECT_NO
+left join om_emporg e on c.FIN_UNIT_ID=e.orgid
+left join om_employee f on e.empid=f.empid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryShareholders">
+        <config db="default" type="sql"><![CDATA[select a.SHAREHOLDER_ID,a.CUSTID,a.SHAREHOLDER_CARDNO,a.SHAREHOLDER_NAME,a.SHAREHOLDING_RATIO,a.UPDATE_TIME,
+a.COMMENT,b.CUSTNAME,b.CUSTNUM,b.SUPPLIERSNAME from PUR_SUPPLIER_SHAREHOLDERS a LEFT JOIN PUR_SUPPLIER b
+on a.CUSTID=b.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryExecutives">
+        <config db="default" type="sql"><![CDATA[select a.EXECUTIVES_ID,a.CUSTID,a.EXECUTIVES_NAME,a.EXECUTIVES_CARDNO,a.EXECUTIVES_POSITIONS,a.UPDATE_TIME,
+a.COMMENT,b.CUSTNAME,b.CUSTNUM,b.SUPPLIERSNAME from PUR_SUPPLIER_EXECUTIVES a LEFT JOIN PUR_SUPPLIER b
+on a.CUSTID=b.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QuerySettles3">
+        <config db="default" type="sql"><![CDATA[select a.BENEFITID,a.CUSTNO,a.PROJECTNO,a.STARTDATE,a.ENDDATE,a.PETTYEXPNO,a.PROCESSINSTID,a.SETAMOUNT,a.COSTTYPE,a.NOTAXMON,
+a.SETSTATUS,a.SETTLEMENTID,a.SUBDATE,a.WORKAMOUNT,a.WORKUNIT,a.CONFPER,a.COMMENT,a.CONFIRMDATE,a.CONTNUM as CWCONTNUM,a.PAYDATE,
+c.PURORDERID,c.PURORDERNUM,c.PURSTATUS,d.PURCONTNAME,d.PURCONTNUM,e.CUSTID,e.CUSTNAME,e.suppliersname,
+y1.orgid,y1.orgname,l.EMPNAME,y2.orgname as syb,y2.orgid as sybid,y3.DICTID as sybywzd,g.CUSTNAME custnamemis,h.PROJECT_NAME,h.PROJECT_ID,stuff((select ','+contnum  from RD_PROJ_CONT WHERE project_no = h.project_no ORDER BY contnum asc for xml path('')),1,1,'') as contnum,stuff((select ','+CONVERT(VARCHAR,k.contractid) from RD_PROJ_CONT a1 LEFT JOIN CS_CONTRACT k ON a1.CONTNUM=k.CONTNUM WHERE a1.project_no = h.project_no ORDER BY k.contractid asc for xml path('')),1,1,'') as contractid,a.SETTLEMENTNO,d.PURTYPE,
+i.creator,j.EMPNAME as creatorname,n.OUTPERNAME
+from PUR_SETTLE a 
+left join PUR_SETTLE_ORDER b on a.SETTLEMENTID=b.SETTLEMENTID 
+left join PUR_ORDER c on b.PURORDERID=c.PURORDERID 
+left join PUR_CONTRACT d on a.PURCONTID=d.PURCONTID
+left join PUR_SUPPLIER e on a.CUSTID=e.CUSTID
+left join MIS_CUSTINFO g on a.CUSTNO=g.CUSTID
+left join RD_PROJECT h on a.PROJECTNO=h.PROJECT_NO 
+left join WFProcessInst i on a.PROCESSINSTID=i.processInstID 
+left join OM_EMPLOYEE j on i.creator=j.EMPCODE 
+left join OM_ORGANIZATION y1 on y1.orgid =a.BENEFITID
+ LEFT JOIN OM_ORGANIZATION y2 on y2.orgid=(case when ( y1.ORGSEQ like '.1.14.%') then SUBSTRING(y1.ORGSEQ,CHARINDEX('.', y1.ORGSEQ,4)+1,CHARINDEX('.',y1.ORGSEQ,8)-CHARINDEX('.',y1.ORGSEQ,4)-1) else substring(y1.orgseq,4,charindex('.',y1.orgseq,4)-charindex('.',y1.orgseq,2)-1) end)
+ LEFT JOIN EOS_DICT_ENTRY y3 on y3.DICTNAME=y2.orgname AND y3.dicttypeid ='CONT_ORG'
+left join (select SETTLEMENTID,OUTPERNAME = (stuff((select ',' + OUTPERNAME 
+	from (select a.SETTLEMENTID,b.OUTPERNAME from PUR_SETTLE_LIST a left join PUR_OUTPERSON b on a.OUTPERNO=b.OUTPERNO) x
+	where x.SETTLEMENTID = y.SETTLEMENTID for xml path('')),1,1,'')) 
+from (select a.SETTLEMENTID,b.OUTPERNAME from PUR_SETTLE_LIST a left join PUR_OUTPERSON b on a.OUTPERNO=b.OUTPERNO) y group by y.SETTLEMENTID) n on a.SETTLEMENTID=n.SETTLEMENTID 
+left join OM_EMPLOYEE l on l.USERID=h.MANAGER]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.GetOutFeeStatSettles">
+        <config db="default" type="sql"><![CDATA[select a.PROJECTNO,a.CUSTID,a.SETSTATUS,b.PURTYPE,a.COSTTYPE,a.STARTDATE,a.ENDDATE,a.SETAMOUNT,a.NOTAXMON,a.WORKUNIT,a.WORKAMOUNT 
+from PUR_SETTLE a 
+left join PUR_CONTRACT b on a.PURCONTID=b.PURCONTID 
+where a.PROJECTNO is not null and a.CUSTID is not null]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.GetOutFeeStatPresettles">
+        <config db="default" type="sql"><![CDATA[select a.PROJECTNO,a.CUSTID,a.ACCRUEDSTATUS,b.PURTYPE,a.COSTTYPE,a.STARTDATE,a.ENDDATE,a.ACCRUEDMONEY from PUR_PRESETTLE a 
+left join PUR_CONTRACT b on a.PURCONTNUM=b.PURCONTNUM where a.PROJECTNO is not null and a.CUSTID is not null]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryOutCount">
+        <config db="default" type="sql"><![CDATA[SELECT
+	DISTINCT
+	c.*, 
+	s.CUSTNAME,
+	s.SUPPLIERSNAME,
+	p.PROJECT_NAME,
+	p.sybname,
+	p.orgname,
+	p.empname,
+	p.syb,
+	p.CUSTID AS CUSTID1,
+	o.OUTPERNAME
+FROM
+	PUR_OUT_COUNT c
+LEFT JOIN PUR_SUPPLIER s ON c.CUSTID = s.CUSTID
+LEFT JOIN (
+	SELECT
+		e.*,l.PROJECT_NO,l.PROJECT_NAME,l.CUSTID,d.DICTNAME,h.orgname,i.empname,case when d.dictid is null then '其他' else c.orgname end as sybname,case when d.DICTID is NULL then '5' ELSE DICTID end as syb
+	FROM
+		RD_PROJECT l
+	LEFT JOIN PUR_PROJ_OUTPER e ON l.PROJECT_NO = e.PROJECTNO
+	LEFT JOIN OM_EMPLOYEE i ON e.MANAGER = i.USERID
+	LEFT JOIN OM_ORGANIZATION h ON l.fin_unit_id = h.orgid
+	LEFT JOIN OM_ORGANIZATION c ON c.orgid = (case when (h.ORGSEQ like '.1.12.%' or h.orgseq like '.1.2904.%' or h.ORGSEQ like '.1.30.%' or h.ORGSEQ like '.1.319.%') then substring(h.orgseq,4,charindex('.',h.orgseq,4)-charindex('.',h.orgseq,2)-1) else SUBSTRING(h.ORGSEQ,CHARINDEX('.', h.ORGSEQ,4)+1,CHARINDEX('.',h.ORGSEQ,8)-CHARINDEX('.',h.ORGSEQ,4)-1) end)
+	LEFT JOIN EOS_DICT_ENTRY d ON c.orgname = d.DICTNAME
+	AND d.DICTTYPEID = 'CONT_ORG'
+) p ON p.PROJECT_NO = c.PROJECTNO AND p.outperno = c.OUTPERNO AND p.startdate = c.RCDATE
+LEFT JOIN PUR_OUTPERSON o ON o.OUTPERNO = c.OUTPERNO]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPurTicket">
+        <config db="default" type="sql"><![CDATA[SELECT distinct a.*,b.PURCONTNUM,b.PURCONTNAME,b.CONTMONEY,c.CUSTNAME,c.SUPPLIERSNAME,e.PROJECT_NO,e.PROJECT_NAME FROM PUR_TICKET a
+LEFT JOIN PUR_CONTRACT b ON a.purcontid = b.PURCONTID
+LEFT JOIN PUR_SUPPLIER c ON a.CUSTID = c.CUSTID
+LEFT JOIN PUR_PROJ_CONT d ON b.PURCONTID = d.PURCONTID
+LEFT JOIN RD_PROJECT e ON d.projectno = e.PROJECT_NO]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPurContractByContractid">
+        <config db="default" type="sql"><![CDATA[select  DISTINCT a.*,d.contractid,d.contnum,h.suppliersname,k.accruedmoney
+from PUR_CONTRACT a
+LEFT JOIN CS_CONTRACT d on a.OUTCONTNUM=d.CONTNUM
+LEFT JOIN PUR_SUPPLIER h on a.custid=h.custid 
+LEFT JOIN 
+(select a.purcontid,sum (l.accruedmoney) as accruedmoney
+from PUR_CONTRACT a
+LEFT JOIN PUR_PRESETTLE l on a.PURCONTNUM=l.PURCONTNUM
+GROUP BY  a.purcontid) k on a.purcontid=k.purcontid
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPurpresettleByContractid">
+        <config db="default" type="sql"><![CDATA[select DISTINCT d.contractid,c.suppliersname,d.contnum,c.custname,b.purcontnum, b.purcontid,a.accruedid,a.accruedmoney,a.ACCRUEDSTATUS,a.ACCRUEDDATE,a.ACCTDATE
+from PUR_PRESETTLE a
+LEFT JOIN CS_CONTRACTSALE_PAY m on a.purcontnum=m.purcontno
+LEFT JOIN  CS_CONTRACT d on d.CONTRACTID=m.CONTRACTID
+LEFT JOIN PUR_CONTRACT b on a.purcontnum=b.purcontnum
+LEFT JOIN PUR_SUPPLIER c on a.custid=c.custid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPursettle">
+        <config db="default" type="sql"><![CDATA[select a.CUSTID,a.CUSTNO,a.PROJECTNO,a.SETTLEMENTID, a.SETTLEMENTNO,a.SETAMOUNT,b.purcontid,a.SETSTATUS,a.STARTDATE,a.PAYDATE ,c.suppliersname ,d.contractid,b.purcontnum
+from PUR_SETTLE a
+LEFT JOIN PUR_CONTRACT b on a.purcontid=b.purcontid
+LEFT JOIN PUR_SUPPLIER c on a.custid=c.custid
+LEFT JOIN CS_CONTRACT d on  a.contnum=d.contnum]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_pur.ame.QueryPurContract1">
+        <config db="default" type="sql"><![CDATA[select a.*,c.FIN_UNIT_ID ,d.orgid ,b.projectno from PUR_CONTRACT a 
+LEFT JOIN PUR_PROJ_CONT b on a.purcontid=b.purcontid
+LEFT JOIN RD_PROJECT c on b.projectno=c.project_no
+LEFT JOIN OM_ORGANIZATION d on c.FIN_UNIT_ID=d.orgid]]></config>
+    </QueryEntity>
+</QueryEntityList>

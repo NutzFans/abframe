@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_resume.importResume">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    <!--校验性别导入的数据是否正确-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="DICTNAME" javaType="String" property="dictname"/>
+        <result column="DICTID" javaType="String" property="dictid"/>
+    </resultMap>
+    <select id="checkGender" resultMap="resultMap1">select DICTNAME,DICTID from EOS_DICT_ENTRY where DICTNAME = #dictname# and DICTTYPEID = 'ABF_GENDER'</select>
+    <!--校验学历导入的数据是否正确-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="DICTNAME" javaType="String" property="dictname"/>
+        <result column="DICTID" javaType="String" property="dictid"/>
+    </resultMap>
+    <select id="checkDegree" resultMap="resultMap1">select DICTNAME,DICTID from EOS_DICT_ENTRY where DICTNAME = #dictname# and DICTTYPEID = 'DEGREE'</select>
+    <!--校验技术等级导入的数据是否正确-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="DICTNAME" javaType="String" property="dictname"/>
+        <result column="DICTID" javaType="String" property="dictid"/>
+    </resultMap>
+    <select id="checkEmpLevel" resultMap="resultMap1">select DICTNAME,DICTID from EOS_DICT_ENTRY where DICTNAME = #dictname# and DICTTYPEID = 'AME_TECH'</select>
+    <!--校验证书类型导入的数据是否正确-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="DICTNAME" javaType="String" property="dictname"/>
+        <result column="DICTID" javaType="String" property="dictid"/>
+    </resultMap>
+    <select id="checkCertType" resultMap="resultMap1">select DICTNAME,DICTID from EOS_DICT_ENTRY where DICTNAME = #dictname# and DICTTYPEID = 'AME_CERTTYPE'</select>
+</sqlMap>

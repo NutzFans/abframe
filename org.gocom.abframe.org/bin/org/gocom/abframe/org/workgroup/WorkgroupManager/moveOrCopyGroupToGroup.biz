@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="moveOrCopyGroupToGroup" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0">
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="周维&#x9;08-9-8 上午12:14"/>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link25" name="复制" type="transition">
+      <bendPoint heightToEnd="90" heightToStart="90" widthToEnd="-164" widthToStart="190"/>
+      <sourceNode>start0</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="OBJEQ">
+          <process:leftOperand type="query">moveOrCopy</process:leftOperand>
+          <process:rightOperand type="literal">copy</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="移动工作组" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link26" name="link26" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.workgroup.WorkgroupManager.moveGroupToGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="from" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">from</process:inputVariable>
+        <process:inputVariable id="1" name="to" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">to</process:inputVariable>
+        <process:inputVariable id="2" name="group" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">groupList</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="oprResult" type="query" value="Int" valueType="Primitive">oprResult</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="17" width="61"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="结束1" type="end">
+    <targetConnections>link25</targetConnections>
+    <targetConnections>link26</targetConnections>
+    <nodeLabel>end1label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="Int" name="oprResult" type="query" valueType="Primitive">oprResult</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <figSize height="17" width="32"/>
+    <node>end1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.0"/>
+  <process:variables/>
+  <process:inputs varArgs="false">
+    <process:input isArray="false" modelType="org.gocom.abframe.dataset.organization.OmGroup" name="from"/>
+    <process:input isArray="false" modelType="org.gocom.abframe.dataset.organization.OmGroup" name="to"/>
+    <process:input isArray="false" modelType="org.gocom.abframe.dataset.organization.OmGroup" name="groupList"/>
+    <process:input isArray="false" name="moveOrCopy" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="返回结果值：1为成功；-1为失败" isArray="false" name="oprResult" primitiveType="Int"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

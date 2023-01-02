@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="sendMailByProjectCheck.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <location x="285" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link14</targetConnections>
+    <location x="1253" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="287" y="276"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="1255" y="276"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="548" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/send</process:from>
+      <process:to type="query">send</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="550" y="276"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess4" name="获取mis信息" displayName="getMisEmailInfo" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="link4" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="473" y="240"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.select.GetMisMailInfo.getMisEmailInfo</process:partner>
+      <process:inputVariables/>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="emailAccount" type="query" value="String" valueType="Primitive">emailAccount</process:outputVariable>
+        <process:outputVariable id="1" name="emailPassword" type="query" value="String" valueType="Primitive">emailPassword</process:outputVariable>
+        <process:outputVariable id="2" name="emailSmtpHost" type="query" value="String" valueType="Primitive">emailSmtpHost</process:outputVariable>
+        <process:outputVariable id="3" name="emailSmtpPort" type="query" value="String" valueType="Primitive">emailSmtpPort</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <location x="452" y="275"/>
+    <figSize height="17" width="69"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="698" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">send+&quot;,&quot;+pmomail</process:from>
+      <process:to type="query">send</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="696" y="276"/>
+    <figSize height="17" width="32"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="发送对象" displayName="split" collapsed="false" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>assign3</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="788" y="240"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="xpath" synchronization="true" transactionType="join">
+      <process:partner type="literal">java.lang.String.split</process:partner>
+      <process:instance instanceName="send"/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="arg0" type="literal" value="java.lang.String" valueType="Java" pattern="reference">,</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String[]" valueType="Java">to</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="775" y="276"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="PMO邮箱" displayName="getDictName" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="623" y="240"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.eoscommon.BusinessDictUtil.getDictName</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dictTypeId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">AME_SYSCONF</process:inputVariable>
+      <process:inputVariable id="1" name="dictId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">PMOMAIL</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">pmomail</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="607" y="276"/>
+    <figSize height="17" width="54"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo7" name="发送邮件" displayName="发送邮件" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo7</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="1190" y="240"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo7label</nodeLabel>
+    <process:pojo methodType="static" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.primeton.eos.ame_common.AmeSendMailUtil.sendMail</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="mailInfo" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">email</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo7label" name="label" nodeType="label">
+    <location x="1177" y="276"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo7</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="发送对象去重" displayName="distinct" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>assign5</targetNode>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="1067" y="240"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.primeton.mis.contract.ExportContract.distinct</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="array" type="query" value="java.lang.String[]" valueType="Java" pattern="reference">to</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String[]" valueType="Java">email/to</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="1042" y="276"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="905" y="330"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">62</process:from>
+      <process:to type="query">mailparam/mailtype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/projbonus</process:from>
+      <process:to type="query">projbonus</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">projbonus.setScale(2,BigDecimal.ROUND_HALF_UP)</process:from>
+      <process:to type="query">projbonus</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/costsave</process:from>
+      <process:to type="query">costsave</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">costsave.setScale(2,BigDecimal.ROUND_HALF_UP)</process:from>
+      <process:to type="query">costsave</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/reservecost</process:from>
+      <process:to type="query">reservecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">reservecost.setScale(2,BigDecimal.ROUND_HALF_UP)</process:from>
+      <process:to type="query">reservecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/projectname</process:from>
+      <process:to type="query">mailparam/projectname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/projectno</process:from>
+      <process:to type="query">mailparam/projectno</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/custname</process:from>
+      <process:to type="query">mailparam/custname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/contnum</process:from>
+      <process:to type="query">mailparam/contnum</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/managername</process:from>
+      <process:to type="query">mailparam/managername</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/orgname</process:from>
+      <process:to type="query">mailparam/orgname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget</process:from>
+      <process:to type="query">mailparam/budget</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">serviceCost</process:from>
+      <process:to type="query">mailparam/serviceCost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reservecost</process:from>
+      <process:to type="query">mailparam/reservecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">costsave</process:from>
+      <process:to type="query">mailparam/costsave</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">projbonus</process:from>
+      <process:to type="query">mailparam/projbonus</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/remark</process:from>
+      <process:to type="query">mailparam/remark</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">companyInfo</process:from>
+      <process:to type="query">mailparam/companyInfo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetcost</process:from>
+      <process:to type="query">mailparam/budgetcost</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="903" y="366"/>
+    <figSize height="17" width="32"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link18" name="link18" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">isDistribution</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="855" y="239"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/budget</process:from>
+      <process:to type="query">budget</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">budget.setScale(2,BigDecimal.ROUND_HALF_UP)</process:from>
+      <process:to type="query">budget</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/assessmentcost</process:from>
+      <process:to type="query">serviceCost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">serviceCost.setScale(2,BigDecimal.ROUND_HALF_UP)</process:from>
+      <process:to type="query">serviceCost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/budgetcost</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/labordiffcost</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">a+b</process:from>
+      <process:to type="query">budgetcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">budgetcost.setScale(2,BigDecimal.ROUND_HALF_UP)</process:from>
+      <process:to type="query">budgetcost</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="853" y="275"/>
+    <figSize height="17" width="32"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="获取公司落款" displayName="getCompanyEmailInfo" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <location x="375" y="240"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.select.GetMisMailInfo.getCompanyEmailInfo</process:partner>
+      <process:inputVariables/>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="companyInfo" type="query" value="String" valueType="Primitive">companyInfo</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="352" y="275"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="生成邮件实例" displayName="createMailInstance" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="988" y="240"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_common.mailtemplate.createMailInstance</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="paramEntity" type="query" value="java.util.HashMap" valueType="Java" pattern="reference">mailparam</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="mailinfo" type="query" value="com.eos.foundation.MailInfo" valueType="DataObject">email</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="965" y="275"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值4" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="920" y="239"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">63</process:from>
+      <process:to type="query">mailparam/mailtype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/projectname</process:from>
+      <process:to type="query">mailparam/projectname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/projectno</process:from>
+      <process:to type="query">mailparam/projectno</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/custname</process:from>
+      <process:to type="query">mailparam/custname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/contnum</process:from>
+      <process:to type="query">mailparam/contnum</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/managername</process:from>
+      <process:to type="query">mailparam/managername</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/orgname</process:from>
+      <process:to type="query">mailparam/orgname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget</process:from>
+      <process:to type="query">mailparam/budget</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">serviceCost</process:from>
+      <process:to type="query">mailparam/serviceCost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">rdprojcheck/remark</process:from>
+      <process:to type="query">mailparam/remark</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">companyInfo</process:from>
+      <process:to type="query">mailparam/companyInfo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetcost</process:from>
+      <process:to type="query">mailparam/budgetcost</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="918" y="275"/>
+    <figSize height="17" width="32"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="赋值5" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>invokePojo7</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="1131" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailAccount</process:from>
+      <process:to type="query">email/from</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailSmtpHost</process:from>
+      <process:to type="query">email/smtpHost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailSmtpPort</process:from>
+      <process:to type="query">email/smtpPort</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailAccount</process:from>
+      <process:to type="query">email/userName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailPassword</process:from>
+      <process:to type="query">email/password</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">HTML</process:from>
+      <process:to type="query">email/messageFormat</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="1129" y="276"/>
+    <figSize height="17" width="32"/>
+    <node>assign5</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="yaoyi" createTime="2018-10-09 16:56:53" date="2018-10-09Z" description="项目考核分配发送邮件" name="项目考核分配发送邮件" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.MailInfo" name="email"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailPassword" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailSmtpHost" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailAccount" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailSmtpPort" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="pmomail" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="send" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" name="to" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="projbonus" primitiveType="Decimal"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="costsave" primitiveType="Decimal"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="reservecost" primitiveType="Decimal"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="serviceCost" primitiveType="Decimal"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="budget" primitiveType="Decimal"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="companyInfo" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="budgetcost" primitiveType="Decimal"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="a" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="b" primitiveType="Double"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="项目考核" isArray="false" modelType="com.primeton.rdmgr.data.rd.RdProjCheck" name="rdprojcheck"/>
+    <process:input description="是否需要考核" isArray="false" name="isDistribution" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs/>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

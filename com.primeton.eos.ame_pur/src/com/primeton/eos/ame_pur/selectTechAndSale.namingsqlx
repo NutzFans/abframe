@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wlq -->
+<sqlMap>
+    <resultMap class="com.eos.workflow.data.WFParticipant" id="resultMap">
+        <result column="id" javaType="String" property="id"/>
+        <result column="name" javaType="String" property="name"/>
+        <result column="typeCode" javaType="String" property="typeCode"/>
+    </resultMap>
+    <select id="selectTechAndSale" resultMap="resultMap">
+	    <![CDATA[
+		    select t.BUSIPARTER as id,b.EMPNAME as name,'person' as typeCode from (
+				select t.userid,t.orgid,t.orgname,BUSIPARTER=substring(t.BUSIPARTER,b.number,charindex(',',t.BUSIPARTER+',',b.number)-b.number) from (
+					select c.userid,c.ORGID,a.ORGNAME,a.BUSIPARTER from OM_ORGANIZATION a,(
+						select c.userid,c.empname,case when a.BUSIPARTER is null then a.PARENTORGID 
+						when (CHARINDEX(c.userid,a.BUSIPARTER)>0) and LEN(a.BUSIPARTER)=LEN(c.userid) and a.orgdegree!='2' then a.PARENTORGID 
+						else a.orgid  end as ORGID
+						from OM_ORGANIZATION a,(			
+							select a.userid,a.empname,case when c.BUSIPARTER is null then c.PARENTORGID 
+							when (CHARINDEX(a.userid,c.BUSIPARTER)>0) and LEN(c.BUSIPARTER)=LEN(a.userid) and c.orgdegree!='2' then c.PARENTORGID 
+							else c.orgid  end as ORGID
+							from om_employee a,OM_organization b,OM_ORGANIZATION c,wfworkitem y,wfprocessInst x
+							where x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid= #workitemid#
+							and a.orgid=b.orgid and b.PARENTORGID =c.orgid and b.ORGID!=1
+						) c WHERE a.ORGID=c.ORGID
+					) c where a.ORGID=c.ORGID
+				)t join master.dbo.spt_values b on b.type='P' where charindex(',',','+t.BUSIPARTER,b.number)=b.number
+			) t LEFT JOIN OM_EMPLOYEE b on t.BUSIPARTER=b.USERID
+			UNION ALL
+			select b.USERID as id,b.EMPNAME as name,'person' as typeCode  from OM_ORGANIZATION a,OM_EMPLOYEE b,(
+				select c.empid,c.userid,c.empname,a.ORGID as orgid1,a.ORGNAME,a.MANAGERID,case when a.MANAGERID is null then a.PARENTORGID 
+				when (CHARINDEX(CAST(c.empid AS varchar(20)),CAST(a.MANAGERID AS varchar(20)))>0) and LEN(CAST(a.MANAGERID AS varchar(20)))=LEN(CAST(c.empid AS varchar(20)))  and a.orgdegree!='2' then a.PARENTORGID 
+				else a.orgid  end as ORGID
+				from OM_ORGANIZATION a,(
+					select a.empid,a.userid,a.empname,c.ORGID as orgid1,c.ORGNAME,c.MANAGERID, case when c.MANAGERID is null then c.PARENTORGID
+					when (CHARINDEX(CAST(a.EMPID AS varchar(20)),CAST(c.MANAGERID AS varchar(20)))>0) and LEN(CAST(c.MANAGERID AS varchar(20)))=LEN(CAST(a.EMPID AS varchar(20))) and c.orgdegree!='2' then c.PARENTORGID 
+					else c.orgid  end as ORGID
+					from om_employee a,OM_organization b,OM_ORGANIZATION c,wfworkitem y,wfprocessInst x
+					where x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid= #workitemid#
+					and a.orgid=b.orgid and b.PARENTORGID =c.orgid and b.ORGID!=1
+				) c WHERE a.ORGID=c.ORGID
+			) c where a.ORGID=c.ORGID and a.MANAGERID=b.EMPID
+		]]>
+    </select>
+    <!-- 外包结算流程 在财务合规审核环节获取分管领导 -->
+    <select id="selectFenGuanLeader" resultMap="resultMap">
+	    <![CDATA[
+		    select e.userid as id,e.empname as name,'person' as typeCode 
+			from om_employee a,OM_organization b,OM_organization d,OM_EMPLOYEE e,wfworkitem y,wfprocessInst x 
+			where a.orgid = b.orgid and x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid=#workitemid#
+			and substring(b.orgseq,4,charindex('.',b.orgseq,4)-charindex('.',b.orgseq,2)-1)=d.orgid and d.managerid=e.EMPID
+		]]>
+    </select>
+    <select id="selectTechAndSaleAndCharge" resultMap="resultMap"><!-- 非外包采购， 加入分管领导审批(注意去重union的话没排序) -->
+	    <![CDATA[
+	    	select DISTINCT id,name,typeCode from (
+				select t.BUSIPARTER as id,b.EMPNAME as name,'person' as typeCode from (
+				select t.userid,t.orgid,t.orgname,BUSIPARTER=substring(t.BUSIPARTER,b.number,charindex(',',t.BUSIPARTER+',',b.number)-b.number) from (
+					select c.userid,c.ORGID,a.ORGNAME,a.BUSIPARTER from OM_ORGANIZATION a,(
+						select c.userid,c.empname,case when a.BUSIPARTER is null then a.PARENTORGID 
+						when (CHARINDEX(c.userid,a.BUSIPARTER)>0) and LEN(a.BUSIPARTER)=LEN(c.userid) and a.orgdegree!='2' then a.PARENTORGID 
+						else a.orgid  end as ORGID
+						from OM_ORGANIZATION a,(			
+							select a.userid,a.empname,case when c.BUSIPARTER is null then c.PARENTORGID 
+							when (CHARINDEX(a.userid,c.BUSIPARTER)>0) and LEN(c.BUSIPARTER)=LEN(a.userid) and c.orgdegree!='2' then c.PARENTORGID 
+							else c.orgid  end as ORGID
+							from om_employee a,OM_organization b,OM_ORGANIZATION c,wfworkitem y,wfprocessInst x
+							where x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid= #workitemid#
+							and a.orgid=b.orgid and b.PARENTORGID =c.orgid and b.ORGID!=1
+						) c WHERE a.ORGID=c.ORGID
+					) c where a.ORGID=c.ORGID
+				)t join master.dbo.spt_values b on b.type='P' where charindex(',',','+t.BUSIPARTER,b.number)=b.number
+			) t LEFT JOIN OM_EMPLOYEE b on t.BUSIPARTER=b.USERID
+			UNION ALL
+			select b.USERID as id,b.EMPNAME as name,'person' as typeCode  from OM_ORGANIZATION a,OM_EMPLOYEE b,(
+				select c.empid,c.userid,c.empname,a.ORGID as orgid1,a.ORGNAME,a.MANAGERID,case when a.MANAGERID is null then a.PARENTORGID 
+				when (CHARINDEX(CAST(c.empid AS varchar(20)),CAST(a.MANAGERID AS varchar(20)))>0) and LEN(CAST(a.MANAGERID AS varchar(20)))=LEN(CAST(c.empid AS varchar(20)))  and a.orgdegree!='2' then a.PARENTORGID 
+				else a.orgid  end as ORGID
+				from OM_ORGANIZATION a,(
+					select a.empid,a.userid,a.empname,c.ORGID as orgid1,c.ORGNAME,c.MANAGERID, case when c.MANAGERID is null then c.PARENTORGID
+					when (CHARINDEX(CAST(a.EMPID AS varchar(20)),CAST(c.MANAGERID AS varchar(20)))>0) and LEN(CAST(c.MANAGERID AS varchar(20)))=LEN(CAST(a.EMPID AS varchar(20))) and c.orgdegree!='2' then c.PARENTORGID 
+					else c.orgid  end as ORGID
+					from om_employee a,OM_organization b,OM_ORGANIZATION c,wfworkitem y,wfprocessInst x
+					where x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid= #workitemid#
+					and a.orgid=b.orgid and b.PARENTORGID =c.orgid and b.ORGID!=1
+				) c WHERE a.ORGID=c.ORGID
+			 ) c where a.ORGID=c.ORGID and a.MANAGERID=b.EMPID
+				UNION ALL	
+				select e.userid as id,e.empname as name,'person' as typeCode from om_employee a,OM_organization b,OM_organization d,OM_EMPLOYEE e,wfworkitem y,wfprocessInst x where a.orgid = b.orgid 
+				and x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid= #workitemid#
+				and substring(b.orgseq,4,charindex('.',b.orgseq,4)-charindex('.',b.orgseq,2)-1)=d.orgid and d.managerid=e.empid
+			)a
+		]]>
+    </select>
+    <resultMap class="com.primeton.rdmgr.data.rd.OmEmployee" id="resultMap1">
+        <result column="salesname" javaType="String" property="salesname"/>
+        <result column="salesid" javaType="String" property="salesid"/>
+    </resultMap>
+    <select id="selectCreator" resultMap="resultMap1">
+	    <![CDATA[
+		    select a.empname as salesname ,a.userid as salesid
+			from om_employee a,wfworkitem y,wfprocessInst x
+			where x.creator=a.userid and x.processInstid=y.processInstid and y.workitemid= #workitemid# 
+		]]>
+    </select>
+</sqlMap>

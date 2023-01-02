@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:许青倩 -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="activityInstID" javaType="string" property="activityInstID"/>
+        <result column="processInstID" javaType="string" property="processInstID"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="goalname" javaType="string" property="goalname"/>
+        <result column="checktype" javaType="string" property="checktype"/>
+        <result column="scorename" javaType="string" property="scorename"/>
+        <result column="weight" javaType="decimal" property="weight"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="probationenddate" javaType="Date" property="probationenddate"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="roleid" javaType="string" property="roleid"/>
+        <result column="rolename" javaType="string" property="rolename"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="emailGroupId" javaType="decimal" property="emailGroupId"/>
+        <result column="emailGroupAcc" javaType="string" property="emailGroupAcc"/>
+        <result column="emailGrouName" javaType="string" property="emailGrouName"/>
+        <result column="emailGrouOrgs" javaType="string" property="emailGrouOrgs"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="repeatnum" javaType="int" property="repeatnum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="oemail" javaType="string" property="oemail"/>
+    </resultMap>
+    <select id="getactivityInstID" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    	select c.activityInstID,d.processInstID from OM_INTEND_JOIN  a 
+		LEFT JOIN WFActivityInst c on c.processInstID=a.PROCESSINSTID
+		LEFT JOIN WFActivityInst d on d.processInstID=a.PROCESSINSTID AND d.activityDefID='manualActivity2' and d.currentState in(1,2,3)
+		where a.processinstid is not NULL and  a.actdate<=GETDATE()
+		and c.activityDefID='manualActivity3' and c.currentState=10
+	]]></select>
+	<select id="getIntendQuality" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+    	select DICTNAME as goalname,1 as checktype,FILTER1 as scorename,FILTER2 as weight 
+		from EOS_DICT_ENTRY where DICTTYPEID='AME_INTEND_QUALOTY'
+	]]></select>
+	<select id="getNextDate" parameterClass="java.util.HashMap" resultMap="resultMap2"><![CDATA[
+    	select dateadd(month,#monthnum#,cast(#actdate# as datetime)) as probationenddate
+	]]></select>
+	<select id="getEmail" parameterClass="java.lang.String" resultMap="resultMap6"><![CDATA[
+    	select stuff((select ',' + EMPNAME+'<'+oemail+'>'  from OM_EMPLOYEE where USERID in($userids$)  for xml path('')),1,1,'') as empname,
+		stuff((select ',' + oemail  from OM_EMPLOYEE where USERID in($userids$)  for xml path('')),1,1,'') as oemail
+	]]></select>
+	
+	<select id="getAuthorizeRole" parameterClass="java.util.HashMap" resultMap="resultMap3">
+		select dictid as roleid,dictname as rolename from EOS_DICT_ENTRY where dicttypeid='AME_ATHORIZEROLE'
+		<isNotNull property="roleids"> and dictid not in ($roleids$)  </isNotNull>
+		ORDER BY SORTNO
+	</select>
+	
+	<select id="getAuthorizeEmailGroup" parameterClass="java.util.HashMap" resultMap="resultMap4">
+		select DISTINCT a.EMAIL_GROUP_ID as emailGroupId,
+		a.EMAIL_GROUP_ACC as emailGroupAcc,
+		a.EMAIL_GROU_NAME as emailGrouName,
+		a.EMAIL_GROU_ORGS as emailGrouOrgs
+		from TX_EMAIN_GROUP_INFO a 
+		LEFT JOIN TX_EXMAIL_GROUP_ORG b on a.EMAIL_GROUP_ID=b.EMAIL_GROUP_ID
+		where b.ORGID in (select orgid from OM_ORGANIZATION where #orgseq# like ORGSEQ +'%')
+		<isNotNull property="emailgroupids">
+		and a.EMAIL_GROUP_ID not in ($emailgroupids$)
+		</isNotNull>
+		<isNotNull property="emailgroupids1">
+		and a.EMAIL_GROUP_ID in ($emailgroupids1$)
+		</isNotNull>
+		order by a.EMAIL_GROUP_ACC asc
+	</select>
+	
+	<select id="getRepeatName" parameterClass="java.util.HashMap" resultMap="resultMap5">
+		select count(*) as repeatnum from OM_EMPLOYEE
+		where (EMPSTATUS ='on' or (EMPSTATUS='leave' and year(GETDATE())=year(OUTDATE)))
+		and EMPNAME = #name# 
+		<isNotNull property="userid">
+		and USERID!=#userid#
+		</isNotNull>
+	</select>
+</sqlMap>

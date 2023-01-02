@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_newlook.accountReceivable">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="ORG" javaType="string" property="org"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="min30" javaType="Decimal" property="min30"/>
+        <result column="max30" javaType="Decimal" property="max30"/>
+        <result column="max90" javaType="Decimal" property="max90"/>
+        <result column="max180" javaType="Decimal" property="max180"/>
+        <result column="max365" javaType="Decimal" property="max365"/>
+        <result column="max730" javaType="Decimal" property="max730"/>
+        <result column="dsoall" javaType="Decimal" property="dsoall"/>
+        <result column="bz" javaType="int" property="bz"/>
+    </resultMap>
+    <select id="getAccountsReceivable" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+   	SELECT * from (
+	select t.ORG,t.orgname,
+	Convert(decimal(18,2),(case when sum(t.[DSO<30]) is null then 0 else sum(t.[DSO<30])/10000 end)) as'min30',
+		Convert(decimal(18,2),(case when sum(t.[DSO>30]) is null then 0 else sum(t.[DSO>30])/10000 end)) as 'max30',
+		Convert(decimal(18,2),(case when sum(t.[DSO>90]) is null then 0 else sum(t.[DSO>90])/10000 end)) as 'max90',
+		Convert(decimal(18,2),(case when sum(t.[DSO>180]) is null then 0 else sum(t.[DSO>180])/10000 end)) as 'max180',
+		Convert(decimal(18,2),(case when sum(t.[DSO>365]) is null then 0 else sum(t.[DSO>365])/10000 end))  as 'max365',
+		Convert(decimal(18,2),(case when sum(t.[DSO>730]) is null then 0 else sum (t.[DSO>730])/10000 end)) as 'max730',
+		Convert(decimal(18,2),(case when sum(t.[DSO<30]) is null then 0 else sum(t.[DSO<30]) end +
+		case when sum(t.[DSO>180]) is null then 0 else sum(t.[DSO>180]) end+
+		case when sum(t.[DSO>30]) is null then 0 else sum(t.[DSO>30]) end+
+		case when sum (t.[DSO>730]) is null then 0 else sum(t.[DSO>730]) end+
+		case when sum(t.[DSO>365]) is null then 0 else sum(t.[DSO>365]) end+
+		case when sum(t.[DSO>90]) is null then 0 else sum(t.[DSO>90]) end)/10000) as dsoall,
+	t.bz
+	from 
+	(
+	select t.ORG,t.orgname,
+	case when t.type='DSO<30' then sum(t.yushou) end as 'DSO<30',
+	case when t.type='DSO>730' then sum(t.yushou) end as 'DSO>730',
+	case when t.type='DSO>365' then sum(t.yushou) end as 'DSO>365',
+	case when t.type='DSO>180' then sum(t.yushou) end as 'DSO>180',
+	case when t.type='DSO>90' then sum(t.yushou) end as 'DSO>90',
+	case when t.type='DSO>30' then sum(t.yushou) end as 'DSO>30',
+	1 as bz
+	FROM
+	(
+	select t.contnum,t.actsum,t.MACONFIRMDAY_START,t.yszk,t.sr,t.sk,
+	CASE when t.sum<t.actsum then t.actsum-t.sum
+	when t.sum>=t.actsum then 0 end as yushou,
+	case when t.dso<=30 then 'DSO<30'
+	when t.dso>730 then 'DSO>730'
+	when t.dso>365  then 'DSO>365'
+	when t.dso>180  then 'DSO>180' 
+	when t.dso>90  then 'DSO>90'
+	when t.dso>30  then 'DSO>30'
+	end as type,
+	t.dso,
+	t.ORG,t.orgname,t.USERID,t.SALENAME,t.CUSTID,t.CUSTNAME,t.CUSTJC
+	from 
+	( 
+	select DISTINCT case when c.PROJECTNAME is null then '' else c.PROJECTNAME end as PROJECTNAME,
+  a.CONTNUM,
+	case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM*f.contsum/c.contsum end as ACTSUM,
+	a.MACONFIRMDAY_START,
+	b.yszk,b.sr,b.sk,
+	case when b.yszk<=0 then 0
+	when(b.sk-case when sum(h.ACTSUM) is null then 0 else sum(h.ACTSUM) END)<=0 and b.yszk>0 then 0 
+	when b.yszk>0 and (b.sk-case when sum(h.ACTSUM) is null then 0 else sum(h.ACTSUM) END)>0 then (b.sk-case when sum(h.ACTSUM) is null then 0 else sum(h.ACTSUM) END) else 0 end as sum,
+  DATEDIFF(day,a.MACONFIRMDAY_START,#confirmday#)+1 as dso,
+	g.org,d.ORGNAME as orgname,f.SALEID as USERID,g.EMPNAME as salename,c.CUSTID,e.CUSTNAME,e.CUSTJC,g.ORGID,g.ywdyid,g.ywdyname,g.ywdyseq,g.sybid,g.sybname,g.sybseq,g.syqid,g.syqname,g.syqseq,g.ORGSEQ
+	from  (select contnum,MACONFIRMDAY_START,sum(ACTSUM) as ACTSUM from CS_REVE_FORECAST where STATUS in(3)  GROUP BY contnum,MACONFIRMDAY_START) a
+	LEFT JOIN (select sum(contsum) as contsum,contnum,CONTRACTID,custid,PROJECTNAME from CS_CONTRACT GROUP BY contnum,CONTRACTID,custid,PROJECTNAME) c on c.contnum=a.CONTNUM
+	LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID,ORGID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID,ORGID) f on f.contractid =c.CONTRACTID 
+	LEFT JOIN (
+		select DISTINCT case when c.ORGID=2904 or c.orgseq like '.1.319.%' or c.orgseq like '.1.30.%' or c.orgseq like '.1.12.%' or c.orgseq like '.1.318.%' or c.ORGID=999999999 then f.ORGID 
+													else d.ORGID
+										end as org,c.ORGSEQ,c.ORGID,b.SALEID,a.EMPNAME,
+										case WHEN e.orgid is null then c.ORGID else e.ORGID end as ywdyid,
+										case when e.orgname is null then c.ORGNAME else e.ORGNAME end as ywdyname,
+										case when e.orgseq is null then c.ORGSEQ else e.ORGSEQ end as ywdyseq,
+										d.ORGID as sybid,d.ORGNAME as sybname,d.ORGSEQ as sybseq,
+										f.ORGID as syqid,f.ORGNAME as syqname,f.ORGSEQ as syqseq,max(e.ORGLEVEL) as orglevel
+		from OM_EMPLOYEE a,CS_CONTRACTSALE b,
+				 OM_ORGANIZATION c
+				 LEFT JOIN OM_ORGANIZATION e on c.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL=4
+         LEFT JOIN OM_ORGANIZATION d on c.ORGSEQ like d.ORGSEQ+'%' and d.ORGLEVEL=3
+				 LEFT JOIN OM_ORGANIZATION f on c.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL=2
+		where a.userid=b.SALEID and c.ORGID=b.ORGID and b.ORGID !='999999999' and c.ORGSEQ is not null and c.ORGSEQ!='' and c.ORGSEQ like '.%.%.%.%'
+    GROUP BY c.ORGID,c.ORGSEQ,b.SALEID,a.EMPNAME,e.orgid,e.orgname,e.orgseq,d.ORGID,d.ORGNAME,d.ORGSEQ,f.ORGID,f.ORGNAME,f.ORGSEQ,c.ORGNAME 
+  ) g on g.SALEID=f.SALEID and g.ORGID=f.ORGID
+	LEFT JOIN OM_ORGANIZATION d on d.ORGID=g.org
+	LEFT JOIN MIS_CUSTINFO e on e.CUSTID=c.CUSTID
+	LEFT JOIN
+	(
+		select a.CONTNUM,a.SALEID,
+		case when sum(a.sr) is null then 0 else sum(a.sr) end-case when sum(b.sk)is null then 0 else sum(b.sk)end as yszk,
+		case when sum(a.sr) is null then 0 else sum(a.sr) end as sr,case when sum(b.sk)is null then 0 else sum(b.sk)end as sk
+		from 
+		(select a.CONTNUM,case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM*f.contsum/c.contsum end as sr,f.SALEID 
+						from (select contnum,sum(ACTSUM) as ACTSUM from CS_REVE_FORECAST where MACONFIRMDAY_START<=#confirmday# and STATUS in (3) GROUP BY contnum) a 
+						LEFT JOIN (select sum(contsum) as contsum,contnum,CONTRACTID,custid from CS_CONTRACT GROUP BY contnum,CONTRACTID,custid) c on c.contnum=a.CONTNUM
+						LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID) f on f.contractid =c.CONTRACTID
+						   )a LEFT JOIN
+		(select b.CONTNUM,case when c.contsum = 0 or c.contsum is null then 0 else b.ACTSUM*f.contsum/c.contsum end as sk,f.SALEID 
+						from (select contnum,sum(ACTSUM) as ACTSUM from CS_GATHER_FC where MACONFIRMDAY<=#confirmday# and status in (2,3,4)  GROUP BY contnum) b
+						LEFT JOIN (select sum(contsum) as contsum,contnum,CONTRACTID,custid from CS_CONTRACT GROUP BY contnum,CONTRACTID,custid) c on c.contnum=b.CONTNUM
+						LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID) f on f.contractid =c.CONTRACTID
+						 )b on a.CONTNUM=b.CONTNUM and a.SALEID=b.SALEID
+		GROUP BY a.CONTNUM,a.SALEID
+	)b on b.CONTNUM=a.CONTNUM and b.SALEID=f.SALEID
+	LEFT JOIN
+	(
+		select sum(t.ACTSUM) as ACTSUM,t.CONTNUM,t.SALEID,t.MACONFIRMDAY_START from 
+		(
+		select case when y.CONTSUM is null or y.CONTSUM=0 then 0 else x.ACTSUM*z.CONTSUM/y.CONTSUM end as ACTSUM,x.CONTNUM,z.SALEID,x.MACONFIRMDAY_START
+		from  (select contnum,STATUS,MACONFIRMDAY_START,sum(ACTSUM) as ACTSUM from CS_REVE_FORECAST GROUP BY contnum,STATUS,MACONFIRMDAY_START) x 
+					 LEFT JOIN (select sum(contsum) as contsum,contnum,CONTRACTID,custid from CS_CONTRACT GROUP BY contnum,CONTRACTID,custid) y on y.contnum=x.CONTNUM
+					 LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID) z on z.contractid =y.CONTRACTID 
+		where x.CONTNUM=y.CONTNUM and y.CONTRACTID=z.CONTRACTID and 
+		x.STATUS in (3) 
+		)t 
+		GROUP BY t.CONTNUM,t.SALEID,t.MACONFIRMDAY_START
+	) h on h.CONTNUM=a.CONTNUM and h.SALEID=f.SALEID and (h.MACONFIRMDAY_START<a.MACONFIRMDAY_START )
+	where b.yszk>0 and a.MACONFIRMDAY_START<=#confirmday#
+	GROUP BY a.CONTNUM,c.contsum,f.contsum,a.ACTSUM,a.MACONFIRMDAY_START,b.yszk,b.sr,b.sk,b.yszk,b.sk,g.org,d.ORGNAME ,f.SALEID,g.EMPNAME,c.CUSTID,e.CUSTNAME,e.CUSTJC,g.ORGID,c.PROJECTNAME,g.ywdyid,g.ywdyname,g.ywdyseq,g.sybid,g.sybname,g.sybseq,g.syqid,g.syqname,g.syqseq,g.ORGSEQ
+	)t 
+	where t.org is not null
+	)t
+	GROUP BY t.ORG,t.orgname, t.type
+	)t
+	group BY t.ORG,t.orgname, t.bz
+	) t ORDER BY $dso$ desc
+
+    ]]></select>
+</sqlMap>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:mengyy -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="OEMAIL" javaType="string" property="oemail"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="SYB" javaType="string" property="syb"/>
+        <result column="SYBNAME" javaType="string" property="sybname"/>
+    </resultMap>
+    <select id="getleaders" parameterClass="java.lang.String" resultMap="resultMap"><![CDATA[
+    select * from (
+	select USERID+'('+EMPNAME+')' as USERID,EMPNAME+'('+USERID+')' as empname,OEMAIL,
+	(CASE when USERID='0127' or USERID ='0237' or USERID ='0621' or USERID ='0562' or USERID ='0451' or USERID ='0300' or USERID ='0630' 
+	 or USERID ='0640' or USERID ='0634' or USERID ='0655' or USERID ='0407' or USERID ='0280' or USERID ='1098'THEN 0 
+	when USERID ='0049' or USERID ='0621' or USERID ='sijw' or USERID ='0408' then 1
+	when USERID='0020' then 2 when USERID='0060' then 3 when USERID='0061' then 4 when USERID='0097' then 5
+	ELSE 6 END)as sort
+	 from OM_EMPLOYEE where USERID in 
+		($names$)
+	)t ORDER BY t.sort
+    ]]></select>
+    <select id="getSaleSyb" parameterClass="java.lang.String" resultMap="resultMap1"><![CDATA[
+    select CASE when a.DICTID is null THEN '5' else a.DICTID END as syb,
+	CASE when a.DICTNAME is null THEN '其他' else a.DICTNAME END as sybname from 
+	(select ORGID,ORGNAME from OM_ORGANIZATION c where c.ORGID=(
+	SELECT (case when b.orgseq like '.1.3.%' or b.orgseq like '.1.4.%' or b.orgseq like '.1.5.%' or b.orgseq like '.1.6.%' 
+	or b.orgseq like '.1.14.%' then SUBSTRING(b.ORGSEQ,CHARINDEX('.', b.ORGSEQ,4)+1,CHARINDEX('.',b.ORGSEQ,8)-CHARINDEX('.',b.ORGSEQ,4)-1) else substring(b.orgseq,4,CHARINDEX('.',b.orgseq,4)-CHARINDEX('.',b.orgseq,2)-1) end) org
+	 FROM OM_ORGANIZATION b where b.orgid=( SELECT orgid from OM_EMPLOYEE where USERID=#userID#))) b
+	LEFT JOIN (select DICTID,DICTNAME from EOS_DICT_ENTRY where DICTTYPEID='cont_org') a on b.ORGNAME=a.DICTNAME
+    ]]></select>
+</sqlMap>

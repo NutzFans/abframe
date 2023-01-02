@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="fileupload.flowx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="文件上传页面流，目前已实现文件对象持久化到数据库字段，可以根据savetype来自定义实现更多的上传保存类型&#xD;&#xA;" title="xiongsh&#x9;13-10-22 上午10:07">
+    <location x="24" y="225"/>
+    <size height="100" width="163"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter anyType="com.primeton.ext.access.http.IUploadFile" description="上传的文件对象" historyStateLocation="client" isArray="false" name="uploadfile"/>
+        <process:parameter description="存储类型，1为存储在字段中，2为存储在目录中" historyStateLocation="client" isArray="false" name="savetype" primitiveType="Int"/>
+        <process:parameter description="保存路径" historyStateLocation="client" isArray="false" name="savepath" primitiveType="String"/>
+        <process:parameter description="持久化对象" historyStateLocation="client" isArray="false" modelType="com.primeton.components.web.fileupload.ds_fileupload.AtFileupload" name="fileobject"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="fileId" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="60" y="134"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" type="end" contextPath="" method="forward" uri="/common/components/swffileupload/swfupload/fileupload.jsp">
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="615" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="62" y="170"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="617" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="默认上传类型" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link4" name="link4" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">savetype</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="208" y="134"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="186" y="170"/>
+    <figSize height="17" width="73"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="空操作" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="356" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="352" y="96"/>
+    <figSize height="17" width="37"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="文件对象持久化" displayName="insertEntity" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>assign3</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="495" y="208"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.insertEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">fileobject</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="464" y="244"/>
+    <figSize height="17" width="85"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="持久化对象装配" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="link3" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="356" y="208"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/fileName</process:from>
+      <process:to type="query">fileobject/fileName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/bytes</process:from>
+      <process:to type="query">fileobject/fileData</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">savetype</process:from>
+      <process:to type="query">fileobject/saveType</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">s:userObject/userId</process:from>
+      <process:to type="query">fileobject/uploadUser</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new java.util.Date()</process:from>
+      <process:to type="query">fileobject/uploadTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/clientFileName</process:from>
+      <process:to type="query">fileobject/clientFileName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/clientPath</process:from>
+      <process:to type="query">fileobject/clientPath</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/contentType</process:from>
+      <process:to type="query">fileobject/contentType</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/name</process:from>
+      <process:to type="query">fileobject/name</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadfile/size</process:from>
+      <process:to type="query">fileobject/size</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="328" y="244"/>
+    <figSize height="17" width="85"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="返回值设置" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="615" y="208"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">fileobject/fileId</process:from>
+      <process:to type="query">fileId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="599" y="244"/>
+    <figSize height="17" width="61"/>
+    <node>assign3</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="xiongsh" createTime="2013-10-16 10:30:57" date="2013-10-16Z" description="文件上传的页面流" name="fileupload" version="6.3"/>
+  <process:variables/>
+</process:tPageFlow>

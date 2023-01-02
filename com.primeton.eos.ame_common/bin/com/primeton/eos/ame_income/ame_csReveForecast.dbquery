@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_income.ame_csReveForecast.QueryCsIncomechecklist">
+        <config db="default" type="sql"><![CDATA[select '0' as CHECKLISTID,'流程审核检查点条目树' as CHECKLISTNAME,'流程审核检查点条目树' as CHECKLISTSHOWNAME1,'流程审核检查点条目树' as CHECKLISTSHOWNAME,'0' SEQ,null as PARENTID,
+'0' as ISCANCHECK,'0' AS [LEVEL],'0' AS SORTNO,'0' AS CHECKLISTSEQ
+UNION all
+select a.CHECKLISTID as CHECKLISTID,a.CHECKLISTNAME as CHECKLISTNAME ,('('+a.CHECKLISTSEQ+')'+a.CHECKLISTSHOWNAME) AS CHECKLISTSHOWNAME1,a.CHECKLISTSHOWNAME,a.SEQ SEQ,
+(CASE WHEN a.PARENTID is null  THEN '0' else a.PARENTID END) as PARENTID,
+a.ISCANCHECK AS ISCANCHECK,a.[LEVEL] AS [LEVEL],a.SORTNO AS SORTNO,a.CHECKLISTSEQ
+from CS_INCOMECHECKLIST a]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.ame_csReveForecast.QueryIncomeCheck">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,b.ACTIVITYDEFID,b.PROCESSDEFNAME,b.BUSICODE
+FROM
+	CS_INCOMECHECKLIST a
+LEFT JOIN (SELECT c.CHECKID,c.CHECKLISTID,d.PROCESSDEFNAME,d.ACTIVITYDEFID,d.BUSICODE FROM CS_INCOMETYPE_CHECK c LEFT JOIN CS_INCOMECHECK_ACT d ON c.CHECKID=d.CHECKID) b ON a.CHECKLISTID = b.CHECKLISTID
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.ame_csReveForecast.GetCheckList">
+        <config db="default" type="sql"><![CDATA[SELECT
+	DISTINCT a.*,b.PROCESSINSTID
+FROM
+	CS_INCOMECHECK b
+LEFT JOIN CS_INCOMECHECKLIST a ON a.CHECKLISTID = b.CHECKLISTID ]]></config>
+    </QueryEntity>
+</QueryEntityList>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zhonghe.ame.marketInfo.marketInfo.queryBid">
+        <config db="default" type="sql"><![CDATA[SELECT
+a.id AS id,
+a.project_name AS project_name,
+a.custinfo_id AS custinfoId,
+c.CUSTNAME AS custName,
+a.proxy_company AS proxyCompany,
+a.project_size AS projectSize,
+a.project_local AS projectlocal,
+a.org_id AS orgId,
+d.ORGNAME,
+a.bid_open_time AS openTime,
+a.bid_status AS bidStatus,
+a.bid_price AS bidPrice,
+a.contract_cycle AS contCycle,
+a.remake,
+a.creat_userid,
+f.EMPNAME,
+a.contract_code,
+a.submit_status,
+a.bid_mode,
+a.tb_price,
+a.start_time,
+a.stop_time,
+a.creat_time,
+a.update_uesrid,
+a.update_time,
+a.external_type,
+a.party_name,
+a.investment_amount,
+a.matter_amount,
+a.headquarter_group,
+a.characteristics,
+a.scope_service,
+a.major,
+a.features,
+a.service_type,
+a.contract_type,
+a.procurement_type,
+a.price_model,
+a.equivalent,
+a.bid_result
+FROM
+	ZH_BIDINFO a
+LEFT JOIN MIS_CUSTINFO c ON a.custinfo_id = c.CUSTID
+LEFT JOIN OM_ORGANIZATION d ON d.ORGID = a.org_id
+LEFT JOIN OM_EMPLOYEE f ON a.creat_userid = f.USERID
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.marketInfo.marketInfo.queryCompetitor">
+        <config db="default" type="sql"><![CDATA[select a.CUSTID,a.CUSTNAME,a.BUSISCOPE,a.comments,a.CREATE_DATE,count(b.bid_id) num from ZH_COMPETITOR a 
+	left join ZH_BIDINFO_COMPETITOR b on a.CUSTID = b.compet_id
+	group by a.custid,a.CUSTNAME,a.BUSISCOPE,a.comments,a.CREATE_DATE]]></config>
+    </QueryEntity>
+</QueryEntityList>

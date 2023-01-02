@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:zhouwenjie -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="contnum" javaType="string" property="contnum"/>
+        <result column="yearmonth" javaType="string" property="yearmonth"/>
+        <result column="projectname" javaType="string" property="projectname"/>
+        <result column="SCFY" javaType="double" property="scfy"/>
+        <result column="ACTSUM2" javaType="double" property="actsum2"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="contnum" javaType="string" property="contnum"/>
+        <result column="yearmonth" javaType="string" property="yearmonth"/>
+        <result column="SETSTART" javaType="string" property="setstart"/>
+        <result column="SETEND" javaType="string" property="setend"/>
+        <result column="actyearmonth" javaType="string" property="actyearmonth"/>
+        <result column="SCFY" javaType="double" property="scfy"/>
+        <result column="ACTSUM2" javaType="double" property="actsum2"/>
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="contnum" javaType="string" property="contnum"/>
+        <result column="yearmonth" javaType="string" property="yearmonth"/>
+        <result column="SCFY" javaType="double" property="scfy"/>
+        <result column="SCFY_BX" javaType="double" property="scfyBx"/>
+        <result column="SCFY_RG" javaType="double" property="scfyRg"/>
+        <result column="SCFY_WB" javaType="double" property="scfyWb"/>
+        <result column="STOCK" javaType="double" property="stock"/>
+        <result column="STOCK_BX" javaType="double" property="stockBx"/>
+        <result column="STOCK_JZ" javaType="double" property="stockJz"/>
+        <result column="STOCK_RG" javaType="double" property="stockRg"/>
+        <result column="STOCK_WB" javaType="double" property="stockWb"/>
+        <result column="STOCK_JZ_ALL" javaType="double" property="stockJzAll"/>
+        <result column="STOCK_NET" javaType="double" property="stockNet"/>
+        <result column="INCOME_PROD_NET" javaType="double" property="incomeProdNet"/>
+        <result column="INCOME_SERV_NET" javaType="double" property="incomeServNet"/>
+        <result column="INCOME_MA_NET" javaType="double" property="incomeMaNet"/>
+        <result column="INCOME_NET" javaType="double" property="incomeNet"/>
+        <result column="STATUS" javaType="string" property="status"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="yearmonth" javaType="string" property="yearmonth"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap8">
+        <result column="TRANYEARMONTH" javaType="string" property="tranyearmonth"/>
+        <result column="STOCK_BX" javaType="double" property="stockBx"/>
+        <result column="STOCK_RG" javaType="double" property="stockRg"/>
+        <result column="STOCK_WB" javaType="double" property="stockWb"/>
+    </resultMap>
+    <update id="updatePsOutStatus" parameterClass="java.util.HashMap"><!-- 更新采购结转从新增改为已进存货-->
+    	<![CDATA[ 
+			UPDATE ERP_PS_OUT SET check_status = '2' WHERE [year]=#year# AND [month]=#month# and CONTNUM=#contnum# and check_status='0'
+    	]]>
+    </update>
+    
+    <update id="updateOutCostStatus" parameterClass="java.util.HashMap"><!-- 更新采购结转从新增改为已进存货-->
+    	<![CDATA[ 
+			UPDATE PUR_OUTCOST SET OUTCOSTSTATUS = '2' WHERE year(CONFIRMDATE)=#year# AND MONTH(CONFIRMDATE)=#month# and CONTNUM=#contnum# and OUTCOSTSTATUS ='0'
+    	]]>
+    </update>
+    <!-- 进存货的成本数据（上个月存货余额；当月没有收入但是有生产成本；当月有收入但是不包含人力和定制）-->
+     <select id="queryStock" parameterClass="java.util.HashMap" resultMap="resultMap6">
+	    <![CDATA[
+	   		 SELECT t.CONTNUM,(t.FINYEAR+''+(case when len(t.finmonth)=1 then '0'+t.finmonth else t.finmonth end)) as yearmonth,t.SCFY,t.SCFY_BX,t.SCFY_RG,t.SCFY_WB,t.STOCK,t.STOCK_BX,t.STOCK_JZ,t.STOCK_RG
+			,t.STOCK_WB,t.STOCK_JZ_ALL,t.STOCK_NET,t.INCOME_PROD_NET,t.INCOME_SERV_NET,t.INCOME_MA_NET,t.INCOME_NET,t.STATUS
+			FROM CS_CONT_STOCK t where FINYEAR = #lastyear# and FINMONTH = #lastmonth# and STOCK is not null and STOCK != 0 and (SELECT count(*) from CS_CONT_STOCK where CONTNUM = 
+						t.contnum and FINYEAR = #finyear# and finmonth = #finmonth# ) = 0 and (ISTRANCOST = 0 or ISTRANCOST is null) 
+			UNION
+			SELECT t.CONTNUM,(t.FINYEAR+''+(case when len(t.finmonth)=1 then '0'+t.finmonth else t.finmonth end)) as yearmonth,t.SCFY,t.SCFY_BX,t.SCFY_RG,t.SCFY_WB,t.STOCK,t.STOCK_BX,t.STOCK_JZ,t.STOCK_RG
+			,t.STOCK_WB,t.STOCK_JZ_ALL,t.STOCK_NET,t.INCOME_PROD_NET,t.INCOME_SERV_NET,t.INCOME_MA_NET,t.INCOME_NET,t.STATUS FROM CS_CONT_STOCK t where FINYEAR = #lastyear# and FINMONTH = #lastmonth# and STOCK is not null and STOCK != 0 and (SELECT count(*) from CS_CONT_STOCK where CONTNUM = 
+						t.contnum and FINYEAR = #finyear# and finmonth = #finmonth# and ISNULL(SCFY_BX,0)+ISNULL(SCFY_RG,0)+ISNULL(SCFY_WB,0)+ISNULL(INCOME,0)=0 and (status = 1 or status is null)) = 1  and (ISTRANCOST = 0 or ISTRANCOST is null) 
+						and (status = 1 or status is null)
+			union
+						SELECT t.CONTNUM,(t.FINYEAR+''+(case when len(t.finmonth)=1 then '0'+t.finmonth else t.finmonth end)) as yearmonth,t.SCFY,t.SCFY_BX,t.SCFY_RG,t.SCFY_WB,t.STOCK,t.STOCK_BX,t.STOCK_JZ,t.STOCK_RG
+			,t.STOCK_WB,t.STOCK_JZ_ALL,t.STOCK_NET,t.INCOME_PROD_NET,t.INCOME_SERV_NET,t.INCOME_MA_NET,t.INCOME_NET,t.STATUS FROM CS_CONT_STOCK t where FINYEAR = #finyear# and finmonth = #finmonth# and CONTNUM not in (SELECT CONTNUM FROM CS_REVE_FORECAST_FIN a WHERE (revetype like '%1%' or REVETYPE like '%5%') and 
+						STATUS='3' and year(a.CONFIRMDAY)=#finyear# and month(a.CONFIRMDAY)=#finmonth#) and (ISTRANCOST = 0 or ISTRANCOST is null) and ISNULL(SCFY_BX,0)+ISNULL(SCFY_RG,0)+ISNULL(SCFY_WB,0)+ISNULL(INCOME,0)!=0 and (status = 1 or status is null)
+	    
+	    ]]>
+	 </select>
+	    <!-- 当月收入为定制的合同-->
+     <select id="queryHtDz" parameterClass="java.util.HashMap" resultMap="resultMap4">
+	    <![CDATA[
+			SELECT y.CONTNUM,y.yearmonth,y.projectname,isnull(y.scfy,0)+isnull(y.STOCK,0) AS SCFY,SUM(d.ACTSUM2) AS actsum2 FROM 
+			(select DISTINCT t.CONTNUM,(#finyear#+''+(case when len(#finmonth#)=1 then '0'+#finmonth# else #finmonth# end)) as yearmonth,x.projectname,t.scfy,t1.STOCK  from cs_cont_stock t
+			LEFT JOIN CS_CONT_STOCK t1 on t1.FINYEAR = #lastyear# and t1.FINMONTH = #lastmonth# and (t1.ISTRANCOST = 0 or t1.ISTRANCOST is null) and (t1.status = 1 or t1.status is null)
+			left join NEW_CS_CONTRACT x on t.contnum = x.contnum
+			 where t.contnum in 
+			(SELECT DISTINCT CONTNUM FROM CS_REVE_FORECAST_FIN a 
+			WHERE (revetype like '%1%' and REVETYPE not like '%5%') and STATUS='3' and year(a.CONFIRMDAY)=#finyear# 
+			and month(a.CONFIRMDAY)=#finmonth#) and (t.ISTRANCOST = 0 or t.ISTRANCOST is null)
+			and t.FINYEAR = #finyear# and t.FINMONTH = #finmonth# and (t.status = 1 or t.status is null)) y 
+			LEFT JOIN CS_REVE_FORECAST_FIN d on d.CONTNUM=y.CONTNUM AND d.CONFIRMDAY BETWEEN #startday# AND #endday#
+			GROUP BY y.CONTNUM,y.yearmonth,y.projectname,y.scfy,y.STOCK
+
+	    ]]>
+	 </select>
+	    <!-- 当月收入为人力的成本数据-->
+     <select id="queryHtRl" parameterClass="java.util.HashMap" resultMap="resultMap5">
+	    <![CDATA[
+			SELECT y.contnum,y.yearmonth,y.SETSTART,y.SETEND,y.actyearmonth,(CASE WHEN q.SCFY is null THEN 0 ELSE q.SCFY end) AS SCFY,SUM(p.ACTSUM2) AS  ACTSUM2 FROM (select t.contnum,t.yearmonth,min(SETSTART) as SETSTART,max(SETEND) as SETEND,
+			(case when (max(t.SETEND)>yearmonth or max(t.SETEND) is null) then yearmonth else max(t.SETEND) end) as actyearmonth 
+			from (
+			SELECT DISTINCT CONTNUM,(#finyear#+''+(case when len(#finmonth#)=1 then '0'+#finmonth# else #finmonth# end)) as yearmonth,a.SETSTART,a.SETEND
+			 FROM CS_REVE_FORECAST_FIN a 
+			WHERE REVETYPE like '%5%' and STATUS='3' and year(a.CONFIRMDAY)=#finyear# and month(a.CONFIRMDAY)=#finmonth#
+			and CONTNUM in (SELECT DISTINCT CONTNUM FROM CS_CONT_STOCK WHERE finyear = #finyear# and FINMONTH = #finmonth# and (STATUS = 1 or STATUS is null))
+			) t group by CONTNUM, yearmonth) y
+			LEFT JOIN CS_REVE_FORECAST_FIN p ON y.contnum=p.CONTNUM AND p.CONFIRMDAY BETWEEN #startday# AND #endday#
+			LEFT JOIN CS_CONT_STOCK q ON y.contnum = q.CONTNUM AND q.FINYEAR = #finyear# AND q.FINMONTH=#finmonth#
+			GROUP BY y.contnum,y.yearmonth,y.SETSTART,y.SETEND,y.actyearmonth,q.SCFY
+	    ]]>
+    </select>
+    
+       <!-- 最近一次结转得处理年月与存货数据-->
+     <select id="queryLastJz" parameterClass="java.lang.String" resultMap="resultMap8">
+	    <![CDATA[
+			SELECT TRANYEARMONTH,STOCK_RG,STOCK_BX,STOCK_WB FROM CS_CONT_STOCK WHERE CONTNUM = #CONTNUM# and 
+			(FINYEAR+(case when len(FINMONTH)=1 then '0'+FINMONTH else FINMONTH end)) = (
+			SELECT max(FINYEAR+(case when len(FINMONTH)=1 then '0'+FINMONTH else FINMONTH end)) FROM CS_CONT_STOCK 
+			WHERE CONTNUM = #CONTNUM# and ISTRANCOST = '1')
+	    ]]>
+    </select>
+    
+    <!-- 更新小于等于当期的成本结转-->
+    <update id="updateDzCost" parameterClass="java.util.HashMap">
+    	<![CDATA[ 
+			UPDATE CS_CONT_STOCK set ISTRANCOST = '1',TRANYEARMONTH = #yearmonth# where 
+			CONTNUM=#contnum# and (FINYEAR+(case when len(FINMONTH)=1 then '0'+FINMONTH else FINMONTH end)) < #yearmonth# and (ISTRANCOST = 0 or ISTRANCOST is null)
+    	]]>
+    </update>
+    <!-- 更新小于等于当期的成本结转-->
+    <update id="updateRlCost" parameterClass="java.util.HashMap">
+    	<![CDATA[ 
+			UPDATE CS_CONT_STOCK set ISTRANCOST = '1',TRANYEARMONTH = #yearmonth# where 
+			CONTNUM=#contnum# and (FINYEAR+(case when len(FINMONTH)=1 then '0'+FINMONTH else FINMONTH end)) <= #yearmonth1# and (ISTRANCOST = 0 or ISTRANCOST is null)
+    	]]>
+    </update>
+    
+    <!--删除合同收入成本记录-->
+     <delete id="deleteContStock" parameterClass="java.util.HashMap">
+       DELETE FROM CS_CONT_STOCK where CONTNUM in (#contnum#,#contnum1#) 
+    </delete>
+    
+    <!--删除合同综合信息数据-->
+     <delete id="deleteCont" parameterClass="java.lang.String">
+       DELETE FROM NEW_CS_CONTRACT where CONTNUM=#contnum1#
+    </delete>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap9">
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="CUSTJC" javaType="string" property="custjc"/>
+        <result column="CUSTID" javaType="Long" property="custid"/>
+    </resultMap>
+    <select id="getContractMes" parameterClass="java.util.HashMap" resultMap="resultMap9">
+	    <![CDATA[
+			select a.PROJECTNAME,b.CUSTJC,b.CUSTID from NEW_CS_CONTRACT a LEFT JOIN MIS_CUSTINFO b ON a.CUSTID = b.CUSTID where CONTNUM=#contnum#;
+	    ]]>
+    </select>
+    
+    <!--取NEW_CS_CONTRACT中最小的缺失值-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap10">
+        <result column="CONTRACTID" javaType="Long" property="contractid"/>
+    </resultMap>
+    <select id="getMinPrimaryKey"  resultMap="resultMap10">
+	    <![CDATA[
+			select 
+			   case 
+			      when not exists(select 1 from NEW_CS_CONTRACT where CONTRACTID=1)
+			      then 1
+			      else (
+			         select min(a.CONTRACTID+1) 
+			           from NEW_CS_CONTRACT as a
+			        where not exists 
+			        (
+			          select 1 
+			            from NEW_CS_CONTRACT as b
+			         where b.CONTRACTID=a.CONTRACTID+1
+			        )
+			     ) 
+			  end as CONTRACTID;
+	    ]]>
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap11">
+        <result column="contsum" javaType="Decimal" property="contsum"/>
+    </resultMap>
+    <select id="getContsum" parameterClass="java.util.HashMap" resultMap="resultMap11">
+			SELECT SUM (contsum) AS contsum FROM (
+			SELECT
+				SUM (FCSUM) AS contsum
+			FROM
+				CS_REVE_FORECAST
+			WHERE
+				CONTNUM=#contnum#
+			AND STATUS != '3'
+			AND STATUS != '4'
+			AND STATUS != '5'
+			AND CONFIRMDAY &lt;=#confirmday#
+			UNION ALL
+			SELECT
+				SUM (FCSUM) AS contsum
+			FROM
+				CS_REVE_FORECAST
+			WHERE
+				CONTNUM=#contnum#
+			AND ( CONFIRMDAY &gt; #confirmday# OR CONFIRMDAY is NULL )
+			) t
+    </select>
+</sqlMap>

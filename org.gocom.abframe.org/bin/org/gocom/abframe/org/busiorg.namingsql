@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="org.gocom.abframe.org.busiorg">
+    <parameterMap class="org.gocom.abframe.dataset.organization.OmBusiorg" id="parentOrgMap">
+        <parameter javaType="string" jdbcType="VARCHAR" property="seqno"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmBusiorg" id="parentOrgResultMap">
+        <result column="orglevel" property="orglevel"/>
+    </resultMap>
+    <select id="selectMaxOrglevel" parameterMap="parentOrgMap" resultMap="parentOrgResultMap"><![CDATA[
+        SELECT MAX(ORGLEVEL) AS ORGLEVEL FROM OM_BUSIORG WHERE SEQNO LIKE ? || '%'
+     ]]></select>
+    <parameterMap class="org.gocom.abframe.dataset.organization.OmBusiorg" id="orgMap">
+        <parameter javaType="string" jdbcType="VARCHAR" property="seqno"/>
+        <parameter javaType="int" jdbcType="number" property="orglevel"/>
+    </parameterMap>
+    <delete id="deleteLastlevelOrg" parameterMap="orgMap"><![CDATA[
+        DELETE FROM OM_BUSIORG WHERE SEQNO LIKE ? || '%' AND ORGLEVEL = ?
+     ]]></delete>
+    <parameterMap class="org.gocom.abframe.dataset.custom.MovePar" id="movePar">
+        <parameter javaType="Int" jdbcType="NUMBER" property="toLevel"/>
+        <parameter javaType="Int" jdbcType="NUMBER" property="fromLevel"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="toSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="fromSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="movedSeq"/>
+    </parameterMap>
+    <update id="moveBusiorgUpdateLevelAndSeq" parameterMap="movePar"><![CDATA[
+    UPDATE OM_BUSIORG T SET T.ORGLEVEL=T.ORGLEVEL+?-?,T.SEQNO=?||SUBSTR(T.SEQNO,LENGTH(?)+1) WHERE T.SEQNO LIKE ?||'%'
+    ]]></update>
+    <parameterMap class="org.gocom.abframe.dataset.custom.MovePar" id="moveTopParMap">
+        <parameter javaType="Int" jdbcType="NUMBER" property="toLevel"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="toSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="movedSeq"/>
+    </parameterMap>
+    <update id="moveTopBusiorgUpdateLevelAndSeq" parameterMap="moveTopParMap"><![CDATA[
+    UPDATE OM_BUSIORG T SET T.ORGLEVEL=T.ORGLEVEL+?,T.SEQNO=?||T.SEQNO WHERE T.SEQNO LIKE ?||'%'
+    ]]></update>
+</sqlMap>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.ameSmsSendRecord">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="SMSNO" javaType="int" property="smsno"/>
+        <result column="RECEIVERNAME" javaType="string" property="receivername"/>
+        <result column="TELPHONE" javaType="string" property="telphone"/>
+        <result column="SMSCONTENT" javaType="string" property="smscontent"/>
+        <result column="SMSBIZTYPE" javaType="string" property="smsbiztype"/>
+        <result column="ISRETURN" javaType="string" property="isreturn"/>
+        <result column="RESENDFLAG" javaType="string" property="resendflag"/>
+        <result column="PERSONNUM" javaType="int" property="personnum"/>
+        <result column="WORDNUMBER" javaType="int" property="wordnumber"/>
+        <result column="COUNT" javaType="int" property="count"/>
+        <result column="SENDTIME" javaType="java.sql.Timestamp" property="sendtime"/>
+        <result column="SENDSTATUS" javaType="string" property="sendstatus"/>
+        <result column="SMSPLATFORMNO" javaType="string" property="smsplatformno"/>
+        <result column="SMSPLATFORMSTATUS" javaType="string" property="smsplatformstatus"/>
+    </resultMap>
+    <select id="querySmsSendRecordWithPage" parameterClass="java.util.HashMap" resultMap="resultMap">
+        SELECT SMSNO             , 
+				   RECEIVERNAME      , 
+				   TELPHONE          , 
+				   SMSCONTENT        , 
+				   SMSBIZTYPE        , 
+				   ISRETURN          , 
+				   RESENDFLAG        , 
+				   PERSONNUM         , 
+				   WORDNUMBER        , 
+				   COUNT             , 
+				   SENDTIME          , 
+				   SENDSTATUS        , 
+				   SMSPLATFORMNO     , 
+				   SMSPLATFORMSTATUS 
+		 FROM AME_SMSSEND_RECORD
+		 WHERE 1=1
+			 <isNotNull property="receivername">and RECEIVERNAME like '%'+ #receivername# +'%'</isNotNull>
+        <isNotNull property="telphone">and TELPHONE like '%'+ #telphone# +'%'</isNotNull>
+        <isNotNull property="smscontent">and SMSCONTENT like '%'+#smscontent#+'%'</isNotNull>
+        <isNotNull property="sendstatus">and SENDSTATUS = #sendstatus#</isNotNull>
+        <isNotNull property="sendtimeMin"><![CDATA[ and SENDTIME >= #sendtimeMin# ]]></isNotNull>
+        <isNotNull property="sendtimeMax"><![CDATA[ and SENDTIME <= #sendtimeMax# ]]></isNotNull>
+        <isNotNull property="smsbiztype">and SMSBIZTYPE = #smsbiztype#</isNotNull>
+        <isNotNull property="smsplatformno">and SMSPLATFORMNO like '%'+#smsplatformno#+'%'</isNotNull> 
+			ORDER BY SENDTIME desc
+    </select>
+    <!--短信发送记录月度汇总统计
+     SENDSTATUS='0' 表示，只查询发送成功的
+     -->
+    <select id="gatherSmsSendRecord" parameterClass="java.util.HashMap" remapResults="true" resultClass="commonj.sdo.DataObject">
+	SELECT * FROM
+ 		(
+	        SELECT SMSBIZTYPE AS BIZTYPE,SUM(COUNT) AS NUM,YM 
+			 FROM 
+				(
+					SELECT R.SMSBIZTYPE,R.COUNT, 
+					REPLACE(CONVERT(VARCHAR(7),R.SENDTIME,120),'-','')  AS YM
+					FROM AME_SMSSEND_RECORD R 
+					WHERE 1=1
+					<isNotNull property="sendstatus">and SENDSTATUS = #sendstatus#</isNotNull>
+        <isNotNull property="sendtimeMin"><![CDATA[ and SENDTIME >= #sendtimeMin# ]]></isNotNull>
+        <isNotNull property="sendtimeMax"><![CDATA[ and SENDTIME <= #sendtimeMax# ]]></isNotNull>
+        <isNotNull property="smsbiztype">and SMSBIZTYPE = #smsbiztype#</isNotNull>
+        <isNotNull property="smsplatformno">and SMSPLATFORMNO like '%'+#smsplatformno#+'%'</isNotNull> 
+				) AS T
+			GROUP BY SMSBIZTYPE,YM
+		) AS Y
+		pivot( sum(num) for ym in ($column$)) as S
+    </select>
+    <select id="getColumns" parameterClass="java.util.HashMap" resultClass="string">
+         SELECT '['+REPLACE(CONVERT(VARCHAR(7),DATEADD(MONTH,NUMBER,#sendtimeMin#),120),'-','')+']' AS col
+		FROM MASTER..SPT_VALUES
+		WHERE TYPE='P' 
+		<![CDATA[ AND DATEADD(MONTH,NUMBER,#sendtimeMin#)<=#sendtimeMax# ]]></select>
+</sqlMap>

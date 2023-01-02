@@ -1,0 +1,20 @@
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+<%@include file="/common.jsp"%>
+<html>
+<head>
+<title></title>
+<style>
+li {float:left; margin:10;font-size: 9pt;}
+body{margin: 0;padding: 0;font-size: small;}
+</style>
+</head>
+<body background='<%=SkinUtil.getStyleFile("images/abf/topbg.gif",request)%>'>
+<div style="float:left"><a href="#" onclick="doBackFirst()" ><img src='<%=SkinUtil.getStyleFile("images/abf/logo.gif",request)%>' border=0></img></a></div>
+<script>
+	function doBackFirst(){
+	  var target = 'bodyFrame';
+	  parent.frames[target].location.href = "<%=request.getContextPath() %>/common/skins/layouts/default/body.jsp";
+	}
+</script>
+</body>
+</html>

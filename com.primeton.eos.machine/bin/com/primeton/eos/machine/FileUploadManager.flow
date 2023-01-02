@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="FileUploadManager" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="蔡述尧&#x9;09-3-18 下午5:40"/>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="enter" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="文件上传管理主框架" type="view" contextPath="" contributionName="org.gocom.abframe.tools" method="forward" uri="/abframe/tools/fileupload/fileupload_mainframe.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="enterUpload" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <figSize height="17" width="109"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="文件上传" type="view" contributionName="org.gocom.abframe.tools" uri="/abframe/tools/fileupload/fileupload.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="upload" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter anyType="com.primeton.ext.access.http.IUploadFile" description="" historyStateLocation="client" isArray="false" name="uploadFile"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <figSize height="17" width="49"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="结束1" type="end" contextPath="" method="forward" uri="/machine/machineScarpBatch.jsp">
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <figSize height="17" width="32"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess1" name="machineScarpByExcel" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.machine.machine.machineScarpByExcel</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="path" type="query" value="String" valueType="Primitive" pattern="value">uploadFile/filePath</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="exist" type="query" value="String" valueType="Primitive">exist</process:outputVariable>
+        <process:outputVariable id="1" name="notexist" type="query" value="String" valueType="Primitive">noexist</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <figSize height="17" width="125"/>
+    <node>subprocess1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.0"/>
+  <process:variables/>
+</process:tPageFlow>

@@ -1,0 +1,1575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="calLocksFee4Leaf" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="叶子节点相关计算包括：分摊计算，以及动态计算的成本费用" title="朱海翔&#x9;18-1-13 下午8:47">
+    <location x="135" y="615"/>
+    <size height="61" width="339"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign10</targetNode>
+    </sourceConnections>
+    <location x="108" y="397"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link24</targetConnections>
+    <location x="1508" y="414"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer[]" name="budgetDept" type="query" valueType="DataObject">budgetDept</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="110" y="433"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="1510" y="450"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign10" name="赋值14" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link23" name="link23" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>invokePojo7</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="150" y="398"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign10label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer</process:from>
+      <process:to type="query">criteria2/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">orgid</process:from>
+      <process:to type="query">criteria2/_expr[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">criteria2/_expr[1]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgTemp/orgid</process:from>
+      <process:to type="query">criteria2/_expr[1]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">year</process:from>
+      <process:to type="query">criteria2/_expr[2]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">criteria2/_expr[2]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">criteria2/_expr[2]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">quarter</process:from>
+      <process:to type="query">criteria2/_expr[3]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">&lt;></process:from>
+      <process:to type="query">criteria2/_expr[3]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">5</process:from>
+      <process:to type="query">criteria2/_expr[3]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new DecimalFormat(&quot;##.##&quot;)</process:from>
+      <process:to type="query">df</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
+    <location x="145" y="434"/>
+    <figSize height="17" width="39"/>
+    <node>assign10</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo7" name="对应预算" displayName="对应预算" collapsed="false" grouped="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo7</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="未做预算" displayName="连接线" type="transition">
+      <bendPoint heightToEnd="121" heightToStart="129" widthToEnd="-151" widthToStart="197"/>
+      <sourceNode>invokePojo7</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">budgetDept</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link23</targetConnections>
+    <location x="225" y="397"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo7label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.queryEntitiesByCriteriaEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="criteriaEntity" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">criteria2</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">budgetDept</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo7label" name="label" nodeType="label">
+    <location x="212" y="433"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo7</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo5" name="计算管理成本" displayName="计算管理成本" collapsed="false" grouped="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="link6" isDefault="true" type="transition">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>assign12</targetNode>
+    </sourceConnections>
+    <targetConnections>link45</targetConnections>
+    <location x="1207" y="226"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo5label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSumCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result13</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo5label" name="label" nodeType="label">
+    <location x="1182" y="262"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo8" name="业务单元数据计算" displayName="业务单元数据计算" collapsed="false" grouped="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo8</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link22</targetConnections>
+    <targetConnections>link31</targetConnections>
+    <location x="1415" y="414"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo8label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.primeton.eos.ame_budget.calData.calComCost</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="budget1" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">budgetDept</process:inputVariable>
+      <process:inputVariable id="1" name="temp" type="literal" value="java.lang.String" valueType="Java" pattern="reference">1</process:inputVariable>
+      <process:inputVariable id="2" name="year" type="query" value="java.lang.String" valueType="Java" pattern="reference">year</process:inputVariable>
+      <process:inputVariable id="3" name="orgid" type="query" value="java.lang.String" valueType="Java" pattern="reference">orgTemp/orgid</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">budgetDept</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo8label" name="label" nodeType="label">
+    <location x="1378" y="450"/>
+    <figSize height="17" width="97"/>
+    <node>invokePojo8</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign13" name="赋值研发成本" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link22" name="link22" displayName="link14" isDefault="true" type="transition">
+      <sourceNode>assign13</sourceNode>
+      <targetNode>invokePojo8</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link30" name="link30" displayName="连接线" type="transition">
+      <sourceNode>assign13</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">year</process:leftOperand>
+          <process:rightOperand type="literal">2017</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="1321" y="413"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign13label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result14[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result14[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result14[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result14[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/deptdcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/deptdcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/deptdcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/deptdcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">2</process:from>
+      <process:to type="query">costvar/costtype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign13label" name="label" nodeType="label">
+    <location x="1299" y="449"/>
+    <figSize height="17" width="73"/>
+    <node>assign13</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo6" name="计算研发成本" displayName="计算研发成本" collapsed="false" grouped="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="link13" isDefault="true" type="transition">
+      <sourceNode>invokePojo6</sourceNode>
+      <targetNode>assign13</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="1206" y="413"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo6label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSumCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result14</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo6label" name="label" nodeType="label">
+    <location x="1181" y="449"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo6</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign12" name="赋值管理成本" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="link8" isDefault="true" type="transition">
+      <sourceNode>assign12</sourceNode>
+      <targetNode>invokePojo6</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="1204" y="331"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign12label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result13[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result13[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result13[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result13[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/deptmcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/deptmcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/deptmcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/deptmcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">4</process:from>
+      <process:to type="query">costvar/costtype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign12label" name="label" nodeType="label">
+    <location x="1182" y="367"/>
+    <figSize height="17" width="73"/>
+    <node>assign12</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign11" name="赋值销售成本" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="link4" isDefault="true" type="transition">
+      <sourceNode>assign11</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link21</targetConnections>
+    <location x="1024" y="292"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign11label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result12[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result12[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result12[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result12[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/salecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/salecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/salecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/salecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign11label" name="label" nodeType="label">
+    <location x="1002" y="328"/>
+    <figSize height="17" width="73"/>
+    <node>assign11</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="计算销售成本" displayName="计算销售成本" collapsed="false" grouped="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="link5" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>assign11</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="1106" y="412"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSaleCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result12</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="1081" y="448"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值服务成本" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="link7" isDefault="false" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">year</process:leftOperand>
+          <process:rightOperand type="literal">2017</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="link17" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="1022" y="413"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/servcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/servcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/servcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/servcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">2</process:from>
+      <process:to type="query">costvar/costtype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="1000" y="449"/>
+    <figSize height="17" width="73"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="计算服务成本" displayName="计算服务成本" collapsed="false" grouped="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="link9" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link43</targetConnections>
+    <location x="948" y="412"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSumCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="923" y="448"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign17" name="公司管理分摊" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="link49" isDefault="true" type="transition">
+      <sourceNode>assign17</sourceNode>
+      <targetNode>subprocess6</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="373" y="325"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign17label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/quar1</process:from>
+      <process:to type="query">mshar1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/quar2</process:from>
+      <process:to type="query">mshar2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/quar3</process:from>
+      <process:to type="query">mshar3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/quar4</process:from>
+      <process:to type="query">mshar4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(mshar1)</process:from>
+      <process:to type="query">budgetDept[1]/commshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(mshar2)</process:from>
+      <process:to type="query">budgetDept[2]/commshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(mshar3)</process:from>
+      <process:to type="query">budgetDept[3]/commshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(mshar4)</process:from>
+      <process:to type="query">budgetDept[4]/commshar</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign17label" name="label" nodeType="label">
+    <location x="351" y="361"/>
+    <figSize height="17" width="73"/>
+    <node>assign17</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign18" name="公司研发分摊" displayName="赋值" collapsed="false" grouped="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="link10" isDefault="true" type="transition">
+      <sourceNode>assign18</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="495" y="405"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign18label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/dshar1</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/dshar2</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/dshar3</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/dshar4</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/comdshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/comdshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/comdshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/comdshar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/ashar1</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/ashar2</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/ashar3</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">fees/ashar4</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/comashar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/comashar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/comashar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/comashar</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign18label" name="label" nodeType="label">
+    <location x="473" y="441"/>
+    <figSize height="17" width="73"/>
+    <node>assign18</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess6" name="计算业务单元市场、研发分摊" displayName="calDASharfee" collapsed="false" grouped="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="link97" isDefault="true" type="transition">
+      <sourceNode>subprocess6</sourceNode>
+      <targetNode>assign18</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="495" y="325"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess6label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.calDASharfee</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="orgid" type="query" value="String" valueType="Primitive" pattern="reference">orgTemp/orgid</process:inputVariable>
+        <process:inputVariable id="1" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="2" name="parentorgid" type="query" value="String" valueType="Primitive" pattern="reference">orgTemp/budgetOrg/orgid</process:inputVariable>
+        <process:inputVariable id="3" name="budgetTemp" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer[]" valueType="DataObject" pattern="reference">parbudgets</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="fee" type="query" value="java.util.HashMap" valueType="Java">fees</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
+    <location x="430" y="360"/>
+    <figSize height="17" width="157"/>
+    <node>subprocess6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess5" name="计算业务单元管理分摊" displayName="calCommfee" collapsed="false" grouped="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="link62" isDefault="true" type="transition">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>assign17</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="373" y="398"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess5label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_budget.ame_budget.calCommfee</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="parentorgid" type="query" value="String" valueType="Primitive" pattern="reference">orgTemp/budgetOrg/orgid</process:inputVariable>
+        <process:inputVariable id="1" name="orgid" type="query" value="String" valueType="Primitive" pattern="reference">orgTemp/orgid</process:inputVariable>
+        <process:inputVariable id="2" name="budgetTemp" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer[]" valueType="DataObject" pattern="reference">parbudgets</process:inputVariable>
+        <process:inputVariable id="3" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="4" name="orgseq" type="query" value="String" valueType="Primitive" pattern="reference">orgTemp/orgseq</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="fee" type="query" value="java.util.HashMap" valueType="Java">fees</process:outputVariable>
+        <process:outputVariable id="1" name="permsr" type="query" value="Double" valueType="Primitive">permsr</process:outputVariable>
+        <process:outputVariable id="2" name="perxcfl" type="query" value="Double" valueType="Primitive">perxcfl</process:outputVariable>
+        <process:outputVariable id="3" name="perhte" type="query" value="Double" valueType="Primitive">perhte</process:outputVariable>
+        <process:outputVariable id="4" name="perml" type="query" value="Double" valueType="Primitive">perml</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess5label" name="label" nodeType="label">
+    <location x="326" y="433"/>
+    <figSize height="17" width="121"/>
+    <node>subprocess5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="动态计算销售成本" displayName="动态计算销售成本" collapsed="false" grouped="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="link22" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>assign11</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="1026" y="355"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSumCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result12</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="989" y="391"/>
+    <figSize height="17" width="97"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>subprocess5</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link18" name="按比例计算分摊" displayName="连接线" type="transition">
+      <bendPoint heightToEnd="71" heightToStart="78" widthToEnd="-139" widthToStart="146"/>
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">ftcaltype</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link25</targetConnections>
+    <location x="285" y="398"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="281" y="434"/>
+    <figSize height="17" width="37"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="570" y="405"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">costvar/costtype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgTemp/orgid</process:from>
+      <process:to type="query">costvar/orgid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">costvar/year</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="572" y="441"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="动态计算外部采购" displayName="动态计算外部采购" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="link39" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>assign19</targetNode>
+    </sourceConnections>
+    <targetConnections>link30</targetConnections>
+    <location x="1325" y="331"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSubCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result1</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="1288" y="367"/>
+    <figSize height="17" width="97"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign19" name="赋值外部采购" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign19</sourceNode>
+      <targetNode>invokePojo8</targetNode>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <location x="1413" y="331"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign19label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[1]/subfee</process:from>
+      <process:to type="query">budgetDept[1]/subfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[2]/subfee</process:from>
+      <process:to type="query">budgetDept[2]/subfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[3]/subfee</process:from>
+      <process:to type="query">budgetDept[3]/subfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[4]/subfee</process:from>
+      <process:to type="query">budgetDept[4]/subfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[1]/psubfee</process:from>
+      <process:to type="query">budgetDept[1]/psubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[2]/psubfee</process:from>
+      <process:to type="query">budgetDept[2]/psubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[3]/psubfee</process:from>
+      <process:to type="query">budgetDept[3]/psubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[4]/psubfee</process:from>
+      <process:to type="query">budgetDept[4]/psubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[1]/ssubfee</process:from>
+      <process:to type="query">budgetDept[1]/ssubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[2]/ssubfee</process:from>
+      <process:to type="query">budgetDept[2]/ssubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[3]/ssubfee</process:from>
+      <process:to type="query">budgetDept[3]/ssubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[4]/ssubfee</process:from>
+      <process:to type="query">budgetDept[4]/ssubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[1]/msubfee</process:from>
+      <process:to type="query">budgetDept[1]/msubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[2]/msubfee</process:from>
+      <process:to type="query">budgetDept[2]/msubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[3]/msubfee</process:from>
+      <process:to type="query">budgetDept[3]/msubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result1[4]/msubfee</process:from>
+      <process:to type="query">budgetDept[4]/msubfee</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign19label" name="label" nodeType="label">
+    <location x="1391" y="367"/>
+    <figSize height="17" width="73"/>
+    <node>assign19</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="计算自有服务成本" displayName="计算服务成本" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link32" name="link32" displayName="link1" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>assign3</targetNode>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="640" y="404"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSelfServCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="603" y="440"/>
+    <figSize height="17" width="97"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>invokePojo9</targetNode>
+    </sourceConnections>
+    <targetConnections>link32</targetConnections>
+    <location x="637" y="331"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/selfservcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/selfservcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/selfservcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/selfservcost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="639" y="367"/>
+    <figSize height="17" width="25"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值1" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link36" name="link36" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>invokePojo10</targetNode>
+    </sourceConnections>
+    <targetConnections>link33</targetConnections>
+    <location x="733" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/pmsubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/pmsubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/pmsubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/pmsubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="731" y="276"/>
+    <figSize height="17" width="32"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo9" name="计算人月外包" displayName="计算自有服务成本" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link33" name="link33" displayName="link32" isDefault="true" type="transition">
+      <sourceNode>invokePojo9</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <location x="640" y="240"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo9label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calPmSubCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo9label" name="label" nodeType="label">
+    <location x="615" y="276"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo9</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="赋值2" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link38" name="link38" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>invokePojo11</targetNode>
+    </sourceConnections>
+    <targetConnections>link35</targetConnections>
+    <location x="733" y="398"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/prosubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/prosubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/prosubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/prosubfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="731" y="434"/>
+    <figSize height="17" width="32"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo10" name="计算项目分包" displayName="计算自有服务成本" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link35" name="link35" displayName="link32" isDefault="true" type="transition">
+      <sourceNode>invokePojo10</sourceNode>
+      <targetNode>assign5</targetNode>
+    </sourceConnections>
+    <targetConnections>link36</targetConnections>
+    <location x="736" y="315"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo10label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calProSubCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo10label" name="label" nodeType="label">
+    <location x="711" y="351"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo10</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign6" name="赋值3" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>invokePojo12</targetNode>
+    </sourceConnections>
+    <targetConnections>link37</targetConnections>
+    <location x="805" y="305"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign6label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/inoutfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/inoutfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/inoutfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/inoutfee</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
+    <location x="803" y="341"/>
+    <figSize height="17" width="32"/>
+    <node>assign6</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo11" name="计算净买入" displayName="计算自有服务成本" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="link32" isDefault="true" type="transition">
+      <sourceNode>invokePojo11</sourceNode>
+      <targetNode>assign6</targetNode>
+    </sourceConnections>
+    <targetConnections>link38</targetConnections>
+    <location x="808" y="398"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo11label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calInoutCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo11label" name="label" nodeType="label">
+    <location x="789" y="434"/>
+    <figSize height="17" width="61"/>
+    <node>invokePojo11</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign7" name="赋值4" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign7</sourceNode>
+      <targetNode>invokePojo13</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <location x="890" y="240"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign7label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/selfsalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/selfsalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/selfsalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/selfsalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">
+    <location x="888" y="276"/>
+    <figSize height="17" width="32"/>
+    <node>assign7</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo12" name="计算自有销售费用" displayName="计算自有服务成本" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="link32" isDefault="true" type="transition">
+      <sourceNode>invokePojo12</sourceNode>
+      <targetNode>assign7</targetNode>
+    </sourceConnections>
+    <targetConnections>link40</targetConnections>
+    <location x="809" y="239"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo12label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calSelfSaleCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo12label" name="label" nodeType="label">
+    <location x="772" y="275"/>
+    <figSize height="17" width="97"/>
+    <node>invokePojo12</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign8" name="赋值5" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link43" name="link43" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>assign8</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">year</process:leftOperand>
+          <process:rightOperand type="literal">2017</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link44" name="link44" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign8</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link41</targetConnections>
+    <location x="890" y="411"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign8label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[1]/totalfee</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[2]/totalfee</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[3]/totalfee</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result11[4]/totalfee</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(a)</process:from>
+      <process:to type="query">budgetDept[1]/nquosalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(b)</process:from>
+      <process:to type="query">budgetDept[2]/nquosalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(c)</process:from>
+      <process:to type="query">budgetDept[3]/nquosalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">df.format(d)</process:from>
+      <process:to type="query">budgetDept[4]/nquosalecost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">a</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">b</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">c</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">d</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
+    <location x="888" y="447"/>
+    <figSize height="17" width="32"/>
+    <node>assign8</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo13" name="计算非额度销售费用" displayName="计算自有销售费用" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link41" name="link41" displayName="link39" isDefault="true" type="transition">
+      <sourceNode>invokePojo13</sourceNode>
+      <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <targetConnections>link42</targetConnections>
+    <location x="893" y="305"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo13label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_budget.deptBudget.calNqSaleCost</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">costvar</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">result11</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo13label" name="label" nodeType="label">
+    <location x="850" y="341"/>
+    <figSize height="17" width="109"/>
+    <node>invokePojo13</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值6" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link45" name="link45" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokePojo5</targetNode>
+    </sourceConnections>
+    <targetConnections>link44</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="1023" y="226"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">3</process:from>
+      <process:to type="query">costvar/costtype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="1021" y="262"/>
+    <figSize height="17" width="32"/>
+    <node>assign1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="朱海翔" createTime="2018-01-12 16:17:55" date="2018-01-12Z" description="重新计算没有子节点的阿米巴部门的费用" name="重新计算没有子节点的阿米巴部门的费用" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria2"/>
+    <process:variable anyType="java.text.DecimalFormat" description="" historyStateLocation="client" isArray="false" name="df"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="a" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="b" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="c" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="d" primitiveType="Double"/>
+    <process:variable description="公司研发费用" historyStateLocation="client" isArray="false" name="dshar1" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="dshar2" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="dshar3" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="dshar4" primitiveType="Double"/>
+    <process:variable description="公司市场费用" historyStateLocation="client" isArray="false" name="ashar1" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="ashar2" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="ashar3" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="ashar4" primitiveType="Double"/>
+    <process:variable description="公司管理费用" historyStateLocation="client" isArray="false" name="mshar1" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="mshar2" primitiveType="Double"/>
+    <process:variable description="公司管理费用" historyStateLocation="client" isArray="false" name="mshar3" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="mshar4" primitiveType="Double"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetOrg" name="orgTemp"/>
+    <process:input description="" isArray="true" modelType="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer" name="parbudgets"/>
+    <process:input description="" isArray="false" name="year" primitiveType="String"/>
+    <process:input description="" isArray="false" name="ftcaltype" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="true" modelType="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer" name="budgetDept"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

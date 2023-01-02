@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.RdLaborStatistics">
+        <config db="default" type="sql"><![CDATA[SELECT T1.LABOR_DATE, T2.EMPNAME, T3.PROJECT_NAME, T1.ACT_HOURS, T1.STD_HOURS, T1.USER_ID, T1.PROJECT_ID FROM 
+(SELECT LABOR_DATE, USER_ID, PROJECT_ID, SUM(ACT_HOURS) ACT_HOURS, SUM(STD_HOURS) STD_HOURS FROM RD_LABOR_DETAIL
+GROUP BY LABOR_DATE, USER_ID, PROJECT_ID  ) T1, 
+OM_EMPLOYEE T2, RD_PROJECT T3 WHERE T1.PROJECT_ID=T3.PROJECT_ID AND T1.USER_ID = T2.USERID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.RdLaborDetailView">
+        <config db="default" type="view"><![CDATA[RD_LABOR_DETAIL_VIEW]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.LaborCal">
+        <config db="default" type="sql"><![CDATA[select a.labor_detail_id,
+case when substring(e.orgseq,4,charindex('.',e.orgseq,4)-charindex('.',e.orgseq,2)-1)=substring(f.orgseq,4,charindex('.',f.orgseq,4)-charindex('.',f.orgseq,2)-1)
+then d.innerdprice*a.act_hours/8 else d.outdprice*act_hours/8 end as cost, 
+case when substring(e.orgseq,4,charindex('.',e.orgseq,4)-charindex('.',e.orgseq,2)-1)=substring(f.orgseq,4,charindex('.',f.orgseq,4)-charindex('.',f.orgseq,2)-1)
+then d.innerdprice else d.outdprice end as price ,
+d.degree as grade from rd_labor_detail a
+left join om_employee g on g.userid=a.user_id 
+left join om_organization e on e.orgid=g.orgid
+left join om_organization f on f.orgid=a.sales_name
+left join org_emp_level b on a.labor_date between b.startdate and b.enddate 
+and a.user_id = b.userid
+left join PARA_PERCOSTSET c on a.labor_date between c.startdate and c.closedate
+left join mis_price d on b.degree=d.degree and c.percostid=d.percostid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.RD_LABOR_DETAIL_VIEW1">
+        <config db="default" type="view"><![CDATA[RD_LABOR_DETAIL_VIEW1]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.LaborConf">
+        <config db="default" type="sql"><![CDATA[select t.labor_detail_id,t.org, 
+case when a.transconf is null then 1 
+	 else a.transconf end as conratio,t.cost
+from RD_LABOR_DETAIL t LEFT JOIN OM_ORGANIZATION y1 on y1.orgid =t.SALES_NAME
+											 LEFT JOIN OM_ORGANIZATION x1 on x1.ORGID=t.USER_ORG_ID
+left join (select a.*,x1.ORGSEQ as salesseq,x2.ORGSEQ FROM AME_TRANSCONF  a
+LEFT JOIN OM_ORGANIZATION x1 on x1.ORGID=a.ORG 
+LEFT JOIN OM_ORGANIZATION x2 on x2.ORGID=a.ORGID) a on y1.ORGSEQ like a.salesseq+'%' and x1.ORGSEQ like a.ORGSEQ+'%' and t.labor_date between a.startdate and a.enddate]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.LaborCont">
+        <config db="default" type="sql"><![CDATA[select t.labor_detail_id,t.org,a.transconfid,
+case when a.transconf is null and b.transconf is not null then b.transconf 
+	 when a.transconf is null and b.transconf is null then 1 
+	 else a.transconf end as conratio,
+	 t.cost
+from rd_labor_detail t 
+left join AME_TRANSCONF a on a.org=t.org and t.labor_date between a.startdate and a.enddate
+left join AME_TRANSCONF b on b.org='0' and t.labor_date between b.startdate and b.enddate
+where (
+(select y.ORGSEQ from OM_EMPLOYEE x,OM_ORGANIZATION y where x.userid=t.USER_ID and x.orgid=y.orgid)like
+(select z.ORGSEQ from OM_ORGANIZATION z where z.orgid=t.SALES_NAME)+'%')
+or 
+((select z.ORGSEQ from OM_ORGANIZATION z where z.orgid=t.SALES_NAME) like 
+(select y.ORGSEQ from OM_EMPLOYEE x,OM_ORGANIZATION y where x.userid=t.USER_ID and x.orgid=y.orgid)+'%'
+)
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.AmeTransconfOrg">
+        <config db="default" type="sql"><![CDATA[select a.*,b.ORGNAME as orgname,b.ORGSEQ
+from AME_TRANSCONF a 
+LEFT JOIN OM_ORGANIZATION b on a.ORG=b.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.RdLaborCount">
+        <config db="default" type="sql"><![CDATA[SELECT a.userid as userId, case when e.DICTID is null then '5' else DICTID end as firstdept,b.ORGNAME,b.orgid,a.EMPNAME,t.TBSUM,t.TBPC,a.EMPSTATUS,a.INDATE,a.OUTDATE,t.labor_date FROM (
+SELECT COUNT(*) as TBSUM,USER_ID,USER_ORG_ID,SUM(TBPC) AS TBPC,labor_date FROM
+(select  * ,CASE WHEN DATEDIFF(day,LABOR_DATE,INSERTDATE)<0 then 0 else DATEDIFF(day,LABOR_DATE,INSERTDATE) end as TBPC
+from RD_LABOR_DETAIL) t GROUP BY USER_ID,labor_date,USER_ORG_ID) t
+LEFT JOIN OM_EMPLOYEE a on t.user_id =a.userid
+LEFT JOIN OM_ORGANIZATION b on t.USER_ORG_ID = b.orgid 
+LEFT JOIN OM_ORGANIZATION c on c.ORGLEVEL=3 and b.ORGSEQ like c.ORGSEQ+'%'
+LEFT JOIN EOS_DICT_ENTRY e on e.DICTNAME=c.orgname AND e.dicttypeid ='CONT_ORG']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.overTime">
+        <config db="default" type="sql"><![CDATA[SELECT     dbo.RD_LABOR_DETAIL.LABOR_DETAIL_ID, dbo.RD_LABOR_DETAIL.LABOR_DATE,dbo.RD_LABOR_DETAIL.ACT_HOURS,D.ORGSEQ,D.ORGID,D.ORGNAME, dbo.RD_LABOR_DETAIL.USER_ID, 
+                      B.PROJECT_NAME,B.PROJECT_NO,G.ORGNAME AS SALES_NAME, H.ORGNAME AS YJBM,C.EMPNAME AS USER_NAME,dbo.RD_LABOR_DETAIL.OTW_HOURS,
+											dbo.RD_LABOR_DETAIL.ISDAYSOFF,dbo.RD_LABOR_DETAIL.USER_ORG_ID,
+                      case when ((datename(weekday,dbo.RD_LABOR_DETAIL.LABOR_DATE) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+                      or (datename(weekday,dbo.RD_LABOR_DETAIL.LABOR_DATE) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null))) then '是' else '否' end as isworkday,
+											datename(weekday,dbo.RD_LABOR_DETAIL.LABOR_DATE) as workday,y.CUSTNAME,y.CUSTID
+FROM         dbo.RD_LABOR_DETAIL LEFT OUTER JOIN
+                      dbo.RD_PROJECT AS B ON dbo.RD_LABOR_DETAIL.PROJECT_ID = B.PROJECT_ID LEFT OUTER JOIN
+											dbo.OM_EMPLOYEE AS C ON dbo.RD_LABOR_DETAIL.USER_ID = C.USERID LEFT OUTER JOIN
+                      dbo.OM_ORGANIZATION AS D ON dbo.RD_LABOR_DETAIL.USER_ORG_ID = D.ORGID LEFT OUTER JOIN
+                      dbo.OM_ORGANIZATION AS G ON dbo.RD_LABOR_DETAIL.SALES_NAME = G.ORGID LEFT OUTER JOIN
+                      dbo.OM_ORGANIZATION AS H ON SUBSTRING(G.ORGSEQ, 4, CHARINDEX('.', G.ORGSEQ, 4) - CHARINDEX('.', G.ORGSEQ, 2) - 1) = H.ORGID LEFT OUTER JOIN
+                      dbo.MIS_ISWORKDAY   AS x on x.MODDATE=dbo.RD_LABOR_DETAIL.LABOR_DATE LEFT OUTER JOIN
+                      dbo.MIS_CUSTINFO as y on y.CUSTID=dbo.RD_LABOR_DETAIL.CUSTID   ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProCont">
+        <config db="default" type="sql"><![CDATA[SELECT a.ISMAINCONT,b.PROJECT_ID,b.PROJECT_NAME,a.PROJECT_NO,b.MANAGER,d.EMPNAME as MANAGERNAME,e.ORGNAME as PROSALE,b.FIN_UNIT_ID as PROSALEID,
+b.CUSTID,f.CUSTNAME,
+a.CONTNUM,c.CONTRACTID,c.CONTRACTTYPE,c.CUSTID as CONTCUSTID,g.CUSTNAME as contcustname,a.CONTORDERNO,c.SALENAME,
+a.PROCONTTYPE,a.PROCONTID,c.ISFORBID,
+case when (SELECT num from (SELECT PROJECT_NO,count(*) as num from (SELECT DISTINCT project_no,contnum FROM RD_PROJ_CONT) y GROUP BY PROJECT_NO
+) x WHERE x.PROJECT_NO = a.project_no) > 1 then 1 
+WHEN( a.project_no in (SELECT PROJECT_NO FROM RD_PROJ_CONT WHERE CONTNUM in (SELECT CONTNUM FROM  RD_PROJ_CONT  GROUP BY CONTNUM HAVING count(*) > 1))) 
+then 2 else 0 end as flag
+FROM RD_PROJ_CONT a
+LEFT JOIN RD_PROJECT b on a.PROJECT_NO = b.PROJECT_NO
+LEFT JOIN OM_EMPLOYEE d on b.manager = d.userid
+LEFT JOIN OM_ORGANIZATION e on b.FIN_UNIT_ID = e.ORGID
+LEFT JOIN MIS_CUSTINFO f on b.CUSTID = f.CUSTID
+LEFT JOIN CS_CONTRACT c on a.CONTNUM = c.CONTNUM
+LEFT JOIN MIS_CUSTINFO g on c.custid = g.custid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryRdProject">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT a.*,d.ORGSEQ,d.ORGNAME,c.EMPNAME as managername,b.CUSTNAME,b.CUSTJC
+,(CASE WHEN (f.num is null) or (f.num = '0') THEN 0 else 1 end) as ishavewb,
+stuff((select DISTINCT ','+contnum  from RD_PROJ_CONT WHERE project_no = a.project_no for xml path('')),1,1,'') as contnum,h.RULEID,h.RULENAME,
+i.EMPNAME as createapplicantname,j.ORGNAME as managerdeptname,j.ORGSEQ as managerdeptseq,k.CONTNUM AS maincontnum
+,case when a.PROJECT_NO in(select p.PROJECT_NO from RD_PROJ_CONT p
+					LEFT JOIN CS_CONTRACT b on p.CONTNUM=b.CONTNUM
+					where b.CONTRACTID is not NULL)
+then 1 else 0 end as  nocontractproject
+ FROM RD_PROJECT a
+LEFT JOIN MIS_CUSTINFO b on a.CUSTID = b.CUSTID
+LEFT JOIN OM_EMPLOYEE c on a.MANAGER = c.USERID
+LEFT JOIN OM_ORGANIZATION d on a.FIN_UNIT_ID = d.ORGID
+LEFT JOIN (select count(outperno) as num,PROJECTNO FROM PUR_PROJ_OUTPER GROUP BY PROJECTNO) f on a.PROJECT_NO = f.PROJECTNO
+LEFT JOIN AME_PROJECT_RULE g on a.PROJECT_NO = g.PROJECTNO
+LEFT JOIN AME_ATTENDANCE_RULE h on g.RULEID = h.RULEID
+LEFT JOIN OM_EMPLOYEE i on a.CREATEAPPLICANT = i.USERID
+LEFT JOIN OM_ORGANIZATION j on a.MANAGERDEPT = j.ORGID
+LEFT JOIN RD_PROJ_CONT k ON a.PROJECT_NO = k.PROJECT_NO AND k.ISMAINCONT = '1']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProjCommon">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT a.PROJECT_ID,a.PROJECT_NAME,a.PROJECT_NO as PROJECTNO,a.PROJECT_TYPE,a.FIN_UNIT_ID,d.ORGSEQ,d.ORGNAME,a.MANAGER,c.EMPNAME as managername,a.FIN_UNIT_ID as ORGID,
+a.PROJECT_STATUS,a.OUTSTATUS,a.CUSTID,b.CUSTNAME,b.CUSTJC,a.ISPASSBUD,a.CREATEDATE,a.CLOSEDATE,a.LASTCOSTDATE,a.IMPLEMENTCITY,a.ISCONPROJ,a.CHECKSTATUS
+,stuff((select DISTINCT ','+CONTNUM  from RD_PROJ_CONT WHERE project_no = a.project_no for xml path('')),1,1,'') as contnum,a.MANAGERDEPT,f.ORGNAME AS mangerdeptname,a.CBVERSION,a.EXPENDDATE,a.STARTDATE,e.PROCONTTYPE,stuff((select DISTINCT ','+CONTORDERNO  from RD_PROJ_CONT WHERE project_no = a.project_no AND CONTNUM = e.CONTNUM for xml path('')),1,1,'') as CONTORDERNO
+ FROM RD_PROJECT a
+LEFT JOIN MIS_CUSTINFO b on a.CUSTID = b.CUSTID
+LEFT JOIN OM_EMPLOYEE c on a.MANAGER = c.USERID
+LEFT JOIN OM_ORGANIZATION d on a.FIN_UNIT_ID = d.ORGID
+LEFT JOIN RD_PROJ_CONT e ON a.PROJECT_NO = e.PROJECT_NO
+LEFT JOIN OM_ORGANIZATION f ON a.MANAGERDEPT = f.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryRdScore">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,b.EMPNAME,
+	(
+		CASE
+		WHEN a.num IS NULL THEN
+			0
+		WHEN a.WEIGHT IS NULL THEN
+			0
+		ELSE
+			a.num * a.WEIGHT
+		END
+	) AS WEIGHTNUM
+FROM
+	RD_PROJ_SCORE a
+LEFT JOIN OM_EMPLOYEE b ON a.USERID = b.USERID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProjEmp">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	a.USER_ID as userid,a.PROJECT_ID,b.EMPNAME,b.EMPSTATUS,CAST (
+		round(SUM(a.ACT_HOURS) / 8, 2) AS NUMERIC (20, 2)
+	) AS workdays, 0 AS sum
+FROM
+	RD_LABOR_DETAIL a
+LEFT JOIN OM_EMPLOYEE b ON a.USER_ID = b.USERID
+GROUP BY a.USER_ID,a.PROJECT_ID,b.EMPNAME,b.EMPSTATUS]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProjAllot">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT
+	a.*,b.EMPNAME,b.EMPSTATUS,d.PROJECTNO,d.PROJECTNAME
+FROM
+	RD_PROJEMP_ALLOT a
+LEFT JOIN OM_EMPLOYEE b ON a.USERID = b.USERID
+LEFT JOIN RD_PROJ_CHECK d ON d.PROJCHECKID = a.PROJCHECKID ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProjEmpAllot">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,f.EMPNAME AS managername,d.CUSTNAME,c.PROJECTNAME,c.ORGID,e.ORGNAME,c.PROJECTNO,c.CONTNUM,c.COMPLETIONDATE,b.EMPNAME,b.EMPCODE,b.EMPSTATUS,d.CUSTJC,c.COSTYEARMONTH
+FROM
+	RD_PROJEMP_ALLOT a
+LEFT JOIN OM_EMPLOYEE b ON a.USERID = b.USERID
+LEFT JOIN RD_PROJ_CHECK c ON a.PROJCHECKID = c.PROJCHECKID
+LEFT JOIN MIS_CUSTINFO d ON c.CUSTID = d.CUSTID
+LEFT JOIN OM_ORGANIZATION e ON c.ORGID = e.ORGID
+LEFT JOIN OM_EMPLOYEE f ON c.MANAGER = f.USERID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryOverTime">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,c.EMPNAME,d.PROJECT_NO,d.PROJECT_NAME,e.CUSTJC,f.ORGNAME,DATENAME(weekday, a.labor_date) as WORKDAY ,h.ORGSEQ,
+case when ((datename(weekday,a.LABOR_DATE) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+or (datename(weekday,a.LABOR_DATE) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null))) then '是' else '否' end as isworkday,
+b.REP_CONTENT
+FROM rd_labor_overtime a
+LEFT JOIN RD_LABOR_DETAIL b on a.LABOR_DETAIL_ID = b.LABOR_DETAIL_ID
+LEFT JOIN OM_EMPLOYEE c on a.user_id = c.USERID
+LEFT JOIN OM_ORGANIZATION h on c.orgid = h.ORGID
+LEFT JOIN RD_PROJECT d on b.PROJECT_ID = d.PROJECT_ID
+LEFT JOIN MIS_CUSTINFO e on b.CUSTID = e.CUSTID
+LEFT JOIN OM_ORGANIZATION f on b.SALES_NAME = f.ORGID
+LEFT JOIN MIS_ISWORKDAY x on a.LABOR_DATE = x.MODDATE
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProject">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT a.PROJECT_ID,a.PROJECT_NAME,a.PROJECT_NO as PROJECTNO,a.PROJECT_TYPE,a.FIN_UNIT_ID,d.ORGSEQ,d.ORGNAME,a.MANAGER,c.EMPNAME as managername,a.FIN_UNIT_ID as ORGID,
+a.PROJECT_STATUS,a.OUTSTATUS,a.CUSTID,b.CUSTNAME,b.CUSTJC,a.ISPASSBUD,a.CREATEDATE,a.CLOSEDATE,a.LASTCOSTDATE,a.IMPLEMENTCITY,a.ISCONPROJ,a.CHECKSTATUS
+,stuff((select DISTINCT ','+CONTNUM  from RD_PROJ_CONT WHERE project_no = a.project_no for xml path('')),1,1,'') as contnum,a.MANAGERDEPT,f.ORGNAME AS mangerdeptname,a.CBVERSION,a.EXPENDDATE,a.STARTDATE
+ FROM RD_PROJECT a
+LEFT JOIN MIS_CUSTINFO b on a.CUSTID = b.CUSTID
+LEFT JOIN OM_EMPLOYEE c on a.MANAGER = c.USERID
+LEFT JOIN OM_ORGANIZATION d on a.FIN_UNIT_ID = d.ORGID
+LEFT JOIN OM_ORGANIZATION f ON a.MANAGERDEPT = f.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProjCommon1">
+        <config db="default" type="sql"><![CDATA[SELECT DISTINCT a.PROJECT_ID,a.PROJECT_NAME,a.PROJECT_NO as PROJECTNO,a.PROJECT_TYPE,a.FIN_UNIT_ID,d.ORGSEQ,d.ORGNAME,a.MANAGER,c.EMPNAME as managername,a.FIN_UNIT_ID as ORGID,
+a.PROJECT_STATUS,a.OUTSTATUS,a.CUSTID,b.CUSTNAME,b.CUSTJC,a.ISPASSBUD,a.CREATEDATE,a.CLOSEDATE,a.LASTCOSTDATE,a.IMPLEMENTCITY,a.ISCONPROJ,a.CHECKSTATUS
+,CONTNUM,a.MANAGERDEPT,f.ORGNAME AS mangerdeptname,a.CBVERSION,a.EXPENDDATE,a.STARTDATE,e.PROCONTTYPE,
+stuff((select DISTINCT ','+CONTORDERNO from RD_PROJ_CONT WHERE project_no = a.project_no AND CONTNUM = e.CONTNUM for xml path('')),1,1,'') as CONTORDERNO,a.ENDDATE
+ FROM RD_PROJECT a
+LEFT JOIN MIS_CUSTINFO b on a.CUSTID = b.CUSTID
+LEFT JOIN OM_EMPLOYEE c on a.MANAGER = c.USERID
+LEFT JOIN OM_ORGANIZATION d on a.FIN_UNIT_ID = d.ORGID
+LEFT JOIN RD_PROJ_CONT e ON a.PROJECT_NO = e.PROJECT_NO
+LEFT JOIN OM_ORGANIZATION f ON a.MANAGERDEPT = f.ORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.queryEmpReturns">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,c.EMPNAME,c.emptype,c.NATURE,c.INDATE,c1.ORGID,c.MAJOR,q.EMPNAME as majorname,g.EMPNAME as confirmname,d.ORGNAME,d1.ORGSEQ,e.ORGNAME as yjbm,f.ORGNAME as ejbm FROM
+AME_RETURN_WORK a 
+LEFT JOIN OM_EMPLOYEE c on a.USERID = c.USERID
+LEFT JOIN OM_EMPLOYEE q on c.major = q.USERID
+LEFT JOIN OM_EMPLOYEE g on a.confirmuserid = g.USERID
+LEFT JOIN OM_EMPORG c1 on c.EMPID=c1.EMPID
+LEFT JOIN OM_ORGANIZATION d1 on c1.ORGID = d1.ORGID
+LEFT JOIN OM_ORGANIZATION d on c.ORGID = d.ORGID
+LEFT JOIN OM_ORGANIZATION e on d.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL = '2'
+LEFT JOIN OM_ORGANIZATION f on d.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL = '3']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.data.rd.QueryProCont1">
+        <config db="default" type="sql"><![CDATA[SELECT a.ISMAINCONT,b.PROJECT_ID,b.PROJECT_NAME,a.PROJECT_NO,b.MANAGER,d.EMPNAME as MANAGERNAME,e.ORGNAME as PROSALE,
+(case when b.FIN_UNIT_ID is null then h.ORGID else b.FIN_UNIT_ID end) as PROSALEID,
+b.CUSTID,f.CUSTNAME,
+a.CONTNUM,c.CONTRACTID,c.CONTRACTTYPE,c.CUSTID as CONTCUSTID,g.CUSTNAME as contcustname,a.CONTORDERNO,c.SALENAME,
+a.PROCONTTYPE,a.PROCONTID,c.ISFORBID,
+case when (SELECT num from (SELECT PROJECT_NO,count(*) as num from (SELECT DISTINCT project_no,contnum FROM RD_PROJ_CONT) y GROUP BY PROJECT_NO
+) x WHERE x.PROJECT_NO = a.project_no) > 1 then 1 
+WHEN( a.project_no in (SELECT PROJECT_NO FROM RD_PROJ_CONT WHERE CONTNUM in (SELECT CONTNUM FROM  RD_PROJ_CONT  GROUP BY CONTNUM HAVING count(*) > 1))) 
+then 2 else 0 end as flag
+FROM CS_CONTRACT c
+LEFT JOIN RD_PROJ_CONT a on a.CONTNUM = c.CONTNUM
+LEFT JOIN RD_PROJECT b on a.PROJECT_NO = b.PROJECT_NO
+LEFT JOIN OM_EMPLOYEE d on b.manager = d.userid
+LEFT JOIN OM_ORGANIZATION e on b.FIN_UNIT_ID = e.ORGID
+LEFT JOIN MIS_CUSTINFO f on b.CUSTID = f.CUSTID
+LEFT JOIN MIS_CUSTINFO g on c.custid = g.custid
+LEFT JOIN CS_CONTRACTSALE h on c.CONTRACTID=h.CONTRACTID]]></config>
+    </QueryEntity>
+</QueryEntityList>

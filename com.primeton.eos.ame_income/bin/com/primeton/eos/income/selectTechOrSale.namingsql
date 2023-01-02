@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.income.selectTechOrSale">
+    <resultMap class="com.eos.workflow.data.WFParticipant" id="resultMap">
+        <result column="id" javaType="String" property="id"/>
+        <result column="name" javaType="String" property="name"/>
+        <result column="typeCode" javaType="String" property="typeCode"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="checklistid" javaType="int" property="checklistid"/>
+        <result column="SEQ" javaType="String" property="seq"/>
+        <result column="checklistseq" javaType="String" property="checklistseq"/>
+        <result column="checklistname" javaType="String" property="checklistname"/>
+        <result column="sortno" javaType="int" property="sortno"/>
+        <result column="level" javaType="int" property="level"/>
+        <result column="iscancheck" javaType="String" property="iscancheck"/>
+        <result column="ischeck" javaType="String" property="ischeck"/>
+        <result column="checkmemo" javaType="String" property="checkmemo"/>
+        <result column="checker" javaType="String" property="checker"/>
+        <result column="checktime" javaType="date" property="checktime"/>
+    </resultMap>
+    <select id="selectTechLeaderByCont" resultMap="resultMap"><![CDATA[
+		select t.BUSIPARTER as id,b.EMPNAME as name,'person' as typeCode from (
+		select t.userid,t.orgid,t.orgname,BUSIPARTER=substring(t.BUSIPARTER,b.number,charindex(',',t.BUSIPARTER+',',b.number)-b.number) from (
+		select c.userid,c.ORGID,a.ORGNAME,a.BUSIPARTER from OM_ORGANIZATION a,(
+		select c.userid,c.empname,case when a.BUSIPARTER is null then a.PARENTORGID 
+		when (CHARINDEX(c.userid,a.BUSIPARTER)>0) and LEN(a.BUSIPARTER)=LEN(c.userid) and a.orgdegree!='2' then a.PARENTORGID 
+		else a.orgid  end as ORGID
+		from OM_ORGANIZATION a,(
+		select e.SALEID as USERID,e.SALENAME as empname,case when c.BUSIPARTER is null then c.PARENTORGID 
+		when (CHARINDEX(e.SALEID,c.BUSIPARTER)>0) and LEN(c.BUSIPARTER)=LEN(e.SALEID) and c.orgdegree!='2' then c.PARENTORGID 
+		else c.orgid  end as ORGID
+		from CS_CONTRACT a,CS_CONTRACTSALE e,OM_ORGANIZATION b,OM_ORGANIZATION c where a.CONTRACTID=e.CONTRACTID and e.ORGID=b.orgid
+		and b.PARENTORGID =c.orgid 
+		and a.CONTRACTID=#contractid#) c WHERE a.ORGID=c.ORGID) c 
+		where a.ORGID=c.ORGID)t join master.dbo.spt_values b on b.type='P' where charindex(',',','+t.BUSIPARTER,b.number)=b.number
+		) t LEFT JOIN OM_EMPLOYEE b on t.BUSIPARTER=b.USERID
+		]]></select>
+    <select id="selectIncomeCheck" parameterClass="java.util.HashMap" resultMap="resultMap1">
+			SELECT DISTINCT a.SEQ,a.CHECKLISTID,a.CHECKLISTSEQ,a.CHECKLISTNAME,a.SORTNO,a. LEVEL,a.ISCANCHECK,c.ISCHECK,c.CHECKMEMO,c.CHECKER,c.CHECKTIME FROM
+				CS_INCOMECHECKLIST a
+			LEFT JOIN CS_INCOMECHECK c ON c.CHECKLISTID = a.CHECKLISTID AND c.processInstID =#processInstID# AND c.ACTIVITYDEFID =#activityDefID#
+			<isNotNull property="workitemid">AND c.WORKITEMID = #workitemid#</isNotNull>
+			WHERE
+				a.CHECKLISTID IN (SELECT CHECKLISTID FROM
+						CS_INCOMETYPE_CHECK
+					WHERE
+						CHECKID in (SELECT CHECKID FROM
+								CS_INCOMECHECK_ACT
+							WHERE
+								(PROCESSDEFNAME =#processDefName# AND ACTIVITYDEFID =#activityDefID# and BUSICODE is null) OR(PROCESSDEFNAME =#processDefName# AND ACTIVITYDEFID =#activityDefID#
+									<isNotNull property="busicode">AND BUSICODE in ($busicode$)</isNotNull>
+								)
+						)
+				) ORDER BY a.CHECKLISTSEQ
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="checklistid" javaType="int" property="checklistid"/>
+        <result column="checklistseq" javaType="String" property="checklistseq"/>
+        <result column="checklistname" javaType="String" property="checklistname"/>
+        <result column="sortno" javaType="int" property="sortno"/>
+        <result column="level" javaType="int" property="level"/>
+        <result column="iscancheck" javaType="String" property="iscancheck"/>
+        <result column="checker1" javaType="String" property="checker1"/>
+        <result column="ischeck1" javaType="String" property="ischeck1"/>
+        <result column="checkmemo1" javaType="String" property="checkmemo1"/>
+        <result column="checktime1" javaType="date" property="checktime1"/>
+        <result column="ischeck2" javaType="String" property="ischeck2"/>
+        <result column="checkmemo2" javaType="String" property="checkmemo2"/>
+        <result column="checker2" javaType="String" property="checker2"/>
+        <result column="checktime2" javaType="date" property="checktime2"/>
+        <result column="ischeck3" javaType="String" property="ischeck3"/>
+        <result column="checkmemo3" javaType="String" property="checkmemo3"/>
+        <result column="checker3" javaType="String" property="checker3"/>
+        <result column="checktime3" javaType="date" property="checktime3"/>
+        <result column="ischeck4" javaType="String" property="ischeck4"/>
+        <result column="checkmemo4" javaType="String" property="checkmemo4"/>
+        <result column="checker4" javaType="String" property="checker4"/>
+        <result column="checktime4" javaType="date" property="checktime4"/>
+    </resultMap>
+    <select id="AllDetailIncomeCheck" parameterClass="java.util.HashMap" resultMap="resultMap2"><![CDATA[
+			select distinct a.CHECKLISTID,a.CHECKLISTSEQ,a.CHECKLISTNAME,a.SORTNO,a.LEVEL,a.ISCANCHECK,
+				(select CHECKER from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务审核' and CHECKLISTID=a.CHECKLISTID) as checker1,
+				(select ISCHECK from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务审核' and CHECKLISTID=a.CHECKLISTID) as ischeck1,
+				(select CHECKMEMO from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务审核' and CHECKLISTID=a.CHECKLISTID) as checkmemo1,
+				(select CHECKTIME from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务审核' and CHECKLISTID=a.CHECKLISTID) as checktime1,
+				(select CHECKER from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务复核' and CHECKLISTID=a.CHECKLISTID) as checker2,
+				(select ISCHECK from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务复核' and CHECKLISTID=a.CHECKLISTID) as ischeck2,
+				(select CHECKMEMO from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务复核' and CHECKLISTID=a.CHECKLISTID) as checkmemo2,
+				(select CHECKTIME from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='商务复核' and CHECKLISTID=a.CHECKLISTID) as checktime2,
+				(select CHECKER from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务审核' and CHECKLISTID=a.CHECKLISTID) as checker3,
+				(select ISCHECK from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务审核' and CHECKLISTID=a.CHECKLISTID) as ischeck3,
+				(select CHECKMEMO from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务审核' and CHECKLISTID=a.CHECKLISTID) as checkmemo3,
+				(select CHECKTIME from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务审核' and CHECKLISTID=a.CHECKLISTID) as checktime3,
+				(select CHECKER from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务复核' and CHECKLISTID=a.CHECKLISTID) as checker4,
+				(select ISCHECK from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务复核' and CHECKLISTID=a.CHECKLISTID) as ischeck4,
+				(select CHECKMEMO from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务复核' and CHECKLISTID=a.CHECKLISTID) as checkmemo4,
+				(select CHECKTIME from CS_INCOMECHECK where processInstID=#processInstID# and ACTIVITYINSTNAME='财务复核' and CHECKLISTID=a.CHECKLISTID) as checktime4
+				from CS_INCOMECHECKLIST a
+				where a.CHECKLISTID IN (SELECT CHECKLISTID FROM
+							CS_INCOMETYPE_CHECK
+						WHERE
+							CHECKID = (SELECT CHECKID FROM
+									CS_INCOMECHECK_ACT
+								WHERE
+									PROCESSDEFNAME =#processDefName# AND ACTIVITYDEFID =#activityDefID# AND BUSICODE in ($busicode$)
+							)
+					) ORDER BY a.SORTNO
+		]]></select>
+    <select id="getTechLeaderBysales" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    	select t.BUSIPARTER as id,(CASE when b.EMPSTATUS='on' then b.EMPNAME ELSE b.EMPNAME+'(离职)' end) as name,'person' as typeCode from (
+		select t.userid,t.orgid,t.orgname,BUSIPARTER=substring(t.BUSIPARTER,b.number,charindex(',',t.BUSIPARTER+',',b.number)-b.number) from (
+		select c.userid,c.ORGID,a.ORGNAME,a.BUSIPARTER from OM_ORGANIZATION a,(
+		select c.userid,c.empname,case when a.BUSIPARTER is null then a.PARENTORGID 
+		when (CHARINDEX(c.userid,a.BUSIPARTER)>0) and LEN(a.BUSIPARTER)=LEN(c.userid) and a.orgdegree!='2' then a.PARENTORGID 
+		else a.orgid  end as ORGID
+		from OM_ORGANIZATION a,(
+		select a.userid,a.empname,case when c.BUSIPARTER is null then c.PARENTORGID 
+		when (CHARINDEX(a.userid,c.BUSIPARTER)>0) and LEN(c.BUSIPARTER)=LEN(a.userid) and c.orgdegree!='2' then c.PARENTORGID 
+		else c.orgid  end as ORGID
+		from om_employee a,OM_ORGANIZATION b,OM_ORGANIZATION c where a.orgid=b.orgid
+		and b.PARENTORGID =c.orgid 
+		 and a.userid=#userid#) c WHERE a.ORGID=c.ORGID) c 
+		where a.ORGID=c.ORGID)t join master.dbo.spt_values b on b.type='P' where charindex(',',','+t.BUSIPARTER,b.number)=b.number
+		) t LEFT JOIN OM_EMPLOYEE b on t.BUSIPARTER=b.USERID
+    	]]></select>
+    <select id="getSaleLeaderBySessionOrgid" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    		select b.USERID as id,(CASE when b.EMPSTATUS='on' then b.EMPNAME ELSE b.EMPNAME+'(离职)' end) as name,'person' as typeCode  from OM_ORGANIZATION a,OM_EMPLOYEE b,(
+			select c.empid,c.userid,c.empname,a.ORGID as orgid1,a.ORGNAME,a.MANAGERID,case when a.MANAGERID is null then a.PARENTORGID 
+			when (CHARINDEX(CAST(c.empid AS varchar(20)),CAST(a.MANAGERID AS varchar(20)))>0) and LEN(CAST(a.MANAGERID AS varchar(20)))=LEN(CAST(c.empid AS varchar(20))) and a.orgdegree!='2' then a.PARENTORGID 
+			else a.orgid  end as ORGID
+			from OM_ORGANIZATION a,(
+			select a.empid,a.userid,a.empname,c.ORGID as orgid1,c.ORGNAME,c.MANAGERID, case when c.MANAGERID is null then c.PARENTORGID
+			when (CHARINDEX(CAST(a.EMPID AS varchar(20)),CAST(c.MANAGERID AS varchar(20)))>0) and LEN(CAST(c.MANAGERID AS varchar(20)))=LEN(CAST(a.EMPID AS varchar(20))) and c.orgdegree!='2' then c.PARENTORGID 
+			else c.orgid  end as ORGID
+			from om_employee a,OM_ORGANIZATION b,OM_ORGANIZATION c where a.orgid=b.orgid
+			and b.PARENTORGID =c.orgid 
+			and a.userid=#userid#) c WHERE a.ORGID=c.ORGID
+			) c where a.ORGID=c.ORGID and a.MANAGERID=b.EMPID
+    	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="CHECKLISTID" javaType="String" property="checklistid"/>
+        <result column="checker" javaType="String" property="checker"/>
+        <result column="checkmemo" javaType="String" property="checkmemo"/>
+    </resultMap>
+    <select id="getCheckerMes" parameterClass="java.util.HashMap" resultMap="resultMap3">SELECT DISTINCT
+			    a.CHECKLISTID,
+			    stuff(
+			     (
+			      SELECT DISTINCT
+			       ',' + CHECKER
+			      FROM
+			       CS_INCOMECHECK
+			      WHERE
+			       PROCESSINSTID = a.PROCESSINSTID
+			      AND ACTIVITYDEFID = a.ACTIVITYDEFID
+			      GROUP BY
+			       CHECKLISTID,
+			       CHECKER FOR xml path ('')
+			     ),
+			     1,
+			     1,
+			     ''
+			    ) AS checker,
+			   stuff(
+			     (
+			      SELECT 
+			       ','+c.CHECKMEMO
+			      FROM
+			       (select CHECKER,CHECKLISTID,PROCESSINSTID,ACTIVITYDEFID,
+			    isnull('【√】'+CHECKMEMO,'【√】') CHECKMEMO,ISCHECK from CS_INCOMECHECK) c
+			      WHERE
+			       c.PROCESSINSTID = a.PROCESSINSTID
+			      AND c.ACTIVITYDEFID = a.ACTIVITYDEFID
+			      AND c.CHECKLISTID=b.CHECKLISTID AND b.ISCANCHECK =1 AND c.ISCHECK = 1
+			      FOR xml path ('')
+			     ),
+			     1,
+			     1,
+			     ''
+			    ) AS checkmemo
+			   FROM
+			    CS_INCOMECHECK a
+			   LEFT JOIN CS_INCOMECHECKLIST b ON a.CHECKLISTID=b.CHECKLISTID
+			   WHERE
+				PROCESSINSTID = #processinstid#
+			AND ACTIVITYDEFID = #activitydefid#</select>
+</sqlMap>

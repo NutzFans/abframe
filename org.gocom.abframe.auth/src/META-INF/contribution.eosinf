@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contribution xmlns="http://www.primeton.com/xmlns/eos/1.0">
+	<!-- MBean config -->
+	<module name="Mbean">
+		<!-- DataSourceMBean config -->
+		<group name="DatasourceMBean">
+			<configValue key="Type">config</configValue>
+			<configValue key="Class">com.eos.system.management.config.mbean.Config</configValue>
+			<configValue key="Handler">com.eos.common.connection.mbean.ContributionDataSourceConfigHandler</configValue>
+			<configValue key="ConfigFileType">config</configValue>
+		</group>
+		<group name="ContributionLoggerMBean">
+			<configValue key="Type">config</configValue>
+			<configValue key="Class">com.eos.system.management.config.mbean.Config</configValue>
+			<configValue key="Handler">com.eos.common.logging.mbean.LogConfigHandler</configValue>
+			<configValue key="ConfigFileType">log</configValue>
+		</group>
+	</module>
+	<!-- datasource config -->
+	<module name="DataSource">
+		<group name="Reference">
+			<configValue key="default">default</configValue>
+		</group>
+	</module>
+
+
+
+    <!-- abframe项目配置 -->
+    <module name="abframe-config">
+
+        <!-- 缓存配置,以key为缓存实例名,value为缓存加载器 -->
+        <!-- 
+             CacheForPermission:权限缓存
+             CacheForPortalResource:Portal资源缓存
+             CacheForBusinessLog:业务日志缓存
+             CacheForFunction:功能列表缓存
+		-->
+        <group name="cache-config">
+            <configValue key="CacheForFunction">org.gocom.abframe.auth.cache.FunctionCacheLoader</configValue>
+            <configValue key="CacheForPermission">org.gocom.abframe.auth.cache.PermissionCacheLoader</configValue>
+            <configValue key="CacheForPortalResource">org.gocom.abframe.auth.cache.PortalResourceCacheLoader</configValue>
+            <configValue key="CacheForBusinessLog">org.gocom.abframe.auth.cache.BusinessLogCacheLoader</configValue>
+        </group>
+
+        <!-- 权限校验配置 -->
+        <group name="permission-config">
+            <configValue key="permission_check_isused">true</configValue>
+            <configValue key="permission_check_handler">org.gocom.abframe.auth.permission.PermissionCheckedHandler</configValue>
+            <configValue key="permission_data_provider">org.gocom.abframe.auth.permission.RDBMSPermissionDataAccessor</configValue>           
+            <!-- 逗号分隔userid -->
+            <configValue key="admin_users">sysadmin</configValue>
+            <configValue key="checked_contributions">                
+              *
+            </configValue>
+            <configValue key="unchecked_contributions">
+             com.gocom.abframe.unittest.*,
+             com.eos.workflow.*,
+             com.primeton.workflow.*                                  
+            </configValue>
+            <configValue key="unmatch_contributions_checked">true</configValue>
+            <configValue key="unregistered_function_access">true</configValue>
+            <configValue key="default_uncheck_resource">						
+				org.gocom.abframe.auth.LoginManager.login.biz,
+				org.gocom.abframe.auth.LoginManager.verifyCode.biz,
+				org.gocom.abframe.auth.LoginManager.verifyCode.biz.ext,
+				org.gocom.abframe.auth.LoginManager.logout.biz,
+				org.gocom.abframe.auth.LoginManager.authentication.biz,
+				com.eos.workflow.executetask.executeTask.flow,
+				com.primeton.eos.ame_common.smsPlatform.receiverSendStatus.biz,
+				com.primeton.eos.ame_common.weChatPlatform.checkEmpByUserID.biz,
+				org.gocom.abframe.auth.PasswordManager.checkUseridAndMobileNo.biz,
+				com.primeton.eos.ame_common.smsPlatform.sendValidationCode.biz,
+				org.gocom.abframe.auth.PasswordManager.forgetPassword.biz,
+				org.gocom.abframe.auth.PasswordManager.checkUseridAndMobileNo.biz,
+				com.primeton.eos.ame_common.smsPlatform.sendValidationCode.biz,
+				org.gocom.abframe.auth.PasswordManager.forgetPassword.biz,
+				com.primeton.eos.ame_newlook.intendInfoInput.flow,
+				org.gocom.abframe.auth.LoginManager.initUserObject.biz,
+				org.gocom.abframe.auth.intendJoinStaff.checkMobileNo.biz,
+				com.primeton.eos.ame_common.smsPlatform.sendValidationCode.biz,
+				org.gocom.abframe.auth.intendJoinStaff.checkValidationCodeForIntendLogin.biz,
+				org.gocom.abframe.org.intendstaff.addIntendStaffInfo.addIntendSatffInfo.biz,
+				org.gocom.abframe.org.intendstaff.addIntendStaffInfo.queryIntendInfo.biz,
+				org.gocom.abframe.org.intendstaff.addIntendStaffInfo.checkFlowStatus.biz,
+				com.primeton.eos.ame_dailyoffice.Hysxx.queryHycxList.biz,
+				com.zhonghe.ame.purchase.restImp.addMaterialsMaterData.biz,
+				com.zhonghe.ame.purchase.restImp.addMaterialsSort.biz,
+				com.zhonghe.ame.purchase.restImp.addMaterialsSortLog.biz,
+				com.zhonghe.ame.purchase.restImp.editMaterialsMaterData.biz,
+				com.zhonghe.ame.purchase.restImp.editMaterialsSort.biz,
+				com.zhonghe.ame.purchase.restImp.queryMaterialsMaterData.biz,
+				com.zhonghe.ame.purchase.restImp.queryMaterialsSort.biz
+            </configValue>
+        </group>
+        
+        <!-- 业务日志配置 -->
+        <group name="business-log">
+            <configValue key="business_log_provider">org.gocom.abframe.auth.handler.RDBMSLogProvider</configValue>
+        </group>
+
+        <!--登陆配置 -->
+        <!-- 
+            password_encryption_algorithm:登录密码加密算法:MD5或SHA 
+            password_encryption_impl：加密算法实现，要求实现接口org.gocom.abframe.auth.
+            external_login_logic:扩展登录逻辑,在登录完成后调用,如org.gocom.abframe.auth.LoginManager.initUserObject.biz  
+        -->
+        <group name="login-config">
+            <configValue key="password_encryption_algorithm">MD5</configValue>
+            <configValue key="password_encryption_impl"></configValue>
+            <configValue key="external_login_logic"></configValue>
+            <configValue key="use_verify_code">true</configValue>
+            <configValue key="use_language_choose">false</configValue>
+            <configValue key="use_default_language">zh_CN</configValue>
+        </group>
+        <!-- portal skin值与abframe的skin值的转换接口实现
+             要求实现org.gocom.abframe.auth.ISkinConvertor接口
+        -->
+        <group name="skin-config">
+            <configValue key="skin_layoutattr">layout</configValue>
+            <configValue key="skin_styleattr">style</configValue> 
+            <configValue key="skin_default_layout">default</configValue>
+            <configValue key="skin_default_style">default</configValue>                      
+            <configValue key="skin_layout_loc">/common/skins/layouts</configValue>
+            <configValue key="skin_style_loc">/common/skins/styles</configValue>
+            <configValue key="skin_layoutstyle_loc">styles</configValue> 
+            <configValue key="skin_param_name">portalSkin</configValue>
+            
+            <!-- portal skin值与abframe的skin值的转换接口实现
+             要求实现org.gocom.abframe.auth.skin.ISkinConvertor接口 
+             默认实现 org.gocom.abframe.auth.skin.DefaultSkinImpl
+             oneApp实现 org.gocom.abframe.auth.skin.OneAppPortalSkinImpl
+             OneAppPortalSkinImpl 兼容DefaultSkinImpl
+             -->
+            <configValue key="skin_convertor">org.gocom.abframe.auth.skin.DefaultSkinImpl</configValue>            
+        </group>
+        
+        <!--LDAP配置-->
+        <group name="ldap-config">
+            <configValue key="ldap_auth_enabled">false</configValue>
+            
+            <configValue key="ldap_factory_initial">com.sun.jndi.ldap.LdapCtxFactory</configValue>
+            <configValue key="ldap_base_provider_url">ldap://localhost:389</configValue>
+            <configValue key="ldap_security_principal">cn=Manager,dc=primeton,dc=com</configValue>
+            <configValue key="ldap_security_credentials">secret</configValue>
+            <configValue key="ldap_referral">follow</configValue>
+
+            <configValue key="ldap_base_dn">dc=primeton,dc=com</configValue>
+            <configValue key="ldap_auth_search_filter">(objectclass=person)</configValue>
+
+            <configValue key="ldap_error_user_lockout">retry limit</configValue>
+            <configValue key="ldap_error_password_expired">expired</configValue>
+
+            <configValue key="ldap_auth_method">bind</configValue>
+
+            <configValue key="ldap_auth_password_encryption_algorithm">MD5</configValue>
+
+            <configValue key="ldap_user_mappings">
+               screenName=cn,
+               password=userPassword,
+               nemailAddress=mail,
+               nfirstName=givenName,
+               lastName=sn,
+               jobTitle=title,
+               group=groupMembership
+            </configValue>
+        </group>
+    </module>
+
+</contribution>

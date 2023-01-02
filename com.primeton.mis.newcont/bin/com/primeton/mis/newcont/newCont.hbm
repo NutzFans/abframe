@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.MisCustinfo" table="MIS_CUSTINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="custid" type="long">
+            <column length="16" name="CUSTID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="custname" type="string">
+            <column length="128" name="CUSTNAME"/>
+        </property>
+        <property name="custnum" type="string">
+            <column length="30" name="CUSTNUM"/>
+        </property>
+        <property name="custtype" type="string">
+            <column length="2" name="CUSTTYPE"/>
+        </property>
+        <property name="isoem" type="string">
+            <column length="1" name="ISOEM"/>
+        </property>
+        <property name="address" type="string">
+            <column length="200" name="ADDRESS"/>
+        </property>
+        <property name="postcode" type="string">
+            <column length="20" name="POSTCODE"/>
+        </property>
+        <property name="telephone" type="string">
+            <column length="128" name="TELEPHONE"/>
+        </property>
+        <property name="fax" type="string">
+            <column length="40" name="FAX"/>
+        </property>
+        <property name="website" type="string">
+            <column length="150" name="WEBSITE"/>
+        </property>
+        <property name="grade" type="string">
+            <column length="1" name="GRADE"/>
+        </property>
+        <property name="comments" type="string">
+            <column length="1024" name="COMMENTS"/>
+        </property>
+        <property name="createDate" type="date">
+            <column name="CREATE_DATE"/>
+        </property>
+        <property name="createUserid" type="string">
+            <column length="40" name="CREATE_USERID"/>
+        </property>
+        <property name="custmanager" type="string">
+            <column length="20" name="CUSTMANAGER"/>
+        </property>
+        <property name="accoutbank" type="string">
+            <column length="300" name="ACCOUTBANK"/>
+        </property>
+        <property name="accoutname" type="string">
+            <column length="300" name="ACCOUTNAME"/>
+        </property>
+        <property name="taxnumb" type="string">
+            <column length="300" name="TAXNUMB"/>
+        </property>
+        <property name="accountid" type="string">
+            <column length="300" name="ACCOUNTID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="1" name="STATUS"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsGather" table="NEW_CS_GATHER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="gatherid" type="long">
+            <column length="16" name="GATHERID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="gatherdate" type="date">
+            <column name="GATHERDATE"/>
+        </property>
+        <property name="summon" type="big_decimal">
+            <column length="16" name="SUMMON" precision="16" scale="2"/>
+        </property>
+        <property name="gatherbl" type="big_decimal">
+            <column length="16" name="GATHERBL" precision="16" scale="2"/>
+        </property>
+        <property name="totalbl" type="big_decimal">
+            <column length="16" name="TOTALBL" precision="16" scale="2"/>
+        </property>
+        <property name="isfirst" type="string">
+            <column length="1" name="ISFIRST"/>
+        </property>
+        <property name="islast" type="string">
+            <column length="1" name="ISLAST"/>
+        </property>
+        <property name="nogathermon" type="big_decimal">
+            <column length="16" name="NOGATHERMON" precision="16" scale="2"/>
+        </property>
+        <property name="gathernum" type="int">
+            <column length="2" name="GATHERNUM"/>
+        </property>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.NewCsContract" fetch="join" foreign-key="NewCsGather_NewCsContract" lazy="false" name="newCsContract">
+            <column length="10" name="CONTRACTID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsBill" table="NEW_CS_BILL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="billid" type="int">
+            <column length="10" name="BILLID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="billtype" type="string">
+            <column length="4" name="BILLTYPE"/>
+        </property>
+        <property name="billyear" type="date">
+            <column name="BILLYEAR"/>
+        </property>
+        <property name="notaxmon" type="big_decimal">
+            <column length="10" name="NOTAXMON" precision="10" scale="2"/>
+        </property>
+        <property name="taxmon" type="big_decimal">
+            <column length="10" name="TAXMON" precision="10" scale="2"/>
+        </property>
+        <property name="nogathermon" type="big_decimal">
+            <column length="10" name="NOGATHERMON" precision="10" scale="2"/>
+        </property>
+        <property name="contnum" type="string">
+            <column length="11" name="CONTNUM"/>
+        </property>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.NewCsContract" fetch="join" foreign-key="NewCsBill_NewCsContract" lazy="false" name="newCsContract">
+            <column length="10" name="CONTRACTID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsYszk1" table="NEW_CS_YSZK1">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="contnum" type="string">
+                <column length="20" name="CONTNUM"/>
+            </key-property>
+            <key-property name="year2012" type="big_decimal">
+                <column length="15" name="YEAR2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2013" type="big_decimal">
+                <column length="15" name="YEAR2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2014" type="big_decimal">
+                <column length="15" name="YEAR2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2015" type="big_decimal">
+                <column length="15" name="YEAR2015" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2016" type="big_decimal">
+                <column length="10" name="YEAR2016" precision="10" scale="2"/>
+            </key-property>
+            <key-many-to-one entity-name="com.primeton.mis.newcont.newCont.NewCsContract" foreign-key="NewCsYszk1_NewCsContract" lazy="false" name="newCsContract">
+                <column length="10" name="CONTRACTID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsBuyBill" table="NEW_CS_BUY_BILL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="billid" type="int">
+            <column length="10" name="BILLID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="billtype" type="string">
+            <column length="4" name="BILLTYPE"/>
+        </property>
+        <property name="billyear" type="string">
+            <column length="4" name="BILLYEAR"/>
+        </property>
+        <property name="notaxmon" type="big_decimal">
+            <column length="10" name="NOTAXMON" precision="10" scale="2"/>
+        </property>
+        <property name="taxmon" type="big_decimal">
+            <column length="10" name="TAXMON" precision="10" scale="2"/>
+        </property>
+        <property name="buyid" type="int">
+            <column length="10" name="BUYID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsBuyPay" table="NEW_CS_BUY_PAY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="payid" type="long">
+            <column length="16" name="PAYID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="paydate" type="date">
+            <column name="PAYDATE"/>
+        </property>
+        <property name="summon" type="big_decimal">
+            <column length="16" name="SUMMON" precision="16" scale="2"/>
+        </property>
+        <property name="paybl" type="big_decimal">
+            <column length="16" name="PAYBL" precision="16" scale="2"/>
+        </property>
+        <property name="totalbl" type="big_decimal">
+            <column length="16" name="TOTALBL" precision="16" scale="2"/>
+        </property>
+        <property name="nopaymon" type="big_decimal">
+            <column length="16" name="NOPAYMON" precision="16" scale="2"/>
+        </property>
+        <property name="paynum" type="int">
+            <column length="2" name="PAYNUM"/>
+        </property>
+        <property name="pzhs" type="string">
+            <column length="20" name="PZHS"/>
+        </property>
+        <property name="confirmdate" type="date">
+            <column name="CONFIRMDATE"/>
+        </property>
+        <property name="taxmon" type="big_decimal">
+            <column length="16" name="TAXMON" precision="16" scale="2"/>
+        </property>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.NewCsBuy" fetch="join" foreign-key="NewCsBuy_NewCsBuyPay" lazy="false" name="newCsBuy">
+            <column length="10" name="BUYID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsYszkzlfx" table="NEW_CS_YSZKZLFX">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="contnum" type="string">
+                <column length="20" name="CONTNUM"/>
+            </key-property>
+            <key-property name="year" type="long">
+                <column length="22" name="YEAR"/>
+            </key-property>
+            <key-property name="qmye" type="big_decimal">
+                <column length="15" name="QMYE" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="incomeyear" type="string">
+                <column length="50" name="INCOMEYEAR"/>
+            </key-property>
+            <key-property name="year1" type="big_decimal">
+                <column length="15" name="YEAR1" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year12" type="big_decimal">
+                <column length="15" name="YEAR12" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year23" type="big_decimal">
+                <column length="15" name="YEAR23" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year34" type="big_decimal">
+                <column length="15" name="YEAR34" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year45" type="big_decimal">
+                <column length="15" name="YEAR45" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year5" type="big_decimal">
+                <column length="15" name="YEAR5" precision="15" scale="2"/>
+            </key-property>
+            <key-many-to-one entity-name="com.primeton.mis.newcont.newCont.NewCsContract" foreign-key="NewCsYszkzlfx_NewCsContract" lazy="false" name="newCsContract">
+                <column length="10" name="CONTRACTID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsBuy" table="NEW_CS_BUY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="buyid" type="int">
+            <column length="10" name="BUYID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="buyno" type="string">
+            <column length="40" name="BUYNO"/>
+        </property>
+        <property name="gysmc" type="string">
+            <column length="100" name="GYSMC"/>
+        </property>
+        <property name="signdate" type="date">
+            <column name="SIGNDATE"/>
+        </property>
+        <property name="buytype" type="string">
+            <column length="10" name="BUYTYPE"/>
+        </property>
+        <property name="buymon" type="big_decimal">
+            <column length="15" name="BUYMON" precision="15" scale="2"/>
+        </property>
+        <property name="servstart" type="date">
+            <column name="SERVSTART"/>
+        </property>
+        <property name="servend" type="date">
+            <column name="SERVEND"/>
+        </property>
+        <property name="buypaycond" type="string">
+            <column length="500" name="BUYPAYCOND"/>
+        </property>
+        <property name="zbjbl" type="string">
+            <column length="10" name="ZBJBL"/>
+        </property>
+        <property name="ystj" type="string">
+            <column length="500" name="YSTJ"/>
+        </property>
+        <property name="status" type="string">
+            <column length="4" name="STATUS"/>
+        </property>
+        <property name="jstype" type="string">
+            <column length="10" name="JSTYPE"/>
+        </property>
+        <property name="jsnum" type="big_decimal">
+            <column length="15" name="JSNUM" precision="15" scale="2"/>
+        </property>
+        <property name="buyprice" type="big_decimal">
+            <column length="15" name="BUYPRICE" precision="15" scale="2"/>
+        </property>
+        <property name="syb" type="string">
+            <column length="1" name="SYB"/>
+        </property>
+        <bag cascade="none" inverse="true" lazy="false" name="newCsBuyBills">
+            <key column="BUYID"/>
+            <one-to-many entity-name="com.primeton.mis.newcont.newCont.NewCsBuyBill"/>
+        </bag>
+        <bag cascade="none" inverse="true" lazy="false" name="newCsBuyPays">
+            <key column="BUYID"/>
+            <one-to-many entity-name="com.primeton.mis.newcont.newCont.NewCsBuyPay"/>
+        </bag>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.NewCsContract" fetch="join" foreign-key="NewCsBuy_NewCsContract" lazy="false" name="newCsContract">
+            <column length="10" name="CONTRACTID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsYfzk" table="NEW_CS_YFZK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="contnum" type="string">
+                <column length="20" name="CONTNUM"/>
+            </key-property>
+            <key-property name="year2012" type="big_decimal">
+                <column length="15" name="YEAR2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2013" type="big_decimal">
+                <column length="15" name="YEAR2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2014" type="big_decimal">
+                <column length="15" name="YEAR2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2015" type="big_decimal">
+                <column length="15" name="YEAR2015" precision="15" scale="2"/>
+            </key-property>
+            <key-many-to-one entity-name="com.primeton.mis.newcont.newCont.NewCsContract" foreign-key="NewCsYfzk_NewCsContract" lazy="false" name="newCsContract">
+                <column length="10" name="CONTRACTID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsYszkdqr" table="NEW_CS_YSZKDQR">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="contnum" type="string">
+                <column length="20" name="CONTNUM"/>
+            </key-property>
+            <key-property name="tax2012" type="big_decimal">
+                <column length="15" name="TAX2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="notax2012" type="big_decimal">
+                <column length="15" name="NOTAX2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="tax2013" type="big_decimal">
+                <column length="15" name="TAX2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="notax2013" type="big_decimal">
+                <column length="15" name="NOTAX2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="tax2014" type="big_decimal">
+                <column length="15" name="TAX2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="notax2014" type="big_decimal">
+                <column length="15" name="NOTAX2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="tax2015" type="big_decimal">
+                <column length="15" name="TAX2015" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="notax2015" type="big_decimal">
+                <column length="15" name="NOTAX2015" precision="15" scale="2"/>
+            </key-property>
+            <key-many-to-one entity-name="com.primeton.mis.newcont.newCont.NewCsContract" foreign-key="NewCsYszkdqr_NewCsContract" lazy="false" name="newCsContract">
+                <column length="10" name="CONTRACTID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsContract" table="NEW_CS_CONTRACT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="contractid" type="long">
+            <column length="16" name="CONTRACTID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="contid" type="string">
+            <column length="60" name="CONTID"/>
+        </property>
+        <property name="projectid" type="long">
+            <column length="16" name="PROJECTID"/>
+        </property>
+        <property name="contracttype" type="string">
+            <column length="2" name="CONTRACTTYPE"/>
+        </property>
+        <property name="liceamout" type="long">
+            <column length="22" name="LICEAMOUT"/>
+        </property>
+        <property name="licetype" type="string">
+            <column length="2" name="LICETYPE"/>
+        </property>
+        <property name="contractposit" type="string">
+            <column length="200" name="CONTRACTPOSIT"/>
+        </property>
+        <property name="remakr" type="string">
+            <column length="1000" name="REMAKR"/>
+        </property>
+        <property name="contnum" type="string">
+            <column length="50" name="CONTNUM"/>
+        </property>
+        <property name="buyprod" type="string">
+            <column length="500" name="BUYPROD"/>
+        </property>
+        <property name="contsum" type="big_decimal">
+            <column length="10" name="CONTSUM" precision="10" scale="2"/>
+        </property>
+        <property name="masum" type="big_decimal">
+            <column length="10" name="MASUM" precision="10" scale="2"/>
+        </property>
+        <property name="servopenflag" type="string">
+            <column length="2" name="SERVOPENFLAG"/>
+        </property>
+        <property name="servterm" type="string">
+            <column length="1" name="SERVTERM"/>
+        </property>
+        <property name="goodsenddate" type="date">
+            <column name="GOODSENDDATE"/>
+        </property>
+        <property name="goodscheckdate" type="date">
+            <column name="GOODSCHECKDATE"/>
+        </property>
+        <property name="servmodule" type="string">
+            <column length="2" name="SERVMODULE"/>
+        </property>
+        <property name="servopentail" type="string">
+            <column length="1000" name="SERVOPENTAIL"/>
+        </property>
+        <property name="signdate" type="date">
+            <column name="SIGNDATE"/>
+        </property>
+        <property name="servstage" type="string">
+            <column length="2" name="SERVSTAGE"/>
+        </property>
+        <property name="isstandardproduct" type="string">
+            <column length="1" name="ISSTANDARDPRODUCT"/>
+        </property>
+        <property name="userid" type="long">
+            <column length="16" name="USERID"/>
+        </property>
+        <property name="devcompanyid" type="long">
+            <column length="16" name="DEVCOMPANYID"/>
+        </property>
+        <property name="projectname" type="string">
+            <column length="200" name="PROJECTNAME"/>
+        </property>
+        <property name="signyear" type="int">
+            <column length="4" name="SIGNYEAR"/>
+        </property>
+        <property name="signquarter" type="string">
+            <column length="2" name="SIGNQUARTER"/>
+        </property>
+        <property name="salename" type="string">
+            <column length="20" name="SALENAME"/>
+        </property>
+        <property name="salechief" type="string">
+            <column length="12" name="SALECHIEF"/>
+        </property>
+        <property name="salevp" type="string">
+            <column length="12" name="SALEVP"/>
+        </property>
+        <property name="signtarget" type="string">
+            <column length="8" name="SIGNTARGET"/>
+        </property>
+        <property name="customerid" type="long">
+            <column length="16" name="CUSTOMERID"/>
+        </property>
+        <property name="receiver" type="string">
+            <column length="10" name="RECEIVER"/>
+        </property>
+        <property name="receiverlink" type="string">
+            <column length="50" name="RECEIVERLINK"/>
+        </property>
+        <property name="receiverlinktel" type="string">
+            <column length="50" name="RECEIVERLINKTEL"/>
+        </property>
+        <property name="receivercompid" type="long">
+            <column length="16" name="RECEIVERCOMPID"/>
+        </property>
+        <property name="prodmon" type="big_decimal">
+            <column length="15" name="PRODMON" precision="15" scale="5"/>
+        </property>
+        <property name="servmon" type="big_decimal">
+            <column length="15" name="SERVMON" precision="15" scale="5"/>
+        </property>
+        <property name="servnumtype" type="string">
+            <column length="10" name="SERVNUMTYPE"/>
+        </property>
+        <property name="servnum" type="string">
+            <column length="50" name="SERVNUM"/>
+        </property>
+        <property name="contpolmon" type="big_decimal">
+            <column length="15" name="CONTPOLMON" precision="15" scale="5"/>
+        </property>
+        <property name="servsubmon" type="big_decimal">
+            <column length="15" name="SERVSUBMON" precision="15" scale="5"/>
+        </property>
+        <property name="othmon" type="big_decimal">
+            <column length="15" name="OTHMON" precision="15" scale="5"/>
+        </property>
+        <property name="suborgid" type="long">
+            <column length="16" name="SUBORGID"/>
+        </property>
+        <property name="org" type="string">
+            <column length="10" name="ORG"/>
+        </property>
+        <property name="industry" type="string">
+            <column length="10" name="INDUSTRY"/>
+        </property>
+        <property name="area" type="string">
+            <column length="1" name="AREA"/>
+        </property>
+        <property name="othmonmemo" type="string">
+            <column length="500" name="OTHMONMEMO"/>
+        </property>
+        <property name="contreg" type="date">
+            <column name="CONTREG"/>
+        </property>
+        <property name="insertuserid" type="string">
+            <column length="40" name="INSERTUSERID"/>
+        </property>
+        <property name="modifyuserid" type="string">
+            <column length="40" name="MODIFYUSERID"/>
+        </property>
+        <property name="modifydate" type="date">
+            <column name="MODIFYDATE"/>
+        </property>
+        <property name="insertdate" type="date">
+            <column name="INSERTDATE"/>
+        </property>
+        <property name="salemode" type="string">
+            <column length="1" name="SALEMODE"/>
+        </property>
+        <property name="isma" type="string">
+            <column length="1" name="ISMA"/>
+        </property>
+        <property name="xystart" type="date">
+            <column name="XYSTART"/>
+        </property>
+        <property name="xyend" type="date">
+            <column name="XYEND"/>
+        </property>
+        <property name="ispt" type="string">
+            <column length="1" name="ISPT"/>
+        </property>
+        <property name="ptcondition" type="string">
+            <column length="500" name="PTCONDITION"/>
+        </property>
+        <property name="istrans" type="string">
+            <column length="1" name="ISTRANS"/>
+        </property>
+        <property name="status" type="string">
+            <column length="1" name="STATUS"/>
+        </property>
+        <property name="servenddate" type="date">
+            <column name="SERVENDDATE"/>
+        </property>
+        <property name="servstartdate" type="date">
+            <column name="SERVSTARTDATE"/>
+        </property>
+        <property name="servicetype" type="string">
+            <column length="10" name="SERVICETYPE"/>
+        </property>
+        <property name="prodwbmon" type="big_decimal">
+            <column length="15" name="PRODWBMON" precision="15" scale="5"/>
+        </property>
+        <property name="servstart" type="string">
+            <column length="50" name="SERVSTART"/>
+        </property>
+        <property name="servend" type="string">
+            <column length="50" name="SERVEND"/>
+        </property>
+        <property name="zsservtype" type="string">
+            <column length="4" name="ZSSERVTYPE"/>
+        </property>
+        <property name="zsservnum" type="string">
+            <column length="50" name="ZSSERVNUM"/>
+        </property>
+        <property name="zbjbl" type="string">
+            <column length="10" name="ZBJBL"/>
+        </property>
+        <property name="htfktj" type="string">
+            <column length="500" name="HTFKTJ"/>
+        </property>
+        <property name="lx" type="string">
+            <column length="20" name="LX"/>
+        </property>
+        <property name="cpysbg" type="string">
+            <column length="20" name="CPYSBG"/>
+        </property>
+        <property name="fwysbg" type="string">
+            <column length="20" name="FWYSBG"/>
+        </property>
+        <property name="srqrsfkq" type="string">
+            <column length="2" name="SRQRSFKQ"/>
+        </property>
+        <property name="cfwssywlx" type="string">
+            <column length="10" name="CFWSSYWLX"/>
+        </property>
+        <property name="contsumAct" type="big_decimal">
+            <column length="10" name="CONTSUM_ACT" precision="10" scale="2"/>
+        </property>
+        <property name="prodmonAct" type="big_decimal">
+            <column length="15" name="PRODMON_ACT" precision="15" scale="5"/>
+        </property>
+        <property name="servmonAct" type="big_decimal">
+            <column length="15" name="SERVMON_ACT" precision="15" scale="5"/>
+        </property>
+        <property name="prodwbmonAct" type="big_decimal">
+            <column length="15" name="PRODWBMON_ACT" precision="15" scale="5"/>
+        </property>
+        <property name="cpazrq" type="string">
+            <column length="50" name="CPAZRQ"/>
+        </property>
+        <property name="cyrq" type="string">
+            <column length="50" name="CYRQ"/>
+        </property>
+        <property name="zyrq" type="string">
+            <column length="50" name="ZYRQ"/>
+        </property>
+        <property name="ryjsdrq1" type="string">
+            <column length="50" name="RYJSDRQ1"/>
+        </property>
+        <property name="ryjsdrq2" type="string">
+            <column length="50" name="RYJSDRQ2"/>
+        </property>
+        <property name="ryjsdrq3" type="string">
+            <column length="50" name="RYJSDRQ3"/>
+        </property>
+        <property name="ryjsdrq4" type="string">
+            <column length="50" name="RYJSDRQ4"/>
+        </property>
+        <property name="contsumJz" type="big_decimal">
+            <column length="10" name="CONTSUM_JZ" precision="10" scale="2"/>
+        </property>
+        <property name="prodmonJz" type="big_decimal">
+            <column length="15" name="PRODMON_JZ" precision="15" scale="5"/>
+        </property>
+        <property name="servmonJz" type="big_decimal">
+            <column length="15" name="SERVMON_JZ" precision="15" scale="5"/>
+        </property>
+        <property name="prodwbmonJz" type="big_decimal">
+            <column length="15" name="PRODWBMON_JZ" precision="15" scale="5"/>
+        </property>
+        <property name="company" type="string">
+            <column length="1" name="COMPANY"/>
+        </property>
+        <property name="ledgercontnum" type="string">
+            <column length="50" name="LEDGERCONTNUM"/>
+        </property>
+        <property name="ledgercontname" type="string">
+            <column length="200" name="LEDGERCONTNAME"/>
+        </property>
+        <property name="publicity" type="string">
+            <column length="1" name="PUBLICITY"/>
+        </property>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.MisCustinfo" fetch="join" foreign-key="NewCsContract_MisCustinfo" lazy="false" name="misCustinfo">
+            <column length="16" name="CUSTID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.newCsIncomeConv" table="NEW_CS_INCOME_CONV">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="contractid" type="int">
+                <column length="10" name="CONTRACTID"/>
+            </key-property>
+            <key-property name="incometype" type="string">
+                <column length="20" name="INCOMETYPE"/>
+            </key-property>
+            <key-property name="quarter" type="string">
+                <column length="10" name="QUARTER"/>
+            </key-property>
+        </composite-id>
+        <property name="incometype1" type="string">
+            <column length="2" name="INCOMETYPE1"/>
+        </property>
+        <property name="incomeconv" type="string">
+            <column length="1" name="INCOMECONV"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsYszk" table="NEW_CS_YSZK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="contnum" type="string">
+                <column length="20" name="CONTNUM"/>
+            </key-property>
+            <key-property name="year2012" type="big_decimal">
+                <column length="15" name="YEAR2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2013" type="big_decimal">
+                <column length="15" name="YEAR2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2014" type="big_decimal">
+                <column length="15" name="YEAR2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2015" type="big_decimal">
+                <column length="15" name="YEAR2015" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="year2016" type="big_decimal">
+                <column length="10" name="YEAR2016" precision="10" scale="2"/>
+            </key-property>
+            <key-property name="sjyx2012" type="big_decimal">
+                <column length="15" name="SJYX2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="sjyx2013" type="big_decimal">
+                <column length="15" name="SJYX2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="sjyx2014" type="big_decimal">
+                <column length="15" name="SJYX2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="sjyx2015" type="big_decimal">
+                <column length="15" name="SJYX2015" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="sjyx2016" type="big_decimal">
+                <column length="10" name="SJYX2016" precision="10" scale="2"/>
+            </key-property>
+            <key-property name="ys2012" type="big_decimal">
+                <column length="15" name="YS2012" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="ys2013" type="big_decimal">
+                <column length="15" name="YS2013" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="ys2014" type="big_decimal">
+                <column length="15" name="YS2014" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="ys2015" type="big_decimal">
+                <column length="15" name="YS2015" precision="15" scale="2"/>
+            </key-property>
+            <key-property name="ys2016" type="big_decimal">
+                <column length="10" name="YS2016" precision="10" scale="2"/>
+            </key-property>
+            <key-many-to-one entity-name="com.primeton.mis.newcont.newCont.NewCsContract" foreign-key="NewCsYszk_NewCsContract" lazy="false" name="newCsContract">
+                <column length="10" name="CONTRACTID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.NewCsIncome" table="NEW_CS_INCOME">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="incomeid" type="long">
+            <column length="10" name="incomeid"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="contnum" type="string">
+            <column length="12" name="contnum"/>
+        </property>
+        <property name="incometype" type="string">
+            <column length="20" name="incometype"/>
+        </property>
+        <property name="income11" type="big_decimal">
+            <column length="10" name="income11" precision="10" scale="2"/>
+        </property>
+        <property name="income121" type="big_decimal">
+            <column length="10" name="income121" precision="10" scale="2"/>
+        </property>
+        <property name="income122" type="big_decimal">
+            <column length="10" name="income122" precision="10" scale="2"/>
+        </property>
+        <property name="income123" type="big_decimal">
+            <column length="10" name="income123" precision="10" scale="2"/>
+        </property>
+        <property name="income124" type="big_decimal">
+            <column length="10" name="income124" precision="10" scale="2"/>
+        </property>
+        <property name="income131" type="big_decimal">
+            <column length="10" name="income131" precision="10" scale="2"/>
+        </property>
+        <property name="income132" type="big_decimal">
+            <column length="10" name="income132" precision="10" scale="2"/>
+        </property>
+        <property name="income133" type="big_decimal">
+            <column length="10" name="income133" precision="10" scale="2"/>
+        </property>
+        <property name="income134" type="big_decimal">
+            <column length="10" name="income134" precision="10" scale="2"/>
+        </property>
+        <property name="income141" type="big_decimal">
+            <column length="10" name="income141" precision="10" scale="2"/>
+        </property>
+        <property name="income142" type="big_decimal">
+            <column length="10" name="income142" precision="10" scale="2"/>
+        </property>
+        <property name="income143" type="big_decimal">
+            <column length="10" name="income143" precision="10" scale="2"/>
+        </property>
+        <property name="income144" type="big_decimal">
+            <column length="10" name="income144" precision="10" scale="2"/>
+        </property>
+        <property name="income151" type="big_decimal">
+            <column length="10" name="income151" precision="10" scale="2"/>
+        </property>
+        <property name="income152" type="big_decimal">
+            <column length="10" name="income152" precision="10" scale="2"/>
+        </property>
+        <property name="income153" type="big_decimal">
+            <column length="10" name="income153" precision="10" scale="2"/>
+        </property>
+        <property name="income154" type="big_decimal">
+            <column length="10" name="income154" precision="10" scale="2"/>
+        </property>
+        <property name="income16" type="big_decimal">
+            <column length="10" name="income16" precision="10" scale="2"/>
+        </property>
+        <property name="syb" type="string">
+            <column length="1" name="syb"/>
+        </property>
+        <property name="income161" type="big_decimal">
+            <column length="10" name="income161" precision="10" scale="2"/>
+        </property>
+        <property name="income162" type="big_decimal">
+            <column length="10" name="income162" precision="10" scale="2"/>
+        </property>
+        <property name="income163" type="big_decimal">
+            <column length="10" name="income163" precision="10" scale="2"/>
+        </property>
+        <property name="income164" type="big_decimal">
+            <column length="10" name="income164" precision="10" scale="2"/>
+        </property>
+        <property name="income1701" type="big_decimal">
+            <column length="10" name="income1701" precision="10" scale="2"/>
+        </property>
+        <property name="income1702" type="big_decimal">
+            <column length="10" name="income1702" precision="10" scale="2"/>
+        </property>
+        <property name="income1703" type="big_decimal">
+            <column length="10" name="income1703" precision="10" scale="2"/>
+        </property>
+        <property name="income1704" type="big_decimal">
+            <column length="10" name="income1704" precision="10" scale="2"/>
+        </property>
+        <property name="income1705" type="big_decimal">
+            <column length="10" name="income1705" precision="10" scale="2"/>
+        </property>
+        <property name="income1706" type="big_decimal">
+            <column length="10" name="income1706" precision="10" scale="2"/>
+        </property>
+        <property name="income1707" type="big_decimal">
+            <column length="10" name="income1707" precision="10" scale="2"/>
+        </property>
+        <property name="income1708" type="big_decimal">
+            <column length="10" name="income1708" precision="10" scale="2"/>
+        </property>
+        <property name="income1709" type="big_decimal">
+            <column length="10" name="income1709" precision="10" scale="2"/>
+        </property>
+        <property name="income1710" type="big_decimal">
+            <column length="10" name="income1710" precision="10" scale="2"/>
+        </property>
+        <property name="income1711" type="big_decimal">
+            <column length="10" name="income1711" precision="10" scale="2"/>
+        </property>
+        <property name="income1712" type="big_decimal">
+            <column length="10" name="income1712" precision="10" scale="2"/>
+        </property>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.NewCsContract" fetch="join" foreign-key="NewCsIncome_NewCsContract" lazy="false" name="newCsContract">
+            <column length="10" name="contractid"/>
+        </many-to-one>
+    </class>
+    <class entity-name="com.primeton.mis.newcont.newCont.QueryOutcost" table="$QueryEntity[com.primeton.mis.newcont.newCont.QueryOutcost]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="PROJECTNO" insert="false" name="projectno" type="string" update="false"/>
+        <property column="SETTLEMENTNO" insert="false" name="settlementno" type="string" update="false"/>
+        <property column="OUTCOSTID" insert="false" name="outcostid" type="big_decimal" update="false"/>
+        <property column="CONFIRMDATE" insert="false" name="confirmdate" type="date" update="false"/>
+        <property column="NOTAXMON" insert="false" name="notaxmon" type="big_decimal" update="false"/>
+        <property column="TAXMON" insert="false" name="taxmon" type="big_decimal" update="false"/>
+        <property column="TAX" insert="false" name="tax" type="big_decimal" update="false"/>
+        <property column="PZHS" insert="false" name="pzhs" type="string" update="false"/>
+        <property column="CONTRACTID" insert="false" name="contractid" type="big_decimal" update="false"/>
+        <property column="OUTCOSTTYPE" insert="false" name="outcosttype" type="string" update="false"/>
+        <property column="SETTLEMENTID" insert="false" name="settlementid" type="string" update="false"/>
+        <property column="ACCRUEDID" insert="false" name="accruedid" type="string" update="false"/>
+        <property column="STARTDATE" insert="false" name="startdate" type="date" update="false"/>
+        <property column="ENDDATE" insert="false" name="enddate" type="date" update="false"/>
+        <property column="SUPPLIERID" insert="false" name="supplierid" type="big_decimal" update="false"/>
+        <property column="OUTCOSTSTATUS" insert="false" name="outcoststatus" type="string" update="false"/>
+        <property column="INSERTDATE" insert="false" name="insertdate" type="date" update="false"/>
+        <property column="SETTLEMON" insert="false" name="settlemon" type="big_decimal" update="false"/>
+        <property column="ACCRUEDMON" insert="false" name="accruedmon" type="big_decimal" update="false"/>
+        <property column="PURCONTNO" insert="false" name="purcontno" type="string" update="false"/>
+        <property column="PURORDERNO" insert="false" name="purorderno" type="string" update="false"/>
+        <property column="FILEDATE" insert="false" name="filedate" type="date" update="false"/>
+        <property column="FILEOPER" insert="false" name="fileoper" type="string" update="false"/>
+        <property column="AUDITOR" insert="false" name="auditor" type="string" update="false"/>
+        <property column="COSTMEMO" insert="false" name="costmemo" type="string" update="false"/>
+        <property column="BENEFORGID" insert="false" name="beneforgid" type="big_decimal" update="false"/>
+        <property column="STOCKDATE" insert="false" name="stockdate" type="date" update="false"/>
+        <property column="CUSTNAME" insert="false" name="custname" type="string" update="false"/>
+        <property column="SUPPLIERSNAME" insert="false" name="suppliersname" type="string" update="false"/>
+        <property column="PURCONTID" insert="false" name="purcontid" type="big_decimal" update="false"/>
+        <property column="CONTNUM" insert="false" name="contnum" type="string" update="false"/>
+        <property column="PURTYPE" insert="false" name="purtype" type="string" update="false"/>
+        <property column="CUSTNO" insert="false" name="custno" type="big_decimal" update="false"/>
+        <property column="ORGID" insert="false" name="orgid" type="big_decimal" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="sybid" insert="false" name="sybid" type="big_decimal" update="false"/>
+        <property column="syb" insert="false" name="syb" type="string" update="false"/>
+        <property column="custjc" insert="false" name="custjc" type="string" update="false"/>
+        <property column="WORKAMOUNT" insert="false" name="workamount" type="big_decimal" update="false"/>
+        <property column="WORKUNIT" insert="false" name="workunit" type="string" update="false"/>
+        <property column="PROJECT_ID" insert="false" name="projectId" type="string" update="false"/>
+        <property column="MARK" insert="false" name="mark" type="string" update="false"/>
+        <property column="PURCUSTNO" insert="false" name="purcustno" type="string" update="false"/>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.AmePayroll" table="AME_PAYROLL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="payrollid" type="big_decimal">
+            <column length="16" name="PAYROLLID" precision="16" scale="0"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="company" type="string">
+            <column length="1" name="COMPANY"/>
+        </property>
+        <property name="costtype" type="string">
+            <column length="4" name="COSTTYPE"/>
+        </property>
+        <property name="issenior" type="string">
+            <column length="1" name="ISSENIOR"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="50" name="ORGNAME"/>
+        </property>
+        <property name="basicpay" type="double">
+            <column length="10" name="BASICPAY" precision="10" scale="2"/>
+        </property>
+        <property name="createdate" type="date">
+            <column name="CREATEDATE"/>
+        </property>
+        <property name="operatorid" type="string">
+            <column length="30" name="OPERATORID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="1" name="STATUS"/>
+        </property>
+        <property name="confirmdate" type="date">
+            <column name="CONFIRMDATE"/>
+        </property>
+        <property name="year" type="string">
+            <column length="4" name="YEAR"/>
+        </property>
+        <property name="month" type="string">
+            <column length="2" name="MONTH"/>
+        </property>
+        <many-to-one cascade="none" entity-name="com.primeton.mis.newcont.newCont.ExpFeetype" fetch="join" foreign-key="AmePayroll_ExpFeetype" lazy="false" name="expFeetype">
+            <column length="2" name="FEETYPE"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.mis.newcont.newCont.ExpFeetype" table="EXP_FEETYPE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="feetypecode" type="string">
+            <column length="1" name="FEETYPECODE"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="exptype" type="string">
+            <column length="1" name="EXPTYPE" not-null="true"/>
+        </property>
+        <property name="feetypename" type="string">
+            <column length="1" name="FEETYPENAME"/>
+        </property>
+        <property name="parentfeetypeid" type="string">
+            <column length="1" name="PARENTFEETYPEID"/>
+        </property>
+        <property name="feelevel" type="big_decimal">
+            <column length="1" name="FEELEVEL" precision="1" scale="0"/>
+        </property>
+        <property name="feeseq" type="string">
+            <column length="1" name="FEESEQ"/>
+        </property>
+        <property name="isleaf" type="string">
+            <column length="1" name="ISLEAF"/>
+        </property>
+        <property name="feetypedesc" type="string">
+            <column length="1" name="FEETYPEDESC"/>
+        </property>
+        <property name="isloadforrpt" type="string">
+            <column length="1" name="ISLOADFORRPT"/>
+        </property>
+        <property name="sortno" type="int">
+            <column name="SORTNO"/>
+        </property>
+        <property name="isquota" type="string">
+            <column length="1" name="ISQUOTA"/>
+        </property>
+    </class>
+</hibernate-mapping>

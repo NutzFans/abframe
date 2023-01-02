@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="EmpOprPosiModify" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="江品廷&#x9;08-8-20 上午11:58"/>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" type="end" contextPath="" method="forward" uri="/abframe/org/emp/empopr_posi_modify.jsp">
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="12" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess1" name="更新人员操作员" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.employee.EmpManager.modifyEmpOpr</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="oEmp" type="query" value="org.gocom.abframe.dataset.organization.OmEmployee" valueType="DataObject" pattern="reference">oEmp</process:inputVariable>
+        <process:inputVariable id="1" name="oOpr" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator" valueType="DataObject" pattern="reference">oOpr</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="iRtn" type="query" value="Int" valueType="Primitive">iRtn</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <figSize height="12" width="85"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess3" name="查询人员操作者" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.employee.EmpManager.queryEmpOprByEmpid</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="iEmpid" type="query" value="Int" valueType="Primitive" pattern="reference">iEmpid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="oEmp" type="query" value="org.gocom.abframe.dataset.organization.OmEmployee" valueType="DataObject">oEmp</process:outputVariable>
+        <process:outputVariable id="1" name="oOpr" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator" valueType="DataObject">oOpr</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <figSize height="12" width="85"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="岗位下人员操作者页" type="view" contributionName="org.gocom.abframe.org" uri="/abframe/org/emp/empopr_posi_modify.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="mdf" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmEmployee" name="oEmp"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcOperator" name="oOpr"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link3" name="link3" lineType="reference" type="action" actionName="action1">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <figSize height="12" width="109"/>
+    <node>view1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.0"/>
+  <process:variables/>
+  <process:inputParameters>
+    <process:parameter historyStateLocation="client" isArray="false" name="iEmpid" primitiveType="Int"/>
+    <process:parameter historyStateLocation="client" isArray="false" name="lOperatorid" primitiveType="Long"/>
+  </process:inputParameters>
+</process:tPageFlow>

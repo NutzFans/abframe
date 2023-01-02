@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.mis.contract.gatherMessage.SendMessagetosales">
+        <config db="default" type="sql"><![CDATA[select x.PROCESSINSTID,x.CUSTNAME,x.GATHERDATE,x.USERID,x.EMPNAME,x.MOBILENO,Convert(decimal(18,2),sum(x.BCXSSK)) as XSSK from (
+select p.PROCESSINSTID,p.CUSTJC as CUSTNAME,CONVERT(varchar(10),p.GATHERDATE,120) as GATHERDATE,p.USERID,p.EMPNAME,p.MOBILENO,
+(case when c.SERVMON is null then 0 else c.SERVMON end)+(case when f.PRODMON is null then 0 else f.PRODMON end) as BCXSSK
+from (
+SELECT g.CUSTJC,a.GATHERDATE,e.USERID,e.EMPNAME,e.MOBILENO,a.PROCESSINSTID,a.GATHERID,b.CONTRACTID,d.CONTSALEID 
+from CS_GATHER a,MIS_CUSTINFO g,CS_GATHER_CONT b,CS_CONTRACTSALE d,OM_EMPLOYEE e 
+where a.GATHERID=b.GATHERID and a.GATHERCUSTID=g.CUSTID and e.EMPSTATUS='on' and d.SALEID=e.USERID and b.CONTRACTID=d.CONTRACTID
+) p
+left join CS_GATHER_CONTSALE c on p.GATHERID=c.GATHERID and p.CONTRACTID=c.CONTRACTID and p.CONTSALEID=c.CONTSALEID
+left join (select CONTRACTID,CONTSALEID,GATHERID,sum(PRODMON) as PRODMON from CS_GATHER_CONTPROD group by CONTRACTID,CONTSALEID,GATHERID) f
+on p.GATHERID=f.GATHERID and p.CONTRACTID=f.CONTRACTID and p.CONTSALEID=f.CONTSALEID
+) x 
+group by x.CUSTNAME,x.GATHERDATE,x.USERID,x.EMPNAME,x.MOBILENO,x.PROCESSINSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.mis.contract.gatherMessage.querysalescontract">
+        <config db="default" type="sql"><![CDATA[select x.PROCESSINSTID,x.CUSTNAME,x.GATHERDATE,x.USERID,x.EMPNAME,x.MOBILENO,x.CONTNUM,Convert(decimal(18,2),sum(x.BCXSSK)) as XSSK from (
+select p.PROCESSINSTID,p.CUSTJC as CUSTNAME,CONVERT(varchar(10),p.GATHERDATE,120) as GATHERDATE,p.USERID,p.EMPNAME,p.MOBILENO,
+(case when c.SERVMON is null then 0 else c.SERVMON end)+(case when f.PRODMON is null then 0 else f.PRODMON end) as BCXSSK,p.CONTNUM
+from (
+SELECT g.CUSTJC,a.GATHERDATE,e.USERID,e.EMPNAME,e.MOBILENO,a.PROCESSINSTID,a.GATHERID,b.CONTRACTID,d.CONTSALEID,z.CONTNUM
+from CS_GATHER a,MIS_CUSTINFO g,CS_GATHER_CONT b,CS_CONTRACT z,CS_CONTRACTSALE d,OM_EMPLOYEE e 
+where a.GATHERID=b.GATHERID and a.GATHERCUSTID=g.CUSTID and e.EMPSTATUS='on' and d.SALEID=e.USERID and b.CONTRACTID=d.CONTRACTID
+and b.CONTRACTID=z.CONTRACTID
+) p
+left join CS_GATHER_CONTSALE c on p.GATHERID=c.GATHERID and p.CONTRACTID=c.CONTRACTID and p.CONTSALEID=c.CONTSALEID
+left join (select CONTRACTID,CONTSALEID,GATHERID,sum(PRODMON) as PRODMON from CS_GATHER_CONTPROD group by CONTRACTID,CONTSALEID,GATHERID) f
+on p.GATHERID=f.GATHERID and p.CONTRACTID=f.CONTRACTID and p.CONTSALEID=f.CONTSALEID
+) x 
+group by x.CUSTNAME,x.GATHERDATE,x.USERID,x.EMPNAME,x.MOBILENO,x.PROCESSINSTID,x.CONTNUM]]></config>
+    </QueryEntity>
+</QueryEntityList>

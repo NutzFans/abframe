@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.rdmgr.project_plan.projectPlanManager.AmeProjectWeekly" table="AME_PROJECT_WEEKLY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="weeklyId" type="big_decimal">
+            <column length="18" name="WEEKLY_ID" precision="18" scale="0"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="projectNo" type="string">
+            <column length="20" name="PROJECT_NO"/>
+        </property>
+        <property name="projectName" type="string">
+            <column length="100" name="PROJECT_NAME"/>
+        </property>
+        <property name="ptime" type="timestamp">
+            <column name="PTIME"/>
+        </property>
+        <property name="weeklycont" type="string">
+            <column length="1" name="WEEKLYCONT"/>
+        </property>
+        <property name="submitter" type="string">
+            <column length="20" name="SUBMITTER"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.rdmgr.project_plan.projectPlanManager.AmeProjectPlan" table="AME_PROJECT_PLAN">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="planId" type="big_decimal">
+            <column length="18" name="PLAN_ID" precision="18" scale="0"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="versionNo" type="int">
+            <column name="VERSION_NO"/>
+        </property>
+        <property name="projectNo" type="string">
+            <column length="20" name="PROJECT_NO"/>
+        </property>
+        <property name="projectName" type="string">
+            <column length="100" name="PROJECT_NAME"/>
+        </property>
+        <property name="submitter" type="string">
+            <column length="20" name="SUBMITTER"/>
+        </property>
+        <property name="ptime" type="timestamp">
+            <column name="PTIME"/>
+        </property>
+        <property name="state" type="string">
+            <column length="5" name="STATE"/>
+        </property>
+        <property name="processinstid" type="big_decimal">
+            <column length="18" name="PROCESSINSTID" precision="18" scale="0"/>
+        </property>
+        <bag cascade="none" inverse="true" lazy="false" name="ameProjectPlanDetails">
+            <key column="PLAN_ID"/>
+            <one-to-many entity-name="com.primeton.rdmgr.project_plan.projectPlanManager.AmeProjectPlanDetail"/>
+        </bag>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.primeton.rdmgr.project_plan.projectPlanManager.AmeProjectPlanDetail" table="AME_PROJECT_PLAN_DETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="stage" type="string">
+                <column length="5" name="STAGE"/>
+            </key-property>
+            <key-property name="startTime" type="date">
+                <column name="START_TIME"/>
+            </key-property>
+            <key-property name="endTime" type="date">
+                <column name="END_TIME"/>
+            </key-property>
+            <key-many-to-one entity-name="com.primeton.rdmgr.project_plan.projectPlanManager.AmeProjectPlan" foreign-key="AmeProjectPlan_AmeProjectPlanDetail" lazy="false" name="ameProjectPlan">
+                <column length="18" name="PLAN_ID" precision="18" scale="0"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class entity-name="com.primeton.rdmgr.project_plan.projectPlanManager.QueryPlanProject" table="$QueryEntity[com.primeton.rdmgr.project_plan.projectPlanManager.QueryPlanProject]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="PROJECT_NAME" insert="false" name="projectName" type="string" update="false"/>
+        <property column="PROJECT_TYPE" insert="false" name="projectType" type="string" update="false"/>
+        <property column="FIN_UNIT_ID" insert="false" name="finUnitId" type="big_decimal" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="MANAGER" insert="false" name="manager" type="string" update="false"/>
+        <property column="managername" insert="false" name="managername" type="string" update="false"/>
+        <property column="PROJECT_STATUS" insert="false" name="projectStatus" type="string" update="false"/>
+        <property column="OUTSTATUS" insert="false" name="outstatus" type="string" update="false"/>
+        <property column="CUSTID" insert="false" name="custid" type="big_decimal" update="false"/>
+        <property column="CUSTNAME" insert="false" name="custname" type="string" update="false"/>
+        <property column="ISPASSBUD" insert="false" name="ispassbud" type="string" update="false"/>
+        <property column="CREATEDATE" insert="false" name="createdate" type="date" update="false"/>
+        <property column="CLOSEDATE" insert="false" name="closedate" type="date" update="false"/>
+        <property column="LASTCOSTDATE" insert="false" name="lastcostdate" type="date" update="false"/>
+        <property column="IMPLEMENTCITY" insert="false" name="implementcity" type="string" update="false"/>
+        <property column="ISCONPROJ" insert="false" name="isconproj" type="string" update="false"/>
+        <property column="CHECKSTATUS" insert="false" name="checkstatus" type="string" update="false"/>
+        <property column="PROJECT_ID" insert="false" name="projectId" type="big_decimal" update="false"/>
+        <property column="ORGSEQ" insert="false" name="orgseq" type="string" update="false"/>
+        <property column="ishavewb" insert="false" name="ishavewb" type="int" update="false"/>
+        <property column="contnum" insert="false" name="contnum" type="string" update="false"/>
+        <property column="RULEID" insert="false" name="ruleid" type="big_decimal" update="false"/>
+        <property column="RULENAME" insert="false" name="rulename" type="string" update="false"/>
+        <property column="CREATEAPPLICANT" insert="false" name="createapplicant" type="string" update="false"/>
+        <property column="createapplicantname" insert="false" name="createapplicantname" type="string" update="false"/>
+        <property column="MANAGERDEPT" insert="false" name="managerdept" type="big_decimal" update="false"/>
+        <property column="managerdeptname" insert="false" name="managerdeptname" type="string" update="false"/>
+        <property column="PROCESSINSTID" insert="false" name="processinstid" type="big_decimal" update="false"/>
+        <property column="CUSTJC" insert="false" name="custjc" type="string" update="false"/>
+        <property column="OCSTARTDATE" insert="false" name="ocstartdate" type="date" update="false"/>
+        <property column="OCENDDATE" insert="false" name="ocenddate" type="date" update="false"/>
+        <property column="PROD_VER_ID" insert="false" name="prodVerId" type="big_decimal" update="false"/>
+        <property column="IS_TEMPLATE" insert="false" name="isTemplate" type="string" update="false"/>
+        <property column="IS_PUBLIC" insert="false" name="isPublic" type="string" update="false"/>
+        <property column="SALEID" insert="false" name="saleid" type="big_decimal" update="false"/>
+        <property column="PRICETYPE" insert="false" name="pricetype" type="string" update="false"/>
+        <property column="ISPASSFZ" insert="false" name="ispassfz" type="string" update="false"/>
+        <property column="ISSENDFZMAIL" insert="false" name="issendfzmail" type="string" update="false"/>
+        <property column="ISSENDBUDMAIL" insert="false" name="issendbudmail" type="string" update="false"/>
+        <property column="REMINDFZ" insert="false" name="remindfz" type="big_decimal" update="false"/>
+        <property column="STARTDATE" insert="false" name="startdate" type="date" update="false"/>
+        <property column="ENDDATE" insert="false" name="enddate" type="date" update="false"/>
+        <property column="PROJECT_NO" insert="false" name="projectno" type="string" update="false"/>
+        <property column="REMARK" insert="false" name="remark" type="string" update="false"/>
+        <property column="EXPENDDATE" insert="false" name="expenddate" type="date" update="false"/>
+        <property column="OUTCONTRACTID" insert="false" name="outcontractid" type="big_decimal" update="false"/>
+        <property column="CBVERSION" insert="false" name="cbversion" type="string" update="false"/>
+        <property column="PCOSTTYPE" insert="false" name="pcosttype" type="string" update="false"/>
+        <property column="LONGITUDE" insert="false" name="longitude" type="string" update="false"/>
+        <property column="LATITUDE" insert="false" name="latitude" type="string" update="false"/>
+        <property column="CHECKPLACE" insert="false" name="checkplace" type="string" update="false"/>
+        <property column="CONTPLANDATE" insert="false" name="contplandate" type="date" update="false"/>
+        <property column="LASTUPDATETIME" insert="false" name="lastupdatetime" type="date" update="false"/>
+        <property column="LASTUPDATEMAN" insert="false" name="lastupdateman" type="string" update="false"/>
+        <property column="maincontnum" insert="false" name="maincontnum" type="string" update="false"/>
+        <property column="managerdeptseq" insert="false" name="managerdeptseq" type="string" update="false"/>
+        <property column="reporttime" insert="false" name="reporttime" type="timestamp" update="false"/>
+        <property column="ptime" insert="false" name="ptime" type="timestamp" update="false"/>
+    </class>
+</hibernate-mapping>

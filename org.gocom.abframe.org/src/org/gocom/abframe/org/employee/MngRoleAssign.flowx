@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="MngRoleAssign.flowx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="可管理角色配置" title="蔡述尧&#x9;09-2-19 下午2:54">
+    <location x="90" y="180"/>
+    <size height="61" width="148"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="begin" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="可授权角色" historyStateLocation="client" isArray="false" name="mngroles" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="101" y="90"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="授权列表" displayName="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/org/emp/emp_power_assign.jsp">
+    <targetConnections>link3</targetConnections>
+    <location x="375" y="90"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="103" y="126"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="365" y="126"/>
+    <figSize height="12" width="49"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="分解角色列表" displayName="analyMngRole" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="289" y="90"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.party.PartyManager.analyMngRole</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="mngroles" type="query" value="String" valueType="Primitive" pattern="reference">mngroles</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="roles" type="query" value="org.gocom.abframe.dataset.privilege.AcRole[]" valueType="DataObject">listc</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="266" y="125"/>
+    <figSize height="12" width="73"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="查询可授权角色" displayName="queryAuthableRoles" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="196" y="90"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.party.PartyManager.queryAuthableRoles</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="operatorid" type="query" value="String" valueType="Primitive" pattern="reference">s:userObject/attributes/operatorid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="roles" type="query" value="org.gocom.abframe.dataset.privilege.AcRole[]" valueType="DataObject">roles</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="167" y="125"/>
+    <figSize height="12" width="85"/>
+    <node>subprocess2</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="蔡述尧" createTime="2009-02-18 17:07:54" date="2009-02-18Z" description="" name="可授权角色列表" version="6.0"/>
+  <process:variables/>
+</process:tPageFlow>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="Login" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="实现操作员登录的身份验证和获取权限" title="翁增仁&#x9;08-9-5 上午11:59">
+    <location x="480" y="96"/>
+    <size height="46" width="251"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="enter" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="语言" historyStateLocation="client" isArray="false" name="choose_lang" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link3" name="link3" lineType="reference" type="action" actionName="logout" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <location x="75" y="279"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="77" y="315"/>
+    <figSize height="15" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="登录页面" displayName="视图" type="view" contextPath="" contributionName="org.gocom.abframe.auth" method="forward" uri="/abframe/auth/login.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="login" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="before">
+        <process:validateRule error-msg="massage" error-msgID="校验码错误" rule="org.gocom.abframe.auth.validator.VerifyCodeLoginValidator" src-parameter="verifyCode" type="customValidator"/>
+      </process:validateRules>
+      <process:inputParameters>
+        <process:parameter description="登录信息" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcOperator" name="acOperator"/>
+        <process:parameter description="校验码" historyStateLocation="client" isArray="false" name="verifyCode" primitiveType="String"/>
+        <process:parameter description="语言" historyStateLocation="client" isArray="false" name="choose_lang" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="188" y="104"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="175" y="140"/>
+    <figSize height="15" width="49"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="登录" displayName="Login1" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" description="返回值小于0" id="link6" name="登录失败" displayName="连接线" isDefault="false" type="transition">
+      <bendPoint heightToEnd="-68" heightToStart="-68" widthToEnd="66" widthToStart="-66"/>
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NE">
+          <process:leftOperand type="query">retCode</process:leftOperand>
+          <process:rightOperand type="literal">0</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="327" y="105"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.auth.LoginManager.login</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="acOperator" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator" valueType="DataObject" pattern="reference">acOperator</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="userObject" type="query" value="com.eos.data.datacontext.UserObject" valueType="Java">s:userObject</process:outputVariable>
+        <process:outputVariable id="1" name="retCode" type="query" value="String" valueType="Primitive">retCode</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="328" y="140"/>
+    <figSize height="15" width="25"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="注销" displayName="logout" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="link4" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="186" y="279"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.auth.LoginManager.logout</process:partner>
+      <process:inputVariables/>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="187" y="314"/>
+    <figSize height="15" width="25"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="注销成功" displayName="结束" nodeType="common" type="end" contributionName="org.gocom.abframe.auth" uri="/abframe/auth/logout.jsp" variableUri="false">
+    <targetConnections>link7</targetConnections>
+    <location x="327" y="279"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="317" y="315"/>
+    <figSize height="15" width="49"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end2" name="显示主页面" displayName="结束" nodeType="common" type="end" contextPath="" contributionName="org.gocom.abframe.auth" method="forward" uri="/redirect.jsp" variableUri="false">
+    <targetConnections>link5</targetConnections>
+    <location x="436" y="180"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end2label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="ok" type="literal">ok</process:inputVariable>
+    </process:inputVariables>
+    <process:returns>
+      <process:return id="0" name="userid" type="query">userid</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end2label" name="label" nodeType="label">
+    <location x="420" y="216"/>
+    <figSize height="15" width="61"/>
+    <node>end2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="判断是否已登录" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link4" name="link4" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">s:userObject/userId</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="74" y="180"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="46" y="216"/>
+    <figSize height="15" width="85"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="305" y="216"/>
+    <figSize height="30" width="73"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="设置设置语言&#xD;&#xA;设置主页面" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="327" y="180"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">com.eos.web.taglib.util.I18nUtil.getLocale(choose_lang==null?&quot;zh_CN&quot;:choose_lang)</process:from>
+      <process:to type="query">s:LOCALE</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">main.jsp</process:from>
+      <process:to type="query">_nextpage</process:to>
+    </process:copy>
+  </nodes>
+  <topRuler>
+    <guides position="-1" horizontal="true"/>
+  </topRuler>
+  <leftRuler/>
+  <process:info author="翁增仁" createTime="2008-08-14 13:27:55" date="2008-08-14Z" description="" name="登录流程" version="6.0"/>
+  <process:variables/>
+  <process:inputParameters/>
+</process:tPageFlow>

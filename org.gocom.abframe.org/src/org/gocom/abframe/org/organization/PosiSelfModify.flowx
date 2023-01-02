@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="PosiSelfModify" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="修改本级岗位" title="江品廷&#x9;08-8-21 下午1:45">
+    <location x="50" y="154"/>
+    <size height="60" width="148"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" description="" id="start0" name="开始" displayName="开始" collapsed="false" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" displayName="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <location x="50" y="68"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="52" y="104"/>
+    <figSize height="15" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="link1" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="140" y="68"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="142" y="104"/>
+    <figSize height="15" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束" displayName="结束" collapsed="false" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/org/organization/posiself_modify.jsp">
+    <targetConnections>link4</targetConnections>
+    <location x="312" y="154"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="314" y="190"/>
+    <figSize height="15" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="通过岗位ID查岗位信息" id="subprocess2" name="查询一个岗位" displayName="expandPosiByPosiid" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="link2" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="232" y="68"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.organization.OrgManager.expandPosiByPosiid</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="iPosiid" type="query" value="Int" valueType="Primitive" pattern="reference">oPosi/positionid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="oPosi" type="query" value="org.gocom.abframe.dataset.organization.OmPosition" valueType="DataObject">oPosi</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="209" y="103"/>
+    <figSize height="15" width="73"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="岗位修改页面" displayName="posiself_modify.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/organization/posiself_modify.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link1" name="link1" displayName="link3" lineType="reference" isDefault="true" type="action" actionName="mdf" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmPosition" name="oPosi"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link4" name="link4" lineType="reference" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="315" y="68"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="290" y="104"/>
+    <figSize height="15" width="73"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="修改岗位" id="subprocess0" name="修改岗位" displayName="modifyPosi" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="405" y="68"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.organization.OrgManager.modifyPosition</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="oPosi" type="query" value="org.gocom.abframe.dataset.organization.OmPosition" valueType="DataObject" pattern="reference">oPosi</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="oPosi" type="query" value="org.gocom.abframe.dataset.organization.OmPosition" valueType="DataObject">oPosi</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="394" y="103"/>
+    <figSize height="15" width="49"/>
+    <node>subprocess0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="江品廷" createTime="2008-08-21 13:39:22" date="2008-08-21Z" description="" name="posiSelfModify" version="6.0"/>
+  <process:variables/>
+  <process:inputParameters>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmPosition" name="oPosi"/>
+  </process:inputParameters>
+</process:tPageFlow>

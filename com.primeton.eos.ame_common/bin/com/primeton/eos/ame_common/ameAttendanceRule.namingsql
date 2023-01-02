@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.ameAttendanceRule">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="RULEID" javaType="Long" property="ruleid"/>
+        <result column="RULENO" javaType="string" property="ruleno"/>
+        <result column="RULENAME" javaType="string" property="rulename"/>
+        <result column="RULETYPE" javaType="string" property="ruletype"/>
+        <result column="ADDRESS" javaType="string" property="address"/>
+        <result column="LONGITUDE" javaType="string" property="longitude"/>
+        <result column="LATITUDE" javaType="string" property="latitude"/>
+        <result column="DATATYPE" javaType="string" property="datatype"/>
+        <result column="VALIDRANGE" javaType="Long" property="validrange"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="STARTTIME" javaType="string" property="starttime"/>
+        <result column="ENDTIME" javaType="string" property="endtime"/>
+        <result column="MANAGERID" javaType="string" property="managerid"/>
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="PROJECTNO" javaType="string" property="projectno"/>
+        <result column="CUSTID" javaType="Long" property="custid"/>
+        <result column="OUTPERNO" javaType="Long" property="outperno"/>
+    </resultMap>
+    <!-- 规则查询结果集 -->
+    <resultMap class="commonj.sdo.DataObject" id="attendanceMap">
+        <result column="RULEID" javaType="Long" property="ruleid"/>
+        <result column="RULENO" javaType="string" property="ruleno"/>
+        <result column="RULENAME" javaType="string" property="rulename"/>
+        <result column="RULETYPE" javaType="string" property="ruletype"/>
+        <result column="ADDRESS" javaType="string" property="address"/>
+        <result column="LONGITUDE" javaType="string" property="longitude"/>
+        <result column="LATITUDE" javaType="string" property="latitude"/>
+        <result column="DATATYPE" javaType="string" property="datatype"/>
+        <result column="VALIDRANGE" javaType="Long" property="validrange"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="STARTTIME" javaType="string" property="starttime"/>
+        <result column="ENDTIME" javaType="string" property="endtime"/>
+    </resultMap>
+    <!-- 通过规则，获取用户列表 -->
+    <resultMap class="commonj.sdo.DataObject" id="personsMap">
+        <result column="LINKTEL" javaType="string" property="linktel"/>
+        <result column="OUTPERNAME" javaType="string" property="outpername"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="result2">
+        <result column="userid" javaType="string" property="userid"/>
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="mobileno" javaType="string" property="mobile"/>
+        <result column="oemail" javaType="string" property="oemail"/>
+        <result column="orgid" javaType="long" property="orgid"/>
+        <result column="empstatus" javaType="string" property="empstatus"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="result4">
+        <result column="orgid" javaType="long" property="orgid"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+    </resultMap>
+    <!-- 查询考勤规则 -->
+    <select id="queryAttendanceRules" parameterClass="java.util.HashMap" resultMap="attendanceMap">
+    	SELECT A.RULEID, RULENO, RULENAME, RULETYPE, ADDRESS, LONGITUDE,
+			LATITUDE, DATATYPE, VALIDRANGE, STATUS, STARTTIME, ENDTIME
+			FROM AME_ATTENDANCE_RULE A 
+			WHERE 1=1
+				<isNotNull property="ruleno">AND A.RULENO LIKE '%'+ #ruleno# +'%'</isNotNull>
+        <isNotNull property="rulename">AND A.RULENAME LIKE '%'+ #rulename# +'%'</isNotNull>
+        <isNotNull property="ruletype">AND A.RULETYPE = #ruletype#</isNotNull>
+        <isNotNull property="address">AND A.ADDRESS LIKE '%'+ #address# +'%'</isNotNull>
+        <isNotNull property="projectNO">AND EXISTS (
+			  			SELECT 1 from AME_PROJECT_RULE B 
+            				WHERE B.RULEID = A.RULEID
+               					AND B.PROJECTNO LIKE '%'+ #projectNO# +'%'
+               		)</isNotNull>
+			  ORDER BY RULENO DESC
+    </select>
+    <!-- 根据人员ID获取考勤规则 -->
+    <select id="getAttendanceRuleByPersonID" parameterClass="string" resultMap="resultMap"><![CDATA[
+    	SELECT A.RULEID, RULENO, RULENAME, RULETYPE, ADDRESS, A.LONGITUDE,B.PROJECTNO,D.CUSTID,D.OUTPERNO,
+			A.LATITUDE, DATATYPE, VALIDRANGE, STATUS, STARTTIME, ENDTIME,C.MANAGER AS MANAGERID, E.PROJECT_NAME AS PROJECTNAME
+		FROM AME_ATTENDANCE_RULE A,AME_PROJECT_RULE B ,RD_PROJECT E,PUR_PROJ_OUTPER C,PUR_OUTPERSON D
+		WHERE A.RULEID = B.RULEID and c.OUTPERNO=d.OUTPERNO AND E.PROJECT_NO = B.PROJECTNO AND C.CURRENTSTATUS !='0' and E.PROJECT_STATUS in ('1','2')
+      		AND EXISTS (SELECT 1 FROM  PUR_OUTPERSON D,PUR_OUTPER_OPERATOR P
+               			WHERE C.PROJECTNO = B.PROJECTNO AND C.OUTPERNO = D.OUTPERNO AND P.OUTPERNO = D.OUTPERNO AND P.USERID = #value#)
+    ]]></select>
+    <!-- 根据人员ID获取    默认的   考勤规则 -->
+    <select id="getDefaultAttendanceRule" parameterClass="string" resultMap="resultMap"><![CDATA[
+    	SELECT RULEID, RULENO, RULENAME, RULETYPE, ADDRESS, LONGITUDE, PROJECTNO,CUSTID,OUTPERNO,
+			LATITUDE, DATATYPE, VALIDRANGE, STATUS, STARTTIME, ENDTIME,MANAGERID,PROJECTNAME
+ 		FROM (SELECT C.MANAGER AS MANAGERID,P.PROJECT_NAME AS PROJECTNAME,P.PROJECT_NO AS PROJECTNO,d.CUSTID,d.OUTPERNO
+ 		      FROM RD_PROJECT P LEFT JOIN PUR_PROJ_OUTPER C ON C.PROJECTNO =P.PROJECT_NO LEFT JOIN PUR_OUTPERSON D on C.OUTPERNO=d.OUTPERNO
+			  WHERE C.CURRENTSTATUS !='0' and P.PROJECT_STATUS in ('1','2') AND EXISTS(
+			 		SELECT 1 FROM PUR_OUTPERSON D,PUR_OUTPER_OPERATOR E
+               		WHERE C.PROJECTNO = P.PROJECT_NO AND C.OUTPERNO = D.OUTPERNO AND E.OUTPERNO = D.OUTPERNO AND E.USERID = #value#
+			 )) PRO,AME_ATTENDANCE_RULE M 
+		WHERE M.STATUS=1
+    ]]></select>
+    <!-- 根据规则NO，获取考勤用户
+      	逻辑：首先，记录中没有。
+      	            其次，打卡信息中没有。
+    -->
+    <select id="getPersonsByRuleID" parameterClass="java.util.HashMap" resultMap="personsMap">
+    	SELECT P.USERID AS LINKTEL,O.OUTPERNAME
+		 FROM PUR_OUTPERSON O,PUR_OUTPER_OPERATOR p
+		  WHERE O.OUTPERNO = P.outperno
+				AND EXISTS (
+				SELECT 1 FROM PUR_PROJ_OUTPER PP ,AME_PROJECT_RULE PR
+					WHERE PP.PROJECTNO = PR.PROJECTNO
+		        AND PR.RULEID = #ruleID#
+		        AND PP.CURRENTSTATUS !='0'
+		        AND PP.WHETHERATTENDANCE ='1'
+		        AND O.OUTPERNO = PP.OUTPERNO
+			)
+			AND NOT EXISTS(
+        		SELECT 1 FROM AME_ATTENDANCE_NOTICE C 
+        		WHERE C.USERID = P.USERID
+            		  AND CLOCKTYPE = #clockType#
+            		  AND datediff(day,C.NOTICEDATE,getdate())=0
+			)
+			AND NOT EXISTS(
+			  SELECT 1 FROM AME_ATTENDANCE_DETAILS D 
+			  	WHERE D.PERSONID=P.USERID
+			  		<isEqual compareValue="1" property="clockType">AND INTIME IS NOT NULL</isEqual>
+        <isEqual compareValue="2" property="clockType">AND OUTTIME IS NOT NULL</isEqual>
+					AND datediff(day,D.SIGNDATE,getdate())=0
+			)
+    </select>
+    <!-- 将另外一笔默认考勤规则，置为非默认考勤
+                      （保持一个原则：数据库中只有一个默认的考勤规则）
+    -->
+    <update id="updateAttendanceRule" parameterClass="string">UPDATE AME_ATTENDANCE_RULE set STATUS='0' WHERE STATUS='1' AND RULENO !=#value#</update>
+    <!-- 清空表数据-->
+    <delete id="deleteAttendanceNotice" parameterClass="string">truncate table AME_ATTENDANCE_NOTICE</delete>
+    <!-- 删除考勤规则项目表-->
+    <delete id="deleteProjectRule" parameterClass="java.util.HashMap">DELETE FROM AME_PROJECT_RULE WHERE RULEID= #ruleID# AND PROJECTNO=#projectNO#</delete>
+    <!-- 获取微信组织机构中没有的用户-->
+    <select id="getWeOnPer" parameterClass="java.util.HashMap" resultMap="result2"><![CDATA[
+    	select userid,empname,mobileno,oemail,orgid,empstatus from om_employee where userid not in ($userid$) and empstatus = 'on';
+	  ]]></select>
+    <!-- 根据年月获取月初和月末-->
+    <select id="getyjbm" parameterClass="java.util.HashMap" resultMap="result4"><![CDATA[
+    	SELECT t.orgid,t.orgname from OM_ORGANIZATION a LEFT JOIN OM_ORGANIZATION t ON t.orgid = SUBSTRING(a.ORGSEQ, 4, CHARINDEX('.', a.ORGSEQ, 4) - CHARINDEX('.', a.ORGSEQ, 2) - 1) where a.orgid = #orgid#
+	  ]]></select>
+    <!-- 判断当天是否已有签到或者签退记录-->
+    <select id="getNowDateIsHaveRecord" parameterClass="commonj.sdo.DataObject" resultClass="int"><![CDATA[
+    	select SIGNID from AME_ATTENDANCE_DETAIL where PERSONID=#personid# and CLOCKTYPE=#clocktype# and CONVERT(varchar(10),CLOCKTIME,120)=#clockdate# and PROJECTNO=#projectno#
+	  ]]></select>
+</sqlMap>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.mis.contract.contract">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="PRODNAME" javaType="string" property="prodname"/>
+    </resultMap>
+    <!-- 拼接合同的产品名称-->
+    <select id="getContProdName" resultMap="resultMap"><![CDATA[
+    	SELECT stuff((select ','+a.PRODNAME  from QUO_PROD a,CS_CONTRACT_PRODUCT b WHERE 
+    	a.PRODID = b.PRODNAME and b.CONTRACTID = #CONTRACTID#  for xml path('')),1,1,'') as PRODNAME 
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="SALENAME" javaType="string" property="salename"/>
+        <result column="ejorgname" javaType="string" property="ejorgname"/>
+        <result column="yjorgname" javaType="string" property="yjorgname"/>
+        <result column="sjorgname" javaType="string" property="sjorgname"/>
+        <result column="prodwbmon" javaType="double" property="prodwbmon"/>
+        <result column="servjsmon" javaType="double" property="servjsmon"/>
+    </resultMap>
+    <!-- 拼接合同的销售、部门、事业部-->
+    <select id="getContSaleName" resultMap="resultMap1"><![CDATA[
+    	WITH cte as(
+			SELECT SALENAME,c.ORGNAME as yjorgname,d.ORGNAME as ejorgname,e.ORGNAME as sjorgname,a.SERVJSMON,a.PRODWBMON FROM CS_CONTRACTSALE a 
+			LEFT JOIN OM_ORGANIZATION b on a.ORGID = b.ORGID
+			LEFT JOIN OM_ORGANIZATION c on b.ORGSEQ like c.ORGSEQ+'%' and c.ORGLEVEL = '2'
+			LEFT JOIN OM_ORGANIZATION d on b.ORGSEQ like d.ORGSEQ+'%' and d.ORGLEVEL = '3'
+			LEFT JOIN OM_ORGANIZATION e on b.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL = '4'
+			 WHERE CONTRACTID = #CONTRACTID#)
+		SELECT stuff((select ','+SALENAME  from cte for xml path('')),1,1,'') as SALENAME,
+		stuff((select ','+ejorgname  from cte for xml path('')),1,1,'') as ejorgname,stuff((select ','+yjorgname  from cte for xml path('')),1,1,'') as yjorgname,
+stuff((select ','+sjorgname  from cte for xml path('')),1,1,'') as sjorgname,sum(SERVJSMON) as servjsmon,sum(PRODWBMON) as prodwbmon FROM cte 
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="incometypename" javaType="string" property="incometypename"/>
+    </resultMap>
+    <!-- 拼接合同的收入确认类型-->
+    <!--先将数据库中有拼接的revetype拆分取对应业务字典值，再将其合并 -->
+    <select id="getContRevetype" resultMap="resultMap2"><![CDATA[
+		with cte(REVETYPE) as 
+		(
+		 SELECT REVETYPE FROM CS_REVE_FORECAST WHERE CONTNUM = #contnum#
+		),
+		cte1 as (
+			SELECT a.dictname as incometypename FROM (
+			Select
+			    DISTINCT REVETYPE=substring(REVETYPE, b.number, charindex(',', REVETYPE+',',b.number)-b.number) 
+			from 
+			    cte a join master..spt_values  b 
+			    ON b.type='p' AND b.number BETWEEN 1 AND LEN(a.REVETYPE)
+			where
+			     substring(','+a.REVETYPE,b.number,1)=',') t 
+			     LEFT JOIN EOS_DICT_ENTRY a on t.REVETYPE = a.DICTID and a.DICTTYPEID = 'AME_REVETYPE'
+		)
+		
+		SELECT stuff((select ','+incometypename  from cte1 for xml path('')),1,1,'') as incometypename
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapProd">
+        <result column="PRODMON" javaType="double" property="prodmon"/>
+    </resultMap>
+    <!-- 查询产品合同代购软硬件金额-->
+    <select id="getProdMonbycontractid" resultMap="resultMapProd"><![CDATA[
+    	select SUM(PRODMON) PRODMON from CS_CONTRACT_PRODUCT where PRODNAME='50' and CONTRACTID=#contractid#
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultprods">
+        <result column="CON_PRO_ID" javaType="Decimal" property="conproid"/>
+        <result column="CONTSALEID" javaType="Decimal" property="contsaleid"/>
+        <result column="PRODNAME" javaType="string" property="prodname"/>
+        <result column="prodtypename" javaType="string" property="prodtypename"/>
+        <result column="PRODMON" javaType="double" property="prodmon"/>
+        <result column="PRODSUBMON" javaType="double" property="prodsubmon"/>
+        <result column="OTHMON" javaType="double" property="othmon"/>
+        <result column="PRODWBMON" javaType="double" property="prodwbmon"/>
+        <result column="PRODWBSUBMON" javaType="double" property="prodwbsubmon"/>
+        <result column="PRODWBOTHMON" javaType="double" property="prodwbothmon"/>
+        <result column="PRODWBNETMON" javaType="double" property="prodwbnetmon"/>
+        <result column="PRODNUMTYPE" javaType="string" property="prodnumtype"/>
+        <result column="PRODNUM" javaType="Decimal" property="prodnum"/>
+    </resultMap>
+    <!-- 查询产品信息-->
+    <select id="getproducts" parameterClass="java.lang.String" resultMap="resultprods"><![CDATA[
+    	select a.CON_PRO_ID,a.CONTSALEID,a.PRODNAME,b.PRODNAME prodtypename,ISNULL(a.PRODMON, 0) PRODMON,
+		ISNULL(a.PRODSUBMON, 0) PRODSUBMON,ISNULL(a.OTHMON, 0) OTHMON,ISNULL(a.PRODWBMON, 0) PRODWBMON,
+		ISNULL(a.PRODWBSUBMON, 0) PRODWBSUBMON,ISNULL(a.PRODWBOTHMON,0) PRODWBOTHMON,ISNULL(a.PRODWBNETMON,0) PRODWBNETMON,
+		a.PRODNUMTYPE,a.PRODNUM
+		from CS_CONTRACT_PRODUCT a
+		LEFT JOIN QUO_PROD b on a.PRODNAME=b.PRODID
+		where a.CONTRACTID=#contractid#
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultsales">
+        <result column="CONTSALEID" javaType="Decimal" property="contsaleid"/>
+        <result column="SALECONTSUM" javaType="double" property="salecontsum"/>
+        <result column="SALEPRODMON" javaType="double" property="saleprodmon"/>
+        <result column="SALESERVMON" javaType="double" property="saleservmon"/>
+        <result column="SALEPRODWBMON" javaType="double" property="saleprodwbmon"/>
+        <result column="SALESERVJSMON" javaType="double" property="saleservjsmon"/>
+        <result column="SALESERVSUBMON" javaType="double" property="saleservsubmon"/>
+        <result column="SALEOTHMON" javaType="double" property="saleothmon"/>
+    </resultMap>
+    <!-- 查询销售信息-->
+    <select id="getsales" parameterClass="java.lang.String" resultMap="resultsales"><![CDATA[
+    	select CONTSALEID,ISNULL(CONTSUM, 0) SALECONTSUM,ISNULL(PRODMON, 0) SALEPRODMON,
+		ISNULL(SERVMON, 0) SALESERVMON,ISNULL(PRODWBMON, 0) SALEPRODWBMON,ISNULL(SERVJSMON, 0) SALESERVJSMON,
+		ISNULL(SERVSUBMON, 0) SALESERVSUBMON,ISNULL(OTHMON, 0) SALEOTHMON
+		from CS_CONTRACTSALE a
+		where a.CONTRACTID=#contractid#
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultgathers">
+        <result column="GATHERNO" javaType="string" property="gatherno"/>
+    </resultMap>
+    <!-- 查询收款收入-->
+    <select id="getcsgather" parameterClass="java.lang.String" resultMap="resultgathers"><![CDATA[
+    	select GATHERNO  from CS_GATHER_FC 
+		where CONTNUM=#contnum#
+		ORDER BY GATHERID;
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultreves">
+        <result column="REVENO" javaType="string" property="reveno"/>
+    </resultMap>
+    <!-- 查询收款收入-->
+    <select id="getcsreve" parameterClass="java.lang.String" resultMap="resultreves"><![CDATA[
+    	select REVENO  from CS_REVE_FORECAST 
+		where CONTNUM=#contnum#
+		ORDER BY REVEID;
+    ]]></select>
+</sqlMap>

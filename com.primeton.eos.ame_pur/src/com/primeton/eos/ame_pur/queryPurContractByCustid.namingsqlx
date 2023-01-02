@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wanglqps -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="custid" javaType="int" property="custid"/>
+        <result column="purcontid" javaType="int" property="purcontid"/>
+        <result column="purcontnum" javaType="string" property="purcontnum"/>
+        <result column="purcontname" javaType="string" property="purcontname"/>
+        <result column="signdate" javaType="date" property="signdate"/>
+        <result column="purtype" javaType="string" property="purtype"/>
+        <result column="contmoney" javaType="int" property="contmoney"/>
+        <result column="startdate" javaType="date" property="startdate"/>
+        <result column="enddate" javaType="date" property="enddate"/>
+        <result column="ouroper" javaType="string" property="ouroper"/>
+        <result column="liankman" javaType="string" property="liankman"/>
+        <result column="linktel" javaType="string" property="linktel"/>
+        <result column="linkemail" javaType="string" property="linkemail"/>
+        <result column="comment" javaType="string" property="comment"/>
+        <result column="cont_keyinfo" javaType="string" property="cont_keyinfo"/>
+        <result column="costtype" javaType="string" property="costtype"/>
+        <result column="outcontnum" javaType="string" property="outcontnum"/>
+    </resultMap>
+    <select id="queryLocalSigndatePurcont" resultMap="resultMap">
+    	<![CDATA[
+			select 
+    			a.custid,
+    			a.purcontid,
+    			a.purcontnum,
+    			a.purcontname,
+    			a.signdate,
+    			a.purtype,
+    			a.contmoney,
+    			a.cont_keyinfo,
+    			a.startdate,
+    			a.enddate,
+    			a.liankman,
+    			a.linktel,
+    			a.linkemail,
+    			a.ouroper,
+    			a.comment,
+    			a.costtype,
+    			a.outcontnum
+    		from 
+    			PUR_CONTRACT a 
+			where 
+    			a.custid=#custid#
+    		    		
+    	]]>
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="sumSetamount" javaType="double" property="sumSetamount"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="sumYjtjeamount" javaType="double" property="sumYjtjeamount"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="sumYspjeamount" javaType="double" property="sumYspjeamount"/>
+    </resultMap>
+    <!--根据合同id>合同项目关系>关联的所有项目>查询已支付金额 （结算状态为完成的）-->
+    <select id="queryYzfjeByPurCont" resultMap="resultMap1">
+    	<![CDATA[select sum(SETAMOUNT) as sumSetamount from Pur_Settle where PURCONTID=#purcontid# and setstatus=2]]>
+    </select>
+    <!--已计提金额-->
+    <select id="queryYjtjeByPurCont" resultMap="resultMap3">
+    	<![CDATA[select sum(ACCRUEDMONEY) as sumYjtjeamount from PUR_PRESETTLE where PURCONTNUM=#purcontnum# ]]>
+    </select>
+    <!--已收票金额-->
+    <select id="queryYspjeByPurCont" resultMap="resultMap4">
+    	<![CDATA[select sum(TICMON) as sumYspjeamount from  PUR_TICKET where PURCONTID=#purcontid# ]]>
+    </select>
+    <!--根据合同id>合同项目关系>关联的所有项目>查询已支付金额 （结算状态为完成的）-->
+    <select id="queryYzfjeByProjno" resultMap="resultMap1">
+    	<![CDATA[
+    		select 
+    			sum(SETAMOUNT) as sumSetamount
+    		from 
+    			Pur_Settle
+    			where projectno =#projectno# and PURCONTID=#purcontid# and setstatus=2
+		]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="sumSetamount" javaType="double" property="sumSetamount"/>
+    </resultMap>
+    <select id="queryYzfjeByProjno1" resultMap="resultMap2">
+    	<![CDATA[
+    		select 
+    			sum(SETAMOUNT) as sumSetamount
+    		from 
+    			Pur_Settle
+    			where projectno =#projectno# and setstatus in (2,1)
+				and  PURCONTID=#purcontid#
+		]]>
+    </select>
+</sqlMap>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_income.queryCsContractsale">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <!-- 根据最新确认年月查询需要发送邮件的销售名称 -->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="SALENAME" javaType="string" property="salename"/>
+        <result column="SALEID" javaType="string" property="saleid"/>
+    </resultMap>
+    <select id="getCsContractSales" parameterClass="java.util.HashMap" resultMap="resultMap1">
+		SELECT DISTINCT c.SALENAME,c.SALEID FROM CS_CONTRACTSALE c 
+			WHERE c.CONTRACTID IN (select b.CONTRACTID FROM CS_CONTRACT b 
+			WHERE b.CONTNUM IN (select a.CONTNUM FROM CS_REVE_FORECAST a WHERE a.status='0' 
+			<isNotNull property="newyearmonth">AND a.NEWYEARMONTH=#newyearmonth#</isNotNull>
+			))
+	</select>
+    <!-- 根据最新确认年月和销售名称查询所对应的收入确认条数 -->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="REVEID" javaType="long" property="reveid"/>
+        <result column="REVENO" javaType="string" property="reveno"/>
+        <result column="FCSUM" javaType="long" property="fcsum"/>
+        <result column="REVETIMEDESC" javaType="string" property="revetimedesc"/>
+        <result column="REVEPROOF" javaType="string" property="reveproof"/>
+        <result column="NEWYEARMONTH" javaType="string" property="newyearmonth"/>
+    </resultMap>
+    <select id="getCsReveForecastsBySalename" parameterClass="java.util.HashMap" resultMap="resultMap2">
+    	SELECT e.CUSTNAME,a.CONTNUM,d.PROJECTNAME,a.REVEID,a.REVENO,ROUND(a.FCSUM,0) AS FCSUM,a.REVETIMEDESC,a.NEWYEARMONTH,
+			(SELECT t.DICTNAME FROM EOS_DICT_ENTRY t WHERE t.DICTTYPEID='MIS_INCOMECONV' AND t.DICTID=a.REVEPROOF) REVEPROOF 
+			FROM CS_REVE_FORECAST a 
+			LEFT JOIN CS_CONTRACT b ON a.CONTNUM=b.CONTNUM 
+			LEFT JOIN CS_CONTRACTSALE c ON b.CONTRACTID=c.CONTRACTID 
+			LEFT JOIN CS_CONTRACT d ON c.CONTRACTID=d.CONTRACTID 
+			LEFT JOIN MIS_CUSTINFO e ON d.CUSTID=e.CUSTID 
+			WHERE a.status='0' 
+			<isNotNull property="newyearmonth">AND a.NEWYEARMONTH=#newyearmonth#</isNotNull>
+        <isNotNull property="salename">AND c.SALENAME = #salename#</isNotNull>
+    </select>
+    <!-- 根据最新确认年月查询所需要发送邮件的事业部总经理 -->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="REALNAME" javaType="string" property="realname"/>
+        <result column="EMPCODE" javaType="string" property="empcode"/>
+        <result column="OEMAIL" javaType="string" property="oemail"/>
+    </resultMap>
+    <select id="getCsContractSybs" parameterClass="java.util.HashMap" resultMap="resultMap3">
+    	SELECT DISTINCT q.EMPNAME,q.REALNAME,q.EMPCODE,q.OEMAIL 
+			FROM OM_EMPLOYEE q LEFT JOIN OM_ORGANIZATION p ON q.EMPID=p.MANAGERID,EOS_DICT_ENTRY o,CS_CONTRACTSALE c,CS_CONTRACT b,CS_REVE_FORECAST a 
+			WHERE p.ORGNAME=o.DICTNAME AND o.DICTTYPEID='CONT_ORG' AND o.DICTID=c.ORG 
+			AND c.CONTRACTID=b.CONTRACTID AND b.CONTNUM=a.CONTNUM AND a.status='0' 
+			<isNotNull property="newyearmonth">AND a.NEWYEARMONTH=#newyearmonth#</isNotNull>
+    </select>
+    <!-- 根据最新确认年月和销售名称查询所对应的收入确认条数 -->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="SALENAME" javaType="string" property="salename"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="REVEID" javaType="long" property="reveid"/>
+        <result column="REVENO" javaType="string" property="reveno"/>
+        <result column="FCSUM" javaType="long" property="fcsum"/>
+        <result column="REVETIMEDESC" javaType="string" property="revetimedesc"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="DICTNAME" javaType="string" property="dictname"/>
+        <result column="REVEPROOF" javaType="string" property="reveproof"/>
+        <result column="NEWYEARMONTH" javaType="string" property="newyearmonth"/>
+    </resultMap>
+    <select id="getCsReveForecastsByEmpname" parameterClass="java.util.HashMap" resultMap="resultMap4">
+    	SELECT c.SALENAME,g.CUSTNAME,a.CONTNUM,b.PROJECTNAME,a.REVEID,a.REVENO,ROUND(a.FCSUM,0) AS FCSUM,a.REVETIMEDESC,a.NEWYEARMONTH,f.EMPNAME,d.DICTNAME,
+			(SELECT t.DICTNAME FROM EOS_DICT_ENTRY t WHERE t.DICTTYPEID='MIS_INCOMECONV' AND t.DICTID=a.REVEPROOF) REVEPROOF
+			FROM CS_REVE_FORECAST a 
+			LEFT JOIN CS_CONTRACT b ON a.CONTNUM = b.CONTNUM 
+			LEFT JOIN CS_CONTRACTSALE c ON b.CONTRACTID=c.CONTRACTID 
+			LEFT JOIN EOS_DICT_ENTRY d ON d.DICTTYPEID='CONT_ORG' AND d.DICTID=c.ORG 
+			LEFT JOIN OM_ORGANIZATION e ON e.ORGNAME=d.DICTNAME 
+			LEFT JOIN OM_EMPLOYEE f ON f.EMPID=e.MANAGERID 
+			LEFT JOIN MIS_CUSTINFO g ON b.CUSTID=g.CUSTID 
+			WHERE a.STATUS='0' 
+			<isNotNull property="newyearmonth">AND a.NEWYEARMONTH=#newyearmonth#</isNotNull>
+        <isNotNull property="empname">AND f.EMPNAME=#empname#</isNotNull>
+    </select>
+</sqlMap>

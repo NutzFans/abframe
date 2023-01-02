@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="org.gocom.abframe.org.intendstaff.emptutor">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    <select id="queryNameByTutorUserid" parameterClass="java.lang.String" resultMap="resultMap"><![CDATA[
+    
+    
+    select empname from OM_EMPLOYEE where USERID=#userid#]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    <select id="queryNameByTutorTutorid" parameterClass="java.lang.String" resultMap="resultMap1"><![CDATA[
+    
+    select empname from OM_EMPLOYEE where USERID=#tutorid#]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    <select id="queryNameByReturnUserid" parameterClass="java.lang.String" resultMap="resultMap2"><![CDATA[
+    
+    select empname from OM_EMPLOYEE where USERID=#userid#]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    <select id="queryNameByReturnTutorid" parameterClass="java.lang.String" resultMap="resultMap3"><![CDATA[
+    
+    select empname from OM_EMPLOYEE where USERID=#tutorid#]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="TUTORID" javaType="int" property="tutorid"/>
+        <result column="USERID" javaType="int" property="userid"/>
+    </resultMap>
+    <select id="queryAutoSendToTutorInfo" parameterClass="java.util.HashMap" resultMap="resultMap4"><![CDATA[
+   
+    
+ 	SELECT tutorid,stuff((SELECT ',' + userid FROM OM_EMP_TUTOR WHERE tutorid = a.tutorid and effectendtime<#effectendtime# FOR XML path('')), 1, 1, '')
+	 FROM OM_EMP_TUTOR a
+	WHERE tutorid=#tutorid# 
+	GROUP BY tutorid]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="TUTORID" javaType="string" property="tutorid"/>
+        <result column="userids" javaType="string" property="userids"/>
+        <result column="tutorname" javaType="string" property="tutorname"/>
+        <result column="oemail" javaType="string" property="oemail"/>
+    </resultMap>
+    <select id="queryAutoSendTutor" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+   
+  
+ 	select * from (
+		select a.tutorid,f.empname as tutorname,f.oemail, userids=stuff((SELECT ',' + d.userid FROM OM_EMP_TUTOR d
+
+		WHERE tutorid = a.tutorid  and  d.userid not in (select userid from OM_TUTOR_RETURN where evaluatetime=#nowdate#)and ((#nowdate# BETWEEN 
+ 		CONVERT(varchar(7) ,d.EFFECTSTARTTIME, 120) and  CONVERT(varchar(7) ,d.EFFECTENDTIME, 120))or (#nowdate#= CONVERT(varchar(7) ,d.EFFECTSTARTTIME, 120))
+		or (#nowdate#= CONVERT(varchar(7) ,d.EFFECTENDTIME, 120)))    FOR XML path('')), 1, 1, '') 
+		 FROM OM_EMP_TUTOR a
+		LEFT JOIN OM_EMPLOYEE f on f.userid=a.tutorid
+		LEFT JOIN OM_ORGANIZATION p on f.ORGID=p.ORGID 
+	  	where p.ORGSEQ like '.1.5.%'
+		GROUP BY a.tutorid,f.empname,f.oemail ) g
+		where g.userids is not null ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="EMPCODE" javaType="string" property="empcode"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="ORGNAME1" javaType="string" property="orgname1"/>
+        <result column="ORGNAME2" javaType="string" property="orgname2"/>
+    </resultMap>
+    <select id="queryTutorEmp" parameterClass="java.util.HashMap" resultMap="resultMap6"><![CDATA[
+   
+  		select a.empname,a.empcode,a.userid,d.orgname,e.orgname as orgname1 ,f.orgname as orgname2 from OM_EMPLOYEE a
+		left join OM_ORGANIZATION c on a.orgid=c.orgid
+		left join OM_ORGANIZATION d on c.orgseq like d.orgseq+'%' and d.orglevel='2'
+		left  join OM_ORGANIZATION e on c.orgseq like e.orgseq+'%' and e.orglevel='3'
+		left  join OM_ORGANIZATION f on c.orgseq like f.orgseq+'%' and f.orglevel='4'
+		
+		where a.userid=#userid#
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap11">
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="OEMAIL" javaType="string" property="oemail"/>
+    </resultMap>
+    <select id="queryManagerEmail" parameterClass="java.util.HashMap" resultMap="resultMap11"><![CDATA[
+   
+  		select d.empname,d.oemail from OM_EMPLOYEE   a
+			LEFT JOIN OM_ORGANIZATION b on a.orgid=b.orgid
+			left join OM_ORGANIZATION c on b.orgseq like c.orgseq+'%' and c.orglevel='3'
+			LEFT JOIN OM_EMPLOYEE d on c.managerid=d.empid
+
+		where a.userid=#userid#
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="TUTORID" javaType="string" property="tutorid"/>
+        <result column="EFFECTSTARTTIME" javaType="date" property="effectstarttime"/>
+        <result column="EFFECTENDTIME" javaType="date" property="effectendtime"/>
+        <result column="RECORDWRITER" javaType="string" property="recordwriter"/>
+        <result column="RECORDTIME" javaType="date" property="recordtime"/>
+        <result column="LASTCHANGER" javaType="string" property="lastchanger"/>
+        <result column="LASTCHANGETIME" javaType="date" property="lastchangetime"/>
+        <result column="EMPTUTORID" javaType="int" property="emptutorid"/>
+    </resultMap>
+    <select id="queryCheckDatas" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+   
+  		select * from om_emp_tutor where emptutorid !=#emptutorid# and userid=#userid#
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap10">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="TUTORID" javaType="string" property="tutorid"/>
+        <result column="EFFECTSTARTTIME" javaType="date" property="effectstarttime"/>
+        <result column="EFFECTENDTIME" javaType="date" property="effectendtime"/>
+        <result column="RECORDWRITER" javaType="string" property="recordwriter"/>
+        <result column="RECORDTIME" javaType="date" property="recordtime"/>
+        <result column="LASTCHANGER" javaType="string" property="lastchanger"/>
+        <result column="LASTCHANGETIME" javaType="date" property="lastchangetime"/>
+        <result column="EMPTUTORID" javaType="int" property="emptutorid"/>
+    </resultMap>
+    <select id="queryCheckDatas1" parameterClass="java.util.HashMap" resultMap="resultMap10"><![CDATA[
+   
+  		select * from om_emp_tutor where  userid=#userid#
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap8">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="TUTORID" javaType="string" property="tutorid"/>
+        <result column="EFFECTSTARTTIME" javaType="date" property="effectstarttime"/>
+        <result column="EFFECTENDTIME" javaType="date" property="effectendtime"/>
+        <result column="RECORDWRITER" javaType="string" property="recordwriter"/>
+        <result column="RECORDTIME" javaType="date" property="recordtime"/>
+        <result column="LASTCHANGER" javaType="string" property="lastchanger"/>
+        <result column="LASTCHANGETIME" javaType="date" property="lastchangetime"/>
+        <result column="EMPTUTORID" javaType="int" property="emptutorid"/>
+        <result column="USERNAME" javaType="string" property="username"/>
+        <result column="TUTORNAME" javaType="string" property="tutorname"/>
+        <result column="TUTOREMPNAME" javaType="string" property="tutorempname"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="YJBM" javaType="string" property="yjbm"/>
+        <result column="EJBM" javaType="string" property="ejbm"/>
+        <result column="BJBM" javaType="string" property="bjbm"/>
+    </resultMap>
+    <select id="queryMystudent" parameterClass="java.util.HashMap" resultMap="resultMap8"><![CDATA[
+   
+  		select a.*,a.userid as username,a.tutorid as tutorname,f.EMPNAME as tutorempname,b.empname as empname ,d.orgname as yjbm,e.orgname as ejbm ,c.orgid ,h.orgname as bjbm from OM_EMP_TUTOR a
+		left join OM_EMPLOYEE b on a.userid=b.userid
+		LEFT JOIN OM_EMPLOYEE f on a.TUTORID=f.USERID
+		left join OM_ORGANIZATION c on b.orgid=c.orgid
+		left join OM_ORGANIZATION d on c.orgseq like d.orgseq+'%' and d.orglevel='2'
+		left  join OM_ORGANIZATION e on c.orgseq like e.orgseq+'%' and e.orglevel='3'
+		left  join OM_ORGANIZATION h on c.orgseq like h.orgseq+'%' and h.orglevel='4'
+		
+		where 
+		TUTORID=#tutorid# and a.userid not in (select userid from OM_TUTOR_RETURN where evaluatetime=#nowdate#)
+ 		and b.empname like '%$empname$%' and ((#nowdate# BETWEEN 
+ 		CONVERT(varchar(7) ,EFFECTSTARTTIME, 120) and  CONVERT(varchar(7) ,EFFECTENDTIME, 120))or (#nowdate#= CONVERT(varchar(7) ,EFFECTSTARTTIME, 120))
+		or (#nowdate#= CONVERT(varchar(7) ,EFFECTENDTIME, 120)))
+		order by recordtime asc
+	
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap9">
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="TUTORID" javaType="string" property="tutorid"/>
+        <result column="EFFECTSTARTTIME" javaType="date" property="effectstarttime"/>
+        <result column="EFFECTENDTIME" javaType="date" property="effectendtime"/>
+        <result column="RECORDWRITER" javaType="string" property="recordwriter"/>
+        <result column="RECORDTIME" javaType="date" property="recordtime"/>
+        <result column="LASTCHANGER" javaType="string" property="lastchanger"/>
+        <result column="LASTCHANGETIME" javaType="date" property="lastchangetime"/>
+        <result column="EMPTUTORID" javaType="int" property="emptutorid"/>
+        <result column="USERNAME" javaType="string" property="username"/>
+        <result column="TUTORNAME" javaType="string" property="tutorname"/>
+        <result column="TUTOREMPNAME" javaType="string" property="tutorempname"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="YJBM" javaType="string" property="yjbm"/>
+        <result column="EJBM" javaType="string" property="ejbm"/>
+        <result column="BJBM" javaType="string" property="bjbm"/>
+    </resultMap>
+    <select id="queryMystudent1" parameterClass="java.util.HashMap" resultMap="resultMap9"><![CDATA[
+   
+  			select a.*,a.userid as username,a.tutorid as tutorname,f.EMPNAME as tutorempname,b.empname as empname ,d.orgname as yjbm,e.orgname as ejbm ,c.orgid ,h.orgname as bjbm from OM_EMP_TUTOR a
+		left join OM_EMPLOYEE b on a.userid=b.userid
+		LEFT JOIN OM_EMPLOYEE f on a.TUTORID=f.USERID
+		left join OM_ORGANIZATION c on b.orgid=c.orgid
+		left join OM_ORGANIZATION d on c.orgseq like d.orgseq+'%' and d.orglevel='2'
+		left  join OM_ORGANIZATION e on c.orgseq like e.orgseq+'%' and e.orglevel='3'
+		left  join OM_ORGANIZATION h on c.orgseq like h.orgseq+'%' and h.orglevel='4'
+		
+		where 	
+		 TUTORID=#tutorid# and a.userid not in (select userid from OM_TUTOR_RETURN where evaluatetime=#nowdate#)and ((#nowdate# BETWEEN 
+ 		CONVERT(varchar(7) ,EFFECTSTARTTIME, 120) and  CONVERT(varchar(7) ,EFFECTENDTIME, 120))or (#nowdate#= CONVERT(varchar(7) ,EFFECTSTARTTIME, 120))
+		or (#nowdate#= CONVERT(varchar(7) ,EFFECTENDTIME, 120)))
+		order by recordtime asc
+
+	
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap12">
+        <result column="NEXTPLAN" javaType="string" property="nextplan"/>
+    </resultMap>
+    <select id="queryNextPlan" parameterClass="java.util.HashMap" resultMap="resultMap12"><![CDATA[
+   
+  		select g.nextplan 
+		 from (
+		
+		select a.*,a.userid as username,a.tutorid as tutorname ,f.EMPNAME as tutorempname,b.empname as empname ,d.orgname as yjbm,e.orgname as ejbm ,g.ORGNAME as bjbm, c.orgid from OM_TUTOR_RETURN a
+		left join OM_EMPLOYEE b on a.userid=b.userid
+		LEFT JOIN OM_EMPLOYEE f on a.TUTORID=f.USERID
+		left join OM_ORGANIZATION c on b.orgid=c.orgid
+		left join OM_ORGANIZATION d on c.orgseq like d.orgseq+'%' and d.orglevel='2'
+		left  join OM_ORGANIZATION e on c.orgseq like e.orgseq+'%' and e.orglevel='3'
+		LEFT JOIN OM_ORGANIZATION g on  c.orgseq like g.orgseq+'%' and g.orglevel='4') g
+		 where not exists(select 1 
+		                  from (
+		
+		select a.*,a.userid as username,a.tutorid as tutorname ,f.EMPNAME as tutorempname,b.empname as empname ,d.orgname as yjbm,e.orgname as ejbm ,g.ORGNAME as bjbm, c.orgid from OM_TUTOR_RETURN a
+		left join OM_EMPLOYEE b on a.userid=b.userid
+		LEFT JOIN OM_EMPLOYEE f on a.TUTORID=f.USERID
+		left join OM_ORGANIZATION c on b.orgid=c.orgid
+		left join OM_ORGANIZATION d on c.orgseq like d.orgseq+'%' and d.orglevel='2'
+		left  join OM_ORGANIZATION e on c.orgseq like e.orgseq+'%' and e.orglevel='3'
+		LEFT JOIN OM_ORGANIZATION g on  c.orgseq like g.orgseq+'%' and g.orglevel='4')b
+		  where b.USERID=g.USERID and b.evaluatetime>g.evaluatetime)
+		and  g.USERID=#userid#]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap13">
+        <result column="EMPNAMES" javaType="string" property="empnames"/>
+        <result column="OEMAIL" javaType="string" property="oemail"/>
+        <result column="OPERATORNAME" javaType="string" property="operatorname"/>
+        <result column="USERID" javaType="string" property="userid"/>
+    </resultMap>
+    <select id="queryTutorAssistantEmail" parameterClass="java.util.HashMap" resultMap="resultMap13"><![CDATA[
+   
+  		select * from (
+
+		select DISTINCT h.operatorname,h.userid,h.oemail,empnames=stuff((SELECT ',' + g.empname FROM (
+	select   a.empname,f.operatorname,f.rolename,f.userid,
+		f.oemail from OM_EMPLOYEE a
+		LEFT JOIN (SELECT DISTINCT
+		 c.EMPCODE,b.USERID,b.OPERATORNAME,b.STATUS,d.orgid,d.ORGNAME,
+		 a.OPERATORID,a.ROLEID,e.ROLENAME,c.oemail
+		FROM
+		 AC_OPERATORROLE a
+		LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+		LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+		LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+		LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID
+		
+		
+		where a.ROLEID='assistant')f on f.orgid=a.orgid
+		
+		where a.userid in(#tutorid1#)) g
+
+		WHERE h.userid = g.userid  FOR XML path('')), 1, 1, '') 
+		 FROM (
+
+	select   a.empname,f.operatorname,f.rolename,f.userid,
+		f.oemail from OM_EMPLOYEE a
+		LEFT JOIN (SELECT DISTINCT
+		 c.EMPCODE,b.USERID,b.OPERATORNAME,b.STATUS,d.orgid,d.ORGNAME,
+		 a.OPERATORID,a.ROLEID,e.ROLENAME,c.oemail
+		FROM
+		 AC_OPERATORROLE a
+		LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+		LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+		LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+		LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID
+		
+		
+		where a.ROLEID='assistant')f on f.orgid=a.orgid
+		
+		where a.userid in(#tutorid1#))h
+
+		) g
+
+	where g.operatorname is not null
+	GROUP BY operatorname,userid,oemail,g.empnames
+
+ 	]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap14">
+        <result column="EMPNAME1" javaType="string" property="empname1"/>
+        <result column="OEMAIL" javaType="string" property="oemail"/>
+        <result column="EMPNAMES" javaType="string" property="empnames"/>
+        <result column="USERID1" javaType="string" property="userid1"/>
+        <result column="OEMAIL1" javaType="string" property="oemail1"/>
+    </resultMap>
+    <select id="queryTutorManagerEmail" parameterClass="string" resultMap="resultMap14"><![CDATA[
+
+		select DISTINCT f.empname1,f.userid1,f.oemail,f.oemail1,empnames=stuff((SELECT ',' + e.empname FROM (
+select d.userid as userid1,d.REALNAME as empname1,d.oemail,a.userid  ,a.empname,g.oemail as oemail1 from OM_EMPLOYEE   a
+			LEFT JOIN OM_ORGANIZATION b on a.orgid=b.orgid
+			left join OM_ORGANIZATION c on b.orgseq like c.orgseq+'%' and c.orglevel='3'
+			LEFT JOIN OM_EMPLOYEE d on c.managerid=d.empid
+			LEFT JOIN (
+			select DISTINCT x.orgid,x.orgname,oemail =stuff(
+(select ','+oemail FROM (select  h.orgid,h.orgname,f.oemail from (SELECT DISTINCT
+		 c.EMPCODE,b.USERID,b.STATUS,d.orgid,d.ORGNAME,
+		 a.OPERATORID,a.ROLEID,e.ROLENAME,c.oemail
+		FROM
+		 AC_OPERATORROLE a
+		LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+		LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+		LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+		LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID	
+		where a.ROLEID='assistant')f
+	LEFT JOIN OM_ORGANIZATION g on f.orgid=g.orgid
+	left join OM_ORGANIZATION h on g.orgseq like h.orgseq+'%' and h.orglevel='3')y WHERE y.orgid = x.orgid for xml path(''))
+,1,1,'')
+
+
+
+FROM (select  h.orgid, h.orgname,f.oemail from (SELECT DISTINCT
+		 c.EMPCODE,b.USERID,b.STATUS,d.orgid,d.ORGNAME,
+		 a.OPERATORID,a.ROLEID,e.ROLENAME,c.oemail
+		FROM
+		 AC_OPERATORROLE a
+		LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+		LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+		LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+		LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID	
+		where a.ROLEID='assistant')f
+	LEFT JOIN OM_ORGANIZATION g on f.orgid=g.orgid
+	left join OM_ORGANIZATION h on g.orgseq like h.orgseq+'%' and h.orglevel='3')x)g on g.orgid=c.orgid
+			where a.userid in($tutorid1$)) e
+
+		WHERE e.userid1 = f.userid1  FOR XML path('')), 1, 1, '') 
+		 FROM (
+select d.userid as userid1,d.REALNAME as empname1,d.oemail,a.userid   ,a.empname,g.oemail as oemail1 from OM_EMPLOYEE   a
+			LEFT JOIN OM_ORGANIZATION b on a.orgid=b.orgid
+			left join OM_ORGANIZATION c on b.orgseq like c.orgseq+'%' and c.orglevel='3'
+			LEFT JOIN OM_EMPLOYEE d on c.managerid=d.empid
+			LEFT JOIN (	select DISTINCT x.orgid,x.orgname,oemail =stuff(
+(select ','+oemail FROM (select  h.orgid, h.orgname,f.oemail from (SELECT DISTINCT
+		 c.EMPCODE,b.USERID,b.STATUS,d.orgid,d.ORGNAME,
+		 a.OPERATORID,a.ROLEID,e.ROLENAME,c.oemail
+		FROM
+		 AC_OPERATORROLE a
+		LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+		LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+		LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+		LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID	
+		where a.ROLEID='assistant')f
+	LEFT JOIN OM_ORGANIZATION g on f.orgid=g.orgid
+	left join OM_ORGANIZATION h on g.orgseq like h.orgseq+'%' and h.orglevel='3')y WHERE y.orgid = x.orgid for xml path(''))
+,1,1,'')
+
+
+
+FROM (select  h.orgid, f.OPERATORNAME,h.orgname,f.oemail from (SELECT DISTINCT
+		 c.EMPCODE,b.USERID,b.OPERATORNAME,b.STATUS,d.orgid,d.ORGNAME,
+		 a.OPERATORID,a.ROLEID,e.ROLENAME,c.oemail
+		FROM
+		 AC_OPERATORROLE a
+		LEFT JOIN AC_OPERATOR b ON a.OPERATORID = b.OPERATORID
+		LEFT JOIN OM_EMPLOYEE c ON b.USERID = c.USERID
+		LEFT JOIN OM_ORGANIZATION d ON c.ORGID = d.ORGID
+		LEFT JOIN AC_ROLE e on a.ROLEID=e.ROLEID	
+		where a.ROLEID='assistant')f
+	LEFT JOIN OM_ORGANIZATION g on f.orgid=g.orgid
+	left join OM_ORGANIZATION h on g.orgseq like h.orgseq+'%' and h.orglevel='3')x)g on g.orgid=c.orgid
+		
+where a.userid in($tutorid1$))f
+	
+
+ 	]]></select>
+</sqlMap>

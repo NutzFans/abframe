@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_common.ameRedTemplate">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="ID" javaType="string" property="id"/>
+        <result column="TYPE" javaType="string" property="type"/>
+        <result column="AMOUNT" javaType="Decimal" property="amount"/>
+        <result column="SENDNAME" javaType="string" property="sendname"/>
+        <result column="WISHING" javaType="string" property="wishing"/>
+        <result column="ACTNAME" javaType="string" property="actname"/>
+        <result column="REMARK" javaType="string" property="remark"/>
+        <result column="STARTDATE" javaType="DATE" property="startdate"/>
+        <result column="ENDDATE" javaType="DATE" property="enddate"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="MAKER" javaType="string" property="maker"/>
+        <result column="MDATE" javaType="DATE" property="mdate"/>
+        <result column="APPID" javaType="int" property="appid"/>
+        <result column="PROBABILITY" javaType="int" property="probability"/>
+        <result column="AMOUNTTYPE" javaType="string" property="amounttype"/>
+        <result column="MINAMOUNT" javaType="Decimal" property="minamount"/>
+        <result column="MAXAMOUNT" javaType="Decimal" property="maxamount"/>
+    </resultMap>
+    <select id="queryRedTemplate" parameterClass="java.util.HashMap" resultMap="resultMap">
+       SELECT ID, TYPE, AMOUNT as AMOUNT, SENDNAME, WISHING, ACTNAME, REMARK,a.MINAMOUNT,a.MAXAMOUNT,a.AMOUNTTYPE, 
+              a.STARTDATE, a.ENDDATE, a.STATUS, b.OPERATORNAME as MAKER, MDATE,APPID,a.PROBABILITY 
+		 FROM AME_RED_TEMPLATE A LEFT JOIN AC_OPERATOR B ON a.MAKER=b.USERID
+	   WHERE 1=1
+			 <isNotNull property="sendname">and SENDNAME like '%'+ #sendname# +'%'</isNotNull>
+        <isNotNull property="actname">and ACTNAME like '%'+ #actname# +'%'</isNotNull>
+        <isNotNull property="status">and a.STATUS = #status#</isNotNull>
+        <isNotNull property="type">and a.TYPE = #type#</isNotNull>
+        <isNotNull property="startdateMin"><![CDATA[ and a.STARTDATE >= #startdateMin# ]]></isNotNull>
+        <isNotNull property="startdateMax"><![CDATA[and a.STARTDATE <= #startdateMax# ]]></isNotNull>
+        <isNotNull property="enddateMin"><![CDATA[ and a.ENDDATE >= #enddateMin# ]]></isNotNull>
+        <isNotNull property="enddateMax"><![CDATA[ and a.ENDDATE <= #enddateMax# ]]></isNotNull>
+	   ORDER BY ID DESC
+    </select>
+    <!--检查模板的有效性 -->
+    <select id="checkTemplate" parameterClass="Long" resultMap="resultMap"><![CDATA[
+	     SELECT a.ID, a.TYPE, a.AMOUNT, a.SENDNAME, a.WISHING, a.ACTNAME, a.REMARK, a.MINAMOUNT,a.MAXAMOUNT,a.AMOUNTTYPE, 
+	              a.STARTDATE, a.ENDDATE, a.STATUS,MAKER, a.MDATE,a.APPID ,a.PROBABILITY 
+			 FROM AME_RED_TEMPLATE a
+	     WHERE 
+	         a.STATUS ='1'
+	         and a.ID =  #tempid#
+	         and (
+		         (a.STARTDATE is null and a.ENDDATE is null) OR
+				 (a.STARTDATE <= CONVERT(varchar(10),GETDATE(),120) AND a.ENDDATE >=CONVERT(varchar(10),GETDATE(),120)) OR
+		         (a.STARTDATE <= CONVERT(varchar(10),GETDATE(),120) AND a.ENDDATE is null) OR
+				(a.STARTDATE is null AND a.ENDDATE >=CONVERT(varchar(10),GETDATE(),120))
+			  )
+		]]></select>
+</sqlMap>

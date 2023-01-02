@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.rdmgr.labor.input.cost_grade">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="grade" javaType="string" property="grade"/>
+        <result column="cost" javaType="float" property="cost"/>
+        <result column="price" javaType="float" property="price"/>
+        <result column="INSERTDATE" javaType="date" property="INSERTDATE"/>
+        <result column="LASTUPDATEDATE" javaType="date" property="LASTUPDATEDATE"/>
+    </resultMap>
+    <select id="get_grade_and_cost" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[select n.degree as grade,
+			 case when #isworkday# = 1 then 
+					       case when #projectId#=1 or #projectId#=2 or g.pricetype is null then
+									case when y2.orgid is not NULL and y3.orgid is not null then 
+														CASE when y2.orgid=y3.orgid then x.DPRICE else x.OUTDPRICE end
+									else CASE when case when y21.orgid is null then 123456789 else y21.orgid end=case when y31.orgid is null then 123456789 else y31.orgid end then x.DPRICE else x.OUTDPRICE end end
+									else case when g.pricetype=0 then x.DPRICE else x.OUTDPRICE end
+									end*(#actHours#-#otwHours#)/8+#otwHours#*cast(case  when f.dictname=null or f.dictname='' then '0' else f.dictname end  as decimal(38,2))
+			      when #isworkday# = 0 then
+					       case when #actHours#<=8 then 
+						          case when #projectId#=1 or #projectId#=2 or g.pricetype is null then
+											case when y2.orgid is not NULL and y3.orgid is not null then 
+														CASE when y2.orgid=y3.orgid then x.DPRICE else x.OUTDPRICE end
+									else CASE when case when y21.orgid is null then 123456789 else y21.orgid end=case when y31.orgid is null then 123456789 else y31.orgid end then x.DPRICE else x.OUTDPRICE end end
+											else case when g.pricetype=0 then x.DPRICE else x.OUTDPRICE end
+											end*(#actHours#)/8+0*cast(case  when f.dictname=null or f.dictname='' then '0' else f.dictname end  as decimal(38,2))
+					           else case when #projectId#=1 or #projectId#=2 or g.pricetype is null then
+											case when y2.orgid is not NULL and y3.orgid is not null then 
+														CASE when y2.orgid=y3.orgid then x.DPRICE else x.OUTDPRICE end
+									else CASE when case when y21.orgid is null then 123456789 else y21.orgid end=case when y31.orgid is null then 123456789 else y31.orgid end then x.DPRICE else x.OUTDPRICE end end
+											else case when g.pricetype=0 then x.DPRICE else x.OUTDPRICE end
+											end+case when #otwHours#=0 or #otwHours# is null then 0 else (#otwHours#-8)end*cast(case  when f.dictname=null or f.dictname='' then '0' else f.dictname end  as decimal(38,2)) 
+								 END
+			 end as COST, 
+			 case when #projectId#=1 or #projectId#=2 or g.pricetype is null then
+				case when y2.orgid is not NULL and y3.orgid is not null then 
+														CASE when y2.orgid=y3.orgid then x.DPRICE else x.OUTDPRICE end
+									else CASE when case when y21.orgid is null then 123456789 else y21.orgid end=case when y31.orgid is null then 123456789 else y31.orgid end then x.DPRICE else x.OUTDPRICE end end
+				else case when g.pricetype=0 then x.DPRICE else x.OUTDPRICE end
+				end as price,
+       CASE when R.insertdate IS NULL THEN cast(getDate() as datetime) else R.insertdate END as INSERTDATE ,
+       cast(getDate() as datetime)  AS LASTUPDATEDATE
+       from OM_EMPLOYEE t
+	   left join OM_EMPORG p on t.EMPID=p.EMPID and p.orgid=#userorgid#
+       LEFT JOIN OM_ORGANIZATION y on y.orgid=p.orgid
+			 LEFT JOIN OM_ORGANIZATION y3 on y.orgseq like y3.ORGSEQ + '%' and ((y3.ORGDEGREE='2' and y.orgseq not like '.1.5.%' and y.orgseq not like '.1.6.%') or (y3.ORGDEGREE='6' and (y.orgseq like '.1.5.%' or y.orgseq like '.1.6.%')))
+       LEFT JOIN OM_ORGANIZATION y31 on y.orgseq like y31.ORGSEQ + '%' and y31.ORGDEGREE='6'
+       LEFT JOIN RD_LABOR_DETAIL R on R.LABOR_DETAIL_ID=#laborDetailId#
+	   LEFT JOIN ORG_EMP_LEVEL n on n.userid=t.userid and #laborDate# between n.startdate and n.enddate 
+       LEFT JOIN PARA_PERCOSTSET m on #laborDate# between m.startdate and m.closedate
+       LEFT JOIN OM_ORGANIZATION y1 on y1.orgid =#salesname#
+       LEFT JOIN OM_ORGANIZATION y2 on y1.orgseq like y2.ORGSEQ + '%' and ((y2.ORGDEGREE='2' and y1.orgseq not like '.1.5.%' and y1.orgseq not like '.1.6.%') or (y2.ORGDEGREE='6' and (y1.orgseq like '.1.5.%' or y1.orgseq like '.1.6.%')))
+       LEFT JOIN OM_ORGANIZATION y21 on y1.ORGSEQ like y21.ORGSEQ+'%' and y21.ORGDEGREE='6'
+	   LEFT JOIN RD_EMP_PROJ g on g.USERID = t.USERID and g.PROJECT_ID=#projectId#
+       LEFT JOIN MIS_PRICE x on m.percostid=x.percostid and x.degree=n.degree  
+       LEFT JOIN OM_ORGANIZATION y4 on y4.ORGID = x.PRICETYPE  and y.ORGSEQ like y4.ORGSEQ+'%'
+       LEFT JOIN EOS_DICT_ENTRY f on f.dicttypeid='AME_SYSCONF' and f.dictid='LABOR_OVERTIME_PAY'
+       where t.USERID=#userId# order by y.ORGLEVEL DESC,PRICE]]></select>
+</sqlMap>

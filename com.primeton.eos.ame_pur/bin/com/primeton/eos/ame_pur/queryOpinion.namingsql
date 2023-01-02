@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_pur.queryOpinion">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="processInstID" javaType="Decimal" property="processinstid"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="OPERATORNAME" javaType="string" property="operatorname"/>
+        <result column="workItemID" javaType="Decimal" property="workitemid"/>
+        <result column="starttime" javaType="string" property="starttime"/>
+        <result column="endtime" javaType="string" property="endtime"/>
+        <result column="WORKITEMNAME" javaType="string" property="workitemname"/>
+        <result column="AUDITOPINION" javaType="string" property="auditopinion"/>
+        <result column="AUDITSTATUS" javaType="string" property="auditstatus"/>
+        <result column="jiequtime" javaType="string" property="jiequtime"/>
+        <result column="currentState" javaType="Decimal" property="currentstate"/>
+    </resultMap>
+    <select id="queryHistoryOpinion" parameterClass="java.lang.String" resultMap="resultMap"><![CDATA[
+select a.*,
+    case when datediff(dd,a.startTime,a.endTime)=0 then (select convert(varchar, convert(datetime, datediff(SS, a.startTime, a.endTime)/convert(decimal,86400)), 8)) 
+    else (convert(varchar ,datediff(dd,a.startTime,a.endTime)) +'天'+(select convert(varchar, convert(datetime, datediff(SS, a.startTime, a.endTime)/convert(decimal,86400)), 8))) end jiequtime
+   from ( 
+   select a.PROCESSFLOWID,USERID,OPERATORNAME,a.processInstID,a.workItemID,
+  (case when AUDITSTATUS ='3' then a.time else b.createTime end) startTime,a.time as endTime,a.WORKITEMNAME,
+  (case when (AUDITSTATUS ='3' and AUDITOPINION is null) then '发起' when (AUDITSTATUS ='4' and AUDITOPINION is null) then '处理' else a.AUDITOPINION end) AUDITOPINION,AUDITSTATUS,b.currentState 
+     from MIS_OPINION a  left outer join  WFWorkItem b on a.WORKITEMID=b.workItemID 
+     where a.PROCESSINSTID= #processInstID#  group by a.PROCESSFLOWID,
+     a.USERID,a.OPERATORNAME ,a.ORGID,a.ORGNAME,a.TIME,a.PROCESSINSTID,a.WORKITEMID,a.WORKITEMNAME,
+     a.AUDITOPINION,a.AUDITSTATUS,a.ACTIVITYDEFID,a.ISSHOW,a.ISDEFAULT,a.CHECKERNAME,
+     a.CHECKERID,b.createTime,a.time,b.currentState
+    UNION ALL
+    select 99999999 as PROCESSFLOWID,partiName as USERID,partiName as OPERATORNAME,null as processInstID,workItemID,
+    startTime,endTime,activityInstName as WORKITEMNAME,null as AUDITOPINION,null as AUDITSTATUS ,currentState 
+    from WFWorkItem 
+    where processInstID=#processInstID# and currentState in(10,4)
+  )a ORDER BY a.PROCESSFLOWID asc,a.endtime ASC ;]]></select>
+</sqlMap>

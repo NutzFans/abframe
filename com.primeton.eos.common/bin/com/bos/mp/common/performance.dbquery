@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.bos.mp.common.performance.emp">
+        <config db="default" type="sql"><![CDATA[select empid,empname+'('+empcode+')' as empname from om_employee where empstatus='on' ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.bos.mp.common.performance.NewexpAndGroup">
+        <config db="default" type="sql"><![CDATA[SELECT deptExpTypeID as exptypeid,deptGroupTypeID as parexptypeid,deptExpTypeName as exptypename,1 as type from ERPRPT_T_DeptExpType
+union all
+SELECT deptGroupTypeID as exptypeid,'0' as parexptypeid,deptGroupTypeName as exptypename,2 as type from ERPRPT_T_DeptGroupType
+union all
+SELECT '0' as exptypeid,null as parexptypeid,'部门费用表类型' as exptypename,0 as type ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.bos.mp.common.performance.departRelation">
+        <config db="default" type="sql"><![CDATA[SELECT a.deptExpTypeID,c.deptExpTypeName,a.expTypeID,b.FEETYPENAME FROM [dbo].[ERPRPT_T_DeptExpVsExpType] a
+LEFT JOIN EXP_FEETYPE b on a.expTypeID=b.FEETYPECODE
+left JOIN ERPRPT_T_DeptExpType c on a.deptExpTypeID=c.deptExpTypeID
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.bos.mp.common.performance.commonExpAndGroup">
+        <config db="default" type="sql"><![CDATA[SELECT comExpTypeID as exptypeid,comGroupTypeID as parexptypeid,comExpTypeName as exptypename,1 as type FROM ERPRPT_T_CommExpType
+UNION ALL
+select comgrouptypeid as exptypeid,'0' as parexptypeid,comGroupTypeName as exptypename,2 as type FROM ERPRPT_T_CommGroupType
+UNION ALL
+SELECT '0' as exptypeid,null as parexptypeid,'公共费用表类型' as exptypename,0 as type]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.bos.mp.common.performance.commonRelation">
+        <config db="default" type="sql"><![CDATA[SELECT a.comExpTypeID,c.comExpTypeName,a.expTypeID,b.FEETYPENAME FROM [dbo].[ERPRPT_T_CommExpVsExpType] a
+LEFT JOIN EXP_FEETYPE b on a.expTypeID=b.FEETYPECODE
+left JOIN ERPRPT_T_CommExpType c on a.comExpTypeID=c.comExpTypeID]]></config>
+    </QueryEntity>
+</QueryEntityList>

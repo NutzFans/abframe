@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="restrictDecide.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="约束判断，根据条件查询，有符合记录的值返回true，否则返回false&#xD;&#xA;查询条件：&#xD;&#xA;&#x9;&#x9;&#x9;  1.首资源编号&#xD;&#xA;&#x9;&#x9;&#x9;  2.次资源编号&#xD;&#xA;&#x9;&#x9;&#x9;  3.约束类型" title="杨文强&#x9;08-9-8 下午10:11">
+    <location x="61" y="246"/>
+    <size height="114" width="165"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <location x="61" y="153"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="450" y="153"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="Boolean" name="returnCode" type="query" valueType="Primitive">returnCode</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="63" y="189"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="452" y="189"/>
+    <figSize height="12" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="查询约束信息" displayName="queryRestrictList" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">restricts</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="274" y="153"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.RestrictManager.queryRestrictList</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="restrict" type="query" value="org.gocom.abframe.dataset.business.AtRestriction" valueType="DataObject" pattern="reference">restrict</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="restricts" type="query" value="org.gocom.abframe.dataset.business.AtRestriction[]" valueType="DataObject">restricts</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="251" y="188"/>
+    <figSize height="12" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="151" y="153"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">firRestrictId</process:from>
+      <process:to type="query">restrict/firresource</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">secRestrictId</process:from>
+      <process:to type="query">restrict/secresource</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">restricttype</process:from>
+      <process:to type="query">restrict/restriction</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="153" y="189"/>
+    <figSize height="12" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="358" y="86"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">returnCode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="357" y="122"/>
+    <figSize height="12" width="31"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="365" y="219"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">false</process:from>
+      <process:to type="query">returnCode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="364" y="255"/>
+    <figSize height="12" width="31"/>
+    <node>assign2</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="杨文强" createTime="2008-09-08 21:45:05" date="2008-09-08Z" description="" name="约束判断" version="6.0"/>
+  <process:variables>
+    <process:variable description="首资源编号" historyStateLocation="client" isArray="false" name="firRestrictId" primitiveType="String"/>
+    <process:variable description="次资源编号" historyStateLocation="client" isArray="false" name="secRestrictId" primitiveType="String"/>
+    <process:variable description="约束类型" historyStateLocation="client" isArray="false" name="restricttype" primitiveType="String"/>
+    <process:variable description="约束查询列表" historyStateLocation="client" isArray="true" modelType="org.gocom.abframe.dataset.business.AtRestriction" name="restricts"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="约束查询对象" isArray="false" modelType="org.gocom.abframe.dataset.business.AtRestriction" name="restrict"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="返回值（true,false）" isArray="false" name="returnCode" primitiveType="Boolean"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

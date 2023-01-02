@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:刘良金 -->
+<sqlMap>    
+    <resultMap class="org.gocom.abframe.dataset.organization.OmEmpposition" id="resultMap">
+        <result column="empid" property="omEmployee/empid"/>
+        <result column="userid" property="omEmployee/userid"/>
+        <result column="empcode" property="omEmployee/empcode"/>
+        <result column="empname" property="omEmployee/empname"/>
+    </resultMap>
+    <!-- 查询可加入岗位的人员列表 
+        参数为：positionid，empcode，empname用于过滤用户
+      -->
+    <select id="selectOrgPositionEmpAllowAdd"  resultMap="resultMap" parameterClass="java.util.HashMap">    
+            SELECT E.EMPID,E.USERID,E.EMPCODE,E.EMPNAME FROM OM_EMPLOYEE E,OM_EMPORG O,OM_POSITION P 
+            WHERE  E.EMPID = O.EMPID AND O.ORGID=P.ORGID  AND P.POSITIONID =#positionid#
+            AND E.EMPID NOT IN (SELECT EMPID FROM OM_EMPPOSITION  WHERE POSITIONID = #positionid#)            
+           <isNotNull prepend="AND" property="userid">
+                USERID LIKE #userid# 
+           </isNotNull>
+           <isNotNull prepend="AND" property="empname">
+                EMPNAME LIKE #empname# 
+           </isNotNull>
+      
+    </select>
+    <select id="selectGroupPositionEmpAllowAdd"  resultMap="resultMap" parameterClass="java.util.HashMap">    
+           SELECT E.EMPID,E.USERID,E.EMPCODE,E.EMPNAME FROM OM_EMPLOYEE E,OM_EMPGROUP O,OM_GROUPPOSI P 
+           WHERE   E.EMPID = O.EMPID AND O.GROUPID=P.GROUPID  AND P.POSITIONID =#positionid#
+           AND E.EMPID NOT IN (SELECT EMPID FROM OM_EMPPOSITION  WHERE POSITIONID = #positionid#)  
+           <isNotNull prepend="AND" property="userid">
+                USERID LIKE #userid# 
+           </isNotNull>
+           <isNotNull prepend="AND" property="empname">
+                EMPNAME LIKE #empname# 
+           </isNotNull>
+      
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="ORGID"  javaType="int" property="orgid"/>
+        <result column="isleader" javaType="int" property="isleader"/>
+    </resultMap>
+    <!--根据人员id获取其所有机构以及是否机构主管 -->
+    <select id="getOrgAManage"  resultMap="resultMap1" parameterClass="java.lang.Integer">    
+           SELECT cast(cast(a.ORGID as varchar)+'00' as NUMERIC) as ORGID,CASE WHEN a.EMPID = b.MANAGERID then 1 else 0 end as isleader FROM OM_EMPORG a,OM_ORGANIZATION b WHERE 
+		   a.ORGID = b.ORGID AND EMPID = #empid#
+      
+    </select>
+</sqlMap>

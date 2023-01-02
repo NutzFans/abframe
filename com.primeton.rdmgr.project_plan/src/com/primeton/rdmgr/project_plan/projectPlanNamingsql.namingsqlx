@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:ganli -->
+<sqlMap>
+    <!-- <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap> -->
+    
+    <!-- contract amount -->
+    <select id="queryContractAmount" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		SUM(t.contsum) AS contsum
+	FROM
+		(
+			SELECT
+				(
+					CASE
+					WHEN c.PROCONTTYPE = '1' THEN
+						a.CONTSUM
+					ELSE
+						d.ordermon
+					END
+				) AS contsum
+			FROM
+				RD_PROJ_CONT c
+			LEFT JOIN CS_CONT_ORDER d ON c.CONTORDERNO = d.CONTORDERNO
+			AND c.CONTORDERNO IS NOT NULL
+			LEFT JOIN CS_CONTRACT a ON a.CONTNUM = c.CONTNUM
+			WHERE
+				c.PROJECT_NO IN (#projectno#)
+		) t
+    ]]>
+    </select>
+    
+    <!-- budget cost -->
+    <select id="queryBudgetCost" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+	select SUM(t.PCOSTSUM) PCOSTSUM from (
+		SELECT
+			PCOSTSUM
+		FROM
+			PRJ_BUGDET_VER
+		WHERE
+			projectid = #projectId#
+		AND iscversion = 1
+	) t
+    ]]>
+    </select>
+    
+    <!-- 工时COST -->
+    <select id="queryCost" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    select sum(COST) COST FROM (
+		SELECT
+				SUM(COST) COST
+			FROM
+				RD_LABOR_DETAIL
+			WHERE 
+				PROJECT_ID = (select PROJECT_ID from RD_PROJECT WHERE PROJECT_NO=#projectno#)
+		union all 
+		select sum(poutcost) as COST from (
+		select sum(NOTAXMON) as poutcost from pur_settle 
+		where projectno in (#projectno#) and setstatus = '2' and costtype in (0,1) group by (projectno)
+		union all
+		select sum(NOTAXMONEY) as poutcost from pur_presettle 
+		where projectno in (#projectno#) and accruedstatus in ('0','1','2','4') and costtype in (0,1) group by (projectno))t
+		
+		union all
+		SELECT sum(money) as COST from(
+		select d.CONFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		and BENEFPROJNO in (#projectno#) and c.feetype = '2' 
+		union all
+		select c.BENEFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		and BENEFPROJNO in (#projectno#) and c.feetype = '2') t
+		) a 
+		
+    ]]>
+    </select>
+    
+    <!-- 工时COST -->
+    <select id="queryTimeCost" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		SUM(COST) COST
+	FROM
+		RD_LABOR_DETAIL
+	WHERE 1=1 
+	]]>
+		<isNotNull prepend="AND" property="projectId">
+		PROJECT_ID = #projectId#
+		</isNotNull>
+		
+		<isNotNull prepend="AND" property="projectNo">
+		PROJECT_ID = (select project_id from rd_project where project_no=#projectNo#)
+		</isNotNull>
+		
+		<isNotNull prepend="AND" property="stage">
+			LABOR_DATE between #startTime# and #endTime#
+		</isNotNull>
+		
+    
+    </select>
+    
+    <!-- 费用COST -->
+    <select id="queryFeeCost" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+
+    SELECT sum(money) as pdircost from(
+		select d.CONFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		<isNotNull prepend="AND" property="projectNo">
+		 BENEFPROJNO=#projectNo# 
+		</isNotNull>
+		and c.feetype = '2' 
+		<isNotNull prepend="AND" property="stage">
+			a.tbdate between #startTime# and #endTime#
+		</isNotNull>
+		union all
+		select c.BENEFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		<isNotNull prepend="AND" property="projectNo">
+		 BENEFPROJNO=#projectNo# 
+		</isNotNull>
+		and c.feetype = '2'
+		<isNotNull prepend="AND" property="stage">
+			a.tbdate between #startTime# and #endTime#
+		</isNotNull>
+		
+		) t
+		
+   
+    </select>
+    
+    <!-- 外包成本 -->
+    <select id="queryOutCost" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    
+select sum(poutcost) as poutcost,projectno from (
+		select sum(setamount) as poutcost,projectno from 
+		(select distinct DATEADD(dd, b.number, a.startdate) as CONFIRMDATE,a.projectno,
+		case when	(datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))=0 then a.notaxmon		 
+		else a.notaxmon/(datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1))) end as setamount,
+		a.setstatus,a.costtype
+		from  pur_settle a
+		LEFT JOIN master.dbo.spt_values b on b.type='p' and b.number<=DATEDIFF(DAY, a.startdate, a.enddate)  
+		LEFT JOIN MIS_ISWORKDAY x on x.MODDATE=DATEADD(dd, b.number, a.startdate)
+		where  ((datename(weekday,DATEADD(dd, b.number, a.startdate)) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+			or (datename(weekday,DATEADD(dd, b.number, a.startdate)) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null)))) a
+		where  setstatus in (2) and costtype=1 and (CONFIRMDATE>=#startTime# or #startTime# is NULL) and (CONFIRMDATE<=#endTime# or #endTime# is NULL)
+		      and projectno=#projectNo#
+    group by (projectno)
+		union all
+		select sum(accruedmoney) as poutcost,projectno from 
+		(select distinct  DATEADD(dd, b.number, a.startdate) as ACCRUEDDATE,a.projectno,
+		case when (datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))= 0 then a.notaxmoney 
+    else a.notaxmoney/(datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1))) end as accruedmoney,
+		a.accruedstatus,a.costtype
+		from  pur_presettle a
+		LEFT JOIN master.dbo.spt_values b on b.type='p' and b.number<=DATEDIFF(DAY, a.startdate, a.enddate)  
+		LEFT JOIN MIS_ISWORKDAY x on x.MODDATE=DATEADD(dd, b.number, a.startdate)
+		where  ((datename(weekday,DATEADD(dd, b.number, a.startdate)) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+			or (datename(weekday,DATEADD(dd, b.number, a.startdate)) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null)))) a
+		where  accruedstatus in (0,1,2,4) and costtype=1 and (ACCRUEDDATE>=#startTime#  or #startTime# is NULL) and (ACCRUEDDATE<=#endTime#  or #endTime# is NULL)
+		 and projectno=#projectNo#
+    group by (projectno)
+
+    union ALL
+    select sum(t.sum) as poutcost,t.projectno 
+		from 
+		(select m.*,m.price*(m.workdays/(m.monthworkdays+0.0))as sum FROM
+		(
+		select r.*,
+		(datediff(DD,r.JTSTARTDATE,r.JTENDDATE)
+		-datediff(week,DateAdd(dd,-1,r.JTSTARTDATE),r.JTENDDATE)*2+1
+		+(select count(*) where datename(weekday,r.JTSTARTDATE) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,r.JTENDDATE) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=r.JTSTARTDATE and x.moddate<=r.JTENDDATE and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=r.JTSTARTDATE and x.moddate<=r.JTENDDATE and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))
+		as workdays,
+		(datediff(DD,Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23),convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23))
+		-datediff(week,DateAdd(dd,-1,Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23)),convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23))*2+1
+		+(select count(*) where datename(weekday,Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23)) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23)) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23) and x.moddate<=convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23) and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23) and x.moddate<=convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23) and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))
+		as monthworkdays
+		 from 
+		(
+		select t.maxdate as enddate,t.maxdate1 as enddate1 ,t.PROJECT_ID,
+		(CASE WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE >= DateAdd(dd,+1,t.maxdate) THEN b.COSTENDDATE + 1 
+						WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE < DateAdd(dd,+1,t.maxdate) THEN DateAdd(dd,+1,t.maxdate)
+						WHEN b.COSTENDDATE IS NULL AND b.STARTDATE >= DateAdd(dd,+1,t.maxdate) THEN b.STARTDATE 
+						WHEN b.COSTENDDATE IS NULL AND b.STARTDATE < DateAdd(dd,+1,t.maxdate) THEN DateAdd(dd,+1,t.maxdate) 
+						ELSE NULL END 
+		) AS JTSTARTDATE,
+		case when t.maxdate<t.maxdate1
+				 then (
+							 CASE WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE <= t.maxdate1 THEN b.ACTENDDATE 
+							 WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE > t.maxdate1 THEN t.maxdate1
+							 WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE <= t.maxdate1 THEN b.EXPENDDATE 
+							 WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE > t.maxdate1 THEN t.maxdate1 
+							 ELSE NULL END 
+							)
+		ELSE NULL end as JTENDDATE 
+		,b.PROJECTNO,
+		b.price
+		from 
+		PUR_PROJ_OUTPER b,
+		RD_PROJECT l,
+		(SELECT case when #startTime# is null or #startTime#<=MAX(t.maxdate) THEN MAX(t.maxdate)
+					 else #startTime# end as maxdate,
+					 CASE WHEN #endTime# is null or #endTime#>=GETDATE() THEN GETDATE()
+					 else #endTime# end as maxdate1,
+					 t.PROJECT_ID from 
+		(
+				select max(t.maxdate) as maxdate ,min(t.mindate) as mindate,m.PROJECT_ID from (
+				select max(enddate) as maxdate,min(startdate) as mindate,projectno from pur_settle where setstatus in (2) and projectno=#projectNo#  GROUP BY projectno
+				union all
+				select max(enddate) as maxdate,min(startdate) as mindate,projectno from pur_presettle where accruedstatus in (0,1,2,4) and projectno=#projectNo# GROUP BY projectno
+				) t,RD_PROJECT m where t.projectno=m.PROJECT_NO and t.projectno=#projectNo# GROUP BY m.PROJECT_ID
+		) t
+		GROUP BY t.PROJECT_ID ) t
+		where b.PROJECTNO=l.PROJECT_NO and l.PROJECT_ID=t.PROJECT_ID and (select PURTYPE from PUR_CONTRACT x where x.purcontid=b.purcontid) is NULL
+    and (select d.projectno from PUR_CONTRACT b,PUR_PRESETTLE d
+        where b.PURCONTNUM=d.PURCONTNUM and d.CUSTID=b.CUSTID and d.ACCRUEDSTATUS in (0,1,2,4) and d.projectno=#projectNo#
+         and d.COSTTYPE='1' and d.projectno =l.PROJECT_NO  and d.STARTDATE>=DateAdd(dd,+1,t.maxdate) and d.STARTDATE<=t.maxdate1) is null ) r 
+		where r.JTENDDATE>=r.enddate and r.JTSTARTDATE<=r.enddate1 and 
+		r.JTENDDATE>=r.JTSTARTDATE
+		)m
+		) t where t.projectno=#projectNo#
+		GROUP BY t.projectno
+
+    )t
+GROUP BY projectno
+
+    ]]>
+    </select>
+    
+    <!-- 外部采购成本 -->
+    <select id="queryPurchaseCost" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    
+select sum(poutcost) as poutcost,projectno from (
+		select sum(setamount) as poutcost,projectno from 
+		(select distinct DATEADD(dd, b.number, a.startdate) as CONFIRMDATE,a.projectno,
+		case when	(datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))=0 then a.notaxmon		 
+		else a.notaxmon/(datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1))) end as setamount,
+		a.setstatus,a.costtype
+		from  pur_settle a
+		LEFT JOIN master.dbo.spt_values b on b.type='p' and b.number<=DATEDIFF(DAY, a.startdate, a.enddate)  
+		LEFT JOIN MIS_ISWORKDAY x on x.MODDATE=DATEADD(dd, b.number, a.startdate)
+		where  ((datename(weekday,DATEADD(dd, b.number, a.startdate)) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+			or (datename(weekday,DATEADD(dd, b.number, a.startdate)) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null)))) a
+		where  setstatus in (2) and costtype!=1 and (CONFIRMDATE>=#startTime# or #startTime# is NULL) and (CONFIRMDATE<=#endTime# or #endTime# is NULL)
+		      and projectno=#projectNo#
+    group by (projectno)
+		union all
+		select sum(accruedmoney) as poutcost,projectno from 
+		(select distinct  DATEADD(dd, b.number, a.startdate) as ACCRUEDDATE,a.projectno,
+		case when (datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))= 0 then a.notaxmoney 
+    else a.notaxmoney/(datediff(DD,a.startdate,a.enddate)
+		-datediff(week, DateAdd(dd,-1,a.startdate),a.enddate)*2+1
+		+(select count(*) where datename(weekday,a.startdate) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,a.enddate) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=a.startdate and x.moddate<=a.enddate and x.isworkday='y' and datepart(dw,x.moddate) in (7,1))) end as accruedmoney,
+		a.accruedstatus,a.costtype
+		from  pur_presettle a
+		LEFT JOIN master.dbo.spt_values b on b.type='p' and b.number<=DATEDIFF(DAY, a.startdate, a.enddate)  
+		LEFT JOIN MIS_ISWORKDAY x on x.MODDATE=DATEADD(dd, b.number, a.startdate)
+		where  ((datename(weekday,DATEADD(dd, b.number, a.startdate)) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+			or (datename(weekday,DATEADD(dd, b.number, a.startdate)) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null)))) a
+		where  accruedstatus in (0,1,2,4) and costtype!=1 and (ACCRUEDDATE>=#startTime#  or #startTime# is NULL) and (ACCRUEDDATE<=#endTime#  or #endTime# is NULL)
+		 and projectno=#projectNo#
+    group by (projectno)
+
+    union ALL
+    select sum(t.sum) as poutcost,t.projectno 
+		from 
+		(select m.*,m.price*(m.workdays/(m.monthworkdays+0.0))as sum FROM
+		(
+		select r.*,
+		(datediff(DD,r.JTSTARTDATE,r.JTENDDATE)
+		-datediff(week,DateAdd(dd,-1,r.JTSTARTDATE),r.JTENDDATE)*2+1
+		+(select count(*) where datename(weekday,r.JTSTARTDATE) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,r.JTENDDATE) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=r.JTSTARTDATE and x.moddate<=r.JTENDDATE and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=r.JTSTARTDATE and x.moddate<=r.JTENDDATE and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))
+		as workdays,
+		(datediff(DD,Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23),convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23))
+		-datediff(week,DateAdd(dd,-1,Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23)),convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23))*2+1
+		+(select count(*) where datename(weekday,Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23)) in('星期日','Sunday'))
+		-(select count(*) where datename(weekday,convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23)) in('星期六','Saturday'))
+		-(select count(*) from MIS_ISWORKDAY x where x.moddate>=Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23) and x.moddate<=convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23) and x.isworkday='n' ) 
+		+(select count (*) from MIS_ISWORKDAY x where x.moddate>=Convert(varchar(10),dateadd(dd,-datepart(dd,r.JTSTARTDATE)+1,r.JTSTARTDATE) ,23) and x.moddate<=convert(varchar,dateadd(day,-day(r.JTSTARTDATE),dateadd(month,1,r.JTSTARTDATE)),23) and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))
+		as monthworkdays
+		 from 
+		(
+		select t.maxdate as enddate,t.maxdate1 as enddate1 ,t.PROJECT_ID,
+		(CASE WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE >= DateAdd(dd,+1,t.maxdate) THEN b.COSTENDDATE + 1 
+						WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE < DateAdd(dd,+1,t.maxdate) THEN DateAdd(dd,+1,t.maxdate)
+						WHEN b.COSTENDDATE IS NULL AND b.STARTDATE >= DateAdd(dd,+1,t.maxdate) THEN b.STARTDATE 
+						WHEN b.COSTENDDATE IS NULL AND b.STARTDATE < DateAdd(dd,+1,t.maxdate) THEN DateAdd(dd,+1,t.maxdate) 
+						ELSE NULL END 
+		) AS JTSTARTDATE,
+		case when t.maxdate<t.maxdate1
+				 then (
+							 CASE WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE <= t.maxdate1 THEN b.ACTENDDATE 
+							 WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE > t.maxdate1 THEN t.maxdate1
+							 WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE <= t.maxdate1 THEN b.EXPENDDATE 
+							 WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE > t.maxdate1 THEN t.maxdate1 
+							 ELSE NULL END 
+							)
+		ELSE NULL end as JTENDDATE 
+		,b.PROJECTNO,
+		b.price
+		from 
+		PUR_PROJ_OUTPER b,
+		RD_PROJECT l,
+		(SELECT case when #startTime# is null or #startTime#<=MAX(t.maxdate) THEN MAX(t.maxdate)
+					 else #startTime# end as maxdate,
+					 CASE WHEN #endTime# is null or #endTime#>=GETDATE() THEN GETDATE()
+					 else #endTime# end as maxdate1,
+					 t.PROJECT_ID from 
+		(
+				select max(t.maxdate) as maxdate ,min(t.mindate) as mindate,m.PROJECT_ID from (
+				select max(enddate) as maxdate,min(startdate) as mindate,projectno from pur_settle where setstatus in (2) and projectno=#projectNo#  GROUP BY projectno
+				union all
+				select max(enddate) as maxdate,min(startdate) as mindate,projectno from pur_presettle where accruedstatus in (0,1,2,4) and projectno=#projectNo# GROUP BY projectno
+				) t,RD_PROJECT m where t.projectno=m.PROJECT_NO and t.projectno=#projectNo# GROUP BY m.PROJECT_ID
+		) t
+		GROUP BY t.PROJECT_ID ) t
+		where b.PROJECTNO=l.PROJECT_NO and l.PROJECT_ID=t.PROJECT_ID and (select PURTYPE from PUR_CONTRACT x where x.purcontid=b.purcontid) is NULL
+    and (select d.projectno from PUR_CONTRACT b,PUR_PRESETTLE d
+        where b.PURCONTNUM=d.PURCONTNUM and d.CUSTID=b.CUSTID and d.ACCRUEDSTATUS in (0,1,2,4) and d.projectno=#projectNo#
+         and d.COSTTYPE='1' and d.projectno =l.PROJECT_NO  and d.STARTDATE>=DateAdd(dd,+1,t.maxdate) and d.STARTDATE<=t.maxdate1) is null ) r 
+		where r.JTENDDATE>=r.enddate and r.JTSTARTDATE<=r.enddate1 and 
+		r.JTENDDATE>=r.JTSTARTDATE
+		)m
+		) t where t.projectno=#projectNo#
+		GROUP BY t.projectno
+
+    )t
+GROUP BY projectno
+
+    ]]>
+    </select>
+    
+    <!-- Check the latest weekly report  -->
+    <select id="queryLatestWeekly" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		t1.WEEKLY_ID weeklyId,
+		t1.PROJECT_NO projectNo,
+		t1.PROJECT_NAME projectName,
+		t1.PTIME ptime,
+		t1.WEEKLYCONT weeklycont,
+		t1.SUBMITTER submitter
+	FROM
+	 (SELECT MAX(PTIME) MTIME FROM AME_PROJECT_WEEKLY WHERE PROJECT_NO=#projectno# GROUP BY PROJECT_NO) t,
+		AME_PROJECT_WEEKLY t1
+	WHERE
+	  t1.PROJECT_NO=#projectno#
+		AND t.MTIME = t1.PTIME
+    ]]>
+    </select>
+    
+    <!-- Enquiry of project plan  -->
+    <select id="queryProjectPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		t.plan_id id,
+		t.version_no varsionNo,
+		t.project_name projectName,
+		t1.stage stage,
+		t1.start_time startTime,
+		t1.end_time endTime,
+		t.submitter submitter,
+		t.ptime ptime,
+		t.state state 
+	FROM
+		AME_PROJECT_PLAN t,
+		AME_PROJECT_PLAN_DETAIL t1,
+		( SELECT MAX (VERSION_NO ) version_no 
+			FROM 
+				AME_PROJECT_PLAN 
+			WHERE state= '1'
+			   and project_no= #projectNo#
+			  ) t2
+	WHERE t.plan_id=t1.plan_id 
+	  AND t.project_no = #projectNo#
+	  AND t.state = #state#
+	  and t.version_no=t2.version_no
+    ]]>
+    </select>
+    
+    <select id="queryPlanPtime" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		max(t.ptime) ptime 
+	FROM
+		AME_PROJECT_PLAN t
+	WHERE t.project_no = #projectno#
+    ]]>
+    </select>
+    
+    <!-- The latest three weekly reports  -->
+    <select id="query3Weekly" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		t1.WEEKLY_ID weeklyId,
+		t1.PROJECT_NO projectNo,
+		t1.PROJECT_NAME projectName,
+		t1.PTIME ptime,
+		t1.WEEKLYCONT weeklycont,
+		t1.SUBMITTER submitter,
+		t2.empname submitName,
+		datename(weekday,t1.PTIME) weekday
+	FROM
+	 (select top 3 WEEKLY_ID from AME_PROJECT_WEEKLY where PROJECT_NO=#projectNo# order by ptime desc) t,
+		AME_PROJECT_WEEKLY t1,
+		OM_EMPLOYEE t2 
+	WHERE t.WEEKLY_ID = t1.WEEKLY_ID
+	 and t1.SUBMITTER = t2.userid 
+    ]]>
+    </select>
+    
+    <!-- all of weekly reports  -->
+    <select id="queryWeeklys" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		t1.WEEKLY_ID weeklyId,
+		t1.PROJECT_NO projectNo,
+		t1.PROJECT_NAME projectName,
+		t1.PTIME ptime,
+		t1.WEEKLYCONT weeklycont,
+		t1.SUBMITTER submitter,
+		t2.empname submitName,
+		datename(weekday,t1.PTIME) weekday
+	FROM
+		AME_PROJECT_WEEKLY t1,
+		OM_EMPLOYEE t2 
+	WHERE t1.SUBMITTER = t2.userid 
+	and t1.PROJECT_NO = #projectNo#
+    ]]>
+	<isNotNull prepend="AND" property="minptime">
+	ptime between #minptime# and #maxptime#
+	</isNotNull>
+	<isNotNull prepend="AND" property="weeklycont">
+	weeklycont like '%'+#weeklycont#+'%'
+	</isNotNull>
+	order by t1.WEEKLY_ID desc
+    </select>
+    
+    <!-- all of weekly reports  -->
+    <select id="queryLatestPlan" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    
+		SELECT
+			a.dictid stage,
+			b.start_time startTime,
+			b.end_time endTime,
+			b.VERSION_NO versionNo,
+			b.PROJECT_NO projectNo,
+			b.PROJECT_NAME projectName
+		FROM
+			EOS_DICT_ENTRY a
+			LEFT OUTER JOIN (
+		SELECT
+			t3.STAGE,
+			t1.VERSION_NO,
+			t1.PROJECT_NO,
+			t1.PROJECT_NAME,
+			t3.START_TIME,
+			t3.END_TIME 
+		FROM
+			AME_PROJECT_PLAN t1,
+			( SELECT MAX ( t.VERSION_NO ) version_no 
+			FROM 
+				AME_PROJECT_PLAN t 
+			WHERE t.state= '1'
+			  <isNotNull prepend="AND" property="projectNo">
+			   t.project_no= #projectNo#
+			  </isNotNull>
+			  <isNotNull prepend="AND" property="workItemID">
+			  t.PROJECT_NO=(select m1.project_no from WFWorkItem m,AME_PROJECT_PLAN m1 where m.processinstid=m1.processinstid and m.workitemid=#workItemID#)
+			  </isNotNull>
+			  ) t2,
+			AME_PROJECT_PLAN_DETAIL t3 
+		WHERE
+			t1.STATE= '1' 
+			AND t1.VERSION_NO= t2.version_no 
+			AND t1.PLAN_ID= t3.PLAN_ID 
+			 <isNotNull prepend="AND" property="projectNo">
+			  t1.PROJECT_NO= #projectNo# 
+			 </isNotNull>
+			 <isNotNull prepend="AND" property="workItemID">
+			  t1.PROJECT_NO=(select m1.project_no from WFWorkItem m,AME_PROJECT_PLAN m1 where m.processinstid=m1.processinstid and m.workitemid=#workItemID#)
+			  </isNotNull>
+			) b ON ( a.dictid= b.stage ) 
+		WHERE
+			a.dicttypeid = 'AME_PROJECT_STAGE'
+		 
+    </select>
+    
+    <!-- Information under review -->
+    <select id="queryInAuditPlan" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+		SELECT distinct
+		    t1.PLAN_ID planId,
+			t3.STAGE stage,
+			t1.VERSION_NO versionNo,
+			t1.PROJECT_NO projectNo,
+			t1.PROJECT_NAME projectName,
+			t3.START_TIME startTime,
+			t3.END_TIME endTime 
+		FROM
+			AME_PROJECT_PLAN t1,
+			AME_PROJECT_PLAN_DETAIL t3 
+		WHERE t1.state='0'  
+			AND t1.PLAN_ID= t3.PLAN_ID
+			]]>
+			<isNotNull prepend="AND" property="projectNo">
+			t1.PROJECT_NO=#projectNo# 
+		    </isNotNull>
+			<isNotNull prepend="AND" property="workItemID">
+			t1.PROCESSINSTID=(select processinstid from WFWorkItem  where workitemid=#workItemID#)
+			</isNotNull>
+		 
+    </select>
+    
+    <select id="queryOrgseq" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+	  select t2.ORGSEQ orgseq
+		from 
+		rd_project t1,
+		OM_ORGANIZATION t2
+		where t1.FIN_UNIT_ID=t2.ORGID
+		AND t1.PROJECT_NO=#projectNo#
+	]]>
+    </select>
+    
+    <select id="queryAudtors" parameterClass="java.util.HashMap" resultClass="com.eos.workflow.omservice.WFParticipant">
+    <![CDATA[
+    SELECT
+		userid id,
+		empname name,
+		'person' typeCode
+	FROM
+		OM_EMPLOYEE 
+	WHERE
+		userid IN (
+	SELECT
+		busiparter 
+	FROM
+		OM_ORGANIZATION 
+	WHERE
+		orgid IN ($orgid$))
+		and userid !=#currentuserid#
+	]]>
+    </select>
+    
+    <select id="queryProcess" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    SELECT
+		w.processinstid processInstID,
+		w.processinstname processInstName,
+		w.activitydefid activityDefID,
+		w.workitemname workItemName,
+		w.workitemid workItemId,
+		p.project_no projectNo,
+		p.project_name projectName 
+	FROM
+		WFWorkItem w,
+		ame_project_plan p 
+	WHERE
+		w.processinstid= p.processinstid 
+		AND w.workitemid=#workItemID#
+	]]>
+    </select>
+    
+    <select id="queryPassingRate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+	select case when num1=0 then 0 else (num1*100)/num2 end passrate
+	 from 
+	(select count(a.PROCESSFLOWID) num1 from (select distinct t.* from 
+	Mis_opinion t,
+	wfworkitem t1,
+	wfworkitem t2
+	where t1.workitemid=#workitemid#
+	and t.auditstatus = '1'
+	and t1.activityinstid = t2.activityinstid
+	and t.workitemid=t2.workitemid) a ) t1,
+	(select count(b.PROCESSFLOWID) num2 from (select distinct t.* from 
+	Mis_opinion t,
+	wfworkitem t1,
+	wfworkitem t2
+	where t1.workitemid=#workitemid#
+	and t.auditstatus != '5'
+	and t1.activityinstid = t2.activityinstid
+	and t.workitemid=t2.workitemid) b) t2
+	
+	]]>
+    </select>
+    
+    <update id="updatePlanState" parameterClass="java.util.HashMap" >
+    <![CDATA[
+    update ame_project_plan set state=#result# where processinstid=#processinstid#
+	]]>
+    </update>
+    
+    <delete id="deletePlanDetail" parameterClass="java.util.HashMap" >
+    <![CDATA[
+    delete AME_PROJECT_PLAN_DETAIL where plan_id=#planId# 
+	]]>
+    </delete>
+    
+    <select id="queryOrgSeq4Parter"  parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" >
+    <![CDATA[
+    select orgseq
+	from OM_ORGANIZATION where busiparter=#busiparter# 
+	]]>
+    </select>
+</sqlMap>

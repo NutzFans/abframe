@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractEntity">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.id,
+	a.create_userid,
+	a.create_time,
+	a.contract_name,
+	a.implement_org,
+	a.signatory,
+	a.contract_model,
+a.tender_id,
+a.isfb,
+	a1.CUSTNAME AS signatoryname,
+	CAST (
+		a.contract_sum AS NUMERIC (18, 2)
+	) AS contract_sum,
+	a.contract_no,
+	a.start_time,
+	a.end_time,
+	a.app_status,
+	a.project_local,
+	a.project_size,
+	a.contract_subject,
+	a.processId,
+	a.pay_method,
+	a.execute_status,
+	a.organizer,
+	a.development_org,
+	a.headquarter_group,
+	a.cachet,
+	a.payee,
+	a.signing_date,
+	a.project_type,
+	a.major,
+	a.contract_period,
+	a.finish_time,
+	a.relate_cont,
+	a.fin_contract_sum,
+	a.act_contract_sum,
+	a.issupagreement,
+	a.remark,
+	a.increase_decrease_sum,
+	a2.contract_name AS original_contract_name,
+	a2.contract_no AS original_contract_no,
+	a.z_dept_countersign_id,
+	a.z_dept_countersign_name,
+	a.f_dept_countersign_name,
+	a.f_dept_countersign_id,
+	a.implement_orgname,
+	a.CREATED_ORGID,
+	a.REVISION,
+	a.UPDATED_TIME,
+	a.UPDATED_BY,
+	a.create_username,a.CONTRACT_SECRET_LEVEL,a.project_secret_level,a.contract_balance,a.procurement_type,a.no_tax_sum,a.pay_tax
+FROM
+	zh_charge_contract a
+LEFT JOIN MIS_CUSTINFO a1 ON a.signatory = a1.CUSTID
+LEFT JOIN zh_charge_contract a2 ON a.relate_cont = a2.id]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractAlterationEnitity">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.id,
+  a.protocol_no,
+  a.original_contract_name,
+  a.original_contract_no,
+	a.create_userid,
+	a.create_time,
+	a.remark,
+  a.implement_org,
+	a.signatory,
+	a.contract_sum,
+  a.start_time,
+	a.app_status,
+  a.project_local,
+  a.project_size,
+	a.processId,
+	f.EMPNAME,
+	o.ORGDEGREE,
+	o.ORGLEVEL,
+	o.ORGID,
+	o.ORGNAME
+FROM
+	zh_charge_contract_alteration a
+LEFT JOIN OM_EMPLOYEE f ON a.create_userid = f.USERID
+LEFT JOIN (
+	SELECT
+		c.orgid,
+		(b.orgname + '---' + c.orgname) AS orgname,
+		c.orgname AS orgname1,
+		c.parentorgid,
+		c.ORGSEQ,
+		c.ORGDEGREE,
+		c.ORGLEVEL
+	FROM
+		OM_ORGANIZATION c,
+		OM_ORGANIZATION b
+	WHERE
+		c.parentorgid = b.orgid
+	AND c.orgid NOT IN (
+		SELECT
+			parentorgid
+		FROM
+			OM_ORGANIZATION
+		WHERE
+			parentorgid IS NOT NULL
+	)
+	AND c.STATUS = 'running'
+) o ON a.implement_org = o.ORGID 
+]]></config>
+    </QueryEntity>
+</QueryEntityList>

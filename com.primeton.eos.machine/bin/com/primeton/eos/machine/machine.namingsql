@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.machine.machine">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="changeid" javaType="int" property="changeid"/>
+        <result column="mid" javaType="int" property="mid"/>
+        <result column="userOld" javaType="string" property="userOld"/>
+        <result column="deptOld" javaType="int" property="deptOld"/>
+        <result column="addressOld" javaType="string" property="addressOld"/>
+        <result column="statusOld" javaType="string" property="statusOld"/>
+        <result column="areaOld" javaType="string" property="areaOld"/>
+        <result column="usingemp" javaType="string" property="usingemp"/>
+        <result column="dept" javaType="int" property="dept"/>
+        <result column="address" javaType="string" property="address"/>
+        <result column="status" javaType="short" property="status"/>
+        <result column="area" javaType="short" property="area"/>
+        <result column="changetime" javaType="string" property="changetime"/>
+        <result column="operator" javaType="string" property="operator"/>
+        <result column="comment" javaType="string" property="comment"/>
+        <result column="remarks" javaType="string" property="remarks"/>
+        <result column="processinstid" javaType="long" property="processinstid"/>
+        <result column="isagree" javaType="short" property="isagree"/>
+        <result column="workitemid" javaType="long" property="workitemid"/>
+        <result column="assetnum" javaType="string" property="assetnum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="max_assetnum" javaType="string" property="max_assetnum"/>
+    </resultMap>
+    <select id="getMyChanges" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		select distinct changeid,mid,user_old as userOld,dept_old as deptOld,address_old as addressOld,
+			status_old as statusOld,area_old as areaOld,usingemp,dept,address,status,area,changetime,operator,comment,remarks,processinstid,null as isagree,
+			workitemid,assetnum 
+				from mis_machine_change
+					where processInstID=#processInstID# and (usingemp=#userid# or (usingemp is null and dept in (select orgid from om_organization where managerid=#empid#))or 
+					(usingemp is null and dept is null and area in (select regionid from mis_regionmanager where userid=#userid#)))and 
+					(isagree is null or isagree!='1');
+	]]></select>
+    <select id="getMaxAssetNum" parameterClass="java.lang.String" resultMap="resultMap1"><![CDATA[
+		select max(assetnum) as max_assetnum from mis_machine where assetnum like #tempPattern# and len(assetnum)>=5 and len(assetnum)<8
+	]]></select>
+</sqlMap>

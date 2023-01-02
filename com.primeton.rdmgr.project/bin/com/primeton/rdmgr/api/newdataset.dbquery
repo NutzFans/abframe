@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.rdmgr.api.newdataset.GetSyb">
+        <config db="default" type="sql"><![CDATA[select a.orgid,(case when d.dictid is null then '5' else d.DICTID end) as DICTID ,(case when d.dictid is null then '其他' else d.DICTNAME end) as dictname,(case when d.dictid is null then 18 else d.SORTNO end) as SORTNO 
+from om_organization a ,om_organization b,om_organization c left join EOS_DICT_ENTRY d on c.orgname=d.DICTNAME and d.DICTTYPEID='CONT_ORG'
+where a.orgid not in (select distinct(p.orgid) from om_organization t,om_organization p 
+where t.parentorgid = p.orgid) and a.parentorgid=b.orgid and
+(case when (a.orgseq like '.1.14.%') then SUBSTRING(a.ORGSEQ, 7, CHARINDEX('.', a.ORGSEQ, 7) - CHARINDEX('.', a.ORGSEQ, 4) - 1) else SUBSTRING(a.ORGSEQ, 4, CHARINDEX('.', a.ORGSEQ, 4) - CHARINDEX('.', a.ORGSEQ, 2) - 1) end)= c.orgid
+union 
+select 236 as orgid,'6' as DICTID,'软件产品部' as dictname,14 as sortno]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.rdmgr.api.newdataset.QueryProjectByMe">
+        <config db="default" type="sql"><![CDATA[SELECT a.PROJECT_ID,a.PROJECT_STATUS,a.PROJECT_TYPE,b.USERID,a.PROJECT_NO,a.PROJECT_NAME,a.CREATEDATE,e.EMPNAME,f.ORGNAME,h.ORGNAME AS businessUnit,d.CUSTJC,d.CUSTNAME,c.mindate,c.maxdate,c.costs,c.acthours FROM RD_PROJECT a
+LEFT JOIN RD_EMP_PROJ b on a.PROJECT_ID = b.PROJECT_ID
+LEFT JOIN (select MIN(i.LABOR_DATE) AS mindate,MAX(i.LABOR_DATE) AS maxdate,sum(i.ACT_HOURS) as acthours,sum(i.COST) as costs,i.PROJECT_ID,i.USER_ID from  RD_LABOR_DETAIL i GROUP BY i.PROJECT_ID,i.USER_ID) c on a.PROJECT_ID = c.PROJECT_ID and b.USERID = c.USER_ID
+left JOIN MIS_CUSTINFO d ON d.CUSTID = a.CUSTID
+LEFT JOIN OM_EMPLOYEE e ON e.USERID = a.MANAGER
+LEFT JOIN OM_ORGANIZATION f ON f.ORGID = a.FIN_UNIT_ID
+LEFT JOIN OM_ORGANIZATION h ON f.ORGSEQ like h.ORGSEQ+'%' and h.ORGLEVEL=3]]></config>
+    </QueryEntity>
+</QueryEntityList>

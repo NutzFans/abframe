@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_newlook.pjmenu">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="id" javaType="string" property="id"/>
+        <result column="text" javaType="string" property="text"/>
+        <result column="icon" javaType="string" property="icon"/>
+        <result column="url" javaType="string" property="url"/>
+        <result column="parentsid" javaType="string" property="parentsid"/>
+        <result column="menulevel" javaType="string" property="menulevel"/>
+        <result column="displayorder" javaType="string" property="displayorder"/>
+        <result column="OPENMODE" javaType="string" property="openmode"/>
+    </resultMap>
+    <select id="getLeafMenu" parameterClass="java.util.HashMap" resultMap="resultMap">
+   		SELECT MENUID as id,MENULABEL as text,case when IMAGEPATH is null then ' clip-file-2' else IMAGEPATH end as icon,
+   		case when substring(MENUACTION,0,2) = 'h'then MENUACTION else '/default'+MENUACTION end as url,parentsid,menulevel,displayorder,OPENMODE FROM AC_MENU where ISLEAF = 'y' and FUNCCODE IN ( 
+          <isNotNull property="id">SELECT DISTINCT F.FUNCCODE FROM AC_FUNCTION F,AC_OPERFUNC A
+           WHERE F.FUNCCODE = A.FUNCCODE AND A.AUTHTYPE='y' AND OPERATORID=#id#</isNotNull>
+        <dynamic prepend="UNION">
+            <isNotNull property="ids">SELECT DISTINCT F.FUNCCODE  FROM AC_FUNCTION F ,AC_ROLEFUNC RF
+           WHERE  RF.FUNCCODE = F.FUNCCODE AND F.ISMENU = 'y' AND RF.ROLEID IN ($ids$)</isNotNull>
+        </dynamic>
+           )
+         <dynamic prepend="AND">
+            <isNotNull property="id">FUNCCODE NOT IN(SELECT FUNCCODE FROM AC_OPERFUNC WHERE OPERATORID=#id# AND AUTHTYPE='n')</isNotNull>
+        </dynamic>            
+          ORDER BY DISPLAYORDER
+    </select>
+    <select id="getLastMenu" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[SELECT MENUID as id,MENULABEL as text,case when IMAGEPATH is null then 'clip-folder' else IMAGEPATH end as icon,'/default'+MENUACTION as url,parentsid,menulevel,displayorder,OPENMODE FROM AC_MENU where MENUID = #parentsid# ORDER BY MENULEVEL, DISPLAYORDER asc]]></select>
+    <select id="getMenus" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[SELECT MENUID as id,MENULABEL as text,case when IMAGEPATH is null then 'clip-folder' else IMAGEPATH end as icon,case when substring(MENUACTION,0,2) = 'h'then MENUACTION else '/default'+MENUACTION end as url,parentsid,menulevel,displayorder,OPENMODE FROM AC_MENU where MENUID in($ids$) ORDER BY MENULEVEL, DISPLAYORDER asc]]></select>
+</sqlMap>

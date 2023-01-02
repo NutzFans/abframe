@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_budget.getPropl">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="pntaxincome" javaType="double" property="pntaxincome"/>
+        <result column="sntaxincome" javaType="double" property="sntaxincome"/>
+        <result column="mntaxincome" javaType="double" property="mntaxincome"/>
+        <result column="ppayback" javaType="double" property="ppayback"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMapcont">
+        <result column="CONTSUM" javaType="double" property="CONTSUM"/>
+        <result column="PRODMON" javaType="double" property="PRODMON"/>
+        <result column="OTHMON" javaType="double" property="OTHMON"/>
+        <result column="SERVSUBMON" javaType="double" property="SERVSUBMON"/>
+        <result column="servjsmon" javaType="double" property="servjsmon"/>
+        <result column="prodwbmon" javaType="double" property="prodwbmon"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="pempcost" javaType="int" property="pempcost"/>
+        <result column="pempcost1" javaType="int" property="pempcost1"/>
+        <result column="empmonth" javaType="double" property="empmonth"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="empMonth">
+        <result column="empmonth" javaType="double" property="empmonth"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="pdircost" javaType="int" property="pdircost"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="poutcost" javaType="int" property="poutcost"/>
+    </resultMap>
+    <resultMap class="com.primeton.eos.ame_budget.ame_budget.PrjBugdetExp" id="resultMap4">
+        <result column="pbid" javaType="long" property="pbid"/>
+        <result column="expid" javaType="string" property="expid"/>
+        <result column="budgetfee" javaType="decimal" property="budgetfee"/>
+        <result column="budgetmemo" javaType="string" property="budgetmemo"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="count1" javaType="int" property="count1"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="pdircost" javaType="double" property="pdircost"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="pempcost" javaType="double" property="pempcost"/>
+        <result column="count1" javaType="int" property="count1"/>
+        <result column="act_hours" javaType="float" property="acthours"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap8">
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="startdate" javaType="date" property="startdate"/>
+        <result column="enddate" javaType="date" property="enddate"/>
+        <result column="dayprice" javaType="float" property="dayprice"/>
+        <result column="ppratio" javaType="float" property="ppratio"/>
+        <result column="labortransf" javaType="float" property="labortransf"/>
+        <result column="resource" javaType="string" property="resource"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap9">
+        <result column="startdate" javaType="date" property="startdate"/>
+        <result column="enddate" javaType="date" property="enddate"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap10">
+        <result column="type" javaType="string" property="type"/>
+        <result column="custname" javaType="string" property="custname"/>
+        <result column="status" javaType="string" property="status"/>
+        <result column="numbers" javaType="string" property="numbers"/>
+        <result column="poutcost" javaType="double" property="poutcost"/>
+        <result column="poutcost1" javaType="double" property="poutcost1"/>
+        <result column="startdate" javaType="date" property="startdate"/>
+        <result column="enddate" javaType="date" property="enddate"/>
+        <result column="workamount" javaType="double" property="workamount"/>
+        <result column="workunit" javaType="string" property="workunit"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap11">
+        <result column="flag" javaType="string" property="flag"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap12">
+        <result column="tocost" javaType="string" property="tocost"/>
+    </resultMap>
+    <!-- 不含税收入：如果实际确认收入有值则取实际确认收入否则判断收入表税率是否有值，如果有值则根据预估收入和税率计算不含税收入 否则根据业务字典中税率和预估收入计算 -->
+    <select id="selectPropl" parameterClass="java.lang.String" resultMap="resultMap"><![CDATA[
+	    SELECT cast(round(sum(t.pntaxincome),2) as NUMERIC(30,2)) as pntaxincome,
+		cast(round(sum(t.sntaxincome),2) as NUMERIC(30,2)) as sntaxincome,cast(round(sum(t.mntaxincome),2) as NUMERIC(30,2)) as mntaxincome,
+		cast(round(sum(t.ppayback),2) as NUMERIC(30,2)) as ppayback from(
+		select 
+			(CASE WHEN j.actsum2 is NOT NULL and j.ACTSUM2!=0 THEN j.ACTPRODUCTSUM2 ELSE
+				(CASE WHEN j.PRODUCTRATE is NOT NULL THEN j.PRODUCTSUM/CAST((1+j.PRODUCTRATE) AS NUMERIC(30,2))
+			ELSE j.PRODUCTSUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'PRODUCTRATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END) 
+		as pntaxincome,
+			(CASE WHEN j.actsum2 is NOT NULL and j.ACTSUM2!=0 THEN j.ACTSERVICESUM2 ELSE
+				(CASE WHEN j.SERVICERATE is NOT NULL THEN j.SERVICESUM/CAST((1+j.SERVICERATE) AS NUMERIC(30,2))
+			ELSE j.SERVICESUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'SERVICERATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END)
+		as sntaxincome,
+			(CASE WHEN j.actsum2 is NOT NULL and j.ACTSUM2!=0 THEN j.ACTMASUM2 ELSE
+				(CASE WHEN j.MARATE is NOT NULL THEN j.MASUM/CAST((1+j.MARATE) AS NUMERIC(30,2))
+			ELSE j.MASUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'MARATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END)
+		as mntaxincome,
+			(CASE WHEN j.actsum2 is NOT NULL and j.ACTSUM2!=0 THEN j.ACTPRODUCTSUM2 ELSE
+				(CASE WHEN j.PRODUCTRATE is NOT NULL THEN j.PRODUCTSUM/CAST((1+j.PRODUCTRATE) AS NUMERIC(30,2))
+			ELSE j.PRODUCTSUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'PRODUCTRATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END) *0.1
+		 as ppayback
+		from CS_REVE_FORECAST j,RD_PROJ_CONT c  
+		where c.CONTNUM = j.CONTNUM and c.CONTORDERNO = j.CONTORDERNO and c.PROJECT_NO in ($projectno$)  and c.PROCONTTYPE = '2'
+		UNION ALL
+		SELECT (CASE WHEN i.actsum2 is NOT NULL and i.ACTSUM2!=0 THEN i.ACTPRODUCTSUM2 ELSE
+				(CASE WHEN i.PRODUCTRATE is NOT NULL THEN i.PRODUCTSUM/CAST((1+i.PRODUCTRATE) as NUMERIC(30,2))
+			ELSE i.PRODUCTSUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'PRODUCTRATE') as NUMERIC(30,2))) as NUMERIC(30,2)) END)END)
+as pntaxincome,
+(CASE WHEN i.actsum2 is NOT NULL and i.ACTSUM2!=0 THEN i.ACTSERVICESUM2 ELSE
+				(CASE WHEN i.SERVICERATE is NOT NULL THEN i.SERVICESUM/CAST((1+i.SERVICERATE) AS NUMERIC(30,2))
+			ELSE i.SERVICESUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'SERVICERATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END)
+			as sntaxincome,
+(CASE WHEN i.actsum2 is NOT NULL and i.ACTSUM2!=0 THEN i.ACTMASUM2 ELSE
+				(CASE WHEN i.MARATE is NOT NULL THEN i.MASUM/CAST((1+i.MARATE) AS NUMERIC(30,2))
+			ELSE i.MASUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'MARATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END)
+			as mntaxincome,
+(CASE WHEN i.actsum2 is NOT NULL and i.ACTSUM2!=0 THEN i.ACTPRODUCTSUM2 ELSE
+				(CASE WHEN i.PRODUCTRATE is NOT NULL THEN i.PRODUCTSUM/CAST((1+i.PRODUCTRATE) AS NUMERIC(30,2))
+			ELSE i.PRODUCTSUM/CAST((1+CAST ((SELECT dictname FROM EOS_DICT_ENTRY WHERE dicttypeid = 'AME_SYSCONF' and dictid = 'PRODUCTRATE') as NUMERIC(30,2))) AS NUMERIC(30,2)) END) END) *0.1
+			as ppayback
+from CS_REVE_FORECAST i,RD_PROJ_CONT c  
+		where c.CONTNUM = i.CONTNUM and c.PROJECT_NO in ($projectno$) and c.PROCONTTYPE = '1'
+
+) t;
+    ]]></select>
+    <select id="selectProCont" parameterClass="java.lang.String" resultMap="resultMapcont"><![CDATA[
+    		SELECT sum(t.contsum) as contsum,sum(t.PRODMON) as prodmon,sum(t.OTHMON) as othmon,sum(t.SERVSUBMON) as servsubmon
+				,sum(t.servjsmon) as servjsmon,sum(t.prodwbmon) as prodwbmon,sum(t.servmon) as servmon from
+		(select (case when c.PROCONTTYPE='1' then a.CONTSUM else d.ordermon end ) as contsum ,
+				(case when c.PROCONTTYPE='1' then a.PRODMON else d.ORDERPRODMON end ) as PRODMON,
+				(case when c.PROCONTTYPE='1' then a.OTHMON else d.OTHMON end ) as OTHMON,
+				(case when c.PROCONTTYPE='1' then a.SERVSUBMON else d.SERVSUBMON end ) as SERVSUBMON,
+				(case when c.PROCONTTYPE='1' then b.servjsmon else d.SERVJSMON end ) as servjsmon,
+				(case when c.PROCONTTYPE='1' then b.prodwbmon else d.PRODWBMON end ) as prodwbmon,
+				(case when c.PROCONTTYPE='1' then b.servmon else d.ORDERSERVMON end ) as servmon
+		from RD_PROJ_CONT c 
+				LEFT JOIN CS_CONT_ORDER d on c.CONTORDERNO = d.CONTORDERNO and c.CONTORDERNO is not NULL
+				LEFT JOIN CS_CONTRACT a on a.CONTNUM = c.CONTNUM
+				left join (
+				select x.CONTRACTID,sum(x.SERVJSMON) as SERVJSMON,sum(x.PRODWBMON) as PRODWBMON,sum(x.SERVMON) as SERVMON
+				from CS_CONTRACTSALE x group by x.CONTRACTID) b on a.CONTRACTID=b.CONTRACTID
+				where c.PROJECT_NO in ($projectno$)) t 
+    ]]></select>
+    <select id="selectPempcost" parameterClass="java.lang.String" resultMap="resultMap1"><![CDATA[
+	    select sum(concost) as pempcost,sum(cost) as pempcost1,cast(round(sum(act_hours)/8/20.5,2) as numeric(20,3)) as empmonth from rd_labor_detail 
+	    where project_id in (select project_id from rd_project where project_no in ($projectno$)) group by(project_id)
+    ]]></select>
+    <!--获取工时调差成本-->
+    <select id="getLaborDIffCost" parameterClass="java.util.HashMap" resultMap="resultMap12"><![CDATA[
+	   select cast(round(sum(cost*(conratio-isnull(#budgetratio#,0))),2) as numeric(20,3)) as tocost from rd_labor_detail where project_id in ($projectid$)  group by project_id;
+    ]]></select>
+    <select id="selectPdircost" parameterClass="java.lang.String" resultMap="resultMap2"><![CDATA[
+	   SELECT sum(money) as pdircost from(
+		select d.CONFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		and BENEFPROJNO in ($projectno$) and c.feetype = '2'	
+		union all
+		select c.BENEFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		and BENEFPROJNO in ($projectno$) and c.feetype = '2') t	
+    ]]></select>
+    <select id="selectWbcg" parameterClass="java.lang.String" resultMap="resultMap3"><![CDATA[
+	    select sum(poutcost) as poutcost from (
+		select sum(NOTAXMON) as poutcost from pur_settle 
+		where projectno in ($projectno$) and setstatus = '2' and costtype!=1 group by (projectno)
+		union all
+		select sum(NOTAXMONEY) as poutcost from pur_presettle 
+		where projectno in ($projectno$) and accruedstatus in ('0','1','2','4') and costtype!=1  group by (projectno))t	
+    ]]></select>
+    <select id="selectPoutcost" parameterClass="java.lang.String" resultMap="resultMap3"><![CDATA[
+	    select sum(poutcost) as poutcost from (
+		select sum(NOTAXMON) as poutcost from pur_settle 
+		where projectno in ($projectno$) and setstatus = '2' and costtype=1 group by (projectno)
+		union all
+		select sum(NOTAXMONEY) as poutcost from pur_presettle 
+		where projectno in ($projectno$) and accruedstatus in ('0','1','2','4') and costtype=1  group by (projectno))t	
+    ]]></select>
+    <select id="getPdircost" parameterClass="java.lang.String" resultMap="resultMap4"><![CDATA[
+	    select (case when pbid is null then #pbid# else pbid end) as pbid,a.dictid as expid,t.budgetfee,t.budgetmemo  from eos_dict_entry a left join (select * from PRJ_BUGDET_EXP where pbid=#pbid#) t on a.dictid=t.expid where a.dicttypeid='AME_EXPTYPE' 
+    ]]></select>
+    <select id="selectIsworkday" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+	    select count(*) as count1 from mis_isworkday where isworkday=#isworkday# and moddate between #begDate# and #endDate#
+    ]]></select>
+    <select id="getWeekActPdir" parameterClass="java.util.HashMap" resultMap="resultMap6"><![CDATA[
+	    SELECT sum(money) as pdircost from(
+		select d.CONFMON as money,c.BENEFPROJNO,a.EXPORGID,c.BENEFORGID,e.ORGTYPE,b.EXPNO,a.tbdate
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2'
+		and BENEFPROJNO = (SELECT project_no from RD_PROJECT where project_id = #projectid#) and c.feetype = '2'
+		and a.tbdate BETWEEN #startdate# and #enddate#
+		union ALL
+		select c.BENEFMON as money,c.BENEFPROJNO,a.EXPORGID,c.BENEFORGID,e.ORGTYPE,b.EXPNO,a.tbdate
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		and BENEFPROJNO = (SELECT project_no from RD_PROJECT where project_id = #projectid#) and c.feetype = '2'
+		and a.tbdate BETWEEN #startdate# and #enddate#
+) t
+    ]]></select>
+    <select id="getWeekActPemp" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+	   select p.count1,q.pempcost,q.act_hours from (select count(distinct user_id) as count1,project_id from rd_labor_detail where labor_date between #startdate# and #enddate# group by(project_id))p,
+		(select sum(concost) as pempcost,sum(act_hours) as act_hours,project_id from rd_labor_detail where project_id=#projectid# and labor_date between #startdate# and #enddate# group by(project_id))q
+		where p.project_id=q.project_id
+    ]]></select>
+    <select id="getWeekBudPemp" parameterClass="java.util.HashMap" resultMap="resultMap8"><![CDATA[
+	    select empname, (case when expindate >#startdate# then expindate else #startdate# end) as startdate,
+(case when expoutdate <#enddate# then expoutdate else #enddate# end) as enddate,dayprice,ppratio,resource,
+(select labortransf from prj_bugdet_ver where projectid=#projectid# and iscversion=1) as labortransf
+ from prj_budget_hu where expindate <= #enddate# and expoutdate>=#startdate# and resource in ($resource$) 
+and pbid=(select pbid from prj_bugdet_ver where projectid=#projectid# and iscversion=1);
+
+    ]]></select>
+    <select id="getWeekPoutnum" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+	   select count(distinct outperno) as count1 from pur_settle_list where settlementid in (select settlementid from pur_settle where projectno=#projectno#) 
+and setenddate >#startdate#  and setstartdate<#enddate#
+    ]]></select>
+    <!--增加外包人员得开始和结束日期-->
+    <select id="getCalPrjdate" parameterClass="java.util.HashMap" resultMap="resultMap9"><![CDATA[
+	  select max(t.maxdate) as enddate ,min(t.mindate) as startdate from (
+	  	select max(expoutdate) as maxdate,min(expindate) as mindate from prj_budget_hu where pbid =#pbid#
+		union all
+		select max(labor_date) as maxdate,min(labor_date) as mindate from rd_labor_detail where project_id=#projectid#
+		union all
+		 SELECT max(t.tbdate) as maxdate,min(t.tbdate) as mindate from(
+		select d.CONFMON as money,c.BENEFPROJNO,a.EXPORGID,c.BENEFORGID,e.ORGTYPE,b.EXPNO,a.tbdate,c.FEETYPE
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		union ALL
+		select c.BENEFMON as money,c.BENEFPROJNO,a.EXPORGID,c.BENEFORGID,e.ORGTYPE,b.EXPNO,a.tbdate,c.FEETYPE
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID = d.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' ) t
+		where BENEFPROJNO = (SELECT project_no from RD_PROJECT where project_id = #projectid#) and feetype = '2'
+		union all
+		select max(enddate) as maxdate,min(startdate) as mindate from pur_settle where projectno=#projectno# and setstatus = '2'
+		union all
+		select max(enddate) as maxdate,min(startdate) as mindate from pur_presettle where projectno=#projectno# and accruedstatus in ('0','1','2','4')
+		union all
+		SELECT 
+			max(CASE WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE <= GETDATE() THEN b.ACTENDDATE 
+				WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE > GETDATE() THEN GETDATE() 
+				WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE <= GETDATE() THEN b.EXPENDDATE 
+				WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE > GETDATE() THEN GETDATE() 
+				ELSE NULL END) AS maxdate,min(STARTDATE ) AS mindate
+ FROM PUR_PROJ_OUTPER b WHERE PROJECTNO = #projectno#
+		) t
+    ]]></select>
+    <select id="getCostPrjdate" parameterClass="java.util.HashMap" resultMap="resultMap9"><![CDATA[
+	  select max(t.maxdate) as enddate ,min(t.mindate) as startdate from (
+		select max(labor_date) as maxdate,min(labor_date) as mindate from rd_labor_detail where project_id=#projectid#
+		union all
+		 SELECT max(t.tbdate) as maxdate,min(t.tbdate) as mindate from(
+		select d.CONFMON as money,c.BENEFPROJNO,a.EXPORGID,c.BENEFORGID,e.ORGTYPE,b.EXPNO,a.tbdate,c.FEETYPE
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+		union ALL
+		select c.BENEFMON as money,c.BENEFPROJNO,a.EXPORGID,c.BENEFORGID,e.ORGTYPE,b.EXPNO,a.tbdate,c.FEETYPE
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID = d.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' ) t
+		where BENEFPROJNO = (SELECT project_no from RD_PROJECT where project_id = #projectid#) and feetype = '2'
+		union all
+		select max(enddate) as maxdate,min(startdate) as mindate from pur_settle where projectno=#projectno# and setstatus = '2'
+		union all
+		select max(enddate) as maxdate,min(startdate) as mindate from pur_presettle where projectno=#projectno# and accruedstatus in ('0','1','2','4')
+		) t
+    ]]></select>
+    <select id="getBudgetdate" parameterClass="int" resultMap="resultMap9"><![CDATA[
+	  	SELECT (CASE when a.per=0 then b.startdate ELSE a.startdate end) as startdate,
+		CASE when a.per=0 then b.enddate ELSE a.enddate end as enddate FROM
+		(select max(expoutdate) as enddate,min(expindate) as startdate,count(*) as per from prj_budget_hu where pbid =#pbid#) a,
+		(SELECT startdate,enddate FROM PRJ_BUGDET_VER WHERE pbid =#pbid#) b
+    ]]></select>
+    <select id="CalPrjdate" parameterClass="java.util.HashMap" resultMap="resultMap9">
+	  select max(t.maxdate) as enddate ,min(t.mindate) as startdate from (
+		select max(enddate) as maxdate,min(startdate) as mindate from pur_settle where projectno in ($projectno$) and setstatus = '2' 
+		<isEqual compareValue="1" property="costtype">and costtype=#costtype#</isEqual>
+        <isEqual compareValue="0" property="costtype">and costtype!=1</isEqual>
+		union all
+		select max(enddate) as maxdate,min(startdate) as mindate from pur_presettle where projectno in ($projectno$) and accruedstatus in ('0','1','2','4') 
+		<isEqual compareValue="1" property="costtype">and costtype=#costtype#</isEqual>
+        <isEqual compareValue="0" property="costtype">and costtype!=1</isEqual>
+		) t
+    </select>
+    <select id="detailPout" parameterClass="java.util.HashMap" resultMap="resultMap10">
+	 select '结算' as type,b.custname,c.dictname as status,a.NOTAXMON as poutcost1,a.SETAMOUNT as poutcost,a.startdate,a.enddate,a.settlementno as numbers,a.workamount,d.DICTNAME as workunit from pur_settle a
+		left join pur_supplier b on a.custid = b.custid 
+		left join eos_dict_entry c on a.setstatus = c.dictid and c.dicttypeid = 'AME_SETSTATUS'
+		LEFT JOIN EOS_DICT_ENTRY d on d.DICTID = a.workunit and d.DICTTYPEID = 'SERV_NUM_TYPE'
+		where projectno = #projectno# and setstatus = '2'  
+		<isEqual compareValue="1" property="costtype">and costtype=#costtype#</isEqual>
+        <isEqual compareValue="0" property="costtype">and costtype!=1</isEqual>
+		union all
+		select '计提' as type,b.custname,c.dictname as status,NOTAXMONEY as poutcost1,ACCRUEDMONEY as poutcost,startdate,enddate,cast(a.accruedid as varchar) as numbers,a.workamount,d.DICTNAME as workunit from pur_presettle a
+		left join pur_supplier b on a.custid = b.custid 
+		left join eos_dict_entry c on a.accruedstatus = c.dictid and c.dicttypeid = 'AME_ACCRUEDSTATUS'
+		LEFT JOIN EOS_DICT_ENTRY d on d.DICTID = a.workunit and d.DICTTYPEID = 'SERV_NUM_TYPE'
+		where projectno =  #projectno# and accruedstatus in ('0','1','2','4') 
+		<isEqual compareValue="1" property="costtype">and costtype=#costtype#</isEqual>
+        <isEqual compareValue="0" property="costtype">and costtype!=1</isEqual>
+    </select>
+    <select id="getIsCys" parameterClass="java.util.HashMap" resultMap="resultMap11">SELECT (CASE WHEN #nowdate# &gt; (SELECT cast(SUBSTRING(CYCLE, 12, 20) as datetime) FROM PRJ_EXECUT_TRA where PTRACID = (SELECT max(PTRACID) FROM PRJ_EXECUT_TRA where PROJECTID = #projectid#))
+	then (SELECT CASE WHEN  a.TOCOST BETWEEN a.TOBUCOST and b.PCOSTSUM then 1 WHEN a.TOCOST &gt; b.PCOSTSUM then 2 when b.PBID is null then 3 else 0 end as flag1 FROM PRJ_EXECUT_TRA a
+	LEFT JOIN PRJ_BUGDET_VER b on a.PROJECTID = b.PROJECTID and b.ISCVERSION = '1'
+	where a.PTRACID = (SELECT max(PTRACID) FROM PRJ_EXECUT_TRA where PROJECTID = #projectid# )) else (SELECT CASE WHEN  a.TOCOST BETWEEN a.TOBUCOST and b.PCOSTSUM then 1 WHEN a.TOCOST &gt; b.PCOSTSUM then 2 when b.PBID is null then 3 else 0 end as flag FROM PRJ_EXECUT_TRA a
+	left JOIN PRJ_BUGDET_VER b on a.PROJECTID = b.PROJECTID and b.ISCVERSION = '1'
+	where a.PROJECTID = #projectid# and #nowdate# BETWEEN  cast(SUBSTRING(CYCLE, 0, 11) as datetime) AND cast(SUBSTRING(CYCLE, 12, 20) as datetime)) end) as flag</select>
+    <select id="getIsCfz" parameterClass="java.util.HashMap" resultMap="resultMap11">SELECT CASE when (a.REMINDFZ is null or b.tocost is null) then 'n' when a.REMINDFZ &lt; b.tocost THEN 'y' ELSE 'n' end as flag  from RD_PROJECT a left join (
+		SELECT CASE WHEN #nowdate# &gt; (SELECT cast(SUBSTRING(CYCLE, 12, 20) as datetime) FROM PRJ_EXECUT_TRA where PTRACID = (SELECT max(PTRACID) FROM PRJ_EXECUT_TRA where PROJECTID = #projectid#))
+		then (SELECT TOCOST FROM PRJ_EXECUT_TRA where PTRACID = (SELECT max(PTRACID) FROM PRJ_EXECUT_TRA where PROJECTID = #projectid#)) else 
+		(SELECT TOCOST FROM PRJ_EXECUT_TRA where PROJECTID = #projectid# and #nowdate# BETWEEN  cast(SUBSTRING(CYCLE, 0, 11) as datetime) AND cast(SUBSTRING(CYCLE, 12, 20) as datetime)) end as tocost,#projectid# as PROJECTID)
+		b on a.PROJECT_ID=b.PROJECTID where a.PROJECT_ID = #projectid#</select>
+    <!--获取预算内部人力人月数 -->
+    <select id="getBuEmpMonth" parameterClass="java.lang.String" resultMap="empMonth">SELECT cast(round(sum(WORKDAYS)/20.5,2) as numeric(20,3)) as empmonth FROM PRJ_BUDGET_HU WHERE 
+		pbid in (SELECT pbid from PRJ_BUGDET_VER WHERE projectid in (SELECT project_id FROM RD_PROJECT WHERE project_no in ($projectno$)))
+		 and RESOURCE != '2'</select>
+    <!--获取预算外包人月数 -->
+    <select id="getBuOutMonth" parameterClass="java.lang.String" resultMap="empMonth">SELECT cast(round(sum(WORKDAYS)/20.5,2) as numeric(20,3)) as empmonth FROM PRJ_BUDGET_HU WHERE pbid in (SELECT pbid from PRJ_BUGDET_VER WHERE projectid in (SELECT project_id FROM RD_PROJECT WHERE project_no in ($projectno$)))
+		 and RESOURCE = '2'</select>
+    <!--获取外包实际人月数 -->
+    <select id="getActPoutnum" parameterClass="java.lang.String" resultMap="empMonth"><![CDATA[
+	 SELECT sum(isnull(workamount,0)) as empmonth from(
+		select CASE WHEN a.workunit = '2' then cast(round(a.workamount/20.5,2) as numeric(20,3)) else a.workamount end as workamount from pur_settle a
+	where projectno in ($projectno$) and setstatus = '2'  and costtype='1'
+	union all
+		select CASE WHEN a.workunit = '2' then cast(round(a.workamount/20.5,2) as numeric(20,3)) else a.workamount end as workamount from pur_presettle a	
+	where projectno in ($projectno$) and accruedstatus in ('0','1','2','4') and costtype='1') t
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="costmap">
+        <result column="tobucost" javaType="double" property="pcostsum"/>
+        <result column="tocost" javaType="double" property="pcostsum1"/>
+    </resultMap>
+    <!--获取周成本执行跟踪的项目总成本及预算总成本 -->
+    <select id="getProjectCostBygz" parameterClass="java.math.BigDecimal" resultMap="costmap"><![CDATA[
+	 	SELECT tocost = (SELECT tocost FROM PRJ_EXECUT_TRA a
+		 WHERE a.WEEKLY = (
+				SELECT 'W'+CAST(max(CAST (REPLACE(WEEKLY, 'W', '') AS NUMERIC)) AS VARCHAR) FROM PRJ_EXECUT_TRA where PROJECTID = #projectid#)
+		AND PROJECTID = #projectid#),tobucost=(SELECT PCOSTSUM FROM PRJ_BUGDET_VER where PROJECTID = #projectid# and ISCVERSION = '1')
+    ]]></select>
+</sqlMap>

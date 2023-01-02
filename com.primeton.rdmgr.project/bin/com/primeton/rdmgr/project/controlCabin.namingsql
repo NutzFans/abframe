@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.rdmgr.project.controlCabin">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="year" javaType="int" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="contsum" javaType="Decimal" property="contsum"/>
+        <result column="confirmcontsum" javaType="Decimal" property="confirmcontsum"/>
+        <result column="confirmgather" javaType="Decimal" property="confirmgather"/>
+        <result column="noconfirmgather" javaType="Decimal" property="noconfirmgather"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="year" javaType="int" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="noconfirmcontsum" javaType="Decimal" property="noconfirmcontsum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap8">
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="year" javaType="int" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="yszk" javaType="Decimal" property="yszk"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap9">
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="year" javaType="int" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="contsum" javaType="Decimal" property="contsum"/>
+        <result column="confirmcontsum" javaType="Decimal" property="confirmcontsum"/>
+        <result column="confirmgather" javaType="Decimal" property="confirmgather"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="activerproject" javaType="Decimal" property="activerproject"/>
+        <result column="passbudproject" javaType="Decimal" property="passbudproject"/>
+        <result column="postproject" javaType="Decimal" property="postproject"/>
+        <result column="nocontractproject" javaType="Decimal" property="nocontractproject"/>
+        <result column="newproject" javaType="Decimal" property="newproject"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="earlynum" javaType="int" property="earlynum"/>
+        <result column="innum" javaType="int" property="innum"/>
+        <result column="leavenum" javaType="int" property="leavenum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="days" javaType="Decimal" property="days"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="intends" javaType="Decimal" property="intends"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="CUSTJC" javaType="string" property="custjc"/>
+        <result column="ORDERREG" jdbcType="Date" property="orderreg"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="CONTSUM" javaType="Decimal" property="contsum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="CUSTID" javaType="Decimal" property="custid"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="CUSTJC" javaType="string" property="custjc"/>
+        <result column="startyszk" javaType="Decimal" property="startyszk"/>
+        <result column="startqcys" javaType="Decimal" property="startqcys"/>
+        <result column="actsum" javaType="Decimal" property="actsum"/>
+        <result column="actsum2" javaType="Decimal" property="actsum2"/>
+        <result column="ticketTax" javaType="Decimal" property="ticketTax"/>
+        <result column="sk" javaType="Decimal" property="sk"/>
+        <result column="endyszk" javaType="Decimal" property="endyszk"/>
+        <result column="endqmys" javaType="Decimal" property="endqmys"/>
+    </resultMap>
+    <select id="getKPI" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		select a.orgid,a.year,a.month,b.contsum,
+		round(case when c.CONTAMT is null then 0 else case when (c.CONTAMT-b.contsum)<0 then 0 else c.CONTAMT-b.contsum end end,2) AS contsumspan,
+		round(d.confirmcontsum,2) as confirmcontsum,
+		round(case when c.NTAXINCOME is null then 0 else case when (c.NTAXINCOME-d.confirmcontsum)<0 then 0 else c.NTAXINCOME-d.confirmcontsum end end,2) AS confirmcontsumspan,
+		
+		round(e.confirmgather,2) as confirmgather,
+		round(case when c.RECEAMT  is null then 0 else case when (c.RECEAMT-e.confirmgather)<0 then 0 else c.RECEAMT-e.confirmgather end end,2) AS confirmgatherspan,
+		round(e.noconfirmgather,2) as noconfirmgather
+		from 
+		(select #orgid# as orgid,cast(left(#yearmonth#,4) as int) as year,number as month 
+		from master.dbo.spt_values
+		where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1
+		) a LEFT JOIN
+		(		select year(ORDERREG) AS MYYEAR,
+		            mlist.month AS MYMONTH,
+		            SUM((case when x.PRODMON=0 and n.num is null then PRODUCTSUM 
+		                      when x.PRODMON=0 and n.num is not null then PRODUCTSUM/n.num
+		                   else PRODUCTSUM*y.PRODMON/x.PRODMON end)
+		            ) + 
+		            SUM((case when x.SERVMON=0 and n.num is null then SERVICESUM 
+													when x.SERVMON=0 and n.num is not null then SERVICESUM/n.num
+		                      else SERVICESUM*y.SERVMON/x.SERVMON end)
+		            ) +
+		            SUM((case when x.SERVMON=0 and n.num is null then  t.MASUM 
+													when x.SERVMON=0 and n.num is not null then t.MASUM/n.num
+		                      else t.MASUM*y.SERVMON/x.SERVMON end)
+		            ) as CONTSUM
+		     from 
+		     (select case when (a.CONTSUM=0 or a.CONTSUM is NULL) and (y.num is null or y.num=0) then 0
+		            when (a.CONTSUM=0 or a.CONTSUM is NULL) and y.num is not NULL and y.num != 0 then x.ORDERPRODMON/y.num
+		            else x.ORDERPRODMON*y.CONTSUM/a.CONTSUM end as PRODUCTSUM,
+					case when x.SERVJSMON is NULL then 0 else x.SERVJSMON end  as SERVICESUM,
+					case when x.PRODWBMON is null then 0 else x.PRODWBMON end  as MASUM,
+					x.CONTRACTID,
+					x.ORDERREG
+					from CS_CONT_ORDER x,(select contractid,sum(CONTSUM)as CONTSUM,sum(SERVJSMON) as SERVJSMON,sum(PRODWBMON) as PRODWBMON,sum(SERVMON) as SERVMON,count(*) as num from CS_CONTRACTSALE GROUP BY contractid) y,CS_CONTRACT a where x.CONTRACTID=y.CONTRACTID and a.CONTRACTID=x.CONTRACTID) t
+		       ,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+						CS_CONTRACT x 
+		         LEFT JOIN (select count(SALEID) as num,CONTRACTID FROM CS_CONTRACTSALE GROUP BY CONTRACTID) n on n.CONTRACTID=x.CONTRACTID,
+					(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int)  and number>=1) mlist
+		     where year(ORDERREG)=cast(left(#yearmonth#,4) as int) 
+							 and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+							 and month(ORDERREG)<=mlist.month
+				 and t.CONTRACTID=x.CONTRACTID and x.CONTRACTID=y.CONTRACTID 
+		     group by year(ORDERREG),mlist.month
+		)b on b.MYYEAR=a.year and b.MYmonth=a.month
+		
+		LEFT JOIN (select t.ORGID,x.year,sum(case when x.CONTAMT is null then 0 else x.CONTAMT end)as CONTAMT,
+		sum(case when x.NTAXINCOME is null then 0 else x.NTAXINCOME end)as NTAXINCOME,
+		sum(case when x.RECEAMT is null then 0 else x.RECEAMT end)as RECEAMT 
+		from DEPT_BUGDET_VER x,BUDGET_ORG t
+		where x.ORGID=t.ORGID and x.[YEAR]=t.BUDGET_YEAR and x.QUARTER in (1,2,3,4)
+		and t.BUDGET_YEAR=cast(left(#yearmonth#,4) as int)
+		and t.ORGID=#orgid#
+		GROUP BY t.ORGID,x.year
+		) c on c.orgid=a.orgid and c.year=a.year
+		
+		LEFT JOIN (select t.MYYEAR,t.MYMONTH, 
+		sum(case when t.status=3 then t.BHSJE else 0 end) as confirmcontsum,
+		sum(case when t.status in (0,2) then t.BHSJE else 0 end) as noconfirmcontsum
+		from(
+		select t.STATUS,substring(NEWYEARMONTH,1,4) AS MYYEAR,mlist.month as MYMONTH,
+		sum(case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is NOT NULL then PRODUCTSUM else PRODUCTSUM*y.PRODMON/x.PRODMON end)+
+		sum(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not NULL then SERVICESUM else SERVICESUM*y.SERVMON/x.SERVMON end)+
+		sum(case when t.MASUM is null then 0 when x.SERVMON=0 and t.MASUM is not NULL then t.MASUM else t.MASUM*y.SERVMON/x.SERVMON end) as JE,
+		case when t.status in (0,2) then(sum((case when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM when PRODUCTSUM is null then 0 else 
+			PRODUCTSUM/(1+(case when PRODUCTRATE is null then PRATE.DICTNAME else PRODUCTRATE end))*y.PRODMON/x.PRODMON end))+
+		sum((case when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM when SERVICESUM is null then 0 else 
+			SERVICESUM/(1+(case when SERVICERATE is null then SRATE.DICTNAME else SERVICERATE end))*y.SERVMON/x.SERVMON end))+
+		sum((case when x.SERVMON=0 and  t.MASUM is not null then  t.MASUM when t.MASUM is null then 0 else 
+			t.MASUM/(1+(case when MARATE is null then MRATE.DICTNAME else MARATE end))*y.SERVMON/x.SERVMON end)))
+    else (sum((case when ACTPRODUCTSUM2 is null then 0 when x.PRODMON=0 and ACTPRODUCTSUM2 is not NULL then ACTPRODUCTSUM2 else ACTPRODUCTSUM2*y.PRODMON/x.PRODMON end))+
+		sum((case when ACTSERVICESUM2 is null then 0 when x.SERVMON=0 and ACTSERVICESUM2 is not null then ACTSERVICESUM2 else ACTSERVICESUM2*y.SERVMON/x.SERVMON end))+
+		sum((case when ACTMASUM2 is null then 0 when x.SERVMON=0 and ACTMASUM2 is not NULL then ACTMASUM2 else ACTMASUM2*y.SERVMON/x.SERVMON end))) end AS BHSJE
+		from CS_REVE_FORECAST t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE ,
+		(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where (case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then year(t.maconfirmday) else substring(t.NEWYEARMONTH,1,4) end)=left(#yearmonth#,4)
+		and cast((case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then month(t.maconfirmday) else substring(t.NEWYEARMONTH,5,6) end) as int)<=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by t.STATUS,substring(NEWYEARMONTH,1,4),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) d on d.MYYEAR=a.year and d.MYmonth=a.month
+		
+		
+		LEFT JOIN (select t.MYYEAR,t.MYMONTH,
+		sum(case when t.FLAG =1 then t.je else 0 end ) as confirmgather ,
+		sum(case when t.FLAG =0 then t.je else 0 end ) as noconfirmgather 
+		from (
+		select substring(NEWYEARMONTH,1,4) AS MYYEAR,mlist.month AS MYMONTH,
+		sum((case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM 
+				else PRODUCTSUM*y.PRODMON/x.PRODMON end)+(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM 
+				else SERVICESUM*y.SERVMON/x.SERVMON end)) as JE,'0' as FLAG 
+		from CS_GATHER_FC t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where t.STATUS in ('0','1') 
+		and substring(NEWYEARMONTH,1,4)=left(#yearmonth#,4) 
+		and cast(right(NEWYEARMONTH,2) as INT)=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by substring(NEWYEARMONTH,1,4),mlist.month
+		
+		union all
+		select year(t.MACONFIRMDAY) as MYYEAR,mlist.month as MYMONTH,
+		sum((case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM 
+				else PRODUCTSUM*y.PRODMON/x.PRODMON end)+(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM 
+				else SERVICESUM*y.SERVMON/x.SERVMON end)) as JE,'1' as FLAG 
+		from CS_GATHER_FC t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where t.STATUS='2' 
+		and year(t.MACONFIRMDAY)=left(#yearmonth#,4) 
+		and month(t.MACONFIRMDAY)<=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by year(t.MACONFIRMDAY),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) e on e.MYYEAR=a.year and e.MYmonth=a.month
+
+		order by a.month asc
+	]]></select>
+    <select id="getLastKPI" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		select a.orgid,a.year,a.month,b.contsum,
+		round(d.confirmcontsum,2) as confirmcontsum,
+		round(e.confirmgather,2) as confirmgather,
+		round(e.noconfirmgather,2) as noconfirmgather
+		from 
+		(select #orgid# as orgid,cast(left(#yearmonth#,4) as int) as year,number as month 
+		from master.dbo.spt_values
+		where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1
+		) a LEFT JOIN
+		(		select year(ORDERREG) AS MYYEAR,
+		            mlist.month AS MYMONTH,
+		            SUM((case when x.PRODMON=0 and n.num is null then PRODUCTSUM 
+		                      when x.PRODMON=0 and n.num is not null then PRODUCTSUM/n.num
+		                   else PRODUCTSUM*y.PRODMON/x.PRODMON end)
+		            ) + 
+		            SUM((case when x.SERVMON=0 and n.num is null then SERVICESUM 
+													when x.SERVMON=0 and n.num is not null then SERVICESUM/n.num
+		                      else SERVICESUM*y.SERVMON/x.SERVMON end)
+		            ) +
+		            SUM((case when x.SERVMON=0 and n.num is null then  t.MASUM 
+													when x.SERVMON=0 and n.num is not null then t.MASUM/n.num
+		                      else t.MASUM*y.SERVMON/x.SERVMON end)
+		            ) as CONTSUM
+		     from 
+		     (select case when (a.CONTSUM=0 or a.CONTSUM is NULL) and (y.num is null or y.num=0) then 0
+		            when (a.CONTSUM=0 or a.CONTSUM is NULL) and y.num is not NULL and y.num != 0 then x.ORDERPRODMON/y.num
+		            else x.ORDERPRODMON*y.CONTSUM/a.CONTSUM end as PRODUCTSUM,
+					case when x.SERVJSMON is NULL then 0 else x.SERVJSMON end  as SERVICESUM,
+					case when x.PRODWBMON is null then 0 else x.PRODWBMON end  as MASUM,
+					x.CONTRACTID,
+					x.ORDERREG
+					from CS_CONT_ORDER x,(select contractid,sum(CONTSUM)as CONTSUM,sum(SERVJSMON) as SERVJSMON,sum(PRODWBMON) as PRODWBMON,sum(SERVMON) as SERVMON,count(*) as num from CS_CONTRACTSALE GROUP BY contractid) y,CS_CONTRACT a where x.CONTRACTID=y.CONTRACTID and a.CONTRACTID=x.CONTRACTID) t
+		       ,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+						CS_CONTRACT x 
+		         LEFT JOIN (select count(SALEID) as num,CONTRACTID FROM CS_CONTRACTSALE GROUP BY CONTRACTID) n on n.CONTRACTID=x.CONTRACTID,
+					(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int)  and number>=1) mlist
+		     where year(ORDERREG)=cast(left(#yearmonth#,4) as int) 
+							 and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+							 and month(ORDERREG)<=mlist.month
+				 and t.CONTRACTID=x.CONTRACTID and x.CONTRACTID=y.CONTRACTID 
+		     group by year(ORDERREG),mlist.month
+		)b on b.MYYEAR=a.year and b.MYmonth=a.month
+		
+		LEFT JOIN (select t.MYYEAR,t.MYMONTH, 
+		sum(case when t.status=3 then t.BHSJE else 0 end) as confirmcontsum,
+		sum(case when t.status in (0,2) then t.BHSJE else 0 end) as noconfirmcontsum
+		from(
+		select t.STATUS,substring(NEWYEARMONTH,1,4) AS MYYEAR,mlist.month as MYMONTH,
+		sum(case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is NOT NULL then PRODUCTSUM else PRODUCTSUM*y.PRODMON/x.PRODMON end)+
+		sum(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not NULL then SERVICESUM else SERVICESUM*y.SERVMON/x.SERVMON end)+
+		sum(case when t.MASUM is null then 0 when x.SERVMON=0 and t.MASUM is not NULL then t.MASUM else t.MASUM*y.SERVMON/x.SERVMON end) as JE,
+		case when t.status in (0,2) then(sum((case when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM when PRODUCTSUM is null then 0 else 
+			PRODUCTSUM/(1+(case when PRODUCTRATE is null then PRATE.DICTNAME else PRODUCTRATE end))*y.PRODMON/x.PRODMON end))+
+		sum((case when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM when SERVICESUM is null then 0 else 
+			SERVICESUM/(1+(case when SERVICERATE is null then SRATE.DICTNAME else SERVICERATE end))*y.SERVMON/x.SERVMON end))+
+		sum((case when x.SERVMON=0 and  t.MASUM is not null then  t.MASUM when t.MASUM is null then 0 else 
+			t.MASUM/(1+(case when MARATE is null then MRATE.DICTNAME else MARATE end))*y.SERVMON/x.SERVMON end)))
+    else (sum((case when ACTPRODUCTSUM2 is null then 0 when x.PRODMON=0 and ACTPRODUCTSUM2 is not NULL then ACTPRODUCTSUM2 else ACTPRODUCTSUM2*y.PRODMON/x.PRODMON end))+
+		sum((case when ACTSERVICESUM2 is null then 0 when x.SERVMON=0 and ACTSERVICESUM2 is not null then ACTSERVICESUM2 else ACTSERVICESUM2*y.SERVMON/x.SERVMON end))+
+		sum((case when ACTMASUM2 is null then 0 when x.SERVMON=0 and ACTMASUM2 is not NULL then ACTMASUM2 else ACTMASUM2*y.SERVMON/x.SERVMON end))) end AS BHSJE
+		from CS_REVE_FORECAST t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE ,
+		(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where (case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then year(t.maconfirmday) else substring(t.NEWYEARMONTH,1,4) end)=left(#yearmonth#,4)
+		and cast((case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then month(t.maconfirmday) else substring(t.NEWYEARMONTH,5,6) end) as int)<=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by t.STATUS,substring(NEWYEARMONTH,1,4),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) d on d.MYYEAR=a.year and d.MYmonth=a.month
+		
+		
+		LEFT JOIN (select t.MYYEAR,t.MYMONTH,
+		sum(case when t.FLAG =1 then t.je else 0 end ) as confirmgather ,
+		sum(case when t.FLAG =0 then t.je else 0 end ) as noconfirmgather 
+		from (
+		select substring(NEWYEARMONTH,1,4) AS MYYEAR,mlist.month AS MYMONTH,
+		sum((case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM 
+				else PRODUCTSUM*y.PRODMON/x.PRODMON end)+(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM 
+				else SERVICESUM*y.SERVMON/x.SERVMON end)) as JE,'0' as FLAG 
+		from CS_GATHER_FC t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where t.STATUS in ('0','1') 
+		and substring(NEWYEARMONTH,1,4)=left(#yearmonth#,4) 
+		and cast(right(NEWYEARMONTH,2) as INT)=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by substring(NEWYEARMONTH,1,4),mlist.month
+		
+		union all
+		select year(t.MACONFIRMDAY) as MYYEAR,mlist.month as MYMONTH,
+		sum((case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM 
+				else PRODUCTSUM*y.PRODMON/x.PRODMON end)+(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM 
+				else SERVICESUM*y.SERVMON/x.SERVMON end)) as JE,'1' as FLAG 
+		from CS_GATHER_FC t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where t.STATUS='2' 
+		and year(t.MACONFIRMDAY)=left(#yearmonth#,4) 
+		and month(t.MACONFIRMDAY)<=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by year(t.MACONFIRMDAY),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) e on e.MYYEAR=a.year and e.MYmonth=a.month
+	]]></select>
+    <select id="getLastLastKPI" parameterClass="java.util.HashMap" resultMap="resultMap9"><![CDATA[
+		select a.orgid,a.year,a.month,b.contsum,
+		round(d.confirmcontsum,2) as confirmcontsum,
+		round(e.confirmgather,2) as confirmgather
+		from 
+		(select #orgid# as orgid,cast(left(#yearmonth#,4) as int) as year,number as month 
+		from master.dbo.spt_values
+		where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1
+		) a LEFT JOIN
+		(		select year(ORDERREG) AS MYYEAR,
+		            mlist.month AS MYMONTH,
+		            SUM((case when x.PRODMON=0 and n.num is null then PRODUCTSUM 
+		                      when x.PRODMON=0 and n.num is not null then PRODUCTSUM/n.num
+		                   else PRODUCTSUM*y.PRODMON/x.PRODMON end)
+		            ) + 
+		            SUM((case when x.SERVMON=0 and n.num is null then SERVICESUM 
+													when x.SERVMON=0 and n.num is not null then SERVICESUM/n.num
+		                      else SERVICESUM*y.SERVMON/x.SERVMON end)
+		            ) +
+		            SUM((case when x.SERVMON=0 and n.num is null then  t.MASUM 
+													when x.SERVMON=0 and n.num is not null then t.MASUM/n.num
+		                      else t.MASUM*y.SERVMON/x.SERVMON end)
+		            ) as CONTSUM
+		     from 
+		     (select case when (a.CONTSUM=0 or a.CONTSUM is NULL) and (y.num is null or y.num=0) then 0
+		            when (a.CONTSUM=0 or a.CONTSUM is NULL) and y.num is not NULL and y.num != 0 then x.ORDERPRODMON/y.num
+		            else x.ORDERPRODMON*y.CONTSUM/a.CONTSUM end as PRODUCTSUM,
+					case when x.SERVJSMON is NULL then 0 else x.SERVJSMON end  as SERVICESUM,
+					case when x.PRODWBMON is null then 0 else x.PRODWBMON end  as MASUM,
+					x.CONTRACTID,
+					x.ORDERREG
+					from CS_CONT_ORDER x,(select contractid,sum(CONTSUM)as CONTSUM,sum(SERVJSMON) as SERVJSMON,sum(PRODWBMON) as PRODWBMON,sum(SERVMON) as SERVMON,count(*) as num from CS_CONTRACTSALE GROUP BY contractid) y,CS_CONTRACT a where x.CONTRACTID=y.CONTRACTID and a.CONTRACTID=x.CONTRACTID) t
+		       ,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+						CS_CONTRACT x 
+		         LEFT JOIN (select count(SALEID) as num,CONTRACTID FROM CS_CONTRACTSALE GROUP BY CONTRACTID) n on n.CONTRACTID=x.CONTRACTID,
+					(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int)  and number>=1) mlist
+		     where year(ORDERREG)=cast(left(#yearmonth#,4) as int) 
+							 and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+							 and month(ORDERREG)<=mlist.month
+				 and t.CONTRACTID=x.CONTRACTID and x.CONTRACTID=y.CONTRACTID 
+		     group by year(ORDERREG),mlist.month
+		)b on b.MYYEAR=a.year and b.MYmonth=a.month
+		
+		LEFT JOIN (select t.MYYEAR,t.MYMONTH, 
+		sum(case when t.status=3 then t.BHSJE else 0 end) as confirmcontsum,
+		sum(case when t.status in (0,2) then t.BHSJE else 0 end) as noconfirmcontsum
+		from(
+		select t.STATUS,substring(NEWYEARMONTH,1,4) AS MYYEAR,mlist.month as MYMONTH,
+		sum(case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is NOT NULL then PRODUCTSUM else PRODUCTSUM*y.PRODMON/x.PRODMON end)+
+		sum(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not NULL then SERVICESUM else SERVICESUM*y.SERVMON/x.SERVMON end)+
+		sum(case when t.MASUM is null then 0 when x.SERVMON=0 and t.MASUM is not NULL then t.MASUM else t.MASUM*y.SERVMON/x.SERVMON end) as JE,
+		case when t.status in (0,2) then(sum((case when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM when PRODUCTSUM is null then 0 else 
+			PRODUCTSUM/(1+(case when PRODUCTRATE is null then PRATE.DICTNAME else PRODUCTRATE end))*y.PRODMON/x.PRODMON end))+
+		sum((case when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM when SERVICESUM is null then 0 else 
+			SERVICESUM/(1+(case when SERVICERATE is null then SRATE.DICTNAME else SERVICERATE end))*y.SERVMON/x.SERVMON end))+
+		sum((case when x.SERVMON=0 and  t.MASUM is not null then  t.MASUM when t.MASUM is null then 0 else 
+			t.MASUM/(1+(case when MARATE is null then MRATE.DICTNAME else MARATE end))*y.SERVMON/x.SERVMON end)))
+    else (sum((case when ACTPRODUCTSUM2 is null then 0 when x.PRODMON=0 and ACTPRODUCTSUM2 is not NULL then ACTPRODUCTSUM2 else ACTPRODUCTSUM2*y.PRODMON/x.PRODMON end))+
+		sum((case when ACTSERVICESUM2 is null then 0 when x.SERVMON=0 and ACTSERVICESUM2 is not null then ACTSERVICESUM2 else ACTSERVICESUM2*y.SERVMON/x.SERVMON end))+
+		sum((case when ACTMASUM2 is null then 0 when x.SERVMON=0 and ACTMASUM2 is not NULL then ACTMASUM2 else ACTMASUM2*y.SERVMON/x.SERVMON end))) end AS BHSJE
+		from CS_REVE_FORECAST t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE ,
+		(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where (case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then year(t.maconfirmday) else substring(t.NEWYEARMONTH,1,4) end)=left(#yearmonth#,4)
+		and cast((case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then month(t.maconfirmday) else substring(t.NEWYEARMONTH,5,6) end) as int)<=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by t.STATUS,substring(NEWYEARMONTH,1,4),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) d on d.MYYEAR=a.year and d.MYmonth=a.month
+		
+		
+		LEFT JOIN (select t.MYYEAR,t.MYMONTH,
+		sum(case when t.FLAG =1 then t.je else 0 end ) as confirmgather  
+		from (
+		select year(t.MACONFIRMDAY) as MYYEAR,mlist.month as MYMONTH,
+		sum((case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM 
+				else PRODUCTSUM*y.PRODMON/x.PRODMON end)+(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM 
+				else SERVICESUM*y.SERVMON/x.SERVMON end)) as JE,'1' as FLAG 
+		from CS_GATHER_FC t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where t.STATUS='2' 
+		and year(t.MACONFIRMDAY)=left(#yearmonth#,4) 
+		and month(t.MACONFIRMDAY)<=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by year(t.MACONFIRMDAY),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) e on e.MYYEAR=a.year and e.MYmonth=a.month
+	]]></select>
+    <select id="getnoconfirmcontsum" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+		select a.orgid,a.year,a.month,round(d1.noconfirmcontsum,2) as noconfirmcontsum
+		from 
+		(select #orgid# as orgid,cast(left(#yearmonth#,4) as int) as year,number as month 
+		from master.dbo.spt_values
+		where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1
+		) a LEFT JOIN
+		(select t.MYYEAR,t.MYMONTH, 
+		sum(case when t.status=3 then t.BHSJE else 0 end) as confirmcontsum,
+		sum(case when t.status in (0,2) then t.BHSJE else 0 end) as noconfirmcontsum
+		from(
+		select t.STATUS,substring(NEWYEARMONTH,1,4) AS MYYEAR,mlist.month as MYMONTH,
+		sum(case when PRODUCTSUM is null then 0 when x.PRODMON=0 and PRODUCTSUM is NOT NULL then PRODUCTSUM else PRODUCTSUM*y.PRODMON/x.PRODMON end)+
+		sum(case when SERVICESUM is null then 0 when x.SERVMON=0 and SERVICESUM is not NULL then SERVICESUM else SERVICESUM*y.SERVMON/x.SERVMON end)+
+		sum(case when t.MASUM is null then 0 when x.SERVMON=0 and t.MASUM is not NULL then t.MASUM else t.MASUM*y.SERVMON/x.SERVMON end) as JE,
+		case when t.status in (0,2) then(sum((case when x.PRODMON=0 and PRODUCTSUM is not null then PRODUCTSUM when PRODUCTSUM is null then 0 else 
+			PRODUCTSUM/(1+(case when PRODUCTRATE is null then PRATE.DICTNAME else PRODUCTRATE end))*y.PRODMON/x.PRODMON end))+
+		sum((case when x.SERVMON=0 and SERVICESUM is not null then SERVICESUM when SERVICESUM is null then 0 else 
+			SERVICESUM/(1+(case when SERVICERATE is null then SRATE.DICTNAME else SERVICERATE end))*y.SERVMON/x.SERVMON end))+
+		sum((case when x.SERVMON=0 and  t.MASUM is not null then  t.MASUM when t.MASUM is null then 0 else 
+			t.MASUM/(1+(case when MARATE is null then MRATE.DICTNAME else MARATE end))*y.SERVMON/x.SERVMON end)))
+    else (sum((case when ACTPRODUCTSUM2 is null then 0 when x.PRODMON=0 and ACTPRODUCTSUM2 is not NULL then ACTPRODUCTSUM2 else ACTPRODUCTSUM2*y.PRODMON/x.PRODMON end))+
+		sum((case when ACTSERVICESUM2 is null then 0 when x.SERVMON=0 and ACTSERVICESUM2 is not null then ACTSERVICESUM2 else ACTSERVICESUM2*y.SERVMON/x.SERVMON end))+
+		sum((case when ACTMASUM2 is null then 0 when x.SERVMON=0 and ACTMASUM2 is not NULL then ACTMASUM2 else ACTMASUM2*y.SERVMON/x.SERVMON end))) end AS BHSJE
+		from CS_REVE_FORECAST t,CS_CONTRACT x,CS_CONTRACTSALE y LEFT JOIN OM_ORGANIZATION O on o.ORGID=y.ORGID,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+		(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE ,
+		(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist
+		where (case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then year(t.maconfirmday) else substring(t.NEWYEARMONTH,1,4) end)=left(#yearmonth#,4)
+		and cast((case when (t.STATUS = '3' or t.STATUS = '7' or t.STATUS = '8') and t.maconfirmday is not null then month(t.maconfirmday) else substring(t.NEWYEARMONTH,5,6) end) as int)=mlist.month 
+		and o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and t.CONTNUM=x.CONTNUM and x.CONTRACTID=y.CONTRACTID 
+		group by t.STATUS,substring(NEWYEARMONTH,1,4),mlist.month
+		)t
+		GROUP BY t.MYYEAR,t.MYMONTH) d1 on d1.MYYEAR=a.year and d1.MYmonth=a.month
+	]]></select>
+    <select id="getYSZKSum" parameterClass="java.util.HashMap" resultMap="resultMap8"><![CDATA[
+		select a.orgid,a.year,a.month,
+		round(f.yszk,2) as yszk
+		from 
+		(select #orgid# as orgid,cast(left(#yearmonth#,4) as int) as year,number as month 
+		from master.dbo.spt_values
+		where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1
+		) a LEFT JOIN(select t.MYYEAR,t.MYMONTH,sum(case when t.yszk<0 then 0 else t.yszk end) as yszk from (
+		select left(#yearmonth#,4) as MYYEAR,a.month as MYMONTH,a.contnum,a.orgid,
+		case when sum(a.sr) is null then 0 else sum(a.sr) end-case when sum(b.sk)is null then 0 else sum(b.sk)end +
+		  case when (sum(a.ACTTAX))<0 then 0
+			else (sum(a.ACTTAX)) end
+    as yszk
+		from 
+		(select t.contnum,t.contractid,t.orgid,t.month,sum(t.sr) as sr,sum(t.acttax) as acttax from (select t.CONTNUM,t.CONTRACTID,0 as sr,sum(t.TicketTAX) as ACTTAX,orgid,month 
+					from(select DISTINCT case when t.contsum is null or t.contsum=0 then 0 else x.TAX*x1.contsum/t.contsum end as TicketTAX,x.TICKETID,mlist.month,x1.orgid,
+								z.CONTRACTID,t.CONTNUM from CS_TICKET x
+								LEFT JOIN CS_BILL_TICKET y on x.TICKETID=y.TICKETID
+								LEFT JOIN CS_NEWBILL z on z.BILLID=y.BILLID
+								LEFT JOIN (select CONTRACTID,CONTNUM,sum(CONTSUM)as CONTSUM from CS_CONTRACT GROUP BY  CONTRACTID,CONTNUM) t on t.contractid=z.contractid
+								LEFT JOIN 
+								(select sum(contsum) as contsum,contractid,orgid from CS_CONTRACTSALE GROUP BY CONTRACTID,orgid )x1 on x1.contractid=t.CONTRACTID
+								,(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1) mlist 
+								where x.STATUS in (1,2,3,4) and (year(x.TICKETDATE)<left(#yearmonth#,4) or (year(x.TICKETDATE)=left(#yearmonth#,4)and month(x.TICKETDATE)<=mlist.month))
+								)t GROUP BY t.CONTRACTID,t.month,t.orgid,t.CONTNUM
+			union all
+			select c.CONTNUM,c.contractid,case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM*f.contsum/c.contsum end as sr,-case when c.contsum = 0 or c.contsum is null then 0 else a.ACTTAX*f.contsum/c.contsum end as ACTTAX,f.ORGID,a.month
+									from (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c
+									LEFT JOIN (select contnum,STATUS,sum(ACTSUM) as ACTSUM,sum(ACTSUM)-sum(ACTSUM2) as ACTTAX,mlist.month from CS_REVE_FORECAST
+															,(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1) mlist where (year(MACONFIRMDAY_START)<left(#yearmonth#,4) or (year(MACONFIRMDAY_START)=left(#yearmonth#,4)and month(MACONFIRMDAY_START)<=mlist.month))  and STATUS in(3) GROUP BY contnum,STATUS,mlist.month) a on c.contnum=a.CONTNUM
+									LEFT JOIN (select sum(contsum) as contsum,contractid,ORGID  from CS_CONTRACTSALE GROUP BY CONTRACTID,ORGID ) f on f.contractid =c.CONTRACTID
+			)t where t.month is not NULL 	GROUP BY t.contnum,t.contractid,t.orgid,t.month)a
+		 LEFT JOIN(select b.CONTNUM,sum(case when c.contsum = 0 or c.contsum is null then 0 else b.ACTSUM*f.contsum/c.contsum end) as sk,f.ORGID,b.month
+						from (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c
+						LEFT JOIN (select contnum,status,sum(ACTSUM) as ACTSUM,mlist.month from CS_GATHER_FC
+											,(select number as month from master.dbo.spt_values where type='p' AND number<=cast(right(#yearmonth#,2)as int) and number>=1) mlist where (year(MACONFIRMDAY)<left(#yearmonth#,4) or (year(MACONFIRMDAY)=left(#yearmonth#,4)and month(MACONFIRMDAY)<=mlist.month))  GROUP BY contnum,STATUS,mlist.month) b on c.contnum=b.CONTNUM
+						LEFT JOIN (select sum(contsum) as contsum,contractid,ORGID from CS_CONTRACTSALE GROUP BY CONTRACTID,ORGID) f on f.contractid =c.CONTRACTID
+						where b.status in (2,3,4)  GROUP BY b.CONTNUM,f.ORGID,b.month)b on a.CONTNUM=b.CONTNUM and a.ORGID=b.ORGID and a.month=b.month
+		LEFT JOIN OM_ORGANIZATION O on o.ORGID=a.ORGID
+		where o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%' and o.ORGID !='999999999'
+		GROUP BY a.month,a.contnum,a.orgid)t where t.MYMONTH is not NULL GROUP BY t.MYYEAR,t.MYMONTH
+		)f on f.MYYEAR=a.year and f.MYmonth=a.month
+		
+		order by a.month asc
+	]]></select>
+    <select id="getLastYSZKSum" parameterClass="java.util.HashMap" resultMap="resultMap8"><![CDATA[
+		select a.orgid,a.year,a.month,
+		round(f.yszk,2) as yszk
+		from 
+		(select #orgid# as orgid,cast(left(#yearmonth#,4) as int) as year,number as month 
+		from master.dbo.spt_values
+		where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1
+		) a LEFT JOIN(select t.MYYEAR,t.MYMONTH,sum(case when t.yszk<0 then 0 else t.yszk end) as yszk from (
+		select left(#yearmonth#,4) as MYYEAR,a.month as MYMONTH,a.contnum,a.orgid,
+		case when sum(a.sr) is null then 0 else sum(a.sr) end-case when sum(b.sk)is null then 0 else sum(b.sk)end +
+		  case when (sum(a.ACTTAX))<0 then 0
+			else (sum(a.ACTTAX)) end
+    as yszk
+		from 
+		(select t.contnum,t.contractid,t.orgid,t.month,sum(t.sr) as sr,sum(t.acttax) as acttax from (select t.CONTNUM,t.CONTRACTID,0 as sr,sum(t.TicketTAX) as ACTTAX,orgid,month 
+					from(select DISTINCT case when t.contsum is null or t.contsum=0 then 0 else x.TAX*x1.contsum/t.contsum end as TicketTAX,x.TICKETID,mlist.month,x1.orgid,
+								z.CONTRACTID,t.CONTNUM from CS_TICKET x
+								LEFT JOIN CS_BILL_TICKET y on x.TICKETID=y.TICKETID
+								LEFT JOIN CS_NEWBILL z on z.BILLID=y.BILLID
+								LEFT JOIN (select CONTRACTID,CONTNUM,sum(CONTSUM)as CONTSUM from CS_CONTRACT GROUP BY  CONTRACTID,CONTNUM) t on t.contractid=z.contractid
+								LEFT JOIN 
+								(select sum(contsum) as contsum,contractid,orgid from CS_CONTRACTSALE GROUP BY CONTRACTID,orgid )x1 on x1.contractid=t.CONTRACTID
+								,(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist 
+								where x.STATUS in (1,2,3,4) and (year(x.TICKETDATE)<left(#yearmonth#,4) or (year(x.TICKETDATE)=left(#yearmonth#,4)and month(x.TICKETDATE)<=mlist.month))
+								)t GROUP BY t.CONTRACTID,t.month,t.orgid,t.CONTNUM
+			union all
+			select c.CONTNUM,c.contractid,case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM*f.contsum/c.contsum end as sr,-case when c.contsum = 0 or c.contsum is null then 0 else a.ACTTAX*f.contsum/c.contsum end as ACTTAX,f.ORGID,a.month
+									from (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c
+									LEFT JOIN (select contnum,STATUS,sum(ACTSUM) as ACTSUM,sum(ACTSUM)-sum(ACTSUM2) as ACTTAX,mlist.month from CS_REVE_FORECAST
+															,(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist where (year(MACONFIRMDAY_START)<left(#yearmonth#,4) or (year(MACONFIRMDAY_START)=left(#yearmonth#,4)and month(MACONFIRMDAY_START)<=mlist.month))  and STATUS in(3) GROUP BY contnum,STATUS,mlist.month) a on c.contnum=a.CONTNUM
+									LEFT JOIN (select sum(contsum) as contsum,contractid,ORGID  from CS_CONTRACTSALE GROUP BY CONTRACTID,ORGID ) f on f.contractid =c.CONTRACTID
+			)t where t.month is not NULL 	GROUP BY t.contnum,t.contractid,t.orgid,t.month)a
+		 LEFT JOIN(select b.CONTNUM,sum(case when c.contsum = 0 or c.contsum is null then 0 else b.ACTSUM*f.contsum/c.contsum end) as sk,f.ORGID,b.month
+						from (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c
+						LEFT JOIN (select contnum,status,sum(ACTSUM) as ACTSUM,mlist.month from CS_GATHER_FC
+											,(select number as month from master.dbo.spt_values where type='p' AND number=cast(right(#yearmonth#,2)as int) and number>=1) mlist where (year(MACONFIRMDAY)<left(#yearmonth#,4) or (year(MACONFIRMDAY)=left(#yearmonth#,4)and month(MACONFIRMDAY)<=mlist.month))  GROUP BY contnum,STATUS,mlist.month) b on c.contnum=b.CONTNUM
+						LEFT JOIN (select sum(contsum) as contsum,contractid,ORGID from CS_CONTRACTSALE GROUP BY CONTRACTID,ORGID) f on f.contractid =c.CONTRACTID
+						where b.status in (2,3,4)  GROUP BY b.CONTNUM,f.ORGID,b.month)b on a.CONTNUM=b.CONTNUM and a.ORGID=b.ORGID and a.month=b.month
+		LEFT JOIN OM_ORGANIZATION O on o.ORGID=a.ORGID
+		where o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%' and o.ORGID !='999999999'
+		GROUP BY a.month,a.contnum,a.orgid)t where t.MYMONTH is not NULL GROUP BY t.MYYEAR,t.MYMONTH
+		)f on f.MYYEAR=a.year and f.MYmonth=a.month
+	]]></select>
+    <select id="getProject" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		select sum(case when  a.PROJECT_STATUS = '1' or a.PROJECT_STATUS='0' then 1 else 0 end) as activerproject,
+		sum(case when a.ISPASSBUD in ('2') then 1 else 0 end) as passbudproject,
+		sum(case when a.EXPENDDATE is not NULL and ((a.EXPENDDATE<a.ENDDATE and a.PROJECT_STATUS!='N') or (a.EXPENDDATE<GETDATE() and a.PROJECT_STATUS='N')) then 1 else 0 end) as postproject,
+		sum(a.nocontractproject) as nocontractproject,
+		sum(a.newproject) as newproject
+		FROM (select a.*,case when a.PROJECT_NO in(select p.PROJECT_NO from RD_PROJ_CONT p
+									LEFT JOIN CS_CONTRACT b on p.CONTNUM=b.CONTNUM
+									where b.CONTRACTID is not NULL)
+				then 0 else 1 end as  nocontractproject,case when a.createdate BETWEEN #yearmonth#+'-01' and (select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) )
+				then 1 else 0  end as newproject
+		from RD_PROJECT a) a
+		LEFT JOIN OM_ORGANIZATION O on o.ORGID=a.FIN_UNIT_ID
+		where o.ORGSEQ like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and (year(a.createdate)<cast(left(#yearmonth#,4) as int) or (year(a.createdate)=cast(left(#yearmonth#,4) as int) and month(a.createdate)<=cast(right(#yearmonth#,2) as int)))
+		and (a.PROJECT_STATUS = '1' or a.PROJECT_STATUS='0')
+	]]></select>
+    <select id="getPeople" parameterClass="java.util.HashMap" resultMap="resultMap2"><![CDATA[
+		select sum (case when t.type='all' then t.EMPPROP else 0 end) earlynum,
+		sum (case when t.type='in' then t.EMPPROP else 0 end) as innum,
+		sum (case when t.type='leave' then t.EMPPROP else 0 end) leavenum
+		FROM(
+		select a.EMPID,a.EMPNAME,1 as EMPPROP,cc.ORGID,'all' as type
+		from OM_EMPLOYEE a
+		LEFT JOIN OM_ORGANIZATION cc on a.orgid=cc.orgid
+		where a.INDATE<=(select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) )
+		and (a.OUTDATE is null or OUTDATE>(select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) ))
+		and a.empid not in(select empid from OM_EMPORG_CHANGE where CHANGEDATE>=#yearmonth#+'-01'
+		and CHANGEDATE<=(select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) ))
+		and a.EMPTYPE=1
+		and cc.ORGSEQ like ((select ORGSEQ from OM_ORGANIZATION where ORGID=#orgid#)+'%')
+		
+		UNION
+		select a.empid,b.EMPNAME,1 as EMPPROP,a.ORGID,'all' as type
+		from 
+		(select a.empid,b.OUTORGID as orgid,a.CHANGEDATE from (select empid,min(CHANGEDATE) CHANGEDATE from OM_EMPORG_CHANGE a
+		where a.CHANGEDATE>=#yearmonth#+'-01'
+		and a.CHANGEDATE<=(select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) )
+		GROUP BY empid ) a
+		LEFT JOIN OM_EMPORG_CHANGE b on a.EMPID=b.empid and a.CHANGEDATE=b.CHANGEDATE
+		) a
+		LEFT JOIN OM_ORGANIZATION cc on a.orgid=cc.orgid
+		,OM_EMPLOYEE b
+		where a.empid=b.empid
+		and b.INDATE<=(select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) )
+		and (b.OUTDATE is null or b.OUTDATE>(select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) ))
+		and b.emptype=1
+		and cc.ORGSEQ like ((select ORGSEQ from OM_ORGANIZATION where ORGID=#orgid#)+'%')
+		
+		UNION all
+		select e.EMPID,e.EMPNAME,1 as EMPPROP,o.ORGID,'leave' as type
+		FROM om_leave_apply a
+		LEFT JOIN OM_EMPLOYEE e ON a.USERID  = e.USERID
+		LEFT JOIN OM_ORGANIZATION o ON e.ORGID = o.ORGID
+		where a.outdate BETWEEN #yearmonth#+'-01' and (select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) )
+		and o.ORGSEQ like ((select ORGSEQ from OM_ORGANIZATION where ORGID=#orgid#)+'%')
+		
+		UNION ALL
+		select e.EMPID,e.EMPNAME,1 as EMPPROP,o.ORGID,'in' as type
+		FROM OM_INTEND_JOIN a
+		LEFT JOIN OM_ORGANIZATION o ON a.INORGID = o.ORGID
+		LEFT JOIN OM_EMPLOYEE e on e.USERID= a.USERID
+		where ((a.INTERDATE BETWEEN #yearmonth#+'-01' and (select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) ) and a.ACTDATE is null) OR
+					 a.ACTDATE BETWEEN #yearmonth#+'-01' and (select dateAdd(day,-1,dateAdd(month,1+datediff(month,#yearmonth#+'-01',#yearmonth#+'-01'),#yearmonth#+'-01')) ))
+		and o.ORGSEQ like ((select ORGSEQ from OM_ORGANIZATION where ORGID=#orgid#)+'%') and a.INTENDSTATUS in (0,1,4)
+		)t
+	]]></select>
+    <select id="getLeave" parameterClass="java.util.HashMap" resultMap="resultMap3"><![CDATA[
+		SELECT count(distinct f.userid) as days FROM AME_LEAVEINFO f
+		LEFT JOIN AME_LEAVEDETAIL d
+		ON f.LEAVEID = d.LEAVEID
+		LEFT JOIN OM_ORGANIZATION b ON f.orgid=b.ORGID
+	   WHERE b.orgseq like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+	   and CONVERT(varchar(10), GETDATE(), 120) BETWEEN d.STARTDATE and d.ENDDATE
+	]]></select>
+    <select id="getIntends" parameterClass="java.util.HashMap" resultMap="resultMap4"><![CDATA[
+		select count(c.INTENDID) as intends from OM_INTEND_JOIN c
+		LEFT JOIN OM_ORGANIZATION b ON c.INORGID=b.ORGID
+		WHERE b.orgseq like (select ORGSEQ from OM_ORGANIZATION where orgid=#orgid#)+'%'
+		and c.INTENDSTATUS in (1,4)
+	]]></select>
+    <select id="getcontsumdetail" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+		select x.CONTNUM,x.CUSTJC
+		       ,e.ORDERREG,x.orgname,
+		       sum(e.PRODUCTSUM_tax)+
+		       sum(e.SERVICESUM_tax)+
+		       sum(e.MASUM_tax) as CONTSUM
+		from 
+		(
+		select distinct a.CONTRACTID,c.DICTNAME,c.DICTID,b.SALEID,b.SALENAME,d.CUSTID,d.CUSTNAME,d.CUSTJC,a.contnum,a.projectname,
+		       b.orgid,b.orgname,b.ORGSEQ,b.sybid,b.sybname,b.sybseq,b.syqid,b.syqname,b.syqseq,1 as ord
+		from CS_CONTRACT a LEFT JOIN MIS_CUSTINFO d ON a.CUSTID=d.CUSTID 
+		left join (select a.SALEID,a.SALENAME,a.ORG,a.CONTRACTID,
+		case WHEN e.orgid is null then b.ORGID else e.ORGID end as orgid,
+		case when e.orgname is null then b.ORGNAME else e.ORGNAME end as orgname,
+		case when e.orgseq is null then b.ORGSEQ else e.ORGSEQ end as orgseq,
+		c.ORGID as sybid,c.ORGNAME as sybname,c.ORGSEQ as sybseq,
+		d.ORGID as syqid,d.ORGNAME as syqname,d.ORGSEQ as syqseq,
+		max(e.ORGLEVEL) as orglevel
+		from CS_CONTRACTSALE a
+		LEFT JOIN OM_ORGANIZATION b on b.ORGID=a.ORGID
+		LEFT JOIN OM_ORGANIZATION e on b.ORGSEQ like e.ORGSEQ+'%' and e.orglevel=4
+		LEFT JOIN OM_ORGANIZATION c on b.ORGSEQ like c.ORGSEQ+'%' and c.orglevel=3
+		LEFT JOIN OM_ORGANIZATION d on d.ORGID=substring(b.orgseq,4,charindex('.',b.orgseq,4)-charindex('.',b.orgseq,2)-1)
+		GROUP BY a.SALEID,a.SALENAME,a.ORG,a.CONTRACTID,e.orgid,e.orgname,e.ORGSEQ,b.ORGID ,b.ORGNAME,b.ORGSEQ,c.ORGID ,c.ORGNAME ,c.ORGSEQ ,d.ORGID ,d.ORGNAME ,d.ORGSEQ ) b on a.CONTRACTID=b.CONTRACTID
+		left join EOS_DICT_ENTRY c on b.ORG=c.DICTID and c.DICTTYPEID='CONT_ORG'
+		) x 
+		left join (
+		     select y.ORG,
+		            y.CONTRACTID,
+		            y.SALEID,
+		            year(t.ORDERREG) AS MYYEAR,
+		            month(t.ORDERREG) AS MYMONTH,
+		            year(ORDERREG) AS MYYEAR1,
+		            month(ORDERREG) AS MYMONTH1,
+		            t.ORDERREG,
+		            CONTORDERNO,
+		            x.CONTSUM,
+								SUM((case when x.PRODMON=0 and PRODUCTSUM is not null and n.num is null then PRODUCTSUM 
+		                   when PRODUCTSUM is null then 0 
+		                   when x.PRODMON=0 and n.num is NOT null then PRODUCTSUM/(1+CONVERT (decimal(19,2),PRATE.DICTNAME))/n.num
+		                   else PRODUCTSUM/(1+CONVERT (decimal(19,2),PRATE.DICTNAME))*y.PRODMON/x.PRODMON end)
+		            ) as PRODUCTSUM_notax,
+		            SUM((case when x.PRODMON=0 and n.num is null then PRODUCTSUM 
+		                      when x.PRODMON=0 and n.num is not null then PRODUCTSUM/n.num
+		                   else PRODUCTSUM*y.PRODMON/x.PRODMON end)
+		            ) as PRODUCTSUM_tax,
+		            SUM((case when x.SERVMON=0 and SERVICESUM is not null and n.num is null then SERVICESUM 
+		                      when SERVICESUM is null then 0 
+		                      when x.SERVMON=0 and n.num is NOT null then SERVICESUM/(1+CONVERT (decimal(19,2),SRATE.DICTNAME))/n.num
+		                      else SERVICESUM/(1+CONVERT (decimal(19,2),SRATE.DICTNAME))*y.SERVMON/x.SERVMON end)
+		            ) as SERVICESUM_notax,
+		            SUM((case when x.SERVMON=0 and n.num is null then SERVICESUM 
+													when x.SERVMON=0 and n.num is not null then SERVICESUM/n.num
+		                      else SERVICESUM*y.SERVMON/x.SERVMON end)
+		            ) as SERVICESUM_tax,
+		            SUM((case when x.SERVMON=0 and  t.MASUM is not null and n.num is null then  t.MASUM 
+		                      when t.MASUM is null then 0 
+		                      when x.SERVMON=0 and n.num is NOT null then t.MASUM/(1+CONVERT (decimal(19,2),MRATE.DICTNAME))/n.num
+		                      else t.MASUM/(1+CONVERT (decimal(19,2),MRATE.DICTNAME))*y.SERVMON/x.SERVMON end)
+		            ) as MASUM_notax,
+		            SUM((case when x.SERVMON=0 and n.num is null then  t.MASUM 
+													when x.SERVMON=0 and n.num is not null then t.MASUM/n.num
+		                      else t.MASUM*y.SERVMON/x.SERVMON end)
+		            ) as MASUM_tax,
+								SUM((case when z.PRODMON is NULL  then 0
+		                      else z.PRODMON/(1+CONVERT (decimal(19,2),MRATE.DICTNAME)) end)
+								) as PRODMON_notax,
+								SUM((case when z.PRODMON is NULL then 0 
+		                      else z.PRODMON end)
+								) as PRODMON_tax
+		     from 
+		     (select case when (a.CONTSUM=0 or a.CONTSUM is NULL) and (y.num is null or y.num=0) then 0
+		            when (a.CONTSUM=0 or a.CONTSUM is NULL) and y.num is not NULL and y.num != 0 then x.ORDERPRODMON/y.num
+		            else x.ORDERPRODMON*y.CONTSUM/a.CONTSUM end as PRODUCTSUM,
+					case when x.SERVJSMON is NULL then 0 else x.SERVJSMON end  as SERVICESUM,
+					case when x.PRODWBMON is null then 0 else x.PRODWBMON end  as MASUM,
+					x.CONTRACTID,
+					x.ORDERREG,CONTORDERNO
+					from CS_CONT_ORDER x,(select contractid,sum(CONTSUM)as CONTSUM,sum(SERVJSMON) as SERVJSMON,sum(PRODWBMON) as PRODWBMON,sum(SERVMON) as SERVMON,count(*) as num from CS_CONTRACTSALE GROUP BY contractid) y,CS_CONTRACT a where x.CONTRACTID=y.CONTRACTID and a.CONTRACTID=x.CONTRACTID) t,CS_CONTRACTSALE y,
+					 (select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+					 (select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+					 (select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE,
+						CS_CONTRACT x LEFT JOIN (select CONTRACTID,SUM(PRODMON) PRODMON from CS_CONTRACT_PRODUCT where PRODNAME='50' GROUP BY CONTRACTID) z on x.CONTRACTID=z.CONTRACTID
+		                      LEFT JOIN (select count(SALEID) as num,CONTRACTID FROM CS_CONTRACTSALE GROUP BY CONTRACTID) n on n.CONTRACTID=x.CONTRACTID
+		     where year(ORDERREG)=#myyear# and  t.CONTRACTID=x.CONTRACTID and x.CONTRACTID=y.CONTRACTID
+		     group by y.ORG,y.CONTRACTID,y.SALEID,t.ORDERREG,CONTORDERNO,x.CONTSUM
+		) e on e.CONTRACTID=x.CONTRACTID and e.ORG=x.DICTID and e.SALEID=x.SALEID
+		
+		where e.MYYEAR is not null and e.MYMONTH is not null  and e.MYMONTH >=1 and e.MYMONTH<=12 
+		and  e.MYYEAR=#myyear#
+		and (x.orgseq like #orgseq#+'%' or #orgseq# is null)
+		and (e.MYMONTH1 <=#mymonth# or #mymonth# is null)
+		group by x.CONTNUM,x.CUSTJC,e.ORDERREG,x.orgname
+		order by e.ORDERREG desc
+	]]></select>
+    <select id="getYSZK" parameterClass="java.util.HashMap" resultMap="resultMap6"><![CDATA[
+		select * from (select t.CUSTID,t.CUSTNAME,t.CUSTJC,
+		sum(t.startyszk) as startyszk,sum(startqcys) as startqcys,sum(t.actsum)as actsum,sum(t.actsum2) as actsum2,
+		sum(t.ticketTax) as ticketTax,sum(t.sk) as sk,sum(CASE when t.endyszk<=0 then 0 else t.endyszk end) as endyszk,
+		sum(CASE when t.endqmys<=0 then 0 else t.endqmys end) as endqmys
+		from (select CASE when (case when a.yszk is null then 0 else a.yszk end+case when c.tax1<=0 or c.tax1 is NULL then 0 else c.tax1 end)<=0 then 0 else (case when a.yszk is null then 0 else a.yszk end+case when c.tax1<=0 or c.tax1 is NULL then 0 else c.tax1 end) end as startyszk,
+		CASE when (-case when a.yszk is null then 0 else a.yszk end-case when c.tax1<=0 or c.tax1 is NULL then 0 else c.tax1 end)<=0 then 0 else (-case when a.yszk is null then 0 else a.yszk end-case when c.tax1<=0 or c.tax1 is NULL then 0 else c.tax1 end) end as startqcys,
+		b.sr as actsum,b.sr1 as actsum2,case when c.tax<=0 then 0 else c.tax end as ticketTax,d.sk,
+		case when a.yszk is null then 0 ELSE a.yszk end + case when b.sr is null then 0 else b.sr END
+		+case when c.tax is null or c.tax<=0 then 0 else c.tax end - case when d.sk is null then 0 else d.sk end as endyszk,
+		-(case when a.yszk is null then 0 ELSE a.yszk end + case when b.sr is null then 0 else b.sr END
+		+case when c.tax is null or c.tax<=0 then 0 else c.tax end - case when d.sk is null then 0 else d.sk end) as endqmys,
+		t.CONTNUM,t.PROJECTNAME,t.SALEID as USERID,
+		e.CUSTJC,e.CUSTNAME,e.CUSTID,
+		g.org,g.EMPNAME as salename,g.ORGID,g.ORGSEQ,
+		g.ywdyid,g.ywdyname,g.ywdyseq,g.sybid,g.sybname,g.sybseq,g.syqid,g.syqname,g.syqseq,1 as ORD
+		from(
+				select DISTINCT a.CONTNUM,a.CONTRACTID,c.SALEID,a.CUSTID,c.ORGID,a.PROJECTNAME from CS_CONTRACT a
+				LEFT JOIN CS_CONTRACTSALE c on c.CONTRACTID=a.CONTRACTID
+		)t
+		LEFT JOIN(
+				select a.CONTNUM,a.SALEID,
+				case when sum(a.sr) is null then 0 else sum(a.sr) end-case when sum(b.sk)is null then 0 else sum(b.sk)end as yszk,
+				case when sum(a.sr) is null then 0 else sum(a.sr) end as sr,case when sum(b.sk)is null then 0 else sum(b.sk)end as sk
+				from 
+				(select c.CONTNUM,case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM*f.contsum/c.contsum end as sr,f.SALEID 
+								from (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c
+								LEFT JOIN (select contnum,STATUS,sum(ACTSUM) as ACTSUM from CS_REVE_FORECAST where MACONFIRMDAY_START<(left(#yearmonth#,4)+'-01-01') and STATUS in(3) GROUP BY contnum,STATUS) a on c.contnum=a.CONTNUM
+								LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID  from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID ) f on f.contractid =c.CONTRACTID
+								)a LEFT JOIN
+				(select b.CONTNUM,sum(case when c.contsum = 0 or c.contsum is null then 0 else b.ACTSUM*f.contsum/c.contsum end) as sk,f.SALEID 
+								from (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c
+								LEFT JOIN (select contnum,status,sum(ACTSUM) as ACTSUM from CS_GATHER_FC where MACONFIRMDAY<(left(#yearmonth#,4)+'-01-01') GROUP BY contnum,STATUS) b on c.contnum=b.CONTNUM
+								LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID) f on f.contractid =c.CONTRACTID
+								where b.status in (2,3,4)  GROUP BY b.CONTNUM,f.SALEID )b on a.CONTNUM=b.CONTNUM and a.SALEID=b.SALEID
+				GROUP BY a.CONTNUM,a.SALEID
+			) a on a.CONTNUM=t.CONTNUM and a.SALEID=t.SALEID
+		LEFT JOIN (
+			 select a.CONTNUM,case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM*f.contsum/c.contsum end as sr,
+		   case when c.contsum = 0 or c.contsum is null then 0 else a.ACTSUM2*f.contsum/c.contsum end as sr1,f.SALEID 
+								from (select contnum,STATUS,sum(ACTSUM) as ACTSUM,sum(ACTSUM2) as ACTSUM2 from CS_REVE_FORECAST where MACONFIRMDAY_START>=(left(#yearmonth#,4)+'-01-01') and MACONFIRMDAY_START<=convert(varchar,dateadd(day,-day(#yearmonth#+'-01'),dateadd(month,1,#yearmonth#+'-01')),23) GROUP BY contnum,STATUS) a 
+								LEFT JOIN (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c on c.contnum=a.CONTNUM
+								LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID ) f on f.contractid =c.CONTRACTID
+								where a.STATUS in (3)   
+			) b on b.CONTNUM=t.CONTNUM and b.SALEID=t.SALEID
+		LEFT JOIN(
+			select t.CONTNUM,t.CONTRACTID,t.SALEID,
+			sum(case when t.TAX<=0 then 0 else t.TAX end) as tax,
+			sum(case when t.TAX1<=0 then 0 else t.TAX1 end) as tax1
+								FROM(
+									select t.CONTNUM,t.CONTRACTID,x.SALEID,
+									CASE when t.CONTSUM is NULL or t.CONTSUM=0 then 0 else (case when a.TicketTAX is null then 0 else a.TicketTAX end- case when b.ACTTAX is null then 0 else b.ACTTAX END)*x.contsum/t.CONTSUM end as TAX,
+		              CASE when t.CONTSUM is NULL or t.CONTSUM=0 then 0 else (case when a1.TicketTAX is null then 0 else a1.TicketTAX end- case when b1.ACTTAX is null then 0 else b1.ACTTAX END)*x.contsum/t.CONTSUM end as TAX1
+									FROM
+										(select CONTRACTID,CONTNUM,sum(CONTSUM)as CONTSUM from CS_CONTRACT GROUP BY  CONTRACTID,CONTNUM) t
+									LEFT JOIN 
+										(select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID )x on x.contractid=t.CONTRACTID
+									LEFT JOIN
+										(select sum(t.TicketTAX) as TicketTAX,t.CONTRACTID from(select DISTINCT x.TAX as TicketTAX,x.TICKETID,
+										z.CONTRACTID from CS_TICKET x
+										LEFT JOIN CS_BILL_TICKET y on x.TICKETID=y.TICKETID
+										LEFT JOIN CS_NEWBILL z on z.BILLID=y.BILLID
+										where x.STATUS in (1,2,3,4) and x.TICKETDATE<=convert(varchar,dateadd(day,-day(#yearmonth#+'-01'),dateadd(month,1,#yearmonth#+'-01')),23)
+										)t GROUP BY t.CONTRACTID)a on a.CONTRACTID=t.CONTRACTID
+									LEFT JOIN 
+										(select contnum,sum(ACTSUM)-sum(ACTSUM2)as ACTTAX
+										from CS_REVE_FORECAST 
+										where MACONFIRMDAY_START<=convert(varchar,dateadd(day,-day(#yearmonth#+'-01'),dateadd(month,1,#yearmonth#+'-01')),23) and STATUS in(3,7,8) GROUP BY contnum,STATUS) b on b.contnum=t.contnum
+		              LEFT JOIN
+										(select sum(t.TicketTAX) as TicketTAX,t.CONTRACTID from(select DISTINCT x.TAX as TicketTAX,x.TICKETID,
+										z.CONTRACTID from CS_TICKET x
+										LEFT JOIN CS_BILL_TICKET y on x.TICKETID=y.TICKETID
+										LEFT JOIN CS_NEWBILL z on z.BILLID=y.BILLID
+										where x.STATUS in (1,2,3,4) and x.TICKETDATE<(left(#yearmonth#,4)+'-01-01')
+										)t GROUP BY t.CONTRACTID)a1 on a1.CONTRACTID=t.CONTRACTID
+									LEFT JOIN 
+										(select contnum,sum(ACTSUM)-sum(ACTSUM2)as ACTTAX
+										from CS_REVE_FORECAST 
+										where MACONFIRMDAY_START<(left(#yearmonth#,4)+'-01-01') and STATUS in (3) GROUP BY contnum,STATUS) b1 on b1.contnum=t.contnum) t
+			GROUP BY t.CONTNUM,t.CONTRACTID,t.SALEID
+			) c on c.CONTNUM=t.CONTNUM and c.SALEID=t.SALEID
+		LEFT JOIN (
+			select b.CONTNUM,case when c.contsum = 0 or c.contsum is null then 0 else b.ACTSUM*f.contsum/c.contsum end as sk,f.SALEID 
+			from (select contnum,sum(ACTSUM) as ACTSUM from CS_GATHER_FC where MACONFIRMDAY>=(left(#yearmonth#,4)+'-01-01') and MACONFIRMDAY<=convert(varchar,dateadd(day,-day(#yearmonth#+'-01'),dateadd(month,1,#yearmonth#+'-01')),23) and status in (2,3,4) GROUP BY contnum) b
+			LEFT JOIN (select sum(contsum) as contsum,contnum,CONTRACTID from CS_CONTRACT GROUP BY contnum,CONTRACTID) c on c.contnum=b.CONTNUM
+			LEFT JOIN (select sum(contsum) as contsum,contractid,SALEID from CS_CONTRACTSALE GROUP BY CONTRACTID,SALEID) f on f.contractid =c.CONTRACTID
+		) d on d.CONTNUM=t.CONTNUM and d.SALEID=t.SALEID
+		LEFT JOIN MIS_CUSTINFO e on e.CUSTID=t.CUSTID
+		LEFT JOIN (
+				select DISTINCT case when c.ORGID=2904 or c.orgseq like '.1.319.%' or c.orgseq like '.1.30.%' or c.orgseq like '.1.12.%' or c.orgseq like '.1.318.%' or c.ORGID=999999999 then f.ORGID
+															else d.ORGID
+												end as org,c.ORGSEQ,c.ORGID,b.SALEID,a.EMPNAME,
+												case WHEN e.orgid is null then c.ORGID else e.ORGID end as ywdyid,
+												case when e.orgname is null then c.ORGNAME else e.ORGNAME end as ywdyname,
+												case when e.orgseq is null then c.ORGSEQ else e.ORGSEQ end as ywdyseq,
+												d.ORGID as sybid,d.ORGNAME as sybname,d.ORGSEQ as sybseq,
+												f.ORGID as syqid,f.ORGNAME as syqname,f.ORGSEQ as syqseq,max(e.ORGLEVEL) as orglevel
+				from OM_EMPLOYEE a,CS_CONTRACTSALE b,
+						 OM_ORGANIZATION c
+						 LEFT JOIN OM_ORGANIZATION e on c.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL=4
+		         LEFT JOIN OM_ORGANIZATION d on c.ORGSEQ like d.ORGSEQ+'%' and d.ORGLEVEL=3
+						 LEFT JOIN OM_ORGANIZATION f on c.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL=2
+				where a.userid=b.SALEID and c.ORGID=b.ORGID and b.ORGID !='999999999' and c.ORGSEQ is not null and c.ORGSEQ!='' and c.ORGSEQ like '.%.%.%.%'
+		    GROUP BY c.ORGID,c.ORGSEQ,b.SALEID,a.EMPNAME,e.orgid,e.orgname,e.orgseq,d.ORGID,d.ORGNAME,d.ORGSEQ,f.ORGID,f.ORGNAME,f.ORGSEQ,c.ORGNAME 
+		  )g on g.SALEID=t.SALEID and g.ORGID=t.ORGID
+		where g.ORGSEQ like #orgseq#+'%'
+		)t
+		GROUP BY t.CUSTID,t.CUSTNAME,t.CUSTJC,t.ORD) t
+		where t.startyszk!=0 or t.actsum!=0 or t.endyszk!=0 or t.sk!=0 or t.endqmys!=0
+	]]></select>
+</sqlMap>

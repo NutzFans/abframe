@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:zhuhx -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="myyear" javaType="string" property="myyear"/>
+        <result column="quarters" javaType="string" property="quarters"/>
+        <result column="contnum" javaType="string" property="contnum"/>
+        <result column="salename" javaType="string" property="salename"/>
+        <result column="custname" javaType="string" property="custname"/>
+        <result column="syb" javaType="string" property="syb"/>
+        <result column="qcch" javaType="double" property="qcch"/>
+        <result column="CBJZ" javaType="double" property="CBJZ"/>
+        <result column="QMCH" javaType="double" property="QMCH"/>
+        <result column="CHXZ" javaType="double" property="CHXZ"/>
+        <result column="STOCKTYPE" javaType="string" property="STOCKTYPE"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="contnum" javaType="string" property="contnum"/>
+        <result column="buy_orgname" javaType="string" property="buyOrgname"/>
+        <result column="custjc" javaType="string" property="custjc"/>
+        <result column="syb" javaType="string" property="syb"/>
+        <result column="costmemo" javaType="string" property="costmemo"/>
+        <result column="year" javaType="string" property="year"/>
+        <result column="month" javaType="string" property="month"/>
+        <result column="finyear" javaType="string" property="finyear"/>
+        <result column="finmonth" javaType="string" property="finmonth"/>
+        <result column="stockdate" javaType="string" property="stockdate"/>
+        <result column="service_date" javaType="string" property="serviceDate"/>
+        <result column="emp_code" javaType="string" property="empCode"/>
+        <result column="costmemo" javaType="string" property="costmemo"/>
+        <result column="emp_name" javaType="string" property="empName"/>
+        <result column="emp_orgname" javaType="string" property="empOrgname"/>
+        <result column="working_hours" javaType="double" property="workingHours"/>
+        <result column="unit_price" javaType="double" property="unitPrice"/>
+        <result column="costs" javaType="double" property="costs"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="orgid" javaType="string" property="orgid"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="orgseq" javaType="string" property="orgseq"/>
+        <result column="parentorgid" javaType="string" property="parentorgid"/>
+        <result column="orglevel" javaType="string" property="orglevel"/>
+        <result column="showname" javaType="string" property="showname"/>
+        <result column="sortno" javaType="string" property="sortno"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="orgid" javaType="string" property="orgid"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="orgseq" javaType="string" property="orgseq"/>
+        <result column="orgtype" javaType="string" property="orgtype"/>
+        <result column="orglevel" javaType="string" property="orglevel"/>
+        <result column="type" javaType="string" property="type"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="reportcode" javaType="string" property="reportcode"/>
+        <result column="reportname" javaType="string" property="reportname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="reportid" javaType="string" property="reportid"/>
+        <result column="reportcode" javaType="string" property="reportcode"/>
+        <result column="reportquotacode" javaType="string" property="reportquotacode"/>
+        <result column="reportquotaname" javaType="string" property="reportquotaname"/>
+        <result column="parentquotacode" javaType="string" property="parentquotacode"/>
+        <result column="quotaseq" javaType="string" property="quotaseq"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="reportid" javaType="string" property="reportid"/>
+        <result column="reportcode" javaType="string" property="reportcode"/>
+        <result column="reportquotacode" javaType="string" property="reportquotacode"/>
+        <result column="reportquotaname" javaType="string" property="reportquotaname"/>
+        <result column="parentquotacode" javaType="string" property="parentquotacode"/>
+        <result column="quotaseq" javaType="string" property="quotaseq"/>
+        <result column="quotaaccesstype" javaType="string" property="quotaaccesstype"/>
+        <result column="computerule" javaType="string" property="computerule"/>
+        <result column="quotaunit" javaType="string" property="quotaunit"/>
+        <result column="showrule" javaType="string" property="showrule"/>
+        <result column="quotasort" javaType="string" property="quotasort"/>
+        <result column="quotaremark" javaType="string" property="quotaremark"/>
+        <result column="smallnumber" javaType="string" property="smallnumber"/>
+        <result column="isshow" javaType="string" property="isshow"/>
+    </resultMap>
+    <select id="selectjdch" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		select #year# as myyear,#quarters# as quarters,
+		coalesce(a.contnum,b.contnum,c.contnum,d.contnum,e.contnum,f.contnum) as contnum,
+		coalesce(a.orgname,b.orgname,c.orgname,d.orgname,e.orgname,f.orgname) as salename,
+		coalesce(a.custname,b.custname,c.custname,d.custname,e.custname,f.custname) as custname,
+		coalesce(a.syb,b.syb,c.syb,d.syb,e.syb,f.syb) as syb,
+		(isNull(ch1,0)+isNull(ch2,0)) as CHXZ,(isNull(byqcch1,0)+isNull(byqcch2,0)+isNull(byqcjz,0)) as qcch,(isNull(byqcjz,0)+isNull(byjz,0)) as CBJZ	,
+		(isNull(ch1,0)+isNull(ch2,0)+isNull(byqcch1,0)+isNull(byqcch2,0)) as QMCH, 'cg' as STOCKTYPE from 
+		(select a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid as sybid,d.orgname as syb,sum(taxmon) as ch1 from pur_outcost t 
+		left join cs_contract a on t.contnum = a.contnum
+		left join mis_custinfo b on a.custid = b.custid
+		left join om_organization c on t.beneforgid = c.orgid
+		left join om_organization d on d.orgid = (case when (c.orgseq like '.1.10.%' or c.orgseq like '.1.14.%') then SUBSTRING(c.ORGSEQ, 7, CHARINDEX('.', c.ORGSEQ, 7) - CHARINDEX('.', c.ORGSEQ, 4) - 1) else SUBSTRING(c.ORGSEQ, 4, CHARINDEX('.', c.ORGSEQ, 4) - CHARINDEX('.', c.ORGSEQ, 2) - 1) end)
+		where DATEPART (quarter,confirmdate) = #quarters# and DATEPART (yyyy,confirmdate) = #year# and t.costmemo = '1'
+		group by a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid,d.orgname) a
+		full join 
+		(select a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid as sybid,d.orgname as syb,sum(taxmon) as ch2 from pur_outcost t 
+		left join cs_contract a on t.contnum = a.contnum
+		left join mis_custinfo b on a.custid = b.custid
+		left join om_organization c on t.beneforgid = c.orgid
+		left join om_organization d on d.orgid = (case when (c.orgseq like '.1.10.%' or c.orgseq like '.1.14.%') then SUBSTRING(c.ORGSEQ, 7, CHARINDEX('.', c.ORGSEQ, 7) - CHARINDEX('.', c.ORGSEQ, 4) - 1) else SUBSTRING(c.ORGSEQ, 4, CHARINDEX('.', c.ORGSEQ, 4) - CHARINDEX('.', c.ORGSEQ, 2) - 1) end)
+		where DATEPART (quarter,confirmdate) = #quarters# and DATEPART (yyyy,confirmdate) = #year#  and ((DATEPART (quarter,stockdate) > #quarters# and DATEPART (yyyy,stockdate) = #year#) or DATEPART (yyyy,stockdate) > #year#) and t.costmemo = '0'
+		group by a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid,d.orgname ) b
+		on a.contractid = b.contractid and a.beneforgid  = b.beneforgid and a.custid = b.custid
+		full join
+		(select a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid as sybid,d.orgname as syb,sum(taxmon) as byqcch1 from pur_outcost t 
+		left join cs_contract a on t.contnum = a.contnum
+		left join mis_custinfo b on a.custid = b.custid
+		left join om_organization c on t.beneforgid = c.orgid
+		left join om_organization d on d.orgid = (case when (c.orgseq like '.1.10.%' or c.orgseq like '.1.14.%') then SUBSTRING(c.ORGSEQ, 7, CHARINDEX('.', c.ORGSEQ, 7) - CHARINDEX('.', c.ORGSEQ, 4) - 1) else SUBSTRING(c.ORGSEQ, 4, CHARINDEX('.', c.ORGSEQ, 4) - CHARINDEX('.', c.ORGSEQ, 2) - 1) end)
+		where ((DATEPART (quarter,confirmdate) < #quarters# and DATEPART (yyyy,confirmdate) = #year#) or DATEPART (yyyy,confirmdate) < #year#) and t.costmemo = '1'
+		group by a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid,d.orgname) c
+		on c.contractid = b.contractid and c.beneforgid  = b.beneforgid and c.custid = b.custid
+		full join 
+		(select a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid as sybid,d.orgname as syb,sum(taxmon) as byqcch2 from pur_outcost t 
+		left join cs_contract a on t.contnum = a.contnum
+		left join mis_custinfo b on a.custid = b.custid
+		left join om_organization c on t.beneforgid = c.orgid
+		left join om_organization d on d.orgid = (case when (c.orgseq like '.1.10.%' or c.orgseq like '.1.14.%') then SUBSTRING(c.ORGSEQ, 7, CHARINDEX('.', c.ORGSEQ, 7) - CHARINDEX('.', c.ORGSEQ, 4) - 1) else SUBSTRING(c.ORGSEQ, 4, CHARINDEX('.', c.ORGSEQ, 4) - CHARINDEX('.', c.ORGSEQ, 2) - 1) end)
+		where ((DATEPART (quarter,confirmdate) < #quarters# and DATEPART (yyyy,confirmdate) = #year#) or DATEPART (yyyy,confirmdate) < #year#) and ((DATEPART (quarter,stockdate) > #quarters# and DATEPART (yyyy,stockdate) = #year#) or DATEPART (yyyy,stockdate) > #year#) and t.costmemo = '0'
+		group by a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid,d.orgname) d
+		on c.contractid = d.contractid and c.beneforgid  = d.beneforgid and c.custid = d.custid
+		full join
+		(select a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid as sybid,d.orgname as syb,sum(taxmon) as byqcjz from pur_outcost t 
+		left join cs_contract a on t.contnum = a.contnum
+		left join mis_custinfo b on a.custid = b.custid
+		left join om_organization c on t.beneforgid = c.orgid
+		left join om_organization d on d.orgid = (case when (c.orgseq like '.1.10.%' or c.orgseq like '.1.14.%') then SUBSTRING(c.ORGSEQ, 7, CHARINDEX('.', c.ORGSEQ, 7) - CHARINDEX('.', c.ORGSEQ, 4) - 1) else SUBSTRING(c.ORGSEQ, 4, CHARINDEX('.', c.ORGSEQ, 4) - CHARINDEX('.', c.ORGSEQ, 2) - 1) end)
+		where DATEPART (quarter,stockdate) =#quarters# and DATEPART (yyyy,stockdate) = #year# and ((DATEPART (quarter,confirmdate) < #quarters# and DATEPART (yyyy,confirmdate) = #year#) or DATEPART (yyyy,confirmdate) < #year#)
+		group by a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid,d.orgname) e
+		on e.contractid = d.contractid and e.beneforgid  = d.beneforgid and e.custid = d.custid
+		full join 
+		(select a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid as sybid,d.orgname as syb,sum(taxmon) as byjz from pur_outcost t
+		left join cs_contract a on t.contnum = a.contnum
+		left join mis_custinfo b on a.custid = b.custid
+		left join om_organization c on t.beneforgid = c.orgid
+		left join om_organization d on d.orgid = (case when (c.orgseq like '.1.10.%' or c.orgseq like '.1.14.%') then SUBSTRING(c.ORGSEQ, 7, CHARINDEX('.', c.ORGSEQ, 7) - CHARINDEX('.', c.ORGSEQ, 4) - 1) else SUBSTRING(c.ORGSEQ, 4, CHARINDEX('.', c.ORGSEQ, 4) - CHARINDEX('.', c.ORGSEQ, 2) - 1) end)
+		where DATEPART (quarter,stockdate)=#quarters# and DATEPART (yyyy,stockdate) = #year# and DATEPART (quarter,confirmdate) =#quarters# and DATEPART (yyyy,confirmdate) = #year# and t.costmemo = '0'
+		group by a.contractid,t.contnum,t.beneforgid,c.orgname,a.custid,b.custname,d.orgid,d.orgname) f 
+		on e.contractid = f.contractid and e.beneforgid  = f.beneforgid and e.custid = f.custid
+		union all 
+		select #year# as myyear, #quarters# as quarters,
+		coalesce(a.contnum,b.contnum,c.contnum,d.contnum,e.contnum,f.contnum) as contnum,
+		coalesce(a.orgname,b.orgname,c.orgname,d.orgname,e.orgname,f.orgname) as salename,
+		coalesce(a.custname,b.custname,c.custname,d.custname,e.custname,f.custname) as custname,
+		coalesce(a.syb,b.syb,c.syb,d.syb,e.syb,f.syb) as syb,
+		(isNull(ch1,0)+isNull(ch2,0)) as CHXZ,(isNull(byqcch1,0)+isNull(byqcch2,0)+isNull(byqcjz,0)) as qcch,(isNull(byqcjz,0)+isNull(byjz,0)) as CBJZ	,
+		(isNull(ch1,0)+isNull(ch2,0)+isNull(byqcch1,0)+isNull(byqcch2,0)) as QMCH, 'rl' as STOCKTYPE from 
+		(select b.contractid,t.contnum,t.buy_orgcode as beneforgid,t.buy_empname as orgname,c.custid,t.custname,f.orgid as sybid,f.orgname as syb,sum(t.costs) as ch1 from erp_ps t 
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on t.custname = c.custname
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)
+		where t.month in (select number from master.dbo.spt_values where number between #month1# and #month2# and type='p') and t.year = #year# and t.costmemo = '1'
+		group by b.contractid,t.contnum,t.buy_orgcode,t.buy_empname,c.custid,t.custname,f.orgid,f.orgname) a
+		full join
+		(select  b.contractid,t.contnum,t.buy_orgcode as beneforgid,t.buy_empname as orgname,c.custid,t.custname,f.orgid as sybid,f.orgname as syb,sum(t.costs) as ch2 from erp_ps t  
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on t.custname = c.custname
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)
+		where t.month in (select number from master.dbo.spt_values where number between #month1# and #month2# and type='p') and t.year = #year# and t.costmemo = '0' 
+		and ((a.finmonth > #month2# and a.finyear = #year#) or a.finyear > #year#)
+		group by b.contractid,t.contnum,t.buy_orgcode,t.buy_empname,c.custid,t.custname,f.orgid,f.orgname) b
+		on a.contractid = b.contractid and a.beneforgid  = b.beneforgid and a.custid = b.custid
+		full join
+		(select  b.contractid,t.contnum,t.buy_orgcode as beneforgid,t.buy_empname as orgname,c.custid,t.custname,f.orgid as sybid,f.orgname as syb,sum(t.costs) as byqcch1 from erp_ps t  
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on t.custname = c.custname
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)
+		where ((t.month < #month1# and t.year = #year#) or t.year < #year#) and t.costmemo = '1'
+		group by b.contractid,t.contnum,t.buy_orgcode,t.buy_empname,c.custid,t.custname,f.orgid,f.orgname) c
+		on c.contractid = b.contractid and c.beneforgid  = b.beneforgid and c.custid = b.custid
+		full join
+		(select  b.contractid,t.contnum,t.buy_orgcode as beneforgid,t.buy_empname as orgname,c.custid,t.custname,f.orgid as sybid,f.orgname as syb,sum(t.costs) as byqcch2 from erp_ps t  
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on t.custname = c.custname
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)
+		where ((t.month < #month1# and t.year = #year#) or t.year < #year#) and t.costmemo = '0' and ((a.finmonth > #month2# and a.finyear = #year#) or a.finyear > #year#)
+		group by b.contractid,t.contnum,t.buy_orgcode,t.buy_empname,c.custid,t.custname,f.orgid,f.orgname) d
+		on c.contractid = d.contractid and c.beneforgid  = d.beneforgid and c.custid = d.custid
+		full join
+		(select  b.contractid,t.contnum,t.buy_orgcode as beneforgid,t.buy_empname as orgname,c.custid,t.custname,f.orgid as sybid,f.orgname as syb,sum(t.costs) as byqcjz from erp_ps t  
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on t.custname = c.custname
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)
+		where ((t.month < #month1# and t.year = #year#) or t.year < #year#) and t.costmemo = '0' and a.finmonth in (select number from master.dbo.spt_values where number between #month1# and #month2# and type='p') and a.finyear = #year#
+		group by b.contractid,t.contnum,t.buy_orgcode,t.buy_empname,c.custid,t.custname,f.orgid,f.orgname) e
+		on e.contractid = d.contractid and e.beneforgid  = d.beneforgid and e.custid = d.custid
+		full join
+		(select  b.contractid,t.contnum,t.buy_orgcode as beneforgid,t.buy_empname as orgname,c.custid,t.custname,f.orgid as sybid,f.orgname as syb,sum(t.costs) as byjz from erp_ps t  
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on t.custname = c.custname
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)
+		where t.month in (select number from master.dbo.spt_values where number between #month1# and #month2# and type='p') and t.year = #year# and t.costmemo = '0' 
+		and a.finmonth in (select number from master.dbo.spt_values where number between #month1# and #month2# and type='p') and a.finyear = #year#
+		group by b.contractid,t.contnum,t.buy_orgcode,t.buy_empname,c.custid,t.custname,f.orgid,f.orgname) f
+		on e.contractid = f.contractid and e.beneforgid  = f.beneforgid and e.custid = f.custid
+]]></select>
+<select id="queryChLabor" parameterClass="java.util.HashMap" resultMap="resultMap1">
+	     select * from (select f.orgname as syb,c.custjc,t.contnum,d.orgname as buy_orgname,t.costmemo,t.year,t.month,a.finyear,a.finmonth,t.stockdate,t.service_date,t.emp_code,t.emp_name,
+		t.emp_orgname,t.prj_num,t.prj_name,t.working_hours,t.unit_price,t.costs
+		from erp_ps t
+		left join mis_finperiod a on t.stockdate between startdate and enddate 
+		left join cs_contract b on t.contnum = b.contnum
+		left join mis_custinfo c on b.custid = c.custid
+		left join om_organization d on t.buy_orgcode = d.orgid
+		left join om_organization f on f.orgid = (case when (d.orgseq like '.1.10.%' or d.orgseq like '.1.14.%') then SUBSTRING(d.ORGSEQ, 7, CHARINDEX('.', d.ORGSEQ, 7) - CHARINDEX('.', d.ORGSEQ, 4) - 1) else SUBSTRING(d.ORGSEQ, 4, CHARINDEX('.', d.ORGSEQ, 4) - CHARINDEX('.', d.ORGSEQ, 2) - 1) end)) t
+		where 1=1 
+		<isNotNull property="custjc">
+			<isNotEqual property="custjc" compareValue="wxtj">
+				and custjc = #custjc#  
+			</isNotEqual>
+		</isNotNull>
+		<isNull property = "custjc">
+			and custjc is null
+		</isNull>
+		<isNotNull property="syb"> 
+			<isNotEqual property="syb" compareValue="wxtj">
+				and syb = #syb#  
+			</isNotEqual>
+		</isNotNull>
+		<isNull property = "syb">
+			and syb is null
+		</isNull>
+		<isNotNull property="salename"> 
+			<isNotEqual property="salename" compareValue="wxtj">
+				and buy_orgname = #salename#  
+			</isNotEqual>
+		</isNotNull>
+		<isNull property = "salename">
+			and buy_orgname is null
+		</isNull>
+		<isNotNull property="contnum"> 
+			<isNotEqual property="contnum" compareValue="wxtj">
+				and contnum = #contnum#  
+			</isNotEqual>
+		</isNotNull>
+		<isNull property = "contnum">
+			and contnum is null
+		</isNull> 
+		<isNotNull property="dqch">
+			and ((t.month = #month# and t.year = #year# and t.costmemo = '1') or (t.month = #month# and t.year = #year# and t.costmemo = '0' 
+			and ((t.finmonth &gt; #month# and t.finyear = #year#) or t.finyear &gt; #year#)))
+		</isNotNull>
+		<isNotNull property="qcch">
+			and ((((t.month &lt; #month# and t.year = #year#) or t.year &lt; #year#) and t.costmemo = '1') or (((t.month &lt; #month# and t.year = #year#) or t.year &lt; #year#) and t.costmemo = '0' 
+			and ((t.finmonth &gt; = #month# and t.finyear = #year#) or t.finyear &gt; #year#)))
+		</isNotNull>
+		<isNotNull property="dqjz">
+			and ((((t.month &lt; #month# and t.year = #year#) or t.year &lt; #year#) and t.costmemo = '0' and t.finmonth = #month# and t.finyear = #year#) or
+			(t.month = #month# and t.year = #t.year# and t.finmonth = #month# and t.finyear = #year# and t.costmemo = '0'))			
+		</isNotNull>
+		<isNotNull property="chye">
+			and ((((t.month &lt;= #month# and t.year = #year#) or t.year &lt; #year#) and t.costmemo = '1') or
+			(((t.month &lt;= #month# and t.year = #year#) or t.year &lt; #year#) and t.costmemo = '0' and ((t.finmonth &gt; #month# and t.finyear = #year#) or t.finyear &gt; #year#))) 
+		</isNotNull>		
+</select>
+
+<select id="exportsalesperformence" parameterClass="java.util.HashMap" resultMap="resultMap2">
+	    select * from 
+		(
+		select m.*,n.SORTNO,n.ORGSEQ as ORGSEQ_n,x.SORTNO as SORTNO_x from 
+		(
+		SELECT ORGID,ORGNAME,ORGSEQ,PARENTORGID,orglevel,
+		'showname'=
+		case 
+		when orglevel=1 then orgname+'销售'
+		when orglevel=2 then '|-'+orgname
+		when orglevel=3 then '||-'+orgname
+		when orglevel=4 then '|||-'+orgname
+		when orglevel=5 then '||||-'+orgname
+		when orglevel=6 then '|||||-'+orgname
+		else '||||||-'+orgname
+		end
+		from om_organization where ((orgtype=2 AND status='running' AND orgid !=28 AND orgid!=461)OR  orgid=1 ) and status='running'
+		and (select count(*) as isHaveALL  from 
+		AC_OPERATOR a,AC_OPERATORROLE b where a.USERID=#userid# and a.OPERATORID=b.OPERATORID 
+		and b.ROLEID in ('COO','CFO','YYFZC','financeReport') )>=1 
+		
+		UNION
+		select *
+		FROM
+		(
+		select a.ORGID,a.ORGNAME,a.ORGSEQ,a.PARENTORGID,a.orglevel,
+		'showname'=
+		case 
+		when a.orglevel=1 then a.orgname+'销售'
+		when a.orglevel=2 then '|-'+a.orgname
+		when a.orglevel=3 then '||-'+a.orgname
+		when a.orglevel=4 then '|||-'+a.orgname
+		when a.orglevel=5 then '||||-'+a.orgname
+		when a.orglevel=6 then '|||||-'+a.orgname
+		else '||||||-'+a.orgname
+		end
+		 from 
+		OM_ORGANIZATION a,OM_EMPLOYEE x where a.MANAGERID=x.EMPID and x.USERID=#userid# and a.ORGTYPE='2' and a.status='running'
+		UNION
+		select a.ORGID,a.ORGNAME,a.ORGSEQ ,a.PARENTORGID,a.orglevel,
+		'showname'=
+		case 
+		when a.orglevel=1 then a.orgname+'销售'
+		when a.orglevel=2 then '|-'+a.orgname
+		when a.orglevel=3 then '||-'+a.orgname
+		when a.orglevel=4 then '|||-'+a.orgname
+		when a.orglevel=5 then '||||-'+a.orgname
+		when a.orglevel=6 then '|||||-'+a.orgname
+		else '||||||-'+a.orgname
+		end
+		from 
+		OM_ORGANIZATION a,OM_ORGANIZATION b,OM_EMPLOYEE x where a.PARENTORGID=b.ORGID and b.MANAGERID=x.EMPID and x.USERID=#userid# and a.ORGTYPE='2' and a.status='running'
+		UNION
+		select a.ORGID,a.ORGNAME,a.ORGSEQ,a.PARENTORGID,a.orglevel,
+		'showname'=
+		case 
+		when a.orglevel=1 then a.orgname+'销售'
+		when a.orglevel=2 then '|-'+a.orgname
+		when a.orglevel=3 then '||-'+a.orgname
+		when a.orglevel=4 then '|||-'+a.orgname
+		when a.orglevel=5 then '||||-'+a.orgname
+		when a.orglevel=6 then '|||||-'+a.orgname
+		else '||||||-'+a.orgname
+		end
+		from 
+		OM_ORGANIZATION a,OM_ORGANIZATION b,OM_ORGANIZATION c,OM_EMPLOYEE x where a.PARENTORGID=b.ORGID and b.PARENTORGID=c.ORGID and c.MANAGERID=x.EMPID and x.USERID=#userid# and a.ORGTYPE='2' and a.status='running'
+		UNION
+		select a.ORGID,a.ORGNAME,a.ORGSEQ,a.PARENTORGID,a.orglevel,
+		'showname'=
+		case 
+		when a.orglevel=1 then a.orgname+'销售'
+		when a.orglevel=2 then '|-'+a.orgname
+		when a.orglevel=3 then '||-'+a.orgname
+		when a.orglevel=4 then '|||-'+a.orgname
+		when a.orglevel=5 then '||||-'+a.orgname
+		when a.orglevel=6 then '|||||-'+a.orgname
+		else '||||||-'+a.orgname
+		end
+		 from 
+		OM_ORGANIZATION a,OM_ORGANIZATION b,OM_ORGANIZATION c,OM_ORGANIZATION d,OM_EMPLOYEE x where a.PARENTORGID=b.ORGID and b.PARENTORGID=c.ORGID and c.PARENTORGID=d.ORGID and d.MANAGERID=x.EMPID and x.USERID=#userid# and a.ORGTYPE='2' and a.status='running'
+		)t
+		where (select count(*) as isHaveALL  from 
+		AC_OPERATOR a,AC_OPERATORROLE b where a.USERID=#userid# and a.OPERATORID=b.OPERATORID 
+		and b.ROLEID in ('COO','CFO','YYFZC','financeReport'))=0) m LEFT JOIN
+		OM_ORGANIZATION n ON m.ORGSEQ like n.ORGSEQ+'%'  and (n.ORGLEVEL='2') and n.ORGID != '999999999' 
+		LEFT JOIN
+		OM_ORGANIZATION x ON m.ORGSEQ like x.ORGSEQ+'%'  and (x.ORGLEVEL='3') and x.ORGID != '999999999' 
+		) s
+		where (s.orgseq like #orgseq#+'%' and #orgseq#!='.1.'
+		and (s.orglevel=(select x.ORGLEVEL from OM_ORGANIZATION x where x.orgseq=#orgseq#) or s.orglevel=((select x.ORGLEVEL from OM_ORGANIZATION x where x.orgseq=#orgseq#)+1)))
+		or (#orgseq#='.1.' and (s.orgid in (select orgid from OM_ORGANIZATION where orgdegree=2) or s.orgid=1))
+		order by s.SORTNO,s.ORGSEQ_n,s.SORTNO_x,s.ORGSEQ
+</select>
+
+<select id="exportdeptBudget" parameterClass="java.util.HashMap" resultMap="resultMap3">
+		select DISTINCT t.* FROM
+		(
+		select DISTINCT m.*,n.SORTNO,n.ORGSEQ as ORGSEQ1,x.SORTNO as SORTNO1 from (
+		select CAST(orgid AS CHAR) as orgid,(case when orglevel='2' then '| -'+orgname when orglevel='3' then '| | -'+orgname 
+		when orglevel='4' then '| | | -'+orgname when orglevel='5' then '| | | | -'+orgname when orglevel='6' then '| | | | | -'+orgname else orgname end) 
+		as orgname,orgseq,orgseq as orgseqs,orgtype,orglevel,type=2 from om_organization WHERE orgseq like '.1.%' and status='running' 
+
+		UNION ALL
+		select  '10000'+CAST(orgid AS CHAR) as orgid,'| | | -'+orgname+'销售汇总' as orgname,orgseq+'10000'+CAST(orgid AS CHAR)+'.' as orgseq,orgseq as orgseqs,2 as orgtype,3 as orglevel,type=0
+		from om_organization WHERE
+		orgseq like (select orgseq from OM_ORGANIZATION where orgid=302)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=304)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=308)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=309)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=310) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=312) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=315) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=34) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=35)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=36)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =10)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =11)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =318)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =103)	
+
+		UNION ALL
+		select  '10001'+CAST(orgid AS CHAR) as orgid,'| | | -'+orgname+'服务汇总' as orgname,orgseq+'10001'+CAST(orgid AS CHAR)+'.',orgseq as orgseqs,2 as orgtype,3 as orglevel,type=1
+		from om_organization WHERE
+		orgseq like (select orgseq from OM_ORGANIZATION where orgid=302)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=304)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=308)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=309)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=310) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=312) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=315) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=34) 
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=35)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid=36)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =10)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =11)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =318)
+		or orgseq like (select orgseq from OM_ORGANIZATION where orgid =103)
+
+
+
+		UNION ALL
+		SELECT orgid='1000021',orgname='| -事业部销售汇总',orgseq='.1.36.1.' ,orgseqs='.1.36.1.' ,2,2,type=22
+		UNION ALL
+		SELECT orgid='1000022',orgname='| -事业部服务汇总',orgseq='.1.36.1.' ,orgseqs='.1.36.1.' ,3,2,type=23
+		) m
+		LEFT JOIN
+		OM_ORGANIZATION n ON m.orgseqs like n.ORGSEQ+'%'  and (n.ORGLEVEL='2' and n.PARENTORGID='1')
+		LEFT JOIN
+		OM_ORGANIZATION x ON m.orgseqs like x.ORGSEQ+'%'  and (x.ORGLEVEL='3' )     
+		) t where (t.orgseq like (select orgseq from OM_ORGANIZATION where ORGID= #orgid#)+'%'
+		and (
+		(
+		t.orglevel=(select ORGLEVEL from OM_ORGANIZATION where ORGID= #orgid#) or t.orglevel=((select ORGLEVEL from OM_ORGANIZATION where ORGID= #orgid#)+2) or t.orglevel=((select ORGLEVEL from OM_ORGANIZATION where ORGID= #orgid#)+1)
+		or t.orgid='10000'+1 or t.orgid='10001'+1
+		)
+		) and #orgid# !=1
+		)
+		or(t.orgid=#orgid# and  (#orgid# like '10000%' or #orgid# like '10001%'))
+		OR(#orgid#=1 
+		and t.orgid in 
+		           (select CAST(orgid AS CHAR) as orgid from OM_ORGANIZATION where ORGLEVEL in (1,2,3) and orgid not in(3603,949,368,369,100880,101181,182,3402,924,12,13,14,999999999)		
+		            UNION select '1000021' as orgid
+		            UNION select '1000022' as orgid)
+		)
+		order by t.SORTNO,t.ORGSEQ1,t.SORTNO1,t.ORGSEQ,t.type
+</select>
+<select id="getReports" parameterClass="java.util.HashMap"  resultMap="resultMap4"><![CDATA[
+   SELECT DISTINCT x.REPORTCODE,x.REPORTNAME
+	FROM
+	(
+	SELECT  A.REPORTCODE,A.REPORTNAME,A.ROLEID,B.ROLEID1 FROM 
+					(
+					SELECT REPORTCODE,REPORTNAME,ROLEID,
+								 ROLEID1 = CONVERT(xml,'<root><v>' + REPLACE([ROLEID], ',', '</v><v>') + '</v></root>')
+					FROM AME_REPORT
+					) A
+					OUTER APPLY
+					(
+						SELECT ROLEID1 = N.v.value('.', 'varchar(100)') FROM A.[ROLEID1].nodes('/root/v') N(v)
+					)B
+	   WHERE B.ROLEID1 IN ($ids$)
+	)x
+]]></select>
+<select id="getReportQuotas" parameterClass="java.util.HashMap" resultMap="resultMap5">
+    	SELECT  p.REPORTID,p.REPORTCODE,p.REPORTCODE as REPORTQUOTACODE,p.REPORTNAME AS REPORTQUOTANAME,'.' + CAST(REPORTCODE  as VARCHAR) + '.' as  QUOTASEQ,PARENTQUOTACODE = null
+		FROM AME_REPORT p
+		<isNotNull property="reportcode">
+    		WHERE p.REPORTCODE  IN ($reportcode$)
+    	</isNotNull>
+		UNION ALL 
+		SELECT r.REPORTID,r.REPORTCODE,q.REPORTQUOTACODE,q.REPORTQUOTANAME,q.QUOTASEQ,q.PARENTQUOTACODE
+			FROM AME_REPORT r
+			INNER JOIN AME_REPORTQUOTA q ON r.REPORTCODE = q.REPORTCODE  WHERE 
+		<isNotNull property="reportcode">
+    		r.REPORTCODE IN ($reportcode$)
+    	</isNotNull>
+</select>
+<select id="queryReportQuotas" parameterClass="java.util.HashMap" resultMap="resultMap6">
+        SELECT  '0' as reportid,'0' as  REPORTCODE, '0' as REPORTQUOTACODE, '月度指标统计报表模型维护' as REPORTQUOTANAME,'.0.' as QUOTASEQ,NULL as PARENTQUOTACODE,
+		NULL as QUOTAACCESSTYPE,NULL as COMPUTERULE,NULL as ISSHOW,NULL as QUOTASORT,NULL as SMALLNUMBER,NULL as QUOTAREMARK,NULL as SHOWRULE,NULL as QUOTAUNIT
+		UNION ALL 
+		SELECT  p.REPORTID,p.REPORTCODE,p.REPORTCODE as REPORTQUOTACODE,p.REPORTNAME AS REPORTQUOTANAME,'.' + CAST(REPORTCODE  as VARCHAR) + '.' as  QUOTASEQ,'.0.' as PARENTQUOTACODE,
+		NULL as QUOTAACCESSTYPE,NULL as COMPUTERULE,NULL as ISSHOW,NULL as QUOTASORT,NULL as SMALLNUMBER,NULL as QUOTAREMARK,NULL as SHOWRULE,NULL as QUOTAUNIT
+		FROM AME_REPORT p
+		<isNotNull property="reportcode">
+    		WHERE ($reportcode$)
+    	</isNotNull>
+		UNION ALL 
+		SELECT p.REPORTID,p.REPORTCODE,q.REPORTQUOTACODE,q.REPORTQUOTANAME,q.QUOTASEQ,q.PARENTQUOTACODE,
+		q.QUOTAACCESSTYPE,q.COMPUTERULE,q.ISSHOW,q.QUOTASORT,q.SMALLNUMBER,q.QUOTAREMARK,q.SHOWRULE,q.QUOTAUNIT
+		FROM AME_REPORT p
+		INNER JOIN AME_REPORTQUOTA q ON p.REPORTCODE = q.REPORTCODE 
+		<isNotNull property="reportcode">
+    		WHERE ($reportcode$)
+    	</isNotNull>
+</select>
+</sqlMap>

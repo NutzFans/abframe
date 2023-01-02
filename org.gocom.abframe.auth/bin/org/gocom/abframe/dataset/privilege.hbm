@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcFuncgroup" table="AC_FUNCGROUP">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="funcgroupid" type="int">
+            <column length="10" name="FUNCGROUPID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="funcgroupname" type="string">
+            <column length="40" name="FUNCGROUPNAME"/>
+        </property>
+        <property name="grouplevel" type="long">
+            <column length="22" name="GROUPLEVEL"/>
+        </property>
+        <property name="funcgroupseq" type="string">
+            <column length="256" name="FUNCGROUPSEQ"/>
+        </property>
+        <property name="isleaf" type="string">
+            <column length="1" name="ISLEAF"/>
+        </property>
+        <property name="subcount" type="int">
+            <column length="10" name="SUBCOUNT"/>
+        </property>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcFuncgroup" fetch="join" foreign-key="FK_AC_FUNCG_F_FUNG_FU_AC_FUNCG" lazy="false" name="acFuncgroup">
+            <column length="10" name="PARENTGROUP"/>
+        </many-to-one>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcApplication" fetch="join" foreign-key="AcFuncgroup_AcApplication" lazy="false" name="acApplication">
+            <column length="10" name="APPID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcApplication" table="AC_APPLICATION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="appid" type="int">
+            <column length="10" name="APPID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="appcode" type="string">
+            <column length="10" name="APPCODE"/>
+        </property>
+        <property name="appname" type="string">
+            <column length="50" name="APPNAME"/>
+        </property>
+        <property name="apptype" type="string">
+            <column length="255" name="APPTYPE"/>
+        </property>
+        <property name="isopen" type="string">
+            <column length="1" name="ISOPEN"/>
+        </property>
+        <property name="opendate" type="date">
+            <column name="OPENDATE"/>
+        </property>
+        <property name="url" type="string">
+            <column length="256" name="URL"/>
+        </property>
+        <property name="appdesc" type="string">
+            <column length="512" name="APPDESC"/>
+        </property>
+        <property name="maintenance" type="int">
+            <column length="10" name="MAINTENANCE"/>
+        </property>
+        <property name="manarole" type="string">
+            <column length="64" name="MANAROLE"/>
+        </property>
+        <property name="demo" type="string">
+            <column length="512" name="DEMO"/>
+        </property>
+        <property name="iniwp" type="string">
+            <column length="1" name="INIWP"/>
+        </property>
+        <property name="intaskcenter" type="string">
+            <column length="1" name="INTASKCENTER"/>
+        </property>
+        <property name="ipaddr" type="string">
+            <column length="50" name="IPADDR"/>
+        </property>
+        <property name="ipport" type="string">
+            <column length="10" name="IPPORT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcFuncresource" table="AC_FUNCRESOURCE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="resid" type="int">
+            <column length="10" name="RESID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="restype" type="string">
+            <column length="4" name="RESTYPE"/>
+        </property>
+        <property name="respath" type="string">
+            <column length="256" name="RESPATH"/>
+        </property>
+        <property name="compackname" type="string">
+            <column length="40" name="COMPACKNAME"/>
+        </property>
+        <property name="resname" type="string">
+            <column length="40" name="RESNAME"/>
+        </property>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcFunction" fetch="join" foreign-key="AcFuncresource_AcFunction" lazy="false" name="acFunction">
+            <column length="255" name="FUNCCODE"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcFunction" table="AC_FUNCTION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="funccode" type="string">
+            <column length="255" name="FUNCCODE"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="funcname" type="string">
+            <column length="128" name="FUNCNAME" not-null="true"/>
+        </property>
+        <property name="funcdesc" type="string">
+            <column length="512" name="FUNCDESC"/>
+        </property>
+        <property name="funcaction" type="string">
+            <column length="256" name="FUNCACTION"/>
+        </property>
+        <property name="parainfo" type="string">
+            <column length="256" name="PARAINFO"/>
+        </property>
+        <property name="ischeck" type="string">
+            <column length="1" name="ISCHECK"/>
+        </property>
+        <property name="functype" type="string">
+            <column default="'1'" length="4" name="FUNCTYPE"/>
+        </property>
+        <property name="ismenu" type="string">
+            <column length="1" name="ISMENU"/>
+        </property>
+        <property name="iscontrolconfig" type="string">
+            <column length="1" name="ISCONTROLCONFIG"/>
+        </property>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcFuncgroup" fetch="join" foreign-key="AcFunction_AcFuncgroup" lazy="false" name="acFuncgroup">
+            <column length="10" name="FUNCGROUPID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcOperatorrole" table="AC_OPERATORROLE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcRole" foreign-key="AcOperatorrole_AcRole" lazy="false" name="acRole">
+                <column length="64" name="ROLEID"/>
+            </key-many-to-one>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcOperator" foreign-key="AcOperatorrole_AcOperator" lazy="false" name="acOperator">
+                <column length="18" name="OPERATORID"/>
+            </key-many-to-one>
+        </composite-id>
+        <property name="auth" type="string">
+            <column length="4" name="AUTH"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcOperconfig" table="AC_OPERCONFIG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="configname" type="string">
+                <column length="255" name="CONFIGNAME"/>
+            </key-property>
+            <key-property name="configtype" type="string">
+                <column length="255" name="CONFIGTYPE"/>
+            </key-property>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcOperator" foreign-key="AcOperconfig_AcOperator" lazy="false" name="acOperator">
+                <column length="18" name="OPERATORID"/>
+            </key-many-to-one>
+        </composite-id>
+        <property name="configvalue" type="string">
+            <column length="255" name="CONFIGVALUE"/>
+        </property>
+        <property name="isvalid" type="string">
+            <column length="1" name="ISVALID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcOperfunc" table="AC_OPERFUNC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="authtype" type="string">
+                <column length="4" name="AUTHTYPE"/>
+            </key-property>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcFunction" foreign-key="AcOperfunc_AcFunction" lazy="false" name="acFunction">
+                <column length="255" name="FUNCCODE"/>
+            </key-many-to-one>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcOperator" foreign-key="AcOperfunc_AcOperator" lazy="false" name="acOperator">
+                <column length="18" name="OPERATORID"/>
+            </key-many-to-one>
+        </composite-id>
+        <property name="appid" type="int">
+            <column length="10" name="APPID" not-null="true"/>
+        </property>
+        <property name="funcgroupid" type="int">
+            <column length="10" name="FUNCGROUPID" not-null="true"/>
+        </property>
+        <property name="startdate" type="date">
+            <column name="STARTDATE"/>
+        </property>
+        <property name="enddate" type="date">
+            <column name="ENDDATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcOpershortcut" table="AC_OPERSHORTCUT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="funccode" type="string">
+                <column length="255" name="FUNCCODE"/>
+            </key-property>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcOperator" foreign-key="AcOpershortcut_AcOperator" lazy="false" name="acOperator">
+                <column length="18" name="OPERATORID"/>
+            </key-many-to-one>
+        </composite-id>
+        <property name="appid" type="int">
+            <column length="10" name="APPID" not-null="true"/>
+        </property>
+        <property name="funcgroupid" type="int">
+            <column length="10" name="FUNCGROUPID" not-null="true"/>
+        </property>
+        <property name="orderno" type="long">
+            <column length="22" name="ORDERNO"/>
+        </property>
+        <property name="imagepath" type="string">
+            <column length="128" name="IMAGEPATH"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcRole" table="AC_ROLE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="roleid" type="string">
+            <column length="64" name="ROLEID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="rolename" type="string">
+            <column length="64" name="ROLENAME"/>
+        </property>
+        <property name="roletype" type="string">
+            <column length="4" name="ROLETYPE"/>
+        </property>
+        <property name="roledesc" type="string">
+            <column length="256" name="ROLEDESC"/>
+        </property>
+        <property name="appid" type="int">
+            <column length="10" name="APPID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="suittype" type="string">
+            <column length="255" name="SUITTYPE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="255" name="REMARK"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcRolefunc" table="AC_ROLEFUNC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcFunction" foreign-key="AcRolefunc_AcFunction" lazy="false" name="acFunction">
+                <column length="40" name="FUNCCODE"/>
+            </key-many-to-one>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcRole" foreign-key="AcRolefunc_AcRole" lazy="false" name="acRole">
+                <column length="64" name="ROLEID"/>
+            </key-many-to-one>
+        </composite-id>
+        <property name="appid" type="int">
+            <column length="10" name="APPID" not-null="true"/>
+        </property>
+        <property name="funcgroupid" type="int">
+            <column length="10" name="FUNCGROUPID" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcMenu" table="AC_MENU">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="menuid" type="string">
+            <column length="40" name="MENUID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="menuname" type="string">
+            <column length="40" name="MENUNAME" not-null="true"/>
+        </property>
+        <property name="menulabel" type="string">
+            <column length="40" name="MENULABEL" not-null="true"/>
+        </property>
+        <property name="menucode" type="string">
+            <column length="40" name="MENUCODE"/>
+        </property>
+        <property name="isleaf" type="string">
+            <column length="1" name="ISLEAF"/>
+        </property>
+        <property name="menuaction" type="string">
+            <column length="256" name="MENUACTION"/>
+        </property>
+        <property name="parameter" type="string">
+            <column length="256" name="PARAMETER"/>
+        </property>
+        <property name="uientry" type="string">
+            <column length="256" name="UIENTRY"/>
+        </property>
+        <property name="menulevel" type="long">
+            <column length="22" name="MENULEVEL"/>
+        </property>
+        <property name="rootid" type="string">
+            <column length="40" name="ROOTID"/>
+        </property>
+        <property name="displayorder" type="long">
+            <column length="22" name="DISPLAYORDER"/>
+        </property>
+        <property name="imagepath" type="string">
+            <column length="100" name="IMAGEPATH"/>
+        </property>
+        <property name="expandpath" type="string">
+            <column length="100" name="EXPANDPATH"/>
+        </property>
+        <property name="menuseq" type="string">
+            <column length="256" name="MENUSEQ"/>
+        </property>
+        <property name="openmode" type="string">
+            <column length="4" name="OPENMODE"/>
+        </property>
+        <property name="subcount" type="int">
+            <column length="10" name="SUBCOUNT"/>
+        </property>
+        <property name="appid" type="int">
+            <column length="10" name="APPID"/>
+        </property>
+        <property name="funccode" type="string">
+            <column length="255" name="FUNCCODE"/>
+        </property>
+        <property name="menudesc" type="string">
+            <column length="512" name="MENUDESC"/>
+        </property>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcMenu" fetch="join" foreign-key="FK_AC_MENU_F_MENU_ME_AC_MENU" lazy="false" name="acMenu">
+            <column length="40" name="PARENTSID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcIdentity" table="AC_IDENTITY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="identityid" type="int">
+            <column length="10" name="IDENTITYID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="identityname" type="string">
+            <column length="255" name="IDENTITYNAME"/>
+        </property>
+        <property name="identityflag" type="string">
+            <column length="1" name="IDENTITYFLAG"/>
+        </property>
+        <property name="seqno" type="long">
+            <column length="22" name="SEQNO"/>
+        </property>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcOperator" fetch="join" foreign-key="AcIdentity_AcOperator" lazy="false" name="acOperator">
+            <column length="18" name="OPERATORID" not-null="true"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcIdentityres" table="AC_IDENTITYRES">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="resourceid" type="string">
+                <column length="255" name="RESOURCEID"/>
+            </key-property>
+            <key-property name="resourcetype" type="string">
+                <column length="255" name="RESOURCETYPE"/>
+            </key-property>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcIdentity" foreign-key="AcIdentityres_AcIdentity" lazy="false" name="acIdentity">
+                <column length="10" name="IDENTITYID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.OmPartyrole" table="OM_PARTYROLE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="partytype" type="string">
+                <column length="255" name="PARTYTYPE"/>
+            </key-property>
+            <key-property name="partyid" type="int">
+                <column length="10" name="PARTYID"/>
+            </key-property>
+            <key-many-to-one entity-name="org.gocom.abframe.dataset.privilege.AcRole" foreign-key="OmPartyrole_AcRole" lazy="false" name="acRole">
+                <column length="64" name="ROLEID"/>
+            </key-many-to-one>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcOpercustmenu" table="AC_OPERCUSTMENU">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="menuid" type="string">
+            <column length="40" name="MENUID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="menuname" type="string">
+            <column length="40" name="MENUNAME" not-null="true"/>
+        </property>
+        <property name="menulabel" type="string">
+            <column length="40" name="MENULABEL" not-null="true"/>
+        </property>
+        <property name="funccode" type="string">
+            <column length="255" name="FUNCCODE"/>
+        </property>
+        <property name="isleaf" type="string">
+            <column length="1" name="ISLEAF"/>
+        </property>
+        <property name="menuaction" type="string">
+            <column length="256" name="MENUACTION"/>
+        </property>
+        <property name="parameter" type="string">
+            <column length="256" name="PARAMETER"/>
+        </property>
+        <property name="uientry" type="string">
+            <column length="256" name="UIENTRY"/>
+        </property>
+        <property name="menulevel" type="long">
+            <column length="22" name="MENULEVEL"/>
+        </property>
+        <property name="rootid" type="string">
+            <column length="40" name="ROOTID"/>
+        </property>
+        <property name="displayorder" type="long">
+            <column length="22" name="DISPLAYORDER"/>
+        </property>
+        <property name="imagepath" type="string">
+            <column length="100" name="IMAGEPATH"/>
+        </property>
+        <property name="expandpath" type="string">
+            <column length="100" name="EXPANDPATH"/>
+        </property>
+        <property name="menuseq" type="string">
+            <column length="256" name="MENUSEQ"/>
+        </property>
+        <property name="openmode" type="string">
+            <column length="255" name="OPENMODE"/>
+        </property>
+        <property name="subcount" type="int">
+            <column length="10" name="SUBCOUNT"/>
+        </property>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcOperator" fetch="join" foreign-key="FK_AC_OPERC_F_OPER_RM_AC_OPERA" lazy="false" name="acOperator">
+            <column length="18" name="OPERATORID"/>
+        </many-to-one>
+        <many-to-one cascade="none" entity-name="org.gocom.abframe.dataset.privilege.AcOpercustmenu" fetch="join" foreign-key="FK_AC_OPERC_REFERENCE_AC_OPERC" lazy="false" name="acOpercustmenu">
+            <column length="40" name="PARENTSID"/>
+        </many-to-one>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="org.gocom.abframe.dataset.privilege.AcOperator" table="AC_OPERATOR">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="operatorid" type="long">
+            <column length="18" name="OPERATORID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="userid" type="string">
+            <column length="64" name="USERID" not-null="true"/>
+        </property>
+        <property name="password" type="string">
+            <column length="100" name="PASSWORD"/>
+        </property>
+        <property name="invaldate" type="date">
+            <column name="INVALDATE"/>
+        </property>
+        <property name="operatorname" type="string">
+            <column length="64" name="OPERATORNAME"/>
+        </property>
+        <property name="authmode" type="string">
+            <column length="255" name="AUTHMODE"/>
+        </property>
+        <property name="status" type="string">
+            <column length="255" name="STATUS"/>
+        </property>
+        <property name="unlocktime" type="timestamp">
+            <column name="UNLOCKTIME"/>
+        </property>
+        <property name="menutype" type="string">
+            <column length="255" name="MENUTYPE"/>
+        </property>
+        <property name="lastlogin" type="timestamp">
+            <column name="LASTLOGIN"/>
+        </property>
+        <property name="errcount" type="int">
+            <column length="10" name="ERRCOUNT"/>
+        </property>
+        <property name="startdate" type="date">
+            <column name="STARTDATE"/>
+        </property>
+        <property name="enddate" type="date">
+            <column name="ENDDATE"/>
+        </property>
+        <property name="validtime" type="string">
+            <column length="255" name="VALIDTIME"/>
+        </property>
+        <property name="maccode" type="string">
+            <column length="128" name="MACCODE"/>
+        </property>
+        <property name="ipaddress" type="string">
+            <column length="128" name="IPADDRESS"/>
+        </property>
+        <property name="email" type="string">
+            <column length="255" name="EMAIL"/>
+        </property>
+        <property name="filePath" type="string">
+            <column length="255" name="FILE_PATH"/>
+        </property>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.AcFunctionExtend" table="$QueryEntity[org.gocom.abframe.dataset.privilege.AcFunctionExtend]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="FUNCCODE" insert="false" name="funccode" type="string" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="FUNCNAME" insert="false" name="funcname" type="string" update="false"/>
+        <property column="FUNCDESC" insert="false" name="funcdesc" type="string" update="false"/>
+        <property column="FUNCACTION" insert="false" name="funcaction" type="string" update="false"/>
+        <property column="PARAINFO" insert="false" name="parainfo" type="string" update="false"/>
+        <property column="ISCHECK" insert="false" name="ischeck" type="string" update="false"/>
+        <property column="FUNCTYPE" insert="false" name="functype" type="string" update="false"/>
+        <property column="ISMENU" insert="false" name="ismenu" type="string" update="false"/>
+        <property column="FUNCGROUPNAME" insert="false" name="funcgroupname" type="string" update="false"/>
+        <property column="APPID" insert="false" name="appid" type="big_decimal" update="false"/>
+        <property column="APPNAME" insert="false" name="appname" type="string" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.AcOpershortcutQuery" table="$QueryEntity[org.gocom.abframe.dataset.privilege.AcOpershortcutQuery]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="OPERATORID" insert="false" name="operatorid" type="big_decimal" update="false"/>
+        <property column="FUNCCODE" insert="false" name="funccode" type="string" update="false"/>
+        <property column="APPID" insert="false" name="appid" type="big_decimal" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="ORDERNO" insert="false" name="orderno" type="short" update="false"/>
+        <property column="IMAGEPATH" insert="false" name="imagepath" type="string" update="false"/>
+        <property column="APPNAME" insert="false" name="appname" type="string" update="false"/>
+        <property column="FUNCGROUPNAME" insert="false" name="funcgroupname" type="string" update="false"/>
+        <property column="FUNCNAME" insert="false" name="funcname" type="string" update="false"/>
+        <property column="FUNCACTION" insert="false" name="funcaction" type="string" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.AppFuncGroup" table="$QueryEntity[org.gocom.abframe.dataset.privilege.AppFuncGroup]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="APPID" insert="false" name="appid" type="big_decimal" update="false"/>
+        <property column="FUNCGROUPNAME" insert="false" name="funcgroupname" type="string" update="false"/>
+        <property column="PARENTGROUP" insert="false" name="parentgroup" type="big_decimal" update="false"/>
+        <property column="GROUPLEVEL" insert="false" name="grouplevel" type="int" update="false"/>
+        <property column="FUNCGROUPSEQ" insert="false" name="funcgroupseq" type="string" update="false"/>
+        <property column="ISLEAF" insert="false" name="isleaf" type="string" update="false"/>
+        <property column="SUBCOUNT" insert="false" name="subcount" type="big_decimal" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.AppFunction" table="$QueryEntity[org.gocom.abframe.dataset.privilege.AppFunction]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="FUNCCODE" insert="false" name="funccode" type="string" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="FUNCNAME" insert="false" name="funcname" type="string" update="false"/>
+        <property column="FUNCTYPE" insert="false" name="functype" type="string" update="false"/>
+        <property column="APPID" insert="false" name="appid" type="big_decimal" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.OmOperRolefuncView" table="$QueryEntity[org.gocom.abframe.dataset.privilege.OmOperRolefuncView]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="ROLEID" insert="false" name="roleid" type="string" update="false"/>
+        <property column="FUNCCODE" insert="false" name="funccode" type="string" update="false"/>
+        <property column="APPID" insert="false" name="appid" type="big_decimal" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="FUNCNAME" insert="false" name="funcname" type="string" update="false"/>
+        <property column="APPNAME" insert="false" name="appname" type="string" update="false"/>
+        <property column="FUNCGROUPNAME" insert="false" name="funcgroupname" type="string" update="false"/>
+        <property column="OPERATORID" insert="false" name="operatorid" type="big_decimal" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.QueryNewMenu" table="$QueryEntity[org.gocom.abframe.dataset.privilege.QueryNewMenu]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="MENUID" insert="false" name="menuid" type="string" update="false"/>
+        <property column="MENUNAME" insert="false" name="menuname" type="string" update="false"/>
+        <property column="MENUSEQ" insert="false" name="menuseq" type="string" update="false"/>
+        <property column="PARENTSID" insert="false" name="parentsid" type="string" update="false"/>
+        <property column="ISLEAF" insert="false" name="isleaf" type="string" update="false"/>
+        <property column="IMAGEPATH" insert="false" name="imagepath" type="string" update="false"/>
+        <property column="EXPANDPATH" insert="false" name="expandpath" type="string" update="false"/>
+        <property column="MENULABEL" insert="false" name="menulabel" type="string" update="false"/>
+        <property column="DISPLAYORDER" insert="false" name="displayorder" type="short" update="false"/>
+        <property column="SUBCOUNT" insert="false" name="subcount" type="big_decimal" update="false"/>
+        <property column="MENULEVEL" insert="false" name="menulevel" type="short" update="false"/>
+        <property column="OPENMODE" insert="false" name="openmode" type="string" update="false"/>
+        <property column="FUNCCODE" insert="false" name="funccode" type="string" update="false"/>
+        <property column="MENUCODE" insert="false" name="menucode" type="string" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.QueryFunTree" table="$QueryEntity[org.gocom.abframe.dataset.privilege.QueryFunTree]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="APPID" insert="false" name="appid" type="string" update="false"/>
+        <property column="APPNAME" insert="false" name="appname" type="string" update="false"/>
+        <property column="PARENTID" insert="false" name="parentid" type="string" update="false"/>
+        <property column="ISLEAF" insert="false" name="isleaf" type="string" update="false"/>
+        <property column="imagepath" insert="false" name="imagepath" type="string" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="APPID1" insert="false" name="appid1" type="big_decimal" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.QueryMyFunc" table="$QueryEntity[org.gocom.abframe.dataset.privilege.QueryMyFunc]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="ROLEID" insert="false" name="roleid" type="string" update="false"/>
+        <property column="FUNCCODE" insert="false" name="funccode" type="string" update="false"/>
+        <property column="APPID" insert="false" name="appid" type="big_decimal" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="FUNCNAME" insert="false" name="funcname" type="string" update="false"/>
+        <property column="APPNAME" insert="false" name="appname" type="string" update="false"/>
+        <property column="FUNCGROUPNAME" insert="false" name="funcgroupname" type="string" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.RoleOperator" table="$QueryEntity[org.gocom.abframe.dataset.privilege.RoleOperator]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="USERID" insert="false" name="userid" type="string" update="false"/>
+        <property column="EMPCODE" insert="false" name="empcode" type="string" update="false"/>
+        <property column="STATUS" insert="false" name="status" type="string" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="OPERATORNAME" insert="false" name="operatorname" type="string" update="false"/>
+        <property column="OPERATORID" insert="false" name="operatorid" type="big_decimal" update="false"/>
+        <property column="ROLEID" insert="false" name="roleid" type="string" update="false"/>
+        <property column="orgid" insert="false" name="orgid" type="big_decimal" update="false"/>
+        <property column="ROLENAME" insert="false" name="rolename" type="string" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.QueryOperatorRole" table="$QueryEntity[org.gocom.abframe.dataset.privilege.QueryOperatorRole]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="OPERATORID" insert="false" name="operatorid" type="big_decimal" update="false"/>
+        <property column="USERID" insert="false" name="userid" type="string" update="false"/>
+        <property column="EMPNAME" insert="false" name="empname" type="string" update="false"/>
+        <property column="EMPSTATUS" insert="false" name="empstatus" type="string" update="false"/>
+        <property column="EMPCODE" insert="false" name="empcode" type="string" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.queryNewAppTree" table="$QueryEntity[org.gocom.abframe.dataset.privilege.queryNewAppTree]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="APPID" insert="false" name="appid" type="string" update="false"/>
+        <property column="APPNAME" insert="false" name="appname" type="string" update="false"/>
+        <property column="PARENTID" insert="false" name="parentid" type="string" update="false"/>
+        <property column="ISLEAF" insert="false" name="isleaf" type="string" update="false"/>
+        <property column="imagepath" insert="false" name="imagepath" type="string" update="false"/>
+        <property column="FUNCGROUPID" insert="false" name="funcgroupid" type="big_decimal" update="false"/>
+        <property column="APPID1" insert="false" name="appid1" type="big_decimal" update="false"/>
+        <property column="SEQ" insert="false" name="seq" type="string" update="false"/>
+        <property column="SUBCOUNT" insert="false" name="subcount" type="big_decimal" update="false"/>
+        <property column="FUNCGROUPSEQ" insert="false" name="funcgroupseq" type="string" update="false"/>
+        <property column="GROUPLEVEL" insert="false" name="grouplevel" type="int" update="false"/>
+    </class>
+    <class entity-name="org.gocom.abframe.dataset.privilege.QueryOrgUsers" table="$QueryEntity[org.gocom.abframe.dataset.privilege.QueryOrgUsers]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="EMPCODE" insert="false" name="empcode" type="string" update="false"/>
+        <property column="USERID" insert="false" name="userid" type="string" update="false"/>
+        <property column="EMPNAME" insert="false" name="empname" type="string" update="false"/>
+        <property column="EMPSTATUS" insert="false" name="empstatus" type="string" update="false"/>
+        <property column="ORGID" insert="false" name="orgid" type="big_decimal" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="ORGSEQ" insert="false" name="orgseq" type="string" update="false"/>
+    </class>
+</hibernate-mapping>

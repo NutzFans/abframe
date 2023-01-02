@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zhonghe.ame.purchase.common.ZhPayContractEntity">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.id,
+	A.increase_decrease_sum,
+	a.create_userid,
+	a.create_time,
+	a.implement_org,
+  a.contract_subject,
+	a.contract_name,
+	a.signatory,
+	a1.CUSTNAME as signatoryname,
+	a.contract_no,
+	a.contract_sum,
+  a.contract_type,
+  a.purchase_plan,
+	a.project_size,
+	a.project_local,
+	a.end_time,
+	a.start_time,
+	a.entry_org,
+	a.countersign_org,
+	a.manage_org,
+	a.audit_org,
+	a.leadership_opinion,
+	a.general_manager,
+	a.legal_person,
+	a.app_status,
+  a.pay_method,
+a.execute_status,
+a.organizer,
+a.cachet,
+a.payer,
+a.signing_date,
+a.contract_period,
+a.finish_time,
+a.relate_cont,
+a.act_contract_sum,
+a.issupagreement,
+a.remark,
+a.processId,
+a2.contract_name as original_contract_name,
+	f.EMPNAME,
+	o.ORGDEGREE,
+	o.ORGLEVEL,
+	o.ORGID,
+	o.ORGNAME
+FROM
+	zh_pay_contract a
+left join PUR_SUPPLIER a1 on a.signatory=a1.CUSTID
+LEFT JOIN OM_EMPLOYEE f ON a.create_userid = f.USERID
+LEFT JOIN zh_pay_contract a2 ON a.relate_cont = a2.id
+LEFT JOIN (
+	SELECT
+		c.orgid,
+		(b.orgname + '---' + c.orgname) AS orgname,
+		c.orgname AS orgname1,
+		c.parentorgid,
+		c.ORGSEQ,
+		c.ORGDEGREE,
+		c.ORGLEVEL
+	FROM
+		OM_ORGANIZATION c,
+		OM_ORGANIZATION b
+	WHERE
+		c.parentorgid = b.orgid
+	AND c.STATUS = 'running'
+) o ON a.implement_org = o.ORGID ]]></config>
+    </QueryEntity>
+</QueryEntityList>

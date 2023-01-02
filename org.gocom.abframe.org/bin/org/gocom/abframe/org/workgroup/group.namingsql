@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="org.gocom.abframe.org.workgroup.group">
+    <parameterMap class="org.gocom.abframe.dataset.organization.OmGroup" id="parentGroupMap">
+        <parameter javaType="string" jdbcType="VARCHAR" property="groupseq"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmGroup" id="parentGroupResultMap">
+        <result column="grouplevel" property="grouplevel"/>
+    </resultMap>
+    <select id="selectMaxGrouplevel" parameterMap="parentGroupMap" resultMap="parentGroupResultMap"><![CDATA[
+        SELECT MAX(GROUPLEVEL) AS GROUPLEVEL FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%'
+     ]]></select>
+    <parameterMap class="org.gocom.abframe.dataset.organization.OmGroup" id="groupMap">
+        <parameter javaType="string" jdbcType="VARCHAR" property="groupseq"/>
+        <parameter javaType="int" jdbcType="number" property="grouplevel"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmGroupposi" id="positionResultMap">
+        <result column="positionid" property="positionid"/>
+    </resultMap>
+    <select id="selectPositions" parameterMap="groupMap" resultMap="positionResultMap"><![CDATA[
+        SELECT B.POSITIONID FROM OM_GROUPPOSI B WHERE B.GROUPID IN 
+    	(SELECT GROUPID FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%' AND GROUPLEVEL = ?)
+     ]]></select>
+    <delete id="deleteGroupEmp" parameterMap="groupMap"><![CDATA[
+        DELETE FROM OM_EMPGROUP WHERE GROUPID IN (
+            SELECT GROUPID FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%' AND GROUPLEVEL = ?
+        )
+     ]]></delete>
+    <delete id="deleteGroupPosition" parameterMap="groupMap"><![CDATA[
+        DELETE FROM OM_GROUPPOSI WHERE GROUPID IN (
+            SELECT GROUPID FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%' AND GROUPLEVEL = ?
+        )
+     ]]></delete>
+    <delete id="deletePositionEmp"><![CDATA[
+    	DELETE FROM OM_EMPPOSITION A WHERE A.POSITIONID IN ($positionids$)
+     ]]></delete>
+    <delete id="deletePosition"><![CDATA[
+    	DELETE FROM OM_POSITION A WHERE A.POSITIONID IN ($positionids$) AND A.POSITYPE = 'workgroup'
+     ]]></delete>
+    <delete id="deleteGroupParty" parameterMap="groupMap"><![CDATA[
+    	DELETE FROM OM_PARTYROLE A WHERE A.PARTYID IN (SELECT B.POSITIONID FROM OM_GROUPPOSI B WHERE B.GROUPID IN 
+    	(SELECT GROUPID FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%' AND GROUPLEVEL = ?)) AND A.PARTYTYPE = 'workgroup'
+     ]]></delete>
+    <delete id="deletePositionParty" parameterMap="groupMap"><![CDATA[
+    	DELETE FROM OM_PARTYROLE A WHERE A.PARTYID IN (SELECT B.POSITIONID FROM OM_GROUPPOSI B WHERE B.GROUPID IN 
+    	(SELECT GROUPID FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%' AND GROUPLEVEL = ?)) AND A.PARTYTYPE = 'position'
+     ]]></delete>
+    <delete id="deleteLastlevelGroup" parameterMap="groupMap"><![CDATA[
+        DELETE FROM OM_GROUP WHERE GROUPSEQ LIKE ? || '%' AND GROUPLEVEL = ?
+     ]]></delete>
+    <parameterMap class="org.gocom.abframe.dataset.custom.MovePar" id="movePar">
+        <parameter javaType="Int" jdbcType="NUMBER" property="toLevel"/>
+        <parameter javaType="Int" jdbcType="NUMBER" property="fromLevel"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="toSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="fromSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="movedSeq"/>
+    </parameterMap>
+    <update id="moveGroupUpdateLevelAndSeq" parameterMap="movePar"><![CDATA[
+    UPDATE OM_GROUP T SET T.GROUPLEVEL=T.GROUPLEVEL+?-?,T.GROUPSEQ=?||SUBSTR(T.GROUPSEQ,LENGTH(?)+1) WHERE T.GROUPSEQ LIKE ?||'%'
+    ]]></update>
+    <parameterMap class="org.gocom.abframe.dataset.custom.MovePar" id="moveTopParMap">
+        <parameter javaType="Int" jdbcType="NUMBER" property="toLevel"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="toSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR2" property="movedSeq"/>
+    </parameterMap>
+    <update id="moveTopGroupUpdateLevelAndSeq" parameterMap="moveTopParMap"><![CDATA[
+    UPDATE OM_GROUP T SET T.GROUPLEVEL=T.GROUPLEVEL+?,T.GROUPSEQ=?||T.GROUPSEQ WHERE T.GROUPSEQ LIKE ?||'%'
+    ]]></update>
+    <parameterMap class="org.gocom.abframe.dataset.organization.OmEmpgroup" id="empGroupMap">
+        <parameter javaType="int" jdbcType="NUMBER" property="omGroup/groupid"/>
+        <parameter javaType="string" jdbcType="VARCHAR" property="omEmployee/userid"/>
+        <parameter javaType="string" jdbcType="VARCHAR" property="omEmployee/empname"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmEmpgroup" id="empResultMap">
+        <result column="empid" property="omEmployee/empid"/>
+        <result column="userid" property="omEmployee/userid"/>
+        <result column="empcode" property="omEmployee/empcode"/>
+        <result column="empname" property="omEmployee/empname"/>
+    </resultMap>
+    <select id="selectEmpGroupAllowAdd" parameterClass="java.util.HashMap" resultMap="empResultMap">
+          SELECT EMPID,USERID,EMPCODE,EMPNAME FROM OM_EMPLOYEE E WHERE EMPID NOT IN
+            (SELECT EMPID FROM OM_EMPGROUP WHERE GROUPID=#groupid#  )
+           <isNotNull prepend="AND" property="userid">USERID LIKE #userid#</isNotNull>
+        <isNotNull prepend="AND" property="empname">EMPNAME LIKE #empname#</isNotNull>
+    </select>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.OmPartyrole" id="groupRoleParam">
+        <parameter javaType="int" jdbcType="number" property="partyid"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.privilege.AcRole" id="groupRoleResult">
+        <result column="roleid" property="roleid"/>
+        <result column="rolename" property="rolename"/>
+    </resultMap>
+    <select id="groupRoleAllowAdd" parameterMap="groupRoleParam" resultMap="groupRoleResult"><![CDATA[
+		  SELECT R.ROLEID, R.ROLENAME FROM AC_ROLE R WHERE R.ROLEID NOT IN (
+            SELECT PR.ROLEID FROM OM_PARTYROLE PR WHERE  PR.PARTYTYPE='workgroup' AND PR.PARTYID=? )          
+    ]]></select>
+    <parameterMap class="org.gocom.abframe.dataset.organization.OmGroup" id="groupRoleFuncParam">
+        <parameter javaType="int" jdbcType="number" property="groupid"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.privilege.AcRolefunc" id="groupRoleFuncResult">
+        <result column="funcname" property="acFunction/funcname"/>
+        <result column="funcdesc" property="acFunction/funcdesc"/>
+    </resultMap>
+    <select id="getAllGroupRoleFuncs" parameterMap="groupRoleFuncParam" resultMap="groupRoleFuncResult"><![CDATA[
+		 SELECT F.FUNCNAME,F.FUNCDESC FROM AC_FUNCTION F WHERE FUNCCODE IN (
+		 	SELECT DISTINCT RF.FUNCCODE FROM AC_ROLEFUNC RF WHERE ROLEID IN (
+		 		SELECT PR.ROLEID FROM  OM_PARTYROLE PR  WHERE  PR.PARTYTYPE='workgroup' AND PR.PARTYID=?
+		 	)
+		  )
+
+    ]]></select>
+    <resultMap class="org.gocom.abframe.dataset.organization.OmEmployee" id="groupOmEmployee">
+        <result column="empid" property="empid"/>
+        <result column="empname" property="empname"/>
+    </resultMap>
+    <select id="selectGroupOmEmployee" parameterClass="java.lang.String" resultMap="groupOmEmployee"><![CDATA[
+		SELECT E.EMPID,E.EMPNAME FROM (
+			SELECT A.EMPID FROM OM_EMPPOSITION A WHERE A.POSITIONID IN (SELECT B.POSITIONID FROM OM_GROUPPOSI B WHERE B.GROUPID = #groupid#)
+				UNION 
+			SELECT C.EMPID FROM OM_EMPGROUP C WHERE C.GROUPID = #groupid#) D LEFT OUTER JOIN OM_EMPLOYEE E ON D.EMPID = E.EMPID
+    ]]></select>
+    <select id="queryGroupTreeEmployee" parameterClass="java.util.HashMap" resultClass="org.gocom.abframe.dataset.organization.OmEmployee"><![CDATA[
+		SELECT E.* FROM OM_EMPLOYEE E 
+		WHERE E.EMPID IN (SELECT EMPID FROM OM_EMPGROUP WHERE GROUPID = #groupid# )
+		 AND E.EMPID NOT IN(SELECT EMPID FROM OM_EMPPOSITION E,OM_GROUPPOSI P WHERE E.POSITIONID = P.POSITIONID AND P.GROUPID = #groupid#)
+    ]]></select>
+</sqlMap>

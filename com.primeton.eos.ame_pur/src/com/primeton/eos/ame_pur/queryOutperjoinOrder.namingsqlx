@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wanglqps -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="outperno" javaType="int" property="outperno"/>
+        <result column="outpername" javaType="string" property="outpername"/>
+        <result column="workunit" javaType="string" property="workunit"/>
+        <result column="price" javaType="float" property="price"/>
+        <result column="startdate" javaType="string" property="startdate"/>
+        <result column="expenddate" javaType="string" property="expenddate"/>
+        <result column="currentstatus" javaType="int" property="currentstatus"/>
+        <result column="managername" javaType="String" property="managername"/>
+        <result column="manager" javaType="String" property="manager"/>
+        <result column="pcprotype" javaType="String" property="pcprotype"/>
+        <result column="comment" javaType="String" property="comment"/>
+        <result column="purorderid" javaType="int" property="purorderid"/>
+        <result column="projectno" javaType="String" property="projectno"/>
+        <result column="projectName" javaType="String" property="projectName"/>
+        <result column="projoutid" javaType="decimal" property="projoutid"/>
+    </resultMap>
+    <select id="showoutper" parameterClass="java.util.HashMap" resultMap="resultMap1"><!--managername:人员订单关系表name。manager：人员项目关系表id。现已项目关系表ID为准扩展订单表的name-->
+	    <![CDATA[
+		    select 
+		    	a.outperno,a.outpername,b.workunit,b.price,convert(nvarchar(10),b.startdate,120) as startdate,
+		    	convert(nvarchar(10),b.expenddate,120) as expenddate,b.currentstatus,b.managername,d.manager,b.pcprotype,
+		    	b.comment,b.purorderid,b.projectno,c.project_name as projectName,d.projoutid
+		    from  
+		    	PUR_OUTPERSON a 
+		    LEFT JOIN 
+		    	PUR_ORDER_OUTPER b 
+		    on a.OUTPERNO = b.OUTPERNO and b.PURORDERID=#purorderid#
+		    left join 
+		    	rd_project c
+		    on c.project_no=b.projectno
+			left join PUR_ORDER e on e.PURORDERID=b.purorderid 
+			left join PUR_PROJ_OUTPER d on d.outperno=a.outperno and d.projectno=b.projectno and d.purcontid=e.PURCONTID and 
+			d.purorderid=e.PURORDERID
+		    where 
+		    	a.custid=#custid#  order by b.purorderid desc,a.outperno asc
+	    ]]>
+    </select>
+    <select id="showoutperofPmo" parameterClass="java.util.HashMap" resultMap="resultMap1"><!--managername:人员订单关系表name。manager：人员项目关系表id。现已项目关系表ID为准扩展订单表的name-->
+	    <![CDATA[
+		    select 
+		    	a.outperno,a.outpername,d.WORKUNIT,d.PRICE,convert(nvarchar(10),d.startdate,120) as startdate,
+		    	convert(nvarchar(10),d.expenddate,120) as expenddate,d.CURRENTSTATUS,f.EMPNAME managername,d.manager,b.pcprotype,
+		    	b.COMMENT,b.purorderid,d.projectno,c.project_name as projectName,d.projoutid
+		    from  
+		    	PUR_OUTPERSON a 
+		    LEFT JOIN 
+		    	PUR_ORDER_OUTPER b 
+		    on a.OUTPERNO = b.OUTPERNO and b.PURORDERID=#purorderid#
+		    
+			left join PUR_ORDER e on e.PURORDERID=b.purorderid 
+			left join PUR_PROJ_OUTPER d on d.outperno=a.outperno
+			left join 
+		    	rd_project c
+		    on c.project_no=d.PROJECTNO
+			LEFT JOIN OM_EMPLOYEE f on d.MANAGER=f.USERID
+		    where 
+		    	a.custid=#custid#  order by b.purorderid desc,a.outperno asc
+	    ]]>
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="outpername" javaType="string" property="outpername"/>
+        <result column="PROJECTNO" javaType="string" property="projectno"/>
+        <result column="SUPPLIERSNAME" javaType="string" property="suppliersname"/>
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="sybname" javaType="string" property="sybname"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="MISCUSTNAME" javaType="String" property="miscustname"/>
+        <result column="CURRENTSTATUS" javaType="String" property="currentstatus"/>
+        <result column="STARTDATE" javaType="date" property="startdate"/>
+        <result column="STARTDATEEND" javaType="String" property="startdateend"/>
+        <result column="EXPENDDATE" javaType="date" property="expenddate"/>
+        <result column="PRICE" javaType="float" property="price"/>
+    </resultMap>
+    <select id="queryPurOutPerson" parameterClass="java.util.HashMap" resultMap="resultMap2"><!--获取项目人员外包关系，取报备服务中的员工，邮件提醒-->
+	    select outpername,PROJECTNO,SUPPLIERSNAME,PROJECTNAME,sybname,ORGNAME,MISCUSTNAME,CURRENTSTATUS,
+		STARTDATE,STARTDATEEND,EXPENDDATE,PRICE from (
+		SELECT a.outpername,b.PROJECTNO,c.SUPPLIERSNAME,d.PROJECT_NAME AS PROJECTNAME,h.ORGNAME as sybname,
+		f.ORGNAME,e.CUSTNAME AS MISCUSTNAME,b.CURRENTSTATUS,b.STARTDATE,
+		Convert(nvarchar(10),DATEADD(day, 15, b.STARTDATE),120) as STARTDATEEND,b.EXPENDDATE,b.PRICE
+		FROM PUR_OUTPERSON a LEFT JOIN PUR_PROJ_OUTPER b ON a.OUTPERNO=b.OUTPERNO 
+		LEFT JOIN PUR_SUPPLIER c ON a.CUSTID=c.CUSTID 
+		LEFT JOIN RD_PROJECT d ON b.PROJECTNO=d.PROJECT_NO 
+		LEFT JOIN MIS_CUSTINFO e ON d.CUSTID=e.CUSTID 
+		LEFT JOIN OM_ORGANIZATION f ON d.FIN_UNIT_ID=f.ORGID 
+		LEFT JOIN OM_ORGANIZATION h ON f.ORGSEQ like h.ORGSEQ+'%' and h.ORGLEVEL=3
+		)t where CURRENTSTATUS='2' and t.STARTDATEEND=#date#
+    </select>
+    
+</sqlMap>

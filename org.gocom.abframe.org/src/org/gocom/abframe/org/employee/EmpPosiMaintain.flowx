@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="EmpPosiMaintain" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="增加、修改通过AJAX调用" title="江品廷&#x9;08-8-21 下午3:22">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" type="note">
+      <sourceNode>node1</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <location x="391" y="16"/>
+    <size height="58" width="112"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" collapsed="false" nodeType="note" type="note" content="1.机构下的人员的维护：增、删、改、查。&#xD;&#xA;2.增加、修改通过AJAX调用，流程不在页面流中画出。" title="江品廷&#x9;08-8-14 下午8:19">
+    <location x="53" y="186"/>
+    <size height="90" width="182"/>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link1" name="link1" displayName="link14" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="232" y="103"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">org.gocom.abframe.dataset.organization.OmPosiEmpOprQuery</process:from>
+      <process:to type="query">f:ctPosiEmpQry/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">f:iPosiid</process:from>
+      <process:to type="query">f:ctPosiEmpQry/_expr[1]/inpositionid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">f:ctPosiEmpQry/_expr[1]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">f:page/begin</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">10</process:from>
+      <process:to type="query">f:page/length</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="231" y="139"/>
+    <figSize height="12" width="31"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tStart" description="" id="start0" name="开始" displayName="开始" collapsed="false" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" displayName="link13" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <location x="51" y="103"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="53" y="139"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="link2" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="141" y="103"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">oPosi/positionid</process:from>
+      <process:to type="query">f:iPosiid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">oPosi/omOrganization/orgid</process:from>
+      <process:to type="query">f:iOrgid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="143" y="139"/>
+    <figSize height="12" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束" displayName="结束" collapsed="false" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/org/emp/emp_posiquery_result.jsp">
+    <targetConnections>link6</targetConnections>
+    <location x="525" y="103"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="527" y="139"/>
+    <figSize height="12" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="批量删除岗位下的人员：&#xD;&#xA;1.删除人员机构关系&#xD;&#xA;2.删除人员岗位关系&#xD;&#xA;3.删除人员工作组关系&#xD;&#xA;4.删除人员&#xD;&#xA;5.删除操作员" id="subprocess0" name="批量删除岗位下的人员" displayName="removeEmpOprPosi" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="link12" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="331" y="190"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.employee.EmpManager.removeEmpOprPosi</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="oaPosiEmpQry" type="query" value="org.gocom.abframe.dataset.organization.OmPosiEmpOprQuery[]" valueType="DataObject" pattern="reference">oaPosiEmpQry</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="iCnt" type="query" value="Int" valueType="Primitive">iCnt</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="284" y="225"/>
+    <figSize height="12" width="121"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="分页查询岗位下的人员" id="subprocess1" name="查询岗位人员" displayName="queryPosiEmpByCriteria" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="link15" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="331" y="103"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.employee.EmpManager.queryPosiEmpByCriteria</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="ctPosiEmpQry" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">f:ctPosiEmpQry</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">f:page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">f:page</process:outputVariable>
+        <process:outputVariable id="1" name="oaPosiEmpQry" type="query" value="org.gocom.abframe.dataset.organization.OmPosiEmpOprQuery[]" valueType="DataObject">oaPosiEmpQry</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="308" y="138"/>
+    <figSize height="12" width="73"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="人员岗位查询结果" displayName="emp_posiquery_result.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/emp/emp_posiquery_result.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link4" name="link4" displayName="link8" lineType="reference" isDefault="false" type="action" actionName="rmv" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="true" modelType="org.gocom.abframe.dataset.organization.OmPosiEmpOprQuery" name="oaPosiEmpQry"/>
+      </process:inputParameters>
+      <process:serviceParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link5" name="link5" displayName="link10" lineType="reference" isDefault="false" type="action" actionName="qryagain" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+      <process:serviceParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link6" name="link6" displayName="link11" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="436" y="103"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="399" y="139"/>
+    <figSize height="12" width="97"/>
+    <node>view0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="江品廷" createTime="2008-08-21 14:41:09" date="2008-08-21Z" description="" name="empPosiMaintain" version="6.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="iPosiid" primitiveType="Int"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="iOrgid" primitiveType="Int"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="ctPosiEmpQry"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+  </process:variables>
+  <process:inputParameters>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmPosition" name="oPosi"/>
+  </process:inputParameters>
+</process:tPageFlow>

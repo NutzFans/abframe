@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryCsBillProd">
+        <config db="default" type="sql"><![CDATA[select b.BILLID,a.CON_PRO_ID,c.CONTRACTID,
+a.PRODNAME,a.PRODMON,b.PRICE,b.NUM,b.UNIT,b.MONEY,
+b.MIEMO,b.TAX,b.U8XSE,b.RDMIEMO,
+c.SALEID,c.SALENAME
+from CS_CONTRACT_PRODUCT a 
+left join CS_BILL_PROD b on a.CON_PRO_ID=b.CON_PRO_ID 
+left join CS_CONTRACTSALE c on a.CONTSALEID=c.CONTSALEID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryCsBillSale">
+        <config db="default" type="sql"><![CDATA[select a.CONTRACTID,b.BILLID,b.CONTSALEID,
+a.SALEID,a.SALENAME,a.SERVMON,b.SERVNAME,b.PRICE,b.RDMIEMO,
+b.NUM,b.UNIT,b.MONEY,b.MIEMO,b.TAX,b.U8XSE
+from CS_CONTRACTSALE a 
+left join CS_BILL_SALE b on a.CONTSALEID=b.CONTSALEID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryCsTickets">
+        <config db="default" type="sql"><![CDATA[select DISTINCT a.TICKETID,a.BILLNO,a.CZTICKETID,a.MONEY,a.STATUS,a.TICKETDATE,
+b.BILLID,b.TYPE,c.BILLTYPE1,d.CONTRACTID,f.BILLSUBID,
+a.TAX,a.U8XSE,a.TAXRATE
+			from CS_TICKET a left join CS_BILL_TICKET b on a.TICKETID=b.TICKETID 
+			left join CS_NEWBILL c on b.BILLID=c.BILLID 
+			left join CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID 
+			left join (select billid,billsubid,ticketid from (SELECT DISTINCT BILLID,TICKETID,  
+			(SELECT CAST(BILLSUBID as varchar)+',' FROM CS_BILL_TICKET   
+				WHERE BILLID=A.BILLID and TICKETID=A.TICKETID
+				order by BILLSUBID 
+				FOR XML PATH('')) AS BILLSUBID  
+			FROM CS_BILL_TICKET A group by BILLID,BILLSUBID,TICKETID) x) f on f.BILLID=c.BILLID and f.ticketid=a.TICKETID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryBillLists">
+        <config db="default" type="sql"><![CDATA[select a.BILLID,a.BILLCOMPID,a.BILLDATE,a.BILLTYPE,a.BILLPRODMON,a.BILLSERVMON,a.BILLSUMMON,a.TAX,a.U8XSE,a.BILLAPPDATE,
+a.APPNAME,a.STATUS,b.CONTNUM,b.CONTRACTID,b.PROJECTNAME,b.INDUSTRY,b.salemode,b.SALENAME,
+c.CUSTNAME ,a.BILLTYPE1
+from CS_NEWBILL a 
+left join CS_CONTRACT b on a.CONTRACTID=b.CONTRACTID 
+left join MIS_CUSTINFO c on a.BILLCOMPID=c.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.ExportBillLists">
+        <config db="default" type="sql"><![CDATA[select a.BILLID,a.BILLCOMPID,a.BILLDATE,a.BILLTYPE,a.BILLPRODMON,a.BILLSERVMON,a.BILLSUMMON,round(d.TAX,2) as TAX,round(d.U8XSE,2) as U8XSE,a.BILLTYPE1,
+a.APPNAME,a.STATUS,b.CONTNUM,b.CONTRACTID,b.PROJECTNAME,b.SALENAME,b.INDUSTRY,b.salemode,b.CONTSUM,
+(select dictname from eos_dict_entry where dictid = a.billtype and dicttypeid='BILLTYPE') as billtypename,
+(select dictname from eos_dict_entry where dictid = a.billtype1 and dicttypeid='CS_BILLTYPE') as billtype1name,
+(select dictname from eos_dict_entry where dictid = b.contracttype and dicttypeid='MIS_CONTRACTTYPE') as contracttypename,
+(select dictname from eos_dict_entry where dictid = b.INDUSTRY and dicttypeid='MIS_INDUSTRY_SUBDIVISION') as industryname,
+(select dictname from eos_dict_entry where dictid = b.salemode and dicttypeid='MIS_SALEMODE') as salemodename,
+(d.dictname) as prodservname,
+(select dictname from eos_dict_entry where dictid = a.status and dicttypeid='MIS_BILLSTATUS') statusname,
+round(d.money,2) as price,f.dictname as org,g.orgname as orgname,d.miemo,d.RDMIEMO,
+c.CUSTNAME,h.BILLNO,
+(select dictname from eos_dict_entry where dictid = d.STATUS and dicttypeid='MIS_BILLSTATUS') as ticketstatus,a.PROCESSINSTID,i.creator,i.EMPNAME
+from CS_NEWBILL a 
+left join CS_CONTRACT b on a.CONTRACTID=b.CONTRACTID 
+left join MIS_CUSTINFO c on a.BILLCOMPID=c.CUSTID 
+left join (select p.BILLID,p.MONEY,p.U8XSE,p.TAX,p.MIEMO,p.RDMIEMO,e.dictname ,p.STATUS
+					from CS_BILL_PROD p LEFT JOIN eos_dict_entry e on e.dicttypeid='CS_PRODNAME' and e.dictid = p.prodname
+
+					UNION ALL
+					select s.BILLID,s.MONEY,s.U8XSE,s.TAX,s.MIEMO,s.RDMIEMO,e.dictname,s.STATUS
+					from CS_BILL_SALE s LEFT JOIN eos_dict_entry e on e.dicttypeid='CS_SERVNAME' and e.dictid = s.SERVNAME) d on a.BILLID=d.BILLID 
+left join (select contractid, dictname=stuff((select ','+dictname from (select contractid,dictname from eos_dict_entry m,cs_contractsale n where m.dictid=n.org and m.dicttypeid='CONT_ORG') t where contractid=tb.contractid for xml path('')), 1, 1, '')  
+from (select contractid,dictname from eos_dict_entry m,cs_contractsale n where m.dictid=n.org and m.dicttypeid='CONT_ORG') tb  
+group by contractid) f on b.contractid=f.contractid 
+left join (select contractid, orgname=stuff((select ','+orgname from (select contractid,orgname from om_organization m,cs_contractsale n where m.orgid=n.orgid ) t where contractid=tb.contractid for xml path('')), 1, 1, '')  
+from (select contractid,orgname from om_organization m,cs_contractsale n where m.orgid=n.orgid ) tb  
+group by contractid) g on b.contractid=g.contractid
+left join (select DISTINCT a.BILLID,BILLNO=stuff((select ','+t.BILLNO from 
+	(select a.BILLID,CAST(b.BILLNO as varchar(20)) as BILLNO from CS_BILL_TICKET a,CS_TICKET b where a.TICKETID=b.TICKETID) t 
+		where a.BILLID=t.BILLID for xml path('')), 1, 1, '') from CS_BILL_TICKET a left join CS_TICKET b on a.TICKETID=b.TICKETID) h on a.BILLID=h.BILLID 
+left join (select a.processInstID,a.creator,b.EMPNAME from WFProcessInst a left join OM_EMPLOYEE b on a.creator=b.USERID 
+where EMPNAME is not null) i on a.PROCESSINSTID=i.processInstID ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryDoneSureBillLists">
+        <config db="default" type="sql"><![CDATA[select t.CONTNUM,t.CONTRACTID,t.CUSTNAME,t.CUSTID,
+       sum(case when t.ACTSUM is null then 0 else t.ACTSUM end) as ACTSUM,
+       sum(case when t.YYMONEY is null then 0 else t.YYMONEY end) as YYMONEY,
+       sum(case when t.YWMONEY is null then 0 else t.YWMONEY end) as YWMONEY,
+       sum(case when t.YWACTSUM is null then 0 else t.YWACTSUM end) as YWACTSUM,
+       max(t.CONFIRMDAY) as CONFIRMDAY
+from 
+(
+SELECT DISTINCT a.CONTNUM,a.CONTRACTID,b.ACTSUM,c.YYMONEY,d.YWMONEY,e.CUSTNAME,e.CUSTID,b.CONFIRMDAY,
+((CASE WHEN b.ACTSUM IS NULL THEN 0 ELSE b.ACTSUM END) - (CASE WHEN c.YYMONEY IS NULL THEN 0 ELSE c.YYMONEY END) - (CASE WHEN d.YWMONEY IS NULL THEN 0 ELSE d.YWMONEY END)) AS YWACTSUM 
+FROM CS_CONTRACT a LEFT JOIN 
+(SELECT CONTNUM,SUM(CS_REVE_FORECAST.ACTSUM) AS ACTSUM,max(CS_REVE_FORECAST.maCONFIRMDAY) as CONFIRMDAY FROM CS_REVE_FORECAST WHERE STATUS='3' GROUP BY CONTNUM) b ON a.CONTNUM=b.CONTNUM 
+LEFT JOIN 
+(SELECT DISTINCT a.CONTRACTID,sum(b.YYMONEY) as YYMONEY FROM CS_NEWBILL a 
+LEFT JOIN (SELECT SUM(a.BILLSUMMON) AS YYMONEY,a.BILLID FROM CS_NEWBILL a WHERE 
+ a.BILLID in (select b.BILLID from CS_BILL_TICKET b LEFT JOIN CS_TICKET c on c.TICKETID=b.TICKETID where c.status='2')
+GROUP BY a.BILLID ) b 
+ON a.BILLID=b.BILLID GROUP BY a.CONTRACTID) c ON a.CONTRACTID=c.CONTRACTID 
+LEFT JOIN 
+(SELECT DISTINCT a.CONTRACTID,sum(b.YWMONEY) as YWMONEY FROM CS_NEWBILL a 
+LEFT JOIN 
+(SELECT SUM(a.BILLSUMMON) AS YWMONEY,a.BILLID FROM CS_NEWBILL a WHERE 
+ a.BILLID in (select b.BILLID from CS_BILL_TICKET b LEFT JOIN CS_TICKET c on c.TICKETID=b.TICKETID where c.status='1')
+GROUP BY a.BILLID ) b 
+ON a.BILLID=b.BILLID GROUP BY a.CONTRACTID) d ON a.CONTRACTID=d.CONTRACTID 
+LEFT JOIN MIS_CUSTINFO e ON a.CUSTID=e.CUSTID
+WHERE (b.ACTSUM IS NOT NULL OR c.YYMONEY IS NOT NULL OR d.YWMONEY IS NOT NULL)
+) t GROUP BY t.CONTNUM,t.CONTRACTID,t.CUSTNAME,t.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryCsBillTickets">
+        <config db="default" type="sql"><![CDATA[--产品
+select a.TICKETID,a.STATUS,g.DICTNAME as statusname,d.STATUS as sale_pro_status,h.DICTNAME as sale_pro_statusname,a.BILLNO,b.BILLID,round(a.MONEY,2) as MONEY,round(a.TAX,2) as TAX,round(a.U8XSE,2) as U8XSE,a.TAXRATE,a.CZTICKETID,a.TICKETDATE,a.REMARK,
+b.BILLSUBID,b.TYPE,c.DICTNAME as typename,d.PRODNAME as sale_pro_type,f.DICTNAME as sale_pro_name,
+round(case when e.MONEY_all is null or e.MONEY_all=0 then 0 else a.MONEY*d.MONEY/e.MONEY_all end,2) as MONEY_sub,
+round(case when e.MONEY_all is null or e.MONEY_all=0 then 0 else a.TAX*d.MONEY/e.MONEY_all end,2) as TAX_sub,
+round(case when e.MONEY_all is null or e.MONEY_all=0 then 0 else a.U8XSE*d.MONEY/e.MONEY_all end,2) as U8XSE_sub,
+round(d.PRICE,2) as PRICE,d.UNIT,l.DICTNAME as UNITNAME,d.NUM,d.TAXRATE as TAXRATE_sub,
+j.CONTNUM,j.CONTRACTID,j.PROJECTNAME,j.CONTSUM,j.INDUSTRY,j.salemode,j.SALENAME,k.CUSTNAME,m.DICTNAME as orgname,n.PRODNAME as memo,
+i.BILLTYPE ,
+(select dictname from eos_dict_entry where dictid = i.billtype and dicttypeid='BILLTYPE') as billtypename
+from CS_TICKET a 
+LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+LEFT JOIN CS_BILL_PROD d on d.CON_PRO_ID=b.BILLSUBID and b.BILLID=d.BILLID
+LEFT JOIN (select x.TICKETID,sum(y.MONEY) as MONEY_all
+					from CS_BILL_TICKET x 
+					LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+					where x.TYPE=0
+					GROUP BY x.TICKETID) e on ((a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3))
+LEFT JOIN CS_NEWBILL i on i.BILLID=b.BILLID
+LEFT JOIN CS_CONTRACT j on j.CONTRACTID=i.CONTRACTID
+LEFT JOIN MIS_CUSTINFO k on k.CUSTID=i.BILLCOMPID
+LEFT JOIN EOS_DICT_ENTRY l on l.DICTTYPEID='UNIT' and l.DICTID=d.UNIT
+LEFT JOIN EOS_DICT_ENTRY c on c.DICTTYPEID='CS_BILLTICKET_TYPE' and c.DICTID=b.TYPE 
+LEFT JOIN EOS_DICT_ENTRY f on f.DICTTYPEID='CS_PRODNAME' and f.DICTID=d.PRODNAME
+LEFT JOIN EOS_DICT_ENTRY g on g.DICTTYPEID='CS_BILLSTATUS' and g.DICTID=a.STATUS
+LEFT JOIN EOS_DICT_ENTRY h on h.DICTTYPEID='MIS_BILLSTATUS' and h.DICTID=d.STATUS
+LEFT JOIN EOS_DICT_ENTRY m on m.DICTTYPEID='CONT_ORG' and m.DICTID=j.ORG
+LEFT JOIN QUO_PROD n on n.PRODID=d.PRODNAME
+where  b.TYPE=0
+--服务
+union all
+select a.TICKETID,a.STATUS,g.DICTNAME as statusname,d.STATUS as sale_pro_status,h.DICTNAME as sale_pro_statusname,a.BILLNO,b.BILLID,round(a.MONEY,2) as MONEY,round(a.TAX,2) as TAX,round(a.U8XSE,2) as U8XSE,a.TAXRATE,a.CZTICKETID,a.TICKETDATE,a.REMARK,
+b.BILLSUBID,b.TYPE,c.DICTNAME as typename,d.SERVNAME as sale_pro_type,f.DICTNAME as sale_pro_name,
+round(case when e.MONEY_all is null or e.MONEY_all=0 then 0 else a.MONEY*d.MONEY/e.MONEY_all end,2) as MONEY_sub,
+round(case when e.MONEY_all is null or e.MONEY_all=0 then 0 else a.TAX*d.MONEY/e.MONEY_all end,2) as TAX_sub,
+round(case when e.MONEY_all is null or e.MONEY_all=0 then 0 else a.U8XSE*d.MONEY/e.MONEY_all end,2) as U8XSE_sub,
+round(d.PRICE,2) as PRICE,d.UNIT,l.DICTNAME as UNITNAME,d.NUM,d.TAXRATE as TAXRATE_sub,
+j.CONTNUM,j.CONTRACTID,j.PROJECTNAME,j.CONTSUM,j.INDUSTRY,j.salemode,j.SALENAME,k.CUSTNAME,m.DICTNAME as orgname,n.DICTNAME as memo,
+i.BILLTYPE,
+(select dictname from eos_dict_entry where dictid = i.billtype and dicttypeid='BILLTYPE') as billtypename
+from CS_TICKET a 
+LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+LEFT JOIN CS_BILL_SALE d on d.CONTSALEID=b.BILLSUBID and b.BILLID=d.BILLID
+LEFT JOIN (select x.TICKETID,sum(y.MONEY) as MONEY_all
+					from CS_BILL_TICKET x 
+					LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+					where x.TYPE=1
+					GROUP BY x.TICKETID) e on ((a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3))
+LEFT JOIN CS_NEWBILL i on i.BILLID=b.BILLID
+LEFT JOIN CS_CONTRACT j on j.CONTRACTID=i.CONTRACTID
+LEFT JOIN MIS_CUSTINFO k on k.CUSTID=i.BILLCOMPID
+LEFT JOIN EOS_DICT_ENTRY l on l.DICTTYPEID='UNIT_SALE' and l.DICTID=d.UNIT
+LEFT JOIN EOS_DICT_ENTRY c on c.DICTTYPEID='CS_BILLTICKET_TYPE' and c.DICTID=b.TYPE 
+LEFT JOIN EOS_DICT_ENTRY f on f.DICTTYPEID='CS_SERVNAME' and f.DICTID=d.SERVNAME
+LEFT JOIN EOS_DICT_ENTRY g on g.DICTTYPEID='CS_BILLSTATUS' and g.DICTID=a.STATUS 
+LEFT JOIN EOS_DICT_ENTRY h on h.DICTTYPEID='MIS_BILLSTATUS' and h.DICTID=d.STATUS
+LEFT JOIN EOS_DICT_ENTRY m on m.DICTTYPEID='CONT_ORG' and m.DICTID=j.ORG
+LEFT JOIN EOS_DICT_ENTRY n on n.DICTTYPEID='CS_SERVNAME' and n.DICTID=d.SERVNAME
+where b.TYPE=1
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_income.gatherFcBillingProcess.QueryForecastGather">
+        <config db="default" type="sql"><![CDATA[select a.*,d.CONTRACTID,b.CONTNUM,d.CUSTID,e.CUSTNAME,b.MACONFIRMDAY,
+f.ORGNAME,g.ORGNAME as yjbm,h.ORGNAME as ejbm,i.ORGNAME as sjbm,
+c.MACONFIRMDAY as revemaconfirmday,year(c.MACONFIRMDAY) as revemaconfirmyear,c.ACTSUM,
+b.GATHERNO,c.REVENO,f.ORGSEQ
+from CS_FORECAST_GATHER a
+LEFT JOIN CS_GATHER_FC b on a.GATHERID=b.GATHERID
+LEFT JOIN CS_REVE_FORECAST c on c.REVEID=a.REVEID
+LEFT JOIN CS_CONTRACT d on d.contnum=b.contnum
+LEFT JOIN MIS_CUSTINFO e on e.CUSTID=d.CUSTID
+LEFT JOIN OM_ORGANIZATION f on a.ORGID=f.ORGID
+LEFT JOIN OM_ORGANIZATION g on g.ORGLEVEL=2 and f.ORGSEQ like g.ORGSEQ+'%'
+LEFT JOIN OM_ORGANIZATION h on h.ORGLEVEL=3 and f.ORGSEQ like h.ORGSEQ+'%'
+LEFT JOIN OM_ORGANIZATION i on i.ORGLEVEL=4 and f.ORGSEQ like i.ORGSEQ+'%']]></config>
+    </QueryEntity>
+</QueryEntityList>

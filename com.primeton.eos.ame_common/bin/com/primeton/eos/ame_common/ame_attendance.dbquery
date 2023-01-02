@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_attendance.QueryProjOutper">
+        <config db="default" type="sql"><![CDATA[
+select * from rd_project r where exists(
+select distinct projectno from pur_proj_outper p where p.projectno=r.project_no)]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_attendance.QueryProjectOutperson">
+        <config db="default" type="sql"><![CDATA[select a.projectno,b.* from pur_outperson b left join pur_proj_outper a on a.outperno=b.outperno
+left join rd_project c on a.projectno=c.project_no ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_attendance.CountAttendace">
+        <config db="default" type="sql"><![CDATA[SELECT a.days,
+ISNULL(b.qdnum, 0) as qdnum ,
+ISNULL(c.qtnum, 0) as qtnum,
+(case when b.qdnum is null then a.days else a.days-b.qdnum end) as wqdnum,
+(case when c.qtnum is null then a.days else a.days-c.qtnum end) as wqtnum,
+ISNULL(d.cdnum, 0) as cdnum,
+ISNULL(e.ztnum, 0) as ztnum,
+a.[year],
+a.[month],
+a.operatorname,
+a.orgname,a.syb,a.sybid,a.project_name,a.project_no,a.suppliersname,a.custname ,a.custid,empname,a.personid,rcdate,
+(SELECT ACTENDDATE FROM PUR_PROJ_OUTPER where outperno = a.outperno and PROJECTNO = a.project_no and STARTDATE = a.rcdate and STARTDATE is not null) as lcdate,outperno
+from (
+			SELECT count(day) as days,personid,year,month,operatorname,suppliersname,orgname,syb,sybid,project_name,project_no,custname,custid,empname,max(rcdate) as rcdate,outperno
+			from ( 
+						SELECT DISTINCT year,month,day,personid,operatorname,suppliersname,case when i2.EMPNAME is null then i1.EMPNAME else i2.EMPNAME end as empname,orgname,syb,sybid,project_name,project_no,custname,custid,rcdate,t.outperno
+						from (
+							SELECT year(SIGNDATE) as year,MONTH(SIGNDATE) as month,DAY(SIGNDATE) as DAY,
+											t.*,l.OUTPERNAME as operatorname,g.suppliersname,g.custname,h.orgname,
+											c.orgname as syb,
+										case when d.DICTID is NULL then '5' ELSE DICTID end as sybid,
+										e.project_name,e.project_no,f1.STARTDATE as rcdate,f1.ACTENDDATE as actenddate1
+								from AME_ATTENDANCE_DETAILS t
+										LEFT JOIN AC_OPERATOR a on t.personid = a.userid
+										LEFT JOIN PUR_SUPPLIER g on t.custid = g.custid
+										LEFT JOIN RD_PROJECT e on t.projectno = e.project_no
+										LEFT JOIN OM_ORGANIZATION h on e.fin_unit_id = h.orgid
+										LEFT JOIN OM_ORGANIZATION c on c.orgid = (case when h.ORGID=2904 or h.orgseq like '.1.319.%' or h.orgseq like '.1.30.%' or h.orgseq like '.1.12.%' or h.orgseq like '.1.999999999.%' then substring(h.orgseq,4,charindex('.',h.orgseq,4)-charindex('.',h.orgseq,2)-1) 
+																																		else SUBSTRING(h.ORGSEQ,CHARINDEX('.', h.ORGSEQ,4)+1,CHARINDEX('.',h.ORGSEQ,8)-CHARINDEX('.',h.ORGSEQ,4)-1) end) 
+										LEFT JOIN EOS_DICT_ENTRY d on c.orgname = d.DICTNAME and d.DICTTYPEID = 'CONT_ORG'
+										LEFT JOIN PUR_OUTPERSON l on t.outperno = l.OUTPERNO
+										LEFT JOIN (SELECT max(s1.STARTDATE) as STARTDATE,max(ACTENDDATE) as ACTENDDATE,OUTPERNO,PROJECTNO from PUR_PROJ_OUTPER s1 GROUP BY OUTPERNO,PROJECTNO) f1
+											on t.outperno = f1.OUTPERNO and t.PROJECTNO = f1.PROJECTNO 
+								) t
+	LEFT JOIN PUR_PROJ_OUTPER a1 on t.actenddate1 = a1.ACTENDDATE and t.outperno = a1.OUTPERNO and a1.PROJECTNO = t.project_no
+	LEFT JOIN OM_EMPLOYEE i1 ON a1.MANAGER = i1.USERID
+	LEFT JOIN PUR_PROJ_OUTPER a2 on a2.ACTENDDATE is NULL AND t.outperno = a2.OUTPERNO and a2.PROJECTNO = t.project_no
+	LEFT JOIN OM_EMPLOYEE i2 ON a2.MANAGER = i2.USERID
+) 
+	t GROUP BY personid, year,month,operatorname,suppliersname,custname,custid,orgname,syb,sybid,project_name,project_no,empname,outperno
+) a
+LEFT JOIN 
+(SELECT count(inFlag) as qdnum,personid,year,month,projectno,custid 
+	from (
+		SELECT year(SIGNDATE) as year,MONTH(SIGNDATE) as month,DAY(SIGNDATE) as DAY,
+		t.* 
+		from AME_ATTENDANCE_DETAILS 
+		t) a 
+		where a.inFlag is not null
+			GROUP BY personid, year,month,projectno,custid
+) b on a.personid = b.personid and a.year = b.year and a.month = b.month and a.project_no = b.projectno and a.custid = b.custid 
+left JOIN
+(
+	SELECT count(outFlag) as qtnum,personid,year,month,projectno,custid
+	from (
+		SELECT year(SIGNDATE) as year,MONTH(SIGNDATE) as month,DAY(SIGNDATE) as DAY,
+		t.* 
+		from AME_ATTENDANCE_DETAILS t
+		) a 
+		where a.outFlag is NOT NULL
+		GROUP BY personid, year,month,projectno,custid
+) c on a.personid = c.personid and a.year = c.year and a.month = c.month and a.project_no = c.projectno and a.custid = c.custid 
+LEFT JOIN
+(
+	SELECT count(inFlag) as cdnum,personid,year,month,projectno,custid 
+	from (
+		SELECT year(SIGNDATE) as year,MONTH(SIGNDATE) as month,DAY(SIGNDATE) as DAY,
+		t.* 
+		from AME_ATTENDANCE_DETAILS t
+	) a 
+	where a.inFlag='1' 
+		GROUP BY personid, year,month,projectno,custid
+) d on a.personid = d.personid and a.year = d.year and a.month = d.month and a.project_no = d.projectno and a.custid = d.custid 
+LEFT JOIN 
+(
+	SELECT count(outflag) as ztnum,personid,year,month,projectno,custid 
+	from (
+		SELECT year(SIGNDATE) as year,MONTH(SIGNDATE) as month,DAY(SIGNDATE) as DAY,
+			t.* 
+		from AME_ATTENDANCE_DETAILS t
+	) a 
+     where a.outflag = '2'
+		GROUP BY personid, year,month,projectno,custid
+) e on a.personid = e.personid and a.year = e.year and a.month = e.month and a.project_no = e.projectno and a.custid = e.custid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_attendance.QueryOutPersonWx">
+        <config db="default" type="sql"><![CDATA[SELECT
+	DISTINCT e.OUTPERNO,
+	e.EMPNAME AS outpername,
+	e.USERID,
+	e.MOBILENO,
+	e.OEMAIL,
+	e.WEIXINID,
+	e.MOBILE,
+	e.EMAIL,
+	e.STATE,
+	e.STATUS,
+	o.PROJECTNO,
+	o.WHETHERATTENDANCE,
+	s.CUSTNAME,
+	m.EMPNAME
+FROM
+	WX_EMP_TEMP e
+LEFT JOIN (select DISTINCT OUTPERNO,PROJECTNO = (stuff((select ',' + PROJECTNO 
+	from PUR_PROJ_OUTPER x
+	where x.OUTPERNO = y.OUTPERNO for xml path('')),1,1,'')),WHETHERATTENDANCE = (stuff((select ',' + WHETHERATTENDANCE 
+	from PUR_PROJ_OUTPER x
+	where x.OUTPERNO = y.OUTPERNO for xml path('')),1,1,'')),MANAGER = (stuff((select ',' + MANAGER 
+	from PUR_PROJ_OUTPER x
+	where x.OUTPERNO = y.OUTPERNO for xml path('')),1,1,'')) from PUR_PROJ_OUTPER y GROUP BY OUTPERNO,PROJECTNO,WHETHERATTENDANCE,MANAGER) o ON o.OUTPERNO = e.OUTPERNO
+LEFT JOIN PUR_OUTPERSON p on p.OUTPERNO = e.OUTPERNO
+LEFT JOIN PUR_SUPPLIER s ON s.CUSTID = p.CUSTID
+LEFT JOIN OM_EMPLOYEE m ON m.USERID = o.MANAGER
+where e.ISOUTPERSON = '1']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_common.ame_attendance.attendanceQueryEntity">
+        <config db="default" type="sql"><![CDATA[SELECT H.SIGNID,E.CUSTNAME,D.PROJECT_NAME,A.OUTPERNAME,C.SUPPLIERSNAME,E.CUSTJC,H.PERSONID AS USERID,				
+H.PERSONID,H.RULENO,H.SIGNDATE,H.INTIME,H.INLOCATION,H.INREMARK,H.PROJECTNO,H.INLATITUDE,
+H.INLONGITUDE,H.INDISTANCE,H.OUTTIME,H.OUTLOCATION,H.OUTLATITUDE,H.OUTLONGITUDE,
+H.OUTREMARK,H.OUTDISTANCE,z.CONTNUM AS swcontnum,k.CONFIRMDAY,j.ACTRATE,
+			CASE ISNULL(H.INFLAG,'') 
+			   WHEN '1' THEN '是'
+			   WHEN '0' THEN '否'
+			END AS INFLAG,
+			CASE ISNULL(H.OUTFLAG,'') 
+			   WHEN '2' THEN '是'
+                        WHEN '0' THEN '否'
+			END AS OUTFLAG,
+			D.LONGITUDE,D.LATITUDE,
+			STARTTIME+'-'+ENDTIME AS RULEDETAIL,Q.CURRENTSTATUS,
+			P.OPERATORNAME AS MANAGERNAME,F.ORGNAME,R.EMPNAME as MANAGERNAME1,S.ORGNAME as ORGNAME1
+			FROM AME_ATTENDANCE_DETAILS H 
+				LEFT JOIN PUR_OUTPERSON A ON A.WXNO=H.PERSONID
+				LEFT JOIN PUR_SUPPLIER C ON H.CUSTID=C.CUSTID 
+				LEFT JOIN RD_PROJECT D ON H.PROJECTNO=D.PROJECT_NO 
+				LEFT JOIN MIS_CUSTINFO E ON D.CUSTID=E.CUSTID 
+				LEFT JOIN OM_ORGANIZATION F ON D.FIN_UNIT_ID=F.ORGID 
+				LEFT JOIN OM_ORGANIZATION S on f.ORGSEQ like s.ORGSEQ +'%' and s.ORGLEVEL=3 
+				LEFT JOIN AME_ATTENDANCE_RULE I ON I.RULENO = H.RULENO
+				LEFT JOIN AC_OPERATOR P ON P.USERID=D.MANAGER
+				LEFT JOIN OM_EMPLOYEE R ON H.REPORTTOPID = R.USERID
+				LEFT JOIN PUR_PROJ_OUTPER Q ON Q.PROJECTNO=D.PROJECT_NO and A.OUTPERNO=Q.OUTPERNO and Q.CURRENTSTATUS!='0'
+				LEFT JOIN (select PROJECT_NO,STUFF((SELECT DISTINCT ','+c.CONTNUM from RD_PROJ_CONT c where c.PROJECT_NO=RD_PROJ_CONT.PROJECT_NO for xml path('')),1,1,'') as CONTNUM from RD_PROJ_CONT group by PROJECT_NO) z ON d.PROJECT_NO = z.PROJECT_NO
+				left join (select x.CONTNUM,sum(x.ACTSUM)/y.CONTSUM as ACTRATE from CS_REVE_FORECAST x 
+				left join CS_CONTRACT y on x.CONTNUM=y.CONTNUM and x.STATUS='3' 
+				where y.CONTSUM is not null and y.CONTSUM != 0 group by x.CONTNUM,y.CONTSUM) j on j.CONTNUM=z.CONTNUM 
+				left join (select x.CONTNUM,max(x.MACONFIRMDAY) as CONFIRMDAY from CS_REVE_FORECAST x 
+				left join CS_CONTRACT y on x.CONTNUM=y.CONTNUM and x.STATUS='3' 
+				where y.CONTSUM is not null and y.CONTSUM != 0 group by x.CONTNUM) k on k.CONTNUM=z.CONTNUM]]></config>
+    </QueryEntity>
+</QueryEntityList>

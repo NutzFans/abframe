@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.QueryResume">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,b.ORGID,c.orgseq,c.orgname as orgs,year(GETDATE())-cast(left(a.WORKDATE,4) as int)as workingyear1,d.EMPNAME as recruitername 
+,e.USERID as OPERATORUSERID,t.TOTALREWARDMONEY,t.PAYMONEY,bf.ORGNAME as BENEFORGNAME
+FROM AME_RESUME a
+LEFT JOIN OM_EMPLOYEE b on a.userid = b.userid
+LEFT JOIN OM_ORGANIZATION c on b.ORGID = c.orgid
+LEFT JOIN OM_EMPLOYEE d on d.OPERATORID=a.OPERATORID
+LEFT JOIN OM_EMPLOYEE e on e.OPERATORID=a.OPERATORID
+LEFT JOIN(
+		SELECT RESUMEID,sum(r.REWARDMONEY) as TOTALREWARDMONEY,
+		sum(
+		CASE WHEN REWARDSTATUS = '2' THEN r.REWARDMONEY ELSE NULL END) AS PAYMONEY,BENEFORGID
+		FROM AME_REFFER_REWARD_DETAIL r
+              WHERE r.REWARDSTATUS in (1,2)
+		GROUP BY RESUMEID,BENEFORGID
+)t ON t.RESUMEID = a.RESUMEID
+LEFT JOIN OM_ORGANIZATION bf on bf.ORGID = t.BENEFORGID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.AmeResumIsRepeat">
+        <config db="default" type="sql"><![CDATA[select a.RESUMEID,case when b.samename>1 then 1 else 0 end issamename,
+case when c.sametel>1 then 1 else 0 end as issametel from AME_RESUME a
+LEFT JOIN (select count(b.RESUMEID) as samename,b.EMPNAME from AME_RESUME b GROUP BY b.EMPNAME)b on a.EMPNAME=b.EMPNAME
+LEFT JOIN (select count(c.RESUMEID) as sametel,c.TEL from AME_RESUME c GROUP BY c.TEL)c on a.TEL=c.TEL]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.QueryRecruitInterviews">
+        <config db="default" type="sql"><![CDATA[SELECT a.EMPNAME,a.RESUMEID,a.WORKINGYEAR,a.GENDER,a.APPLYOCCUPATION,a.EDUCATION,a.SCHOOL,a.SPECIALTY,a.TEL,a.SELFEMAIL,a.EXPECTINCOME,a.APPLYSTATUS,a.WORKDATE,a.INTERVIEWSTATUS,t.INTERVIEWROUNDES,t.INTERVIEWDTAE,r.RECRUITID,r.CANDIDATESTATUS 
+FROM AME_RESUME a
+LEFT JOIN AME_RESUME_RECOMMEND r
+ON a.RESUMEID = r.RESUMEID
+LEFT JOIN 
+(SELECT e.* FROM AME_RESUME_INTERVIEW e 
+,(SELECT w.RECRUITID,w.RESUMEID,MIN(w.INTERVIEWROUNDES) as INTERVIEWROUNDES
+FROM AME_RESUME_INTERVIEW w 
+WHERE  w.INTERVIEWROUNDES IS NOT NULL 
+GROUP BY w.RESUMEID,w.RECRUITID) b 
+where e.RESUMEID=b.RESUMEID and e.INTERVIEWROUNDES=b.INTERVIEWROUNDES and e.RECRUITID=b.RECRUITID
+)t on a.RESUMEID = t.RESUMEID AND t.RECRUITID = r.RECRUITID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.QueryInterviewMould">
+        <config db="default" type="sql"><![CDATA[SELECT  DISTINCT a.*,t.POSITION as POSITION1,positionname = STUFF(( SELECT ',' + dictname FROM  EOS_DICT_ENTRY  where PATINDEX('%,' + RTRIM(dictid) + ',%',',' + a.position + ',')>0 
+AND dicttypeid = 'AME_POSITION_MEMO'
+ORDER BY PATINDEX('%,' + RTRIM(dictid) + ',%',',' + a.position + ',') FOR XML PATH('')),1, 1,'') 
+FROM  AME_INTERVIEW_EVALUATION_MOULD  a
+LEFT JOIN
+(
+  select  
+     a.EVALUATIONMOULDID,a.MOULDNAME,b.POSITION
+		 from  
+				 (select EVALUATIONMOULDID,MOULDNAME,POSITION = convert(xml,' <root> <v>'+replace(POSITION,',',' </v> <v>')+' </v> </root>') from AME_INTERVIEW_EVALUATION_MOULD)a 
+		 outer apply 
+				 (select a.MOULDNAME,POSITION =C.v.value('.','nvarchar(100)') from a.POSITION.nodes('/root/v')C(v))b
+)t
+ON a.EVALUATIONMOULDID = t.EVALUATIONMOULDID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.GetmouldPositions">
+        <config db="default" type="sql"><![CDATA[SELECT e.dicttypeid,e.dictid as position,e.dictname as positionname FROM EOS_DICT_ENTRY e
+		WHERE e.dicttypeid = 'AME_POSITION_MEMO'
+		]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.queryInterview">
+        <config db="default" type="sql"><![CDATA[select a.*,b.RECRUITNO,b.RECPOSITION,b.ORGID,b.RECPOSITIONNAME,c.EMPNAME,d.OVERALLMERIT,e.PROCESSINSTID 
+from AME_RESUME_INTERVIEW a 
+LEFT JOIN OM_RECRUIT b on a.RECRUITID=b.RECRUITID
+LEFT JOIN AME_RESUME c on c.RESUMEID=a.RESUMEID
+LEFT JOIN AME_INTERVIEW_APPRAISE d on d.INTERVIEWID=a.INTERVIEWID
+LEFT JOIN AME_RESUME_RECOMMEND e on e.RESUMEID=a.RESUMEID and e.RECRUITID=b.RECRUITID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.Queryhandlerewardmoney">
+        <config db="default" type="sql"><![CDATA[SELECT r.EMPNAME,re.RECRUITNO,re.position,d.REFFERREWARDDETAILID,d.RESUMEID,d.EVENTTYPE,d.RECRUITID,d.REWARDMONEY,d.BENEFORGID,d.REWARDSTATUS,
+CONVERT(VARCHAR(16),d.CREATEDATE,120) as CREATEDATE,d.PAYDATE,d.REWARDREMARK,d.REFERRER,e.EMPNAME as referrername,d.PAYUSERID,pay.EMPNAME as payempname,d.SUREUSERID,sure.EMPNAME as sureempname,CONVERT(VARCHAR(16),d.SUREDATE,120) as SUREDATE,CONVERT(VARCHAR(16),d.SUREPAYDATE,120) as SUREPAYDATE,o.ORGSEQ,o.ORGNAME as beneforgname,
+benefsyq.ORGNAME as benefsyqname,benefsyb.ORGNAME as benefsybname,oo.ORGNAME as referrerorgname,
+oo.ORGID as referrerorgid,referrersyq.ORGNAME as referrersyqname,tt.directPersons
+FROM AME_REFFER_REWARD_DETAIL d
+LEFT JOIN OM_ORGANIZATION o ON d.BENEFORGID = o.ORGID
+LEFT OUTER JOIN OM_ORGANIZATION benefsyq on o.ORGSEQ like benefsyq.ORGSEQ+'%' and benefsyq.ORGLEVEL=2
+LEFT OUTER JOIN OM_ORGANIZATION benefsyb on o.ORGSEQ like benefsyb.ORGSEQ+'%' and benefsyb.ORGLEVEL=3
+LEFT JOIN OM_EMPLOYEE e on d.REFERRER = e.USERID
+LEFT JOIN
+(
+SELECT ee.userid,COUNT(eee.userid) as directPersons FROM OM_EMPLOYEE ee
+LEFT JOIN OM_EMPLOYEE eee ON ee.userid = eee.major    collate Chinese_PRC_BIN 
+WHERE eee.major is not null
+GROUP BY ee.userid
+)tt ON e.userid = tt.userid
+LEFT JOIN OM_ORGANIZATION oo ON e.ORGID = oo.ORGID
+LEFT OUTER JOIN OM_ORGANIZATION referrersyq on oo.ORGSEQ like referrersyq.ORGSEQ+'%' and referrersyq.ORGLEVEL=2
+LEFT JOIN OM_RECRUIT re ON  re.RECRUITID = d.RECRUITID
+LEFT JOIN OM_EMPLOYEE sure on d.SUREUSERID = sure.USERID
+LEFT JOIN OM_EMPLOYEE pay on d.PAYUSERID = pay.USERID
+LEFT JOIN AME_RESUME r ON r.RESUMEID = d.RESUMEID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.eos.ame_resume.resume.QueryRecruitConfamt">
+        <config db="default" type="sql"><![CDATA[SELECT d.FINTYPE,t.FEETYPENAME,b.beneforgid,g.ORGNAME,b.BENEFMON as  CONFAMT,convert(char(7),r.PAYDATE,120) AS costdate,DATEPART(month,r.PAYDATE)  AS month FROM EXP_REI r,EXP_REI_LIST l,EXP_REIDETAIL d
+LEFT JOIN EXP_FEETYPE t ON t.FEETYPECODE = d.FINTYPE
+,EXP_REIBENEF b
+LEFT JOIN OM_ORGANIZATION g ON g.ORGID = b.beneforgid
+WHERE r.REIID = l.REIID AND l.EXPID = d.EXPID AND b.EXPID = d.EXPID AND YEAR(r.PAYDATE) >= 2020 AND d.FINTYPE in ('1S','1R','1H')
+union all
+SELECT FINTYPE = 'bole' ,FEETYPENAME = '伯乐奖',d.beneforgid,g.ORGNAME,SUM(d.REWARDMONEY) AS CONFAMT,convert(char(7),d.SUREDATE,120) AS costdate,DATEPART(month,d.SUREDATE) AS month FROM  AME_REFFER_REWARD_DETAIL d
+LEFT JOIN OM_ORGANIZATION g ON g.ORGID = d.beneforgid
+WHERE rewardstatus = 1
+GROUP BY d.beneforgid,g.ORGNAME,d.SUREDATE]]></config>
+    </QueryEntity>
+</QueryEntityList>

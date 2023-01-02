@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurPlan">
+        <config db="default" type="sql"><![CDATA[SELECT
+t.id,
+t.plan_id,
+t.purchase_first_code,
+t.purchase_two_code,
+t.purchase_three_code,
+t.budget_amount,
+t.unit,
+t1.ischange,
+t.purchase_first_name,
+t.purchase_two_name,
+t.purchase_three_name,
+t.material_name,
+t.remark,
+t.technology_need,
+t.package_contract,
+t.key_issus,
+t.is_project,
+t.model,
+t.code,
+t.balance,
+t.projectname,
+t.CREATED_USERNAME,
+t.CREATED_TIME,
+t.number,
+t1.type,
+t1.name,
+t1.infomant_user,
+t1.CREATED_BY,
+t1.CREATED_ORGID,
+t1.status,
+t1.need_org_name,
+t1.need_org_id,
+t1.year,
+t.is_adopt,
+Convert(NUMERIC(18,2),(t.budget_amount -Convert(NUMERIC(18,2),isnull((select SUM(t2.amount) from zh_project_approval_details t2 LEFT JOIN zh_project_approval p1 on t2.pid=p1.id where  p1.status!=4 and t2.plan_id = t.id),0)))) as sumAmount,
+T2.ORGNAME as putunder_name,
+t1.UPDATED_TIME,
+t1.putunder
+FROM
+	zh_purchase_plan_item t
+LEFT JOIN zh_purchase_plan t1 ON t.plan_id = t1.id
+LEFT JOIN OM_ORGANIZATION T2 ON t1.putunder = T2.ORGCODE]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurZero">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*, b.ORGNAME ,c.EMPNAME as created_name
+FROM
+	zh_purchase_zero a
+LEFT JOIN OM_ORGANIZATION b ON a.org_id = b.orgcode
+LEFT JOIN OM_EMPLOYEE C ON C.EMPCODE = a.CREATED_BY]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurUrgent">
+        <config db="default" type="sql"><![CDATA[select a.*,b.ORGNAME from zh_purchase_urgent a left join OM_ORGANIZATION b on a.org_id=b.orgcode]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurUrgentItem">
+        <config db="default" type="sql"><![CDATA[SELECT
+a.*,
+	b.item_name firstItemValue,
+
+	c.item_name secondItemValue,
+
+	d.item_name threeItemValue
+FROM
+	zh_purchase_urgent_item a
+	LEFT JOIN zh_purchase_items b ON a.purchase_first_code = b.item_code
+
+	LEFT JOIN zh_purchase_items c ON a.purchase_two_code = c.item_code
+
+	LEFT JOIN zh_purchase_items d ON a.purchase_three_code = d.item_code]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryProApp">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,
+	c.EMPNAME agentEmpName,
+	d.EMPNAME chargeEmpName
+FROM
+	zh_project_approval a
+	left join OM_EMPLOYEE c ON a.pro_app_agent_userid=c.EMPCODE
+	left join OM_EMPLOYEE d on a.pro_app_charge_userid=d.EMPCODE]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurPackage">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,
+	b.project_name,
+	c.pro_app_code,
+	d.ORGNAME
+FROM
+	zh_purchase_package a
+	LEFT JOIN RD_PROJECT b ON a.project_id = b.PROJECT_ID
+	left join zh_project_approval c on a.proapp_id =c.id
+	left join OM_ORGANIZATION d on d.ORGCODE = a.org_id]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurPackageSup">
+        <config db="default" type="sql"><![CDATA[SELECT a.*,b.custname FROM zh_package_sup a left join PUR_SUPPLIER b on a.custid = b.custid]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryReviewReport">
+        <config db="default" type="sql"><![CDATA[select a.*,b.pro_app_code,b.pro_app_name,b.pro_app_apply_price,b.putunder,b.type,b.purchas_mode,c.purchase_number,d.empname approvalName,e.empname examineName from zh_purchase_reviewreport a
+left join zh_project_approval b on a.proapp_id=b.id 
+left join zh_purchase_plan c on a.plan_id=c.id
+left join OM_EMPLOYEE d on a.approval_user_id = d.empcode 
+left join om_employee e on a.examine_user_id = e.empcode]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.querySupEvaluate">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,
+	a.supplier_name as CUSTNAME,
+	c.contract_name,
+	c.contract_no
+FROM
+	zh_supplier_evaluate a
+	left join zh_pay_contract c on a.contract_id=c.id]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryVerifyList">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.*,
+	b.contract_no,
+	c.EMPNAME,
+	d.ORGNAME
+FROM
+	zh_purchase_verify a
+	LEFT JOIN zh_pay_contract b ON a.contract_id = b.id
+	LEFT JOIN OM_EMPLOYEE c ON a.user_id = c.EMPCODE
+	left join OM_ORGANIZATION d on a.org_id=d.orgcode]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryVerifyDetail">
+        <config db="default" type="sql"><![CDATA[select a.*,b.custname from zh_purchase_verify_detail a left join PUR_SUPPLIER b on a.sup_id=b.CUSTID]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurReportForm">
+        <config db="default" type="sql"><![CDATA[	SELECT
+	a.id,
+	a.pro_app_code,
+	a.pro_app_name,
+	c.orgname proAppOrgName,
+	a.plan_id,
+	a.pro_app_obj_type,
+	b.contract_no,
+	b.contract_name,
+	b.act_contract_sum/10000 actContractSum,
+	b.signatory,
+	b.signing_date,
+	b.issupagreement,
+	e.package_type,
+	d.type,
+	a.pro_app_apply_price,
+	a.cost_from,
+	g.EMPNAME agentName,
+	h.EMPNAME chargeName,
+	i.ORGNAME proAppAppOrgname,
+	a.CREATED_TIME,
+	a.pro_app_impl_time,
+	e.package_code,
+	d.purchase_number,
+	a.status,
+	j.CUSTNAME AS signatoryname,
+	j.isgroupqualified,
+	k.codes,
+	l.sums,
+	p.electron,
+	concat(round(cast(isnull(cast(p.electron*1.0/l.sums as decimal(10,6)),0)*100 as decimal(10,2)),2),'%') as focusrate,
+	q.prices,
+	concat(round(cast(isnull(cast(q.prices*1.0/l.sums as decimal(10,6)),0)*100 as decimal(10,2)),2),'%') as electronrate,
+	r.publics,
+	concat(round(cast(isnull(cast(r.publics*1.0/l.sums as decimal(10,6)),0)*100 as decimal(10,2)),2),'%') as publicrate
+FROM
+	zh_project_approval a
+	LEFT JOIN zh_pay_contract b ON a.id= b.pro_app_id 
+	AND b.issupagreement = '0'
+	LEFT JOIN OM_ORGANIZATION c ON a.pro_app_org_id= c.ORGCODE
+	LEFT JOIN zh_purchase_plan d ON a.plan_id = d.id
+	LEFT JOIN zh_purchase_package e ON e.proapp_id = a.id
+	LEFT JOIN RD_PROJECT f ON f.project_id = a.project_id
+	LEFT JOIN OM_EMPLOYEE g ON a.pro_app_agent_userid= g.empcode
+	LEFT JOIN OM_EMPLOYEE h ON a.pro_app_charge_userid= h.empcode
+	LEFT JOIN OM_ORGANIZATION i ON a.approval_org_id= i.ORGCODE
+	LEFT JOIN PUR_SUPPLIER j ON b.signatory= j.CUSTID
+	LEFT JOIN 
+	(SELECT zp.plan_id,stuff(
+	( 
+		SELECT ','+code FROM zh_purchase_plan_item zp1 WHERE zp1.plan_id=zp.plan_id for xml path('')
+	),1,1,'')
+as codes FROM zh_purchase_plan_item zp GROUP BY zp.plan_id) as k ON a.plan_id = k.plan_id
+,
+(
+	SELECT sum(cast(pro_app_apply_price as decimal(10,6))) as sums FROM zh_project_approval
+) as l,
+(
+	SELECT sum(cast(budget_amount as decimal(10,6))) as electron  FROM
+	(SELECT m.type,m.budget_amount from zh_project_approval n
+	LEFT join  zh_purchase_plan m on n.plan_id = m.id) as o
+	WHERE type in('1','2')
+) as p,
+(SELECT sum(cast(price as decimal(10,6))) as prices from zh_purchase_package WHERE package_type in('电子商城采购')) as q,
+(SELECT sum(cast(price as decimal(10,6))) as publics from zh_purchase_package WHERE is_electric_mining in('1')) as r]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurProgramme">
+        <config db="default" type="sql"><![CDATA[select a.*,b.pro_app_code,b.pro_app_name,b.pro_app_apply_price,b.putunder,c.purchase_number,d.empname approvalName,e.empname examineName from zh_purchase_programme a
+left join zh_project_approval b on a.proapp_id=b.id 
+left join zh_purchase_plan c on a.plan_id=c.id
+left join OM_EMPLOYEE d on a.approval_user_id = d.empcode 
+left join om_employee e on a.examine_user_id = e.empcode]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryProAppDtl">
+        <config db="default" type="sql"><![CDATA[SELECT
+t.id,
+t.pid,
+t.plan_id,
+t.amount,
+t.status,
+t.ischange,
+t.REVISION,
+t.remark,
+t.plan_name,
+t.plan_code,
+t.need_org_name,
+t.need_org_id,
+t1.material_name,
+t1.code,
+t1.new_budget_amount as budget_amount,
+Convert(NUMERIC(18,2),(t1.new_budget_amount -Convert(NUMERIC(18,2),isnull((select SUM(t2.amount) from zh_project_approval_details t2 LEFT JOIN zh_project_approval p1 on t2.pid=p1.id where  p1.status!=4 and t2.plan_id = t1.id),0)))) as sumAmount
+
+FROM
+	zh_project_approval_details t
+LEFT JOIN zh_purchase_plan_item t1 ON t.plan_id = t1.id
+]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurPlanItem">
+        <config db="default" type="sql"><![CDATA[SELECT
+a.*,
+e.budget_amount budgetAmounts,
+a.budget_amount old_budget_amount,
+a.purchase_first_code AS firstItemCode,
+a.purchase_two_code AS secondItemCode,
+a.purchase_three_code AS threeItemCode,
+b.item_name AS firstItemValue,
+c.item_name AS secondItemValue,
+d.item_name AS threeItemValue,
+a.purchase_first_code AS aitemcode,
+a.purchase_two_code AS bitemcode,
+a.purchase_three_code AS citemcode,
+b.item_name AS aitemname,
+c.item_name AS bitemname,
+d.item_name AS citemname,
+Convert(NUMERIC(18,2),isnull((select SUM(t2.amount) from zh_project_approval_details t2 LEFT JOIN zh_purchase_plan p1 on t2.pid=p1.id where  p1.status!=4 and t2.plan_id = a.id),0)) as sumAmount
+FROM
+	zh_purchase_plan_item a
+	LEFT JOIN (select DISTINCT item_code,item_name from zh_purchase_items )b ON a.purchase_first_code = b.item_code
+	LEFT JOIN (select DISTINCT item_code,item_name from zh_purchase_items ) c ON a.purchase_two_code = c.item_code
+	LEFT JOIN (select DISTINCT item_code,item_name from zh_purchase_items ) d ON a.purchase_three_code = d.item_code
+	LEFT JOIN zh_purchase_plan e on a.PLAN_ID = e.id]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurPlanItemChange">
+        <config db="default" type="sql"><![CDATA[SELECT
+a.*,
+b.budget_amount as old_budget_amount
+FROM
+	zh_purchase_plan_item a
+	LEFT JOIN zh_purchase_plan_item b on a.old_item_id = b.id]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.SelectPurchasePlan">
+        <config db="default" type="sql"><![CDATA[SELECT
+t.id,
+t.plan_id,
+t.purchase_first_code,
+t.purchase_two_code,
+t.new_budget_amount,
+t.new_number,
+t.NEW_UNIT,
+t1.ischange,
+t.purchase_first_name,
+t.purchase_two_name,
+t.material_name,
+t.remark,
+t.code,
+t.balance,
+t.centralized_dept as putunder,
+T2.ORGNAME as putunder_name,
+t1.type,
+t1.name,
+t1.infomant_user,
+t1.CREATED_BY,
+t1.CREATED_ORGID,
+t1.status,
+t1.need_org_name,
+t1.need_org_id,
+t1.year,
+t.is_adopt,
+Convert(NUMERIC(18,2),(t.new_budget_amount -Convert(NUMERIC(18,2),isnull((select SUM(t2.amount) from zh_project_approval_details t2 LEFT JOIN zh_project_approval p1 on t2.pid=p1.id where  p1.status!=4 and t2.plan_id = t.id),0)))) as sumAmount
+FROM
+	zh_purchase_plan_item t
+LEFT JOIN zh_purchase_plan t1 ON t.plan_id = t1.id
+LEFT JOIN OM_ORGANIZATION T2 ON t.centralized_dept = T2.ORGCODE]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.purchase.purchase.queryPurZeroItems">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.item_name,
+	a.total_price,
+	a.num,
+	b.purchase_name,
+	b.purchase_code,
+	b.CREATED_TIME,
+	b.status,
+	b.CREATED_BY,
+	b.CREATED_ORGID,
+	c.EMPNAME AS created_name,
+	b.created_orgname,
+	b.contractor,
+	b.purchase_date,
+	b.contract,
+	b.org_id,
+	b.apply_reason,
+	a.id,
+	b.total_amount,
+	a.unit,
+	a.one_price,
+	a.zero_id 
+FROM
+	dbo.zh_purchase_zero_item AS a
+	LEFT JOIN dbo.zh_purchase_zero AS b ON a.zero_id = b.id
+	LEFT JOIN dbo.OM_EMPLOYEE AS C ON C.EMPCODE = b.CREATED_BY
+	where b.status!='4']]></config>
+    </QueryEntity>
+</QueryEntityList>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.common.insertCommBudget">
+    <resultMap class="com.bos.mp.common.performance.ErprptTCommbudget" id="resultMap">
+        <result column="companyID" javaType="string" property="companyid"/>
+        <result column="region" javaType="string" property="region"/>
+        <result column="comExpTypeID" javaType="string" property="erprptTCommexptype/comexptypeid"/>
+        <result column="year" javaType="string" property="year"/>
+        <result column="month" javaType="string" property="month"/>
+        <result column="actamt" javaType="Decimal" property="actamt"/>
+    </resultMap>
+    <!-- 插入直接固定资产临时表数据（21原值 22折旧） -->
+    <insert id="insertDeptCostTmp" parameterClass="java.util.HashMap"><![CDATA[
+		insert into ERPRPT_T_DeptCostTmp
+		select a.deptNo,a.year,a.month,a.costTypeID,a.amt,a.regionID from (
+		SELECT a.deptno,#year# as year,#month# as month,#oldCostTypeID# as costTypeID,c.amt as amt1,Convert(decimal(18,3),round(c.amt/c.deptEmpNum*a.empnum,0)) as amt,a.regionID 
+		FROM ERPORG_T_DeptEmpNum a left join OM_ORGANIZATION b on a.deptno = b.orgid 
+		LEFT JOIN (select t.deptNo,t.amt,(SELECT SUM(empNum) FROM ERPORG_T_DeptEmpNum a left join OM_ORGANIZATION b on a.deptno = b.orgid 
+			WHERE  year=t.[year] and month=t.[month] and  (a.deptNo = t.deptNo or b.parentorgid = t.deptNo) )as deptEmpNum
+		    from ERPRPT_T_DeptCost t
+		    where t.[year]=#year# and t.[month]=#month# and t.costTypeID=#oldCostTypeID#) c on a.deptNo = c.deptno or b.PARENTORGID=c.deptno
+			WHERE  year=#year# and month=#month# and a.empnum > 0 and (a.deptNo = c.deptno or b.parentorgid =c.deptno)
+		) a group by a.deptno,a.year,a.month,a.costtypeid,a.regionID,a.amt
+		]]></insert>
+    <!-- 从部门成本表中加载直接固定资产原值  到区域部门成本分摊表 ,从部门成本表中加载直接固定资产折旧 到区域部门成本分摊 临时表  21-37  22-38 -->
+    <insert id="insertDeptCostRegionOrTmp" parameterClass="java.util.HashMap"><![CDATA[
+		insert into $tableName$ 
+		select a.deptno,a.regionID,a.year,a.month,a.costTypeID,sum(amt)as amt from (
+		select deptNo as deptNo,regionID as regionID,#year# as year,#month# as month,#newCostTypeID# as costTypeID,amt as amt
+		from ERPRPT_T_DeptCostTmp 
+		where year=#year# and month=#month# and costTypeID=#oldCostTypeID#
+		) a
+		GROUP BY a.deptno,a.regionID,a.year,a.month,a.costTypeID
+		]]></insert>
+    <!-- 将部门划分到区域的成本，再按区域总人头数取平均值，并存入临时区域部门成本分摊表，供以后的部门费用表取公共费用时使用 -->
+    <insert id="insertDeptCostRegionByRegionTmp" parameterClass="java.util.HashMap"><![CDATA[
+		insert into ERPRPT_T_DeptCostRegion 
+		select a.deptno,a.regionID,a.year,a.month,a.costTypeID,sum(amt) as amt from (
+		select a.deptno,b.empnum ,#year# as year,#month# as month,#newCostTypeID# as costTypeID,c.regionID,c.amt as totalAmt,c.totalempNum,
+		Convert(decimal(18,3),round(c.amt*b.empNum/c.totalempNum,0)) as amt
+		from ERPRPT_T_DeptCostRegionTmp a 
+		left join  ERPORG_T_DeptEmpNum b 
+		on a.deptNo=b.deptNo and a.regionid = b.regionid and a.year=b.year and a.month=b.month
+		LEFT JOIN (select a.regionID,SUM(a.amt)as amt,sum(b.empnum) totalempNum from ERPRPT_T_DeptCostRegionTmp a left join  ERPORG_T_DeptEmpNum b 
+		on a.deptNo=b.deptNo and a.regionid = b.regionid and a.year=b.year and a.month=b.month 
+		where a.costTypeID = #newCostTypeID# and a.year=#year# and a.month=#month# 
+		GROUP BY a.regionID ) c on c.regionid=a.regionID
+		where a.year=#year# and a.month=#month# and a.costTypeID=#newCostTypeID#
+		) a GROUP BY a.deptno,a.regionID,a.year,a.month,a.costTypeID
+		]]></insert>
+    <select id="queryCommBudgetbyexp" parameterClass="java.util.HashMap" resultMap="resultMap">select companyID,[year],[month],t.region,comExpTypeID,sum(actAmt) as actAmt,flag from (
+		select companyID,[year],[month],t.region,comExpTypeID,sum(actAmt) as actAmt,
+		(CASE when (SELECT COUNT(*) from ERPRPT_T_CommBudget_NEW where region =t.region and year=t.year and month=t.month and comExpTypeID=t.comExpTypeID)=1
+		then 1 else 0 end) as flag from(
+			select '1' companyID,#year# as year,#month# as month, a.regionID as region,b.comExpTypeID,round(sum(amt),0) as actAmt		
+			from ERPRPT_T_DeptCostRegion a, ERPRPT_T_DeptCostType b
+			where b.comExpTypeID is not null and a.costTypeID=b.costTypeID and a.year=#year# and a.month=#month#
+			group by regionID,comExpTypeID
+			UNION ALL
+			select '1' companyID,#year# as year,#month# as month,a.BENEFREGION as region,c.comExpTypeID,round(sum(f.CONFMON),0) as actAmt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI e,EXP_REIDETAIL f,ERPRPT_T_CommExpVsExpType c,EXP_FEETYPE d
+			where a.EXPID=b.EXPID and b.REIID=e.REIID and b.EXPID=f.EXPID and f.FINTYPE=c.expTypeID and f.FINTYPE=d.FEETYPECODE and d.isLoadForRpt=1
+			and Year(e.acctDate)=#year# and Month(e.acctDate)=#month# and e.EXPTYPE='3'
+			group by a.BENEFREGION,c.comExpTypeID
+			UNION all
+			select '1' companyID,#year# as year,#month# as month,region,comExpTypeID,round(sum(addAmt),0) as actAmt
+			from ERPRPT_T_CommExpChange
+			where year=#year# and month=#month#
+			group by region,comExpTypeID
+		) t 
+		GROUP BY t.companyID,t.year,t.month,t.region,t.comExpTypeID
+		) t  where t.flag=#flag#
+	GROUP BY t.companyID,t.year,t.month,t.region,t.comExpTypeID,t.flag</select>
+    <!-- 从区域部门成本分摊中加载,存入公共费用表 -->
+    <insert id="insertCommByDeptCostRegion" parameterClass="java.util.HashMap"><![CDATA[
+		insert into ERPRPT_T_CommBudget_NEW (companyID,year,month,region,comExpTypeID,actAmt)
+		select a.companyID,a.year,a.month,a.region,a.comExpTypeID,sum(actAmt) as actAmt from (
+		select '1' companyID,#year# as year,#month# as month, a.regionID as region,b.comExpTypeID,round(sum(amt),0) as actAmt
+		from ERPRPT_T_DeptCostRegion a, ERPRPT_T_DeptCostType b
+		where b.comExpTypeID is not null and a.costTypeID=b.costTypeID and a.year=#year# and a.month=#month#
+		group by regionID,comExpTypeID 
+		) a
+		GROUP BY a.companyID,a.year,a.month,a.region,a.comExpTypeID
+		]]></insert>
+    <!-- 从公共费用报销单中加载数据,存入公共费用表-->
+    <insert id="insertCommByExpRei" parameterClass="java.util.HashMap"><![CDATA[
+		insert into ERPRPT_T_CommBudget_NEW (companyID,year,month,region,comExpTypeID,actAmt)
+		select a.companyID,a.year,a.month,a.region,a.comExpTypeID,sum(actAmt) as actAmt from (
+			select '1' companyID,#year# as year,#month# as month,a.BENEFREGION as region,c.comExpTypeID,round(sum(f.CONFMON),0) as actAmt
+			from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI e,EXP_REIDETAIL f,ERPRPT_T_CommExpVsExpType c,EXP_FEETYPE d
+			where a.EXPID=b.EXPID and b.REIID=e.REIID and b.EXPID=f.EXPID and f.FINTYPE=c.expTypeID and f.FINTYPE=d.FEETYPECODE and d.isLoadForRpt=1
+			and Year(e.acctDate)=#year# and Month(e.acctDate)=#month# and e.EXPTYPE='3'
+			group by a.BENEFREGION,c.comExpTypeID
+		) a
+		GROUP BY a.companyID,a.year,a.month,a.region,a.comExpTypeID
+		]]></insert>
+    <!-- 从公共费用调整记录中加载数据,存入公共费用表-->
+    <insert id="insertCommByCommExpChange" parameterClass="java.util.HashMap"><![CDATA[
+		insert into ERPRPT_T_CommBudget_NEW (companyID,year,month,region,comExpTypeID,actAmt)
+		select a.companyID,a.year,a.month,a.region,a.comExpTypeID,sum(actAmt) as actAmt from (
+		select '1' companyID,#year# as year,#month# as month,region,comExpTypeID,round(sum(addAmt),0) as actAmt
+		from ERPRPT_T_CommExpChange
+		where year=#year# and month=#month#
+		group by region,comExpTypeID
+		) a
+		GROUP BY a.companyID,a.year,a.month,a.region,a.comExpTypeID
+		]]></insert>
+    <update id="updateErprptcommbudget"><![CDATA[
+    	update ERPRPT_T_CommBudget_NEW set actAmt=0 where year=#year# and month=#month#
+    ]]></update>
+    <!--删除ERPRPT_T_DeptCostTmp-->
+    <delete id="deleteDeptCostTmp">delete from ERPRPT_T_DeptCostTmp</delete>
+    <!--删除ERPRPT_T_DeptCostRegionTmp-->
+    <delete id="deleteDeptCostRegionTmp">delete from ERPRPT_T_DeptCostRegionTmp</delete>
+    <!--删除ERPRPT_T_DeptCostRegion-->
+    <delete id="deleteDeptCostRegion" parameterClass="java.util.HashMap">delete from ERPRPT_T_DeptCostRegion 
+		where [year]=#year# and [month]=#month# and costTypeID in ('37','38');</delete>
+</sqlMap>

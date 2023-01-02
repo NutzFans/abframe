@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.primeton.xbb.importExcel.report.QueryMenueAndCode">
+        <config db="default" type="sql"><![CDATA[select b.funccode,b.funcaction,a.menuname,
+reverse(substring(reverse(b.funcaction),1,CHARINDEX('=',reverse(b.funcaction)) - 1))as reportname from AC_MENU a
+LEFT JOIN AC_FUNCTION b on a.funccode=b.FUNCCODE
+WHERE b.funcaction like '%amereport%']]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.xbb.importExcel.report.QueryReportQuota">
+        <config db="default" type="sql"><![CDATA[SELECT r.REPORTCODE,r.REPORTNAME,r.ROLEID,q.REPORTQUOTACODE,x.REPORTQUOTANAME as PARENTQUOTANAME,q.REPORTQUOTANAME,q.QUOTASEQ,g.ORGNAME,g.ORGSEQ,s.REPORTSTORECODE,s.YEAR,s.MONTH,s.ORGID,s.QUOTAVALUE,s.PROJECTNO,
+s.EMPCODE,s.CONTNUM,s.CUSTNUM,e.EMPNAME,s.INTENDPOSITIONTYPE,s.JOBLEVEL,m.CUSTNAME,c.PROJECTNAME as CONTNAME,p.PROJECT_NAME
+	FROM AME_REPORT r
+	INNER JOIN AME_REPORTQUOTA q ON r.REPORTCODE = q.REPORTCODE AND q.PARENTQUOTACODE is not null
+  LEFT JOIN AME_REPORTQUOTA x on x.QUOTASEQ=q.PARENTQUOTACODE AND x.REPORTCODE = q.REPORTCODE
+	INNER JOIN AME_REPORTQUOTA_STORE s ON s.REPORTCODE = q.REPORTCODE AND s.REPORTQUOTACODE = q.REPORTQUOTACODE 
+  LEFT JOIN OM_EMPLOYEE e ON s.EMPCODE = E.EMPCODE 
+	LEFT JOIN OM_ORGANIZATION g ON g.ORGID = s.ORGID 
+  LEFT JOIN MIS_CUSTINFO m ON m.CUSTNUM = s.CUSTNUM
+  LEFT JOIN CS_CONTRACT c ON c.CONTNUM = s.CONTNUM
+  LEFT JOIN RD_PROJECT p ON p.PROJECT_NO = s.PROJECTNO]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.primeton.xbb.importExcel.report.ReportQuotaCode">
+        <config db="default" type="sql"><![CDATA[select q.REPORTCODE,r.REPORTNAME,q.REPORTQUOTACODE,q.REPORTQUOTANAME,q.PARENTQUOTACODE,p.REPORTQUOTANAME as PARENTQUOTANAME,q.COMPUTERULE,q.QUOTASORT 
+from AME_REPORTQUOTA q
+LEFT JOIN AME_REPORTQUOTA p on p.QUOTASEQ=q.PARENTQUOTACODE AND p.REPORTCODE = q.REPORTCODE
+LEFT JOIN AME_REPORT r ON r.REPORTCODE = q.REPORTCODE
+WHERE   p.REPORTQUOTANAME is not NULL]]></config>
+    </QueryEntity>
+</QueryEntityList>

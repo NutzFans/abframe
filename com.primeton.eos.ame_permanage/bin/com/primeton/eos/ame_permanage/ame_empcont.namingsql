@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_permanage.ame_empcont">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="OLDEMPCONTID" javaType="Decimal" property="oldempcontid"/>
+        <result column="EMPID" javaType="Decimal" property="empid"/>
+        <result column="OLDCONTSTART" javaType="Date" property="oldcontstart"/>
+        <result column="OLDCONTEND" javaType="Date" property="oldcontend"/>
+        <result column="CONTSTART" javaType="Date" property="contstart"/>
+        <result column="CONTEND" javaType="Date" property="contend"/>
+        <result column="USERID" javaType="string" property="userid"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="ORGID" javaType="Int" property="orgid"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="sybid" javaType="Int" property="sybid"/>
+        <result column="sybname" javaType="string" property="sybname"/>
+        <result column="syqid" javaType="Int" property="syqid"/>
+        <result column="syqname" javaType="string" property="syqname"/>
+        <result column="MAJOR" javaType="string" property="major"/>
+        <result column="COMPANY" javaType="string" property="company"/>
+        <result column="WORKPLACE" javaType="string" property="workplace"/>
+        <result column="POSITIONNAME" javaType="string" property="positionname"/>
+        <result column="POSITIONCALL" javaType="string" property="positioncall"/>
+        <result column="EMPCODE" javaType="string" property="empcode"/>
+        <result column="CONTTYPE" javaType="string" property="conttype"/>
+        <result column="CONTPROP" javaType="string" property="contprop"/>
+    </resultMap>
+    <select id="queryEmpCont" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    	SELECT DISTINCT a.EMPCONTID OLDEMPCONTID,a.EMPID,a.CONTSTART OLDCONTSTART,a.CONTEND OLDCONTEND,
+		convert(char,dateadd(DD,1,a.CONTEND),120) CONTSTART,convert(char,dateadd(yy,3,a.CONTEND),120) CONTEND,
+		c.USERID,c.EMPNAME,d.ORGID,d.ORGNAME,e.ORGID sybid,e.ORGNAME sybname,f.orgid syqid,f.ORGNAME syqname,
+		c.MAJOR,c.COMPANY,c.WORKPLACE,g.DICTID POSITIONNAME,c.POSITIONCALL,c.EMPCODE,CONTTYPE,CONTPROP
+		from OM_EMP_CONTRACT a
+		LEFT JOIN OM_EMPLOYEE c on a.EMPID=c.EMPID
+		LEFT JOIN EOS_DICT_ENTRY g on c.POSITIONNAME=g.DICTID and g.DICTTYPEID='AME_POSITION_MEMO'
+		LEFT JOIN OM_ORGANIZATION d on c.orgid=d.ORGID
+		LEFT JOIN OM_ORGANIZATION e on d.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL=3
+		LEFT JOIN OM_ORGANIZATION f on d.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL=2,
+		(select empid,CONTEND from OM_EMP_CONTRACT
+		where DATEDIFF ( day , #date# , CONTEND) BETWEEN 0 and #empcontday# 
+		and EMPID not in (
+		select empid from OM_EMP_CONTRACT
+		where DATEDIFF ( day , CONTSTART , #date#) BETWEEN -1*#empcontday# and #empcontday# 
+		)) b 
+		WHERE a.empid=b.empid and a.CONTEND=b.CONTEND
+		and c.EMPSTATUS='on' and a.CONTSTATUS='3' and CONTTYPE != '2'
+		and c.OUTDATE is null 
+		and c.USERID not in (select USERID from OM_LEAVE_APPLY where STATUS in (0,3,4))
+    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="oldempcontid" javaType="Decimal" property="oldempcontid"/>
+        <result column="EMPCONTID" javaType="Decimal" property="empcontid"/>
+        <result column="EMPID" javaType="Decimal" property="empid"/>
+        <result column="CONTUSERID" javaType="string" property="contuserid"/>
+        <result column="CONTCOMPANY" javaType="string" property="contcompany"/>
+        <result column="CONTWORKPLACE" javaType="string" property="contworkplace"/>
+        <result column="POSITION" javaType="string" property="position"/>
+        <result column="POSITIONNAME" javaType="string" property="positionname"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    <select id="queryUpEmpCont" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+    	select b.EMPCONTID as oldempcontid,a.EMPCONTID,a.EMPID,a.CONTUSERID,
+		a.CONTCOMPANY,a.CONTWORKPLACE,a.POSITION,a.POSITIONNAME,c.EMPNAME
+		from OM_EMP_CONTRACT a
+		LEFT JOIN OM_EMP_CONTRACT b on a.EMPID = b.EMPID and b.CONTSTATUS = '3'
+		LEFT JOIN OM_EMPLOYEE c on a.EMPID = c.EMPID
+		where a.CONTSTART=#date# and a.CONTSTATUS='4' and a.PROCESSINSTID is not null 
+    ]]></select>
+</sqlMap>

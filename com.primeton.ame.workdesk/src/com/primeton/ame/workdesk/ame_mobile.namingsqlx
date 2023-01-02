@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:朱海翔 -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="MONEY" javaType="double" property="money"/>
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="dates" javaType="string" property="dates"/>
+    </resultMap>
+   
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="MONEY" javaType="double" property="money"/>
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="date" javaType="string" property="date"/>
+        <result column="contnum" javaType="string" property="contnum"/>
+        <result column="custname" javaType="string" property="custname"/>
+        <result column="contsum" javaType="double" property="contsum"/>
+        <result column="signdate" javaType="string" property="signdate"/>
+        <result column="remoney" javaType="double" property="remoney"/>
+        <result column="RECONTNUM" javaType="string" property="recontnum"/>
+        <result column="RECUSTNAME" javaType="string" property="recustname"/>
+        <result column="redate" javaType="string" property="redate"/>
+        <result column="skmoney" javaType="double" property="skmoney"/>
+        <result column="SKCONTNUM" javaType="string" property="skcontnum"/>
+        <result column="SKCUSTNAME" javaType="string" property="skcustname"/>
+        <result column="skdate" javaType="string" property="skdate"/>
+        <result column="LABOR_DATE" javaType="string" property="laborDate"/>
+        <result column="pronum" javaType="int" property="pronum"/>
+        <result column="LABORCOST" javaType="double" property="laborcost"/>
+        <result column="dircost" javaType="double" property="dircost"/>
+        <result column="paydate" javaType="string" property="paydate"/>
+        <result column="expnum" javaType="int" property="expnum"/>
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="FCSUM" javaType="double" property="fcsum"/>
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="dates" javaType="string" property="dates"/>
+        <result column="num" javaType="string" property="num"/>
+        <result column="ids" javaType="string" property="ids"/>
+        
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap13">
+        <result column="FCSUM" javaType="double" property="fcsum"/>
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="dates" javaType="string" property="dates"/>
+        <result column="num" javaType="string" property="num"/>
+        <result column="ids" javaType="string" property="ids"/>
+        <result column="GATHERTIMEDESC" javaType="string" property="gathertimedesc"/>
+        
+      
+        
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="ACT_HOURS" javaType="double" property="actHours"/>
+        <result column="COST" javaType="double" property="cost"/>
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="PROJECT_ID" javaType="string" property="projectId"/>
+        <result column="USER_ID" javaType="string" property="userid"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="EXPNO" javaType="string" property="expno"/>
+        <result column="EXPTYPE" javaType="string" property="exptype"/>
+        <result column="FEETYPENAME" javaType="string" property="feetypename"/>
+        <result column="CONFAMT" javaType="string" property="confamt"/>
+        <result column="PLANREPAYDATE" javaType="string" property="planrepaydate"/>
+        <result column="paydate" javaType="string" property="paydate"/>
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="CUSTJC" javaType="string" property="custjc"/>
+        <result column="ISPASSBUD" javaType="string" property="ispassbud"/>
+        <result column="PCOSTSUM" javaType="double" property="pcostsum"/>
+        <result column="TOBUCOST" javaType="double" property="tobucost"/>
+        <result column="TOCOST" javaType="double" property="tocost"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="LABORCOST" javaType="double" property="LABORCOST"/>
+        <result column="hours" javaType="string" property="hours"/>
+        <result column="empname" javaType="string" property="empname"/>
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap8">
+        <result column="reiid" javaType="string" property="reiid"/>
+        <result column="dircost" javaType="double" property="dircost"/>
+        <result column="feetypename" javaType="string" property="feetypename"/>
+        <result column="empname" javaType="string" property="empname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap9">
+        <result column="orgid" javaType="string" property="orgid"/>
+    </resultMap>
+    <!-- 确认日期在已选日期范围内的确认收入（汇总） -->
+    <select id="queryReveForcast" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		SELECT sum((case when a.ACTPRODUCTSUM is null then 0 when b.PRODMON=0 and a.ACTPRODUCTSUM is not null then a.ACTPRODUCTSUM
+						else a.ACTPRODUCTSUM*c.PRODMON/b.PRODMON end)+
+						(case when a.ACTSERVICESUM is null then 0 when b.SERVMON=0 and a.ACTSERVICESUM is not null then a.ACTSERVICESUM
+						else a.ACTSERVICESUM*c.SERVMON/b.SERVMON end)+
+						(case when a.ACTMASUM is null then 0 when b.SERVMON=0 and a.ACTMASUM is not null then a.ACTMASUM
+						else a.ACTMASum*c.SERVMON/b.SERVMON end)) AS MONEY,a.CONTNUM,d.CUSTJC AS CUSTNAME,c.ORGID,CONVERT(varchar(100), a.MACONFIRMDAY , 23) as dates FROM CS_REVE_FORECAST a
+				LEFT JOIN CS_CONTRACT b on a.CONTNUM = b.CONTNUM
+				LEFT JOIN CS_CONTRACTSALE c on b.CONTRACTID = c.CONTRACTID
+				LEFT JOIN MIS_CUSTINFO d on b.CUSTID = d.CUSTID
+				WHERE c.ORGID = #orgid# and a.status = '3' and a.MACONFIRMDAY between #startdate# and #enddate#
+				GROUP BY a.CONTNUM,d.CUSTJC ,c.ORGID,a.MACONFIRMDAY
+		]]>
+    </select>
+    <!-- 已收款（汇总） -->
+     <select id="queryGaFc" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		SELECT sum((case when a.ACTPRODUCTSUM is null then 0 when b.PRODMON=0 and a.ACTPRODUCTSUM is not null then a.ACTPRODUCTSUM
+		else a.ACTPRODUCTSUM*c.PRODMON/b.PRODMON end)+
+		(case when a.ACTSERVICESUM is null then 0 when b.SERVMON=0 and a.ACTSERVICESUM is not null then a.ACTSERVICESUM
+		else a.ACTSERVICESUM*c.SERVMON/b.SERVMON end)) AS MONEY,a.CONTNUM,d.CUSTJC AS CUSTNAME,c.ORGID,CONVERT(varchar(100), a.CONFIRMDAY , 23) as dates  FROM CS_GATHER_FC a
+		LEFT JOIN CS_CONTRACT b on a.CONTNUM = b.CONTNUM
+		LEFT JOIN CS_CONTRACTSALE c on b.CONTRACTID = c.CONTRACTID
+		LEFT JOIN MIS_CUSTINFO d on b.CUSTID = d.CUSTID
+		WHERE c.ORGID = #orgid# and a.status = '2' and a.CONFIRMDAY between #startdate# and #enddate# 
+		GROUP BY a.CONTNUM,d.CUSTJC ,c.ORGID,a.CONFIRMDAY
+		order by CONFIRMDAY asc
+     ]]>
+    </select>
+    <!-- 签订日期在已选日期范围内的合同信息（汇总） -->
+    <select id="queryCont" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+		SELECT a.ORGID,b.CONTNUM,c.CUSTJC AS CUSTNAME,b.CONTSUM as MONEY,CONVERT(varchar(100), b.signdate , 23) as dates FROM CS_CONTRACTSALE a 
+		LEFT JOIN CS_CONTRACT b on a.CONTRACTID = b.CONTRACTID
+		LEFT JOIN MIS_CUSTINFO c on b.CUSTID = c.CUSTID
+		WHERE a.ORGID = #orgid# and b.signdate between #startdate# and #enddate#
+	]]>
+    </select>
+    <!-- 签订日期在已选日期范围内的合同金额汇总（汇总） -->
+    <select id="queryContSum" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		SELECT sum(b.CONTSUM) as MONEY FROM CS_CONTRACTSALE a 
+		LEFT JOIN CS_CONTRACT b on a.CONTRACTID = b.CONTRACTID
+		WHERE a.ORGID = #orgid# and signdate between #startdate# and #enddate#
+		GROUP BY a.ORGID
+	]]>
+    </select>
+    <!-- 受益工时成本（汇总） -->
+    <select id="queryStandCost" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		SELECT sum(cost) as MONEY FROM RD_LABOR_DETAIL t where t.SALES_NAME = #orgid# AND LABOR_DATE between #startdate# and #enddate# GROUP BY SALES_NAME
+	]]>
+    </select>
+    <!-- 受益外包费用（汇总） -->
+    <select id="queryPoutCost" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		select sum(poutcost) as MONEY from (
+		select sum(setamount) as poutcost from pur_settle 
+		where projectno in (select project_no from rd_project where FIN_UNIT_ID=#orgid#) and setstatus in (0,1,2) and costtype=1 and paydate between #startdate# and #enddate# group by (projectno)
+		union all
+		select sum(accruedmoney) as poutcost from pur_presettle 
+		where projectno in (select project_no from rd_project where FIN_UNIT_ID=#orgid#) and accruedstatus in (0,1) and costtype=1 and confirmdate between #startdate# and #enddate# group by (projectno))t	
+	]]>
+    </select>
+     <!-- 受益外部采购（汇总） -->
+    <select id="queryWbcg" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		select sum(poutcost) as MONEY from (
+		select sum(setamount) as poutcost from pur_settle 
+		where projectno in (select project_no from rd_project where FIN_UNIT_ID=#orgid#) and setstatus in (0,1,2) and costtype!=1 and paydate between #startdate# and #enddate# group by (projectno)
+		union all
+		select sum(accruedmoney) as poutcost from pur_presettle 
+		where projectno in (select project_no from rd_project where FIN_UNIT_ID=#orgid#) and accruedstatus in (0,1) and costtype!=1 and confirmdate between #startdate# and #enddate# group by (projectno))t	
+	]]>
+    </select>
+     <!-- 受益给销售的直接费用（汇总） -->
+    <select id="queryPdirCost" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		SELECT sum(money) as MONEY from(
+		select d.CONFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus = '5' 
+		and c.BENEFORGID=#orgid# and c.feetype = '2' and a.paydate between #startdate# and #enddate#
+		union all
+		select c.BENEFMON as money
+		from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c
+		left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus = '5' and a.paydate between #startdate# and #enddate#
+		and c.BENEFORGID=#orgid# and c.feetype = '2') t		
+	]]>
+    </select>
+      <!-- 我的费用报销已出款（汇总） -->
+    <select id="queryMyCkdirCost" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		SELECT sum(money) as MONEY from(
+		select d.CONFMON as money from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d
+		where a.REIID=b.REIID and b.EXPID=d.EXPID and a.expstatus = '5' and a.expuserid = #userid# and a.paydate between #startdate# and #enddate#
+		) t		
+	]]>
+    </select>
+    
+      <!-- 我的费用报销审核中（汇总） -->
+    <select id="queryMydirCost" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		SELECT sum(money) as MONEY from(
+		select d.CONFMON as money from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d
+		where a.REIID=b.REIID and b.EXPID=d.EXPID and a.expstatus not in ('-2','5') and a.expuserid = #userid# and d.findate between #startdate# and #enddate#
+		) t		
+	]]>
+    </select>
+    
+    <!-- 已逾期未确认收入（提醒） -->
+     <select id="queryPassReve" parameterClass="java.util.HashMap" resultMap="resultMap3"><![CDATA[
+		SELECT sum(
+				(case when a.PRODUCTSUM is null then 0 when b.PRODMON=0 and a.PRODUCTSUM is not null then a.PRODUCTSUM 
+		else a.PRODUCTSUM*c.PRODMON/b.PRODMON end) +
+		 (case when a.SERVICESUM is null then 0 when b.SERVMON=0 and a.SERVICESUM is not null then a.SERVICESUM 
+		else a.SERVICESUM*c.SERVMON/b.SERVMON end) +
+		 (case when a.MASUM is null then 0 when b.SERVMON=0 and a.MASUM is not null then a.MASUM 
+		else a.MASUM*c.SERVMON/b.SERVMON end)) AS FCSUM,
+		a.CONTNUM,d.CUSTJC AS CUSTNAME,c.ORGID,CONVERT(varchar(100), a.newyearmonth , 23) as dates,a.reveno as num,a.reveid as ids FROM
+		 CS_REVE_FORECAST a
+		LEFT JOIN CS_CONTRACT b on a.CONTNUM = b.CONTNUM
+		LEFT JOIN CS_CONTRACTSALE c on b.CONTRACTID = c.CONTRACTID
+		LEFT JOIN MIS_CUSTINFO d on b.CUSTID = d.CUSTID
+		WHERE c.ORGID = #orgid# and a.status = '0' and a.newyearmonth <= CONVERT(varchar(100), #enddate# , 23)
+		GROUP BY a.CONTNUM,d.CUSTJC ,c.ORGID,a.newyearmonth,a.reveno,a.reveid
+	]]>
+    </select>
+    
+     <!-- 已逾期未收款（提醒） -->
+     <select id="queryPassGa" parameterClass="java.util.HashMap" resultMap="resultMap13"><![CDATA[
+		SELECT sum((case when a.FCSUM is null then 0 when b.CONTSUM=0 and a.FCSUM is not null then a.FCSUM 
+		else a.FCSUM*c.CONTSUM/b.CONTSUM end)) AS FCSUM,a.CONTNUM,d.CUSTJC AS CUSTNAME,c.ORGID,CONVERT(varchar(100), a.newyearmonth , 23) as dates,GATHERNO as num,GATHERID as ids 
+		,a.gathertimedesc as gathertimedesc  FROM CS_GATHER_FC a
+		LEFT JOIN CS_CONTRACT b on a.CONTNUM = b.CONTNUM
+		LEFT JOIN CS_CONTRACTSALE c on b.CONTRACTID = c.CONTRACTID
+		LEFT JOIN MIS_CUSTINFO d on b.CUSTID = d.CUSTID
+		WHERE c.ORGID = #orgid# and a.status = '0' and a.newyearmonth <= CONVERT(varchar(100), #enddate# , 23)
+		GROUP BY a.CONTNUM,d.CUSTJC ,c.ORGID,a.newyearmonth,GATHERNO,GATHERID,a.gathertimedesc
+		order by newyearmonth asc
+	]]>
+    </select>
+    
+    <!-- 未确认工时（提醒） -->
+     <select id="queryPassLab" parameterClass="java.util.HashMap" resultMap="resultMap4"><![CDATA[
+		SELECT sum(ACT_HOURS) as ACT_HOURS,sum(COST) as COST,b.PROJECT_NAME,a.PROJECT_ID,USER_ID,c.EMPNAME from RD_LABOR_DETAIL a
+		LEFT JOIN RD_PROJECT b on a.PROJECT_ID = b.PROJECT_ID
+		LEFT JOIN OM_EMPLOYEE c on a.USER_ID = c.USERID
+		where STATUS = '0' and SALES_NAME = #orgid# and LABOR_DATE <= #enddate# GROUP BY b.PROJECT_NAME,USER_ID,a.PROJECT_ID,c.EMPNAME
+	]]>
+    </select>
+    
+     <!-- 未核销借款（提醒） -->
+     <select id="queryPassPay" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+		SELECT a.EXPNO,a.EXPTYPE,c.FEETYPENAME,a.CONFAMT,CONVERT(varchar(100), a.PLANREPAYDATE, 23) as PLANREPAYDATE,
+		CONVERT(varchar(100), a.paydate, 23) as paydate FROM EXP_BEILIST a
+		LEFT JOIN EXP_FEETYPE c on a.EXPTYPE = c.EXPTYPE
+		,EXP_BEIBENEF b 
+		WHERE a.EXPID = b.EXPID and a.EXPSTATUS = '5' AND HXSTATUS in ('0','1') AND b.BENEFORGID = #orgid# AND PLANREPAYDATE <= #enddate#
+	]]>
+    </select>
+    
+     <!-- 超预算项目（提醒） -->
+     <select id="queryPassBud" parameterClass="java.util.HashMap" resultMap="resultMap6"><![CDATA[
+		SELECT c.PROJECT_NAME,d.CUSTJC,a.pcostsum,b.TOBUCOST,b.TOCOST,f.DICTNAME as ISPASSBUD FROM PRJ_BUGDET_VER a,PRJ_EXECUT_TRA b,RD_PROJECT c
+		LEFT JOIN MIS_CUSTINFO d on c.CUSTID = d.CUSTID
+		LEFT JOIN EOS_DICT_ENTRY f on c.ISPASSBUD = f.DICTID and f.DICTTYPEID = 'AME_ISPASSBUD'
+		WHERE a.PROJECTID = b.PROJECTID and a.PROJECTID = c.PROJECT_ID and a.ISCVERSION = '1' and c.PROJECT_STATUS in ('1','2','4') and 
+		c.FIN_UNIT_ID =#orgid#  and b.PTRACID = (SELECT max(PTRACID) FROM PRJ_EXECUT_TRA WHERE PROJECTID = c.PROJECT_ID) and c.ISPASSBUD in ('1','2')
+	]]>
+    </select>
+    
+     <!-- 流水（流水） -->
+    <select id="queryDateCost" parameterClass="java.util.HashMap" resultMap="resultMap2"><![CDATA[
+		
+		SELECT * FROM (SELECT
+				CONVERT (VARCHAR (100),dateadd(d, number, CONVERT(datetime,#startdate#) ),23) AS date
+		FROM
+				master..spt_values n
+		WHERE
+				n.type = 'p'
+		AND n.number <= (SELECT DATEDIFF(day, #startdate#, #enddate#))) a
+		LEFT JOIN (SELECT a.CONTNUM,b.CUSTNAME,a.CONTSUM,a.SIGNDATE FROM CS_CONTRACT a 
+				LEFT JOIN MIS_CUSTINFO b on a.CUSTID = b.CUSTID
+				LEFT JOIN CS_CONTRACTSALE c on a.CONTRACTID = c.CONTRACTID
+				WHERE c.ORGID = #orgid# and SIGNDATE BETWEEN #startdate# and #enddate#) b on a.date = b.signdate
+		LEFT JOIN (SELECT sum((case when a.ACTPRODUCTSUM is null then 0 when b.PRODMON=0 and a.ACTPRODUCTSUM is not null then a.ACTPRODUCTSUM
+								else a.ACTPRODUCTSUM*c.PRODMON/b.PRODMON end)+
+								(case when a.ACTSERVICESUM is null then 0 when b.SERVMON=0 and a.ACTSERVICESUM is not null then a.ACTSERVICESUM
+								else a.ACTSERVICESUM*c.SERVMON/b.SERVMON end)+
+								(case when a.ACTMASUM is null then 0 when b.SERVMON=0 and a.ACTMASUM is not null then a.ACTMASUM
+								else a.ACTMASum*c.SERVMON/b.SERVMON end)) AS REMONEY,a.CONTNUM AS RECONTNUM,d.CUSTJC AS RECUSTNAME,a.MACONFIRMDAY AS REDATE FROM CS_REVE_FORECAST a
+						LEFT JOIN CS_CONTRACT b on a.CONTNUM = b.CONTNUM
+						LEFT JOIN CS_CONTRACTSALE c on b.CONTRACTID = c.CONTRACTID
+						LEFT JOIN MIS_CUSTINFO d on b.CUSTID = d.CUSTID
+						WHERE c.ORGID = #orgid# and a.status = '3' and a.MACONFIRMDAY between #startdate# and #enddate#
+						GROUP BY a.CONTNUM,d.CUSTJC ,c.ORGID,a.MACONFIRMDAY) c on a.date = c.REDATE
+		LEFT JOIN (SELECT sum((case when a.ACTPRODUCTSUM is null then 0 when b.PRODMON=0 and a.ACTPRODUCTSUM is not null then a.ACTPRODUCTSUM
+				else a.ACTPRODUCTSUM*c.PRODMON/b.PRODMON end)+
+				(case when a.ACTSERVICESUM is null then 0 when b.SERVMON=0 and a.ACTSERVICESUM is not null then a.ACTSERVICESUM
+				else a.ACTSERVICESUM*c.SERVMON/b.SERVMON end)) AS SKMONEY,a.CONTNUM AS SKCONTNUM,d.CUSTJC AS SKCUSTNAME,a.CONFIRMDAY AS SKDATE FROM CS_GATHER_FC a
+				LEFT JOIN CS_CONTRACT b on a.CONTNUM = b.CONTNUM
+				LEFT JOIN CS_CONTRACTSALE c on b.CONTRACTID = c.CONTRACTID
+				LEFT JOIN MIS_CUSTINFO d on b.CUSTID = d.CUSTID
+				WHERE c.ORGID = #orgid# and a.status = '2' and a.CONFIRMDAY between #startdate# and #enddate#
+				GROUP BY a.CONTNUM,d.CUSTJC ,c.ORGID,a.CONFIRMDAY) d on a.date = d.SKDATE
+				LEFT JOIN (SELECT LABOR_DATE,sum(COST) as LABORCOST,count(distinct PROJECT_ID) as pronum
+							FROM RD_LABOR_DETAIL t where t.SALES_NAME = #orgid# AND LABOR_DATE between #startdate# and #enddate# GROUP BY LABOR_DATE) e on a.date =e.labor_date
+				LEFT JOIN (SELECT sum(money) as dircost, convert(varchar(10),paydate,120) as paydate,COUNT(DISTINCT reiid) as expnum from(
+				select d.CONFMON as money,a.paydate,a.reiid
+				from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+				left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+				where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+				and d.FINTYPE not in ('1J','1P') AND a.expstatus = '5' 
+				and c.BENEFORGID=#orgid# and c.feetype = '2'	and a.paydate BETWEEN #startdate# and #enddate#
+				union all
+				select c.BENEFMON as money,a.paydate,a.reiid
+				from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c
+				left join OM_ORGANIZATION e on c.BENEFORGID=e.ORGID
+				where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+				and c.FINTYPE not in ('1J','1P') AND a.expstatus = '5' 
+				and c.BENEFORGID=#orgid# and c.feetype = '2' and a.paydate BETWEEN #startdate# and #enddate#) t	GROUP BY paydate) f on a.date = f.paydate
+		where b.contnum is not null or c.RECONTNUM is not null or d.SKCONTNUM is not null or e.laborcost is not null or dircost is not null order by date desc
+
+	]]>
+    </select>
+    
+     <!-- 工时流水详情 -->
+     <select id="getLaborDetail" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+		SELECT sum(COST) as LABORCOST,a.PROJECT_NAME,sum(ACT_HOURS) as hours,b.EMPNAME FROM RD_LABOR_DETAIL t 
+		LEFT JOIN RD_PROJECT a on t.PROJECT_ID = a.PROJECT_ID
+		LEFT JOIN OM_EMPLOYEE b on t.USER_ID = b.USERID
+		where t.SALES_NAME = #orgid# AND LABOR_DATE = #date# GROUP BY a.PROJECT_NAME,b.EMPNAME order by PROJECT_NAME,empname
+	]]>
+    </select>
+    
+    <!-- 报销流水详情 -->
+     <select id="getDirDetail" parameterClass="java.util.HashMap" resultMap="resultMap8"><![CDATA[
+		SELECT sum(money) as dircost,reiid ,FEETYPENAME,EMPNAME from(
+		select d.CONFMON as money,a.paydate,a.REIID,f.FEETYPENAME,e.EMPNAME
+		from EXP_REI a
+		LEFT JOIN EXP_FEETYPE f on f.FEETYPECODE = a.EXPTYPE
+		LEFT JOIN OM_EMPLOYEE e on e.USERID = a.EXPUSERID
+		,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c
+		where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+		and d.FINTYPE not in ('1J','1P') AND a.expstatus = '5' 
+		and c.BENEFORGID=#orgid# and c.feetype = '2'	and a.paydate = #date#
+		union all
+		select c.BENEFMON as money,a.paydate,a.reiid,d.FEETYPENAME,e.EMPNAME
+		from EXP_REI a
+		LEFT JOIN EXP_FEETYPE d on d.FEETYPECODE = a.EXPTYPE
+		LEFT JOIN OM_EMPLOYEE e on e.USERID = a.EXPUSERID
+		,EXP_REI_LIST b,EXP_REIBENEF c
+		where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+		and c.FINTYPE not in ('1J','1P') AND a.expstatus = '5' 
+		and c.BENEFORGID=#orgid# and c.feetype = '2' and a.paydate = #date#) t	GROUP BY reiid ,FEETYPENAME,EMPNAME order by reiid
+	]]>
+    </select>
+    <!-- 查询该员工所在销售部门的orgid -->
+     <select id="getSealOrgid" parameterClass="java.util.HashMap" resultMap="resultMap9"><![CDATA[
+		select ORGID from OM_ORGANIZATION  where orgid in (select orgid from OM_EMPORG where EMPID = #empid#) AND ORGTYPE = '2'
+	]]>
+    </select>
+    
+    
+</sqlMap>

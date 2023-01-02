@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="ExpSendMail.flowx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="sendMail" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxdlx" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxdlxid" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="pk" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="je" primitiveType="Float"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxr" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="100" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/mpcommon/expSendMailFinish.jsp">
+    <targetConnections>link3</targetConnections>
+    <location x="540" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="102" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="542" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="获取收件人信息" displayName="getEmpInfo" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="225" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.common.sendMail.getEmpInfo</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="empno" type="query" value="String" valueType="Primitive" pattern="reference">bxr</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="empname" type="query" value="String" valueType="Primitive">bxrxm</process:outputVariable>
+        <process:outputVariable id="1" name="oemail" type="query" value="String" valueType="Primitive">oemail</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="196" y="185"/>
+    <figSize height="17" width="85"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="准备发送邮件" displayName="expSendMail.jsp" type="view" contributionName="com.primeton.eos.common" uri="/mpcommon/expSendMail.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="sendMailSubmit" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxdlx" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxdlxid" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="pk" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="je" primitiveType="Float"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxr" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bxrxm" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="oemail" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bckc" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="bz" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="315" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="290" y="186"/>
+    <figSize height="17" width="73"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="发送打款邮件" displayName="sendMail" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="461" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="9" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.common.sendMail.sendMail</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="pk" type="query" value="String" valueType="Primitive" pattern="reference">pk</process:inputVariable>
+        <process:inputVariable id="1" name="bxdlx" type="query" value="String" valueType="Primitive" pattern="reference">bxdlx</process:inputVariable>
+        <process:inputVariable id="2" name="bxdlxid" type="query" value="String" valueType="Primitive" pattern="reference">bxdlxid</process:inputVariable>
+        <process:inputVariable id="3" name="bxr" type="query" value="String" valueType="Primitive" pattern="reference">bxr</process:inputVariable>
+        <process:inputVariable id="4" name="bxrxm" type="query" value="String" valueType="Primitive" pattern="reference">bxrxm</process:inputVariable>
+        <process:inputVariable id="5" name="oemail" type="query" value="String" valueType="Primitive" pattern="reference">oemail</process:inputVariable>
+        <process:inputVariable id="6" name="bckc" type="query" value="String" valueType="Primitive" pattern="reference">bckc</process:inputVariable>
+        <process:inputVariable id="7" name="bz" type="query" value="String" valueType="Primitive" pattern="reference">bz</process:inputVariable>
+        <process:inputVariable id="8" name="je" type="query" value="String" valueType="Primitive" pattern="reference">je</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="438" y="185"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="huangqj" createTime="2013-08-20 15:32:20" date="2013-08-20Z" description="" name="ExpSendMail" version="6.3"/>
+</process:tPageFlow>

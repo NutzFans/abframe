@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_budget.pubSharStand">
+    <resultMap class="com.primeton.eos.ame_budget.ame_budget.PubSharStand" id="resultMap">
+        <result column="sharstandid" javaType="Decimal" property="sharstandid"/>
+        <result column="citycode" javaType="String" property="citycode"/>
+        <result column="cityname" javaType="String" property="cityname"/>
+        <result column="year" javaType="String" property="year"/>
+        <result column="sharfee" javaType="double" property="sharfee"/>
+        <result column="totalmonthsnum" javaType="double" property="totalmonthsnum"/>
+    </resultMap>
+    <select id="refreashPubSharStand" resultMap="resultMap"><![CDATA[
+		SELECT 
+			a.sharstandid,a.citycode,a.cityname,a.year,b.totalmonthsnum,a.totalmoney,ROUND(a.totalmoney/b.totalmonthsnum,0) as sharfee
+		FROM 
+			PUB_SHAR_STAND a 
+		left join 
+			(select year,citycode,sum(PERNUM) AS TOTALMONTHSNUM from DEPT_SHAR_BUDGET group by citycode,year ) b 
+		on a.CITYCODE=b.CITYCODE and a.year=b.year 
+		where a.year=#year#
+		ORDER BY a.citycode asc
+	]]></select>
+    <resultMap class="com.primeton.eos.ame_budget.ame_budget.DeptSharBudget" id="resultMap1">
+        <result column="sharid" javaType="Decimal" property="sharid"/>
+        <result column="sharmoney" javaType="String" property="sharmoney"/>
+    </resultMap>
+    <select id="refreashDeptSharStand" resultMap="resultMap1"><![CDATA[
+		select 
+			b.sharid,a.SHARFEE*b.pernum as sharmoney 
+		from 
+			(SELECT 
+				a.sharstandid,a.citycode,a.cityname,a.year,b.totalmonthsnum,a.totalmoney,ROUND(a.totalmoney/b.totalmonthsnum,0) as sharfee
+			FROM 
+				PUB_SHAR_STAND a 
+			left join 
+				(select year,citycode,sum(PERNUM) AS TOTALMONTHSNUM from DEPT_SHAR_BUDGET group by citycode,year ) b 
+			on a.CITYCODE=b.CITYCODE and a.year=b.year 
+			where a.year=#year# ) a
+		left join DEPT_SHAR_BUDGET b 
+		on a.CITYCODE=b.CITYCODE and a.year=b.year
+	]]></select>
+    <resultMap class="java.lang.Double" id="resultMap3">
+        <result column="totalmonthsnum" property="totalmonthsnum"/>
+    </resultMap>
+    <select id="calPubSharStand" resultMap="resultMap3">
+        <!-- 汇总某一年，某个城市所有的人月数 --><![CDATA[
+		select sum(pernum) as totalmonthsnum from DEPT_SHAR_BUDGET where CITYCODE = #citycode# and year=#year# GROUP BY YEAR
+	]]></select>
+    <select id="calDeptSharStand" resultMap="resultMap1">
+        <!-- 用于更新公摊预算数据 --><![CDATA[
+		select sharid,pernum*#sharfee# as sharmoney from DEPT_SHAR_BUDGET where citycode = #citycode# and year=#year#
+	]]></select>
+</sqlMap>

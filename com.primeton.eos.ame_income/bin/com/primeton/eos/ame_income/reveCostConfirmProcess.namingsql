@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_income.reveCostConfirmProcess">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="RLNY" javaType="string" property="rlny"/>
+        <result column="projectId" javaType="Long" property="projectid"/>
+        <result column="projectNo" javaType="string" property="projectno"/>
+        <result column="startdate" javaType="date" property="startdate"/>
+        <result column="enddate" javaType="date" property="enddate"/>
+        <result column="CONCOST" javaType="decimal" property="concost"/>
+        <result column="directsum" javaType="decimal" property="directsum"/>
+        <result column="ACTMONTH" javaType="decimal" property="actmonth"/>
+    </resultMap>
+    <resultMap class="com.eos.workflow.data.WFParticipant" id="resultMap2">
+        <result column="id" javaType="String" property="id"/>
+        <result column="name" javaType="String" property="name"/>
+        <result column="typeCode" javaType="String" property="typeCode"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="contnum" javaType="String" property="contnum"/>
+        <result column="SETSTART" javaType="String" property="setstart"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="PGPRATE" javaType="decimal" property="pgprate"/>
+    </resultMap>
+    <select id="getPartByUserid" parameterClass="java.lang.String" resultMap="resultMap2">
+        <!--根据userid查询流程参与者 -->
+    	select userid as id,empname as name,'person' as typecode from om_employee where userid in ($userid$);
+    </select>
+    <select id="getMaxSetStart" parameterClass="java.util.HashMap" resultMap="resultMap3">
+        <!--根据项目编号查询收入开始月份 -->
+    	select contnum,
+		CONVERT(varchar(6) ,dateadd(m,1,LEFT(max(SETEND),4)+'-'+right(max(SETEND),2)+'-01'),112) as SETSTART
+		from CS_REVE_FORECAST
+		where SETEND is not NULL and CONTNUM=#contnum#
+		GROUP BY contnum
+    </select>
+    <select id="getBudgetRate" parameterClass="java.util.HashMap" resultMap="resultMap4">
+        <!--根据项目id查询预估毛利率 -->
+    	select
+		case when sum(case when PCOSTSUM is null then 0 else PCOSTSUM end)+sum(case when PGROSSPROFIT is null then 0 else PGROSSPROFIT end) = 0 then 0 else 
+		sum(case when PGROSSPROFIT is null then 0 else PGROSSPROFIT end)/(sum(case when PCOSTSUM is null then 0 else PCOSTSUM end)+sum(case when PGROSSPROFIT is null then 0 else PGROSSPROFIT end))end as PGPRATE
+		from PRJ_BUGDET_VER
+		where ISCVERSION = '1' and PROJECTID in ($projectid$)
+    </select>
+    <select id="QueryProjectFinalCost" parameterClass="java.util.HashMap" resultMap="resultMap1">
+        <!--获取项目成本-->
+    	select DISTINCT x.RLNY,x.projectId,x.projectNo,
+			cast(left(x.RLNY,4)+'-'+right(x.RLNY,2)+'-01' as datetime) as startdate,
+			DATEADD(DAY,-1,case when convert(int,right(x.RLNY,2))=12 then convert(VARCHAR(4),convert(int,left(x.RLNY,4))+1) else left(x.RLNY,4) END+'-'
+			+case when convert(int,right(x.RLNY,2))=12 then '01' else convert(VARCHAR(2),convert(int,right(x.RLNY,2))+1) END+'-01') as enddate,
+			case when a.CONCOST is null then 0 else a.CONCOST end as CONCOST,
+			case when d.directsum is null then 0 else d.directsum end as directsum,
+			case when a.ACTMONTH is null then 0 else a.ACTMONTH end as ACTMONTH
+			from (
+			select DISTINCT convert(varchar(6),LABOR_DATE,112) as RLNY ,a.project_id as projectId,b.PROJECT_NO as projectNo
+			from RD_LABOR_DETAIL a,RD_PROJECT b where  a.PROJECT_ID=b.PROJECT_ID and
+			LABOR_DATE is not null and a.project_id is not NULL and b.PROJECT_ID in ($projectid$)
+			UNION
+			select DISTINCT convert(varchar(6),DATEADD(month,c.number,a.STARTDATE) ,112) as RLNY ,b.PROJECT_ID as projectId,b.PROJECT_NO as projectNo
+			from PUR_PRESETTLE a,RD_PROJECT b,master.dbo.spt_values c 
+			where a.PROJECTNO=b.PROJECT_NO and a.ACCRUEDSTATUS in (0,1,2,4)
+			and CONFIRMDATE is not null and b.PROJECT_ID is not NULL
+			and c.type='p' AND c.number &lt;=DATEDIFF(month,a.STARTDATE,a.ENDDATE) and b.PROJECT_ID in ($projectid$)
+			UNION 
+			select DISTINCT convert(varchar(6),DATEADD(month,c.number,a.STARTDATE) ,112) as RLNY,b.PROJECT_ID as projectId,b.PROJECT_NO as projectNo
+			from PUR_SETTLE a,RD_PROJECT b,master.dbo.spt_values c
+			where a.PROJECTNO=b.PROJECT_NO and a.SETSTATUS in (2)
+			and CONFIRMDATE is not NULL
+			and c.type='p' AND c.number &lt;=DATEDIFF(month,a.STARTDATE,a.ENDDATE) and b.PROJECT_ID in ($projectid$)
+			UNION
+			SELECT DISTINCT a.RLNY,b.PROJECT_ID as projectId,b.PROJECT_NO as projectNo from(
+					select BENEFPROJNO as project_no,convert(varchar(6),a.TBDATE,112) as RLNY
+					from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c,RD_PROJECT e
+					where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+          and e.PROJECT_NO=c.BENEFPROJNO 
+          and e.PROJECT_ID in ($projectid$)
+					and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+					and c.feetype = '2' 	
+					union all
+					select BENEFPROJNO as project_no,convert(varchar(6),a.TBDATE,112) as RLNY
+					from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c,RD_PROJECT e
+					where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E') 
+					and e.PROJECT_NO=c.BENEFPROJNO
+          and e.PROJECT_ID in ($projectid$)
+					and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' and c.feetype = '2' ) a,RD_PROJECT b 
+			where a.project_no=b.PROJECT_NO and b.PROJECT_ID is not NULL and b.PROJECT_ID in ($projectid$)
+			)x
+			left join 
+			(
+			select convert(varchar(6),LABOR_DATE,112) as RLNY,sum(case when CONCOST is null then 0 else CONCOST end) as CONCOST,
+			sum(a.ACT_HOURS)/8/20.5 as ACTMONTH,b.PROJECT_ID as projectId
+			from RD_LABOR_DETAIL a,RD_PROJECT b where a.PROJECT_ID=b.PROJECT_ID and b.PROJECT_ID is not null and b.PROJECT_ID in ($projectid$)
+			and LABOR_DATE is not null group by convert(varchar(6),LABOR_DATE,112),b.PROJECT_ID
+			) a on a.RLNY=x.RLNY and a.projectId=x.projectId 
+			LEFT JOIN(
+			SELECT a.RLNY,sum(case when a.money is null then 0 else a.money END) as directsum,b.PROJECT_ID as projectId from(
+					select d.CONFMON as money,BENEFPROJNO as project_no,convert(varchar(6),a.TBDATE,112) as RLNY
+					from EXP_REI a,EXP_REI_LIST b,EXP_REIDETAIL d,EXP_REIBENEF c,RD_PROJECT e
+					where a.ISMULTI='0' and a.REIID=b.REIID and b.EXPID=c.EXPID and b.EXPID=d.EXPID and a.EXPTYPE not in ('C','E')
+					and e.PROJECT_NO=c.BENEFPROJNO 
+          and e.PROJECT_ID in ($projectid$)
+					and d.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+					and c.feetype = '2'
+					union all
+					select c.BENEFMON as money,BENEFPROJNO as project_no,convert(varchar(6),a.TBDATE,112) as RLNY
+					from EXP_REI a,EXP_REI_LIST b,EXP_REIBENEF c,RD_PROJECT e
+					where a.ISMULTI='1' and a.REIID=b.REIID and b.EXPID=c.EXPID and a.EXPTYPE not in ('C','E')
+					and e.PROJECT_NO=c.BENEFPROJNO 
+          and e.PROJECT_ID in ($projectid$)
+					and c.FINTYPE not in ('1J','1P') AND a.expstatus != '-2' 
+				  and c.feetype = '2') a,RD_PROJECT b 
+			where a.project_no=b.PROJECT_NO and b.PROJECT_ID is not NULL 
+			GROUP BY a.RLNY,b.PROJECT_ID
+			) d on d.RLNY=x.RLNY and d.projectId=x.projectId
+			where 1=1
+			<isNotNull property="start">and x.RLNY &gt;=#start#</isNotNull>
+        <isNotNull property="end">and x.RLNY &lt;=#end#</isNotNull>
+			order by x.RLNY desc
+    </select>
+</sqlMap>

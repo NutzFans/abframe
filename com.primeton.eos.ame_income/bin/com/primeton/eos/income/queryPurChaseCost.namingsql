@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.income.queryPurChaseCost">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="purChaseMoney" javaType="double" property="purChaseMoney"/>
+    </resultMap>
+    <select id="queryPurCosts" parameterClass="java.lang.String" resultMap="resultMap">
+        <!-- 获取采购总成本  --><![CDATA[
+	    	select isNull(sum(money),0) as purChaseMoney  from 
+	    		(select sum(notaxmon) as money from PUR_SETTLE where  setstatus in (0,1,2) and contnum=#contnum#
+				union all
+				select sum(notaxmoney) as money from PUR_PRESETTLE where  accruedstatus in (0,1) and contnum=#contnum#) a
+	    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="pempcost" javaType="double" property="pempcost"/>
+    </resultMap>
+    <select id="selectPempcost" parameterClass="java.lang.String" resultMap="resultMap1"><![CDATA[
+		    select SUM(a.COST) as pempcost from RD_LABOR_DETAIL a,RD_PROJECT b LEFT JOIN RD_PROJ_CONT c ON b.PROJECT_NO = c.PROJECT_NO where c.CONTNUM=#contnum# and a.STATUS='4' AND a.PROJECT_ID=b.PROJECT_ID
+	    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="year" javaType="String" property="year"/>
+        <result column="month1" javaType="double" property="month1"/>
+        <result column="month2" javaType="double" property="month2"/>
+        <result column="month3" javaType="double" property="month3"/>
+        <result column="month4" javaType="double" property="month4"/>
+        <result column="month5" javaType="double" property="month5"/>
+        <result column="month6" javaType="double" property="month6"/>
+        <result column="month7" javaType="double" property="month7"/>
+        <result column="month8" javaType="double" property="month8"/>
+        <result column="month9" javaType="double" property="month9"/>
+        <result column="month10" javaType="double" property="month10"/>
+        <result column="month11" javaType="double" property="month11"/>
+        <result column="month12" javaType="double" property="month12"/>
+        <result column="yearMoney" javaType="double" property="yearMoney"/>
+    </resultMap>
+    <select id="selectErpPs" parameterClass="java.lang.String" resultMap="resultMap3">
+        <!-- 点击查询erp_ps已结算的工时表，展示汇总按年月统计 --><![CDATA[
+			select 
+		    	year,
+				isNull(sum(MONTH1),0) as MONTH1,isNull(sum(MONTH2),0) as MONTH2,isNull(sum(MONTH3),0) as MONTH3,
+		    	isNull(sum(MONTH4),0) as MONTH4,isNull(sum(MONTH5),0) as MONTH5,isNull(sum(MONTH6),0) as MONTH6,
+		    	isNull(sum(MONTH7),0) as MONTH7,isNull(sum(MONTH8),0) as MONTH8,isNull(sum(MONTH9),0) as MONTH9,
+				isNull(sum(MONTH10),0) as MONTH10,isNull(sum(MONTH11),0) as MONTH11,isNull(sum(MONTH12),0)  as MONTH12,
+		    	(isNull(sum(MONTH1),0)+isNull(sum(MONTH2),0)+isNull(sum(MONTH3),0)+isNull(sum(MONTH4),0)+isNull(sum(MONTH5),0) 
+		    	+isNull(sum(MONTH6),0)+isNull(sum(MONTH7),0) +isNull(sum(MONTH8),0) +isNull(sum(MONTH9),0) +isNull(sum(MONTH10),0) 
+		    	+isNull(sum(MONTH11),0) +isNull(sum(MONTH12),0) ) as yearMoney
+		    from (
+			SELECT year,[1] as MONTH1,[2] as MONTH2,[3] as MONTH3,[4] as MONTH4,[5] as MONTH5,[6] as MONTH6,[7] as MONTH7,[8] as MONTH8,[9] as MONTH9,[10] as MONTH10,[11] as MONTH11,[12] as MONTH12 
+			from ERP_PS 
+			PIVOT (SUM (costs) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b 
+			where contnum = #contnum#) a  group by a.year 
+	    ]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="pdircost" javaType="double" property="pdircost"/>
+    </resultMap>
+    <select id="selectPdircost" parameterClass="java.lang.String" resultMap="resultMap2"><![CDATA[
+	    	select isNull(sum(BENEFMON),0) as pdircost from (
+				select DISTINCT CONTNUM,a.BENEFMON,a.BENEFORGID,c.EXPORGID,d.ORGTYPE 
+				from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI c,OM_ORGANIZATION d,EXP_REIDETAIL e
+				where a.EXPID=b.EXPID and b.REIID=c.REIID and c.EXPORGID=d.ORGID and c.ISMULTI='0'
+				and b.EXPID=e.EXPID and e.FINTYPE not in ('1J','1P')
+				UNION ALL 
+				select DISTINCT CONTNUM,a.BENEFMON,a.BENEFORGID,c.EXPORGID,d.ORGTYPE 
+				from EXP_REIBENEF a,EXP_REI_LIST b,EXP_REI c,OM_ORGANIZATION d
+				where a.EXPID=b.EXPID and b.REIID=c.REIID and c.EXPORGID=d.ORGID and c.ISMULTI='1' and
+				a.FINTYPE not in ('1J','1P')) t
+			where t.CONTNUM=#contnum# and (t.EXPORGID!=t.BENEFORGID or (t.EXPORGID=t.BENEFORGID and t.orgtype!=2)) group by t.CONTNUM
+    	]]></select>
+    <select id="updatePresettleContnum" parameterClass="java.util.HashMap">UPDATE PUR_PRESETTLE SET CONTNUM=#contnum# WHERE CONTNUM is NULL AND ACCRUEDID IN (SELECT a.ACCRUEDID FROM PUR_OUTCOST a WHERE a.CONTNUM=#projectno# AND a.OUTCOSTTYPE='1')</select>
+</sqlMap>

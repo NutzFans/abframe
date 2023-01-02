@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_resume.exportResume">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    <!--校验性别导入的数据是否正确-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="BEGINENDDATE" javaType="String" property="beginenddate"/>
+        <result column="ENDDATE" javaType="String" property="enddate"/>
+        <result column="CUSTNAME" javaType="String" property="custname"/>
+        <result column="PROJECTNAME" javaType="String" property="projectname"/>
+        <result column="PROJECTINTRODUCE" javaType="String" property="projectintroduce"/>
+        <result column="PROJECTDUTY" javaType="String" property="projectduty"/>
+    </resultMap>
+    <select id="orderProjExp" resultMap="resultMap1">select BEGINENDDATE,ENDDATE, CUSTNAME, PROJECTNAME, PROJECTINTRODUCE, PROJECTDUTY from AME_RESUME_PROJEXP where RESUMEID = #resumeid# order by BEGINENDDATE asc</select>
+    <!--校验性别导入的数据是否正确-->
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="STARTDATE" javaType="String" property="startdate"/>
+        <result column="ENDDATE" javaType="String" property="enddate"/>
+        <result column="COMPANYNAME" javaType="String" property="companyname"/>
+        <result column="DUTY" javaType="String" property="duty"/>
+        <result column="WORKDESCRIPTION" javaType="String" property="workdescription"/>
+    </resultMap>
+    <select id="orderWorkExp" resultMap="resultMap1">select STARTDATE, ENDDATE, COMPANYNAME, DUTY, WORKDESCRIPTION from AME_RESUME_WORKEXP where RESUMEID = #resumeid# order by STARTDATE asc</select>
+</sqlMap>

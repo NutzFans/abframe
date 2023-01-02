@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:刘良金 -->
+<sqlMap>
+    <parameterMap class="org.gocom.abframe.dataset.privilege.OmPartyrole" id="dutyParam">
+        <parameter javaType="int" jdbcType="number" property="partyid"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.privilege.AcRole" id="dutyResult">
+        <result column="roleid"  property="roleid"/>
+        <result column="rolename"  property="rolename"/>
+    </resultMap>
+    
+    <!-- 查询职务角色 -->
+    <select id="dutyRoleAllowAdd" parameterMap="dutyParam" resultMap="dutyResult"><![CDATA[
+       SELECT R.ROLEID, R.ROLENAME FROM AC_ROLE R 
+	   WHERE R.ROLEID NOT IN
+	   (  
+	       SELECT PR.ROLEID  FROM OM_PARTYROLE PR WHERE
+	       PR.PARTYID=? AND  PR.PARTYTYPE = 'duty' 
+		 )
+    ]]></select>
+    
+    <resultMap class="org.gocom.abframe.dataset.organization.OmDuty" id="resultDutyMap">
+        <result column="dictid"  property="dutytype"/>
+        <result column="dictname"  property="dutyname"/>
+    </resultMap>
+    <!--  查询职务套别-->
+    <select id="selectRootDuty"  resultMap="resultDutyMap">
+        <![CDATA[ SELECT DICTID, DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ABF_DUTYTYPE' ]]>
+    </select>
+    
+    <parameterMap class="org.gocom.abframe.dataset.custom.PosiMovePara" id="moveParamMap">
+        <parameter javaType="String" jdbcType="VARCHAR" property="type"/>
+        <parameter javaType="Int" jdbcType="NUMBER" property="toPosLevel"/>
+        <parameter javaType="Int" jdbcType="NUMBER" property="fromParentPosLevel"/>
+        <parameter javaType="String" jdbcType="VARCHAR" property="toPosSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR" property="fromParentPosSeq"/>
+        <parameter javaType="String" jdbcType="VARCHAR" property="fromPosSeq"/>
+    </parameterMap>
+    <!--移动职务节点-->
+    <update id="moveDuty" parameterMap="moveParamMap"><![CDATA[
+         UPDATE OM_DUTY T SET T.DUTYTYPE=?,T.DUTYLEVEL=T.DUTYLEVEL+?-?,T.DUTYSEQ=?||SUBSTR(T.DUTYSEQ,LENGTH(?)+1) WHERE T.DUTYSEQ LIKE ?
+    ]]></update>
+    
+    <parameterMap class="org.gocom.abframe.dataset.privilege.OmPartyrole" id="dutyRoleAllowAddParam">
+        <parameter javaType="int" jdbcType="number" property="partyid"/>
+    </parameterMap>
+    <resultMap class="org.gocom.abframe.dataset.privilege.AcRolefunc" id="dutyFuncResultMap">
+        <result column="funccode"  property="acFunction/funccode"/>
+        <result column="funcname"  property="acFunction/funcname"/>
+    </resultMap>
+    <!-- 查询职务角色的所有功能列表 -->
+    <select id="dutyRoleAll" parameterMap="dutyRoleAllowAddParam" resultMap="dutyFuncResultMap"><![CDATA[
+          SELECT FUNCCODE, FUNCNAME FROM AC_FUNCTION WHERE  FUNCCODE IN (
+          SELECT FUNCCODE FROM AC_ROLEFUNC WHERE ROLEID IN (
+		  SELECT R.ROLEID FROM AC_ROLE R WHERE R.ROLEID IN (
+            SELECT PR.ROLEID FROM OM_PARTYROLE PR WHERE 
+              PR.PARTYTYPE = 'duty' AND PR.PARTYID = ?) ) )
+    ]]></select>
+</sqlMap>

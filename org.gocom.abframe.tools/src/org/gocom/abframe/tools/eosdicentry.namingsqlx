@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:张一博 -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+    	<result column="DICTTYPEID" javaType="string" property="dicttypeid"/>
+        <result column="DICTTYPENAME" javaType="string" property="dicttypename"/>
+        <result column="DICTID" javaType="string" property="dictid"/>
+        <result column="treeid" javaType="string" property="treeid"/>
+        <result column="PARENTID" javaType="string" property="parentid"/>
+        <result column="treeparentid" javaType="string" property="treeparentid"/>
+        <result column="SORTNO" javaType="int" property="sortno"/>
+        <result column="FILTER1" javaType="string" property="filter1"/>
+        <result column="FILTER2" javaType="string" property="filter2"/>
+        <result column="NOTE" javaType="string" property="note"/>
+    </resultMap>
+    <select id="queryEosEntry" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+	select #dicttypeid# as dicttypeid, '业务字典类型项' AS dicttypename,'dictid' AS dictid,'dictid' as treeid,
+	NULL as PARENTID,null AS treeparentid,null as sortno,null AS FILTER1,null as FILTER2,null as NOTE
+		UNION all
+		select a.DICTTYPEID, a.DICTNAME as DICTTYPENAME,a.DICTID AS DICTID,a.SEQNO AS treeid,(CASE WHEN a.PARENTID is null  THEN 'dictid' else a.PARENTID END) as PARENTID,(CASE WHEN a.PARENTID is null  THEN 'dictid' else b.SEQNO END) as treeparentid,a.SORTNO
+		,a.FILTER1,a.FILTER2,a.NOTE 
+		from EOS_DICT_ENTRY  a
+	  LEFT JOIN EOS_DICT_ENTRY b on b.DICTID=a.PARENTID and b.RANK=a.RANK-1 AND b.DICTTYPEID in (
+		SELECT DICTTYPEID from EOS_DICT_TYPE where SEQNO like 
+		((select SEQNO from EOS_DICT_TYPE where DICTTYPEID like #dicttypeid#)+'%')
+		)
+	  where a.DICTTYPEID in (
+		SELECT DICTTYPEID from EOS_DICT_TYPE where SEQNO like 
+		((select SEQNO from EOS_DICT_TYPE where DICTTYPEID like #dicttypeid#)+'%')
+		)  
+	ORDER BY sortno ASC;
+	
+    ]]></select>
+</sqlMap>

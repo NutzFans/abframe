@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.machine.machineApply">
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="money" javaType="Decimal" property="money"/>
+        <result column="id" javaType="String" property="id"/>
+        <result column="name" javaType="String" property="name"/>
+    </resultMap>
+    <select id="getspr" parameterClass="string" resultMap="resultMap"><![CDATA[
+    	select cast(DICTNAME  as DECIMAL) money,FILTER1 id,b.EMPNAME as name from EOS_DICT_ENTRY a,OM_EMPLOYEE b 
+		where a.FILTER1=b.USERID and DICTTYPEID=#dicttypeid#;
+		]]></select>
+</sqlMap>

@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.primeton.eos.ame_budget.BuyInout">
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="type" javaType="string" property="type"/>
+        <result column="month1" javaType="double" property="month1"/>
+        <result column="month2" javaType="double" property="month2"/>
+        <result column="month3" javaType="double" property="month3"/>
+        <result column="month4" javaType="double" property="month4"/>
+        <result column="month5" javaType="double" property="month5"/>
+        <result column="month6" javaType="double" property="month6"/>
+        <result column="month7" javaType="double" property="month7"/>
+        <result column="month8" javaType="double" property="month8"/>
+        <result column="month9" javaType="double" property="month9"/>
+        <result column="month10" javaType="double" property="month10"/>
+        <result column="month11" javaType="double" property="month11"/>
+        <result column="month12" javaType="double" property="month12"/>
+        <result column="year" javaType="double" property="year"/>
+    </resultMap>
+    <select id="selectfwAllBuyInOut" resultMap="resultMap">
+        <!--服务成本-->
+        <!-- 	业务单元的买入卖出(服务成本,买入:区分costtype，卖出不区分costtype
+						销售成本,买入:区分costtype，卖出为0
+						管理成本,买入:区分costtype，卖出为0
+						研发成本,买入:区分costtype，卖出为0
+						市场成本,买入:区分costtype，卖出为0) --><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)   and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+				a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+			from 
+				(SELECT '卖出' as type) a
+			left join 
+				(select 
+					'卖出' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)   and year=#year# group by a.month) t) b 
+			on a.type=b.type
+			)
+			union ALL
+			(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)   and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+					a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+				from 
+					(SELECT '成本' as type) a
+				left join 
+					(select 
+						'成本' as type,
+						isnull(max(case month when 1 then money else 0 end),0) month1 ,
+						isnull(max(case month when 2 then money else 0 end),0) month2,
+						isnull(max(case month when 3 then money else 0 end),0) month3,
+						isnull(max(case month when 4 then money else 0 end),0) month4,
+						isnull(max(case month when 5 then money else 0 end),0) month5,
+						isnull(max(case month when 6 then money else 0 end),0) month6,
+						isnull(max(case month when 7 then money else 0 end),0) month7,
+						isnull(max(case month when 8 then money else 0 end),0) month8,
+						isnull(max(case month when 9 then money else 0 end),0) month9,
+						isnull(max(case month when 10 then money else 0 end),0) month10,
+						isnull(max(case month when 11 then money else 0 end),0) month11,
+						isnull(max(case month when 12 then money else 0 end),0) month12,
+						isnull(sum(money),0) as year
+					from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)   and year=#year# group by a.month) t) b
+				on a.type=b.type
+			) c on b.type =c.type
+		)
+		]]></select>
+    <select id="queryAllBuyInOut" resultMap="resultMap">
+        <!--公司级--><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a ,BUDGET_ORG b
+				where a.inorgid=b.orgid and b.BUDGET_YEAR=a.year and b.ORGSEQ like #orgseq#  
+				and a.year=#year# and costtype in ($costtype$) and b.orgdegree in ($orgdegree$) and b.ORGTYPE in ($orgtype$) group by a.month
+				) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+				a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+			from 
+				(SELECT '卖出' as type) a
+			left join 
+				(select 
+					'卖出' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from (select t.year,t.money,t.month,t.outorgid,x.ORGSEQ,
+				(
+				case when x.orgdegree = 2 or x.orgdegree = 3 or x.orgtype = 3 then 1 
+				when x.orgdegree != 3 and x.orgtype = 1 then 3 
+				when x.orgdegree != 3 and x.orgtype = 2 and x.orgid = 28 then 5 
+				when x.orgdegree != 3 and x.orgtype = 2 and x.orgid != 28 then 2 
+				when  x.orgdegree != 3 and x.orgtype = 4 then 4 end
+				) as costtype 
+				 from DEPT_INOUT_BUDGET t 
+				left join budget_org x
+				on t.outorgid = x.orgid and t.year = x.budget_year) a,BUDGET_ORG b where a.YEAR=b.BUDGET_YEAR 
+				and a.outORGID=b.orgid and a.ORGSEQ like #orgseq#  and b.ORGTYPE in ($orgtype$) and  b.orgdegree  in ($orgdegree$) and a.costtype in ($costtype$) and year=#year# group by a.month) t) b 
+							on a.type=b.type
+							)
+				union all
+				(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a ,BUDGET_ORG b
+				where a.inorgid=b.orgid and b.BUDGET_YEAR=a.year and b.ORGSEQ like #orgseq#  
+				and a.year=#year# and costtype in ($costtype$) and b.orgdegree in ($orgdegree$) and b.ORGTYPE in ($orgtype$) group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+					a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+				from 
+					(SELECT '成本' as type) a
+				left join 
+					(select 
+						'成本' as type,
+						isnull(max(case month when 1 then money else 0 end),0) month1 ,
+						isnull(max(case month when 2 then money else 0 end),0) month2,
+						isnull(max(case month when 3 then money else 0 end),0) month3,
+						isnull(max(case month when 4 then money else 0 end),0) month4,
+						isnull(max(case month when 5 then money else 0 end),0) month5,
+						isnull(max(case month when 6 then money else 0 end),0) month6,
+						isnull(max(case month when 7 then money else 0 end),0) month7,
+						isnull(max(case month when 8 then money else 0 end),0) month8,
+						isnull(max(case month when 9 then money else 0 end),0) month9,
+						isnull(max(case month when 10 then money else 0 end),0) month10,
+						isnull(max(case month when 11 then money else 0 end),0) month11,
+						isnull(max(case month when 12 then money else 0 end),0) month12,
+						isnull(sum(money),0) as year
+					from (select sum(money) as money,month from (select t.year,t.money,t.month,t.outorgid,x.ORGSEQ,
+				(
+				case when x.orgdegree = 2 or x.orgdegree = 3 or x.orgtype = 3 then 1 
+				when x.orgdegree != 3 and x.orgtype = 1 then 3 
+				when x.orgdegree != 3 and x.orgtype = 2 and x.orgid = 28 then 5 
+				when x.orgdegree != 3 and x.orgtype = 2 and x.orgid != 28 then 2 
+				when  x.orgdegree != 3 and x.orgtype = 4 then 4 end
+				) as costtype 
+				 from DEPT_INOUT_BUDGET t 
+				left join budget_org x
+				on t.outorgid = x.orgid and t.year = x.budget_year) a,BUDGET_ORG b where 
+				a.YEAR=b.BUDGET_YEAR and a.outORGID=b.orgid and a.ORGSEQ like #orgseq# and b.orgdegree in ($orgdegree$) and b.ORGTYPE in ($orgtype$)
+				and a.costtype in ($costtype$) and year=#year# group by a.month) t) b
+				on a.type=b.type
+			) c on b.type =c.type
+		)
+
+
+		]]></select>
+    <select id="selectAllBuyInOut" resultMap="resultMap">
+        <!--非服务成本-->
+        <!-- 	业务单元的买入卖出(服务成本,买入:区分costtype，卖出不区分costtype
+						销售成本,买入:区分costtype，卖出为0
+						管理成本,买入:区分costtype，卖出为0
+						研发成本,买入:区分costtype，卖出为0
+						市场成本,买入:区分costtype，卖出为0) --><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid  in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)  and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+				'卖出' as type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,0 as month12,0 as year
+			)
+			union ALL
+			(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid  in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)  and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+				'成本' as type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,0 as month12,0 as year
+			) c on b.type =c.type
+		)
+		]]></select>
+    <select id="selectAllBuyInOutType" resultMap="resultMap">
+        <!-- 业务单元级特殊部门处理 --><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)  and year=#year#  group by a.month) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+					'卖出' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)  and year=#year# group by a.month) t
+			)
+			union ALL
+			(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)  and year=#year# group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)  and year=#year# group by a.month) t) c 
+			on b.type =c.type
+		)
+		]]></select>
+    <select id="selectsybAllBuyInOutType" resultMap="resultMap">
+        <!-- 事业部级特殊部门处理 --><![CDATA[
+			select a.type,costtype,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select '买入' as type,
+					costtype,sum(MONTH1)as month1,sum(MONTH2)as month2,sum(MONTH3)as month3,sum(MONTH4)as month4,sum(MONTH5)as month5,sum(MONTH6)as month6,
+					sum(MONTH7)as month7,sum(MONTH8)as month8,sum(MONTH9)as month9,sum(MONTH10)as month10,sum(MONTH11)as month11,sum(MONTH12)as month12,
+					(sum(isNull(MONTH1,0))+sum(isNull(MONTH2,0))+sum(isNull(MONTH3,0))+sum(isNull(MONTH4,0))+sum(isNull(MONTH5,0))+sum(isNull(MONTH6,0))
+					 +sum(isNull(MONTH7,0))+sum(isNull(MONTH8,0))+sum(isNull(MONTH9,0))+sum(isNull(MONTH10,0))+sum(isNull(MONTH11,0))+sum(isNull(MONTH12,0))) as year
+			 from 
+					(
+				SELECT year,orgid,costtype,[1] as MONTH1,[2] as MONTH2,[3] as MONTH3,[4] as MONTH4,[5] as MONTH5,[6] as MONTH6,[7] as MONTH7,[8] as MONTH8,[9] as MONTH9,[10] as MONTH10,[11] as MONTH11,[12] as MONTH12 
+									FROM (select sum(money) as money,month,costtype,year,orgid from (
+				select money,month,year,a.orgid,
+				costtype 
+				from DEPT_INOUT_BUDGET a 
+				where 
+				a.inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)
+				and year=#year# ) a 
+				group by a.month,costtype,year,orgid) a
+					PIVOT (SUM (money) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			and year = #year# and costtype=#costtype# 
+			GROUP BY a.year,costtype) b 
+			on a.type=b.type
+			union all
+			(
+			select a.type,b.costtype,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+			 from (
+			select '卖出' as type)a left join (
+			select '卖出' as type,
+					costtype,sum(MONTH1)as month1,sum(MONTH2)as month2,sum(MONTH3)as month3,sum(MONTH4)as month4,sum(MONTH5)as month5,sum(MONTH6)as month6,
+					sum(MONTH7)as month7,sum(MONTH8)as month8,sum(MONTH9)as month9,sum(MONTH10)as month10,sum(MONTH11)as month11,sum(MONTH12)as month12,
+					(sum(isNull(MONTH1,0))+sum(isNull(MONTH2,0))+sum(isNull(MONTH3,0))+sum(isNull(MONTH4,0))+sum(isNull(MONTH5,0))+sum(isNull(MONTH6,0))
+					 +sum(isNull(MONTH7,0))+sum(isNull(MONTH8,0))+sum(isNull(MONTH9,0))+sum(isNull(MONTH10,0))+sum(isNull(MONTH11,0))+sum(isNull(MONTH12,0))) as year
+			 from 
+					(
+				SELECT year,orgid,costtype,[1] as MONTH1,[2] as MONTH2,[3] as MONTH3,[4] as MONTH4,[5] as MONTH5,[6] as MONTH6,[7] as MONTH7,[8] as MONTH8,[9] as MONTH9,[10] as MONTH10,[11] as MONTH11,[12] as MONTH12 
+									FROM (select sum(money) as money,month,costtype,year,orgid from (
+				select money,month,year,a.outorgid as orgid,
+				(case when x.orgdegree = 2 or x.orgdegree = 3 or x.orgtype = 3 then 1 when x.orgdegree != 3 and x.orgtype = 1 then 3 when x.orgdegree != 3 and x.orgtype = 2 and x.orgid = 28 then 5 
+					when x.orgdegree != 3 and x.orgtype = 2 and x.orgid != 28 then 2 
+					when  x.orgdegree != 3 and x.orgtype = 4 then 4 end) as costtype 
+				from DEPT_INOUT_BUDGET a 
+				 left join budget_org x
+							on a.outorgid = x.orgid and a.year = x.budget_year 
+				where 
+				a.outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)
+				and year=#year# ) a 
+				group by a.month,costtype,year,orgid) a
+					PIVOT (SUM (money) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			and year = #year# and costtype=#costtype# 
+			GROUP BY a.year,costtype)b on a.type=b.type)
+			union ALL
+			(select 
+				a.type,b.costtype,(isNull(b.month1,0)-isNull(c.month1,0)) as month1,(isNull(b.month2,0)-isNull(c.month2,0)) as month2,
+				(isNull(b.month3,0)-isNull(c.month3,0)) as month3,(isNull(b.month4,0)-isNull(c.month4,0)) as month4,
+				(isNull(b.month5,0)-isNull(c.month5,0)) as month5,(isNull(b.month6,0)-isNull(c.month6,0)) as month6,
+				(isNull(b.month7,0)-isNull(c.month7,0)) as month7,(isNull(b.month8,0)-isNull(c.month8,0)) as month8,
+				(isNull(b.month9,0)-isNull(c.month9,0)) as month9,(isNull(b.month10,0)-isNull(c.month10,0)) as month10,
+				(isNull(b.month11,0)-isNull(c.month11,0)) as month11,(isNull(b.month12,0)-isNull(c.month12,0)) as month12,
+				(isNull(b.year,0)-isNull(c.year,0)) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select '成本' as type,
+					costtype,sum(isNull(MONTH1,0))as month1,sum(isNull(MONTH2,0))as month2,sum(isNull(MONTH3,0))as month3,sum(isNull(MONTH4,0))as month4,sum(isNull(MONTH5,0))as month5,sum(isNull(MONTH6,0))as month6,
+					sum(isNull(MONTH7,0))as month7,sum(isNull(MONTH8,0))as month8,sum(isNull(MONTH9,0))as month9,sum(isNull(MONTH10,0))as month10,sum(isNull(MONTH11,0))as month11,sum(isNull(MONTH12,0))as month12,
+					(sum(isNull(MONTH1,0))+sum(isNull(MONTH2,0))+sum(isNull(MONTH3,0))+sum(isNull(MONTH4,0))+sum(isNull(MONTH5,0))+sum(isNull(MONTH6,0))
+					 +sum(isNull(MONTH7,0))+sum(isNull(MONTH8,0))+sum(isNull(MONTH9,0))+sum(isNull(MONTH10,0))+sum(isNull(MONTH11,0))+sum(isNull(MONTH12,0))) as year
+			 from 
+					(
+				SELECT year,orgid,costtype,isnull([1],0) as MONTH1,isnull([2],0) as MONTH2,isnull([3],0) as MONTH3,isnull([4],0) as MONTH4,isnull([5],0) as MONTH5,isnull([6],0) as MONTH6,isnull([7],0) as MONTH7,isnull([8],0) as MONTH8,isnull([9],0) as MONTH9,isnull([10],0) as MONTH10,isnull([11],0) as MONTH11,isnull([12],0) as MONTH12 
+									FROM (select sum(money) as money,month,costtype,year,orgid from (
+				select money,month,year,a.orgid,
+				costtype 
+				from DEPT_INOUT_BUDGET a 
+				where 
+				a.inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)
+				and year=#year# ) a 
+				group by a.month,costtype,year,orgid) a
+					PIVOT (SUM (money) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			and year = #year# and costtype=#costtype# 
+			GROUP BY a.year,costtype) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(
+			select '成本' as type,
+					costtype,sum(MONTH1)as month1,sum(MONTH2)as month2,sum(MONTH3)as month3,sum(MONTH4)as month4,sum(MONTH5)as month5,sum(MONTH6)as month6,
+					sum(MONTH7)as month7,sum(MONTH8)as month8,sum(MONTH9)as month9,sum(MONTH10)as month10,sum(MONTH11)as month11,sum(MONTH12)as month12,
+					(sum(isNull(MONTH1,0))+sum(isNull(MONTH2,0))+sum(isNull(MONTH3,0))+sum(isNull(MONTH4,0))+sum(isNull(MONTH5,0))+sum(isNull(MONTH6,0))
+					 +sum(isNull(MONTH7,0))+sum(isNull(MONTH8,0))+sum(isNull(MONTH9,0))+sum(isNull(MONTH10,0))+sum(isNull(MONTH11,0))+sum(isNull(MONTH12,0))) as year
+			 from 
+					(
+				SELECT year,orgid,costtype,isnull([1],0) as MONTH1,isnull([2],0) as MONTH2,isnull([3],0) as MONTH3,isnull([4],0) as MONTH4,isnull([5],0) as MONTH5,isnull([6],0) as MONTH6,isnull([7],0) as MONTH7,isnull([8],0) as MONTH8,isnull([9],0) as MONTH9,isnull([10],0) as MONTH10,isnull([11],0) as MONTH11,isnull([12],0) as MONTH12 
+									FROM (select sum(money) as money,month,costtype,year,orgid from (
+				select money,month,year,a.outorgid as orgid,
+				(case when x.orgdegree = 2 or x.orgdegree = 3 or x.orgtype = 3 then 1 when x.orgdegree != 3 and x.orgtype = 1 then 3 when x.orgdegree != 3 and x.orgtype = 2 and x.orgid = 28 then 5 
+					when x.orgdegree != 3 and x.orgtype = 2 and x.orgid != 28 then 2 
+					when  x.orgdegree != 3 and x.orgtype = 4 then 4 end) as costtype 
+				from DEPT_INOUT_BUDGET a 
+				 left join budget_org x
+							on a.outorgid = x.orgid and a.year = x.budget_year 
+				where 
+				a.outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)
+				and year=#year# ) a 
+				group by a.month,costtype,year,orgid) a
+					PIVOT (SUM (money) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			and year = #year# and costtype=#costtype# 
+			GROUP BY a.year,costtype) c
+			on a.type =c.type
+			)
+		]]></select>
+    <select id="selectSybfwAllBuyInOut" resultMap="resultMap">
+        <!--事业部服务成本-->
+        <!-- 事业部级买入卖出汇总 （服务成本）
+    	买入：子orgid所有的买入（区分costtype），卖出：子orgid所有的卖出（不区分costtype，都汇总到服务类）
+    --><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select a.orgid  from BUDGET_ORG a,BUDGET_ORG b
+			where a.PARENTORGID=b.ORGID and b.budget_year=a.budget_year and a.budget_year =#year#  and a.ORGLEVEL=3 and b.orgid=#orgid#
+			)  and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+				a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+			from 
+				(SELECT '卖出' as type) a
+			left join 
+				(select 
+					'卖出' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.outorgid in (select a.orgid  from BUDGET_ORG a,BUDGET_ORG b
+			where a.PARENTORGID=b.ORGID and b.budget_year=a.budget_year and a.budget_year =#year#  and a.ORGLEVEL=3 and b.orgid=#orgid#
+			)  and year=#year# group by a.month) t) b 
+			on a.type=b.type
+			)
+			union ALL
+			(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select a.orgid  from BUDGET_ORG a,BUDGET_ORG b
+			where a.PARENTORGID=b.ORGID and b.budget_year=a.budget_year and a.budget_year =#year#  and a.ORGLEVEL=3 and b.orgid=#orgid#
+			)  and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+					a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+				from 
+					(SELECT '成本' as type) a
+				left join 
+					(select 
+						'成本' as type,
+						isnull(max(case month when 1 then money else 0 end),0) month1 ,
+						isnull(max(case month when 2 then money else 0 end),0) month2,
+						isnull(max(case month when 3 then money else 0 end),0) month3,
+						isnull(max(case month when 4 then money else 0 end),0) month4,
+						isnull(max(case month when 5 then money else 0 end),0) month5,
+						isnull(max(case month when 6 then money else 0 end),0) month6,
+						isnull(max(case month when 7 then money else 0 end),0) month7,
+						isnull(max(case month when 8 then money else 0 end),0) month8,
+						isnull(max(case month when 9 then money else 0 end),0) month9,
+						isnull(max(case month when 10 then money else 0 end),0) month10,
+						isnull(max(case month when 11 then money else 0 end),0) month11,
+						isnull(max(case month when 12 then money else 0 end),0) month12,
+						isnull(sum(money),0) as year
+					from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.outorgid in (select a.orgid  from BUDGET_ORG a,BUDGET_ORG b
+			where a.PARENTORGID=b.ORGID and b.budget_year=a.budget_year and a.budget_year =#year#  and a.ORGLEVEL=3 and b.orgid=#orgid#
+			) and year=#year# group by a.month) t) b
+				on a.type=b.type
+			) c on b.type =c.type
+		)
+		]]></select>
+    <select id="selectSybAllBuyInOut" resultMap="resultMap">
+        <!--事业部非服务成本-->
+        <!-- 事业部级买入卖出汇总 （非服务成本）
+    	买入：子orgid所有的买入（区分costtype），卖出：都为0
+    --><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select a.orgid  from BUDGET_ORG a,BUDGET_ORG b
+			where a.PARENTORGID=b.ORGID and b.budget_year=a.budget_year and a.budget_year =#year#  and a.ORGLEVEL=3 and b.orgid=#orgid#
+			)  and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+				'卖出' as type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,0 as month12,0 as year
+			)
+			union ALL
+			(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where a.inorgid in (select a.orgid  from BUDGET_ORG a,BUDGET_ORG b
+			where a.PARENTORGID=b.ORGID and b.budget_year=a.budget_year and a.budget_year =#year#  and a.ORGLEVEL=3 and b.orgid=#orgid#
+			)  and year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+				'成本' as type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,0 as month12,0 as year
+				) c on b.type =c.type
+		)
+		]]></select>
+    <select id="selectGsAllBuyInOut" resultMap="resultMap">
+        <!-- 公司级买入卖出汇总 --><![CDATA[
+			select a.type,
+				b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.year
+			from 
+				(SELECT '买入' as type) a
+			left join 
+				(select 
+					'买入' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			union all
+			(select 
+				a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+			from 
+				(SELECT '卖出' as type) a
+			left join 
+				(select 
+					'卖出' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where year=#year# and costtype=#costtype# group by a.month) t) b 
+			on a.type=b.type
+			)
+			union ALL
+			(select 
+				a.type,(b.month1-c.month1) as month1,(b.month2-c.month2) as month2,(b.month3-c.month3) as month3,(b.month4-c.month4) as month4,
+				(b.month5-c.month5) as month5,(b.month6-c.month6) as month6,(b.month7-c.month7) as month7,(b.month8-c.month8) as month8,
+				(b.month9-c.month9) as month9,(b.month10-c.month10) as month10,(b.month11-c.month11) as month11,(b.month12-c.month12) as month12,
+				(b.year-c.year) as year
+			from 
+				(SELECT '成本' as type) a
+			left join 
+				(select 
+					'成本' as type,
+					isnull(max(case month when 1 then money else 0 end),0) month1 ,
+					isnull(max(case month when 2 then money else 0 end),0) month2,
+					isnull(max(case month when 3 then money else 0 end),0) month3,
+					isnull(max(case month when 4 then money else 0 end),0) month4,
+					isnull(max(case month when 5 then money else 0 end),0) month5,
+					isnull(max(case month when 6 then money else 0 end),0) month6,
+					isnull(max(case month when 7 then money else 0 end),0) month7,
+					isnull(max(case month when 8 then money else 0 end),0) month8,
+					isnull(max(case month when 9 then money else 0 end),0) month9,
+					isnull(max(case month when 10 then money else 0 end),0) month10,
+					isnull(max(case month when 11 then money else 0 end),0) month11,
+					isnull(max(case month when 12 then money else 0 end),0) month12,
+					isnull(sum(money),0) as year
+				from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where year=#year# and costtype=#costtype# group by a.month) t
+				) b 
+			on a.type=b.type
+			LEFT JOIN 
+				(select 
+					a.type,b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12,b.year
+				from 
+					(SELECT '成本' as type) a
+				left join 
+					(select 
+						'成本' as type,
+						isnull(max(case month when 1 then money else 0 end),0) month1 ,
+						isnull(max(case month when 2 then money else 0 end),0) month2,
+						isnull(max(case month when 3 then money else 0 end),0) month3,
+						isnull(max(case month when 4 then money else 0 end),0) month4,
+						isnull(max(case month when 5 then money else 0 end),0) month5,
+						isnull(max(case month when 6 then money else 0 end),0) month6,
+						isnull(max(case month when 7 then money else 0 end),0) month7,
+						isnull(max(case month when 8 then money else 0 end),0) month8,
+						isnull(max(case month when 9 then money else 0 end),0) month9,
+						isnull(max(case month when 10 then money else 0 end),0) month10,
+						isnull(max(case month when 11 then money else 0 end),0) month11,
+						isnull(max(case month when 12 then money else 0 end),0) month12,
+						isnull(sum(money),0) as year
+					from (select sum(money) as money,month from DEPT_INOUT_BUDGET a where year=#year# and costtype=#costtype# group by a.month) t) b
+				on a.type=b.type
+			) c on b.type =c.type
+		)
+		]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="leaforgid" javaType="string" property="leaforgid"/>
+        <result column="leaforgname" javaType="string" property="leaforgname"/>
+    </resultMap>
+    <select id="getBudgetNotLeafOrg" resultMap="resultMap1"><![CDATA[
+    		select a.orgid AS leaforgid,(b.orgname+'---'+a.orgname) as leaforgname
+			from BUDGET_ORG a,BUDGET_ORG b
+			where a.parentorgid=b.orgid and a.BUDGET_YEAR=b.BUDGET_YEAR and a.BUDGET_YEAR = #year# and
+			a.orgid not in (select parentorgid from BUDGET_ORG where parentorgid is not null and BUDGET_YEAR = #year#) order by a.orgseq
+		]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="inoutid" javaType="string" property="inoutid"/>
+        <result column="orgid" javaType="string" property="orgid"/>
+        <result column="year" javaType="string" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="inorgid" javaType="string" property="inorgid"/>
+        <result column="outorgid" javaType="string" property="outorgid"/>
+        <result column="money" javaType="double" property="money"/>
+        <result column="memo" javaType="string" property="memo"/>
+        <result column="costtype" javaType="string" property="costtype"/>
+    </resultMap>
+    <select id="getSybBuyIn" resultMap="resultMap2"><![CDATA[
+    	select inoutid,orgid,year,month,inorgid,outorgid,money,memo,costtype from DEPT_INOUT_BUDGET where year =#year#  and inorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)
+		and costtype=#costtype#
+		order by orgid desc ,month asc
+		]]></select>
+    <select id="getSybSaleOut" resultMap="resultMap2"><![CDATA[
+    		select inoutid,orgid,year,month,inorgid,outorgid,money,memo,costtype from (
+    		select inoutid,t.orgid,year,month,inorgid,outorgid,money,memo,
+			(case when x.orgdegree = 2 or x.orgdegree = 3 or x.orgtype = 3 then 1 when x.orgdegree != 3 and x.orgtype = 1 then 3 when x.orgdegree != 3 and x.orgtype = 2 and x.orgid = 28 then 5 
+			when x.orgdegree != 3 and x.orgtype = 2 and x.orgid != 28 then 2 
+			when  x.orgdegree != 3 and x.orgtype = 4 then 4 end) as costtype 
+			from DEPT_INOUT_BUDGET t left join budget_org x
+			on t.outorgid = x.orgid and t.year = x.budget_year 
+			where outorgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#)) a
+    		where year =#year#  and costtype=#costtype#
+		]]></select>
+    <select id="getSybSaleOut1" resultMap="resultMap2"><![CDATA[
+    	select inoutid,orgid,year,month,inorgid,outorgid,money,memo,costtype from DEPT_INOUT_BUDGET where year =#year# and outorgid in 
+		(
+		select orgid  from BUDGET_ORG where PARENTORGID =#orgid# and BUDGET_YEAR=#year#
+		) order by orgid desc ,month asc
+		]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="money" javaType="float" property="money"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="inorgid" javaType="int" property="inorgid"/>
+        <result column="outorgid" javaType="int" property="outorgid"/>
+        <result column="memo" javaType="string" property="memo"/>
+    </resultMap>
+    <select id="getSybSaleOut2" resultMap="resultMap3"><![CDATA[
+    	select  money,month,inorgid,outorgid,memo from DEPT_INOUT_BUDGET a ,BUDGET_ORG b
+				where a.inorgid=b.orgid and b.BUDGET_YEAR=a.year and b.ORGSEQ like #orgseq#
+				and a.year=#year# and costtype in ($costtype$) and b.orgdegree in ($orgdegree$) and b.orgtype in ($orgtype$) 
+		]]></select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+        <result column="money" javaType="float" property="money"/>
+        <result column="year" javaType="String" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="inorgid" javaType="int" property="inorgid"/>
+        <result column="outorgid" javaType="int" property="outorgid"/>
+        <result column="costtype" javaType="String" property="costtype"/>
+        <result column="memo" javaType="String" property="memo"/>
+    </resultMap>
+    <select id="getSybBuyIn2" resultMap="resultMap4"><![CDATA[
+    	select money,year,month,inorgid,outorgid,costtype,memo from (select t.year,t.money,t.month,t.outorgid,x.ORGSEQ,inorgid,memo,
+		(
+		case when x.orgdegree = 2 or x.orgdegree = 3 or x.orgtype = 3 then 1 
+		when x.orgdegree != 3 and x.orgtype = 1 then 3 
+		when x.orgdegree != 3 and x.orgtype = 2 and x.orgid = 28 then 5 
+		when x.orgdegree != 3 and x.orgtype = 2 and x.orgid != 28 then 2 
+		when  x.orgdegree != 3 and x.orgtype = 4 then 4 end
+		) as costtype 
+		 from DEPT_INOUT_BUDGET t 
+		left join budget_org x
+		on t.outorgid = x.orgid and t.year = x.budget_year) a,BUDGET_ORG b where a.YEAR=b.BUDGET_YEAR 
+		and a.outORGID=b.orgid and a.ORGSEQ like #orgseq# and b.orgdegree in ($orgdegree$) and b.orgtype in ($orgtype$) and a.costtype in ($costtype$) and year=#year#
+		]]></select>
+</sqlMap>

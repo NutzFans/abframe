@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:xuqq -->
+<sqlMap>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="costmemo" javaType="string" property="costmemo"/>
+    	<result column="stockdate" javaType="date" property="stockdate"/>
+    </resultMap>
+    <select id="select_id" parameterClass="java.util.HashMap" resultMap="resultMap">
+    select (case when (select count(*) from CS_REVE_FORECAST x where x.CONTNUM=b.CONTNUM 
+	and x.STATUS='3' and (x.REVETYPE like '%1%' or x.REVETYPE like '%5%') 
+	and x.NEWYEARMONTH>=convert(varchar(6),convert(datetime,#date#),112))>0 then '0'
+	 when (select count(*) from CS_REVE_FORECAST where CONTNUM=b.CONTNUM and STATUS!='3' and (REVETYPE like '%1%' or REVETYPE like '%5%'))>0
+	 then '1' else '2' end) as COSTMEMO,
+	(case when (select count(*) from CS_REVE_FORECAST x where x.CONTNUM=b.CONTNUM 
+	and x.STATUS='3' and (x.REVETYPE like '%1%' or x.REVETYPE like '%5%') and x.NEWYEARMONTH>=convert(varchar(6),convert(datetime,#date#),112))>0 
+	 then (select MIN(x.CONFIRMDAY) from CS_REVE_FORECAST x where x.CONTNUM=b.CONTNUM
+	and x.STATUS='3' and (x.REVETYPE like '%1%' or x.REVETYPE like '%5%') and x.NEWYEARMONTH>=convert(varchar(6),convert(datetime,#date#),112)) 
+	 else null end) as STOCKDATE
+	from CS_CONTRACT b where b.CONTNUM=#contnum#
+	</select>
+</sqlMap>
