@@ -5493,7 +5493,7 @@
           <allowAgent>true</allowAgent>
           <customURL>
             <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/contractPact/payContract/payContractFlow.jsp</urlInfo>
+            <urlInfo>/contractPact/chargeContract/chargeContractFlow.jsp</urlInfo>
             <urlType>webpage</urlType>
           </customURL>
           <resetUrl>

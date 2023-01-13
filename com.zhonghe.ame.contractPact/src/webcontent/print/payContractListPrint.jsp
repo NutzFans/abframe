@@ -1,6 +1,5 @@
 <%@include file="/common/common.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="com.eos.data.datacontext.UserObject"%>
 <%@page import="commonj.sdo.DataObject"%>
@@ -9,326 +8,221 @@
 <head>
 <title>打印页面</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<script src="<%=request.getContextPath()%>/common/nui/nui.js"
-	type="text/javascript"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
-<script type="text/javascript"
-	src="<%=request.getContextPath()%>/ame_common/js/jquery-barcode.js"></script>
-	<style type="text/css">
-		.link-top {
-            width: 100%;
-            height: 5px;
-            border-bottom: solid #ACC0D8 5px;
-        }
-        .base_div{
-            text-align: left;
-		    font-size: 14px;
-		    font-weight: bold;
-		    background: #F6F6F6;
-		    padding: 8px;
-		    border-bottom: 1px solid #999;
-        }
-        body { 
-        	-webkit-print-color-adjust: exact; 
-        }
-        div
-     	{
-	         white-space:normal;
-	         word-break:break-all;
-	         word-wrap:break-word; 
-         }
+<script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery-barcode.js"></script>
+<style type="text/css">
+.link-top {
+	width: 100%;
+	height: 5px;
+	border-bottom: solid #ACC0D8 5px;
+}
 
-        table tr{
-        	height: 28px;
-        }
-        table, table tr td{
-		    font-size: 12px;
-        }<d:checkbox/>
+.base_div {
+	text-align: left;
+	font-size: 14px;
+	font-weight: bold;
+	background: #F6F6F6;
+	padding: 8px;
+	border-bottom: 1px solid #999;
+}
 
-	</style>
+body {
+	-webkit-print-color-adjust: exact;
+}
+
+div {
+	white-space: normal;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+table tr {
+	height: 28px;
+}
+
+table,table tr td {
+	font-size: 12px;
+}
+</style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body style="overflow-y: scroll;">
-	<div align="right" style="width: 400px; " >
+	<div align="right" style="width: 400px;">
 		<div align="right">
 			<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 		</div>
 	</div>
+
 	<div title="付费合同打印" style="height: auto;">
-		<div id="pipi" class="nui-panel"
-			style="font-size: 13px; width: 840px; height: 30px; margin: 0 auto;    text-align: center;"
-			align="left"></div>
-		<div class="" 
-			style="width: 788px;margin: 0 auto;font-size: 14px;border:1px solid #999999;<!--height: 435px-->">
+		<div id="pipi" class="nui-panel" style="font-size: 13px; width: 840px; height: 30px; margin: 0 auto; text-align: center;" align="left"></div>
+		<div class="" style="width: 788px;margin: 0 auto;font-size: 14px;border:1px solid #999999;">
 			<div class="base_div">付费合同基本信息</div>
 			<form id="form1" method="post">
-				<input name="files" id="fileids" class="nui-hidden" /> <input
-					class="nui-hidden" name="id" />
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input class="nui-hidden" name="id" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 160px">合同名称：</td>
-							<td colspan="5"><input id="contractName" name="contractName"
-								enabled="false"  class="nui-textbox"
-								style="width: 100%" /></td>
+							<td colspan="5">
+								<input id="contractName" name="contractName" enabled="false" class="nui-textbox" style="width: 100%" />
+							</td>
 						</tr>
 						<tr>
 							<td class="form_label" align="right">申请人：</td>
-							<td><input id="createUsername" name="createUsername"
-								class="nui-textbox" enabled="false" 
-								style="width: 200px" required="true" /></td>
+							<td>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 160px">合同实施部门：</td>
-							<td><input name="implementOrg" id="implementOrg"
-								class="nui-hidden" style="width: 200px;" /> <input
-								id="implementOrgname" name="implementOrgname"
-								 class="nui-textbox" enabled="false"
-								style="width: 200px" required="true" /></td>
-							
+							<td>
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
+								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">申请日期：</td>
-							<td><input id="createTime" name="createTime"
-								 enabled="false" class="nui-textbox"
-								style="width: 200px" /></td>
+							<td>
+								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
 							<td align="right" style="width: 160px">合同类型：</td>
-							<td><input id="contractType" name="contractType"
-								enabled="false"  class="nui-dictcombobox" 
-								dictTypeId="ZH_CONTRACT_TYPE" style="width: 200px"
-								required="true" /></td>
+							<td>
+								<input id="contractType" name="contractType" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 200px" required="true" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">标的规模：</td>
-							<td><input id="projectSize" name="projectSize"
-								enabled="false"  class="nui-textbox"
-								style="width: 200px" /></td>
+							<td>
+								<input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
 							<td align="right" style="width: 160px">实施地点：</td>
-							<td><input id="projectLocal" name="projectLocal"
-								enabled="false"  class="nui-textbox"
-								style="width: 200px" /></td>
+							<td>
+								<input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">合同金额(元)：</td>
-							<td><input id="contractSum" name="contractSum"
-								enabled="false"  class="nui-textbox"
-								style="width: 200px" required="true" /></td>
+							<td>
+								<input id="contractSum" name="contractSum" enabled="false" class="nui-textbox" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 120px">合同不含税金额(元):</td>
-							<td><input name="noTaxSum" id="noTaxSum"
-								class="nui-textbox" vtype="float" style="width: 100%"
-								enabled="false" 	/></td>
+							<td>
+								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 100%" enabled="false" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 120px">税额(元):</td>
-							<td><input name="payTax" id="payTax"
-								class="nui-textbox" vtype="float" style="width: 100%"
-								 enabled="false" /></td>
+							<td>
+								<input name="payTax" id="payTax" class="nui-textbox" vtype="float" style="width: 100%" enabled="false" />
+							</td>
 							<td align="right" style="width: 160px">签约方：</td>
-							<td><input id="signatoryname" name="signatoryname"
-								enabled="false"  class="nui-textbox"
-								style="width: 200px" /></td>
+							<td>
+								<input id="signatoryname" name="signatoryname" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">合同签约主体：</td>
-							<td><input id="contractSubject" name="contractSubject"
-								enabled="false"  class="nui-dictcombobox"
-								dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px"
-								required="true" /></td>
+							<td>
+								<input id="contractSubject" name="contractSubject" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 100px">合同文本密级:</td>
-							<td><input id="contractSecretLevel"
-								name="contractSecretLevel" class="nui-dictcombobox"
-								dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%"
-								required="true" /></td>
+							<td>
+								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%" required="true" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">项目密级:</td>
-							<td><input id="projectSecretLevel" name="projectSecretLevel"
-								class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL"
-								style="width: 100%" required="true" /></td>
+							<td>
+								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 100%" required="true" />
+							</td>
 							<td align="right" style="width: 100px">是否为SM协作配套:</td>
-							<td><input id="issm" name="issm" class="nui-dictcombobox"
-								dictTypeId="ABF_YESORNO" style="width: 100%" required="false" /></td>
+							<td>
+								<input id="issm" name="issm" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 100%" required="false" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">合同价款形式:</td>
-							<td><input id="contractPrice"
-								name="contractPrice" class="nui-dictcombobox"
-								dictTypeId="CONTRACT_PRICE" style="width: 100%"
-								required="true" /></td>
+							<td>
+								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
+							</td>
 
 							<td align="right" style="width: 100px">合同性质:</td>
-							<td><input id="contractNature" name="contractNature"
-								class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE"
-								style="width: 100%" required="true" /></td>
+							<td>
+								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">采购立项编号：</td>
-							<td><input id="purchasePlan" name="purchasePlan"
-								enabled="false"  class="nui-textbox"
-								style="width: 200px" required="true" /></td>
+							<td>
+								<input id="purchasePlan" name="purchasePlan" enabled="false" class="nui-textbox" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 100px">采购方式:</td>
-							<td><input id="procurementType" name="procurementType"
-								class="nui-dictcombobox" dictTypeId="PROCUREMENT_TYPE"
-								style="width: 100%" required="false" enabled="true" /></td>
+							<td>
+								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 100%" required="false" enabled="true" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 120px">预算金额(元):</td>
-							<td><input name="budgetSum" id="budgetSum"
-								class="nui-textbox" vtype="float" style="width: 100%"
-								required="false" enabled="false" /></td>
-							<td align="right" style="width: 120px">定标金额(元):</td>
-							<td><input name="scalingSum" id="scalingSum"
-								class="nui-textbox" vtype="float" style="width: 100%"
-								required="false" enabled="false" /></td>
-						</tr>
-						<!--<tr>
-							<td align="right" style="width: 100px">本部会签部门领导：</td>
-							<td style="width: 20%;"><input name="zDeptCountersignName"
-								id="zDeptCountersignName" 
-								class="nui-textbox" style="width: 100%" enabled="false">
+							<td>
+								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
 							</td>
-						</tr>-->
+							<td align="right" style="width: 120px">定标金额(元):</td>
+							<td>
+								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
+							</td>
+						</tr>
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
-							<td id="remark" colspan="5" style="height: 68px;background:#F0F0F0;border:1px solid #A5ACB5">
-								<!--<input id="remark" name="remark"   style="width: 100%;" enabled="false"/>-->
-							</td>
+							<td id="remark" colspan="5" style="height: 68px; background: #F0F0F0; border: 1px solid #A5ACB5"></td>
 						</tr>
 					</table>
 				</div>
 				<div class="link-top"></div>
-				<p style="color: red;font-weight: bold;">补充合同信息:</p>
+				<p style="color: red; font-weight: bold;">补充合同信息:</p>
 				<div style="padding: 5px;" align="center">
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 100px">合同编号：</td>
-							<td><input id="contractNo" name="contractNo"
-								class="nui-textbox"  style="width: 200px"
-								enabled="false" required="true" /></td>
+							<td>
+								<input id="contractNo" name="contractNo" class="nui-textbox" style="width: 200px" enabled="false" required="true" />
+							</td>
 							<td align="right" style="width: 100px">签订日期：</td>
-							<td><input id="signingDate" name="signingDate"
-								enabled="false"  class="nui-textbox"
-								style="width: 200px" required="true" /></td>
+							<td>
+								<input id="signingDate" name="signingDate" enabled="false" class="nui-textbox" style="width: 200px" required="true" />
+							</td>
 						</tr>
 					</table>
 				</div>
 			</form>
-		<!--  <div title="未来年度付款计划">
-			<p style="color: red;font-weight: bold;">未来年度付款计划:</p>
-			<div id="datagrid2" class="nui-datagrid"
-				style="width: 100%; height: 200px;" allowResize="true" showSummaryRow="true" datafield="data"
-				allowCellEdit="true" allowCellSelect="true" multiSelect="true" allowSortColumn = "false"
-				showPager="false">
-				<div property="columns">
-					<div field="years" width="80" headerAlign="center"
-						allowSort="true">
-						年份<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="jan" width="120" headerAlign="center"
-						allowSort="true">
-						一月<input property="editor" class="nui-textbox" id = "jan"
-							style="width: 100%;" />
-					</div>
-					<div field="feb" width="120" headerAlign="center"
-						allowSort="true" >
-						二月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="mar" width="120" headerAlign="center"
-						allowSort="true">
-						三月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="apr" width="120" headerAlign="center"
-						allowSort="true">
-						四月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="may" width="120" headerAlign="center"
-						allowSort="true">
-						五月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="jun" width="120" headerAlign="center"
-						allowSort="true">
-						六月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="jul" width="120" headerAlign="center"
-						allowSort="true">
-						七月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="aug" width="120" headerAlign="center"
-						allowSort="true">
-						八月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="sep" width="120" headerAlign="center"
-						allowSort="true">
-						九月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="oct" width="120" headerAlign="center"
-						allowSort="true">
-						十月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="nov" width="120" headerAlign="center"
-						allowSort="true">
-						十一月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="dec" width="120" headerAlign="center"
-						allowSort="true">
-						十二月<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					<div field="sum" width="120" headerAlign="center"
-						allowSort="true" summaryType="sum">
-						总计<input property="editor" class="nui-textbox"
-							style="width: 100%;" />
-					</div>
-					
-				</div>
-			</div>
-		</div> -->
-		<div title="相关附件">
+			<div title="相关附件">
 				<jsp:include page="/ame_common/detailFile.jsp" />
-		</div>
-		<div class="nui-panel" id="d3" title="审批意见列表" style="width: 100%;height: auto;">
-			<div id="datagrid5" class="nui-datagrid"
-				style="width: 780px; height: auto;" dataField="misOpinions"
-				url="com.primeton.eos.ame_pur.purContractProcess.queryAuditOpinions.biz.ext"
-				idField="id" allowResize="true" allowAlternating="true"
-				multiSelect="true" showPager="false" allowCellWrap="true">
-				<div property="columns">
-					<div type="indexcolumn" headerAlign="center" width="30">编号</div>
-					<div field="operatorname" width="50" headerAlign="center"
-						align="center">处理人</div>
-					<div field="workitemname" width="80" align="center"
-						headerAlign="center">处理环节</div>
-					<div field="auditstatus" renderer="onCheckRenderer" width="80"
-						align="center" headerAlign="center">处理结果</div>
-					<div field="auditopinion" width="150" headerAlign="center">处理意见</div>
-					<div field="time" width="100" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">处理时间</div>
-					<div field="orgname" width="100" align="center" headerAlign="center">处理人所在机构</div>
-					<div field="files" renderer="onFileRenderer" width="100"hight="100" align="center" headerAlign="center">附件</div>
+			</div>
+			<div class="nui-panel" id="d3" title="审批意见列表" style="width: 100%; height: auto;">
+				<div id="datagrid5" class="nui-datagrid" style="width: 780px; height: auto;" dataField="misOpinions" url="com.primeton.eos.ame_pur.purContractProcess.queryAuditOpinions.biz.ext" idField="id"
+					allowResize="true" allowAlternating="true" multiSelect="true" showPager="false" allowCellWrap="true">
+					<div property="columns">
+						<div type="indexcolumn" headerAlign="center" width="30">编号</div>
+						<div field="operatorname" width="50" headerAlign="center" align="center">处理人</div>
+						<div field="workitemname" width="80" align="center" headerAlign="center">处理环节</div>
+						<div field="auditstatus" renderer="onCheckRenderer" width="80" align="center" headerAlign="center">处理结果</div>
+						<div field="auditopinion" width="150" headerAlign="center">处理意见</div>
+						<div field="time" width="100" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">处理时间</div>
+						<div field="orgname" width="100" align="center" headerAlign="center">处理人所在机构</div>
+						<div field="files" renderer="onFileRenderer" width="100" hight="100" align="center" headerAlign="center">附件</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	</div>
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
-		var grid2 = nui.get("datagrid2");
-		//var grid1 = nui.get("datagrid1");
 		var grid5 = nui.get("datagrid5");
 		setData();
 		var id;
+		
 		function getV(e) {
 			var grid = e.sender;
 			var record = e.record;
@@ -337,70 +231,55 @@
 			var s = "<a>同意</a>";
 			return s;
 		}
-
+		
 		//处理结果业务字典显示
 		function onCheckRenderer(e) {
 			return nui.getDictText('MIS_AUDITSTATUS', e.value);
 		}
+		
 		function setData() {
 			id =<%=request.getParameter("id")%>;
 			var json = nui.encode({"id" : id});
 			nui.ajax({
-					url : "com.zhonghe.ame.payContract.payContract.getPayContractById.biz.ext",
-					type : 'POST',
-					data : json,
-					contentType : 'text/json',
-					success : function(o) {
-						console.log(o);
-						var data = o.data[0];
-		            	var createUsername ;
-		            	console.log(data);
-		            	form.setData(data);
-		            	nui.get("contractSum").setValue(data.contractSum);
-						$("#remark").html(data.remark);
-		            	nui.get("createUsername").setValue(data.createUsername);
-		            	
-						if(data.createUsername!=null){
-							createUsername= data.createUsername
-						}else{
-							createUsername ="";
-						}
-		            	document.getElementById("pipi").innerHTML="【"+createUsername+"发起的"+data.contractName+"付费合同】";
-						form.setEnabled(false);
-						
-						var grid_0 = nui.get("grid_0");
-						if(data.issupagreement=="1"){
-							grid_0.load({"groupid":"PAY_CONTRACT","relationid":data.relateCont});
-						}else{
-							grid_0.load({"groupid":"PAY_CONTRACT","relationid":id});
-						}
-						grid_0.sortBy("fileTime","desc");
-		                var processInstID = data.processid;
-						grid5.sortBy("time", "desc");
-						grid5.load({processInstID:processInstID});
-					}
-				});
-				queryPlan(id);
-		}
-		
-		function queryPlan(str) {
-			nui.ajax({
-				url : "com.zhonghe.ame.chargeContract.chargeContract.queryPlan.biz.ext",
-				type : "post",
+				url : "com.zhonghe.ame.payContract.payContract.getPayContractById.biz.ext",
+				type : 'POST',
+				data : json,
 				contentType : 'text/json',
-				data : {
-					"payId" : str
-				},
-				success : function(data) {
-					grid2.setData(data.data);
-					console.log(data.data);
+				success : function(o) {
+					var data = o.data[0];
+					var createUsername;
+					form.setData(data);
+					nui.get("contractSum").setValue(data.contractSum);
+					$("#remark").html(data.remark);
+					nui.get("createUsername").setValue(data.createUsername);
+					if (data.createUsername != null) {
+						createUsername = data.createUsername
+					} else {
+						createUsername = "";
+					}
+					document.getElementById("pipi").innerHTML = "【" + createUsername + "发起的" + data.contractName + "付费合同】";
+					form.setEnabled(false);
+					var grid_0 = nui.get("grid_0");
+					if (data.issupagreement == "1") {
+						grid_0.load({
+							"groupid" : "PAY_CONTRACT",
+							"relationid" : data.relateCont
+						});
+					} else {
+						grid_0.load({
+							"groupid" : "PAY_CONTRACT",
+							"relationid" : id
+						});
+					}
+					grid_0.sortBy("fileTime", "desc");
+					var processInstID = data.processid;
+					grid5.sortBy("time", "desc");
+					grid5.load({
+						processInstID : processInstID
+					});
 				}
-			})
+			});
 		}
-		grid2.on("cellbeginedit",function(e){
-				e.cancel="true";
-			console.log(e);
-		}); 
 		
 		function setViewData(data) {
 			form.setData(data);
@@ -416,7 +295,7 @@
 			});
 			grid5.sortBy("time", "desc");
 		}
-
+		
 		function createEwm(url) {
 			$('#qrcode').empty();
 			var para = url;
@@ -426,11 +305,12 @@
 				text : para
 			});
 		}
-
-		//----------------------审批意见-------------------------//
+		
 		function onCheckRenderer(e) {
 			return nui.getDictText('MIS_AUDITSTATUS', e.value);//设置业务字典值
 		}
+		
+
 		function initMisOpinion(data) {
 			//初始化处理意见
 			var dataStatus = [ {
@@ -446,6 +326,7 @@
 			nui.get("auditstatus").setData(dataStatus);
 			nui.get("auditstatus").setValue(data.auditstatus);
 		}
+		
 		//审核结果触发
 		function show() {
 			var auditopinion = nui.get("auditopinion").getValue().trim();
@@ -467,28 +348,31 @@
 				showNone();
 			}
 		}
+		
 		function showNone() {
 			nui.get("backTo").setValue("");
 			document.getElementById("choosehide").style.display = "none";
 		}
+		
 		function chooselink() {
 			document.getElementById("choosehide").style.display = "";
 		}
+		
 		function dicttic(e) {
 			return nui.getDictText('AME_TICTYPE', e.value);//设置业务字典值
 		}
+		
 		function printview() {
-	        document.getElementById('checkview').style.display="none";
-	        /* window.document.body.innerHTML = document.documentElement.innerHTML; */
-	        print();
-	        document.getElementById('checkview').style.display="";
-    	};
+			document.getElementById('checkview').style.display = "none";
+			print();
+			document.getElementById('checkview').style.display = "";
+		}
+		
 		function printBtn() {
-	        document.getElementById('checkview').style.display="none";
-	        /* window.document.body.innerHTML = document.documentElement.innerHTML; */
-	        print();
-	        document.getElementById('checkview').style.display="";
-    	};
+			document.getElementById('checkview').style.display = "none";
+			print();
+			document.getElementById('checkview').style.display = "";
+		}
 	</script>
 </body>
 </html>

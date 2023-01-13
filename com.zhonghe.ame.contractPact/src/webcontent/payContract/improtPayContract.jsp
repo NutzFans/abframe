@@ -2,34 +2,23 @@
 <%@include file="/common/common.jsp"%>
 <%@include file="/common/skins/skin0/component.jsp" %>
 <html>
-<!-- 
-  - Author(s): huangqj
-  - Date: 2022-10-21 10:11:53
-  - Description:
--->
 <head>
 <title>Title</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<script src="<%=request.getContextPath()%>/common/nui/nui.js"
-	type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 </head>
 <body>
-<form enctype="multipart/form-data" id="batchUpload" method="post"
-		class="form-horizontal">
+	<form enctype="multipart/form-data" id="batchUpload" method="post" class="form-horizontal">
 		<div style="margin-left: 200px; margin-top: 15px">
-			<input class="nui-htmlfile" name="ecdPath" id="ecdPath" /> <input
-				id="saveButton" class="nui-button" text="提交"
-				style="margin-left: 20px" onclick="uploadBtn()" />
+			<input class="nui-htmlfile" name="ecdPath" id="ecdPath" />
+			<input id="saveButton" class="nui-button" text="提交" style="margin-left: 20px" onclick="uploadBtn()" />
 		</div>
-
 	</form>
-
+	
 	<script type="text/javascript">
-    	nui.parse();
-    	var contextPath = "<%=request.getContextPath()%>";
+		nui.parse();
+		var contextPath = "<%=request.getContextPath()%>";
 		function uploadBtn() {
-			/* loading("保存中..."); */
-			/* nui.loading("保存中..."); */ 
 			nui.loading("保存中...");
 			var uploadEventFile = nui.get("ecdPath").getValue();
 			if (uploadEventFile == '' || uploadEventFile == null) {
@@ -39,12 +28,12 @@
 				nui.alert("只能上传Excel文件", "");
 				return;
 			} else {
-				document.getElementById('batchUpload').action = contextPath
-						+ '/com.zhonghe.ame.payContract.improtPayContract.flow';
+				document.getElementById('batchUpload').action = contextPath + '/com.zhonghe.ame.payContract.improtPayContract.flow';
 				document.getElementById('batchUpload').submit();
 			}
 
 		}
 	</script>
+	
 </body>
 </html>

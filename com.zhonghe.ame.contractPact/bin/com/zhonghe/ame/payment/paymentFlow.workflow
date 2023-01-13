@@ -287,15 +287,6 @@
     </transition>
     <transition>
       <from>manualActivity3</from>
-      <to>routeActivity</to>
-      <isDefault>true</isDefault>
-      <priority>60</priority>
-      <displayName></displayName>
-      <type>simpleCondition</type>
-      <bendPoints/>
-    </transition>
-    <transition>
-      <from>manualActivity3</from>
       <to>manualActivity4</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
@@ -311,7 +302,7 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>routeActivity</from>
+      <from>manualActivity3</from>
       <to>manualActivity37</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
@@ -320,11 +311,11 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>routeActivity</from>
+      <from>manualActivity3</from>
       <to>routeActivity1</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>设备监理中心</displayName>
+      <displayName></displayName>
       <type>simpleCondition</type>
       <simpleCondition>
         <leftValueType>variable</leftValueType>
@@ -998,32 +989,6 @@
         <width>64</width>
         <x>750</x>
         <y>85</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>routeActivity</activityId>
-      <activityName>路由活动</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>route</activityType>
-      <splitTransaction>false</splitTransaction>
-      <isStartActivity>false</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>32</height>
-        <width>32</width>
-        <x>767</x>
-        <y>180</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>

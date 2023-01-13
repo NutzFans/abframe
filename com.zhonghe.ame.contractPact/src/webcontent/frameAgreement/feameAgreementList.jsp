@@ -149,8 +149,6 @@
     	var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
 		init();
     	function init(){
-    		//按钮权限的控制
-	    	getOpeatorButtonAuth("kjxylist_add,kjxylist_edit,kjxylist_del");//操作按钮权限初始化
     		//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"kjxylist","map":{"property":"status","op":"=","value":"running"}};
     		nui.ajax({
