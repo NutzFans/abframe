@@ -100,6 +100,12 @@
 									<td><input id="contractPeriod" name="contractPeriod"  class="nui-textbox" style="width: 300px"/></td>
 							</tr>
 							<tr>
+								<td align="right" style="width:160px">协议起始日期：</td>
+									<td><input id="startTime" name="startTime"  class="nui-datepicker" style="width: 200px" required="true"></td>
+								<td align="right" style="width:160px">协议结束日期：</td>
+									<td><input id="endTime" name="endTime"  class="nui-datepicker" style="width: 200px" required="true" /></td>
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">备注：</td>
 								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
 							</tr>
@@ -281,18 +287,13 @@
 			if(null != data.contractPeriod){
 				nui.get("contractPeriod").setValue(data.contractPeriod);
 			}
-// 			if(null != data.auditOrg){
-// 				nui.get("auditOrg").setValue(data.auditOrg);
-// 			}
-// 			if(null != data.leadershipOpinion){
-// 				nui.get("leadershipOpinion").setValue(data.leadershipOpinion);
-// 			}
-// 			if(null != data.generalManager){
-// 				nui.get("generalManager").setValue(data.generalManager);
-// 			}
-// 			if(null != data.legalPerson){
-// 				nui.get("legalPerson").setValue(data.legalPerson);
-// 			}
+			if(null != data.startTime){
+				nui.get("startTime").setValue(data.startTime);
+			}
+			if(null != data.endTime){
+				nui.get("endTime").setValue(data.endTime);
+			}
+			
 			var form = new nui.Form("#form1");
 			var grid_0 = nui.get("grid_0");
         	grid_0.load({"groupid":"ZH_CONTRACTFEAME","relationid":data.id});
