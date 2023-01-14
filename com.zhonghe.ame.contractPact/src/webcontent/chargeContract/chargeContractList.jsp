@@ -130,12 +130,11 @@ html,body {
 		<table style="width: 100%;">
 			<tr>
 				<td style="width: 20%;">
-					<!-- <a class="nui-button" id="sfhtlist_add" iconCls="icon-add" onclick="add()">新增</a> -->
-					<!-- <a class="nui-button" id="sfhtlist_edit" iconCls="icon-edit" onclick="edit()">编辑</a> -->
 					<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
-					<a class="nui-button" id="edit" iconCls="icon-edit" onclick="edit()">编辑</a>
-					<a class="nui-button" id="sfhtlist_del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
-					<a class="nui-button" id="sfhtlist_bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
+					<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+					<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+					<a class="nui-button" id="sfhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
+					<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
 					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 					<a class="nui-button" id="improt" iconCls="icon-print" onclick="improt()">导入</a>
 				</td>
@@ -146,21 +145,23 @@ html,body {
 	<div class="nui-fit">
 		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" showSummaryRow="true" ondrawsummarycell="onDrawSummaryCell" pageSize="15" class="nui-datagrid"
 			style="width: 100%; height: 100%;" url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" multiSelect="true" allowSortColumn=true frozenStartColumn="0"
-			frozenEndColumn="5" ondrawcell="setBackGroundColor">
+			frozenEndColumn="8" ondrawcell="setBackGroundColor">
 			<div property="columns">
-				<div name="temp123" type="checkcolumn"></div>
+				<div type="checkcolumn"></div>
+				<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
+				<div field="createTime" headerAlign="center" allowSort="true" visible="false">创建时间</div>
 				<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
 				<div field="createUsername" width="100" align="center" headerAlign="center" allowSort="true">合同经办人</div>
 				<div field="implementOrgname" width="120" headerAlign="center" allowSort="true">合同承办部门</div>
 				<div field="contractNo" width="180" headerAlign="center" allowSort="true">合同编号</div>
 				<div field="contractName" width="150" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
+				<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
 				<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同金额</div>
 				<div field="finContractSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同最终金额（元）</div>
 				<div field="noTaxSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同不含税金额（元）</div>
 				<div field="payTax" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">税额（元）</div>
 				<div field="contractBalance" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同余额（元）</div>
 				<div field="executeStatus" width="80" align="center" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS">执行状态</div>
-				<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
 				<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true">签约方</div>
 				<div field="contractSubject" width="120" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">合同签约主体</div>
 				<div field="payee" width="80" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
@@ -190,8 +191,12 @@ html,body {
 		
 
 		function init() {
-			//按钮权限的控制
-			/* getOpeatorButtonAuth("sfhtlist_kpsq_bc,sfhtlist_add,sfhtlist_edit,sfhtlist_bcxy,sfhtlist_kpsq"); */
+			// 按钮权限
+			if(userId !='sysadmin'){
+				// 维护按钮 - sfhtlist_wh
+				getOpeatorButtonAuth("sfhtlist_wh");
+			}
+			
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"sfhtlist","map":{"property":"status","op":"=","value":"running"}};
 			nui.ajax({
@@ -253,7 +258,7 @@ html,body {
 				executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
-				showTips("请选中一条记录");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 		
@@ -263,7 +268,7 @@ html,body {
 				executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
-				showTips("请选中一条记录");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 		
@@ -276,13 +281,6 @@ html,body {
 		}
 		
 		function search() {
-			if (nui.get("orgid2").getValue() == "") {
-				nui.get("tempCond1").setValue("=");
-				nui.get("tempCond2").setValue("");
-			} else {
-				nui.get("tempCond1").setValue("in");
-				nui.get("tempCond2").setValue("1");
-			}
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
 			grid.sortBy("createTime", "desc");
@@ -309,22 +307,19 @@ html,body {
 			search();
 		}
 		
-		//修改投标明细
-		function edit() {
+		function wh_edit() {
 			var row = grid.getSelecteds();
-			var data = row[0];
-			if (data.appStatus == "0") {
-			
-			} else if (data.appStatus != "2") {
-				showTips("流程未审批通过，无法修改！");
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行维护", "danger");
 				return;
 			}
-			if (data) {
+			var data = row[0];
+			if (data.appStatus == "2") {
 				nui.open({
 					url : "/default/contractPact/chargeContract/chargeContractEdit.jsp",
 					width : '100%',
 					height : '100%',
-					title : "收费合同签订编辑",
+					title : "收费合同签订维护",
 					onload : function() {
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setEditData(data);
@@ -336,47 +331,81 @@ html,body {
 						search();
 					}
 				})
-
-			} else {
-				showTips("请选中一条记录", "提示");
+				
+			}else{
+				showTips("只能维护审批状态为【审批通过】的数据", "danger");
+			}
+		}
+		
+		// 暂存编辑
+		function zc_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行编辑", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.appStatus == '0') {
+				var json = {
+					"processID" : data.processid
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.chargeContract.chargeContract.getWorkItemByProcessInstID.biz.ext",
+					data : json,
+					success : function(result) {
+						if(JSON.stringify(result) !== '{}'){
+							nui.open({
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+ result.workItemID,
+								width : '100%',
+								height : '100%',
+								ondestroy : function(action) {
+									grid.reload();
+									search();
+								}
+							})
+						}
+					}
+				});
+			}else{
+				showTips("只能编辑审批状态为【草稿】的数据", "danger");
 			}
 		}
 		
 		function deleteInfo() {
 			var row = grid.getSelecteds();
-			if (row.length > 1) {
-				showTips("只能选中一条项目记录进行删除");
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行删除", "danger");
+				return;
 			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				} else {
-					if (row) {
-						var json = nui.encode({
-							'data' : row
-						});
-						nui.ajax({
-							url : "com.zhonghe.ame.chargeContract.chargeContract.deleteChargeContractById.biz.ext",
-							type : 'POST',
-							data : json,
-							contentType : 'text/json',
-							success : function(o) {
-								if (o.result == 1) {
-									nui.alert("删除成功", "系统提示", function() {
-										//nui.get("sureButton").setEnabled(true);
-										/* CloseWindow("ok"); */
-										grid.reload();
-									});
-								} else {
-									nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
-
-									});
-								}
-							}
-						});
+				if (row.appStatus == '4') {
+					if (!confirm("是否删除？")) {
+						return;
 					} else {
-						showTips("请选中一条记录", "提示");
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.chargeContract.chargeContract.deleteChargeContractById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("删除成功");
+										grid.reload();
+									} else {
+										showTips("删除失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行删除", "danger");
+						}
 					}
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
@@ -418,14 +447,10 @@ html,body {
 		function alteration() {
 			var row = grid.getSelecteds();
 			if (row.length != 1) {
-				showTips("请仅选中一条“审批通过”的记录", "提示");
+				showTips("只能选中一条项目记录发起补充协议签订", "danger");
 				return;
 			}
 			var data = row[0];
-			if (data.issupagreement == "1") {
-				showTips("请选中一条主合同发起协议变更", "提示");
-				return;
-			}
 			if (data.appStatus == "2") {
 				nui.open({
 					url : "/default/contractPact/chargeContract/chargeContractAlteration.jsp",
@@ -441,7 +466,7 @@ html,body {
 					}
 				})
 			} else {
-				showTips("请选中一条“审批通过”的记录", "提示");
+				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
 			}
 		}
 		

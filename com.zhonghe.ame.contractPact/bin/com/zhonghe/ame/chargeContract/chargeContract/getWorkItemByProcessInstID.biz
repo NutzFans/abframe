@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="getWorkItemByProcessInstID" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokeService0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" type="end">
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="workItemID" type="query" valueType="Primitive">workItemID</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeService0" name="queryNextWorkItemsByProcessInstID" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>invokeService0label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.queryNextWorkItemsByProcessInstID</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">processID</process:inputVariable>
+      <process:inputVariable id="1" name="fetchParticipant" type="expression" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.util.List&lt;com.eos.workflow.data.WFWorkItem>" valueType="Java">datas</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
+    <figSize height="17" width="220"/>
+    <node>invokeService0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">datas[1]/workItemID</process:from>
+      <process:to type="query">workItemID</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="7.0.0.0"/>
+  <process:variables>
+    <process:variable anyType="com.eos.workflow.data.WFWorkItem" historyStateLocation="client" isArray="true" name="datas"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input isArray="false" name="processID" primitiveType="Long"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" name="workItemID" primitiveType="String"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

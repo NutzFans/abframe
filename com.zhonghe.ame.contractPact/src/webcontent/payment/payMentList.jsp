@@ -109,7 +109,7 @@
 		</div>
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" sortMode="client" class="nui-datagrid" style="width: 100%; height: 100%;" allowCellWrap="true"
-				url="com.zhonghe.ame.payment.payMent.payMentAll.biz.ext" multiSelect="true" showSummaryRow="true" frozenStartColumn="0" frozenEndColumn="8">
+				url="com.zhonghe.ame.payment.payMent.payMentAll.biz.ext" multiSelect="true" showSummaryRow="true" frozenStartColumn="0" frozenEndColumn="9">
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
