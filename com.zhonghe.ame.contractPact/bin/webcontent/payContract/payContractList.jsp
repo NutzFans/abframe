@@ -131,6 +131,7 @@
 			<div property="columns">
 				<div type="checkcolumn"></div>
 				<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
+				<div field="createTime" headerAlign="center" allowSort="true" visible="false">创建时间</div>
 				<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
 				<div field="createUsername" width="60" headerAlign="center" allowSort="true">申请人</div>
 				<div field="implementOrgname" width="120" headerAlign="center" allowSort="true">合同实施部门</div>

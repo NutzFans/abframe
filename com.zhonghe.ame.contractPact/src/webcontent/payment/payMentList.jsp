@@ -109,6 +109,7 @@
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
+					<div field="createTime" headerAlign="center" allowSort="true" visible="false">创建时间</div>
 					<div type="indexcolumn" width="50" align="center" headerAlign="center">序号</div>
 					<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">付款日期</div>
 					<div field="empname" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
