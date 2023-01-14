@@ -82,6 +82,10 @@
 							<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
 							<input class="nui-datepicker" name="critria._expr[10]._max" style="width: 41%;" />
 						</td>
+						<td class="form_label" align="right">审批状态:</td>
+						<td colspan="1">
+							<input name="critria._expr[13].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 79%;" showNullItem="true" nullItemText="全部" />
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -92,7 +96,7 @@
 					<td>
 						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
 						<a class="nui-button" id="dit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
-						<a class="nui-button" id="fklblist_del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="fklblist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 					</td>
@@ -144,8 +148,8 @@
 		function init() {
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				// 删除按钮 - fklblist_del，维护按钮 - fklblist_wh
-				getOpeatorButtonAuth("fklblist_del,fklblist_wh");
+				// 维护按钮 - fklblist_wh
+				getOpeatorButtonAuth("fklblist_wh");
 			}
 			
 			//code:对应功能编码，map：对于机构的查询条件
@@ -207,7 +211,7 @@
 				executeUrl = "<%= request.getContextPath() %>/contractPact/print/payMentListPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
-				showTips("请选中一条记录");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 		
@@ -217,7 +221,7 @@
 				executeUrl = "<%= request.getContextPath() %>/contractPact/print/payMentListPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
-				showTips("请选中一条记录");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 		
@@ -242,6 +246,10 @@
 		
 		function wh_edit() {
 			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行维护", "danger");
+				return;
+			}
 			var data = row[0];
 			if (data.appStatus == '2') {
 				nui.open({
@@ -268,6 +276,10 @@
 		// 暂存编辑
 		function zc_edit() {
 			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行编辑", "danger");
+				return;
+			}
 			var data = row[0];
 			if (data.appStatus == '0') {
 				var json = {
@@ -485,44 +497,42 @@
 			return nui.getDictText("ZH_CONTRACT_TYPE", e.value);
 		}
 		
-
 		function deleteInfo() {
 			var row = grid.getSelecteds();
-			if (row.length > 1) {
+			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条项目记录进行删除", "danger");
+				return;
 			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				} else {
-					if (row) {
-						var json = nui.encode({
-							'data' : row
-						});
-						nui.ajax({
-							url : "com.zhonghe.ame.payment.payMent.deletePayMentById.biz.ext",
-							type : 'POST',
-							data : json,
-							contentType : 'text/json',
-							success : function(o) {
-								if (o.result == 1) {
-									nui.alert("删除成功", "系统提示", function() {
-										//nui.get("sureButton").setEnabled(true);
-										/* CloseWindow("ok"); */
-										grid.reload();
-									});
-								} else {
-									nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
-										//nui.get("sureButton").setEnabled(true);
-									});
-
-								}
-							}
-						});
-
+				if(row.appStatus == '4'){
+					if (!confirm("是否删除？")) {
+						return;
 					} else {
-						nui.alert("请选中一条记录", "提示");
-					}
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.payment.payMent.deletePayMentById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("删除成功");
+										grid.reload();
+									} else {
+										showTips("删除失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+	
+						} else {
+							showTips("只能选中一条项目记录进行删除", "danger");
+						}
+					}				
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
