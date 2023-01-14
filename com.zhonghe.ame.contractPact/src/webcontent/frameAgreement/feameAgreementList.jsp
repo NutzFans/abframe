@@ -149,6 +149,11 @@
     	var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
 		init();
     	function init(){
+			// 按钮权限
+			if(userId !='sysadmin'){
+				// 编辑按钮 - kjxylist_edit
+				getOpeatorButtonAuth("kjxylist_edit");
+			}
     		//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"kjxylist","map":{"property":"status","op":"=","value":"running"}};
     		nui.ajax({

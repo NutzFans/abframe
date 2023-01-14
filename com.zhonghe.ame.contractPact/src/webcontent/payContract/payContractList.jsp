@@ -111,7 +111,7 @@
 				<td>
 					<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
 					<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
-					<a class="nui-button" id="ffhtlist_del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+					<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 					<a class="nui-button" id="ffhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 					<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
@@ -178,8 +178,8 @@
 		function init() {
 			// 按钮权限
 			if(userId !='sysadmin'){
-				// 删除按钮 - ffhtlist_del，维护按钮 - ffhtlist_wh
-				getOpeatorButtonAuth("ffhtlist_del,ffhtlist_wh");
+				// 维护按钮 - ffhtlist_wh
+				getOpeatorButtonAuth("ffhtlist_wh");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -290,6 +290,10 @@
 
 		function wh_edit() {
 			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行维护", "danger");
+				return;
+			}
 			var data = row[0];
 			if (data.appStatus == "2") {
 				nui.open({
@@ -317,6 +321,10 @@
 		// 暂存编辑
 		function zc_edit() {
 			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行编辑", "danger");
+				return;
+			}
 			var data = row[0];
 			if (data.appStatus == '0') {
 				var json = {
@@ -346,41 +354,40 @@
 
 		function deleteInfo() {
 			var row = grid.getSelecteds();
-			if (row.length > 1) {
+			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条项目记录进行删除", "danger");
+				return;
 			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				} else {
-					if (row) {
-						var json = nui.encode({
-							'data' : row
-						});
-						nui.ajax({
-							url : "com.zhonghe.ame.payContract.payContract.deletePayContractById.biz.ext",
-							type : 'POST',
-							data : json,
-							contentType : 'text/json',
-							success : function(o) {
-								if (o.result == 1) {
-									nui.alert("删除成功", "系统提示", function() {
-										//nui.get("sureButton").setEnabled(true);
-										/* CloseWindow("ok"); */
-										grid.reload();
-									});
-								} else {
-									nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
-										//nui.get("sureButton").setEnabled(true);
-									});
-
-								}
-							}
-						});
-
+				if (row.appStatus == '4') {
+					if (!confirm("是否删除？")) {
+						return;
 					} else {
-						nui.alert("请选中一条记录", "提示");
-					}
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.payContract.payContract.deletePayContractById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("删除成功");
+										grid.reload();
+									} else {
+										showTips("删除失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+	
+						} else {
+							showTips("只能选中一条项目记录进行删除", "danger");
+						}
+					}					
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
@@ -462,15 +469,11 @@
 
 		function alteration() {
 			var row = grid.getSelecteds();
-			if (row.length > 1) {
-				showTips("请仅选中一条“审批通过”的记录", "danger");
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录发起补充协议签订", "danger");
 				return;
 			}
 			var data = row[0];
-			if (data.issupagreement == "1") {
-				showTips("请选中一条主合同发起协议变更", "danger");
-				return;
-			}
 			if (data.appStatus == "2") {
 				nui.open({
 					url : "/default/contractPact/payContract/payContractAlteration.jsp",
@@ -486,7 +489,7 @@
 					}
 				})
 			} else {
-				showTips("请选中一条“审批通过”的记录", "danger");
+				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
 			}
 		}
 
@@ -507,7 +510,7 @@
 					}
 				})
 			} else {
-				nui.alert("请选中一条记录", "提示");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 
