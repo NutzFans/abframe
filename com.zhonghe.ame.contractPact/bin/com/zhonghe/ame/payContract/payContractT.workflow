@@ -178,7 +178,7 @@
           <suppressJoinFailure>suppress</suppressJoinFailure>
           <application>
             <actionType>logic-flow</actionType>
-            <applicationUri>com.zhonghe.ame.invoice.invoice.updateInvoiceStatus</applicationUri>
+            <applicationUri>com.zhonghe.ame.payContract.payContract.updatePayContractStatus</applicationUri>
             <transactionType>join</transactionType>
             <exceptionStrategy>rollback</exceptionStrategy>
             <invokePattern>synchronous</invokePattern>
