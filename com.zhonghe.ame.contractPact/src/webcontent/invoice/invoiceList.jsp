@@ -1,7 +1,7 @@
 <%@page import="com.eos.data.datacontext.UserObject"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@include file="/common/common.jsp"%>
+<%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
 <title>开票管理</title>
@@ -25,7 +25,7 @@ html,body {
 </style>
 </head>
 <body>
-	<div class="nui-panel" title="发票管理" style="width: 100%; height: 100%">
+	<div class="nui-panel" title="开票管理" style="width: 100%; height: 100%">
 		<div id="form1">
 			<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoiceEntity" />
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
@@ -51,14 +51,9 @@ html,body {
 							<input class="nui-hidden" name="critria._expr[4]._property" value="contractName" />
 							<input class="nui-hidden" name="critria._expr[4]._op" value="like" />
 						</td>
-						<td class="form_label" align="right">申请日期:</td>
+						<td class="form_label" align="right">审批状态:</td>
 						<td colspan="1">
-							<input class="nui-hidden" name="critria._expr[5]._op" value="between" />
-							<input class="nui-hidden" name="critria._expr[5]._pattern" value="yyyy-MM-dd" />
-							<input class="nui-hidden" name="critria._expr[5]._property" value="createTime" />
-							<input class="nui-datepicker" name="critria._expr[5]._min" />
-							<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-							<input class="nui-datepicker" name="critria._expr[5]._max" />
+							<input name="critria._expr[20].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 65%;" showNullItem="true" nullItemText="全部" />
 						</td>
 					</tr>
 					<tr>
@@ -91,41 +86,20 @@ html,body {
 							<input class="nui-hidden" name="critria._expr[9]._property" value="payerName" />
 							<input class="nui-hidden" name="critria._expr[9]._op" value="like" />
 						</td>
-
-						<td class="form_label" align="right">开票金额（元）:</td>
-						<td colspan="1">
-							<input name="critria._expr[10]._value" class="nui-textbox" style="width: 65%;" />
-							<input class="nui-hidden" name="critria._expr[10]._property" value="invoiceSum" />
-							<input class="nui-hidden" name="critria._expr[10]._op" value="=" />
-						</td>
-					</tr>
-					<tr>
-						<td class="form_label" align="right">账面收入（元）:</td>
-						<td colspan="1">
-							<input name="critria._expr[11]._value" class="nui-textbox" style="width: 65%;" />
-							<input class="nui-hidden" name="critria._expr[11]._property" value="bookIncome" />
-							<input class="nui-hidden" name="critria._expr[11]._op" value="=" />
-						</td>
-						<td class="form_label" align="right">回款金额（元）:</td>
-						<td colspan="1">
-							<input name="critria._expr[12]._value" class="nui-textbox" style="width: 65%;" />
-							<input class="nui-hidden" name="critria._expr[12]._property" value="receivableSum" />
-							<input class="nui-hidden" name="critria._expr[12]._op" value="=" />
-						</td>
 						<td class="form_label" align="right">专业类别:</td>
 						<td colspan="1">
 							<input name="critria._expr[13]._value" class="nui-dictcombobox" style="width: 65%;" dictTypeId="ZH_MAJOR_TYPE" nullItemText="全部" showNullItem="true" />
 							<input class="nui-hidden" name="critria._expr[13]._property" value="major" />
 							<input class="nui-hidden" name="critria._expr[13]._op" value="=" />
 						</td>
-						<td class="form_label" align="right">回款日期:</td>
+						<td class="form_label" align="right">申请日期:</td>
 						<td colspan="1">
-							<input class="nui-hidden" name="critria._expr[14]._op" value="between" />
-							<input class="nui-hidden" name="critria._expr[14]._pattern" value="yyyy-MM-dd" />
-							<input class="nui-hidden" name="critria._expr[14]._property" value="receivableData" />
-							<input class="nui-datepicker" name="critria._expr[14]._min" />
+							<input class="nui-hidden" name="critria._expr[5]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[5]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[5]._property" value="createTime" />
+							<input class="nui-datepicker" name="critria._expr[5]._min" />
 							<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-							<input class="nui-datepicker" name="critria._expr[14]._max" />
+							<input class="nui-datepicker" name="critria._expr[5]._max" />
 						</td>
 					</tr>
 					<tr>
@@ -153,6 +127,15 @@ html,body {
 							<input class="nui-hidden" name="critria._expr[18]._property" value="invoiceType" />
 							<input class="nui-hidden" name="critria._expr[18]._op" value="=" />
 						</td>
+						<td class="form_label" align="right">回款日期:</td>
+						<td colspan="1">
+							<input class="nui-hidden" name="critria._expr[14]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[14]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[14]._property" value="receivableData" />
+							<input class="nui-datepicker" name="critria._expr[14]._min" />
+							<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
+							<input class="nui-datepicker" name="critria._expr[14]._max" />
+						</td>
 					</tr>
 					<tr>
 						<td colspan="9" align="center">
@@ -167,9 +150,10 @@ html,body {
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 20%;">
-						<a class="nui-button" id="checkview" iconCls="icon-add" onclick="add()">新增</a>
-						<a class="nui-button" id="checkview" iconCls="icon-edit" onclick="edit()">编辑</a>
-						<a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="kjfplist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 					</td>
 				</tr>
@@ -178,12 +162,12 @@ html,body {
 		<div class="nui-fit">
 			<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true" dataField="data" showSummaryRow="true" sortMode="client" ondrawsummarycell="onDrawSummaryCell"
 				class="nui-datagrid" style="width: 100%; height: 90%;" url="com.zhonghe.ame.invoice.invoice.queryinvoiceAll.biz.ext" multiSelect="false" allowSortColumn=true ondrawcell="setBackGroundColor"
-				showSummaryRow="true">
+				showSummaryRow="true" frozenStartColumn="0" frozenEndColumn="9">
 				<div property="columns">
-					<div name="temp123" type="checkcolumn"></div>
+					<div type="checkcolumn"></div>
 					<div type="indexcolumn" width="70" align="center" headerAlign="center">序号</div>
 					<div field="invoiceNameType" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">发票抬头</div>
-					<div field="createTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center">开票日期</div>
+					<div field="createTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">开票日期</div>
 					<div field="empname" width="70" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="orgname" width="200" align="center" headerAlign="center" allowSort="true">承办部门</div>
 					<div field="contractNo" width="180" align="center" headerAlign="center" allowSort="true">合同编号</div>
@@ -209,12 +193,6 @@ html,body {
 	
 	<script type="text/javascript">
 		nui.parse();
-		<%
-			UserObject user = (UserObject) session.getAttribute("userObject");
-			String userName = user.getUserName();
-			String userId = user.getUserId();
-			String orgName = user.getUserOrgName();
-		%>
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
 		var type = <%=request.getParameter("type")%>;
@@ -224,6 +202,12 @@ html,body {
 		init();
 		
 		function init(){
+			// 按钮权限
+			if(userId !='sysadmin'){
+				// 维护按钮 - kjfplist_wh
+				getOpeatorButtonAuth("kjfplist_wh");
+			}
+
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"kjfplist","map":{"property":"status","op":"=","value":"running"}};
 			nui.ajax({
@@ -236,8 +220,8 @@ html,body {
 						var orgids = text.orgids;
 						if (text.orgs.length == 0) {
 							//当没有有权的机构时将申请人设置为登陆人
-							nui.get("createUserid").setValue('<%=userId%>');
-							nui.get("createname").setValue('<%=userName%>');
+							nui.get("createUserid").setValue(userId);
+							nui.get("createname").setValue(userName);
 							nui.get("createname").setReadOnly(true);
 						}
 						nui.get("orgid2").setData(text.orgs);
@@ -250,8 +234,8 @@ html,body {
 						}
 					} else {
 						//当没有有权的机构时将申请人设置为登陆人
-						nui.get("createUserid").setValue('<%=userId%>');
-						nui.get("createname").setValue('<%=userName%>');
+						nui.get("createUserid").setValue(userId);
+						nui.get("createname").setValue(userName);
 						nui.get("createname").setReadOnly(true);
 					}
 					search();
@@ -270,6 +254,7 @@ html,body {
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy("createTime", "desc");
 			grid.load(data); //datagrid加载数据
 		}
 
@@ -293,11 +278,11 @@ html,body {
 				var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + selectRow.id;
 				var myWindow = window.open(url);
 				myWindow.onload = function() {
-					myWindow.document.title = "付费合同签订查看";
+					myWindow.document.title = "打印页面";
 					myWindow.setViewData(selectRow);
 				};
 			} else {
-				showTips("请选中一条记录");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 		
@@ -312,15 +297,20 @@ html,body {
 			search();
 		}
 		
-		function edit() {
+		function wh_edit() {
 			var row = grid.getSelecteds();
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行维护", "danger");
+				return;
+			}
 			var data = row[0];
-			if (data) {
+			if (data.appStatus == "2") {
 				nui.open({
 					url : "/default/contractPact/invoice/invoiceUpdate.jsp",
-					width : '90%',
-					height : '90%',
-					title : "开票编辑",
+					width : '100%',
+					height : '100%',
+					title : "开票信息维护",
 					onload : function() {
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setEditData(data);
@@ -331,12 +321,46 @@ html,body {
 						}
 						search();
 					}
-				})
-
-			} else {
-				nui.alert("请选中一条记录", "提示");
+				})			
+			
+			}else{
+				showTips("只能维护审批状态为【审批通过】的数据", "danger");
 			}
 		}
+		
+		// 暂存编辑
+		function zc_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行编辑", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.appStatus == '0') {
+				var json = {
+					"processID" : data.processid
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.invoice.invoice.getWorkItemByProcessInstID.biz.ext",
+					data : json,
+					success : function(result) {
+						if(JSON.stringify(result) !== '{}'){
+							nui.open({
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+ result.workItemID,
+								width : '100%',
+								height : '100%',
+								ondestroy : function(action) {
+									grid.reload();
+									search();
+								}
+							})
+						}
+					}
+				});
+			}else{
+				showTips("只能编辑审批状态为【草稿】的数据", "danger");
+			}
+		}		
 		
 		function setBackGroundColor(e) {
 			var record = e.record;
@@ -349,36 +373,39 @@ html,body {
 		
 		function deleteInfo() {
 			var row = grid.getSelecteds();
-			if (row.length > 1) {
-				nui.alert("只能选中一条项目记录进行删除");
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行删除", "danger");
+				return;
 			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				} else {
-					if (row) {
-						var json = nui.encode({
-							'data' : row
-						});
-						nui.ajax({
-							url : "com.zhonghe.ame.invoice.invoice.deleteInvoiceById.biz.ext",
-							type : 'POST',
-							data : json,
-							contentType : 'text/json',
-							success : function(o) {
-								if (o.result == 1) {
-									nui.alert("删除成功", "系统提示", function() {
-										grid.reload();
-									});
-								} else {
-									nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
-									});
-								}
-							}
-						});
+				if (row.appStatus == '4') {
+					if (!confirm("是否删除？")) {
+						return;
 					} else {
-						nui.alert("请选中一条记录", "提示");
-					}
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.invoice.invoice.deleteInvoiceById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("删除成功");
+										grid.reload();
+									} else {
+										showTips("删除失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行删除", "danger");
+						}
+					}				
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
@@ -473,6 +500,7 @@ html,body {
 				url : "/default/contractPact/invoice/invoiceAdd.jsp",
 				width : '100%',
 				height : '100%',
+				title : "开票申请",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 				},
@@ -492,7 +520,7 @@ html,body {
 				executeUrl = "<%= request.getContextPath() %>/contractPact/print/invoiceListPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
-				showTips("请选中一条记录");
+				showTips("请选中一条记录", "danger");
 			}
 		}
 		

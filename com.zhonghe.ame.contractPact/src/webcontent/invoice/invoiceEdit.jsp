@@ -235,7 +235,7 @@
 			if (type == 1) {
 				form.validate();
 				if (form.isValid() == false) {
-					showTips("请检查必填项");
+					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
 			}
@@ -243,7 +243,7 @@
 			for (var j = 0; j < filePaths; j++) {
 				var a = document.getElementsByName("remarkList")[j].value;
 				if (a == null || a == "") {
-					showTips("新增附件不可以为空");
+					showTips("新增附件不可以为空", "danger");
 					return;
 				}
 			}

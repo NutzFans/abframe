@@ -173,7 +173,8 @@
 
 	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
 		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px;">关闭</a>
+		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 20px;">关闭</a>
+		<a class="nui-button" id="kjfplist_sp_print" iconCls="icon-print" onclick="printBtn()" style="width: 80px;">打印</a>
 	</div>
 
 	<script type="text/javascript">
@@ -185,10 +186,17 @@
 		var projectid = <%=request.getParameter("projectid")%>;
 		var workItemID = <%=request.getParameter("workItemID")%>;
 		var opioionform = new nui.Form("#opioionform");
+		var id;
 		
 		init();
 		
 		function init() {
+			// 按钮权限
+			if(userId !='sysadmin'){
+				// 审批页-打印按钮 - kjfplist_sp_print
+				getOpeatorButtonAuth("kjfplist_sp_print");
+			}
+		
 			var data = {workitemid:<%=workitemid%>};
 			var json = nui.encode(data);
 			nui.ajax({
@@ -198,6 +206,7 @@
 				contentType : 'text/json',
 				success : function(o) {
 					form.setData(o.data)
+					id = o.data.id;
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);
 					nui.ajax({
@@ -282,7 +291,15 @@
 				}
 			})
 		}
+		
+		function printBtn() {
+			var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + id;
+			var myWindow = window.open(url);
+			myWindow.onload = function() {
+				myWindow.document.title = "打印页面";
+				myWindow.setViewData(selectRow);
+			};
+		}
 	</script>
-
 </body>
 </html>
