@@ -285,10 +285,9 @@
 						//注销掉删除操作
 						$(".Delete_Button").hide();
 					}, 300);
-					//初始化处理意见
-					initMisOpinion({
-						auditstatus : "1"
-					});
+					//初始化审核意见
+					nui.get("auditstatus").setValue(1);//1：通过,0：退回，2：终止流程，3:发起
+					document.getElementById("salesEdit").style.display = "none";
 				}
 			});
 		}
@@ -347,48 +346,26 @@
 				}
 			});
 		}
-		
-		function SaveData1(json) {
-			var auditstatus = nui.get("auditstatus").getValue();
-			if (auditstatus == 1) {
-				var fileids1 = nui.get("fileids1").getValue();
-				if (fileids1 == null || fileids1 == "null" || fileids1 == "") {
-					nui.alert("请至少添加一个附件后再进行提交！", "系统提示");
-					nui.get("creatReimbProcess").setEnabled(true);
-					return;
-				}
-			}
-			var data = form.getData();
+
+		function SaveData1() {
 			var misOpinion = opioionform.getData().misOpinion;//审核意见
+			var data = form.getData();
 			var json = {
-				'cpData' : data,
-				misOpinion : misOpinion,
-				workItemID : <%=workitemid%>
+				"cpData" : data,
+				"misOpinion" : misOpinion,
+				"workItemID" : <%=workitemid%>
 			};
-			mini.mask({
-				el : document.body,
-				cls : 'mini-mask-loading',
-				html : titleText + '中...'
-			});
-			nui.ajax({
+			ajaxCommon({
 				url : "com.zhonghe.ame.chargeContract.chargeContract.chargeContractReview.biz.ext",
-				type : "post",
 				data : json,
-				contentType : "text/json",
 				success : function(o) {
-					nui.unmask(document.body);
 					if (o.result == "success") {
-						nui.alert(titleText + "成功", "系统提示", function() {
-							CloseWindow("ok");
-						});
+						showTips(titleText + "成功")
+						closeOk();
 					} else {
-						nui.alert("提交失败，请联系信息技术部人员！", "系统提示", function(action) {
-							CloseWindow("ok");
-						});
+						showTips("提交失败，请联系信息技术部人员！", "danger")
+						closeOk();
 					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert(jqXHR.responseText);
 				}
 			})
 		}

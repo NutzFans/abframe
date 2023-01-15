@@ -13,7 +13,7 @@
 <body>
 	<div class="nui-fit">
 		<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 97%;">
-			<legend>收费合同签订编辑</legend>
+			<legend>收费合同签订信息</legend>
 			<form id="form1" method="post">
 				<input name="processid" id="processid" class="nui-hidden" />
 				<input name="files" id="fileids" class="nui-hidden" />
@@ -237,7 +237,7 @@
 				data : json,
 				contentType : "text/json",
 				success : function(o) {
-					//付款申请基本信息
+					//收款申请基本信息
 					form.setData(o.chargeContract);
 					queryPlan(o.chargeContract.id);
 					var grid_0 = nui.get("grid_0");
@@ -276,7 +276,7 @@
 			var form = new nui.Form("#form1");
 			form.validate();
 			if (form.isValid() == false) {
-				nui.alert("请检查必填项");
+				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
 			nui.get("creatReimb").disable();
@@ -288,11 +288,9 @@
 			for (var j = 0; j < filePaths; j++) {
 				var a = document.getElementsByName("remarkList")[j].value;
 				if (a == null || a == "") {
-					alert("新增附件不可以为空");
-
+					showTips("新增附件不可以为空", "danger");
 					nui.get("saveReimb").enable();
 					nui.get("creatReimbProcess").enable();
-
 					return;
 				}
 			}

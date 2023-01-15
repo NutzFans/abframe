@@ -265,14 +265,14 @@
 			if (type == 1) {
 				form.validate();
 				if (form.isValid() == false) {
-					showTips("请检查表单的完整性");
+					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
 				var filePaths = document.getElementsByName("uploadfile").length;
 				for (var j = 0; j < filePaths; j++) {
 					var a = document.getElementsByName("remarkList")[j].value;
 					if (a == null || a == "") {
-						showTips("新增附件不可以为空");
+						showTips("新增附件不可以为空", "danger");
 						return false;
 					}
 				}
