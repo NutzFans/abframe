@@ -88,4 +88,82 @@ LEFT JOIN (
 FROM
 	zh_invoice_item]]></config>
     </QueryEntity>
+    <QueryEntity name="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoiceEntityExcel">
+        <config db="default" type="sql"><![CDATA[SELECT
+	a.id,
+	a.create_userid,
+	a.create_time,
+	a.contract_name,
+	a.contract_no,
+	a.implement_org,
+	a.invoice_type,
+	a.headquarter_group,
+	a.invoice_sum,
+	a.invoice_sum_capital,
+	a.payer_name,
+	a.taxpayer_number,
+	a.account,
+	a.unit_address,
+	a.unit_phone,
+	a.post_flag,
+	a.content,
+	a.project_type,
+	a.content_info,
+	a.scheduled_time,
+	a.mailing_address,
+	a.invoice_user,
+	a.invoice_post_time,
+	a.invoice_price_excluding_tax,
+	a.invoice_tax,
+	a.invoice_remark,
+	a.invoice_name_type,
+	a.app_status,
+	a.processId,
+      a.lssuing_state,
+      a.invoice_date,
+	a.major,
+	f.EMPNAME,
+	o.ORGDEGREE,
+	o.ORGLEVEL,
+	o.ORGID,
+	o.ORGNAME,
+a.book_income,
+a.invoice_used,
+a.invoice_rate,
+a.mail_name,
+a.mail_phone,
+a.mail_address,
+a.remark,
+a.receivable_sum,
+a.balance_sum,
+a.receivable_data,
+a.verification
+FROM
+	zh_invoice a
+LEFT JOIN OM_EMPLOYEE f ON a.create_userid = f.USERID
+LEFT JOIN (
+	SELECT
+		c.orgid,
+		(b.orgname + '---' + c.orgname) AS orgname,
+		c.orgname AS orgname1,
+		c.parentorgid,
+		c.ORGSEQ,
+		c.ORGDEGREE,
+		c.ORGLEVEL
+	FROM
+		OM_ORGANIZATION c,
+		OM_ORGANIZATION b
+	WHERE
+		c.parentorgid = b.orgid
+	AND c.orgid NOT IN (
+		SELECT
+			parentorgid
+		FROM
+			OM_ORGANIZATION
+		WHERE
+			parentorgid IS NOT NULL
+	)
+	AND c.STATUS = 'running'
+) o ON a.implement_org = o.ORGID]]></config>
+    </QueryEntity>
 </QueryEntityList>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="exportInvoiceExcel.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
   <nodes xsi:type="process:tStart" id="start0" name="开始" type="start">
-    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+      <targetNode>assign0</targetNode>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
@@ -28,7 +28,7 @@
       <targetNode>invokePojo1</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
+    <targetConnections>link1</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.queryEntitiesByCriteriaEntity</process:partner>
@@ -110,6 +110,22 @@
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
     <figSize height="17" width="54"/>
     <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.zhonghe.ame.invoice.ZhInvoice.ZhInvoiceEntityExcel</process:from>
+      <process:to type="query">critria/_entity</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
