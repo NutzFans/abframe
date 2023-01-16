@@ -10,7 +10,7 @@
 %>
 <html>
 <head>
-<title>开票信息编辑</title>
+<title>开票信息维护</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
@@ -49,31 +49,31 @@
 							<tr>
 								<td align="right" style="width: 160px">合同编号：</td>
 								<td>
-									<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="true" />
+									<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true"/>
 								</td>
 								<td align="right" style="width: 160px">合同名称：</td>
 								<td colspan="6">
-									<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+									<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true"/>
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 100px">专业类别：</td>
 								<td>
-									<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 300px" required="true" enabled="false" />
+									<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 300px" required="true"/>
 								</td>
 								<td align="right" style="width: 160px">工程类别：</td>
 								<td>
-									<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true" enabled="false" />
+									<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true"/>
 								</td>
 								<td align="right" style="width: 160px">集团内外：</td>
 								<td>
-									<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true" enabled="false" />
+									<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true"/>
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">发票抬头类别：</td>
 								<td>
-									<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true" enabled="true" />
+									<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true"/>
 								</td>
 								<td align="right" style="width: 160px">发票类型：</td>
 								<td>
@@ -91,7 +91,7 @@
 								</td>
 								<td align="right" style="width: 160px">合同金额（元）：</td>
 								<td>
-									<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" style="width: 300px" enabled="false" />
+									<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" style="width: 300px"/>
 								</td>
 							</tr>
 							<tr>
@@ -101,11 +101,11 @@
 								</td>
 								<td align="right" style="width: 160px">开票金额账面收入（元）：</td>
 								<td>
-									<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+									<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true"/>
 								</td>
 								<td align="right" style="width: 160px">税额：</td>
 								<td>
-									<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+									<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true"/>
 								</td>
 							</tr>
 							<tr>
@@ -168,21 +168,21 @@
 							<tr>
 								<td align="right" style="width: 160px">回款金额（元）：</td>
 								<td>
-									<input id="receivableSum" name="receivableSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="receivableSum" />
+									<input id="receivableSum" name="receivableSum" class="nui-textbox" vtype="float" style="width: 300px" onvaluechanged="receivableSum" />
 								</td>
 								<td align="right" style="width: 160px">余额（元）：</td>
 								<td>
-									<input id="balanceSum" name="balanceSum" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+									<input id="balanceSum" name="balanceSum" class="nui-textbox" style="width: 300px"/>
 								</td>
 								<td align="right" style="width: 160px">回款时间：</td>
 								<td>
-									<input id="receivableData" name="receivableData" enabled="true" class="nui-datepicker" style="width: 300px" required="true" />
+									<input id="receivableData" name="receivableData" enabled="true" class="nui-datepicker" style="width: 300px"/>
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">核查（元）：</td>
 								<td>
-									<input id="verification" name="verification" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+									<input id="verification" name="verification" class="nui-textbox" style="width: 300px"/>
 								</td>
 							</tr>
 							<tr>
@@ -284,8 +284,10 @@
 			} else {
 				nui.get("account").setRequired(false);
 				nui.get("account").disable();
+				nui.get("account").setValue("");
 				nui.get("unitAddress").setRequired(false);
 				nui.get("unitAddress").disable();
+				nui.get("unitAddress").setValue("");
 			}
 		}
 		
@@ -333,8 +335,6 @@
 			form.setData(data);
 			setAttribute();
 			invoiceType();
-			var appStatus = data.appStatus;
-			finish(appStatus);
 			var grid_0 = nui.get("grid_0");
 			grid_0.load({
 				"groupid" : "INVOICE",
