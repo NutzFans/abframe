@@ -155,7 +155,7 @@ html,body {
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="kjfplist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
-						<a class="nui-button" id="kjfplist_export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 					</td>
 				</tr>
 			</table>
@@ -211,8 +211,8 @@ html,body {
 		function init(){
 			// 按钮权限
 			if(userId !='sysadmin'){
-				// 维护按钮 - kjfplist_wh，导出按钮 - kjfplist_export
-				getOpeatorButtonAuth("kjfplist_wh,kjfplist_export");
+				// 维护按钮 - kjfplist_wh
+				getOpeatorButtonAuth("kjfplist_wh");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
