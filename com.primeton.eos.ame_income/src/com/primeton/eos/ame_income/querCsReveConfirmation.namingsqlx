@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:EPCNB324 -->
+<sqlMap>
+    <resultMap class="java.util.HashMap" id="resultMap1">
+        <result column="reveno" javaType="string" property="reveno"/>
+        <result column="sumhs" javaType="string" property="sumhs"/>
+        <result column="REVETIMEDESC" javaType="string" property="revetimedesc"/>
+    </resultMap>
+    <select id="getCsReveDetail" parameterClass="java.util.HashMap" resultMap="resultMap1">
+    <![CDATA[
+    	select DISTINCT reveno,
+				sumhs  = case when B.STATUS=3 then CAST(B.ACTSUM as VARCHAR(20)) else CAST(B.FCSUM as VARCHAR(20))end,REVETIMEDESC
+		from CS_REVE_FORECAST B
+		where B.NEWYEARMONTH=#newyearmonth# and B.contnum=#contnum#
+		and B.STATUS <=3
+	]]>
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="contractid" javaType="int" property="contractid"/>
+        <result column="CUSTID" javaType="int" property="custid"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="CUSTJC" javaType="string" property="custjc"/>
+        <result column="PROJECTNAME" javaType="string" property="projectname"/>
+        <result column="CONTSUM" javaType="decimal" property="contsum"/>
+        <result column="SALEID" javaType="string" property="saleid"/>
+        <result column="SALENAME" javaType="string" property="salename"/>
+        <result column="ORG" javaType="string" property="org"/>
+        <result column="ORGID" javaType="int" property="orgid"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="sybid" javaType="int" property="sybid"/>
+        <result column="sybname" javaType="string" property="sybname"/>
+        <result column="syqid" javaType="int" property="syqid"/>
+        <result column="syqname" javaType="string" property="syqname"/>
+        <result column="BHSFinACTSUM" javaType="decimal" property="BHSFinActsum"/>
+        <result column="FinACTSUM" javaType="decimal" property="FinActsum"/>
+        <result column="BHSManACTSUM" javaType="decimal" property="BHSManActsum"/>
+        <result column="ManACTSUM" javaType="decimal" property="ManActsum"/>
+        <result column="MarginACTSUM" javaType="decimal" property="MarginActsum"/>
+    </resultMap>
+    <select id="getCsReveMargin" parameterClass="java.util.HashMap" resultMap="resultMap2">
+    select * from (
+		select DISTINCT a.CONTNUM ,x.contractid,x.CUSTID,e.CUSTNAME,e.CUSTJC,x.PROJECTNAME,x.CONTSUM,y.SALEID,y.SALENAME,
+					 y.ORG,d.ORGID,d.ORGNAME,f.ORGID as sybid,f.ORGNAME as sybname,g.ORGID as syqid,g.ORGNAME as syqname,
+					(case when x.PRODMON=0 and b.BHSPRODUCTSUM is not null then b.BHSPRODUCTSUM when b.BHSPRODUCTSUM is null then 0 else b.BHSPRODUCTSUM*y.PRODMON/x.PRODMON end+
+					case when x.SERVMON=0 and b.BHSSERVICESUM is not null then b.BHSSERVICESUM when b.BHSSERVICESUM is null then 0 else b.BHSSERVICESUM*y.SERVMON/x.SERVMON end+
+					case when x.SERVMON=0 and b.BHSMASUM is not null then b.BHSMASUM when b.BHSMASUM is null then 0 else b.BHSMASUM*y.SERVMON/x.SERVMON END) as BHSFinACTSUM,
+					(case when x.PRODMON=0 and b.PRODUCTSUM is not null then b.PRODUCTSUM when b.PRODUCTSUM is null then 0 else b.PRODUCTSUM*y.PRODMON/x.PRODMON end+
+					case when x.SERVMON=0 and b.SERVICESUM is not null then b.SERVICESUM when b.SERVICESUM is null then 0 else b.SERVICESUM*y.SERVMON/x.SERVMON end+
+					case when x.SERVMON=0 and b.MASUM is not null then b.MASUM when b.MASUM is null then 0 else b.MASUM*y.SERVMON/x.SERVMON END) as FinACTSUM,
+		
+					(case when x.PRODMON=0 and c.BHSPRODUCTSUM is not null then c.BHSPRODUCTSUM when c.BHSPRODUCTSUM is null then 0 else c.BHSPRODUCTSUM*y.PRODMON/x.PRODMON end+
+					case when x.SERVMON=0 and c.BHSSERVICESUM is not null then c.BHSSERVICESUM when c.BHSSERVICESUM is null then 0 else c.BHSSERVICESUM*y.SERVMON/x.SERVMON end+
+					case when x.SERVMON=0 and c.BHSMASUM is not null then c.BHSMASUM when c.BHSMASUM is null then 0 else c.BHSMASUM*y.SERVMON/x.SERVMON END) as BHSManACTSUM,
+					(case when x.PRODMON=0 and c.PRODUCTSUM is not null then c.PRODUCTSUM when c.PRODUCTSUM is null then 0 else c.PRODUCTSUM*y.PRODMON/x.PRODMON end+
+					case when x.SERVMON=0 and c.SERVICESUM is not null then c.SERVICESUM when c.SERVICESUM is null then 0 else c.SERVICESUM*y.SERVMON/x.SERVMON end+
+					case when x.SERVMON=0 and c.MASUM is not null then c.MASUM when c.MASUM is null then 0 else c.MASUM*y.SERVMON/x.SERVMON END) as ManACTSUM,
+		
+					((case when x.PRODMON=0 and b.BHSPRODUCTSUM is not null then b.BHSPRODUCTSUM when b.BHSPRODUCTSUM is null then 0 else b.BHSPRODUCTSUM*y.PRODMON/x.PRODMON end+
+					case when x.SERVMON=0 and b.BHSSERVICESUM is not null then b.BHSSERVICESUM when b.BHSSERVICESUM is null then 0 else b.BHSSERVICESUM*y.SERVMON/x.SERVMON end+
+					case when x.SERVMON=0 and b.BHSMASUM is not null then b.BHSMASUM when b.BHSMASUM is null then 0 else b.BHSMASUM*y.SERVMON/x.SERVMON END)-
+					(case when x.PRODMON=0 and c.BHSPRODUCTSUM is not null then c.BHSPRODUCTSUM when c.BHSPRODUCTSUM is null then 0 else c.BHSPRODUCTSUM*y.PRODMON/x.PRODMON end+
+					case when x.SERVMON=0 and c.BHSSERVICESUM is not null then c.BHSSERVICESUM when c.BHSSERVICESUM is null then 0 else c.BHSSERVICESUM*y.SERVMON/x.SERVMON end+
+					case when x.SERVMON=0 and c.BHSMASUM is not null then c.BHSMASUM when c.BHSMASUM is null then 0 else c.BHSMASUM*y.SERVMON/x.SERVMON END)  )as MarginACTSUM
+		from CS_REVE_FORECAST a
+		LEFT JOIN (select sum(ACTPRODUCTSUM2) as BHSPRODUCTSUM,
+											sum(ACTSERVICESUM2) as BHSSERVICESUM,
+											sum(ACTMASUM2)as BHSMASUM,
+											sum(ACTPRODUCTSUM) as PRODUCTSUM,sum(ACTSERVICESUM) as SERVICESUM,sum(ACTMASUM) as MASUM,CONTNUM from CS_REVE_FORECAST,
+								(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+								(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+								(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE 
+								WHERE ((confirmday &gt;= #startdate# or #startdate# is NULL)
+											and (confirmday &lt;= #enddate# or #enddate# is NULL))
+											and (status IN (6) or (status = 3 and confirmday!=maconfirmday)) GROUP BY CONTNUM) b on b.CONTNUM=a.CONTNUM
+		LEFT JOIN (select sum(ACTPRODUCTSUM2) as BHSPRODUCTSUM,
+											sum(ACTSERVICESUM2) as BHSSERVICESUM,
+											sum(ACTMASUM2)as BHSMASUM,
+											sum(ACTPRODUCTSUM) as PRODUCTSUM,sum(ACTSERVICESUM) as SERVICESUM,sum(ACTMASUM) as MASUM,CONTNUM from CS_REVE_FORECAST,
+								(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+								(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+								(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE  
+								WHERE ((maconfirmday &gt;= #startdate# or #startdate# is NULL)
+											and (maconfirmday &lt;= #enddate# or #enddate# is NULL))
+											and (status IN (7,8) or (status = 3 and confirmday!=maconfirmday)) GROUP BY CONTNUM) c on c.CONTNUM=a.CONTNUM
+		LEFT JOIN CS_CONTRACT x on x.CONTNUM=a.CONTNUM
+		LEFT JOIN MIS_CUSTINFO e on e.CUSTID=x.CUSTID
+		LEFT JOIN CS_CONTRACTSALE y on x.CONTRACTID=y.CONTRACTID
+		LEFT JOIN OM_ORGANIZATION d on d.ORGID=y.ORGID
+		LEFT JOIN OM_ORGANIZATION f on d.ORGSEQ like f.ORGSEQ+'%' and f.ORGDEGREE=2
+		LEFT JOIN OM_ORGANIZATION g on d.ORGSEQ like g.ORGSEQ+'%' and g.orglevel=2
+		where (((a.confirmday &gt;= #startdate# or #startdate# is NULL)
+		      and (a.confirmday &lt;= #enddate# or #enddate# is NULL))
+		      or ((a.maconfirmday &gt;= #startdate# or #startdate# is NULL)
+		      and (a.maconfirmday &lt;= #enddate# or #enddate# is NULL)))
+		and (a.STATUS in (6,7,8) or (a.status = 3 and a.confirmday!=a.maconfirmday)) and x.contractid is not null
+		<isNotNull property="contnum">AND a.CONTNUM like '%'+CAST(#contnum# AS VARCHAR)+'%'</isNotNull>
+		<isNotNull property="org">and y.org in ($org$)</isNotNull>
+		<isNotNull property="salename">and y.SALENAME like '%'+CAST(#salename# AS VARCHAR)+'%' </isNotNull>
+		<isNotNull property="projectname">and x.PROJECTNAME like '%'+CAST(#projectname# AS VARCHAR)+'%' </isNotNull>
+		<isNotNull property="custname">and (e.CUSTJC like '%'+CAST(#custname# AS VARCHAR)+'%' or e.CUSTNAME like '%'+CAST(#custname# AS VARCHAR)+'%' ) </isNotNull>
+		)t
+		where 1=1
+		<isNotNull property="iszero">and t.MarginACTSUM != #iszero#</isNotNull>
+		<isNotNull property="sortField">order by $sortField$</isNotNull>
+		<isNotNull property="sortOrder"> $sortOrder$</isNotNull>
+    </select>
+</sqlMap>

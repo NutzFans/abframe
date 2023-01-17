@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wanglq -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="yearQuarterly" javaType="string" property="yearQuarterly"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="CONTNUM" javaType="string" property="contnum"/>
+        <result column="contsumNet" javaType="Decimal" property="contsumNet"/>
+        <result column="INCOME_NET" javaType="Decimal" property="incomeNet"/>
+        <result column="CBJZ" javaType="Decimal" property="cbjz"/>
+        <result column="incomeRat" javaType="Decimal" property="incomerat"/>
+        <result column="notincome_net" javaType="Decimal" property="notincomeNet"/>
+        <result column="STOCK_NET" javaType="Decimal" property="stockNet"/>
+        <result column="beconfRat" javaType="Decimal" property="beconfrat"/>
+    </resultMap>
+    <select id="queryNewCsContRate" parameterClass="java.lang.String"  resultMap="resultMap1"><!-- 行转列需要的数据准备 -->
+    	<![CDATA[
+			select t.CONTNUM,t.contsumNet,t.INCOME_NET,t.CBJZ,cast(round(t.incomeRat,2) as numeric(20,2)) as incomeRat,t.notincome_net,t.STOCK_NET,cast(round(t.beconfRat,2) as numeric(20,2)) as beconfRat from (
+				select b.CONTNUM,b.contsum contsumNet,ISNULL(a.INCOME_NET, 0) INCOME_NET,ISNULL(a.CBJZ, 0) CBJZ,ISNULL(a.CBJZ1, 0) as CBJZ1,(case when ISNULL(a.INCOME_NET, 0) =0 then 0  else (ISNULL(a.INCOME_NET, 0)-ISNULL(a.CBJZ1, 0))/a.INCOME_NET end) as incomeRat,
+				(ISNULL(b.contsum, 0)-ISNULL(a.INCOME_NET, 0)) as notincome_net,ISNULL(a.STOCK_NET, 0) as STOCK_NET,
+				(CASE when ISNULL(b.contsum, 0)-ISNULL(a.INCOME_NET, 0) <=0 then 0 else (ISNULL(b.contsum, 0)-ISNULL(a.INCOME_NET, 0)-ISNULL(a.STOCK_NET, 0))/(ISNULL(b.contsum, 0)-ISNULL(a.INCOME_NET, 0)) end) as beconfRat 
+				from (select CONTNUM,((CASE when sum(PRODMON) is null then 0 else Convert(decimal(18,2),sum(PRODMON)/(1+CONVERT (decimal(19,2),PRATE.DICTNAME))) end)+
+				(case when sum(SERVMON) is null then 0 else Convert(decimal(18,2),sum(SERVMON)/(1+CONVERT (decimal(19,2),SRATE.DICTNAME))) end)) as contsum from NEW_CS_CONTRACT a,
+				(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+				(select ede.DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE
+				where CONTNUM=#contnum#
+				GROUP BY CONTNUM,PRATE.DICTNAME,SRATE.DICTNAME) b 
+				LEFT JOIN 
+				(select a.CONTNUM,sum(case when a.INCOME_NET is null then 0 else a.INCOME_NET end) INCOME_NET,sum(case when a.CBJZ is null then 0 else a.CBJZ end) CBJZ,sum(case when a.CBJZ is null then 0 when a.CBJZ<0 then -1*a.CBJZ else a.CBJZ end) CBJZ1,b.STOCK_NET from  CS_CONT_STOCK a
+				LEFT JOIN (select CONTNUM,(CASE when STOCK_NET is null then 0 else STOCK_NET end ) STOCK_NET  from CS_CONT_STOCK a where a.FINYEAR=(select max(cast( FINYEAR as int)) FINYEAR from CS_CONT_STOCK b where b.CONTNUM=#contnum#) 
+				and a.FINMONTH=(select max(cast( c.FINMONTH as int)) FINMONTH from CS_CONT_STOCK c  where c.FINYEAR=(select max(cast( FINYEAR as int)) FINYEAR from CS_CONT_STOCK b where b.CONTNUM=#contnum#) and c.CONTNUM=#contnum#)
+				) b on a.CONTNUM=b.CONTNUM 
+				where a.CONTNUM=#contnum#
+				GROUP BY a.CONTNUM,b.STOCK_NET )a on a.CONTNUM=b.CONTNUM
+			) t 
+		]]>
+	</select>
+    <select id="queryYearQuarterlys"  resultMap="resultMap"><!-- 行转列需要的数据准备 -->
+    	<![CDATA[
+			select * from (
+				select (case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then  '['+FINYEAR+'-Q1]'
+						     when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then '['+FINYEAR+'-Q2]'
+						     when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then '['+FINYEAR+'-Q3]'
+						     when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then '['+FINYEAR+'-Q4]' 
+						     when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN '['+FINYEAR+'-0'+FINMONTH+']'
+							 when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN '['+FINYEAR+'-'+FINMONTH+']' end) yearQuarterly
+				from CS_CONT_STOCK where contnum =#contnum#) a 
+			group by yearQuarterly order by yearQuarterly asc
+		]]>
+	</select>
+	<select id="queryYears"  resultMap="resultMap"><!-- 行转列需要的数据准备 -->
+    	<![CDATA[
+			select '['+convert(varchar(4) ,t.yearQuarterly)+']' as yearQuarterly  from 
+			(select FINYEAR yearQuarterly from CS_CONT_STOCK where contnum =  #contnum#
+			group by FINYEAR 
+			UNION
+			SELECT convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM= #contnum#
+			GROUP BY SUBSTRING(NEWYEARMONTH, 0, 5)
+			) t
+			ORDER BY t.yearQuarterly asc
+		]]>
+	</select>
+	<select id="queryCsMoneyYears"  resultMap="resultMap"><!-- 行转列需要的数据准备 -->
+    	<![CDATA[
+			select CASE when t.NEWYEARMONTH is null then null else '['+t.NEWYEARMONTH+']' end as yearQuarterly from (
+			select NEWYEARMONTH from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2'
+			UNION 
+			select NEWYEARMONTH from CS_REVE_FORECAST where CONTNUM=#contnum# and STATUS='3'
+			UNION
+			select DISTINCT cast(year(TICKETDATE) as varchar)+cast((case when MONTH(TICKETDATE) not in (10,11,12) 
+			then '0'+CAST (month(TICKETDATE) as VARCHAR)  ELSE CAST (month(TICKETDATE) as VARCHAR) end) as varchar) as NEWYEARMONTH
+			from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN CS_NEWBILL i on i.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT j on j.CONTRACTID=i.CONTRACTID 
+			where j.CONTNUM=#contnum# and a.STATUS in (1,2,3,4)
+			) t ORDER BY t.NEWYEARMONTH
+
+		]]>
+	</select>
+	<select id="queryCsCopeYears"  resultMap="resultMap"><!-- 行转列需要的数据准备 -->
+    	<![CDATA[
+			select '['+t.yearQuarterly+']' as yearQuarterly from (
+			select DISTINCT (case when a.CONFIRMDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.CONFIRMDATE,121) end) yearQuarterly  
+			from PUR_OUTCOST a 
+			where a.CONTNUM=#contnum# and a.CONFIRMDATE is not null
+			UNION
+			select DISTINCT (case when a.PAYDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.PAYDATE,121) end) yearQuarterly  
+			from PUR_SETTLE a 
+			where a.CONTNUM=#contnum# and a.PAYDATE is not null
+			)t ORDER BY t.yearQuarterly asc
+		]]>
+	</select>
+	<select id="queryCsCopeColum"  resultMap="resultMap"><!-- 动态列名展示,2018年以前的应付，全部算在201801 -->
+    	<![CDATA[
+			select t.* from (
+			select DISTINCT (case when a.CONFIRMDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.CONFIRMDATE,121) end) yearQuarterly  
+			from PUR_OUTCOST a 
+			where a.CONTNUM=#contnum# and a.CONFIRMDATE is not null
+			UNION
+			select DISTINCT (case when a.PAYDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.PAYDATE,121) end) yearQuarterly  
+			from PUR_SETTLE a 
+			where a.CONTNUM=#contnum# and a.PAYDATE is not null
+			)t ORDER BY t.yearQuarterly asc
+		]]>
+	</select>
+	<select id="queryCsGrossColum"  resultMap="resultMap"><!-- 动态列名展示 -->
+    	<![CDATA[
+			select t.* from 
+			(select FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+			group by FINYEAR 
+			UNION
+			SELECT convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+			GROUP BY SUBSTRING(NEWYEARMONTH, 0, 5)
+			) t
+			ORDER BY t.yearQuarterly asc
+		]]>
+	</select>
+	<select id="queryCsMoneyColum"  resultMap="resultMap"><!-- 动态列名展示 /查询应收预收账款-->
+    	<![CDATA[
+			select t.NEWYEARMONTH as yearQuarterly from (
+			select NEWYEARMONTH from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2'
+			UNION 
+			select NEWYEARMONTH from CS_REVE_FORECAST where CONTNUM=#contnum# and STATUS='3'
+			UNION
+			select DISTINCT cast(year(TICKETDATE) as varchar)+cast((case when MONTH(TICKETDATE) not in (10,11,12) 
+			then '0'+CAST (month(TICKETDATE) as VARCHAR)  ELSE CAST (month(TICKETDATE) as VARCHAR) end) as varchar) as NEWYEARMONTH
+			from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN CS_NEWBILL i on i.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT j on j.CONTRACTID=i.CONTRACTID 
+			where j.CONTNUM=#contnum# and a.STATUS in (1,2,3,4)
+			) t ORDER BY t.NEWYEARMONTH
+		]]>
+	</select>
+    <select id="queryChangeCsStockColum"  resultMap="resultMap"><!-- 动态列名展示 -->
+    	<![CDATA[
+    		select * from (
+    			select (case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						 	 when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						 	 when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						 	 when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4'
+						 	 when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+							 when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly
+			from CS_CONT_STOCK where contnum = #contnum# ) a
+			group by yearQuarterly order by  yearQuarterly asc
+		]]>
+	</select>
+	<select id="queryCsCopeList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" remapResults="true">
+    	<![CDATA[
+			select '期初应付账款余额' as type,b.* from (
+			select t.yearQuarterly,
+			(select sum(x.NOTAXMONEY) from(
+				select sum(a.NOTAXMON) as NOTAXMONEY from PUR_OUTCOST a
+				where a.CONFIRMDATE BETWEEN  '2017-01-01' and t.yearQuarterly+'-01'
+				and a.CONTNUM=#contnum#
+				UNION ALL
+				select -sum(a.NOTAXMON) as NOTAXMONEY from PUR_SETTLE a
+				where a.PAYDATE BETWEEN  '2017-01-01' and t.yearQuarterly+'-01'
+				and a.CONTNUM=#contnum#
+				union ALL
+				select sum(NOTAXMONEY) as NOTAXMONEY from PUR_PRESETTLE_2016 where CONFIRMDATE is not null and contnum=#contnum# 
+				)  x
+			) as money
+			from (
+			select DISTINCT (case when a.CONFIRMDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.CONFIRMDATE,121) end) yearQuarterly  
+			from PUR_OUTCOST a 
+			where a.CONTNUM=#contnum# and a.CONFIRMDATE is not null
+			UNION
+			select DISTINCT (case when a.PAYDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.PAYDATE,121) end) yearQuarterly  
+			from PUR_SETTLE a 
+			where a.CONTNUM=#contnum# and a.PAYDATE is not null
+			)t
+			) as c
+			PIVOT(sum(money) FOR [yearQuarterly] IN($yearQuarterlys$)) as b
+			UNION ALL 
+			select '本期采购(不含税)' as type,b.* from 
+			(select t.yearQuarterly,
+			(select sum(a.NOTAXMON) as money
+			from PUR_OUTCOST a 
+			where convert(varchar(7),a.CONFIRMDATE,121)=t.yearQuarterly
+			and a.CONTNUM=#contnum# and year(a.CONFIRMDATE) >=2017)  as money
+			from (
+			select DISTINCT (case when a.CONFIRMDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.CONFIRMDATE,121) end) yearQuarterly  
+			from PUR_OUTCOST a 
+			where a.CONTNUM=#contnum# and a.CONFIRMDATE is not null
+			UNION
+			select DISTINCT (case when a.PAYDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.PAYDATE,121) end) yearQuarterly  
+			from PUR_SETTLE a 
+			where a.CONTNUM=#contnum# and a.PAYDATE is not null
+			)t
+			) as c
+			PIVOT(sum(money) FOR [yearQuarterly] IN($yearQuarterlys$)) AS b
+			UNION ALL
+			select '本期支付(不含税)' as type,b.* from 
+			(select t.yearQuarterly,
+			(select sum(a.NOTAXMON)
+			from PUR_SETTLE a
+			where convert(varchar(7),a.PAYDATE,121)=t.yearQuarterly
+			and a.CONTNUM=#contnum# and year(a.PAYDATE) >=2017)  as money
+			from (
+			select DISTINCT (case when a.CONFIRMDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.CONFIRMDATE,121) end) yearQuarterly  
+			from PUR_OUTCOST a 
+			where a.CONTNUM=#contnum# and a.CONFIRMDATE is not null
+			UNION
+			select DISTINCT (case when a.PAYDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.PAYDATE,121) end) yearQuarterly  
+			from PUR_SETTLE a 
+			where a.CONTNUM=#contnum# and a.PAYDATE is not null
+			)t
+			) as c
+			PIVOT(sum(money) FOR [yearQuarterly] IN($yearQuarterlys$)) AS b
+			UNION ALL
+			select '期末应付账款余额' as type,b.* from 
+			(select t.yearQuarterly,
+			(
+			select sum(x.NOTAXMONEY) from(
+			select sum(a.NOTAXMON) as NOTAXMONEY
+			from PUR_OUTCOST a
+			where a.CONFIRMDATE BETWEEN  '2017-01-01' and (dateadd(month, datediff(month, -1, yearQuarterly+'-01'), -1))
+			and a.CONTNUM=#contnum#
+			UNION ALL
+			select -sum(a.NOTAXMON) as NOTAXMONEY
+			from PUR_SETTLE a
+			where a.PAYDATE BETWEEN  '2017-01-01' and (dateadd(month, datediff(month, -1, yearQuarterly+'-01'), -1))
+			and a.CONTNUM=#contnum#
+			union ALL
+			select sum(NOTAXMONEY) as NOTAXMONEY from PUR_PRESETTLE_2016 where CONFIRMDATE is not null and contnum=#contnum# 
+			)  x
+			)  as money
+			from (
+			select DISTINCT (case when a.CONFIRMDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.CONFIRMDATE,121) end) yearQuarterly  
+			from PUR_OUTCOST a 
+			where a.CONTNUM=#contnum# and a.CONFIRMDATE is not null
+			UNION
+			select DISTINCT (case when a.PAYDATE <='2018-01-01' then '2018-01' else convert(varchar(7),a.PAYDATE,121) end) yearQuarterly  
+			from PUR_SETTLE a 
+			where a.CONTNUM=#contnum# and a.PAYDATE is not null
+			)t
+			) as c
+			PIVOT(sum(money) FOR [yearQuarterly] IN($yearQuarterlys$)) AS b
+		]]>
+	</select>
+	<select id="queryCsReveGatherList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" remapResults="true">
+    	<![CDATA[
+			(select '含税收入-收款' as type,b.* from (
+			select a.CONTNUM,a.NEWYEARMONTH,(CASE when sum(b.actsum2)-sum(b.ACTSUM) <0 then 0 else sum(b.actsum2)-sum(b.ACTSUM) end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) AS NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH
+			) a 
+			LEFT JOIN 
+			(select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) AS NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH)b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,a.ACTSUM,a.actsum2
+			) a
+			PIVOT (SUM(actsum) FOR NEWYEARMONTH IN ($yearQuarterlys$) ) as b)
+			UNION ALL
+			(select '税金影响' as type,b.* from (
+			select a.contnum,a.NEWYEARMONTH,(CASE when a.tax-a.ACTSUM <0 then 0 ELSE a.tax-a.ACTSUM end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.tax) is null then 0 else sum(b.tax) END ) as tax from
+			(
+			select a.CONTNUM,a.NEWYEARMONTH,sum(b.ACTSUM) as actsum from
+			(select CONTNUM, convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) a
+			LEFT JOIN 
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH
+			) a
+			FULL JOIN
+			(select a.CONTNUM,a.newyearmonth,sum(b.tax) tax  from 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) a
+			LEFT JOIN 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) b on b.newyearmonth<=a.newyearmonth
+			GROUP BY a.CONTNUM,a.newyearmonth,a.tax
+			) b on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.newyearmonth
+			GROUP BY a.CONTNUM,b.CONTNUM,a.NEWYEARMONTH,b.newyearmonth
+			) a
+			)a
+			PIVOT (SUM(actsum) FOR NEWYEARMONTH IN ($yearQuarterlys$) ) as b
+			)
+			UNION ALL
+			(select '应收账款余额' as type,b.* from (
+			select a.contnum,a.NEWYEARMONTH,(a.ACTSUM+a.actsum2) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select a.CONTNUM,a.NEWYEARMONTH,(CASE when sum(b.actsum2)-sum(b.ACTSUM) <0 then 0 else sum(b.actsum2)-sum(b.ACTSUM) end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH
+			) a 
+			LEFT JOIN 
+			(select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH)b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,a.ACTSUM,a.actsum2
+			)a
+			FULL join
+			(select a.contnum,a.NEWYEARMONTH,(CASE when a.tax-a.ACTSUM <0 then 0 ELSE a.tax-a.ACTSUM end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.tax) is null then 0 else sum(b.tax) END ) as tax from
+			(
+			select a.CONTNUM,a.NEWYEARMONTH,sum(b.ACTSUM) as actsum from
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) a
+			LEFT JOIN 
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH
+			) a
+			FULL JOIN
+			(select a.CONTNUM,a.newyearmonth,sum(b.tax) tax  from 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) a
+			LEFT JOIN 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) b on b.newyearmonth<=a.newyearmonth
+			GROUP BY a.CONTNUM,a.newyearmonth,a.tax
+			) b on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.newyearmonth
+			GROUP BY a.CONTNUM,b.CONTNUM,a.NEWYEARMONTH,b.newyearmonth
+			) a
+			)b on a.CONTNUM=b.contnum and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,b.CONTNUM,a.NEWYEARMONTH,b.newyearmonth
+			) a
+			) a 
+			PIVOT (SUM(actsum) FOR NEWYEARMONTH IN ($yearQuarterlys$) ) as b
+			)
+			UNION ALL
+			(select '收款-含税收入' as type ,b.* from (
+			select a.CONTNUM,a.NEWYEARMONTH,(CASE when sum(b.actsum)-sum(b.ACTSUM2) <0 then 0 else sum(b.actsum)-sum(b.actsum2) end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH
+			) a 
+			LEFT JOIN 
+			(select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH)b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,a.ACTSUM,a.actsum2
+			) a
+			PIVOT (SUM(actsum) FOR NEWYEARMONTH IN ($yearQuarterlys$) ) as b
+			)
+			UNION ALL
+			(select '税金影响' as type,b.* from (
+			select a.contnum,a.NEWYEARMONTH,(CASE when a.tax-a.ACTSUM <0 then 0 ELSE a.tax-a.ACTSUM end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.tax) is null then 0 else sum(b.tax) END ) as tax from
+			(
+			select a.CONTNUM,a.NEWYEARMONTH,sum(b.ACTSUM) as actsum from
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) a
+			LEFT JOIN 
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH
+			) a
+			FULL JOIN
+			(select a.CONTNUM,a.newyearmonth,sum(b.tax) tax  from 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) a
+			LEFT JOIN 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) b on b.newyearmonth<=a.newyearmonth
+			GROUP BY a.CONTNUM,a.newyearmonth,a.tax
+			) b on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.newyearmonth
+			GROUP BY a.CONTNUM,b.CONTNUM,a.NEWYEARMONTH,b.newyearmonth
+			) a
+			)a
+			PIVOT (SUM(actsum) FOR NEWYEARMONTH IN ($yearQuarterlys$) ) as b
+			)
+			UNION ALL
+			(select '预收账款余额' as type,b.* from (
+			select a.contnum,a.NEWYEARMONTH,(case when (a.ACTSUM-a.actsum2)<0 then 0 else a.ACTSUM-a.actsum2 end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select a.CONTNUM,a.NEWYEARMONTH,(CASE when sum(b.actsum)-sum(b.ACTSUM2) <0 then 0 else sum(b.actsum)-sum(b.actsum2) end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM, convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH
+			) a 
+			LEFT JOIN 
+			(select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.ACTSUM) is null then 0 else sum(b.ACTSUM) END ) as actsum2 from 
+			(select CONTNUM,NEWYEARMONTH,sum(ACTSUM)as ACTSUM from CS_GATHER_FC where CONTNUM=#contnum# and STATUS='2' 
+			GROUP BY CONTNUM,NEWYEARMONTH) a
+			FULL JOIN
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,sum(ACTSUM) as actsum from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112)) b
+			on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,b.CONTNUM,b.NEWYEARMONTH)b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH,a.ACTSUM,a.actsum2)a
+			FULL join
+			(select a.contnum,a.NEWYEARMONTH,(CASE when a.tax-a.ACTSUM <0 then 0 ELSE a.tax-a.ACTSUM end) as actsum from (
+			select (CASE when a.CONTNUM is null then b.CONTNUM ELSE a.CONTNUM end )as contnum,(CASE when a.NEWYEARMONTH is null then b.NEWYEARMONTH ELSE a.NEWYEARMONTH end) as NEWYEARMONTH,(CASE when SUM(a.ACTSUM) is null then 0 else sum(a.ACTSUM) END) as ACTSUM,
+			(CASE when sum(b.tax) is null then 0 else sum(b.tax) END ) as tax from
+			(
+			select a.CONTNUM,a.NEWYEARMONTH,sum(b.ACTSUM) as actsum from
+			(select CONTNUM,convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) a
+			LEFT JOIN 
+			(select CONTNUM, convert(varchar(6),CONFIRMDAY,112) as NEWYEARMONTH,SUM(ACTSUM)-sum(ACTSUM2) as ACTSUM from CS_REVE_FORECAST_FIN where CONTNUM=#contnum# and STATUS='3'
+			GROUP BY CONTNUM,convert(varchar(6),CONFIRMDAY,112) ) b on b.NEWYEARMONTH<=a.NEWYEARMONTH
+			GROUP BY a.CONTNUM,a.NEWYEARMONTH
+			) a
+			FULL JOIN
+			(select a.CONTNUM,a.newyearmonth,sum(b.tax) tax  from 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) a
+			LEFT JOIN 
+			(select a.CONTNUM,a.newyearmonth,sum(tax)as tax from (
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_PROD y on y.CON_PRO_ID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=0
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=0 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			UNION ALL
+			select d.CONTNUM,cast(year(a.TICKETDATE) as varchar)+cast((case when MONTH(a.TICKETDATE) not in (10,11,12) then '0'+CAST (month(a.TICKETDATE) as VARCHAR)  ELSE CAST (month(a.TICKETDATE) as VARCHAR) end) as varchar) as newyearmonth,sum(a.TAX) as tax  from CS_TICKET a
+			LEFT JOIN CS_BILL_TICKET b on (a.TICKETID=b.TICKETID and a.STATUS !=3) or (a.CZTICKETID=b.TICKETID and a.STATUS =3)
+			LEFT JOIN (select x.TICKETID,x.BILLID,sum(y.MONEY) as MONEY_all
+								from CS_BILL_TICKET x 
+								LEFT JOIN CS_BILL_SALE y on y.CONTSALEID=x.BILLSUBID and x.BILLID=y.BILLID
+								where x.TYPE=1
+								GROUP BY x.TICKETID,x.BILLID) e on (a.TICKETID=e.TICKETID and a.STATUS !=3) or (a.CZTICKETID=e.TICKETID and a.STATUS =3) and e.BILLID=b.BILLID
+			LEFT JOIN CS_NEWBILL c on c.BILLID=b.BILLID
+			LEFT JOIN CS_CONTRACT d on c.CONTRACTID=d.CONTRACTID
+			where b.type=1 and d.CONTNUM=#contnum#
+			GROUP BY d.CONTNUM,a.TICKETDATE
+			) a GROUP BY a.CONTNUM,a.newyearmonth) b on b.newyearmonth<=a.newyearmonth
+			GROUP BY a.CONTNUM,a.newyearmonth,a.tax
+			) b on a.CONTNUM=b.CONTNUM and a.NEWYEARMONTH=b.newyearmonth
+			GROUP BY a.CONTNUM,b.CONTNUM,a.NEWYEARMONTH,b.newyearmonth
+			) a
+			)b on a.CONTNUM=b.contnum and a.NEWYEARMONTH=b.NEWYEARMONTH
+			GROUP BY a.CONTNUM,b.CONTNUM,a.NEWYEARMONTH,b.newyearmonth
+			) a
+			) a 
+			PIVOT (SUM(actsum) FOR NEWYEARMONTH IN ($yearQuarterlys$) ) as b
+			)
+		]]>
+	</select>
+    <select id="queryCsContStockList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" remapResults="true">
+    	<![CDATA[
+			SELECT '产品收入额(含税)' type,b.*,c.total FROM (
+				select INCOME_PROD,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_PROD) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_PROD) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum
+			union all
+			(SELECT '服务收入额(含税)' type,b.*,c.total FROM (
+				select INCOME_SERV,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_SERV) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_SERV) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT 'MA收入额(含税)' type,b.*,c.total FROM (
+				select INCOME_MA,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_MA) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_MA) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '收入含税小计' type,b.*,c.total FROM (
+				select INCOME,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '产品收入额(不含税)' type,b.*,c.total FROM (
+				select INCOME_PROD_NET,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_PROD_NET) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_PROD_NET) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '服务收入额(不含税)' type,b.*,c.total FROM (
+				select INCOME_SERV_NET,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_SERV_NET) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_SERV_NET) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT 'MA收入额(不含税)' type,b.*,c.total FROM (
+				select INCOME_MA_NET,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_MA_NET) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_MA_NET) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '收入不含税小计' type,b.*,c.total FROM (
+				select INCOME_NET,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(INCOME_NET) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(INCOME_NET) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '生产费用-人工成本' type,b.*,c.total FROM (
+				select SCFY_RG,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(SCFY_RG) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(SCFY_RG) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '生产费用-外包成本' type,b.*,c.total FROM (
+				select SCFY_WB,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(SCFY_WB) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(SCFY_WB) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '生产费用-直接费用' type,b.*,c.total FROM (
+				select SCFY_BX,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(SCFY_BX) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(SCFY_BX) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '生产费用余额' type,b.*,c.total FROM (
+				select SCFY,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(SCFY) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(isnull(SCFY_RG,0)+isnull(SCFY_WB,0)+isnull(SCFY_BX,0)) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '成本结转-人工成本' type,b.*,c.total FROM (
+				select CBJZ_RG,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(CBJZ_RG) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(CBJZ_RG) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '成本结转-外包成本' type,b.*,c.total FROM (
+				select CBJZ_WB,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(CBJZ_WB) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(CBJZ_WB) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '成本结转-直接费用' type,b.*,c.total FROM (
+				select CBJZ_BX,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(CBJZ_BX) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(CBJZ_BX) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '成本结转额' type,b.*,c.total FROM (
+				select CBJZ,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(CBJZ) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(CBJZ) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '存货余额-人工成本' type,b.*,c.total FROM (
+				select STOCK_RG,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK_RG) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (
+				select * from (
+					select isnull(STOCK_RG,0) as total,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+				 where yearQuarterly=substring(#yearQuarterlys#,len(#yearQuarterlys#)-CHARINDEX(',',reverse(#yearQuarterlys#))+3,7)) c on c.contnum=b.contnum)
+			union all
+			(SELECT '存货余额-外包成本' type,b.*,c.total FROM (
+				select STOCK_WB,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK_WB) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (
+			select * from (
+				select isnull(STOCK_WB,0) as total,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+				 where yearQuarterly=substring(#yearQuarterlys#,len(#yearQuarterlys#)-CHARINDEX(',',reverse(#yearQuarterlys#))+3,7)) c on c.contnum=b.contnum)
+			union all
+			(SELECT '存货余额-直接费用' type,b.*,c.total FROM (
+				select STOCK_BX,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK_BX) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (			
+			select * from (
+				select isnull(STOCK_BX,0) as total,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+				 where yearQuarterly=substring(#yearQuarterlys#,len(#yearQuarterlys#)-CHARINDEX(',',reverse(#yearQuarterlys#))+3,7)) c on c.contnum=b.contnum)
+			union all
+			(SELECT '存货余额' type,b.*,c.total FROM (
+				select STOCK,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (
+			select * from (
+				select isnull(STOCK,0) as total,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+				 where yearQuarterly=substring(#yearQuarterlys#,len(#yearQuarterlys#)-CHARINDEX(',',reverse(#yearQuarterlys#))+3,7)) c on c.contnum=b.contnum)
+			union all
+			(SELECT '存货减值' type,b.*,c.total FROM (
+				select STOCK_JZ,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK_JZ) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (select contnum,sum(STOCK_JZ) as total from CS_CONT_STOCK where contnum =#contnum# group by contnum ) c on c.contnum=b.contnum)
+			union all
+			(SELECT '累计存货减值' type,b.*,c.total FROM (
+				select STOCK_JZ_ALL,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK_JZ_ALL) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (
+			select * from (
+				select isnull(STOCK_JZ_ALL,0) as total,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum# )a
+				 where yearQuarterly=substring(#yearQuarterlys#,len(#yearQuarterlys#)-CHARINDEX(',',reverse(#yearQuarterlys#))+3,7)) c on c.contnum=b.contnum)
+			union all
+			(SELECT '存货净值' type,b.*,c.total FROM (
+				select STOCK_NET,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly  
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (SUM(STOCK_NET) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			left join (
+			select * from (
+				select isnull(STOCK_NET,0) as total,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum# )a
+			where yearQuarterly=substring(#yearQuarterlys#,len(#yearQuarterlys#)-CHARINDEX(',',reverse(#yearQuarterlys#))+3,7)) c on c.contnum=b.contnum)
+			union all
+			(SELECT '是否已结转' type,b.*,null as total FROM (
+				select ISTRANCOST,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (MAX(ISTRANCOST) FOR yearQuarterly IN ($yearQuarterlys$) ) as b)
+			union all
+			(SELECT '结转年月' type,b.*,null as total FROM (
+				select TRANYEARMONTH,contnum,(case when CONVERT(int ,FINMONTH) in (1,2,3) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q1'
+						when CONVERT(int ,FINMONTH) in (4,5,6) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q2'
+						when CONVERT(int ,FINMONTH) in (7,8,9) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q3'
+						when CONVERT(int ,FINMONTH) in (10,11,12) and FINYEAR in (2011,2012,2013,2014,2015,2016) then FINYEAR+'-Q4' 
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH not in (10,11,12) THEN FINYEAR+'-0'+FINMONTH
+						when FINYEAR not in (2011,2012,2013,2014,2015,2016) and FINMONTH in (10,11,12) THEN FINYEAR+'-'+FINMONTH end) yearQuarterly 
+				 from CS_CONT_STOCK where contnum =#contnum#) a
+			PIVOT (MAX(TRANYEARMONTH) FOR yearQuarterly IN ($yearQuarterlys$) ) as b)
+		]]>
+	</select>
+	<select id="queryCsGrossList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" remapResults="true">
+    	<![CDATA[
+			(SELECT '已确认收入' type,b.* FROM (
+				select INCOME_NET,contnum,FINYEAR yearQuarterly
+				 from CS_CONT_STOCK where contnum =#contnum#
+			) a
+			PIVOT (SUM(INCOME_NET) FOR yearQuarterly IN ($yearQuarterlys$) ) as b)
+			union all
+			(SELECT '已结转成本' type,b.* FROM (
+				select CBJZ,contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum =#contnum#
+			) a
+			PIVOT (SUM(CBJZ) FOR yearQuarterly IN ($yearQuarterlys$) ) as b)
+			UNION ALL
+			(select '已确认毛利' type,b.* from 
+				(select (a.INCOME_NET+a.CBJZ) as YQRML,a.contnum,a.yearQuarterly  from 
+					(
+						select contnum,sum(INCOME_NET) as INCOME_NET,sum(CBJZ) as CBJZ,FINYEAR as yearQuarterly from CS_CONT_STOCK where contnum =#contnum# group by contnum,FINYEAR
+					) a 
+				) a
+			PIVOT (SUM(a.YQRML) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			)
+			UNION ALL
+			(select '已确认毛利率' type,b.* from 
+				(select (CASE when a.INCOME_NET is null or a.INCOME_NET = 0 then '0' else cast(round(((a.INCOME_NET+a.CBJZ)/a.INCOME_NET)*100,2) as numeric(20,2)) end) as YQRML,a.contnum,a.yearQuarterly  from 
+					(
+						select contnum,sum(INCOME_NET) as INCOME_NET,sum(CBJZ) as CBJZ,FINYEAR as yearQuarterly from CS_CONT_STOCK where contnum =#contnum# group by contnum,FINYEAR
+					) a 
+				) a
+			PIVOT (SUM(a.YQRML) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			)
+			UNION ALL
+			(select '合同总收入' as type,b.* from (
+				select t.*,(select sum(a.FCSUM2) FCSUM2 from (
+					select  CONTNUM,SUBSTRING(NEWYEARMONTH, 0, 5) NEWYEARMONTH,FCSUM,ROUND((CASE when PRODUCTSUM is null then 0 ELSE PRODUCTSUM/(1+(CASE when PRODUCTRATE is null then PRATE.dictname else PRODUCTRATE END))END)+
+					(CASE when SERVICESUM is null  then 0 ELSE SERVICESUM/(1+(CASE when SERVICERATE is null then SRATE.dictname else SERVICERATE END))END)+
+					(CASE when MASUM is null then 0 ELSE MASUM/(1+(CASE when MARATE is null then MRATE.dictname else MARATE END))END) , 2)as FCSUM2 from CS_REVE_FORECAST a,
+					 (SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+							(SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+							(SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE 
+					where CONTNUM=#contnum#
+			 ) a where a.NEWYEARMONTH<=t.yearQuarterly) as FCSUM2
+			from (select contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+						group by contnum ,FINYEAR 
+						UNION
+						SELECT contnum,convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+						GROUP BY contnum,SUBSTRING(NEWYEARMONTH, 0, 5)
+					) t
+			) a
+			 PIVOT (SUM(a.FCSUM2) FOR yearQuarterly IN ($yearQuarterlys$) ) as b)
+			union all
+			(SELECT '生产成本' type,b.* FROM (
+				select t.*,(select (sum(isnull(SCFY_RG,0))+sum(isnull(SCFY_WB,0))+sum(isnull(SCFY_BX,0))) as SCFY 
+				 from CS_CONT_STOCK where contnum =#contnum# and FINYEAR<=t.yearQuarterly ) as SCFY
+				from (select contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+							group by contnum ,FINYEAR 
+							UNION
+							SELECT contnum,convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+							GROUP BY contnum,SUBSTRING(NEWYEARMONTH, 0, 5)
+						) t) a
+			PIVOT (SUM(SCFY) FOR yearQuarterly IN ($yearQuarterlys$) ) as b)
+			UNION ALL
+			select '合同总毛利' as type,b.* from (
+				select a.contnum,a.yearQuarterly,(a.FCSUM2-case when b.SCFY is null or b.SCFY=0 then 0 ELSE b.SCFY END) as maoli from 
+				(select t.*,(select sum(a.FCSUM2) FCSUM2 from (
+					select  CONTNUM,SUBSTRING(NEWYEARMONTH, 0, 5) NEWYEARMONTH,FCSUM,ROUND((CASE when PRODUCTSUM is null then 0 ELSE PRODUCTSUM/(1+(CASE when PRODUCTRATE is null then PRATE.dictname else PRODUCTRATE END))END)+
+					(CASE when SERVICESUM is null  then 0 ELSE SERVICESUM/(1+(CASE when SERVICERATE is null then SRATE.dictname else SERVICERATE END))END)+
+					(CASE when MASUM is null then 0 ELSE MASUM/(1+(CASE when MARATE is null then MRATE.dictname else MARATE END))END) , 2)as FCSUM2 from CS_REVE_FORECAST a,
+					 (SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+							(SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+							(SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE 
+					where CONTNUM=#contnum#
+			 ) a where a.NEWYEARMONTH<=t.yearQuarterly) as FCSUM2
+			from (select contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+						group by contnum ,FINYEAR 
+						UNION
+						SELECT contnum,convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+						GROUP BY contnum,SUBSTRING(NEWYEARMONTH, 0, 5)
+					) t
+				) a
+				LEFT JOIN 
+				(
+				select t.*,(select (sum(isnull(SCFY_RG,0))+sum(isnull(SCFY_WB,0))+sum(isnull(SCFY_BX,0))) as SCFY 
+				 from CS_CONT_STOCK where contnum =#contnum# and FINYEAR<=t.yearQuarterly ) as SCFY
+				from (select contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+							group by contnum ,FINYEAR 
+							UNION
+							SELECT contnum,convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+							GROUP BY contnum,SUBSTRING(NEWYEARMONTH, 0, 5)
+						) t
+				) b on a.contnum=b.contnum AND a.yearQuarterly=b.yearQuarterly
+				) a
+				PIVOT (SUM(a.maoli) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+			UNION ALL
+			select '合同总毛利率' as type,b.* from (
+				select a.contnum,a.yearQuarterly,(CASE when a.FCSUM2 is null or a.FCSUM2=0 then 0 else cast(round(((a.FCSUM2-case when b.SCFY is null or b.SCFY=0 then 0 ELSE b.SCFY END)/a.FCSUM2)*100,2) as numeric(20,2)) end) as maoli from 
+				(select t.*,(select sum(a.FCSUM2) FCSUM2 from (
+					select  CONTNUM,SUBSTRING(NEWYEARMONTH, 0, 5) NEWYEARMONTH,FCSUM,ROUND((CASE when PRODUCTSUM is null then 0 ELSE PRODUCTSUM/(1+(CASE when PRODUCTRATE is null then PRATE.dictname else PRODUCTRATE END))END)+
+					(CASE when SERVICESUM is null  then 0 ELSE SERVICESUM/(1+(CASE when SERVICERATE is null then SRATE.dictname else SERVICERATE END))END)+
+					(CASE when MASUM is null then 0 ELSE MASUM/(1+(CASE when MARATE is null then MRATE.dictname else MARATE END))END) , 2)as FCSUM2 from CS_REVE_FORECAST a,
+					 (SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='PRODUCTRATE') PRATE,
+							(SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='SERVICERATE') SRATE,
+							(SELECT cast(ede.DICTNAME AS numeric(3,2)) DICTNAME from EOS_DICT_ENTRY ede where ede.DICTID='MARATE') MRATE 
+					where CONTNUM=#contnum#
+			 ) a where a.NEWYEARMONTH<=t.yearQuarterly) as FCSUM2
+			from (select contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+						group by contnum ,FINYEAR 
+						UNION
+						SELECT contnum,convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+						GROUP BY contnum,SUBSTRING(NEWYEARMONTH, 0, 5)
+					) t
+				) a
+				LEFT JOIN 
+				(
+				select t.*,(select (sum(isnull(SCFY_RG,0))+sum(isnull(SCFY_WB,0))+sum(isnull(SCFY_BX,0))) as SCFY 
+				 from CS_CONT_STOCK where contnum =#contnum# and FINYEAR<=t.yearQuarterly ) as SCFY
+				from (select contnum,FINYEAR yearQuarterly from CS_CONT_STOCK where contnum = #contnum#
+							group by contnum ,FINYEAR 
+							UNION
+							SELECT contnum,convert(int ,SUBSTRING(NEWYEARMONTH, 0, 5)) as yearQuarterly from CS_REVE_FORECAST where CONTNUM=#contnum#
+							GROUP BY contnum,SUBSTRING(NEWYEARMONTH, 0, 5)
+						) t
+				) b on a.contnum=b.contnum AND a.yearQuarterly=b.yearQuarterly
+				) a
+				PIVOT (SUM(a.maoli) FOR yearQuarterly IN ($yearQuarterlys$) ) as b
+		]]>
+	</select>
+	<!-- 将商务合同转换为财务合同-->
+	<insert id="insertNewCsContBycsCont" ><![CDATA[
+		insert into new_cs_contract (contractid,contnum,contreg,signdate,custid,userid,projectname,contsum,prodmon,servmon,contsum_act,prodmon_act,servmon_act,salename,org,servnumtype,servnum,industry,publicity) 
+		select contractid,contnum,contreg,signdate,custid,userid,projectname,contsum,prodmon,servmon,contsum_act,prodmon_act,servmon_act,salename,org,servnumtype,servnum,industry,publicity from cs_contract
+		where contractid not in (select contractid from new_cs_contract)
+		]]>
+	</insert>
+</sqlMap>

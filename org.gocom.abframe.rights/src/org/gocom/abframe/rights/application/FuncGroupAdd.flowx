@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="FuncGroupAdd" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" collapsed="false" nodeType="note" type="note" content="新增功能组。为实现新增操作后自动关闭弹出的页面，故以单独页面流实现" title="张丹凤&#x9;08-8-20 下午9:40">
+    <location x="95" y="182"/>
+    <size height="54" width="148"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" collapsed="false" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" displayName="link0" lineType="reference" isDefault="true" type="action" actionName="add" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="228" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="230" y="116"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="设置加载位置" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="link3" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="372" y="220"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">appid</process:from>
+      <process:to type="query">funcGroup/acApplication/appid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="350" y="256"/>
+    <figSize height="12" width="73"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="打开刷新开关" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="link5" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="481" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">isRefreshParent</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="459" y="186"/>
+    <figSize height="12" width="73"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束" displayName="结束" collapsed="false" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/rights/application/add_funcgroup_to_app.jsp">
+    <targetConnections>link4</targetConnections>
+    <location x="620" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="622" y="116"/>
+    <figSize height="12" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="新增功能组" displayName="add_funcgroup_to_app.jsp" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/application/add_funcgroup_to_app.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link4" name="link4" displayName="link4" lineType="reference" isDefault="false" type="action" actionName="action0">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link3" name="link3" displayName="link1" lineType="reference" isDefault="true" type="action" actionName="addExcute" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcFuncgroup" name="funcGroup"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="375" y="80"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="356" y="116"/>
+    <figSize height="12" width="61"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="新增功能组" displayName="addFuncGroup" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="link2" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="596" y="220"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.addFuncGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroup" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject" pattern="reference">funcGroup</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="retCode" type="query" value="String" valueType="Primitive">retCode</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="579" y="255"/>
+    <figSize height="12" width="61"/>
+    <node>subprocess1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="张丹凤" createTime="2008-09-02 15:38:02" date="2008-09-02Z" description="单击动态树应用节点，点击功能组tab页签，&lt;新增>按钮实现新增某应用下的功能组" name="新增功能组" version="6.0"/>
+  <process:variables/>
+</process:tPageFlow>

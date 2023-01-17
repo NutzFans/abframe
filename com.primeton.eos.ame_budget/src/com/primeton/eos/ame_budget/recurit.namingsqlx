@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:zhouwenjie -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="type" javaType="String" property="type"/>
+        <result column="month1" javaType="double" property="month1"/>
+        <result column="month2" javaType="double" property="month2"/>
+        <result column="month3" javaType="double" property="month3"/>
+        <result column="month4" javaType="double" property="month4"/>
+        <result column="month5" javaType="double" property="month5"/>
+        <result column="month6" javaType="double" property="month6"/>
+        <result column="month7" javaType="double" property="month7"/>
+        <result column="month8" javaType="double" property="month8"/>
+        <result column="month9" javaType="double" property="month9"/>
+        <result column="month10" javaType="double" property="month10"/>
+        <result column="month11" javaType="double" property="month11"/>
+        <result column="month12" javaType="double" property="month12"/>
+        <result column="yearMoney" javaType="double" property="yearMoney"/>
+    </resultMap>
+    <select id="queryAllExitEmployee"  resultMap="resultMap1"><!--查询业务单元级存量人员 汇总（类似报表） -->
+    <![CDATA[
+		select 
+		a.type, b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.yearMoney
+			from 
+				(SELECT '当月人数' as type) a
+			left join 
+				(select 
+					'当月人数' as type,
+					isnull(sum(case month when 1 then empnum else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then empnum else 0 end),0) month2,
+					isnull(sum(case month when 3 then empnum else 0 end),0) month3,
+					isnull(sum(case month when 4 then empnum else 0 end),0) month4,
+					isnull(sum(case month when 5 then empnum else 0 end),0) month5,
+					isnull(sum(case month when 6 then empnum else 0 end),0) month6,
+					isnull(sum(case month when 7 then empnum else 0 end),0) month7,
+					isnull(sum(case month when 8 then empnum else 0 end),0) month8,
+					isnull(sum(case month when 9 then empnum else 0 end),0) month9,
+					isnull(sum(case month when 10 then empnum else 0 end),0) month10,
+					isnull(sum(case month when 11 then empnum else 0 end),0) month11,
+					isnull(sum(case month when 12 then empnum else 0 end),0) month12,
+					0 as yearMoney
+				from (select month,sum(empnum) as empnum  from DEPT_EMP_BUDGET a where a.orgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month
+			) t) b 
+			on a.type=b.type
+			union all
+			(select 
+					'薪资汇总' as type,
+					isnull(sum(case month when 1 then TOSALARY else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOSALARY else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOSALARY else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOSALARY else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOSALARY else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOSALARY else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOSALARY else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOSALARY else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOSALARY else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOSALARY else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOSALARY else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOSALARY else 0 end),0) month12,
+					isnull(sum(TOSALARY),0) as yearMoney
+				from (select month,sum(TOSALARY) as TOSALARY  from DEPT_EMP_BUDGET a where a.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month) t
+			)
+			union all
+			(select 
+					'福利汇总' as type,
+					isnull(sum(case month when 1 then TOWEAL else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOWEAL else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOWEAL else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOWEAL else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOWEAL else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOWEAL else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOWEAL else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOWEAL else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOWEAL else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOWEAL else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOWEAL else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOWEAL else 0 end),0) month12,
+					isnull(sum(TOWEAL),0) as yearMoney
+				from (select month,sum(TOWEAL) as TOWEAL  from DEPT_EMP_BUDGET a where a.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month) t
+			)
+			union all
+						(
+			select 
+			a1.type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,
+			(month1+month2+month3+month4+month5+month6+month7+month8+month9+month10+month11+month12)as month12,(month1+month2+month3+month4+month5+month6+month7+month8+month9+month10+month11+month12)as yearMoney
+			 from (
+			select 
+					'奖金汇总' as type,
+					isnull(sum(case month when 1 then TOBONUS else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOBONUS else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOBONUS else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOBONUS else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOBONUS else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOBONUS else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOBONUS else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOBONUS else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOBONUS else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOBONUS else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOBONUS else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOBONUS else 0 end),0) month12,
+					isnull(sum(case month when 12 then TOBONUS else 0 end),0) yearMoney
+				from (select month,sum(TOBONUS) as TOBONUS  from DEPT_EMP_BUDGET a where a.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month) t
+			) a1
+		)
+    ]]>
+    </select>
+    <select id="queryAllRecurit"  resultMap="resultMap1"><!--查询业务单元级 招聘人员汇总（类似报表） -->
+    <![CDATA[
+		select 
+		a.type, b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.yearMoney
+			from 
+				(SELECT '当月人数' as type) a
+			left join 
+				(select 
+					'当月人数' as type,
+					isnull(sum(case month when 1 then empnum else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then empnum else 0 end),0) month2,
+					isnull(sum(case month when 3 then empnum else 0 end),0) month3,
+					isnull(sum(case month when 4 then empnum else 0 end),0) month4,
+					isnull(sum(case month when 5 then empnum else 0 end),0) month5,
+					isnull(sum(case month when 6 then empnum else 0 end),0) month6,
+					isnull(sum(case month when 7 then empnum else 0 end),0) month7,
+					isnull(sum(case month when 8 then empnum else 0 end),0) month8,
+					isnull(sum(case month when 9 then empnum else 0 end),0) month9,
+					isnull(sum(case month when 10 then empnum else 0 end),0) month10,
+					isnull(sum(case month when 11 then empnum else 0 end),0) month11,
+					isnull(sum(case month when 12 then empnum else 0 end),0) month12,
+					0 as yearMoney
+				from (select month,sum(empnum) as empnum  from DEPT_EMP_BUDGET a where a.orgid in (select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month
+			) t) b 
+			on a.type=b.type
+			union all
+			(select 
+					'薪资汇总' as type,
+					isnull(sum(case month when 1 then TOSALARY else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOSALARY else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOSALARY else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOSALARY else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOSALARY else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOSALARY else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOSALARY else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOSALARY else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOSALARY else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOSALARY else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOSALARY else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOSALARY else 0 end),0) month12,
+					isnull(sum(TOSALARY),0) as yearMoney
+				from (select month,sum(TOSALARY) as TOSALARY  from DEPT_EMP_BUDGET a where a.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month) t
+			)
+			union all
+			(select 
+					'福利汇总' as type,
+					isnull(sum(case month when 1 then TOWEAL else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOWEAL else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOWEAL else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOWEAL else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOWEAL else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOWEAL else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOWEAL else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOWEAL else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOWEAL else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOWEAL else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOWEAL else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOWEAL else 0 end),0) month12,
+					isnull(sum(TOWEAL),0) as yearMoney
+				from (select month,sum(TOWEAL) as TOWEAL  from DEPT_EMP_BUDGET a where a.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month) t
+			)
+			union all
+						(
+			select 
+			a1.type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,
+			(month1+month2+month3+month4+month5+month6+month7+month8+month9)as month12,(month1+month2+month3+month4+month5+month6+month7+month8+month9)as yearMoney
+			 from (
+			select 
+					'奖金汇总' as type,
+					isnull(sum(case month when 1 then TOBONUS else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOBONUS else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOBONUS else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOBONUS else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOBONUS else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOBONUS else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOBONUS else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOBONUS else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOBONUS else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOBONUS else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOBONUS else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOBONUS else 0 end),0) month12,
+					isnull(sum(case month when 12 then TOBONUS else 0 end),0) yearMoney
+				from (select month,sum(TOBONUS) as TOBONUS  from DEPT_EMP_BUDGET a where a.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			  and year=#year# and costtype=#costtype# and status=#status# group by a.month) t
+			) a1
+		)
+    ]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="dictname" javaType="String" property="dictname"/>
+        <result column="dictid" javaType="double" property="dictid"/>
+        <result column="sumPerson1" javaType="double" property="sumPerson1"/>
+        <result column="sumPerson2" javaType="double" property="sumPerson2"/>
+        <result column="sumPerson3" javaType="double" property="sumPerson3"/>
+        <result column="sumPerson4" javaType="double" property="sumPerson4"/>
+        <result column="sumPerson5" javaType="double" property="sumPerson5"/>
+        <result column="sumPerson6" javaType="double" property="sumPerson6"/>
+        <result column="sumPerson7" javaType="double" property="sumPerson7"/>
+        <result column="sumPerson8" javaType="double" property="sumPerson8"/>
+        <result column="sumPerson9" javaType="double" property="sumPerson9"/>
+        <result column="sumPerson10" javaType="double" property="sumPerson10"/>
+        <result column="sumPerson11" javaType="double" property="sumPerson11"/>
+        <result column="sumPerson12" javaType="double" property="sumPerson12"/>
+        <result column="sumPerson" javaType="double" property="sumPerson"/>
+    </resultMap>
+    <select id="queryAllPeople"  resultMap="resultMap2"><!--公摊人员非公司级 -->
+    <![CDATA[
+    select * from  
+			(select * from EOS_DICT_ENTRY where DICTTYPEID = 'EXP_REGION' )  as a 
+			left join 
+			(select year,CASE when b.DICTID is null then 0 else citycode end as citycode,
+					costtype,sum(MONTH1)as sumPerson1,sum(MONTH2)as sumPerson2,sum(MONTH3)as sumPerson3,sum(MONTH4)as sumPerson4,sum(MONTH5)as sumPerson5,sum(MONTH6)as sumPerson6,
+					sum(MONTH7)as sumPerson7,sum(MONTH8)as sumPerson8,sum(MONTH9)as sumPerson9,sum(MONTH10)as sumPerson10,sum(MONTH11)as sumPerson11,sum(MONTH12)as sumPerson12,
+					(sum(isNull(MONTH1,0))+sum(isNull(MONTH2,0))+sum(isNull(MONTH3,0))+sum(isNull(MONTH4,0))+sum(isNull(MONTH5,0))+sum(isNull(MONTH6,0))
+					 +sum(isNull(MONTH7,0))+sum(isNull(MONTH8,0))+sum(isNull(MONTH9,0))+sum(isNull(MONTH10,0))+sum(isNull(MONTH11,0))+sum(isNull(MONTH12,0))) as sumPerson
+			 from 
+					(SELECT year,orgid,citycode,costtype,[1] as MONTH1,[2] as MONTH2,[3] as MONTH3,[4] as MONTH4,[5] as MONTH5,[6] as MONTH6,[7] as MONTH7,[8] as MONTH8,[9] as MONTH9,[10] as MONTH10,[11] as MONTH11,[12] as MONTH12 
+					FROM DEPT_EMP_BUDGET a
+					PIVOT (SUM (empnum) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			LEFT JOIN EOS_DICT_ENTRY b on a.citycode = b.DICTID and b.DICTTYPEID = 'EXP_REGION'
+			where  orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			and year = #year# and costtype=#costtype# 
+			GROUP BY a.year,costtype,citycode,b.DICTID 
+			) b on a.dictid=b.citycode order by a.sortno asc
+    ]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="dictname" javaType="String" property="dictname"/>
+        <result column="dictid" javaType="int" property="dictid"/>
+        <result column="sumSharmoney1" javaType="int" property="sumSharmoney1"/>
+        <result column="sumSharmoney2" javaType="int" property="sumSharmoney2"/>
+        <result column="sumSharmoney3" javaType="int" property="sumSharmoney3"/>
+        <result column="sumSharmoney4" javaType="int" property="sumSharmoney4"/>
+        <result column="sumSharmoney5" javaType="int" property="sumSharmoney5"/>
+        <result column="sumSharmoney6" javaType="int" property="sumSharmoney6"/>
+        <result column="sumSharmoney7" javaType="int" property="sumSharmoney7"/>
+        <result column="sumSharmoney8" javaType="int" property="sumSharmoney8"/>
+        <result column="sumSharmoney9" javaType="int" property="sumSharmoney9"/>
+        <result column="sumSharmoney10" javaType="int" property="sumSharmoney10"/>
+        <result column="sumSharmoney11" javaType="int" property="sumSharmoney11"/>
+        <result column="sumSharmoney12" javaType="int" property="sumSharmoney12"/>
+        <result column="sumSharmoney" javaType="int" property="sumSharmoney"/>
+    </resultMap>
+    <select id="queryAllMoney"  resultMap="resultMap3"><!--公摊money 非公司级-->
+    <![CDATA[
+    	select * from  
+			(select * from EOS_DICT_ENTRY where DICTTYPEID = 'EXP_REGION' )  as a 
+			left join 
+			(select year,citycode,
+					costtype,sum(MONTH1)as sumSharmoney1,sum(MONTH2)as sumSharmoney2,sum(MONTH3)as sumSharmoney3,sum(MONTH4)as sumSharmoney4,sum(MONTH5)as sumSharmoney5,sum(MONTH6)as sumSharmoney6,
+					sum(MONTH7)as sumSharmoney7,sum(MONTH8)as sumSharmoney8,sum(MONTH9)as sumSharmoney9,sum(MONTH10)as sumSharmoney10,sum(MONTH11)as sumSharmoney11,sum(MONTH12)as sumSharmoney12,
+					(sum(isNull(MONTH1,0))+sum(isNull(MONTH2,0))+sum(isNull(MONTH3,0))+sum(isNull(MONTH4,0))+sum(isNull(MONTH5,0))+sum(isNull(MONTH6,0))
+					 +sum(isNull(MONTH7,0))+sum(isNull(MONTH8,0))+sum(isNull(MONTH9,0))+sum(isNull(MONTH10,0))+sum(isNull(MONTH11,0))+sum(isNull(MONTH12,0))) as sumSharmoney
+			 from 
+					(SELECT year,citycode,orgid,costtype,[1] as MONTH1,[2] as MONTH2,[3] as MONTH3,[4] as MONTH4,[5] as MONTH5,[6] as MONTH6,[7] as MONTH7,[8] as MONTH8,[9] as MONTH9,[10] as MONTH10,[11] as MONTH11,[12] as MONTH12 
+					FROM DEPT_SHAR_BUDGET a
+					PIVOT (SUM (SHARMONEY) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			and year = #year# and costtype=#costtype# 
+			GROUP BY a.year,costtype,citycode 
+			) b on a.dictid=b.citycode order by a.sortno asc
+    ]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+    	<result column="monthTosalary" javaType="double" property="monthTosalary"/>
+        <result column="monthToweal" javaType="double" property="monthToweal"/>
+        <result column="monthTobonus" javaType="double" property="monthTobonus"/>
+        <result column="tosalary" javaType="double" property="tosalary"/>
+        <result column="toweal" javaType="double" property="toweal"/>
+        <result column="tobonus" javaType="double" property="tobonus"/>
+        <result column="perratio" javaType="double" property="perratio"/>
+    </resultMap>
+    <select id="queryThreeMoney"  resultMap="resultMap4">
+    <![CDATA[
+		select 
+			salary*#renum# as monthTosalary,weal*#renum# as monthToweal,salary*PERRATIO*#renum# as monthTobonus ,perratio,
+			salary*#renum#*(12-#month#+1) as tosalary,weal*#renum#*(12-#month#+1) as toweal,
+			salary*PERRATIO*#renum#*(case when (12-#month#+1-3)<0 then 0 else (12-#month#+1-3) end) as tobonus
+		from PER_BUDGET_COST  a where a.PERDEGREE=#degree# and year = #year#
+    ]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="rebudid" javaType="int" property="rebudid"/>
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="orgname" javaType="String" property="orgname"/>
+        <result column="year" javaType="String" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="citycode" javaType="String" property="citycode"/>
+        <result column="costtype" javaType="String" property="costtype"/>
+        <result column="degree" javaType="String" property="degree"/>
+         <result column="degreename" javaType="String" property="degreename"/>
+        <result column="renum" javaType="int" property="renum"/>
+        <result column="monthTosalary" javaType="double" property="monthTosalary"/>
+        <result column="monthToweal" javaType="double" property="monthToweal"/>
+        <result column="perratio" javaType="double" property="perratio"/>
+        <result column="tosalary" javaType="double" property="tosalary"/>
+        <result column="toweal" javaType="double" property="toweal"/>
+        <result column="tobonus" javaType="double" property="tobonus"/>
+        <result column="memo" javaType="String" property="memo"/>
+    </resultMap>
+    <select id="queryRecruitList"  resultMap="resultMap5"><!--查询业务单元级招聘人力和薪资福利奖金详情 -->
+    <![CDATA[
+		select 
+			a.degreename,b.*,c.orgname as orgname,salary*renum as monthTosalary,weal*renum as monthToweal,perratio,
+			salary*renum*(12-b.month+1) as tosalary,weal*renum*(12-b.month+1) as toweal,
+			salary*PERRATIO*renum*(case when (12-b.month+1-3)<0 then 0 else (12-b.month+1-3) end) as tobonus
+		from PER_BUDGET_COST  a,DEPT_STAFF_REBUD b,BUDGET_ORG c
+		where a.perdegree=b.degree and a.year = b.year and b.orgid in
+			(select orgid from BUDGET_ORG where orgseq like (select ORGSEQ+'%' from BUDGET_ORG where orgid=#orgid# and budget_year =#year#) and budget_year =#year#) 
+			 and a.year =#year# and costtype=#costtype# 
+		and b.year=c.BUDGET_YEAR and b.orgid=c.orgid
+		ORDER BY c.orgname,b.month asc
+    ]]>
+    </select>
+    <select id="queryGsRecruitList"  resultMap="resultMap5"><!--查询公司级招聘人力和薪资福利奖金详情 -->
+    <![CDATA[
+		select 
+			a.degreename,b.*,c.orgname as orgname,salary*renum as monthTosalary,weal*renum as monthToweal,perratio,
+			salary*renum*(12-b.month+1) as tosalary,weal*renum*(12-b.month+1) as toweal,
+			salary*PERRATIO*renum*(case when (12-b.month+1-3)<0 then 0 else (12-b.month+1-3) end) as tobonus 
+		from PER_BUDGET_COST  a,DEPT_STAFF_REBUD b,BUDGET_ORG c
+		where a.perdegree=b.degree and a.year = b.year and b.orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$))  
+			and a.year =#year# and costtype in($costtype$) and b.year=c.BUDGET_YEAR and b.orgid=c.orgid
+		ORDER BY c.orgname,b.month asc
+    ]]>
+    </select>
+     <resultMap class="commonj.sdo.DataObject" id="resultMap9">
+        <result column="rebudid" javaType="int" property="rebudid"/>
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="orgname" javaType="String" property="orgname"/>
+        <result column="year" javaType="String" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="citycode" javaType="String" property="citycode"/>
+        <result column="costtype" javaType="String" property="costtype"/>
+        <result column="degree" javaType="String" property="degree"/>
+        <result column="renum" javaType="int" property="renum"/>
+        <result column="tosalary" javaType="double" property="tosalary"/>
+        <result column="toweal" javaType="double" property="toweal"/>
+        <result column="tobonus" javaType="double" property="tobonus"/>
+        <result column="memo" javaType="String" property="memo"/>
+    </resultMap>
+    <select id="queryRecruitDetail"  resultMap="resultMap9"><!--新增招聘人力计算薪资福利奖金展示在页面上     （编辑)传进来的数据进行计算 -->
+    <![CDATA[
+		select #orgname# as orgname,
+			b.*,salary*renum as tosalary,weal*renum as toweal,salary*PERRATIO*renum as tobonus 
+		from PER_BUDGET_COST  a,DEPT_STAFF_REBUD b
+		where a.perdegree=b.degree and a.year = b.year and rebudid=#rebudid#
+		ORDER BY b.month asc
+    ]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap10">
+        <result column="rebudid" javaType="int" property="rebudid"/>
+        <result column="orgid" javaType="int" property="orgid"/>
+        <result column="year" javaType="String" property="year"/>
+        <result column="month" javaType="int" property="month"/>
+        <result column="citycode" javaType="String" property="citycode"/>
+        <result column="costtype" javaType="String" property="costtype"/>
+        <result column="degree" javaType="String" property="degree"/>
+        <result column="renum" javaType="int" property="renum"/>
+        <result column="tosalary" javaType="double" property="tosalary"/>
+        <result column="toweal" javaType="double" property="toweal"/>
+        <result column="tobonus" javaType="double" property="tobonus"/>
+        <result column="memo" javaType="String" property="memo"/>
+    </resultMap>
+    <select id="queryRecruitDetailByID"  resultMap="resultMap10"><!--新增招聘人力计算薪资福利奖金展示在页面上     （删除)传进来的数据进行计算 -->
+    <![CDATA[
+		select 
+			b.*,salary*renum as tosalary,weal*renum as toweal,salary*PERRATIO*renum as tobonus 
+		from PER_BUDGET_COST  a,DEPT_STAFF_REBUD b
+		where a.perdegree=b.degree and a.year = b.year and b.rebudid = #rebudid# 
+    ]]>
+    </select>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="sumempnum" javaType="float" property="sumempnum"/>
+        <result column="fee" javaType="int" property="fee"/>
+    </resultMap>
+    <select id="queryEmpPersonAndMoney"  resultMap="resultMap6"><!--新增招聘信息更新公摊人员和金额java方法准备 -->
+    <![CDATA[
+		select a.sumempnum,a.sumempnum*b.SHARFEE as fee from (
+		select citycode,sum(empnum)as sumempnum from DEPT_EMP_BUDGET 
+		where orgid=#orgid# and year =#year# and citycode=#citycode# and month =#month# and costtype=#costtype# GROUP BY citycode) as a 
+		left join PUB_SHAR_STAND b 
+		on a.citycode=b.CITYCODE;
+    ]]>
+    </select>
+    <update id="updateEmpPersonAndMoney"><!--新增招聘信息更新公摊人员和金额 -->
+	    <![CDATA[
+		    update DEPT_SHAR_BUDGET set PERNUM=
+			(select a.sumempnum from (
+			select citycode,sum(empnum)as sumempnum from (select (case when a.citycode in ('1','2','3','4','5','6','7','8','9')  then a.citycode else 0 end) as citycode,
+			empnum,orgid,year,month,costtype from DEPT_EMP_BUDGET a)a
+			where orgid=#orgid# and year =#year# and citycode=(case when #citycode# in ('1','2','3','4','5','6','7','8','9')  then #citycode# else 0 end) and month =#month# and costtype=#costtype# GROUP BY citycode) as a 
+			),sharmoney=(
+			select a.sumempnum*b.SHARFEE as fee from (
+			select citycode,sum(empnum)as sumempnum from (select (case when a.citycode in ('1','2','3','4','5','6','7','8','9')  then a.citycode else 0 end) as citycode,
+			empnum,orgid,year,month,costtype from DEPT_EMP_BUDGET a)a
+			where orgid=#orgid# and year =#year# and citycode=(case when #citycode# in ('1','2','3','4','5','6','7','8','9')  then #citycode# else 0 end) and month =#month# and costtype=#costtype# GROUP BY citycode) as a 
+			left join PUB_SHAR_STAND b 
+			on a.citycode=b.CITYCODE
+			) 
+			where orgid=#orgid# and year =#year# and citycode=(case when #citycode# in ('1','2','3','4','5','6','7','8','9')  then #citycode# else 0 end) and month =#month# and costtype=#costtype#
+		]]>
+    </update>
+    
+    <select id="queryGsAllExitPerson"  resultMap="resultMap1"><!-- 查询公司级现有人力、或者招聘人力数据-->
+    <![CDATA[
+		select 
+			a.type, b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.yearMoney
+		from 
+			(SELECT '当月人数' as type) a
+		left join 
+			(select 
+				'当月人数' as type,
+				isnull(sum(case month when 1 then empnum else 0 end),0) month1 ,
+				isnull(sum(case month when 2 then empnum else 0 end),0) month2,
+				isnull(sum(case month when 3 then empnum else 0 end),0) month3,
+				isnull(sum(case month when 4 then empnum else 0 end),0) month4,
+				isnull(sum(case month when 5 then empnum else 0 end),0) month5,
+				isnull(sum(case month when 6 then empnum else 0 end),0) month6,
+				isnull(sum(case month when 7 then empnum else 0 end),0) month7,
+				isnull(sum(case month when 8 then empnum else 0 end),0) month8,
+				isnull(sum(case month when 9 then empnum else 0 end),0) month9,
+				isnull(sum(case month when 10 then empnum else 0 end),0) month10,
+				isnull(sum(case month when 11 then empnum else 0 end),0) month11,
+				isnull(sum(case month when 12 then empnum else 0 end),0) month12,
+				0 as yearMoney
+			from (select month,sum(empnum) as empnum  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month
+					) t) b 
+					on a.type=b.type
+		union all
+			(select 
+				'薪资汇总' as type,
+				isnull(sum(case month when 1 then TOSALARY else 0 end),0) month1 ,
+				isnull(sum(case month when 2 then TOSALARY else 0 end),0) month2,
+				isnull(sum(case month when 3 then TOSALARY else 0 end),0) month3,
+				isnull(sum(case month when 4 then TOSALARY else 0 end),0) month4,
+				isnull(sum(case month when 5 then TOSALARY else 0 end),0) month5,
+				isnull(sum(case month when 6 then TOSALARY else 0 end),0) month6,
+				isnull(sum(case month when 7 then TOSALARY else 0 end),0) month7,
+				isnull(sum(case month when 8 then TOSALARY else 0 end),0) month8,
+				isnull(sum(case month when 9 then TOSALARY else 0 end),0) month9,
+				isnull(sum(case month when 10 then TOSALARY else 0 end),0) month10,
+				isnull(sum(case month when 11 then TOSALARY else 0 end),0) month11,
+				isnull(sum(case month when 12 then TOSALARY else 0 end),0) month12,
+				isnull(sum(TOSALARY),0) as yearMoney
+			from (select month,sum(TOSALARY) as TOSALARY  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month) t
+			)
+		union all
+			(select 
+				'福利汇总' as type,
+				isnull(sum(case month when 1 then TOWEAL else 0 end),0) month1 ,
+				isnull(sum(case month when 2 then TOWEAL else 0 end),0) month2,
+				isnull(sum(case month when 3 then TOWEAL else 0 end),0) month3,
+				isnull(sum(case month when 4 then TOWEAL else 0 end),0) month4,
+				isnull(sum(case month when 5 then TOWEAL else 0 end),0) month5,
+				isnull(sum(case month when 6 then TOWEAL else 0 end),0) month6,
+				isnull(sum(case month when 7 then TOWEAL else 0 end),0) month7,
+				isnull(sum(case month when 8 then TOWEAL else 0 end),0) month8,
+				isnull(sum(case month when 9 then TOWEAL else 0 end),0) month9,
+				isnull(sum(case month when 10 then TOWEAL else 0 end),0) month10,
+				isnull(sum(case month when 11 then TOWEAL else 0 end),0) month11,
+				isnull(sum(case month when 12 then TOWEAL else 0 end),0) month12,
+				isnull(sum(TOWEAL),0) as yearMoney
+			from (select month,sum(TOWEAL) as TOWEAL  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month) t
+			)
+		union all
+			(select 
+			a1.type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,
+			(month1+month2+month3+month4+month5+month6+month7+month8+month9+month10+month11+month12)as month12,(month1+month2+month3+month4+month5+month6+month7+month8+month9+month10+month11+month12)as year
+			 from (
+			select 
+					'奖金汇总' as type,
+					isnull(sum(case month when 1 then TOBONUS else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOBONUS else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOBONUS else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOBONUS else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOBONUS else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOBONUS else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOBONUS else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOBONUS else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOBONUS else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOBONUS else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOBONUS else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOBONUS else 0 end),0) month12
+				from (select month,sum(TOBONUS) as TOBONUS  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month) t
+			) a1
+		)
+    ]]>
+    </select>
+    <select id="queryGsAllRecurit"  resultMap="resultMap1"><!-- 查询公司级现有人力、或者招聘人力数据-->
+    <![CDATA[
+		select 
+			a.type, b.month1,b.month2,b.month3,b.month4,b.month5,b.month6,b.month7,b.month8,b.month9,b.month10,b.month11,b.month12 ,b.yearMoney
+		from 
+			(SELECT '当月人数' as type) a
+		left join 
+			(select 
+				'当月人数' as type,
+				isnull(sum(case month when 1 then empnum else 0 end),0) month1 ,
+				isnull(sum(case month when 2 then empnum else 0 end),0) month2,
+				isnull(sum(case month when 3 then empnum else 0 end),0) month3,
+				isnull(sum(case month when 4 then empnum else 0 end),0) month4,
+				isnull(sum(case month when 5 then empnum else 0 end),0) month5,
+				isnull(sum(case month when 6 then empnum else 0 end),0) month6,
+				isnull(sum(case month when 7 then empnum else 0 end),0) month7,
+				isnull(sum(case month when 8 then empnum else 0 end),0) month8,
+				isnull(sum(case month when 9 then empnum else 0 end),0) month9,
+				isnull(sum(case month when 10 then empnum else 0 end),0) month10,
+				isnull(sum(case month when 11 then empnum else 0 end),0) month11,
+				isnull(sum(case month when 12 then empnum else 0 end),0) month12,
+				0 as yearMoney
+			from (select month,sum(empnum) as empnum  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month
+					) t) b 
+					on a.type=b.type
+		union all
+			(select 
+				'薪资汇总' as type,
+				isnull(sum(case month when 1 then TOSALARY else 0 end),0) month1 ,
+				isnull(sum(case month when 2 then TOSALARY else 0 end),0) month2,
+				isnull(sum(case month when 3 then TOSALARY else 0 end),0) month3,
+				isnull(sum(case month when 4 then TOSALARY else 0 end),0) month4,
+				isnull(sum(case month when 5 then TOSALARY else 0 end),0) month5,
+				isnull(sum(case month when 6 then TOSALARY else 0 end),0) month6,
+				isnull(sum(case month when 7 then TOSALARY else 0 end),0) month7,
+				isnull(sum(case month when 8 then TOSALARY else 0 end),0) month8,
+				isnull(sum(case month when 9 then TOSALARY else 0 end),0) month9,
+				isnull(sum(case month when 10 then TOSALARY else 0 end),0) month10,
+				isnull(sum(case month when 11 then TOSALARY else 0 end),0) month11,
+				isnull(sum(case month when 12 then TOSALARY else 0 end),0) month12,
+				isnull(sum(TOSALARY),0) as yearMoney
+			from (select month,sum(TOSALARY) as TOSALARY  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month) t
+			)
+		union all
+			(select 
+				'福利汇总' as type,
+				isnull(sum(case month when 1 then TOWEAL else 0 end),0) month1 ,
+				isnull(sum(case month when 2 then TOWEAL else 0 end),0) month2,
+				isnull(sum(case month when 3 then TOWEAL else 0 end),0) month3,
+				isnull(sum(case month when 4 then TOWEAL else 0 end),0) month4,
+				isnull(sum(case month when 5 then TOWEAL else 0 end),0) month5,
+				isnull(sum(case month when 6 then TOWEAL else 0 end),0) month6,
+				isnull(sum(case month when 7 then TOWEAL else 0 end),0) month7,
+				isnull(sum(case month when 8 then TOWEAL else 0 end),0) month8,
+				isnull(sum(case month when 9 then TOWEAL else 0 end),0) month9,
+				isnull(sum(case month when 10 then TOWEAL else 0 end),0) month10,
+				isnull(sum(case month when 11 then TOWEAL else 0 end),0) month11,
+				isnull(sum(case month when 12 then TOWEAL else 0 end),0) month12,
+				isnull(sum(TOWEAL),0) as yearMoney
+			from (select month,sum(TOWEAL) as TOWEAL  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month) t
+			)
+		union all
+			(select 
+			a1.type,0 as month1,0 as month2,0 as month3,0 as month4,0 as month5,0 as month6,0 as month7,0 as month8,0 as month9,0 as month10,0 as month11,
+			(month1+month2+month3+month4+month5+month6+month7+month8+month9)as month12,(month1+month2+month3+month4+month5+month6+month7+month8+month9)as year
+			 from (
+			select 
+					'奖金汇总' as type,
+					isnull(sum(case month when 1 then TOBONUS else 0 end),0) month1 ,
+					isnull(sum(case month when 2 then TOBONUS else 0 end),0) month2,
+					isnull(sum(case month when 3 then TOBONUS else 0 end),0) month3,
+					isnull(sum(case month when 4 then TOBONUS else 0 end),0) month4,
+					isnull(sum(case month when 5 then TOBONUS else 0 end),0) month5,
+					isnull(sum(case month when 6 then TOBONUS else 0 end),0) month6,
+					isnull(sum(case month when 7 then TOBONUS else 0 end),0) month7,
+					isnull(sum(case month when 8 then TOBONUS else 0 end),0) month8,
+					isnull(sum(case month when 9 then TOBONUS else 0 end),0) month9,
+					isnull(sum(case month when 10 then TOBONUS else 0 end),0) month10,
+					isnull(sum(case month when 11 then TOBONUS else 0 end),0) month11,
+					isnull(sum(case month when 12 then TOBONUS else 0 end),0) month12
+				from (select month,sum(TOBONUS) as TOBONUS  from DEPT_EMP_BUDGET a where year=#year# and costtype in ($costtype$) and status=#status# and orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$)) 
+			 group by a.month) t
+			) a1
+		)
+    ]]>
+    </select>
+    <select id="queryGsAllPeople"  resultMap="resultMap2"><!--公司级公摊人员 -->
+    <![CDATA[
+		select a.dictname,a.dictid,a.sortno,b.sumPerson1,b.sumPerson2,b.sumPerson3,b.sumPerson4,b.sumPerson5,b.sumPerson6,b.sumPerson7,b.sumPerson8,b.sumPerson9,b.sumPerson10,b.sumPerson11,b.sumPerson12,
+			((isNull(sumPerson1,0))+isNull(sumPerson2,0)+isNull(sumPerson3,0)+isNull(sumPerson4,0)+isNull(sumPerson5,0)+isNull(sumPerson6,0)
+					 +isNull(sumPerson7,0)+isNull(sumPerson8,0)+isNull(sumPerson9,0)+isNull(sumPerson10,0)+isNull(sumPerson11,0)+isNull(sumPerson12,0)) as sumPerson
+			from  
+			(SELECT dictname,dictid,sortno from EOS_DICT_ENTRY where DICTTYPEID = 'EXP_REGION')  as a 
+			left join 
+			(select year,CITYCODE,
+					sum(sumPerson1)as sumPerson1,sum(sumPerson2)as sumPerson2,sum(sumPerson3)as sumPerson3,sum(sumPerson4)as sumPerson4,sum(sumPerson5)as sumPerson5,sum(sumPerson6)as sumPerson6,
+					sum(sumPerson7)as sumPerson7,sum(sumPerson8)as sumPerson8,sum(sumPerson9)as sumPerson9,sum(sumPerson10)as sumPerson10,sum(sumPerson11)as sumPerson11,sum(sumPerson12)as sumPerson12,
+					(sum(isNull(sumPerson1,0))+sum(isNull(sumPerson2,0))+sum(isNull(sumPerson3,0))+sum(isNull(sumPerson4,0))+sum(isNull(sumPerson5,0))+sum(isNull(sumPerson6,0))
+					 +sum(isNull(sumPerson7,0))+sum(isNull(sumPerson8,0))+sum(isNull(sumPerson9,0))+sum(isNull(sumPerson10,0))+sum(isNull(sumPerson11,0))+sum(isNull(sumPerson12,0))) as yearmoney
+			 from 
+					(SELECT year,CITYCODE,orgid,costtype,[1] as sumPerson1,[2] as sumPerson2,[3] as sumPerson3,[4] as sumPerson4,[5] as sumPerson5,[6] as sumPerson6,
+									[7] as sumPerson7,[8] as sumPerson8,[9] as sumPerson9,[10] as sumPerson10,[11] as sumPerson11,[12] as sumPerson12 
+					FROM DEPT_SHAR_BUDGET a
+					PIVOT (SUM (pernum) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$) )
+			and year = #year#  and costtype in ($costtype$)
+			GROUP BY a.year,CITYCODE  
+			) b on a.dictid = b.CITYCODE order by sortno asc
+    ]]>
+    </select>
+    <select id="queryGsAllMoney"  resultMap="resultMap3"><!--公司级公摊金额 -->
+    <![CDATA[
+		select a.dictname,a.dictid,a.sortno,b.sumSharmoney1,b.sumSharmoney2,b.sumSharmoney3,b.sumSharmoney4,b.sumSharmoney5,b.sumSharmoney6,b.sumSharmoney7,b.sumSharmoney8,b.sumSharmoney9,b.sumSharmoney10,b.sumSharmoney11,b.sumSharmoney12,
+			((isNull(sumSharmoney1,0))+isNull(sumSharmoney2,0)+isNull(sumSharmoney3,0)+isNull(sumSharmoney4,0)+isNull(sumSharmoney5,0)+isNull(sumSharmoney6,0)
+					 +isNull(sumSharmoney7,0)+isNull(sumSharmoney8,0)+isNull(sumSharmoney9,0)+isNull(sumSharmoney10,0)+isNull(sumSharmoney11,0)+isNull(sumSharmoney12,0)) as sumSharmoney
+			from  
+			(SELECT dictname,dictid,sortno from EOS_DICT_ENTRY where DICTTYPEID = 'EXP_REGION')  as a 
+			left join 
+			(select year,CITYCODE,
+					sum(sumSharmoney1)as sumSharmoney1,sum(sumSharmoney2)as sumSharmoney2,sum(sumSharmoney3)as sumSharmoney3,sum(sumSharmoney4)as sumSharmoney4,sum(sumSharmoney5)as sumSharmoney5,sum(sumSharmoney6)as sumSharmoney6,
+					sum(sumSharmoney7)as sumSharmoney7,sum(sumSharmoney8)as sumSharmoney8,sum(sumSharmoney9)as sumSharmoney9,sum(sumSharmoney10)as sumSharmoney10,sum(sumSharmoney11)as sumSharmoney11,sum(sumSharmoney12)as sumSharmoney12,
+					(sum(isNull(sumSharmoney1,0))+sum(isNull(sumSharmoney2,0))+sum(isNull(sumSharmoney3,0))+sum(isNull(sumSharmoney4,0))+sum(isNull(sumSharmoney5,0))+sum(isNull(sumSharmoney6,0))
+					 +sum(isNull(sumSharmoney7,0))+sum(isNull(sumSharmoney8,0))+sum(isNull(sumSharmoney9,0))+sum(isNull(sumSharmoney10,0))+sum(isNull(sumSharmoney11,0))+sum(isNull(sumSharmoney12,0))) as yearmoney
+			 from 
+					(SELECT year,CITYCODE,orgid,costtype,[1] as sumSharmoney1,[2] as sumSharmoney2,[3] as sumSharmoney3,[4] as sumSharmoney4,[5] as sumSharmoney5,[6] as sumSharmoney6,
+									[7] as sumSharmoney7,[8] as sumSharmoney8,[9] as sumSharmoney9,[10] as sumSharmoney10,[11] as sumSharmoney11,[12] as sumSharmoney12 
+					FROM DEPT_SHAR_BUDGET a
+					PIVOT (SUM (SHARMONEY) FOR MONTH IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as b )a 
+			where  orgid in
+			(select orgid from BUDGET_ORG where  budget_year =#year# and ORGDEGREE in ($orgdegree$) and ORGTYPE in ($orgtype$) )
+			and year = #year#  and costtype in ($costtype$)
+			GROUP BY a.year,CITYCODE 
+			) b on a.dictid = b.CITYCODE order by sortno asc
+    ]]>
+    </select>
+</sqlMap>

@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="FunctionGroupManager" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node4" name="注释4" displayName="注释" nodeType="note" type="note" content="在动态树上对功能组进行增删改操作" title="张丹凤&#x9;08-8-28 上午11:02">
+    <location x="731" y="351"/>
+    <size height="49" width="136"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node3" name="注释3" displayName="注释" collapsed="false" nodeType="note" type="note" content="修改（子）功能组" title="张丹凤&#x9;08-8-13 下午3:27">
+    <targetConnections>link24</targetConnections>
+    <location x="645" y="38"/>
+    <size height="45" width="125"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node2" name="注释2" displayName="注释" nodeType="note" type="note" content="新增子功能组（父功能组是非自身功能组）" title="张丹凤&#x9;08-8-13 下午3:34">
+    <targetConnections>link18</targetConnections>
+    <location x="122" y="444"/>
+    <size height="46" width="128"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="新增功能组（父功能组是本身）" title="张丹凤&#x9;08-8-13 下午3:27">
+    <targetConnections>link14</targetConnections>
+    <location x="309" y="371"/>
+    <size height="45" width="125"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" description="" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="entry" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link5" name="link5" lineType="reference" type="action" actionName="add" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link13" name="link13" lineType="reference" type="action" actionName="addSub" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view5</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupname" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link19" name="link19" lineType="reference" type="action" actionName="update" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcFuncgroup" name="funcGroup"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="123" y="236"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" type="end" contextPath="" method="forward" uri="/abframe/rights/functiongroup/func_groupsub_list.jsp">
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="705" y="236"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="125" y="272"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="707" y="272"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="Tab页面" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/functiongroup/func_group_tab.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="query" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>subprocess5</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link26" name="link26" lineType="reference" type="action" actionName="querySubFuncGroup" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="245" y="236"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="233" y="272"/>
+    <figSize height="17" width="47"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view2" name="新增功能组" displayName="func_group_add.jsp" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/functiongroup/func_group_add.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link6" name="link6" lineType="reference" isDefault="true" type="action" actionName="addExcute" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcFuncgroup" name="funcGroup"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="125" y="316"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view2label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view2label" name="label" nodeType="label">
+    <location x="106" y="352"/>
+    <figSize height="17" width="61"/>
+    <node>view2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="新增功能组" displayName="addFuncGroup" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" type="note">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>node1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign5</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="330" y="316"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.addFuncGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroup" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject" pattern="reference">funcGroup</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="retCode" type="query" value="String" valueType="Primitive">retCode</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="313" y="351"/>
+    <figSize height="17" width="61"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="设置加载位置" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal"/>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="242" y="316"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">appid</process:from>
+      <process:to type="query">funcGroup/acApplication/appid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="220" y="352"/>
+    <figSize height="17" width="73"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="新增子功能组" displayName="addSubFuncGroup" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" type="note">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>node2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="27" y="408"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.addSubFuncGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroupTemp" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject" pattern="reference">funcGroup</process:inputVariable>
+        <process:inputVariable id="1" name="funcGroupId" type="query" value="Int" valueType="Primitive" pattern="reference">funcgroupid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="isSuccess" type="query" value="Int" valueType="Primitive">isSuccess</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="4" y="443"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="修改功能组" displayName="updateFuncGroup" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link22" name="link22" displayName="连接线" isDefault="true" type="transition">
+      <bendPoint heightToEnd="-305" heightToStart="0" widthToEnd="154" widthToStart="270"/>
+      <bendPoint heightToEnd="0" heightToStart="305" widthToEnd="154" widthToStart="270"/>
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>assign6</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" type="note">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>node3</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <location x="493" y="12"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.updateFuncGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroupUpdate" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject" pattern="reference">funcGroup</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="isSuccess" type="query" value="Int" valueType="Primitive">isSuccess</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="476" y="47"/>
+    <figSize height="17" width="61"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess4" name="根据ID查询功能组" displayName="expandFuncGroup" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>view3</targetNode>
+    </sourceConnections>
+    <targetConnections>link23</targetConnections>
+    <location x="242" y="12"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.expandFuncGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroupTemp" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject" pattern="reference">funcGroup</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <location x="206" y="47"/>
+    <figSize height="17" width="98"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="设置查询主键" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link23" name="link23" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>subprocess4</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="122" y="12"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">funcgroupid</process:from>
+      <process:to type="query">funcGroup/funcgroupid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="100" y="48"/>
+    <figSize height="17" width="73"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="打开节点刷新开关" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="403" y="316"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">isRefreshNode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="369" y="352"/>
+    <figSize height="17" width="97"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="设置父功能组" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>assign6</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="608" y="408"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">funcgroupid</process:from>
+      <process:to type="query">funcGroup/funcgroupid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="586" y="444"/>
+    <figSize height="17" width="73"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign6" name="打开父节点刷新开关" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>subprocess6</targetNode>
+    </sourceConnections>
+    <targetConnections>link22</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="608" y="316"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign6label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">isRefreshParent</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
+    <location x="568" y="352"/>
+    <figSize height="17" width="109"/>
+    <node>assign6</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view5" name="新增子功能组" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/functiongroup/func_groupsub_add_dtree.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link15" name="link15" lineType="reference" isDefault="true" type="action" actionName="addSubExcute" dataConvertClass="">
+      <sourceNode>view5</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcFuncgroup" name="funcGroup"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="30" y="236"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view5label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view5label" name="label" nodeType="label">
+    <location x="5" y="272"/>
+    <figSize height="17" width="73"/>
+    <node>view5</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view3" name="修改功能组" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/functiongroup/func_group_update_dtree.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link20" name="link20" lineType="reference" isDefault="true" type="action" actionName="updateExcute" dataConvertClass="">
+      <sourceNode>view3</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcFuncgroup" name="funcGroup"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link21</targetConnections>
+    <location x="360" y="12"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view3label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view3label" name="label" nodeType="label">
+    <location x="341" y="48"/>
+    <figSize height="17" width="61"/>
+    <node>view3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess5" name="查询本功能组信息" displayName="getFuncGroupInfo" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>view4</targetNode>
+    </sourceConnections>
+    <targetConnections>link25</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="242" y="78"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess5label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.getFuncGroupInfo</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroupId" type="query" value="Int" valueType="Primitive" pattern="reference">funcgroupid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="funcGroupInfo" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject">funcGroup</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess5label" name="label" nodeType="label">
+    <location x="207" y="113"/>
+    <figSize height="17" width="97"/>
+    <node>subprocess5</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess6" name="查询其子功能组" displayName="getFuncGroupSub" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess6</sourceNode>
+      <targetNode>view6</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="493" y="236"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess6label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.getFuncGroupSub</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroupId" type="query" value="Int" valueType="Primitive" pattern="reference">funcgroupid</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="subFuncGroupList" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup[]" valueType="DataObject">subFuncGroups</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+        <process:outputVariable id="2" name="total" type="query" value="Int" valueType="Primitive"></process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
+    <location x="464" y="271"/>
+    <figSize height="17" width="85"/>
+    <node>subprocess6</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view4" name="本功能组信息" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/functiongroup/func_group_info.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link3" name="link3" lineType="reference" isDefault="true" type="action" actionName="updateInfo" dataConvertClass="">
+      <sourceNode>view4</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcFuncgroup" name="funcGroup"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link27" name="link27" lineType="reference" type="action" actionName="action0">
+      <sourceNode>view4</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="615" y="170"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view4label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view4label" name="label" nodeType="label">
+    <location x="590" y="206"/>
+    <figSize height="17" width="73"/>
+    <node>view4</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view6" name="子功能组列表" displayName="func_groupsub_list.jsp" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/functiongroup/func_groupsub_list.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link4" name="link4" lineType="reference" isDefault="true" type="action" actionName="action2" dataConvertClass="">
+      <sourceNode>view6</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link30" name="link30" lineType="reference" type="action" actionName="queryGroups" dataConvertClass="">
+      <bendPoint heightToEnd="-48" heightToStart="-48" widthToEnd="99" widthToStart="-109"/>
+      <sourceNode>view6</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="funcgroupid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="613" y="236"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view6label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view6label" name="label" nodeType="label">
+    <location x="588" y="272"/>
+    <figSize height="17" width="73"/>
+    <node>view6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess7" name="修改本功能组信息" displayName="修改功能组" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link28" name="link28" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess7</sourceNode>
+      <targetNode>assign7</targetNode>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <location x="493" y="78"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess7label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.FuncGroupManager.updateFuncGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="funcGroupUpdate" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup" valueType="DataObject" pattern="reference">funcGroup</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="isSuccess" type="query" value="Int" valueType="Primitive">isSuccess</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess7label" name="label" nodeType="label">
+    <location x="458" y="113"/>
+    <figSize height="17" width="97"/>
+    <node>subprocess7</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign7" name="刷新其所在应用节点" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign7</sourceNode>
+      <targetNode>subprocess5</targetNode>
+    </sourceConnections>
+    <targetConnections>link28</targetConnections>
+    <location x="358" y="78"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign7label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">isRefreshParent</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">
+    <location x="318" y="114"/>
+    <figSize height="17" width="109"/>
+    <node>assign7</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess7</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="611" y="78"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">funcgroupid</process:from>
+      <process:to type="query">funcGroup/funcgroupid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="613" y="114"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess6</targetNode>
+    </sourceConnections>
+    <targetConnections>link26</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link30</targetConnections>
+    <location x="402" y="236"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="400" y="272"/>
+    <figSize height="17" width="32"/>
+    <node>assign2</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="张丹凤" createTime="2008-08-12 13:51:18" date="2008-08-12Z" description="" name="功能组管理" version="6.0"/>
+  <process:variables/>
+  <process:inputParameters/>
+</process:tPageFlow>

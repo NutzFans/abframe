@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="sendMailToParti.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+    </sourceConnections>
+    <location x="30" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="960" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="32" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="962" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService0" name="查询工作项参与者" displayName="WorkItemManagerService.queryWorkItemParticipantInfo4SDO" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="105" y="153"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService0label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.queryWorkItemParticipantInfo4SDO</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="workItemID" type="query" value="long" valueType="Java" pattern="reference">workItemID</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">list</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
+    <location x="71" y="183"/>
+    <figSize height="17" width="97"/>
+    <node>invokeService0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>loopstart0</targetNode>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="225" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">您有一条新的待办任务到达</process:from>
+      <process:to type="query">email/subject</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailAccount</process:from>
+      <process:to type="query">email/from</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailSmtpHost</process:from>
+      <process:to type="query">email/smtpHost</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailSmtpPort</process:from>
+      <process:to type="query">email/smtpPort</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailAccount</process:from>
+      <process:to type="query">email/userName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">emailPassword</process:from>
+      <process:to type="query">email/password</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">HTML</process:from>
+      <process:to type="query">email/messageFormat</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">UTF-8</process:from>
+      <process:to type="query">email/charset</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="227" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopStart" description="" id="loopstart0" name="循环" displayName="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="315" y="153"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
+    <process:iterate iterable="list" iterableElement="iteria"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <location x="315" y="185"/>
+    <figSize height="17" width="25"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" displayName="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>invokePojo5</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="741" y="153"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <location x="729" y="185"/>
+    <figSize height="17" width="49"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <location x="315" y="90"/>
+    <size height="166" width="451"/>
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>subprocess0</chidren>
+    <chidren>assign1</chidren>
+    <chidren>invokePojo0</chidren>
+    <chidren>invokeService1</chidren>
+    <chidren>invokePojo1</chidren>
+    <chidren>invokePojo2</chidren>
+    <chidren>assign2</chidren>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="查询邮箱" displayName="getEmpInfo" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="link6" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>loopend0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">oemail</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="360" y="199"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.common.sendMail.getEmpInfo</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="empno" type="query" value="String" valueType="Primitive" pattern="reference">iteria/id</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="empname" type="query" value="String" valueType="Primitive">iteria/name</process:outputVariable>
+        <process:outputVariable id="1" name="oemail" type="query" value="String" valueType="Primitive">oemail</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="349" y="234"/>
+    <figSize height="17" width="49"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokeService1</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="360" y="111"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">oemail</process:from>
+      <process:to type="query">email/to[1]</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1000000</process:from>
+      <process:to type="query">page/length</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="358" y="147"/>
+    <figSize height="17" width="32"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="发送邮件" displayName="发送邮件" collapsed="false" grouped="true" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="608" y="111"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="static" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.primeton.eos.ame_common.AmeSendMailUtil.sendMail</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="mailInfo" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">email</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="595" y="147"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="邮件内容" displayName="concat" grouped="true" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="554" y="111"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="joinString" type="expression" value="java.lang.String" valueType="Java" pattern="reference">&quot;&quot;</process:inputVariable>
+      <process:inputVariable id="1" name="strings" type="query" value="java.lang.String" valueType="Java" pattern="reference">iteria/name</process:inputVariable>
+      <process:inputVariable id="2" name="param1" type="literal" value="java.lang.String" valueType="Java" pattern="reference">，您好：&lt;br/>您有一条新的待办任务到达！目前共有</process:inputVariable>
+      <process:inputVariable id="3" name="param2" type="query" value="java.lang.String" valueType="Java" pattern="reference">count</process:inputVariable>
+      <process:inputVariable id="4" name="param3" type="literal" value="java.lang.String" valueType="Java" pattern="reference">条任务需要处理。&lt;br/>流程名称为：</process:inputVariable>
+      <process:inputVariable id="5" name="param4" type="query" value="java.lang.String" valueType="Java" pattern="reference">processInstName</process:inputVariable>
+      <process:inputVariable id="6" name="param5" type="literal" value="java.lang.String" valueType="Java" pattern="reference">&lt;br/>环节名称为：</process:inputVariable>
+      <process:inputVariable id="7" name="param6" type="query" value="java.lang.String" valueType="Java" pattern="reference">workItemName</process:inputVariable>
+      <process:inputVariable id="8" name="param7" type="literal" value="java.lang.String" valueType="Java" pattern="reference">&lt;br/>请登陆&lt;a href=&quot;</process:inputVariable>
+      <process:inputVariable id="9" name="param10" type="query" value="java.lang.String" valueType="Java" pattern="reference">PROJECTURL</process:inputVariable>
+      <process:inputVariable id="10" name="param11" type="literal" value="java.lang.String" valueType="Java" pattern="reference">&quot;></process:inputVariable>
+      <process:inputVariable id="11" name="param12" type="query" value="java.lang.String" valueType="Java" pattern="reference">PROJECTNAME</process:inputVariable>
+      <process:inputVariable id="12" name="param13" type="literal" value="java.lang.String" valueType="Java" pattern="reference">&lt;/a>系统进行处理！</process:inputVariable>
+      <process:inputVariable id="13" name="param14" type="query" value="java.lang.String" valueType="Java" pattern="reference">companyInfo</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">email/message</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="541" y="147"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="查询还有多少任务" displayName="WorklistQueryManagerService.queryPersonWorkItems4SDO" grouped="true" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="435" y="114"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService1label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorklistQueryManagerComponent/WorklistQueryManagerService.queryPersonWorkItems4SDO</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="personID" type="query" value="java.lang.String" valueType="Java" pattern="reference">iteria/id</process:inputVariable>
+      <process:inputVariable id="1" name="permission" type="literal" value="java.lang.String" valueType="Java" pattern="reference">ALL</process:inputVariable>
+      <process:inputVariable id="2" name="scope" type="literal" value="java.lang.String" valueType="Java" pattern="reference">ALL</process:inputVariable>
+      <process:inputVariable id="3" name="pagecond" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">page</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">listTemp</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService1label" name="label" nodeType="label">
+    <location x="401" y="144"/>
+    <figSize height="17" width="97"/>
+    <node>invokeService1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="清理临时变量" displayName="deleteObject" grouped="true" type="invoke" index="1" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="675" y="111"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.data.DataContextUtil.deleteObject</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="xpaths" type="literal" value="java.lang.String" valueType="Java" pattern="reference">listTemp</process:inputVariable>
+      <process:inputVariable id="1" name="param1" type="literal" value="java.lang.String" valueType="Java" pattern="reference">page</process:inputVariable>
+      <process:inputVariable id="2" name="param2" type="literal" value="java.lang.String" valueType="Java" pattern="reference">email/message</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="650" y="147"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="得到系统配置" displayName="getDictName" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="link12" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>invokeService0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">isSendMail</process:leftOperand>
+          <process:rightOperand type="literal">true</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <bendPoint heightToEnd="-105" heightToStart="0" widthToEnd="0" widthToStart="854"/>
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="109" y="45"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.eoscommon.BusinessDictUtil.getDictName</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dictTypeId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">AME_SYSCONF</process:inputVariable>
+      <process:inputVariable id="1" name="dictId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">isSendMail</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">isSendMail</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="84" y="81"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="507" y="111"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">page/count</process:from>
+      <process:to type="query">count</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">count+1</process:from>
+      <process:to type="query">count</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="505" y="147"/>
+    <figSize height="17" width="32"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="concat" displayName="concat" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="link16" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>invokePojo6</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="900" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="joinString" type="literal" value="java.lang.String" valueType="Java" pattern="reference"/>
+      <process:inputVariable id="1" name="strings" type="literal" value="java.lang.String" valueType="Java" pattern="reference">流程实例名称为：</process:inputVariable>
+      <process:inputVariable id="2" name="param1" type="query" value="java.lang.String" valueType="Java" pattern="reference">processInstName</process:inputVariable>
+      <process:inputVariable id="3" name="param2" type="literal" value="java.lang.String" valueType="Java" pattern="reference">，工作项名称为：</process:inputVariable>
+      <process:inputVariable id="4" name="param3" type="query" value="java.lang.String" valueType="Java" pattern="reference">workItemName</process:inputVariable>
+      <process:inputVariable id="5" name="param4" type="literal" value="java.lang.String" valueType="Java" pattern="reference">，任务到达后，给用户：</process:inputVariable>
+      <process:inputVariable id="6" name="param5" type="query" value="java.lang.String" valueType="Java" pattern="reference">empnames</process:inputVariable>
+      <process:inputVariable id="7" name="param6" type="literal" value="java.lang.String" valueType="Java" pattern="reference">发送邮件</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">operateinfo</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="892" y="186"/>
+    <figSize height="17" width="39"/>
+    <node>invokePojo4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo5" name="得到收件人姓名" displayName="得到收件人姓名" collapsed="false" type="invoke" index="5" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="link15" isDefault="true" type="transition">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>invokePojo4</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="819" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo5label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.data.DataObjectUtil.concatPropertyValues</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="entities" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">list</process:inputVariable>
+      <process:inputVariable id="1" name="propertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">name</process:inputVariable>
+      <process:inputVariable id="2" name="roundString" type="expression" value="java.lang.String" valueType="Java" pattern="reference">&quot;&quot;</process:inputVariable>
+      <process:inputVariable id="3" name="joinString" type="literal" value="java.lang.String" valueType="Java" pattern="reference">,</process:inputVariable>
+      <process:inputVariable id="4" name="ignoreNullValue" type="literal" value="boolean" valueType="Java" pattern="reference">true</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">empnames</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo5label" name="label" nodeType="label">
+    <location x="788" y="186"/>
+    <figSize height="17" width="85"/>
+    <node>invokePojo5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo6" name="记录操作日志" displayName="saveop4Login" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo6</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="900" y="229"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo6label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.primeton.eos.ame_common.opLog.saveop4Login</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="userName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">系统</process:inputVariable>
+      <process:inputVariable id="1" name="operatefunc" type="literal" value="java.lang.String" valueType="Java" pattern="reference">任务到达邮件通知</process:inputVariable>
+      <process:inputVariable id="2" name="operatefuncmo" type="literal" value="java.lang.String" valueType="Java" pattern="reference">公共功能</process:inputVariable>
+      <process:inputVariable id="3" name="optype" type="literal" value="java.lang.String" valueType="Java" pattern="reference">7</process:inputVariable>
+      <process:inputVariable id="4" name="operateinfo" type="query" value="java.lang.String" valueType="Java" pattern="reference">operateinfo</process:inputVariable>
+      <process:inputVariable id="5" name="userid" type="literal" value="java.lang.String" valueType="Java" pattern="reference">system</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo6label" name="label" nodeType="label">
+    <location x="875" y="265"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="获取mis信息" displayName="getMisEmailInfo" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <location x="225" y="225"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.select.GetMisMailInfo.getMisEmailInfo</process:partner>
+      <process:inputVariables/>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="emailAccount" type="query" value="String" valueType="Primitive">emailAccount</process:outputVariable>
+        <process:outputVariable id="1" name="emailPassword" type="query" value="String" valueType="Primitive">emailPassword</process:outputVariable>
+        <process:outputVariable id="2" name="emailSmtpHost" type="query" value="String" valueType="Primitive">emailSmtpHost</process:outputVariable>
+        <process:outputVariable id="3" name="emailSmtpPort" type="query" value="String" valueType="Primitive">emailSmtpPort</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="204" y="260"/>
+    <figSize height="17" width="69"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="获取公司落款" displayName="getCompanyEmailInfo" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="106" y="225"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.select.GetMisMailInfo.getCompanyEmailInfo</process:partner>
+      <process:inputVariables/>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="companyInfo" type="query" value="String" valueType="Primitive">companyInfo</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="83" y="260"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess2</node>
+  </nodes>
+  <topRuler>
+    <guides position="375" horizontal="true"/>
+  </topRuler>
+  <leftRuler/>
+  <process:info author="huangqj" createTime="2016-07-04 13:46:56" date="2016-07-04Z" description="" name="sendMailToParti" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.eos.workflow.data.WFParticipant" name="list"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.MailInfo" name="email"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="iteria"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="count" primitiveType="Int"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailPassword" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailSmtpHost" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailAccount" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="emailSmtpPort" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="companyInfo" primitiveType="String"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" name="workItemID" primitiveType="Long"/>
+    <process:input description="" isArray="false" name="workItemName" primitiveType="String"/>
+    <process:input description="" isArray="false" name="processInstName" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs/>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

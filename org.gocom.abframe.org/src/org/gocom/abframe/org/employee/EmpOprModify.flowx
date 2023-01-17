@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="EmpOprModify" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="人员操作者的修改" title="江品廷&#x9;08-8-20 下午6:18">
+    <location x="32" y="96"/>
+    <size height="66" width="148"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" description="" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <location x="30" y="32"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/org/emp/empopr_org_modify.jsp">
+    <targetConnections>link3</targetConnections>
+    <location x="264" y="115"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="32" y="68"/>
+    <figSize height="15" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="266" y="151"/>
+    <figSize height="15" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="人员操作者修改页面" displayName="empopr_org_modify.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/emp/empopr_org_modify.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" lineType="reference" isDefault="true" type="action" actionName="mdf" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmEmployee" name="oEmp"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcOperator" name="oOpr"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link3" name="link3" lineType="reference" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="266" y="32"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="223" y="68"/>
+    <figSize height="15" width="109"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="更新人员、操作员信息" displayName="modifyEmpOpr" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="390" y="32"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.employee.EmpManager.modifyEmpOpr</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="oEmp" type="query" value="org.gocom.abframe.dataset.organization.OmEmployee" valueType="DataObject" pattern="reference">oEmp</process:inputVariable>
+        <process:inputVariable id="1" name="oOpr" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator" valueType="DataObject" pattern="reference">oOpr</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="iRtn" type="query" value="Int" valueType="Primitive">iRtn</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="343" y="67"/>
+    <figSize height="15" width="121"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="查询人员操作者" displayName="queryEmpOprByEmpid" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="149" y="32"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.employee.EmpManager.queryEmpOprByEmpid</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="iEmpid" type="query" value="Int" valueType="Primitive" pattern="reference">oEmp/empid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="oEmp" type="query" value="org.gocom.abframe.dataset.organization.OmEmployee" valueType="DataObject">oEmp</process:outputVariable>
+        <process:outputVariable id="1" name="oOpr" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator" valueType="DataObject">oOpr</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="120" y="67"/>
+    <figSize height="15" width="85"/>
+    <node>subprocess2</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="江品廷" createTime="2008-08-20 17:32:04" date="2008-08-20Z" description="" name="empOprModify" version="6.0"/>
+  <process:variables/>
+  <process:inputParameters>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmEmployee" name="oEmp"/>
+  </process:inputParameters>
+</process:tPageFlow>

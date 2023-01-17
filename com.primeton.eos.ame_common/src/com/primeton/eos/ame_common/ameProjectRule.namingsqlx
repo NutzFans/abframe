@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:shihao -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="PROJECT_ID" javaType="string" property="PROJECT_ID"/>
+        <result column="PROJECT_NO" javaType="string" property="PROJECT_NO"/>
+        <result column="FIN_UNIT_ID" javaType="string" property="FIN_UNIT_ID"/>
+        <result column="PROJECT_NAME" javaType="string" property="PROJECT_NAME"/>
+        <!-- 客户简称-->
+        <result column="CUSTJC" javaType="string" property="CUSTJC"/>
+        <!-- 受益部门-->
+        <result column="ORGNAME" javaType="string" property="ORGNAME"/>
+        <!-- 项目经理-->
+        <result column="OPERATORNAME" javaType="string" property="OPERATORNAME"/>
+        <result column="PROJECT_STATUS" javaType="string" property="PROJECT_STATUS"/>
+        <result column="STARTDATE" javaType="java.sql.Timestamp" property="STARTDATE"/>
+        
+        <result column="ENDDATE" javaType="java.sql.Timestamp" property="ENDDATE"/>
+        <result column="EXPENDDATE" javaType="java.sql.Timestamp" property="EXPENDDATE"/>
+        
+        <result column="PCOSTTYPE" javaType="string" property="PCOSTTYPE"/>
+        
+    </resultMap>
+    
+    <!-- 根据规则ID，获取项目组信息-->
+    <select id="getProjectRuleByRuleID" parameterClass="string" resultMap="resultMap">
+    <![CDATA[
+    	SELECT
+			A.PROJECT_ID,  A.FIN_UNIT_ID, A.PROJECT_NAME, A.PROJECT_TYPE, 
+			A.PROJECT_STATUS, A.CUSTID, A.SALEID, A.PRICETYPE, 
+		    A.REMINDFZ, A.STARTDATE, A.ENDDATE, A.MANAGER,  
+			A.MANAGERDEPT, A.PROJECT_NO,  A.CREATEDATE, 
+			A.EXPENDDATE, A.OUTCONTRACTID, A.OCSTARTDATE,P.OPERATORNAME,
+			A.PCOSTTYPE, A.CREATEAPPLICANT, O.ORGNAME,M.CUSTJC 
+		FROM RD_PROJECT A 
+		    	LEFT JOIN OM_ORGANIZATION O ON O.ORGID=A.FIN_UNIT_ID
+		  		LEFT JOIN MIS_CUSTINFO M ON M.CUSTID=A.CUSTID
+		  		LEFT JOIN AC_OPERATOR P ON P.USERID=A.MANAGER
+		WHERE EXISTS
+				(
+					SELECT 1 FROM AME_PROJECT_RULE R WHERE R.PROJECTNO=A.PROJECT_NO
+					     AND R.RULEID = #RULEID#
+				) 
+    ]]>
+    </select>
+    
+</sqlMap>

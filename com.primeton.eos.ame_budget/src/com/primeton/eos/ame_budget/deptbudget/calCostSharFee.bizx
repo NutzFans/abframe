@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="calCostSharFee.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="产品平台，武汉交付中心公司管理分摊" title="朱海翔&#x9;17-12-15 上午10:58">
+    <location x="345" y="465"/>
+    <size height="76" width="168"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <location x="332" y="300"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link4</targetConnections>
+    <location x="1076" y="300"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="java.util.HashMap" name="fee" type="query" valueType="Java">fee</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="334" y="336"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="1078" y="336"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="计算参与分摊部门的总的自有成本" displayName="calSelfCostTotal" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="665" y="300"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_budget.deptbudget.calSelfCostTotal</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="totalfee" type="query" value="Double" valueType="Primitive">totalfee</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="588" y="335"/>
+    <figSize height="17" width="181"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="获取公司管理成本" displayName="queryComFee" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>assign10</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="440" y="300"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_budget.deptbudget.queryComFee</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="budgetTemp" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer[]" valueType="DataObject">budgetTemp</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="405" y="335"/>
+    <figSize height="17" width="97"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess4" name="部门成本" displayName="calSelfCost" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="804" y="300"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.calSelfCost</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="orgid" type="query" value="String" valueType="Primitive" pattern="reference">orgid</process:inputVariable>
+        <process:inputVariable id="1" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="2" name="costtype" type="query" value="String" valueType="Primitive" pattern="reference">costtype</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="fee" type="query" value="Double" valueType="Primitive">fees</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <location x="793" y="335"/>
+    <figSize height="17" width="49"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="1015" y="300"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">paraTemp/parameters</process:from>
+      <process:to type="query">parameters</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">fees/totalfee*parameters+pratio</process:from>
+      <process:to type="query">pratio</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">commshar1*pratio</process:from>
+      <process:to type="query">fee/quar1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">commshar2*pratio</process:from>
+      <process:to type="query">fee/quar2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">commshar3*pratio</process:from>
+      <process:to type="query">fee/quar3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">commshar4*pratio</process:from>
+      <process:to type="query">fee/quar4</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="1017" y="336"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign10" name="赋值6" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="545" y="300"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign10label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetTemp[1]/commshar</process:from>
+      <process:to type="query">commshar1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetTemp[2]/commshar</process:from>
+      <process:to type="query">commshar2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetTemp[3]/commshar</process:from>
+      <process:to type="query">commshar3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetTemp[4]/commshar</process:from>
+      <process:to type="query">commshar4</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
+    <location x="543" y="336"/>
+    <figSize height="17" width="32"/>
+    <node>assign10</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="管理分摊比例" displayName="calMaPratio" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="946" y="300"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.calMaPratio</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="orgid" type="query" value="String" valueType="Primitive" pattern="reference">orgid</process:inputVariable>
+        <process:inputVariable id="1" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="2" name="parentorgid" type="query" value="String" valueType="Primitive" pattern="reference">budgetorg/budgetOrg/orgid</process:inputVariable>
+        <process:inputVariable id="3" name="orgseq" type="query" value="String" valueType="Primitive" pattern="reference">budgetorg/orgseq</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="pratio" type="query" value="Double" valueType="Primitive">pratio</process:outputVariable>
+        <process:outputVariable id="1" name="permsr" type="query" value="Double" valueType="Primitive">permsr</process:outputVariable>
+        <process:outputVariable id="2" name="perxcfl" type="query" value="Double" valueType="Primitive">perxcfl</process:outputVariable>
+        <process:outputVariable id="3" name="perhte" type="query" value="Double" valueType="Primitive">perhte</process:outputVariable>
+        <process:outputVariable id="4" name="perml" type="query" value="Double" valueType="Primitive">perml</process:outputVariable>
+        <process:outputVariable id="5" name="permsrd" type="query" value="Double" valueType="Primitive">permsrd</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="923" y="335"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="查orgseq" displayName="查orgseq1" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="883" y="384"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntityByTemplate</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="template" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetorg</process:inputVariable>
+      <process:inputVariable id="2" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetorg</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="867" y="420"/>
+    <figSize height="17" width="55"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="804" y="384"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgid</process:from>
+      <process:to type="query">budgetorg/orgid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">budgetorg/budgetYear</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">GL-ZYCB</process:from>
+      <process:to type="query">paraTemp/paracode</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">paraTemp/year</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="802" y="420"/>
+    <figSize height="17" width="32"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="自有成本参数" displayName="毛收入参数" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="949" y="384"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntityByTemplate</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="template" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">paraTemp</process:inputVariable>
+      <process:inputVariable id="2" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">paraTemp</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="924" y="420"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="朱海翔" createTime="2017-12-15 10:42:28" date="2017-12-15Z" description="计算成本部门管理分摊（产品平台、武汉交付中心）" name="计算成本部门管理分摊" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="pratio" primitiveType="Double"/>
+    <process:variable description="公司管理费用/事业部管理分摊" historyStateLocation="client" isArray="false" name="commshar1" primitiveType="Double"/>
+    <process:variable description="公司管理费用/事业部管理分摊" historyStateLocation="client" isArray="false" name="commshar2" primitiveType="Double"/>
+    <process:variable description="公司管理费用/事业部管理分摊" historyStateLocation="client" isArray="false" name="commshar3" primitiveType="Double"/>
+    <process:variable description="公司管理费用/事业部管理分摊" historyStateLocation="client" isArray="false" name="commshar4" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="totalfee" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="fees" primitiveType="Double"/>
+    <process:variable description="coo-office季度成本" historyStateLocation="client" isArray="false" name="quar1" primitiveType="Double"/>
+    <process:variable description="coo-office季度成本" historyStateLocation="client" isArray="false" name="quar2" primitiveType="Double"/>
+    <process:variable description="coo-office季度成本" historyStateLocation="client" isArray="false" name="quar3" primitiveType="Double"/>
+    <process:variable description="coo-office季度成本" historyStateLocation="client" isArray="false" name="quar4" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="quarTemp" primitiveType="Double"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetOrg" name="budgetorg"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetPara" name="paraTemp"/>
+    <process:variable description="自有成本参数值" historyStateLocation="client" isArray="false" name="parameters" primitiveType="Double"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" name="year" primitiveType="String"/>
+    <process:input description="" isArray="false" name="orgid" primitiveType="String"/>
+    <process:input description="" isArray="false" name="costtype" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output anyType="java.util.HashMap" description="需要分摊的成本" isArray="false" name="fee"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

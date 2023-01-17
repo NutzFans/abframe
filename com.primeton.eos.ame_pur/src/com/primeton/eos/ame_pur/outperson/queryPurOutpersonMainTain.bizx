@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryPurOutpersonMainTain.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="扩展字段受益部门（汇报对象）" title="zhuyl&#x9;17-1-3 下午2:29">
+    <targetConnections>link14</targetConnections>
+    <location x="756" y="180"/>
+    <size height="51" width="183"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <location x="60" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link15</targetConnections>
+    <location x="1066" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="com.primeton.eos.ame_pur.ame.PurProjOutper[]" name="purProjOutper" type="query" valueType="DataObject">purProjOutper</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="62" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="1068" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="120" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.primeton.eos.ame_pur.ame.PurProjOutper</process:from>
+      <process:to type="query">criteria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">sortField</process:from>
+      <process:to type="query">criteria/_orderby[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">sortOrder</process:from>
+      <process:to type="query">criteria/_orderby[1]/_sort</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">outperno</process:from>
+      <process:to type="query">criteria/_expr[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">purOutperson/outperno</process:from>
+      <process:to type="query">criteria/_expr[1]/_value</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="122" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="获取该外包人员所属的外包项目列表" displayName="查询采购合同基本信息" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="240" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.queryEntitiesByCriteriaEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="criteriaEntity" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">criteria</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">purProjOutper</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="155" y="96"/>
+    <figSize height="17" width="193"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="服务项目" displayName="fillCodeDesc" type="invoke" index="7" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>loopstart0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="377" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.fillCodeDesc</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="entities" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">purProjOutper</process:inputVariable>
+      <process:inputVariable id="2" name="propertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">projectno</process:inputVariable>
+      <process:inputVariable id="3" name="codeEntityName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.rdmgr.data.rd.RdProject</process:inputVariable>
+      <process:inputVariable id="4" name="associationPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">projectno</process:inputVariable>
+      <process:inputVariable id="5" name="codeEntityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">projectName,custid,omOrganization/orgid</process:inputVariable>
+      <process:inputVariable id="6" name="entityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">projectname,custid1,orgid</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="364" y="96"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="采购合同" displayName="项目" collapsed="false" type="invoke" index="7" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="895" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.fillCodeDesc</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="entities" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">purProjOutper</process:inputVariable>
+      <process:inputVariable id="2" name="propertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purcontid</process:inputVariable>
+      <process:inputVariable id="3" name="codeEntityName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_pur.ame.PurContract</process:inputVariable>
+      <process:inputVariable id="4" name="associationPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purcontid</process:inputVariable>
+      <process:inputVariable id="5" name="codeEntityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purcontname</process:inputVariable>
+      <process:inputVariable id="6" name="entityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purcontname</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="882" y="96"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="采购订单" displayName="合同" collapsed="false" type="invoke" index="7" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>invokePojo7</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="949" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.fillCodeDesc</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="entities" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">purProjOutper</process:inputVariable>
+      <process:inputVariable id="2" name="propertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purorderid</process:inputVariable>
+      <process:inputVariable id="3" name="codeEntityName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.eos.ame_pur.ame.PurOrder</process:inputVariable>
+      <process:inputVariable id="4" name="associationPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purorderid</process:inputVariable>
+      <process:inputVariable id="5" name="codeEntityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purordernum</process:inputVariable>
+      <process:inputVariable id="6" name="entityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">purordernum</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="936" y="96"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign8" name="客户id" displayName="赋值" collapsed="false" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="link12" isDefault="true" type="transition">
+      <sourceNode>assign8</sourceNode>
+      <targetNode>invokePojo4</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="510" y="59"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign8label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">temp/custid1</process:from>
+      <process:to type="query">misCust/custid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
+    <location x="506" y="95"/>
+    <figSize height="17" width="36"/>
+    <node>assign8</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="客户名称" displayName="赋值" collapsed="false" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="link11" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>invokePojo6</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="624" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">misCust/custname</process:from>
+      <process:to type="query">temp/custname</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="614" y="96"/>
+    <figSize height="17" width="49"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="查询客户" displayName="查询客户" collapsed="false" grouped="true" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="link8" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="570" y="59"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">misCust</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="557" y="95"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo6" name="deleteObject" displayName="deleteObject" collapsed="false" grouped="true" type="invoke" index="1" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo6</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="694" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo6label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.data.DataContextUtil.deleteObject</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="xpaths" type="literal" value="java.lang.String" valueType="Java" pattern="reference">misCust</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo6label" name="label" nodeType="label">
+    <location x="668" y="96"/>
+    <figSize height="17" width="75"/>
+    <node>invokePojo6</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopStart" description="" id="loopstart0" name="循环" displayName="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="客户ID为空" displayName="连接线" type="transition">
+      <bendPoint heightToEnd="-36" heightToStart="-35" widthToEnd="-208" widthToStart="35"/>
+      <bendPoint heightToEnd="-36" heightToStart="-35" widthToEnd="-22" widthToStart="221"/>
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>invokePojo6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">temp/custid1</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="450" y="61"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:iterate iterable="purProjOutper" iterableElement="temp"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <location x="450" y="93"/>
+    <figSize height="17" width="25"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" displayName="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>invokePojo5</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="770" y="61"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <location x="758" y="93"/>
+    <figSize height="17" width="49"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <location x="450" y="25"/>
+    <size height="97" width="344"/>
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>assign8</chidren>
+    <chidren>invokePojo4</chidren>
+    <chidren>assign4</chidren>
+    <chidren>invokePojo6</chidren>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo5" name="受益部门" displayName="采购合同" collapsed="false" type="invoke" index="7" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" type="note">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>node0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="837" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo5label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.fillCodeDesc</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="entities" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">purProjOutper</process:inputVariable>
+      <process:inputVariable id="2" name="propertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">orgid</process:inputVariable>
+      <process:inputVariable id="3" name="codeEntityName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.rdmgr.data.rd.OmOrganization</process:inputVariable>
+      <process:inputVariable id="4" name="associationPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">orgid</process:inputVariable>
+      <process:inputVariable id="5" name="codeEntityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">orgname</process:inputVariable>
+      <process:inputVariable id="6" name="entityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">orgname</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo5label" name="label" nodeType="label">
+    <location x="824" y="96"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo7" name="汇报对象" displayName="受益部门" collapsed="false" type="invoke" index="7" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo7</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="1016" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo7label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.fillCodeDesc</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="entities" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">purProjOutper</process:inputVariable>
+      <process:inputVariable id="2" name="propertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">manager</process:inputVariable>
+      <process:inputVariable id="3" name="codeEntityName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.primeton.rdmgr.data.rd.OmEmployee</process:inputVariable>
+      <process:inputVariable id="4" name="associationPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">userid</process:inputVariable>
+      <process:inputVariable id="5" name="codeEntityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">empname</process:inputVariable>
+      <process:inputVariable id="6" name="entityPropertyName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">managername</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo7label" name="label" nodeType="label">
+    <location x="1003" y="96"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo7</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="ChiaYang" createTime="2016-10-10 10:59:58" date="2016-10-10Z" description="" name="维护外包人员项目关系" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.mis.contract.contract.MisCustinfo" name="misCust"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" modelType="com.primeton.eos.ame_pur.ame.PurOutperson" name="purOutperson"/>
+    <process:input description="" isArray="false" name="sortField" primitiveType="String"/>
+    <process:input description="" isArray="false" name="sortOrder" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="true" modelType="com.primeton.eos.ame_pur.ame.PurProjOutper" name="purProjOutper"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

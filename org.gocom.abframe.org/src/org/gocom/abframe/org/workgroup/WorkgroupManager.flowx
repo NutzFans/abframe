@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="WorkgroupManager" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="描述：工作组管理页面流&#xD;&#xA;&#xD;&#xA;关键点说明：&#xD;&#xA;本岗位修改、岗位员工维护、岗位权限维护等调用的是岗位管理下的子页面流" title="周维&#x9;08-8-21 下午1:52">
+    <location x="59" y="349"/>
+    <size height="151" width="263"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <location x="57" y="157"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="59" y="193"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="工作组管理主页面" displayName="group_manager.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/workgroup/group_manager.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="groupTree" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" lineType="reference" type="action" actionName="grouptabs" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="162" y="157"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="125" y="193"/>
+    <figSize height="12" width="97"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view1" name="工作组树" displayName="group_tree.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/workgroup/group_tree.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link7" name="link7" lineType="reference" isDefault="true" type="action" actionName="toTab" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="292" y="82"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="" historyStateLocation="client" isArray="false" name="defaultTab" primitiveType="String"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" name="nodeType" primitiveType="String"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmGroup" name="group"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmPosition" name="position"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmEmployee" name="emp"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="279" y="118"/>
+    <figSize height="12" width="49"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view2" name="工作组标签页面" displayName="group_tabs.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/workgroup/group_tabs.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link5" name="link5" lineType="reference" isDefault="true" type="action" actionName="queryGroup" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link8" name="link8" lineType="reference" type="action" actionName="updateSelfGroup" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link10" name="link10" lineType="reference" isDefault="false" type="action" actionName="querySubGroup" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link4" name="link4" lineType="reference" type="action" actionName="queryGroupPosi" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow5</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link11" name="link11" lineType="reference" type="action" actionName="queryGroupEmp" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow9</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link14" name="link14" lineType="reference" type="action" actionName="manageGroupRole" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow4</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.OmPartyrole" name="oPartyrole"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link16" name="link16" lineType="reference" type="action" actionName="updatePosition" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow6</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link18" name="link18" lineType="reference" type="action" actionName="queryPositionEmp" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow7</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link20" name="link20" lineType="reference" type="action" actionName="managePositionRole" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subpageflow10</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.OmPartyrole" name="oPartyrole"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="292" y="244"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view2label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="工作组信息" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmGroup" name="group"/>
+      <process:parameter description="岗位信息" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmPosition" name="position"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view2label" name="label" nodeType="label">
+    <location x="261" y="280"/>
+    <figSize height="12" width="85"/>
+    <node>view2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow0" name="工作组条件查询" displayName="GroupMain" type="subpageflow" method="forward" subFlowAction="queryGroup" subFlowID="org.gocom.abframe.org.workgroup.GroupMain">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow0</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="533" y="34"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow0label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+      <process:inputVariable id="1" name="group" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">group</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow0label" name="label" nodeType="label">
+    <location x="504" y="71"/>
+    <figSize height="12" width="85"/>
+    <node>subpageflow0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end2" name="结束2" displayName="结束" type="end" contextPath="" method="forward" uri="/abframe/org/workgroup/group_tabs.jsp">
+    <targetConnections>link21</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link3</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="822" y="249"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end2label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end2label" name="label" nodeType="label">
+    <location x="821" y="285"/>
+    <figSize height="12" width="31"/>
+    <node>end2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow1" name="本工作组修改" displayName="GroupMain" type="subpageflow" method="forward" subFlowAction="update" subFlowID="org.gocom.abframe.org.workgroup.GroupMain">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow1</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="533" y="90"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow1label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+      <process:inputVariable id="1" name="group" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">group</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow1label" name="label" nodeType="label">
+    <location x="510" y="127"/>
+    <figSize height="12" width="73"/>
+    <node>subpageflow1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow3" name="下级工作组维护" displayName="GroupMain" type="subpageflow" method="forward" subFlowAction="queryGroup" subFlowID="org.gocom.abframe.org.workgroup.GroupMain">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow3</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="533" y="147"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow3label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+      <process:inputVariable id="1" name="group" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">group</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow3label" name="label" nodeType="label">
+    <location x="504" y="184"/>
+    <figSize height="12" width="85"/>
+    <node>subpageflow3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow5" name="工作组岗位维护" displayName="子页面流" type="subpageflow" method="forward" subFlowAction="action0" subFlowID="org.gocom.abframe.org.workgroup.GroupPositionMaintain">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow5</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="533" y="203"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow5label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="group" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">group</process:inputVariable>
+      <process:inputVariable id="1" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow5label" name="label" nodeType="label">
+    <location x="504" y="240"/>
+    <figSize height="12" width="85"/>
+    <node>subpageflow5</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow6" name="本岗位修改" displayName="子页面流" type="subpageflow" method="forward" subFlowAction="posiBaseInfo" subFlowID="org.gocom.abframe.org.position.PositionInfo">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow6</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="533" y="379"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow6label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="position" type="query" value="org.gocom.abframe.dataset.organization.OmPosition" valueType="DataObject" pattern="reference">position</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow6label" name="label" nodeType="label">
+    <location x="516" y="416"/>
+    <figSize height="12" width="61"/>
+    <node>subpageflow6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow7" name="岗位员工维护" displayName="子页面流" type="subpageflow" method="forward" subFlowAction="begin" subFlowID="org.gocom.abframe.org.position.PositionEmp">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow7</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="533" y="443"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow7label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      <process:inputVariable id="1" name="position" type="query" value="org.gocom.abframe.dataset.organization.OmPosition" valueType="DataObject" pattern="reference">position</process:inputVariable>
+      <process:inputVariable id="2" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow7label" name="label" nodeType="label">
+    <location x="510" y="480"/>
+    <figSize height="12" width="73"/>
+    <node>subpageflow7</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow9" name="工作组员工维护" displayName="子页面流" type="subpageflow" method="forward" subFlowAction="action0" subFlowID="org.gocom.abframe.org.workgroup.GroupEmpMaintain">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow9</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="533" y="263"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow9label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="group" type="query" value="org.gocom.abframe.dataset.organization.OmGroup" valueType="DataObject" pattern="reference">group</process:inputVariable>
+      <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      <process:inputVariable id="2" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow9label" name="label" nodeType="label">
+    <location x="504" y="300"/>
+    <figSize height="12" width="85"/>
+    <node>subpageflow9</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow4" name="工作组权限维护" displayName="子页面流" type="subpageflow" method="forward" subFlowAction="begin" subFlowID="org.gocom.abframe.org.party.PartyRightManitain">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow4</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="533" y="316"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow4label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="oPartyrole" type="query" value="org.gocom.abframe.dataset.privilege.OmPartyrole" valueType="DataObject" pattern="reference">oPartyrole</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow4label" name="label" nodeType="label">
+    <location x="504" y="353"/>
+    <figSize height="12" width="85"/>
+    <node>subpageflow4</node>
+  </nodes>
+  <nodes xsi:type="process:tSubPageFlow" description="" id="subpageflow10" name="岗位权限维护" displayName="子页面流" type="subpageflow" method="forward" subFlowAction="begin" subFlowID="org.gocom.abframe.org.party.PartyRightManitain">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subpageflow10</sourceNode>
+      <targetNode>end2</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <location x="533" y="525"/>
+    <size height="29" width="27"/>
+    <nodeLabel>subpageflow10label</nodeLabel>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="oPartyrole" type="query" value="org.gocom.abframe.dataset.privilege.OmPartyrole" valueType="DataObject" pattern="reference">oPartyrole</process:inputVariable>
+    </process:inputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subpageflow10label" name="label" nodeType="label">
+    <location x="510" y="562"/>
+    <figSize height="12" width="73"/>
+    <node>subpageflow10</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="周维" createTime="2008-08-18 15:37:50" date="2008-08-18Z" description="" name="工作组管理" version="6.0"/>
+  <process:variables/>
+</process:tPageFlow>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="OrgModify.flowx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="机构修改页面" title="朱江&#x9;09-3-30 下午4:13">
+    <location x="42" y="159"/>
+    <size height="100" width="148"/>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束" displayName="结束" collapsed="false" type="end" contextPath="" method="forward" uri="/abframe/org/organization/org_modify.jsp">
+    <targetConnections>link3</targetConnections>
+    <location x="228" y="167"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="230" y="203"/>
+    <figSize height="17" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view1" name="机构修改页" displayName="org_modify.jsp" collapsed="false" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/organization/org_modify.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link2" name="link2" displayName="link2" lineType="reference" isDefault="true" type="action" actionName="mdf" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmOrganization" name="oOrg"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" id="link3" name="link3" displayName="link3" lineType="reference" type="action" actionName="action1">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="230" y="77"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="211" y="113"/>
+    <figSize height="17" width="61"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tStart" description="" id="start0" name="开始" displayName="开始" collapsed="false" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link4" name="link4" displayName="link0" lineType="reference" isDefault="true" type="action" actionName="action0">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <location x="52" y="77"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="54" y="113"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="修改机构信息" id="subprocess3" name="修改机构" displayName="modifyOrg" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="link4" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="321" y="77"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.organization.OrgManager.modifyOrg</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="oOrg" type="query" value="org.gocom.abframe.dataset.organization.OmOrganization" valueType="DataObject" pattern="reference">oOrg</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="iRtn" type="query" value="Int" valueType="Primitive">iRtn</process:outputVariable>
+        <process:outputVariable id="1" name="wxresult" type="query" value="String" valueType="Primitive">wxresult</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="310" y="112"/>
+    <figSize height="17" width="49"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="扩展机构信息" displayName="expandOrg" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="link1" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="140" y="77"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.organization.OrgManager.expandOrg</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="oOrg" type="query" value="org.gocom.abframe.dataset.organization.OmOrganization" valueType="DataObject" pattern="reference">oOrg</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="oOrg" type="query" value="org.gocom.abframe.dataset.organization.OmOrganization" valueType="DataObject">oOrg</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="117" y="112"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="朱江" createTime="2009-01-12 17:47:40" date="2009-01-12Z" description="" name="机构修改" version="6.0"/>
+  <process:variables/>
+  <process:inputParameters>
+    <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmOrganization" name="oOrg"/>
+  </process:inputParameters>
+</process:tPageFlow>

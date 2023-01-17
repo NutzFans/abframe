@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:许青倩 -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="interviewid" javaType="string" property="interviewid"/>
+        <result column="interviewer" javaType="string" property="interviewer"/>
+        <result column="interviewername" javaType="string" property="interviewername"/>
+        <result column="STATUS" javaType="string" property="status"/>
+        <result column="INTERVIEWROUNDES" javaType="string" property="interviewroundes"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+    	<result column="DICTTYPEID" javaType="string" property="dicttypeid"/>
+        <result column="DICTTYPENAME" javaType="string" property="dicttypename"/>
+        <result column="DICTID" javaType="string" property="dictid"/>
+        <result column="TREEID" javaType="string" property="treeid"/>
+        <result column="PARENTID" javaType="string" property="parentid"/>
+        <result column="TREEPARENTID" javaType="string" property="treeparentid"/>
+        <result column="SORTNO" javaType="string" property="sortno"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="interviewdtae" javaType="string" property="interviewdtae"/>
+        <result column="interviewnum" javaType="string" property="interviewnum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="interdate" javaType="string" property="interdate"/>
+        <result column="intendjoinnum" javaType="string" property="intendjoinnum"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="dictid" javaType="string" property="dictid"/>
+        <result column="dictname" javaType="string" property="dictname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap3">
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="recpositionname" javaType="string" property="recpositionname"/>
+        <result column="interviewdtae" javaType="string" property="interviewdtae"/>
+        <result column="interviewer" javaType="string" property="interviewer"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="status" javaType="string" property="status"/>
+        <result column="venue" javaType="string" property="venue"/>
+        <result column="creator" javaType="string" property="creator"/>
+        <result column="processinstid" javaType="string" property="processinstid"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap4">
+         <result column="intendname" javaType="string" property="intendname"/>
+        <result column="intendrecempname" javaType="string" property="intendrecempname"/>
+        <result column="interdate" javaType="string" property="interdate"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="workplace" javaType="string" property="workplace"/>
+        <result column="intendstatus" javaType="string" property="intendstatus"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap7">
+        <result column="activityInstID" javaType="string" property="activityInstID"/>
+    </resultMap>
+    <select id="getnextInterview" parameterClass="java.util.HashMap" resultMap="resultMap"><![CDATA[
+    	select a.interviewid,a.interviewer,b.EMPNAME as interviewername,a.STATUS,a.INTERVIEWROUNDES from AME_RESUME_INTERVIEW a
+		LEFT JOIN OM_EMPLOYEE b on a.INTERVIEWER=b.USERID
+		where a.INTERVIEWROUNDES = (
+		select min(INTERVIEWROUNDES) from AME_RESUME_INTERVIEW 
+		where RESUMEID=#resumeid# and RECRUITID=#recruitid# and STATUS=0
+		) and RESUMEID=#resumeid# and RECRUITID=#recruitid# and STATUS=0
+	]]></select>
+    <select id="queryEvaluation" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+	    select 'AME_EVALUATION' as dicttypeid, '面试评价项' AS dicttypename,'dictid' AS dictid,'dictid' as treeid,
+		        NULL AS SORTNO,NULL AS PARENTID,NULL AS treeparentid
+UNION ALL
+		SELECT a.DICTTYPEID, a.DICTNAME AS DICTTYPENAME,a.DICTID AS DICTID,a.SEQNO AS treeid,a.SORTNO,
+		(CASE WHEN a.PARENTID is NULL THEN 'dictid' ELSE a.PARENTID END) as PARENTID,'dictid' AS treeparentid
+		FROM EOS_DICT_ENTRY  a WHERE a.dicttypeid = 'AME_EVALUATION'
+UNION ALL
+        SELECT  * FROM 
+			(
+			SELECT a.DICTTYPEID, a.DICTNAME AS DICTTYPENAME,a.DICTID AS DICTID,a.SEQNO AS treeid,a.SORTNO,
+			(CASE WHEN a.PARENTID is null  THEN 'dictid' else a.PARENTID END) as PARENTID,
+			(CASE WHEN a.PARENTID IS NULL THEN 'dictid' ELSE b.SEQNO END) AS treeparentid
+			FROM EOS_DICT_ENTRY  a
+			LEFT JOIN  EOS_DICT_ENTRY b
+			   ON b.DICTID=a.PARENTID and b.RANK=a.RANK-1 AND b.DICTTYPEID = 'AME_EVALUATION'
+			   WHERE a.DICTTYPEID = 'AME_EVALUATION_SUB'
+			)t
+		WHERE  t.dictid NOT IN (
+		       SELECT EVALUATIONSUBTYPE FROM AME_INTERVIEW_EVALUATION_DET WHERE evaluationmouldid = #evaluationmouldid#
+	    )
+ORDER BY sortno ASC;
+    ]]></select>
+	<select id="getPositionname" parameterClass="java.util.HashMap" resultClass="string">
+		SELECT DICTNAME as positionname FROM EOS_DICT_ENTRY e
+		WHERE e.DICTTYPEID = 'AME_POSITION_MEMO'
+		AND e.DICTID = #p# 
+	</select>
+	<select id="getrepeatpositionnames" parameterClass="java.util.HashMap" resultClass="string"><![CDATA[
+     SELECT REPEATPOSITIONNAMES = STUFF(( SELECT '，' + POSITIONNAME 
+			FROM 
+			(
+				SELECT 
+								   e.DICTNAME + '(' + x.MOULDNAME1 + ')' AS POSITIONNAME
+									 from   
+											 (select EVALUATIONMOULDID,MOULDNAME,POSITION = convert(xml,' <root> <v>'+replace(POSITION,',',' </v> <v>')+' </v> </root>') from AME_INTERVIEW_EVALUATION_MOULD)a 
+									 outer apply 
+											 (select POSITION =C.v.value('.','nvarchar(100)') from a.POSITION.nodes('/root/v')C(v))b
+							         LEFT JOIN  EOS_DICT_ENTRY e ON e.dicttypeid = 'AME_POSITION_MEMO' AND b.[POSITION] = e.DICTID
+				LEFT JOIN
+						(
+						SELECT POSITION, MOULDNAME1 = stuff
+								((SELECT     ',' + MOULDNAME
+								FROM 
+								(SELECT
+												   b.[POSITION],a.MOULDNAME 
+													 from   
+															 (select EVALUATIONMOULDID,MOULDNAME,POSITION = convert(xml,' <root> <v>'+replace(POSITION,',',' </v> <v>')+' </v> </root>') from AME_INTERVIEW_EVALUATION_MOULD)a 
+													 outer apply 
+															 (select POSITION =C.v.value('.','nvarchar(100)') from a.POSITION.nodes('/root/v')C(v))b
+								)t 
+								WHERE     t .[POSITION] = tb.[POSITION] FOR xml path('')), 1, 1, '')
+								FROM 
+								(SELECT
+												   b.[POSITION],a.MOULDNAME 
+													 from   
+															 (select EVALUATIONMOULDID,MOULDNAME,POSITION = convert(xml,' <root> <v>'+replace(POSITION,',',' </v> <v>')+' </v> </root>') from AME_INTERVIEW_EVALUATION_MOULD)a 
+													 outer apply 
+															 (select POSITION =C.v.value('.','nvarchar(100)') from a.POSITION.nodes('/root/v')C(v))b
+								)tb
+						GROUP BY POSITION
+						)x
+				ON x.[POSITION] = b.[POSITION]
+				GROUP BY b.POSITION,e.DICTNAME,x.MOULDNAME1
+				HAVING count(b.POSITION ) > 1
+			)m
+			FOR XML PATH('')),1, 1,'')
+	]]></select>
+	<select id="getEvaluationMould" parameterClass="java.util.HashMap" resultClass="string">
+		select c.EVALUATIONMOULDID
+		from OM_RECRUIT a
+		LEFT JOIN AME_INTERVIEW_EVALUATION_MOULD c on ','+c.POSITION+',' like '%,'+a.RECPOSITION+',%'
+		where a.RECRUITID = #recruitid#
+	</select>
+	<select id="getworkdate" parameterClass="java.util.HashMap" resultClass="string">
+		select cast ((year(GETDATE())-#workingyear#) as varchar)+'-07' as workdate
+	</select>
+	<select id="getInterviewNum" parameterClass="java.util.HashMap" resultMap="resultMap2">
+    <![CDATA[
+    	SELECT t.INTERVIEWDTAE,count(t.INTERVIEWDTAE) AS INTERVIEWNUM FROM 
+			(
+			SELECT xx.creator,
+			b.RECRUITID,b.RESUMEID,CONVERT(nvarchar(10),b.INTERVIEWDTAE,120) as INTERVIEWDTAE  
+			FROM AME_RESUME_RECOMMEND r LEFT JOIN WFProcessInst xx on r.PROCESSINSTID = xx.processInstID,AME_RESUME m,OM_RECRUIT a,AME_RESUME_INTERVIEW b 
+			WHERE r.RESUMEID = m.RESUMEID AND r.RECRUITID = a.RECRUITID AND r.RESUMEID = b.RESUMEID AND a.RECRUITID = b.RECRUITID AND xx.creator in  ($userid$)
+			GROUP BY a.RECRUITID,b.RECRUITID,b.RESUMEID,CONVERT(nvarchar(10),b.INTERVIEWDTAE,120),xx.creator 
+			)t
+		 WHERE MONTH(t.INTERVIEWDTAE) =  #month# AND year(t.INTERVIEWDTAE) = #year#
+		 GROUP BY t.INTERVIEWDTAE
+    ]]>
+    </select>
+    <select id="getIntendjoinnum" parameterClass="java.util.HashMap" resultMap="resultMap5"><![CDATA[
+	    SELECT t.INTERDATE,count(t.INTERDATE) AS intendjoinnum FROM 
+			(
+			SELECT a.INTENDNAME,CONVERT(nvarchar(10),a.INTERDATE,120) as INTERDATE FROM 
+					   (
+						 SELECT a.INTENDNAME,a.RECRUITID,a.INTENDRECEMPNAME,a.INTERDATE,a.ACTDATE,a.INTENDSTATUS,
+						 [INTENDRECEMPNAME1] = CONVERT(xml,'<root><v>' + REPLACE([INTENDRECEMPNAME], ',', '</v><v>') + '</v></root>') FROM OM_INTEND_JOIN a
+						) A
+						 OUTER APPLY
+						(
+							SELECT value = N.v.value('.', 'varchar(100)') FROM A.[INTENDRECEMPNAME1].nodes('/root/v') N(v)
+					    )C
+			        WHERE  C.[value] in  ($userid$)
+			)t
+			WHERE MONTH(t.INTERDATE) =  #month# AND year(t.INTERDATE) = #year#
+			GROUP BY t.INTERDATE
+	]]></select>
+    <select id="getInterview" parameterClass="java.util.HashMap" resultMap="resultMap3"><![CDATA[
+    	SELECT DISTINCT a.RESUMEID,a.PROCESSINSTID,a.RECRUITID,xx.creator,b.EMPNAME,x.RECUSERID,x.RECPOSITIONNAME,y.ORGNAME,
+			d.INTERVIEWER,CONVERT(nvarchar(16),d.INTERVIEWDTAE,120) as INTERVIEWDTAE,d.STATUS,d.VENUE
+			FROM
+			AME_RESUME_RECOMMEND a 
+            LEFT JOIN WFProcessInst xx on a.PROCESSINSTID = xx.processInstID
+			LEFT JOIN AME_RESUME b ON a.RESUMEID = b.RESUMEID
+			LEFT JOIN OM_RECRUIT x ON a.RECRUITID = x.RECRUITID
+            LEFT JOIN OM_ORGANIZATION y on x.ORGID=y.ORGID
+            LEFT JOIN AME_RESUME_INTERVIEW d on a.RECRUITID = d.RECRUITID and a.RESUMEID = d.RESUMEID
+			WHERE  xx.creator in ($userid$)   and CONVERT(nvarchar(10),d.INTERVIEWDTAE,120) = #date#
+			ORDER BY INTERVIEWDTAE
+	]]></select>
+	<select id="getIntendjoin" parameterClass="java.util.HashMap" resultMap="resultMap4"><![CDATA[
+	     SELECT a.INTENDNAME,a.RECRUITID,a.INTENDRECEMPNAME,CONVERT(nvarchar(10),a.INTERDATE,120) as INTERDATE,a.INTENDSTATUS,
+			CONVERT(nvarchar(10),a.ACTDATE,120) as ACTDATE,r.WORKPLACE,x.ORGNAME
+					FROM OM_RECRUIT r
+			LEFT JOIN OM_ORGANIZATION x ON x.ORGID = r.ORGID,
+		   (
+			 SELECT a.INTENDNAME,a.RECRUITID,a.INTENDRECEMPNAME,a.INTERDATE,a.ACTDATE,a.INTENDSTATUS,
+			 [INTENDRECEMPNAME1] = CONVERT(xml,'<root><v>' + REPLACE([INTENDRECEMPNAME], ',', '</v><v>') + '</v></root>') FROM OM_INTEND_JOIN a
+			) A
+			 OUTER APPLY
+			(
+				SELECT value = N.v.value('.', 'varchar(100)') FROM A.[INTENDRECEMPNAME1].nodes('/root/v') N(v)
+		    )C
+            WHERE r.RECRUITID = a.RECRUITID AND C.[value] in ($userid$) AND  CONVERT(nvarchar(10),a.INTERDATE,120) = #date#
+            order by( 
+			case a.INTENDSTATUS
+			when 1 then 1 
+			when 4 then 2    
+			when 0 then 3  
+			when 2 then 4
+			when 3 then 5
+			else ''
+			end
+			)
+	]]></select>
+	<select id="getrecruitnums" parameterClass="java.util.HashMap" resultClass="string">
+		SELECT COUNT(*) FROM  WFWorkItem
+		  WHERE processDefName = 'org.gocom.abframe.org.recruitApproval.recruit_approval' AND currentState in (4,8,10)
+		  AND activityDefID = 'manualActivity1' AND participant = 'recruitteam'
+		GROUP BY activityDefID
+	</select>
+	<select id="getarrangeinterviewnums" parameterClass="java.util.HashMap" resultClass="string"><![CDATA[
+	SELECT count(t.participant) AS arrangeinterviewnum FROM
+		(
+		SELECT c.[value],a.participant,a.participant1,a.currentState,a.processDefName,a.activityDefID FROM 
+							   (
+								 SELECT a.participant,a.currentState,a.processDefName,a.activityDefID,
+								 [participant1] = CONVERT(xml,'<root><v>' + REPLACE([participant], '|', '</v><v>') + '</v></root>') FROM WFWorkItem a
+								) A
+								 OUTER APPLY
+								(
+									SELECT value = N.v.value('.', 'varchar(100)') FROM A.[participant1].nodes('/root/v') N(v)
+							    )C			       
+			WHERE processDefName = 'com.primeton.eos.ame_permanage.ame_interview'
+			AND currentState in(4,8,10)
+			AND activityDefID = 'manualActivity'
+			AND c.[value] = #userid#
+		)t
+	]]></select>
+	<select id="getcommunicateoffernums" parameterClass="java.util.HashMap" resultClass="string"><![CDATA[
+	SELECT count(t.participant) AS arrangeinterviewnum FROM
+		(
+		SELECT c.[value],a.participant,a.participant1,a.currentState,a.processDefName,a.activityDefID FROM 
+							   (
+								 SELECT a.participant,a.currentState,a.processDefName,a.activityDefID,
+								 [participant1] = CONVERT(xml,'<root><v>' + REPLACE([participant], '|', '</v><v>') + '</v></root>') FROM WFWorkItem a
+								) A
+								 OUTER APPLY
+								(
+									SELECT value = N.v.value('.', 'varchar(100)') FROM A.[participant1].nodes('/root/v') N(v)
+							    )C			       
+			WHERE processDefName = 'com.primeton.eos.ame_permanage.ame_interview'
+			AND currentState in(4,8,10)
+			AND activityDefID = 'manualActivity2'
+			AND c.[value] = #userid#
+		)t
+	]]></select>
+	<select id="getentrynums" parameterClass="java.util.HashMap" resultClass="string"><![CDATA[
+	 SELECT count(*) as entrynums FROM(
+			SELECT a.INTENDNAME FROM 
+			(
+			  SELECT a.INTENDNAME,a.RECRUITID,a.INTENDRECEMPNAME,a.INTENDSTATUS,
+									 [INTENDRECEMPNAME1] = CONVERT(xml,'<root><v>' + REPLACE([INTENDRECEMPNAME], ',', '</v><v>') + '</v></root>') FROM OM_INTEND_JOIN a
+									) A
+									 OUTER APPLY
+									(
+										SELECT value = N.v.value('.', 'varchar(100)') FROM A.[INTENDRECEMPNAME1].nodes('/root/v') N(v)
+								   )C
+			WHERE  C.[value] =  #userid# AND  a.INTENDSTATUS = '1'
+			)t
+	]]></select>
+	<select id="getRefferEventtype" parameterClass="java.util.HashMap" resultMap="resultMap6"><![CDATA[
+    	select 'A'+CAST(dictid AS nvarchar(4)) as DICTID,DICTNAME from EOS_DICT_ENTRY  where DICTTYPEID='REFFER_EVENTTYPE' ORDER BY SORTNO
+    ]]></select>
+    <select id="queryRefferEventtype" parameterClass="java.util.HashMap" resultMap="resultMap6"><![CDATA[
+    	select '[A'+CAST(dictid AS nvarchar(4))+']' as DICTID,DICTNAME from EOS_DICT_ENTRY  where DICTTYPEID='REFFER_EVENTTYPE' ORDER BY SORTNO
+    ]]></select>
+    <select id="getRefferexpMould" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" remapResults="true">
+        select b.*,c.status,c.mouldremark,d.total as xj
+		from 
+		    (select refferexpmouldno,'A'+CAST(eventtype AS nvarchar(4)) as eventtype,rewardmoney from AME_REFFER_EXP_MOULD) as a
+		     PIVOT (SUM(REWARDMONEY) FOR [EVENTTYPE] IN ($eventtypes$)) AS b
+		LEFT JOIN 
+		(select m.REFFEREXPMOULDNO,m.STATUS,m.MOULDREMARK from AME_REFFER_EXP_MOULD m GROUP BY REFFEREXPMOULDNO,STATUS,MOULDREMARK) c
+		ON b.refferexpmouldno = c.refferexpmouldno
+		LEFT JOIN 
+		(select m.REFFEREXPMOULDNO,sum(REWARDMONEY) total from AME_REFFER_EXP_MOULD m GROUP BY REFFEREXPMOULDNO) d
+		ON b.refferexpmouldno = d.refferexpmouldno
+    </select>
+	<select id="getInterviewActive" parameterClass="java.util.HashMap" resultMap="resultMap7"><![CDATA[
+		select c.activityInstID from AME_RESUME_RECOMMEND  a 
+		LEFT JOIN WFActivityInst c on c.processInstID=a.PROCESSINSTID
+		LEFT JOIN AME_RESUME_INTERVIEW b on b.RESUMEID=a.RESUMEID and b.RECRUITID=a.RECRUITID and b.FEEDBACKSTATUS=1
+		where a.processinstid is not NULL and  
+		((CONVERT(varchar(100),b.INTERVIEWDTAE, 102)<CONVERT(varchar(100),GETDATE(), 102) and #processinstid# is null)
+		or(a.PROCESSINSTID=#processinstid# and #processinstid# is not null))
+		and c.activityDefID='autoActivity' and c.currentState=10
+	]]></select>
+</sqlMap>

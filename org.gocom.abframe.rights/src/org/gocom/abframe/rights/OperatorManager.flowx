@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="OperatorManager" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="功能描述：操作员管理&#xD;&#xA;输入：acoperator(类型：AcOperator数据实体)&#xD;&#xA;输出：acoperator(类型：AcOperator数据实体)&#xD;&#xA;关键点说明：" title="耿大伟&#x9;08-9-9 下午3:28">
+    <location x="33" y="232"/>
+    <size height="189" width="313"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link16" name="link16" lineType="reference" isDefault="true" type="action" actionName="begin" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <location x="33" y="149"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="35" y="185"/>
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view1" name="查询操作员页面" displayName="operator_manager.jsp" type="view" contextPath="" contributionName="通用工具" method="forward" uri="/abframe/rights/operator/operator_query.jsp" variableUri="false">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link5" name="link5" lineType="reference" isDefault="false" type="action" actionName="update" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>subprocess6</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcOperator" name="acoperator"/>
+      </process:inputParameters>
+      <process:serviceParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link8" name="link8" lineType="reference" isDefault="false" type="action" actionName="insert" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+      <process:serviceParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link3" name="link3" lineType="reference" isDefault="true" type="action" actionName="pageQuery" dataConvertClass="">
+      <sourceNode>view1</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+      <process:serviceParameters/>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="479" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      <process:parameter description="" historyStateLocation="client" isArray="true" modelType="org.gocom.abframe.dataset.privilege.AcOperator" name="select_objs"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="448" y="186"/>
+    <figSize height="12" width="85"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="分页查询操作员" displayName="queryAcOperators" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand/>
+          <process:rightOperand/>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="376" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="2" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.OperatorManager.queryAcOperators</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="emps" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator[]" valueType="DataObject">acoperators</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="347" y="185"/>
+    <figSize height="12" width="85"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="新增、修改操作员页面" displayName="operator_add.jsp" type="view" contextPath="" contributionName="通用工具" method="forward" uri="/abframe/rights/operator/operator_add.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link18" name="link18" lineType="reference" isDefault="true" type="action" actionName="end" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="590" y="149"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcOperator" name="acoperator"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="541" y="185"/>
+    <figSize height="12" width="121"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="结束" displayName="operator_manager.jsp" nodeType="common" type="end" contributionName="通用工具" uri="/abframe/rights/operator/operator_query.jsp" variableUri="false">
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="698" y="149"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="700" y="185"/>
+    <figSize height="12" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="分页查询操作员" displayName="queryAcOperators" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="699" y="35"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="2" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.OperatorManager.queryAcOperators</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="emps" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator[]" valueType="DataObject">acoperators</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="670" y="70"/>
+    <figSize height="12" width="85"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="查询条件、分页赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="256" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">org.gocom.abframe.dataset.privilege.AcOperator</process:from>
+      <process:to type="query">criteria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">-2</process:from>
+      <process:to type="query">page/count</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">operatorid</process:from>
+      <process:to type="query">criteria/_order/_asc</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="216" y="186"/>
+    <figSize height="12" width="109"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view2" name="操作员管理页面" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/operator/operator_manager.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="query" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+      <process:serviceParameters/>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="135" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view2label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view2label" name="label" nodeType="label">
+    <location x="104" y="186"/>
+    <figSize height="12" width="85"/>
+    <node>view2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess6" name="查询操作员" displayName="expandAcOperator" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess6</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="476" y="272"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess6label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.OperatorManager.expandAcOperator</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="acoperator" type="query" value="org.gocom.abframe.dataset.privilege.AcOperator" valueType="DataObject" pattern="reference">acoperator</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
+    <location x="459" y="307"/>
+    <figSize height="12" width="61"/>
+    <node>subprocess6</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="分页赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="477" y="35"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">-2</process:from>
+      <process:to type="query">page/count</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">operatorid</process:from>
+      <process:to type="query">criteria/_order/_asc</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="467" y="71"/>
+    <figSize height="12" width="49"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="587" y="272"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="583" y="308"/>
+    <figSize height="12" width="37"/>
+    <node>switch0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="耿大伟" createTime="2008-09-08 20:19:58" date="2008-09-08Z" description="" name="操作员管理" version="6.0"/>
+  <process:variables/>
+</process:tPageFlow>

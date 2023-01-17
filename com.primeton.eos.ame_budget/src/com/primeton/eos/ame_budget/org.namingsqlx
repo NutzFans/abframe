@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:zhouwenjie -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="orgid" javaType="int" property="orgid"/>
+    </resultMap>
+    <select id="queryNoywdySybAndAllYwdy"  resultMap="resultMap">
+    <!-- 查询没有子节点的orgid（没有业务单元的事业部和所有业务单元orgid）-->
+    <![CDATA[
+		select orgid from budget_org 
+		where orgid not in (select parentorgid from budget_org where parentorgid is not null and BUDGET_YEAR=#year#) and budget_year=#year# 
+	]]>
+	</select>
+	
+	<resultMap class="commonj.sdo.DataObject" id="resultMapisHaveCl">
+        <result column="flag" javaType="string" property="flag"/>
+    </resultMap>
+    <select id="isHaveCl"  resultMap="resultMapisHaveCl">
+    <!-- 判断子部门中是否含有利润部门-->
+    <![CDATA[
+	select case when count(*) != 0 then '1' else 0 end as flag from budget_org where parentorgid = #orgid# and budget_year = #year# and orgdegree = '2'		
+	]]>
+	
+	</select>
+	<resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="leaforgid" javaType="string" property="leaforgid"/>
+        <result column="leaforgname" javaType="string" property="leaforgname"/>
+    </resultMap>
+    <select id="getBudgetNotLeafOrg"  resultMap="resultMap1">
+    	<![CDATA[
+    		select a.orgid AS leaforgid,(b.orgname+'---'+a.orgname) as leaforgname
+			from BUDGET_ORG a,BUDGET_ORG b
+			where a.parentorgid=b.orgid and a.BUDGET_YEAR=b.BUDGET_YEAR and a.BUDGET_YEAR = #year# and
+			a.orgid not in (select parentorgid from BUDGET_ORG where parentorgid is not null and BUDGET_YEAR = #year#) order by a.orgseq
+		]]>
+	</select>
+	<resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="orgid" javaType="string" property="orgid"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+    </resultMap>
+    <select id="queryChildOrgByparentOrg"  resultMap="resultMap2"><!-- 通过事业部查到所有业务单元，根据公司查询所有事业部 -->
+    	<![CDATA[
+    		select  orgid,orgname from  BUDGET_ORG where BUDGET_YEAR =#year# and orgid = #orgid#
+    		union all
+			(select b.orgid,b.orgname 
+			from BUDGET_ORG a, BUDGET_ORG b 
+			where  a.orgid=b.PARENTORGID  and a.orgid=#orgid# and a.BUDGET_YEAR = b.BUDGET_YEAR and a.BUDGET_YEAR = #year#)
+		]]>
+	</select>
+</sqlMap>

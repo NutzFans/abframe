@@ -1,0 +1,142 @@
+<%@page pageEncoding="UTF-8"%>
+<%@include file="/common.jsp"%>
+<html>
+<head>
+<title></title>
+<%
+	//获取标签中使用的国际化资源信息
+	String dutyList = com.eos.foundation.eoscommon.ResourcesMessageUtil.getI18nResourceMessage("roleManager_l_dutyList");
+%>
+<script>
+  /*
+   * 新增职务后的回调函数
+   */
+  function callBack() {
+        var frm = $name("viewlist1");
+        frm.elements["_eosFlowAction"].value = "callBack";
+        frm.submit();
+  }
+  /*
+   * 新增职务
+   */
+  function addRecord() {
+        var url = "org.gocom.abframe.rights.role.AddDuty.flow";
+        url += "?_eosFlowAction=start";
+        url += "&acRole/roleid=";
+        url += '<b:write property="acRoleVar/roleid"/>';
+        url += '&_ts='+(new Date()).getTime();   //防止IE缓存，在每次打开时加个时间差的参数
+	    showModalCenter(url, "", callBack, 700, 400, '<b:message key="roleManager_l_addDuty"/>');
+  }
+  /*
+   * 刪除职务
+   */ 
+  function delRecord() {
+    var g = $id("group1");
+    if (g.getSelectLength() < 1) {
+      alert('<b:message key="l_m_alert_mustSelectOneOrMore"/>');  <!-- 至少选择一行！ -->
+      return;
+    }
+    if( !confirm('<b:message key="roleManager_l_m_alert_confirmDeleteDuty"/>') ) {
+      return;
+    }
+    var frm = $name("viewlist1");
+    frm.elements["_eosFlowAction"].value = "delRecord";
+    frm.submit();
+  }
+  
+  /*
+   * 实现全选复选框
+   */
+   function checkSelectAll(){
+	 if ($id("checkSelect").checked){
+		selectAll("group1");
+	 }else{
+		selectNone("group1");
+	 }
+   }
+</script>
+</head>
+<body leftmargin="0" topmargin="0">
+<form name="viewlist1" action="org.gocom.abframe.rights.role.AssignRoleDuty.flow" method="post">
+  <input type="hidden" name="_eosFlowAction" value="pageQuery4" >
+  <h:hiddendata property="criteria" />
+  <h:hidden property="acRoleVar/roleid"/>
+  <h:hidden property="page/begin"/>
+  <h:hidden property="page/length"/>
+  <h:hidden property="page/count"/>
+    <table align="center" border="0" width="100%" class="EOS_table">
+      <tr>
+        <th align="center">
+          <l:greaterThan property="page/size" targetValue="0" compareType="number">
+	        <input  type="checkbox" id="checkSelect" name="checkSelect" onclick="checkSelectAll();"> 
+	      </l:greaterThan><b:message key="l_select"/>
+        </th>
+        <th>	<!-- 职务名称 -->
+          <b:message key="roleManager_OmDuty.dutyname"/>
+        </th>
+        <th>	<!-- 职务代码 -->
+          <b:message key="roleManager_OmDuty.dutycode"/>
+        </th>
+        <th>	<!-- 职务套别 -->
+          <b:message key="roleManager_OmDuty.dutytype"/>
+        </th>
+      </tr>
+      <w:checkGroup id="group1">
+        <l:iterate property="dutyList" id="id1">
+          <tr class="<l:output evenOutput='EOS_table_row' />">
+            <td align="center">
+              <w:rowCheckbox afterSelectFunc="clickCheck($id('group1'), null, $id('deleteButton'))" afterUnSelectFunc="clickCheck($id('group1'), null, $id('deleteButton'))">
+				<h:param name='partyRole[*]/acRole/roleid' iterateId='id1' property='roleid' indexed='true' />
+				<h:param name='partyRole/roleid' iterateId='id1' property='roleid' indexed='true' />
+				<h:param name='partyRole/partytype' iterateId='id1' property='partytype' indexed='true' />
+				<h:param name='partyRole/partyid' iterateId='id1' property='partyid' indexed='true' />
+              </w:rowCheckbox>
+            </td>
+            <td>
+              <b:write iterateId="id1" property="dutyname"/>
+            </td>
+            <td>
+              <b:write iterateId="id1" property="dutycode"/>
+            </td>
+            <td>
+              <d:write dictTypeId="ABF_DUTYTYPE" iterateId="id1" property="dutytype"/>
+            </td>
+          </tr>
+        </l:iterate>
+      </w:checkGroup>
+      <tr>
+        <td colspan="4" class="command_sort_area" nowrap="nowrap">
+          <div style="float:left" >
+          <input type="button" class="button" value="<b:message key = 'l_add'/>" onclick="addRecord();">
+          <l:greaterThan property="page/size" targetValue="0" compareType="number">
+            <input type="button" class="button" value="<b:message key = 'l_delete'/>" onclick="delRecord();" id="deleteButton" disabled="true">
+          </l:greaterThan>
+          </div><div style="float:right">
+            <l:equal property="page/isCount" targetValue="true">
+              <b:message key="l_total"/>
+              <b:write property="page/count"/>
+              <b:message key="l_recordNO."/>
+              <b:write property="page/currentPage"/>
+              <b:message key="l_page"/>/
+              <b:write property="page/totalPage"/>
+              <b:message key="l_page"/>
+            </l:equal>
+            <l:equal property="page/isCount" targetValue="false">
+              <b:message key="l_NO."/>
+              <b:write property="page/currentPage"/>
+              <b:message key="l_page"/>
+            </l:equal>
+            <input type="button" class="button" onclick="firstPage('page', 'pageQuery4', null, null, 'viewlist1');" value="<b:message key="l_firstPage"/>"  <l:equal property="page/isFirst" targetValue="true">disabled</l:equal> >
+            <input type="button" class="button" onclick="prevPage('page', 'pageQuery4', null, null, 'viewlist1');" value="<b:message key="l_upPage"/>" <l:equal property="page/isFirst" targetValue="true">disabled</l:equal> >
+            <input type="button" class="button" onclick="nextPage('page', 'pageQuery4', null, null, 'viewlist1');" value="<b:message key="l_nextPage"/>" <l:equal property="page/isLast" targetValue="true">disabled</l:equal> >
+            <l:equal property="page/isCount" targetValue="true">
+              <input type="button" class="button" onclick="lastPage('page', 'pageQuery4', null, null, 'viewlist1');" value="<b:message key="l_lastPage"/>" <l:equal property="page/isLast" targetValue="true">disabled</l:equal> >
+            </l:equal>
+            </div>
+        </td>
+      </tr>
+    </table>
+</form>
+
+</body>
+</html>

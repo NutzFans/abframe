@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:huangqj -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="TYPEID" javaType="string" property="typeId"/>
+    </resultMap>
+    <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
+    
+    <select id="queryPaidByContractNo" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.payment.payMent.ZhPayment">
+    	select contract_id,apply_pay_contract_sum from zh_payment  where contract_id = #contractNo# and app_status = '2'
+    </select>
+    
+    
+    <select id="queryPayPlan" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.annualPlan.annualPlan.AnnualPaymentPlan">
+    	select * from annual_payment_plan w where w.pay_id = #payId#
+    </select>
+    
+    
+    <select id="queryChargePlan" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.annualPlan.annualPlan.AnnualPaymentPlan">
+    	select * from annual_payment_plan w where w.charge_id = #chargeId#;
+    </select>
+    
+    
+    <select id="queryOrg" parameterClass = "java.util.HashMap" resultClass = "com.zhonghe.ame.payment.payMent.OmOrganization">
+    	SELECT ORGID,ORGNAME,ORGLEVEL,PARENTORGID FROM OM_ORGANIZATION WHERE ORGID = #orgid#
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="processMap">
+    	<result column="endtime" property="endtime"/>
+    </resultMap>
+    
+    <select id="queryProcessInstById" parameterClass="java.lang.String" resultMap="processMap">
+	
+		select endtime from wfprocessinst  where PROCESSINSTID = #processinstid#
+
+    </select>
+    
+    <update id="updatePayMent" parameterClass="java.util.HashMap">
+  	   update zh_payment set end_time = #endtime# where processid = #processinstId#
+  </update>
+  
+  <select id="queryPayMentByProcessId" parameterClass="java.lang.String" resultClass="com.zhonghe.ame.payment.payMent.ZhPayment">
+	
+		select * from zh_payment  where processid = #processinstid#
+
+    </select>
+    
+      <update id="updateContractBalance" parameterClass="java.util.HashMap">
+  	   update zh_pay_contract set contract_balance = #contractBalance# where contract_no = #contractNo#
+	  </update>
+	  
+	  
+    <update id="updateInvoice" parameterClass="java.util.HashMap">
+  	   update zh_invoice set create_time = #endtime# where processId = #processid#
+  </update>
+  
+  
+  <select id="queryInvoiceByProcessId" parameterClass="java.lang.String" resultClass="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice">
+	
+		select * from zh_invoice  where processId = #processid#
+
+    </select>
+    
+    
+    <select id="querySignatoryName" parameterClass = "java.util.HashMap" resultClass = "com.zhonghe.ame.payContract.payContract.PurSupplier">
+    	select * from PUR_SUPPLIER where CUSTNAME = #CUSTNAME#
+    </select>
+</sqlMap>

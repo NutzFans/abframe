@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:zyl -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="PROJECTNO" javaType="string" property="projectno"/>
+        <result column="CUSTID" javaType="decimal" property="custid"/>
+        <result column="PURTYPE" javaType="string" property="purtype"/>
+        <result column="COSTTYPE" javaType="string" property="costtype"/>
+    </resultMap>
+    <!-- 获取需要统计外包费用的项目 -->
+    <select id="getNeedProject" parameterClass="java.util.HashMap" resultMap="resultMap">
+		SELECT DISTINCT x.PROJECTNO,x.CUSTID,x.PURTYPE,x.COSTTYPE FROM (
+			SELECT DISTINCT PROJECTNO,A.CUSTID,A.STARTDATE,A.ENDDATE,B.PURTYPE,A.COSTTYPE 
+			FROM PUR_SETTLE A left join PUR_CONTRACT B on A.PURCONTID=B.PURCONTID 
+			WHERE PROJECTNO IS NOT NULL AND A.CUSTID IS NOT NULL 
+				AND A.STARTDATE IS NOT NULL AND A.ENDDATE IS NOT NULL AND SETSTATUS IN ('0','1','2') 
+				AND	((A.ENDDATE &gt;= #startdate# AND A.ENDDATE &lt;= #enddate#) OR 
+					(A.STARTDATE &gt;= #startdate# AND A.STARTDATE &lt;= #enddate#) 
+					OR (A.STARTDATE &lt;= #startdate# AND A.ENDDATE &gt;= #enddate#))
+			UNION 
+			SELECT DISTINCT B.PROJECTNO,B.CUSTID,B.STARTDATE,B.ENDDATE,A.PURTYPE,B.COSTTYPE 
+			FROM PUR_PRESETTLE B left join PUR_CONTRACT A on A.PURCONTNUM=B.PURCONTNUM
+			WHERE B.PROJECTNO IS NOT NULL AND B.CUSTID IS NOT NULL  
+				AND B.STARTDATE IS NOT NULL AND B.ENDDATE IS NOT NULL AND ACCRUEDSTATUS IN ('0','1') 
+				AND	((B.ENDDATE &gt;= #startdate# AND B.ENDDATE &lt;= #enddate#) OR 
+					(B.STARTDATE &gt;= #startdate# AND B.STARTDATE &lt;= #enddate#) 
+					OR (B.STARTDATE &lt;= #startdate# AND B.ENDDATE &gt;= #enddate#)) 
+			UNION
+			SELECT C.PROJECTNO,C.CUSTID,C.STARTDATE,C.ENDDATE,C.PURTYPE,1 AS COSTTYPE FROM (
+			SELECT DISTINCT	t.PROJECTNO,b.CUSTID,t.STARTDATE,
+			(CASE WHEN t.ACTENDDATE IS NOT NULL THEN t.ACTENDDATE ELSE t.EXPENDDATE END) AS ENDDATE,a.PURTYPE
+			FROM
+				PUR_PROJ_OUTPER t LEFT JOIN PUR_OUTPERSON b on t.OUTPERNO = b.OUTPERNO 
+				LEFT JOIN PUR_CONTRACT a on t.PURCONTID=a.PURCONTID
+				LEFT JOIN PUR_SUPPLIER c on b.CUSTID = c.CUSTID LEFT JOIN RD_PROJECT d on t.PROJECTNO = d.PROJECT_NO 
+			WHERE t.CURRENTSTATUS != '0' AND t.PROJECTNO IS NOT NULL AND b.CUSTID IS NOT NULL) C 
+				WHERE ((C.ENDDATE &gt;= #startdate# AND C.ENDDATE &lt;= #enddate#) OR 
+					(C.STARTDATE &gt;= #startdate# AND C.STARTDATE &lt;= #enddate#) 
+					OR (C.STARTDATE &lt;= #startdate# AND C.ENDDATE &gt;= #enddate#)) 
+		) x WHERE 1=1 
+		<isNotNull property="projectno">
+			AND x.PROJECTNO = #projectno# 
+		</isNotNull>
+		<isNotNull property="custid">
+			AND x.CUSTID = #custid# 
+		</isNotNull>
+	</select>
+	
+	<!-- 外包测算费用统计 -->
+	<parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap2">
+        <result column="PROJECTNO" javaType="string" property="projectno"/>
+        <result column="CUSTID" javaType="decimal" property="custid"/>
+        <result column="STARTDATE" javaType="date" property="startdate"/>
+        <result column="EXPENDDATE" javaType="date" property="expenddate"/>
+        <result column="ACTENDDATE" javaType="date" property="actenddate"/>
+        <result column="ACCUENDDATE" javaType="date" property="accuenddate"/>
+        <result column="COSTENDDATE" javaType="date" property="costenddate"/>
+        <result column="PRICE" javaType="float" property="price"/>
+        <result column="JTSTARTDATE" javaType="date" property="jtstartdate"/>
+        <result column="JTENDDATE" javaType="date" property="jtenddate"/>
+        <result column="INPUTRATIO" javaType="float" property="inputratio"/>
+        <result column="PROJOUTID" javaType="int" property="projoutid"/>
+        <result column="PURTYPE" javaType="string" property="purtype"/>
+        <result column="COSTTYPE" javaType="string" property="costtype"/>
+    </resultMap>
+    <select id="GetOutFeeStatGuesss" parameterClass="java.util.HashMap" resultMap="resultMap2">
+		SELECT b.PROJECTNO,e.CUSTID,b.STARTDATE,b.EXPENDDATE,b.ACTENDDATE,b.ACCUENDDATE,b.COSTENDDATE,b.PROJOUTID,
+			b.PRICE,b.INPUTRATIO,'1' AS COSTTYPE,x.PURTYPE,
+			(CASE WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE &gt;= #startdate# THEN COSTENDDATE + 1 
+				WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE &lt; #startdate# THEN #startdate# 
+				WHEN b.COSTENDDATE IS NULL AND b.STARTDATE &gt;= #startdate# THEN b.STARTDATE 
+				WHEN b.COSTENDDATE IS NULL AND b.STARTDATE &lt; #startdate# THEN #startdate# 
+				ELSE NULL END 
+			) AS JTSTARTDATE,
+			(CASE WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE &lt;= #enddate# THEN b.ACTENDDATE 
+				WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE &gt; #enddate# THEN #enddate# 
+				WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE &lt;= #enddate# THEN b.EXPENDDATE 
+				WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE &gt; #enddate# THEN #enddate# 
+				ELSE NULL END) AS JTENDDATE
+		FROM PUR_PROJ_OUTPER b 
+		LEFT JOIN PUR_OUTPERSON e ON b.OUTPERNO=e.OUTPERNO
+		LEFT JOIN RD_PROJECT d ON b.PROJECTNO = d.PROJECT_NO
+		LEFT JOIN PUR_ORDER a ON a.PURORDERID = b.PURORDERID 
+		LEFT JOIN PUR_CONTRACT x ON x.PURCONTID = a.PURCONTID 
+		WHERE 
+		(b.STARTDATE &lt;= #enddate# OR b.EXPENDDATE &gt;= #startdate#) 
+		AND (b.COSTENDDATE IS NULL OR b.COSTENDDATE &lt; #enddate#) 
+		<isNotNull property="custid">
+			AND e.CUSTID = #custid# 
+		</isNotNull>
+		<isNotNull property="projectno">
+			AND b.PROJECTNO = #projectno# 
+		</isNotNull>
+		<isNotNull property="miscustid">
+			AND d.CUSTID = #miscustid# 
+		</isNotNull>
+		<isNotNull property="purtype">
+			AND x.PURTYPE = #purtype# 
+		</isNotNull>
+		<isNull property="purtype">
+			AND x.PURTYPE IS NULL 
+		</isNull>
+		AND (CASE WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE &lt;= #enddate# THEN b.ACTENDDATE 
+				WHEN b.ACTENDDATE IS NOT NULL AND b.ACTENDDATE &gt; #enddate# THEN #enddate# 
+				WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE &lt;= #enddate# THEN b.EXPENDDATE 
+				WHEN b.ACTENDDATE IS NULL AND b.EXPENDDATE &gt; #enddate# THEN #enddate# 
+				ELSE NULL END) &gt;= #startdate# 
+		AND (CASE WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE &gt;= #startdate# THEN COSTENDDATE + 1 
+				WHEN b.COSTENDDATE IS NOT NULL AND b.COSTENDDATE &lt; #startdate# THEN #startdate# 
+				WHEN b.COSTENDDATE IS NULL AND b.STARTDATE &gt;= #startdate# THEN b.STARTDATE 
+				WHEN b.COSTENDDATE IS NULL AND b.STARTDATE &lt; #startdate# THEN #startdate# 
+				ELSE NULL END 
+			) &lt;= #enddate# 
+    </select>
+</sqlMap>

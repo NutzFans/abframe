@@ -1,0 +1,1689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="exportDeptBudgetNew.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link29" name="link29" displayName="连接线" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign11</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">flag</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <location x="25" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link37</targetConnections>
+    <targetConnections>link38</targetConnections>
+    <location x="1416" y="512"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="downloadFile" type="query" valueType="Primitive">downloadFile</process:return>
+      <process:return id="1" language="Int" name="result" type="query" valueType="Primitive">result</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="27" y="211"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="1418" y="548"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="94" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.primeton.eos.ame_budget.ame_budget.BudgetOrg</process:from>
+      <process:to type="query">criteria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">budgetYear</process:from>
+      <process:to type="query">criteria/_expr[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">criteria/_expr[1]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">criteria/_expr[1]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">orgdegree</process:from>
+      <process:to type="query">criteria/_expr[2]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">in</process:from>
+      <process:to type="query">criteria/_expr[2]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1,2,3</process:from>
+      <process:to type="query">criteria/_expr[2]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">budgetOrg.orgid</process:from>
+      <process:to type="query">criteria/_or[1]/_expr[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgid</process:from>
+      <process:to type="query">criteria/_or[1]/_expr[1]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">orgid</process:from>
+      <process:to type="query">criteria/_or[1]/_expr[2]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgid</process:from>
+      <process:to type="query">criteria/_or[1]/_expr[2]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">orgtype</process:from>
+      <process:to type="query">criteria/_expr[3]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">&lt;></process:from>
+      <process:to type="query">criteria/_expr[3]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">4</process:from>
+      <process:to type="query">criteria/_expr[3]/_value</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="96" y="211"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="查询要导出的部门" displayName="queryEntitiesByCriteriaEntity" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>assign6</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link35</targetConnections>
+    <location x="165" y="175"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.queryEntitiesByCriteriaEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="criteriaEntity" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">criteria</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">orgs</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="128" y="211"/>
+    <figSize height="17" width="97"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopStart" description="" id="loopstart0" name="循环" displayName="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link25</targetConnections>
+    <location x="240" y="177"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
+    <process:iterate iterable="orgs" iterableElement="temp"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <location x="240" y="209"/>
+    <figSize height="17" width="25"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" displayName="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+    </sourceConnections>
+    <targetConnections>link43</targetConnections>
+    <location x="1416" y="177"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <location x="1404" y="209"/>
+    <figSize height="17" width="49"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <location x="240" y="124"/>
+    <size height="147" width="1201"/>
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>assign3</chidren>
+    <chidren>assign2</chidren>
+    <chidren>invokePojo4</chidren>
+    <chidren>switch3</chidren>
+    <chidren>assign7</chidren>
+    <chidren>invokePojo2</chidren>
+    <chidren>assign5</chidren>
+    <chidren>subprocess0</chidren>
+    <chidren>invokePojo5</chidren>
+    <chidren>invokePojo6</chidren>
+    <chidren>assign1</chidren>
+    <chidren>switch2</chidren>
+    <chidren>assign4</chidren>
+    <chidren>switch1</chidren>
+    <chidren>invokePojo7</chidren>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="getDeptBudget" displayName="getDeptBudget" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" description="" id="link4" name="link4" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">names</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">names</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="300" y="175"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getDeptBudget</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="orgid" type="query" value="String" valueType="Primitive" pattern="reference">temp/orgid</process:inputVariable>
+        <process:inputVariable id="1" name="year" type="query" value="Int" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="2" name="orgseq" type="query" value="String" valueType="Primitive" pattern="reference">temp/orgseq</process:inputVariable>
+        <process:inputVariable id="3" name="parentorgid" type="query" value="String" valueType="Primitive" pattern="reference">temp/budgetOrg/orgid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="budget" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer[]" valueType="DataObject">budget</process:outputVariable>
+        <process:outputVariable id="1" name="budget1" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer" valueType="DataObject">budget1</process:outputVariable>
+        <process:outputVariable id="2" name="budget2" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer" valueType="DataObject">budget2</process:outputVariable>
+        <process:outputVariable id="3" name="budget3" type="query" value="commonj.sdo.DataObject" valueType="Java">budget3</process:outputVariable>
+        <process:outputVariable id="4" name="orgFlag" type="query" value="String" valueType="Primitive">orgFlag</process:outputVariable>
+        <process:outputVariable id="5" name="budstatus" type="query" value="String" valueType="Primitive">budstatus</process:outputVariable>
+        <process:outputVariable id="6" name="budget_sj" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptExecutTemp[]" valueType="DataObject">budget_sj</process:outputVariable>
+        <process:outputVariable id="7" name="budget_hj" type="query" value="com.primeton.eos.ame_budget.ame_budget.DeptExecutTemp" valueType="DataObject">budget_hj</process:outputVariable>
+        <process:outputVariable id="8" name="ftcaltype" type="query" value="String" valueType="Primitive">ftcaltype</process:outputVariable>
+        <process:outputVariable id="9" name="commshar" type="query" value="java.util.HashMap" valueType="Java">commshar</process:outputVariable>
+        <process:outputVariable id="10" name="comashar" type="query" value="java.util.HashMap" valueType="Java">comashar</process:outputVariable>
+        <process:outputVariable id="11" name="startshar" type="query" value="java.util.HashMap" valueType="Java">startshar</process:outputVariable>
+        <process:outputVariable id="12" name="baseshar" type="query" value="java.util.HashMap" valueType="Java">baseshar</process:outputVariable>
+        <process:outputVariable id="13" name="rebateshar" type="query" value="java.util.HashMap" valueType="Java">rebateshar</process:outputVariable>
+        <process:outputVariable id="14" name="ishavecl" type="query" value="String" valueType="Primitive">ishavecl</process:outputVariable>
+        <process:outputVariable id="15" name="bonusPara" type="query" value="java.util.HashMap" valueType="Java">bonusPara</process:outputVariable>
+        <process:outputVariable id="16" name="paybackPara" type="query" value="String" valueType="Primitive">paybackPara</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="268" y="210"/>
+    <figSize height="17" width="90"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="动态分sheet页导出" displayName="分工作表将对象数组导出到指定的模板Excel文件" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>assign13</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link36" name="link36" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>assign12</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="1418" y="378"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">org.gocom.abframe.tools.ExcelUtil.exportExcelWithAutoSheet</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="exportObjects" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">budgetTemps1</process:inputVariable>
+      <process:inputVariable id="1" name="exportInfo" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">budgetTemps</process:inputVariable>
+      <process:inputVariable id="2" name="templateFilename" type="literal" value="java.lang.String" valueType="Java" pattern="reference">deptBudgetTempNew</process:inputVariable>
+      <process:inputVariable id="3" name="sheetNames" type="query" value="java.lang.String[]" valueType="Java" pattern="reference">sheetName</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">downloadFile</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="1377" y="414"/>
+    <figSize height="17" width="104"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="拼接" displayName="拼接统一做批量更新2" collapsed="false" grouped="true" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>invokePojo4</targetNode>
+    </sourceConnections>
+    <targetConnections>link23</targetConnections>
+    <targetConnections>link20</targetConnections>
+    <location x="1230" y="179"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.data.DataContextUtil.appendObject</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="xpath" type="literal" value="java.lang.String" valueType="Java" pattern="value">budgetTemps</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="value">budgetTemp</process:inputVariable>
+      <process:inputVariable id="2" name="isCheckEntityType" type="literal" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="1229" y="215"/>
+    <figSize height="17" width="25"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign7</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="375" y="211"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">预算</process:from>
+      <process:to type="query">budgetTemp1/budgetname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="value">temp/orgname</process:from>
+      <process:to type="query">name</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="value">names+&quot;,&quot;+name</process:from>
+      <process:to type="query">names</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="373" y="247"/>
+    <figSize height="17" width="32"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="split" displayName="split" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="1417" y="285"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="xpath" synchronization="true" transactionType="join">
+      <process:partner type="literal">java.lang.String.split</process:partner>
+      <process:instance instanceName="names"/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="arg0" type="literal" value="java.lang.String" valueType="Java" pattern="reference">,</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String[]" valueType="Java">sheetName</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="1416" y="321"/>
+    <figSize height="17" width="25"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="拼接1" displayName="拼接" collapsed="false" grouped="true" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>invokePojo7</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="1281" y="179"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.data.DataContextUtil.appendObject</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="xpath" type="literal" value="java.lang.String" valueType="Java" pattern="value">budgetTemps1</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="value">budgetTemp1</process:inputVariable>
+      <process:inputVariable id="2" name="isCheckEntityType" type="literal" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="1276" y="215"/>
+    <figSize height="17" width="32"/>
+    <node>invokePojo4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值1" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>assign7</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="360" y="148"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="value">temp/orgname</process:from>
+      <process:to type="query">name</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="value">name</process:from>
+      <process:to type="query">names</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="358" y="184"/>
+    <figSize height="17" width="32"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值季度预计" displayName="赋值" collapsed="false" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>switch2</targetNode>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="913" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/contamt</process:from>
+      <process:to type="query">budgetTemp/contamt1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/contamt</process:from>
+      <process:to type="query">budgetTemp/contamt2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/contamt</process:from>
+      <process:to type="query">budgetTemp/contamt3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/contamt</process:from>
+      <process:to type="query">budgetTemp/contamt4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/pcontamt</process:from>
+      <process:to type="query">budgetTemp/pcontamt1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/pcontamt</process:from>
+      <process:to type="query">budgetTemp/pcontamt2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/pcontamt</process:from>
+      <process:to type="query">budgetTemp/pcontamt3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/pcontamt</process:from>
+      <process:to type="query">budgetTemp/pcontamt4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/scontamt</process:from>
+      <process:to type="query">budgetTemp/scontamt1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/scontamt</process:from>
+      <process:to type="query">budgetTemp/scontamt2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/scontamt</process:from>
+      <process:to type="query">budgetTemp/scontamt3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/scontamt</process:from>
+      <process:to type="query">budgetTemp/scontamt4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/mcontamt</process:from>
+      <process:to type="query">budgetTemp/mcontamt1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/mcontamt</process:from>
+      <process:to type="query">budgetTemp/mcontamt2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/mcontamt</process:from>
+      <process:to type="query">budgetTemp/mcontamt3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/mcontamt</process:from>
+      <process:to type="query">budgetTemp/mcontamt4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/receamt</process:from>
+      <process:to type="query">budgetTemp/receamt1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/receamt</process:from>
+      <process:to type="query">budgetTemp/receamt2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/receamt</process:from>
+      <process:to type="query">budgetTemp/receamt3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/receamt</process:from>
+      <process:to type="query">budgetTemp/receamt4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/taxincome</process:from>
+      <process:to type="query">budgetTemp/taxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/taxincome</process:from>
+      <process:to type="query">budgetTemp/taxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/taxincome</process:from>
+      <process:to type="query">budgetTemp/taxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/taxincome</process:from>
+      <process:to type="query">budgetTemp/taxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/ptaxincome</process:from>
+      <process:to type="query">budgetTemp/ptaxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/ptaxincome</process:from>
+      <process:to type="query">budgetTemp/ptaxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/ptaxincome</process:from>
+      <process:to type="query">budgetTemp/ptaxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/ptaxincome</process:from>
+      <process:to type="query">budgetTemp/ptaxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/mtaxincome</process:from>
+      <process:to type="query">budgetTemp/mtaxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/mtaxincome</process:from>
+      <process:to type="query">budgetTemp/mtaxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/mtaxincome</process:from>
+      <process:to type="query">budgetTemp/mtaxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/mtaxincome</process:from>
+      <process:to type="query">budgetTemp/mtaxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/staxincome</process:from>
+      <process:to type="query">budgetTemp/staxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/staxincome</process:from>
+      <process:to type="query">budgetTemp/staxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/staxincome</process:from>
+      <process:to type="query">budgetTemp/staxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/staxincome</process:from>
+      <process:to type="query">budgetTemp/staxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/ntaxincome</process:from>
+      <process:to type="query">budgetTemp/ntaxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/ntaxincome</process:from>
+      <process:to type="query">budgetTemp/ntaxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/ntaxincome</process:from>
+      <process:to type="query">budgetTemp/ntaxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/ntaxincome</process:from>
+      <process:to type="query">budgetTemp/ntaxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/pntaxincome</process:from>
+      <process:to type="query">budgetTemp/pntaxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/pntaxincome</process:from>
+      <process:to type="query">budgetTemp/pntaxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/pntaxincome</process:from>
+      <process:to type="query">budgetTemp/pntaxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/pntaxincome</process:from>
+      <process:to type="query">budgetTemp/pntaxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/sntaxincome</process:from>
+      <process:to type="query">budgetTemp/sntaxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/sntaxincome</process:from>
+      <process:to type="query">budgetTemp/sntaxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/sntaxincome</process:from>
+      <process:to type="query">budgetTemp/sntaxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/sntaxincome</process:from>
+      <process:to type="query">budgetTemp/sntaxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/mntaxincome</process:from>
+      <process:to type="query">budgetTemp/mntaxincome1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/mntaxincome</process:from>
+      <process:to type="query">budgetTemp/mntaxincome2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/mntaxincome</process:from>
+      <process:to type="query">budgetTemp/mntaxincome3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/mntaxincome</process:from>
+      <process:to type="query">budgetTemp/mntaxincome4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/bustax</process:from>
+      <process:to type="query">budgetTemp/bustax1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/bustax</process:from>
+      <process:to type="query">budgetTemp/bustax2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/bustax</process:from>
+      <process:to type="query">budgetTemp/bustax3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/bustax</process:from>
+      <process:to type="query">budgetTemp/bustax4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/currentcost</process:from>
+      <process:to type="query">budgetTemp/currentcost1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/currentcost</process:from>
+      <process:to type="query">budgetTemp/currentcost2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/currentcost</process:from>
+      <process:to type="query">budgetTemp/currentcost3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/currentcost</process:from>
+      <process:to type="query">budgetTemp/currentcost4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/payback</process:from>
+      <process:to type="query">budgetTemp/payback1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/payback</process:from>
+      <process:to type="query">budgetTemp/payback2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/payback</process:from>
+      <process:to type="query">budgetTemp/payback3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/payback</process:from>
+      <process:to type="query">budgetTemp/payback4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/profitBBonus</process:from>
+      <process:to type="query">budgetTemp/profitBBonus1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/profitBBonus</process:from>
+      <process:to type="query">budgetTemp/profitBBonus2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/profitBBonus</process:from>
+      <process:to type="query">budgetTemp/profitBBonus3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/profitBBonus</process:from>
+      <process:to type="query">budgetTemp/profitBBonus4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/profitABonus</process:from>
+      <process:to type="query">budgetTemp/profitABonus1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/profitABonus</process:from>
+      <process:to type="query">budgetTemp/profitABonus2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/profitABonus</process:from>
+      <process:to type="query">budgetTemp/profitABonus3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/profitABonus</process:from>
+      <process:to type="query">budgetTemp/profitABonus4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/servcost</process:from>
+      <process:to type="query">budgetTemp/servcost1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/servcost</process:from>
+      <process:to type="query">budgetTemp/servcost2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/servcost</process:from>
+      <process:to type="query">budgetTemp/servcost3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/servcost</process:from>
+      <process:to type="query">budgetTemp/servcost4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/salecost</process:from>
+      <process:to type="query">budgetTemp/salecost1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/salecost</process:from>
+      <process:to type="query">budgetTemp/salecost2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/salecost</process:from>
+      <process:to type="query">budgetTemp/salecost3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/salecost</process:from>
+      <process:to type="query">budgetTemp/salecost4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/commshar</process:from>
+      <process:to type="query">budgetTemp/commshar1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/commshar</process:from>
+      <process:to type="query">budgetTemp/commshar2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/commshar</process:from>
+      <process:to type="query">budgetTemp/commshar3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/commshar</process:from>
+      <process:to type="query">budgetTemp/commshar4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/comashar</process:from>
+      <process:to type="query">budgetTemp/comashar1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/comashar</process:from>
+      <process:to type="query">budgetTemp/comashar2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/comashar</process:from>
+      <process:to type="query">budgetTemp/comashar3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/comashar</process:from>
+      <process:to type="query">budgetTemp/comashar4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/comdshar</process:from>
+      <process:to type="query">budgetTemp/comdshar1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/comdshar</process:from>
+      <process:to type="query">budgetTemp/comdshar2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/comdshar</process:from>
+      <process:to type="query">budgetTemp/comdshar3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/comdshar</process:from>
+      <process:to type="query">budgetTemp/comdshar4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/assetlose</process:from>
+      <process:to type="query">budgetTemp/assetlose1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/assetlose</process:from>
+      <process:to type="query">budgetTemp/assetlose2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/assetlose</process:from>
+      <process:to type="query">budgetTemp/assetlose3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/assetlose</process:from>
+      <process:to type="query">budgetTemp/assetlose4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/baddebts</process:from>
+      <process:to type="query">budgetTemp/baddebts1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/baddebts</process:from>
+      <process:to type="query">budgetTemp/baddebts2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/baddebts</process:from>
+      <process:to type="query">budgetTemp/baddebts3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/baddebts</process:from>
+      <process:to type="query">budgetTemp/baddebts4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/instock</process:from>
+      <process:to type="query">budgetTemp/instock1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/instock</process:from>
+      <process:to type="query">budgetTemp/instock2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/instock</process:from>
+      <process:to type="query">budgetTemp/instock3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/instock</process:from>
+      <process:to type="query">budgetTemp/instock4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/outstock</process:from>
+      <process:to type="query">budgetTemp/outstock1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/outstock</process:from>
+      <process:to type="query">budgetTemp/outstock2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/outstock</process:from>
+      <process:to type="query">budgetTemp/outstock3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/outstock</process:from>
+      <process:to type="query">budgetTemp/outstock4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/bonus</process:from>
+      <process:to type="query">budgetTemp/bonus1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/bonus</process:from>
+      <process:to type="query">budgetTemp/bonus2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/bonus</process:from>
+      <process:to type="query">budgetTemp/bonus3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/bonus</process:from>
+      <process:to type="query">budgetTemp/bonus4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/servtax</process:from>
+      <process:to type="query">budgetTemp/servtax1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/servtax</process:from>
+      <process:to type="query">budgetTemp/servtax2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/servtax</process:from>
+      <process:to type="query">budgetTemp/servtax3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/servtax</process:from>
+      <process:to type="query">budgetTemp/servtax4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/selfservcost</process:from>
+      <process:to type="query">budgetTemp/selfservcost1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/selfservcost</process:from>
+      <process:to type="query">budgetTemp/selfservcost2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/selfservcost</process:from>
+      <process:to type="query">budgetTemp/selfservcost3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/selfservcost</process:from>
+      <process:to type="query">budgetTemp/selfservcost4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/pmsubfee</process:from>
+      <process:to type="query">budgetTemp/pmsubfee1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/pmsubfee</process:from>
+      <process:to type="query">budgetTemp/pmsubfee2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/pmsubfee</process:from>
+      <process:to type="query">budgetTemp/pmsubfee3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/pmsubfee</process:from>
+      <process:to type="query">budgetTemp/pmsubfee4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/prosubfee</process:from>
+      <process:to type="query">budgetTemp/prosubfee1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/prosubfee</process:from>
+      <process:to type="query">budgetTemp/prosubfee2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/prosubfee</process:from>
+      <process:to type="query">budgetTemp/prosubfee3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/prosubfee</process:from>
+      <process:to type="query">budgetTemp/prosubfee4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/inoutfee</process:from>
+      <process:to type="query">budgetTemp/inoutfee1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/inoutfee</process:from>
+      <process:to type="query">budgetTemp/inoutfee2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/inoutfee</process:from>
+      <process:to type="query">budgetTemp/inoutfee3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/inoutfee</process:from>
+      <process:to type="query">budgetTemp/inoutfee4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/selfsalecost</process:from>
+      <process:to type="query">budgetTemp/selfsalecost1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/selfsalecost</process:from>
+      <process:to type="query">budgetTemp/selfsalecost2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/selfsalecost</process:from>
+      <process:to type="query">budgetTemp/selfsalecost3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/selfsalecost</process:from>
+      <process:to type="query">budgetTemp/selfsalecost4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/nquosalecost</process:from>
+      <process:to type="query">budgetTemp/nquosalecost1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/nquosalecost</process:from>
+      <process:to type="query">budgetTemp/nquosalecost2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/nquosalecost</process:from>
+      <process:to type="query">budgetTemp/nquosalecost3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/nquosalecost</process:from>
+      <process:to type="query">budgetTemp/nquosalecost4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/startfee</process:from>
+      <process:to type="query">budgetTemp/startfee1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/startfee</process:from>
+      <process:to type="query">budgetTemp/startfee2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/startfee</process:from>
+      <process:to type="query">budgetTemp/startfee3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/startfee</process:from>
+      <process:to type="query">budgetTemp/startfee4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/bsfee</process:from>
+      <process:to type="query">budgetTemp/bsfee1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/bsfee</process:from>
+      <process:to type="query">budgetTemp/bsfee2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/bsfee</process:from>
+      <process:to type="query">budgetTemp/bsfee3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/bsfee</process:from>
+      <process:to type="query">budgetTemp/bsfee4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[1]/rebate</process:from>
+      <process:to type="query">budgetTemp/rebate1</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[2]/rebate</process:from>
+      <process:to type="query">budgetTemp/rebate2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[3]/rebate</process:from>
+      <process:to type="query">budgetTemp/rebate3</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget[4]/rebate</process:from>
+      <process:to type="query">budgetTemp/rebate4</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="891" y="211"/>
+    <figSize height="17" width="73"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" displayName="空操作" grouped="true" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link18" name="link18" displayName="连接线" type="transition">
+      <bendPoint heightToEnd="-30" heightToStart="-30" widthToEnd="-58" widthToStart="59"/>
+      <sourceNode>switch1</sourceNode>
+      <targetNode>switch2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">budget</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link42</targetConnections>
+    <location x="828" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <location x="820" y="211"/>
+    <figSize height="17" width="44"/>
+    <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="赋值上一年合计" displayName="赋值" collapsed="false" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link22" name="link22" displayName="连接线" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>switch3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">budget_hj</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="1164" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/contamt</process:from>
+      <process:to type="query">budgetTemp/contamt5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/pcontamt</process:from>
+      <process:to type="query">budgetTemp/pcontamt5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/scontamt</process:from>
+      <process:to type="query">budgetTemp/scontamt5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/mcontamt</process:from>
+      <process:to type="query">budgetTemp/mcontamt5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/receamt</process:from>
+      <process:to type="query">budgetTemp/receamt5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/taxincome</process:from>
+      <process:to type="query">budgetTemp/taxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/ptaxincome</process:from>
+      <process:to type="query">budgetTemp/ptaxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/mtaxincome</process:from>
+      <process:to type="query">budgetTemp/mtaxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/staxincome</process:from>
+      <process:to type="query">budgetTemp/staxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/ntaxincome</process:from>
+      <process:to type="query">budgetTemp/ntaxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/pntaxincome</process:from>
+      <process:to type="query">budgetTemp/pntaxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/sntaxincome</process:from>
+      <process:to type="query">budgetTemp/sntaxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/mntaxincome</process:from>
+      <process:to type="query">budgetTemp/mntaxincome5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/bustax</process:from>
+      <process:to type="query">budgetTemp/bustax5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/currentcost</process:from>
+      <process:to type="query">budgetTemp/currentcost5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/payback</process:from>
+      <process:to type="query">budgetTemp/payback5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/profitBBonus</process:from>
+      <process:to type="query">budgetTemp/profitBBonus5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/profitABonus</process:from>
+      <process:to type="query">budgetTemp/profitABonus5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/servcost</process:from>
+      <process:to type="query">budgetTemp/servcost5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/salecost</process:from>
+      <process:to type="query">budgetTemp/salecost5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/commshar</process:from>
+      <process:to type="query">budgetTemp/commshar5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/comashar</process:from>
+      <process:to type="query">budgetTemp/comashar5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/comdshar</process:from>
+      <process:to type="query">budgetTemp/comdshar5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/assetlose</process:from>
+      <process:to type="query">budgetTemp/assetlose5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/baddebts</process:from>
+      <process:to type="query">budgetTemp/baddebts5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/instock</process:from>
+      <process:to type="query">budgetTemp/instock5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/outstock</process:from>
+      <process:to type="query">budgetTemp/outstock5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/bonus</process:from>
+      <process:to type="query">budgetTemp/bonus5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/servtax</process:from>
+      <process:to type="query">budgetTemp/servtax5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/deviation</process:from>
+      <process:to type="query">budgetTemp/deviation5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/cashflow</process:from>
+      <process:to type="query">budgetTemp/cashflow5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/wptotalfee</process:from>
+      <process:to type="query">budgetTemp/wptotalfee5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/nquosalecost</process:from>
+      <process:to type="query">budgetTemp/nquosalecost5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/selfsalecost</process:from>
+      <process:to type="query">budgetTemp/selfsalecost5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/inoutfee</process:from>
+      <process:to type="query">budgetTemp/inoutfee5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/prosubfee</process:from>
+      <process:to type="query">budgetTemp/prosubfee5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/pmsubfee</process:from>
+      <process:to type="query">budgetTemp/pmsubfee5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/selfservcost</process:from>
+      <process:to type="query">budgetTemp/selfservcost5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/startfee</process:from>
+      <process:to type="query">budgetTemp/startfee5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/bsfee</process:from>
+      <process:to type="query">budgetTemp/bsfee5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/rebate</process:from>
+      <process:to type="query">budgetTemp/rebate5</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budget2/accounts</process:from>
+      <process:to type="query">budgetTemp/accounts5</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="1136" y="211"/>
+    <figSize height="17" width="85"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch2" name="空操作2" displayName="空操作" collapsed="false" grouped="true" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>assign5</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link24" name="link24" displayName="连接线" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>switch3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">budget2</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="1052" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch2label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch2label" name="label" nodeType="label">
+    <location x="1044" y="211"/>
+    <figSize height="17" width="44"/>
+    <node>switch2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch3" name="空操作3" displayName="空操作" grouped="true" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link23" name="link23" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch3</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link22</targetConnections>
+    <targetConnections>link24</targetConnections>
+    <location x="1115" y="135"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch3label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch3label" name="label" nodeType="label">
+    <location x="1107" y="171"/>
+    <figSize height="17" width="44"/>
+    <node>switch3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign7" name="赋值2" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign7</sourceNode>
+      <targetNode>invokePojo5</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="450" y="174"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign7label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">year+&quot;年&quot;+name+&quot;预算&quot;</process:from>
+      <process:to type="query">budgetTemp1/budgetname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">budgetPara1/year</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">Y-PRATIO</process:from>
+      <process:to type="query">budgetPara1/paracode</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">budgetPara3/year</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">M-PRATIO</process:from>
+      <process:to type="query">budgetPara3/paracode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">
+    <location x="448" y="210"/>
+    <figSize height="17" width="32"/>
+    <node>assign7</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign11" name="赋值4" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link35" name="link35" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign11</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <location x="90" y="97"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign11label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.primeton.eos.ame_budget.ame_budget.BudgetOrg</process:from>
+      <process:to type="query">criteria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">budgetYear</process:from>
+      <process:to type="query">criteria/_expr[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">criteria/_expr[1]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">criteria/_expr[1]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">orgid</process:from>
+      <process:to type="query">criteria/_expr[2]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">criteria/_expr[2]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgid</process:from>
+      <process:to type="query">criteria/_expr[2]/_value</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign11label" name="label" nodeType="label">
+    <location x="88" y="133"/>
+    <figSize height="17" width="32"/>
+    <node>assign11</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign12" name="赋值5" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign12</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link36</targetConnections>
+    <location x="1302" y="378"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign12label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">-1</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign12label" name="label" nodeType="label">
+    <location x="1300" y="414"/>
+    <figSize height="17" width="32"/>
+    <node>assign12</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign13" name="赋值6" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link38" name="link38" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign13</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="1415" y="435"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign13label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign13label" name="label" nodeType="label">
+    <location x="1413" y="471"/>
+    <figSize height="17" width="32"/>
+    <node>assign13</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo5" name="研发分摊比例" displayName="研发分摊比例" collapsed="false" grouped="true" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="link13" isDefault="true" type="transition">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>invokePojo6</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <location x="577" y="174"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo5label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntityByTemplate</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="template" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetPara1</process:inputVariable>
+      <process:inputVariable id="2" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetPara1</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo5label" name="label" nodeType="label">
+    <location x="552" y="210"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo6" name="管理分摊比例" displayName="管理分摊比例" collapsed="false" grouped="true" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link41" name="link41" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo6</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <location x="675" y="174"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo6label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntityByTemplate</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="template" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetPara3</process:inputVariable>
+      <process:inputVariable id="2" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetPara3</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo6label" name="label" nodeType="label">
+    <location x="650" y="210"/>
+    <figSize height="17" width="73"/>
+    <node>invokePojo6</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值8" displayName="赋值" collapsed="false" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link41</targetConnections>
+    <location x="750" y="175"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetPara3/parameters</process:from>
+      <process:to type="query">budgetTemp/mpratio</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetPara1/parameters</process:from>
+      <process:to type="query">budgetTemp/ypratio</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">budgetPara4/parameters</process:from>
+      <process:to type="query">budgetTemp/paybackPara</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">MARATE</process:from>
+      <process:to type="query">budgetTemp/MARATE</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">PRODUCTRATE</process:from>
+      <process:to type="query">budgetTemp/PRODUCTRATE</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">SERVICERATE</process:from>
+      <process:to type="query">budgetTemp/SERVICERATE</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="748" y="211"/>
+    <figSize height="17" width="32"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo7" name="deleteObject" displayName="deleteObject" grouped="true" type="invoke" index="1" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link43" name="link43" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo7</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="1350" y="179"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo7label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.data.DataContextUtil.deleteObject</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="xpaths" type="literal" value="java.lang.String" valueType="Java" pattern="reference">budgetTemp</process:inputVariable>
+      <process:inputVariable id="1" name="param1" type="literal" value="java.lang.String" valueType="Java" pattern="reference">budgetTemp1</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo7label" name="label" nodeType="label">
+    <location x="1324" y="215"/>
+    <figSize height="17" width="75"/>
+    <node>invokePojo7</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo8" name="退税比例" displayName="退税比例" collapsed="false" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo8</sourceNode>
+      <targetNode>invokePojo9</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="195" y="247"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo8label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntityByTemplate</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="template" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetPara4</process:inputVariable>
+      <process:inputVariable id="2" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">budgetPara4</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo8label" name="label" nodeType="label">
+    <location x="182" y="283"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo8</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign6" name="赋值7" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>invokePojo8</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="139" y="247"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign6label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">year</process:from>
+      <process:to type="query">budgetPara4/year</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">PAYBACK-RATIO</process:from>
+      <process:to type="query">budgetPara4/paracode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
+    <location x="137" y="283"/>
+    <figSize height="17" width="32"/>
+    <node>assign6</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo9" name="产品税率" displayName="getDictName" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo9</sourceNode>
+      <targetNode>invokePojo10</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="196" y="316"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo9label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.eoscommon.BusinessDictUtil.getDictName</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dictTypeId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">AME_SYSCONF</process:inputVariable>
+      <process:inputVariable id="1" name="dictId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">PRODUCTRATE</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">PRODUCTRATE</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo9label" name="label" nodeType="label">
+    <location x="183" y="352"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo9</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo10" name="服务税率" displayName="产品税率" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo10</sourceNode>
+      <targetNode>invokePojo11</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="323" y="316"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo10label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.eoscommon.BusinessDictUtil.getDictName</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dictTypeId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">AME_SYSCONF</process:inputVariable>
+      <process:inputVariable id="1" name="dictId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">SERVICERATE</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">SERVICERATE</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo10label" name="label" nodeType="label">
+    <location x="310" y="352"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo10</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo11" name="MA税率" displayName="产品税率" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo11</sourceNode>
+      <targetNode>loopstart0</targetNode>
+    </sourceConnections>
+    <targetConnections>link21</targetConnections>
+    <location x="268" y="270"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo11label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.eoscommon.BusinessDictUtil.getDictName</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dictTypeId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">AME_SYSCONF</process:inputVariable>
+      <process:inputVariable id="1" name="dictId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">MARATE</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">MARATE</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo11label" name="label" nodeType="label">
+    <location x="257" y="306"/>
+    <figSize height="17" width="45"/>
+    <node>invokePojo11</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="朱海翔" createTime="2018-01-02 17:11:37" date="2018-01-02Z" description="导出本部门及下级部门预算损益" name="导出本部门及下级部门预算损益" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetTemp" name="budgetTemps"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetOrg" name="orgs"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetTemp" name="budgetTemp"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="name" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="names" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer" name="budgetTemps1"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.DeptBugdetVer" name="budgetTemp1"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.primeton.eos.ame_budget.ame_budget.DeptExecutTemp" name="budget_sj"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetPara" name="budgetPara1"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetPara" name="budgetPara3"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_budget.ame_budget.BudgetPara" name="budgetPara4"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" name="orgid" primitiveType="String"/>
+    <process:input description="" isArray="false" name="year" primitiveType="String"/>
+    <process:input description="" isArray="false" name="orgFlag" primitiveType="String"/>
+    <process:input description="1：本部门 2：本部门及下级部门" isArray="false" name="flag" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" name="downloadFile" primitiveType="String"/>
+    <process:output description="" isArray="false" name="result" primitiveType="Int"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

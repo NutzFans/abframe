@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:huangqj -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="CONTRACTID" javaType="long" property="CONTRACTID"/>
+        <result column="CONTNUM" javaType="string" property="CONTNUM"/>
+        <result column="FINYEAR" javaType="string" property="FINYEAR"/>
+        <result column="FINMONTH" javaType="string" property="FINMONTH"/>
+        <result column="INCOME_PROD" javaType="Decimal" property="INCOME_PROD"/>
+        <result column="INCOME_SERV" javaType="Decimal" property="INCOME_SERV"/>
+        <result column="INCOME_MA" javaType="Decimal" property="INCOME_MA"/>
+        <result column="INCOME" javaType="Decimal" property="INCOME"/>
+        <result column="INCOME_PROD_NET" javaType="Decimal" property="INCOME_PROD_NET"/>
+        <result column="INCOME_SERV_NET" javaType="Decimal" property="INCOME_SERV_NET"/>
+        <result column="INCOME_MA_NET" javaType="Decimal" property="INCOME_MA_NET"/>
+        <result column="INCOME_NET" javaType="Decimal" property="INCOME_NET"/>
+        <result column="SCFY_RG" javaType="Decimal" property="SCFY_RG"/>
+        <result column="SCFY_WB" javaType="Decimal" property="SCFY_WB"/>
+        <result column="SCFY_BX" javaType="Decimal" property="SCFY_BX"/>
+        <result column="SCFY" javaType="Decimal" property="SCFY"/>
+        <result column="CBJZ_RG" javaType="Decimal" property="CBJZ_RG"/>
+        <result column="CBJZ_WB" javaType="Decimal" property="CBJZ_WB"/>
+        <result column="CBJZ_BX" javaType="Decimal" property="CBJZ_BX"/>
+        <result column="CBJZ" javaType="Decimal" property="CBJZ"/>
+        <result column="STOCK_RG" javaType="Decimal" property="STOCK_RG"/>
+        <result column="STOCK_WB" javaType="Decimal" property="STOCK_WB"/>
+        <result column="STOCK_BX" javaType="Decimal" property="STOCK_BX"/>
+        <result column="STOCK" javaType="Decimal" property="STOCK"/>
+        <result column="STOCK_JZ" javaType="Decimal" property="STOCK_JZ"/>
+        <result column="STOCK_JZ_ALL" javaType="Decimal" property="STOCK_JZ_ALL"/>
+        <result column="STOCK_NET" javaType="Decimal" property="STOCK_NET"/>
+        <result column="FLAG" javaType="string" property="FLAG"/>
+    </resultMap>
+    <select id="getContIncomeCost" parameterClass="java.lang.Long" resultMap="resultMap"><![CDATA[
+    	select t.CONTRACTID,t.CONTNUM,t.FINYEAR,t.FINMONTH,sum(case incometype when '11' then mon else 0 end) INCOME_PROD,
+			   sum(case incometype when '12' then mon else 0 end) INCOME_SERV,sum(case incometype when '13' then mon else 0 end) INCOME_MA,
+			   sum(case incometype when '1' then mon else 0 end) INCOME,sum(case incometype when '21' then mon else 0 end) INCOME_PROD_NET,
+			   sum(case incometype when '22' then mon else 0 end) INCOME_SERV_NET,sum(case incometype when '23' then mon else 0 end) INCOME_MA_NET,
+			   sum(case incometype when '2' then mon else 0 end) INCOME_NET,sum(case incometype when '31' then mon else 0 end) SCFY_RG,
+			   sum(case incometype when '32' then mon else 0 end) SCFY_WB,0 as SCFY_BX,sum(case incometype when '3' then mon else 0 end) SCFY,
+			   0 as CBJZ_RG,0 as CBJZ_WB,0 as CBJZ_BX,sum(case incometype when '4' then mon else 0 end) CBJZ,0 as STOCK_RG,0 as STOCK_WB,0 as STOCK_BX,
+			   sum(case incometype when '5' then mon else 0 end)+sum(case incometype when '6' then mon else 0 end) STOCK,
+			   sum(case incometype when '6' then mon else 0 end) STOCK_JZ,sum(case incometype when '5' then mon else 0 end) STOCK_NET
+		from (
+			select contractid,contnum,incometype,income11 as mon,2011 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income121 as mon,2012 as FINYEAR,3 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income122 as mon,2012 as FINYEAR,6 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income123 as mon,2012 as FINYEAR,9 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income124 as mon,2012 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income131 as mon,2013 as FINYEAR,3 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income132 as mon,2013 as FINYEAR,6 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income133 as mon,2013 as FINYEAR,9 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income134 as mon,2013 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income141 as mon,2014 as FINYEAR,3 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income142 as mon,2014 as FINYEAR,6 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income143 as mon,2014 as FINYEAR,9 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income144 as mon,2014 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income151 as mon,2015 as FINYEAR,3 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income152 as mon,2015 as FINYEAR,6 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income153 as mon,2015 as FINYEAR,9 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income154 as mon,2015 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income161 as mon,2016 as FINYEAR,3 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income162 as mon,2016 as FINYEAR,6 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income163 as mon,2016 as FINYEAR,9 as FINMONTH from NEW_CS_INCOME
+			union select contractid,contnum,incometype,income164 as mon,2016 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME
+			) t where contractid=#contractid#
+		group by t.contractid,t.contnum,t.FINYEAR,t.FINMONTH
+		order by t.contractid,t.contnum,t.FINYEAR,t.FINMONTH
+    ]]></select>
+    <select id="getContIncomeCost1" parameterClass="java.lang.Long" resultMap="resultMap"><![CDATA[
+    	select b.CONTRACTID,a.CONTNUM,FINYEAR,FINMONTH,INCOME_PROD,INCOME_SERV,INCOME_MA,INCOME,INCOME_PROD_NET,INCOME_SERV_NET,INCOME_MA_NET,
+			   INCOME_NET,SCFY_RG,SCFY_WB,SCFY_BX,SCFY,CBJZ_RG,CBJZ_WB,CBJZ_BX,CBJZ,STOCK_RG,STOCK_WB,STOCK_BX,STOCK,STOCK_JZ,STOCK_JZ_ALL,STOCK_NET,1 as FLAG
+		from CS_CONT_STOCK a,NEW_CS_CONTRACT b 
+		where b.CONTRACTID=#contractid# and a.CONTNUM=b.CONTNUM and FINYEAR=2017 and FINMONTH=11 and a.CONTNUM in (select CONTNUM from CS_CONT_STOCK)
+		UNION ALL
+		select b.CONTRACTID,b.CONTNUM,2017 as FINYEAR,11 as FINMONTH,0 as INCOME_PROD,0 as INCOME_SERV,0 as INCOME_MA,0 as INCOME,0 as INCOME_PROD_NET,0 as INCOME_SERV_NET,0 as INCOME_MA_NET,
+			   0 as INCOME_NET,0 as SCFY_RG,0 as SCFY_WB,0 as SCFY_BX,0 as SCFY,0 as CBJZ_RG,0 as CBJZ_WB,0 as CBJZ_BX,0 as CBJZ,0 as STOCK_RG,0 as STOCK_WB,0 as STOCK_BX,0 as STOCK,0 as STOCK_JZ,0 as STOCK_JZ_ALL,0 as STOCK_NET,0 as FLAG
+		from NEW_CS_CONTRACT b 
+		where b.CONTRACTID=#contractid# and b.CONTNUM not in (select CONTNUM from CS_CONT_STOCK)
+		union ALL
+		select t.CONTRACTID,t.CONTNUM,t.FINYEAR,t.FINMONTH,sum(case incometype when '11' then mon else 0 end) INCOME_PROD,
+			   sum(case incometype when '12' then mon else 0 end) INCOME_SERV,sum(case incometype when '13' then mon else 0 end) INCOME_MA,
+			   sum(case incometype when '1' then mon else 0 end) INCOME,sum(case incometype when '21' then mon else 0 end) INCOME_PROD_NET,
+			   sum(case incometype when '22' then mon else 0 end) INCOME_SERV_NET,sum(case incometype when '23' then mon else 0 end) INCOME_MA_NET,
+			   sum(case incometype when '2' then mon else 0 end) INCOME_NET,sum(case incometype when '31' then mon else 0 end) SCFY_RG,
+			   sum(case incometype when '32' then mon else 0 end) SCFY_WB,0 as SCFY_BX,sum(case incometype when '3' then mon else 0 end) SCFY,
+			   0 as CBJZ_RG,0 as CBJZ_WB,0 as CBJZ_BX,sum(case incometype when '4' then mon else 0 end) CBJZ,0 as STOCK_RG,0 as STOCK_WB,0 as STOCK_BX,
+			   sum(case incometype when '5' then mon else 0 end)+sum(case incometype when '6' then mon else 0 end) STOCK,
+			   sum(case incometype when '6' then mon else 0 end) STOCK_JZ,0 as STOCK_JZ_ALL,sum(case incometype when '5' then mon else 0 end) STOCK_NET,0 as FLAG
+		from (
+			select contractid,contnum,incometype,income1712 as mon,2017 as FINYEAR,12 as FINMONTH from NEW_CS_INCOME) t where t.CONTRACTID=#contractid#
+		group by t.contractid,t.contnum,t.FINYEAR,t.FINMONTH
+		order by contractid,contnum,FINYEAR,CONVERT(int,FINMONTH)
+    ]]></select>
+</sqlMap>

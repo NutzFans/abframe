@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="SubBusiOrgMaintain" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node2" name="注释2" displayName="注释" nodeType="note" type="note" content="使用Ajax调用增加和更新业务逻辑" title="周维&#x9;08-9-5 下午4:35">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" type="note">
+      <sourceNode>node2</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <location x="424" y="300"/>
+    <size height="61" width="185"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="描述：子业务机构维护，提供增删改等操作" title="周维&#x9;08-9-5 下午4:29">
+    <location x="98" y="315"/>
+    <size height="100" width="142"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="使用ajax调用删除业务逻辑&#xD;&#xA;&#xD;&#xA;使用ajax提交update和insert请求" title="周维&#x9;08-9-5 下午2:02">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" type="note">
+      <sourceNode>node0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <location x="382" y="-75"/>
+    <size height="61" width="232"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmBusiorg" name="busiorg"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="30" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/abframe/org/busiorg/busiorg_child_list.jsp">
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="645" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="32" y="96"/>
+    <figSize height="15" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="647" y="96"/>
+    <figSize height="15" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="page、parentBusiorg赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="155" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">page/begin</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">10</process:from>
+      <process:to type="query">page/length</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">busiorg</process:from>
+      <process:to type="query">f:parentBusiorg</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">busiorg/busiorgid</process:from>
+      <process:to type="query">f:parentBusiorgid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">org.gocom.abframe.dataset.organization.OmBusiorg</process:from>
+      <process:to type="query">criteria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">busiorg/busiorgid</process:from>
+      <process:to type="query">criteria/_expr[1]/omBusiorg.busiorgid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="101" y="96"/>
+    <figSize height="15" width="137"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="子业务机构列表" displayName="busiorg_child_list.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/busiorg/busiorg_child_list.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link3" name="link3" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link5" name="link5" lineType="reference" type="action" actionName="pageQuery" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link7" name="link7" lineType="reference" type="action" actionName="insert" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link8" name="link8" lineType="reference" type="action" actionName="update" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="504" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters>
+      <process:parameter description="分页信息" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      <process:parameter description="业务机构" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmBusiorg" name="org"/>
+      <process:parameter description="查询条件" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
+    </process:inputParameters>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="473" y="96"/>
+    <figSize height="15" width="85"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view1" name="业务机构输入" displayName="busiorg_input.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.org" method="forward" uri="/abframe/org/busiorg/busiorg_input.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link10" name="link10" lineType="reference" isDefault="true" type="action" actionName="action4">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="505" y="210"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="480" y="246"/>
+    <figSize height="15" width="73"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="查询业务机构信息并填充岗位名属性" id="subprocess1" name="查询业务机构信息并填充岗位名属性" displayName="expandBusiorgFillnames" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="330" y="210"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.busiorg.BusiOrgManager.expandBusiorgFillnames</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="org" type="query" value="org.gocom.abframe.dataset.organization.OmBusiorg" valueType="DataObject" pattern="reference">org</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="org" type="query" value="org.gocom.abframe.dataset.organization.OmBusiorg" valueType="DataObject">org</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="247" y="245"/>
+    <figSize height="15" width="193"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="根据条件分页查询子业务机构" displayName="querySubBusiorgByCriteriaPage" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <bendPoint heightToEnd="-55" heightToStart="-54" widthToEnd="-97" widthToStart="90"/>
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="315" y="60"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.org.busiorg.BusiOrgManager.querySubBusiorgByCriteriaPage</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="criteria" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">criteria</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="orgList" type="query" value="org.gocom.abframe.dataset.organization.OmBusiorg[]" valueType="DataObject">busiorgs</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="250" y="95"/>
+    <figSize height="15" width="157"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="407" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">0</process:from>
+      <process:to type="query">page/count</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="409" y="96"/>
+    <figSize height="15" width="25"/>
+    <node>assign1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="周维" createTime="2008-09-05 12:07:55" date="2008-09-05Z" description="" name="子业务机构维护" version="6.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="parentBusiorgid" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.organization.OmBusiorg" name="parentBusiorg"/>
+  </process:variables>
+  <process:inputParameters/>
+</process:tPageFlow>

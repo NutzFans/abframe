@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="ApplicationManager" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.0" state="stateless">
+  <nodes xsi:type="model:Note" id="node3" name="注释3" displayName="注释" collapsed="false" nodeType="note" type="note" content="根据主键查询应用信息，为左键单击动态树上的应用节点提供数据" title="张丹凤&#x9;08-8-20 下午9:32">
+    <targetConnections>link20</targetConnections>
+    <location x="78" y="473"/>
+    <size height="61" width="147"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link12" name="link12" lineType="reference" isDefault="true" type="action" actionName="entry" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view5</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link6" name="link6" lineType="reference" isDefault="false" type="action" actionName="auto" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>view7</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <location x="78" y="160"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end0" name="结束" displayName="结束" type="end" contextPath="" method="forward" uri="/abframe/rights/application/application_query.jsp">
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link30</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="715" y="255"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="80" y="196"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="717" y="291"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view0" name="新增应用" displayName="application_add.jsp" collapsed="false" type="view" contextPath="" contributionName="org.gocom.abframe.rights" method="forward" uri="/abframe/rights/application/application_add.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link18" name="link18" lineType="reference" isDefault="true" type="action" actionName="end" dataConvertClass="">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="874" y="160"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="861" y="196"/>
+    <figSize height="17" width="49"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view2" name="查询应用" displayName="application_query.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.rights" method="forward" uri="/abframe/rights/application/application_query.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link7" name="link7" lineType="reference" isDefault="true" type="action" actionName="queryAllExcute" dataConvertClass="">
+      <sourceNode>view2</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="application"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="421" y="160"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view2label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view2label" name="label" nodeType="label">
+    <location x="408" y="196"/>
+    <figSize height="17" width="49"/>
+    <node>view2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="查询所有应用" displayName="queryApplication" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>view3</targetNode>
+    </sourceConnections>
+    <targetConnections>link26</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="574" y="160"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.ApplicationManager.queryApplication</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="application" type="query" value="com.primeton.das.criteria.criteriaType" valueType="DataObject" pattern="reference">application</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="appList" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication[]" valueType="DataObject">appList</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+        <process:outputVariable id="2" name="total" type="query" value="Int" valueType="Primitive"></process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="551" y="195"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="主键赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="716" y="43"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">appid</process:from>
+      <process:to type="query">acapplication/appid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="706" y="79"/>
+    <figSize height="17" width="49"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="根据主键查询应用" displayName="expandApplication" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="871" y="43"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.ApplicationManager.expandApplication</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="acapplication" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication" valueType="DataObject" pattern="reference">acapplication</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="acapplication" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication" valueType="DataObject">acapplication</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="836" y="78"/>
+    <figSize height="17" width="97"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="查询条件" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <targetConnections>link27</targetConnections>
+    <location x="78" y="382"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">appid</process:from>
+      <process:to type="query">appExpand/appid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="68" y="418"/>
+    <figSize height="17" width="49"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess4" name="查询" displayName="根据主键查询应用" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" displayName="连接线" type="note">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>node3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>view4</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="279" y="382"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.ApplicationManager.expandApplication</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="appExpand" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication" valueType="DataObject" pattern="reference">appExpand</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="appExpand" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication" valueType="DataObject">appExpand</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <location x="280" y="417"/>
+    <figSize height="17" width="25"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view4" name="本应用信息" displayName="applicaiton_query_by_id.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.rights" method="forward" uri="/abframe/rights/application/applicaiton_query_by_id.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link15" name="link15" lineType="reference" isDefault="true" type="action" actionName="updateInfo" dataConvertClass="">
+      <sourceNode>view4</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcApplication" name="acapplication"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcApplication" name="appExpand"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link19" name="link19" lineType="reference" type="action" actionName="end2" dataConvertClass="">
+      <sourceNode>view4</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link31</targetConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="421" y="382"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view4label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view4label" name="label" nodeType="label">
+    <location x="402" y="418"/>
+    <figSize height="17" width="61"/>
+    <node>view4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="打开刷新开关" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>view2</targetNode>
+    </sourceConnections>
+    <targetConnections>link25</targetConnections>
+    <location x="419" y="43"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">isRefreshRoot</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="397" y="79"/>
+    <figSize height="17" width="73"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tView" description="" id="view3" name="应用查询结果" displayName="application_query_result.jsp" type="view" contextPath="" contributionName="org.gocom.abframe.rights" method="forward" uri="/abframe/rights/application/application_query_result.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link9" name="link9" lineType="reference" isDefault="false" type="action" actionName="end1" dataConvertClass="">
+      <sourceNode>view3</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link24" name="link24" lineType="reference" type="action" actionName="buttonDelete" dataConvertClass="">
+      <sourceNode>view3</sourceNode>
+      <targetNode>subprocess6</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="true" modelType="org.gocom.abframe.dataset.privilege.AcApplication" name="app_selectedObjects"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link26" name="link26" lineType="reference" type="action" actionName="pageQuery" dataConvertClass="">
+      <sourceNode>view3</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="application"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link3" name="link3" lineType="reference" type="action" actionName="update" dataConvertClass="">
+      <sourceNode>view3</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcApplication" name="acapplication"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="add" dataConvertClass="">
+      <sourceNode>view3</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="718" y="160"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view3label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view3label" name="label" nodeType="label">
+    <location x="693" y="196"/>
+    <figSize height="17" width="73"/>
+    <node>view3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess6" name="删除应用" displayName="deleteApplication" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess6</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link24</targetConnections>
+    <location x="574" y="43"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess6label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.ApplicationManager.deleteApplication</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="application" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication[]" valueType="DataObject" pattern="reference">app_selectedObjects</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="appDeleteResult" type="query" value="Int" valueType="Primitive">appDeleteResult</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
+    <location x="563" y="78"/>
+    <figSize height="17" width="49"/>
+    <node>subprocess6</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view5" name="Tab页" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/application/application_tab.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link27" name="link27" lineType="reference" isDefault="true" type="action" actionName="queryById" dataConvertClass="">
+      <sourceNode>view5</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="org.gocom.abframe.dataset.privilege.AcApplication" name="appExpand"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link28" name="link28" lineType="reference" type="action" actionName="queryFuncGroups" dataConvertClass="">
+      <sourceNode>view5</sourceNode>
+      <targetNode>subprocess7</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="82" y="255"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view5label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view5label" name="label" nodeType="label">
+    <location x="76" y="291"/>
+    <figSize height="17" width="35"/>
+    <node>view5</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view6" name="应用下的所有功能组" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/application/application_funcgroup.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link32" name="link32" lineType="reference" isDefault="false" type="action" actionName="query" dataConvertClass="">
+      <bendPoint heightToEnd="57" heightToStart="56" widthToEnd="68" widthToStart="-72"/>
+      <sourceNode>view6</sourceNode>
+      <targetNode>subprocess7</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appid" primitiveType="Int"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link30" name="link30" lineType="reference" isDefault="true" type="action" actionName="end0" dataConvertClass="">
+      <sourceNode>view6</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <location x="421" y="255"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view6label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view6label" name="label" nodeType="label">
+    <location x="378" y="291"/>
+    <figSize height="17" width="109"/>
+    <node>view6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess7" name="根据appid查询功能组" displayName="queryFuncGroupByAppWithPage" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess7</sourceNode>
+      <targetNode>view6</targetNode>
+    </sourceConnections>
+    <targetConnections>link32</targetConnections>
+    <targetConnections>link28</targetConnections>
+    <location x="279" y="255"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess7label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.ApplicationManager.queryFuncGroupByAppWithPage</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="appid" type="query" value="Int" valueType="Primitive" pattern="reference">appid</process:inputVariable>
+        <process:inputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject" pattern="reference">page</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="funcGroupList" type="query" value="org.gocom.abframe.dataset.privilege.AcFuncgroup[]" valueType="DataObject">funcgroups</process:outputVariable>
+        <process:outputVariable id="1" name="page" type="query" value="com.eos.foundation.PageCond" valueType="DataObject">page</process:outputVariable>
+        <process:outputVariable id="2" name="total" type="query" value="Int" valueType="Primitive"></process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess7label" name="label" nodeType="label">
+    <location x="233" y="290"/>
+    <figSize height="17" width="119"/>
+    <node>subprocess7</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess8" name="修改应用信息" displayName="修改应用" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess8</sourceNode>
+      <targetNode>view4</targetNode>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <location x="715" y="382"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess8label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">org.gocom.abframe.rights.application.ApplicationManager.updateApplication</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="acapplication" type="query" value="org.gocom.abframe.dataset.privilege.AcApplication" valueType="DataObject" pattern="reference">acapplication</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="retCode" type="query" value="String" valueType="Primitive">retCode</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess8label" name="label" nodeType="label">
+    <location x="692" y="417"/>
+    <figSize height="17" width="73"/>
+    <node>subprocess8</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>subprocess8</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="417" y="490"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">appid</process:from>
+      <process:to type="query">appExpand/appid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">isRefreshRoot</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appExpand</process:from>
+      <process:to type="query">acapplication</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="419" y="526"/>
+    <figSize height="17" width="25"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view7" name="tab" displayName="视图" type="view" contributionName="org.gocom.abframe.rights" uri="/abframe/rights/application/applications_tab.jsp">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link17" name="link17" lineType="reference" isDefault="true" type="action" actionName="queryAll" dataConvertClass="">
+      <sourceNode>view7</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:validateRules onError="default"/>
+      <process:inputParameters/>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="279" y="160"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view7label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view7label" name="label" nodeType="label">
+    <location x="280" y="196"/>
+    <figSize height="17" width="20"/>
+    <node>view7</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="张丹凤" createTime="2008-08-06 19:19:49" date="2008-08-06Z" description="" name="应用管理" version="6.0"/>
+  <process:variables/>
+  <process:inputParameters/>
+</process:tPageFlow>

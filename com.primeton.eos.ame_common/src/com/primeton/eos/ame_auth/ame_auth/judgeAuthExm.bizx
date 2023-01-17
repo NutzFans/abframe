@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="judgeAuthExm.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="code：功能编码&#xD;&#xA;map:条件。map有三个key值分别为property（字段名），op（判断条件），value（字段对应的值），多个条件以“;”隔开&#xD;&#xA;" title="zhuhx&#x9;18-3-23 下午1:58">
+    <targetConnections>link1</targetConnections>
+    <location x="158" y="285"/>
+    <size height="91" width="361"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <location x="165" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link3</targetConnections>
+    <location x="400" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="org.gocom.abframe.dataset.organization.OmOrganization[]" name="orgs" type="query" valueType="DataObject">orgs</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="167" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="402" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="255" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">status;orglevel</process:from>
+      <process:to type="query">map/property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=;&lt;=</process:from>
+      <process:to type="query">map/op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">'running';'6'</process:from>
+      <process:to type="query">map/value</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="257" y="186"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="获取我有权的机构" displayName="getownorg" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" type="note">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>node0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="325" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.primeton.eos.ame_auth.ame_auth.getownorg</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="code" type="literal" value="String" valueType="Primitive" pattern="value">SRQRYL</process:inputVariable>
+        <process:inputVariable id="1" name="map" type="query" value="java.util.HashMap" valueType="Java" pattern="reference">map</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="orgs" type="query" value="org.gocom.abframe.dataset.organization.OmOrganization[]" valueType="DataObject">orgs</process:outputVariable>
+        <process:outputVariable id="1" name="errcode" type="query" value="String" valueType="Primitive">errcode</process:outputVariable>
+        <process:outputVariable id="2" name="orgids" type="query" value="String" valueType="Primitive">orgids</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="290" y="185"/>
+    <figSize height="17" width="97"/>
+    <node>subprocess1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="朱海翔" createTime="2018-03-19 11:14:36" date="2018-03-19Z" description="获取权限（示例）" name="获取权限（示例）" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="map"/>
+  </process:variables>
+  <process:inputs varArgs="false"/>
+  <process:outputs>
+    <process:output description="" isArray="true" modelType="org.gocom.abframe.dataset.organization.OmOrganization" name="orgs"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

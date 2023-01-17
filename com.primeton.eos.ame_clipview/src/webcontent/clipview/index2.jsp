@@ -1,0 +1,590 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<!-- Template Name: Clip-One - Responsive Admin Template build with Twitter Bootstrap 3.x Version: 1.3 Author: ClipTheme -->
+<!--[if IE 8]><html class="ie8 no-js" lang="en"><![endif]-->
+<!--[if IE 9]><html class="ie9 no-js" lang="en"><![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+	<!--<![endif]-->
+	<!-- start: HEAD -->
+	<head>
+		<title>普元业务综合管理平台</title>
+		<!-- start: META -->
+		<meta charset="utf-8" />
+		<!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,IE=8,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta content="" name="description" />
+		<meta content="" name="author" />
+		<!-- end: META -->
+		<script src="<%= request.getContextPath() %>/common/nui/nui.js" type="text/javascript"></script>
+		<!-- start: MAIN CSS -->
+		<link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="assets/fonts/style.css">
+		<link rel="stylesheet" href="assets/css/main.css">
+		<link rel="stylesheet" href="assets/css/bootstrap-table.min.css">
+		<link rel="stylesheet" href="assets/css/main-responsive.css">
+		<link rel="stylesheet" href="assets/plugins/iCheck/skins/all.css">
+		<link rel="stylesheet" href="assets/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css">
+		<link rel="stylesheet" href="assets/plugins/perfect-scrollbar/src/perfect-scrollbar.css">
+		<link rel="stylesheet" href="assets/css/theme_light.css" type="text/css" id="skin_color">
+		<link rel="stylesheet" href="assets/css/print.css" type="text/css" media="print"/>
+		<!--[if IE 7]>
+		<link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome-ie7.min.css">
+		<![endif]-->
+		<!-- end: MAIN CSS -->
+		<!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
+		<link rel="stylesheet" href="assets/plugins/fullcalendar/fullcalendar/fullcalendar.css">
+		<!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
+		<link rel="shortcut icon" href="favicon.ico" />
+	</head>
+	<!-- end: HEAD -->
+	<!-- start: BODY -->
+	<body>
+		<!-- start: HEADER -->
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<!-- start: TOP NAVIGATION CONTAINER -->
+			<div class="container">
+				<div class="navbar-header">
+					<!-- start: RESPONSIVE MENU TOGGLER -->
+					<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+						<span class="clip-list-2"></span>
+					</button>
+					<!-- end: RESPONSIVE MENU TOGGLER -->
+					<!-- start: LOGO -->
+					<a class="navbar-brand" href="index.html">
+						普元业务综合管理平台
+					</a>
+					<!-- end: LOGO -->
+				</div>
+				<div class="navbar-tools">
+					<!-- start: TOP NAVIGATION MENU -->
+					<ul class="nav navbar-right">
+						<!-- start: TO-DO DROPDOWN -->
+						<li class="dropdown">
+							<a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+								<i class="clip-list-5"></i>
+								<span class="badge"> 12</span>
+							</a>
+							<ul class="dropdown-menu todo">
+								<li>
+									<span class="dropdown-menu-title"> You have 12 pending tasks</span>
+								</li>
+								<li>
+									<div class="drop-down-wrapper">
+										<ul>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc" style="opacity: 1; text-decoration: none;">Staff Meeting</span>
+													<span class="label label-danger" style="opacity: 1;"> today</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc" style="opacity: 1; text-decoration: none;"> New frontend layout</span>
+													<span class="label label-danger" style="opacity: 1;"> today</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc"> Hire developers</span>
+													<span class="label label-warning"> tommorow</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc">Staff Meeting</span>
+													<span class="label label-warning"> tommorow</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc"> New frontend layout</span>
+													<span class="label label-success"> this week</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc"> Hire developers</span>
+													<span class="label label-success"> this week</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc"> New frontend layout</span>
+													<span class="label label-info"> this month</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc"> Hire developers</span>
+													<span class="label label-info"> this month</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc" style="opacity: 1; text-decoration: none;">Staff Meeting</span>
+													<span class="label label-danger" style="opacity: 1;"> today</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc" style="opacity: 1; text-decoration: none;"> New frontend layout</span>
+													<span class="label label-danger" style="opacity: 1;"> today</span>
+												</a>
+											</li>
+											<li>
+												<a class="todo-actions" href="javascript:void(0)">
+													<i class="fa fa-square-o"></i>
+													<span class="desc"> Hire developers</span>
+													<span class="label label-warning"> tommorow</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</li>
+								<li class="view-all">
+									<a href="javascript:void(0)">
+										See all tasks <i class="fa fa-arrow-circle-o-right"></i>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<!-- end: TO-DO DROPDOWN-->
+						<!-- start: NOTIFICATION DROPDOWN -->
+						<li class="dropdown">
+							<a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+								<i class="clip-notification-2"></i>
+								<span class="badge"> 11</span>
+							</a>
+							<ul class="dropdown-menu notifications">
+								<li>
+									<span class="dropdown-menu-title"> You have 11 notifications</span>
+								</li>
+								<li>
+									<div class="drop-down-wrapper">
+										<ul>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-primary"><i class="fa fa-user"></i></span>
+													<span class="message"> New user registration</span>
+													<span class="time"> 1 min</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-success"><i class="fa fa-comment"></i></span>
+													<span class="message"> New comment</span>
+													<span class="time"> 7 min</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-success"><i class="fa fa-comment"></i></span>
+													<span class="message"> New comment</span>
+													<span class="time"> 8 min</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-success"><i class="fa fa-comment"></i></span>
+													<span class="message"> New comment</span>
+													<span class="time"> 16 min</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-primary"><i class="fa fa-user"></i></span>
+													<span class="message"> New user registration</span>
+													<span class="time"> 36 min</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-warning"><i class="fa fa-shopping-cart"></i></span>
+													<span class="message"> 2 items sold</span>
+													<span class="time"> 1 hour</span>
+												</a>
+											</li>
+											<li class="warning">
+												<a href="javascript:void(0)">
+													<span class="label label-danger"><i class="fa fa-user"></i></span>
+													<span class="message"> User deleted account</span>
+													<span class="time"> 2 hour</span>
+												</a>
+											</li>
+											<li class="warning">
+												<a href="javascript:void(0)">
+													<span class="label label-danger"><i class="fa fa-shopping-cart"></i></span>
+													<span class="message"> Transaction was canceled</span>
+													<span class="time"> 6 hour</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-success"><i class="fa fa-comment"></i></span>
+													<span class="message"> New comment</span>
+													<span class="time"> yesterday</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-primary"><i class="fa fa-user"></i></span>
+													<span class="message"> New user registration</span>
+													<span class="time"> yesterday</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-primary"><i class="fa fa-user"></i></span>
+													<span class="message"> New user registration</span>
+													<span class="time"> yesterday</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-success"><i class="fa fa-comment"></i></span>
+													<span class="message"> New comment</span>
+													<span class="time"> yesterday</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)">
+													<span class="label label-success"><i class="fa fa-comment"></i></span>
+													<span class="message"> New comment</span>
+													<span class="time"> yesterday</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</li>
+								<li class="view-all">
+									<a href="javascript:void(0)">
+										See all notifications <i class="fa fa-arrow-circle-o-right"></i>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<!-- end: NOTIFICATION DROPDOWN -->
+						<!-- start: MESSAGE DROPDOWN -->
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-close-others="true" data-hover="dropdown" data-toggle="dropdown" href="#">
+								<i class="clip-bubble-3"></i>
+								<span class="badge"> 9</span>
+							</a>
+							<ul class="dropdown-menu posts">
+								<li>
+									<span class="dropdown-menu-title"> You have 9 messages</span>
+								</li>
+								<li>
+									<div class="drop-down-wrapper">
+										<ul>
+											<li>
+												<a href="javascript:;">
+													<div class="clearfix">
+														<div class="thread-image">
+															<img alt="" src="./assets/images/avatar-2.jpg">
+														</div>
+														<div class="thread-content">
+															<span class="author">Nicole Bell</span>
+															<span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
+															<span class="time"> Just Now</span>
+														</div>
+													</div>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:;">
+													<div class="clearfix">
+														<div class="thread-image">
+															<img alt="" src="./assets/images/avatar-1.jpg">
+														</div>
+														<div class="thread-content">
+															<span class="author">Peter Clark</span>
+															<span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
+															<span class="time">2 mins</span>
+														</div>
+													</div>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:;">
+													<div class="clearfix">
+														<div class="thread-image">
+															<img alt="" src="./assets/images/avatar-3.jpg">
+														</div>
+														<div class="thread-content">
+															<span class="author">Steven Thompson</span>
+															<span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
+															<span class="time">8 hrs</span>
+														</div>
+													</div>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:;">
+													<div class="clearfix">
+														<div class="thread-image">
+															<img alt="" src="./assets/images/avatar-1.jpg">
+														</div>
+														<div class="thread-content">
+															<span class="author">Peter Clark</span>
+															<span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
+															<span class="time">9 hrs</span>
+														</div>
+													</div>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:;">
+													<div class="clearfix">
+														<div class="thread-image">
+															<img alt="" src="./assets/images/avatar-5.jpg">
+														</div>
+														<div class="thread-content">
+															<span class="author">Kenneth Ross</span>
+															<span class="preview">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</span>
+															<span class="time">14 hrs</span>
+														</div>
+													</div>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</li>
+								<li class="view-all">
+									<a href="pages_messages.html">
+										See all messages <i class="fa fa-arrow-circle-o-right"></i>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<!-- end: MESSAGE DROPDOWN -->
+						<!-- start: USER DROPDOWN -->
+						<li class="dropdown current-user">
+							<a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+								<img src="assets/images/avatar-1-small.jpg" class="circle-img" alt="">
+								<span class="username">Peter Clark</span>
+								<i class="clip-chevron-down"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="pages_user_profile.html">
+										<i class="clip-user-2"></i>
+										&nbsp;My Profile
+									</a>
+								</li>
+								<li>
+									<a href="pages_calendar.html">
+										<i class="clip-calendar"></i>
+										&nbsp;My Calendar
+									</a>
+								<li>
+									<a href="pages_messages.html">
+										<i class="clip-bubble-4"></i>
+										&nbsp;My Messages (3)
+									</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href="utility_lock_screen.html"><i class="clip-locked"></i>
+										&nbsp;Lock Screen </a>
+								</li>
+								<li>
+									<a href="login_example1.html">
+										<i class="clip-exit"></i>
+										&nbsp;Log Out
+									</a>
+								</li>
+							</ul>
+						</li>
+						<!-- end: USER DROPDOWN -->
+					</ul>
+					<!-- end: TOP NAVIGATION MENU -->
+				</div>
+			</div>
+			<!-- end: TOP NAVIGATION CONTAINER -->
+		</div>
+		<!-- end: HEADER -->
+		<!-- start: MAIN CONTAINER -->
+		<div class="main-container">
+			1
+			</div>
+			<!-- start: PAGE -->
+			<div class="main-content">
+			2
+			<!-- end: PAGE -->
+		</div>
+		<!-- end: MAIN CONTAINER -->
+		<!-- start: FOOTER -->
+		<div class="footer clearfix">
+			<div class="footer-inner">
+				2014 &copy; clip-one by cliptheme.
+			</div>
+			<div class="footer-items">
+				<span class="go-top"><i class="clip-chevron-up"></i></span>
+			</div>
+		</div>
+		<!-- end: FOOTER -->
+		<div id="event-management" class="modal fade" tabindex="-1" data-width="760" style="display: none;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title">Event Management</h4>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" data-dismiss="modal" class="btn btn-light-grey">
+							Close
+						</button>
+						<button type="button" class="btn btn-danger remove-event no-display">
+							<i class='fa fa-trash-o'></i> Delete Event
+						</button>
+						<button type='submit' class='btn btn-success save-event'>
+							<i class='fa fa-check'></i> Save
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- start: MAIN JAVASCRIPTS -->
+		<!--[if lt IE 9]>
+		<script src="assets/plugins/respond.min.js"></script>
+		<script src="assets/plugins/excanvas.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<![endif]-->
+		<!--[if gte IE 9]><!-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<!--<![endif]-->
+		<script src="assets/plugins/jquery-ui/jquery-ui-1.10.2.custom.min.js"></script>
+		<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+		<script src="assets/plugins/blockUI/jquery.blockUI.js"></script>
+		<script src="assets/plugins/iCheck/jquery.icheck.min.js"></script>
+		<script src="assets/plugins/perfect-scrollbar/src/jquery.mousewheel.js"></script>
+		<script src="assets/plugins/perfect-scrollbar/src/perfect-scrollbar.js"></script>
+		<script src="assets/plugins/less/less-1.5.0.min.js"></script>
+		<script src="assets/plugins/jquery-cookie/jquery.cookie.js"></script>
+		<script src="assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js"></script>
+		<script src="assets/js/main.js"></script>
+		<!-- end: MAIN JAVASCRIPTS -->
+		<!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		<script src="assets/plugins/flot/jquery.flot.js"></script>
+		<script src="assets/plugins/flot/jquery.flot.pie.js"></script>
+		<script src="assets/plugins/flot/jquery.flot.resize.min.js"></script>
+		<script src="assets/plugins/jquery.sparkline/jquery.sparkline.js"></script>
+		<script src="assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+		<script src="assets/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+		<script src="assets/plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
+		<script src="assets/js/index.js"></script>
+		<script src="assets/js/bootstrap-table.min.js"></script>
+		<script src="assets/js/bootstrap-table-zh-CN.js"></script>
+		<script src="assets/js/bootstrap-table-mobile.min.js"></script>
+		<!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				Main.init();
+				Index.init();
+			});
+			nui.parse();
+			initTable()
+			function initTable() {  
+		        nui.ajax({
+				   type:"POST",
+				   url:'com.primeton.eos.ame_common.ameNotice.noticeList1.biz.ext',
+				   success:function(data){
+				     var datalist = data.rows;
+				     $('#cusTable').bootstrapTable('destroy').bootstrapTable({  //'destroy' 是必须要加的==作用是加载服务器//  //数据，初始化表格的内容Destroy the bootstrap table.
+				       data:datalist,   //datalist 即为需要的数据
+				       dataType:'json',
+				       data_locale:"zh-US",  //转换中文 但是没有什么用处
+				       pagination: false,
+				       pageList:[],
+				       pageNumber:1,
+				       paginationLoop:false,
+				  //这里也可以将TABLE样式中的<tr>标签里的内容挪到这里面：
+				     
+				     });
+				   },error:function(data){
+				     Modal.confirm({title:'提示',msg:"刷新数据失败!"});
+				   }
+	 			})
+	 			 nui.ajax({
+				   type:"POST",
+				   url:'org.gocom.bps.wfclient.task.business.task.queryMyTasks.biz.ext',
+				   success:function(data){
+				     var datalist = data.tasks;
+				     $('#tasklist').bootstrapTable('destroy').bootstrapTable({  //'destroy' 是必须要加的==作用是加载服务器//  //数据，初始化表格的内容Destroy the bootstrap table.
+				       data:datalist,   //datalist 即为需要的数据
+				       dataType:'json',
+				       data_locale:"zh-US",  //转换中文 但是没有什么用处
+				       pagination: false,
+				       pageList:[],
+				       pageNumber:1,
+				       paginationLoop:false,
+				  //这里也可以将TABLE样式中的<tr>标签里的内容挪到这里面：
+				     
+				     });
+				   },error:function(data){
+				     Modal.confirm({title:'提示',msg:"刷新数据失败!"});
+				   }
+	 			})
+	 			nui.ajax({
+				   type:"POST",
+				   url:'com.primeton.eos.ame_common.ameRegular.regularList.biz.ext',
+				   success:function(data){
+				     var datalist = data.ameRegular;
+				     $('#regularListId').bootstrapTable('destroy').bootstrapTable({  //'destroy' 是必须要加的==作用是加载服务器//  //数据，初始化表格的内容Destroy the bootstrap table.
+				       data:datalist,   //datalist 即为需要的数据
+				       dataType:'json',
+				       data_locale:"zh-US",  //转换中文 但是没有什么用处
+				       data_align:"left",
+				       pagination: false,
+				       pageList:[],
+				       pageNumber:1,
+				       paginationLoop:false,
+				  //这里也可以将TABLE样式中的<tr>标签里的内容挪到这里面：
+				     /*   columns: [{
+						 field: 'title',
+						 title: '制度名称',
+						 height:'200px',
+						 formatter: operateFormatter
+						 }, {
+						 field: 'orgname',
+						 title: '发布部门'
+						 }, {
+						 field: 'pubdate',
+						 title: '发布日期'
+					 }]  */
+				     });
+				   },error:function(data){
+				     Modal.confirm({title:'提示',msg:"刷新数据失败!"});
+				   }
+	 			})
+	     	}
+	     	function operateFormatter(e){
+	     		return '<a href="javascript:doView()">' + e + '</a> ';
+	     	} 
+	     	function doView(){
+	     		alert("s");
+	     	}
+		</script>
+	</body>
+	<!-- end: BODY -->
+</html>

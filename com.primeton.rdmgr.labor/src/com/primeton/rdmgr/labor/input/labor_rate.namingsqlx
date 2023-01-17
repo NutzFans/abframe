@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:lixq -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="userID" javaType="string" property="userID"/>
+        <result column="perActHours" javaType="double" property="perActHours"/>
+        <result column="laborDate" javaType="date" property="laborDate"/>
+        <result column="empID" javaType="string" property="empID"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="actWorkDays" javaType="int" property="actWorkDays"/>
+        <result column="LaborRate" javaType="double" property="LaborRate"/>
+        <result column="orgseq" javaType="String" property="orgseq"/>
+        <result column="isworkrate" javaType="int" property="isworkrate"/>
+        <result column="stdworkdays" javaType="int" property="stdworkdays"/>
+        <result column="stdworkhour" javaType="int" property="stdworkhour"/>
+        <result column="otwhours" javaType="int" property="otwhours"/>
+    </resultMap>
+     <resultMap class="commonj.sdo.DataObject" id="laborinputMap">
+        <result column="userid" javaType="String" property="userid"/>
+        <result column="labordate" javaType="Date" property="labordate"/>
+        <result column="acthours" javaType="float" property="acthours"/>
+        <result column="otwhours" javaType="float" property="otwhours"/>
+        <result column="empname" javaType="String" property="empname"/>
+        <result column="orgname" javaType="String" property="orgname"/>
+        <result column="projectname" javaType="String" property="projectname"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="getorgrateMap">
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="org" javaType="string" property="org"/>
+        <result column="stdworkday" javaType="int" property="stdworkday"/>
+        <result column="stdworkhour" javaType="int" property="stdworkhour"/>
+        <result column="inputnum" javaType="int" property="inputnum"/>
+        <result column="labordate" javaType="date" property="labordate"/>
+        <result column="peract" javaType="double" property="peract"/>
+        <result column="perworkday" javaType="float" property="perworkday"/>
+        <result column="orgradio" javaType="float" property="orgradio"/>
+        <result column="otwhours" javaType="double" property="otwhours"/>
+        <result column="avgotwhours" javaType="double" property="avgotwhours"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="getDegree">
+        <result column="degree" javaType="string" property="degree"/>
+        <result column="degreename" javaType="string" property="degreename"/>
+        <result column="PERCOSTID" javaType="string" property="percostid"/>
+        <result column="orgid" javaType="string" property="orgid"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap6">
+        <result column="empname" javaType="string" property="empname"/>
+        <result column="majorname" javaType="string" property="majorname"/>
+        <result column="orgname" javaType="string" property="orgname"/>
+        <result column="yjbm" javaType="string" property="yjbm"/>
+        <result column="ejbm" javaType="string" property="ejbm"/>
+        <result column="sjbm" javaType="string" property="sjbm"/>
+        <result column="nowdate" javaType="string" property="nowdate"/>
+        <result column="retrunstatus" javaType="string" property="retrunstatus"/>
+        <result column="confirmstatus" javaType="string" property="confirmstatus"/>
+        <result column="returncity" javaType="string" property="returncity"/>
+        <result column="confirmname" javaType="string" property="confirmname"/>
+        <result column="inlocation" javaType="string" property="inlocation"/>
+        <result column="insertdate" javaType="string" property="insertdate"/>
+        <result column="remark" javaType="string" property="remark"/>
+        <result column="indate" javaType="date" property="indate"/>
+        <result column="nature" javaType="string" property="nature"/>
+    </resultMap>
+    <select id="get_org_rate" parameterClass="java.util.HashMap" resultMap="getorgrateMap">
+		select inputnum,cast(#startdate# as datetime) as labordate,stdworkday as stdworkday,stdworkday*8 as stdworkhour, acthours as peract, acthours/8.0 as perworkday, allotwhours as otwhours,c.orgname as orgname,
+			   y2.orgname AS org,acthours/(stdworkday*8.0) as orgradio,allotwhours*1.0/inputnum as avgotwhours 
+		from(
+			select count(userID) as inputnum,sum(stdworkdays) as stdworkday,sum(perActHours) as acthours,sum(actWorkDays) as actworkday,userorgid,sum(perotwhours) as allotwhours 
+				from(
+					select q.userID,perActHours,actWorkDays,x.orgid as userorgid,perotwhours,stdworkdays 
+					from (
+						 select t.user_id as userID,sum((case when project_id != 1 then t.act_hours else 0 end)) as perActHours,count(distinct t.labor_date) as actWorkDays,x.orgid as userorgid,case when sum(otw_hours) is null then 0 else sum(otw_hours) end as perotwhours
+				    	 from RD_LABOR_DETAIL t  left join OM_EMPLOYEE x on x.USERID=t.user_id
+						 where labor_date between cast(#startdate# as datetime) and cast(#enddate# as datetime) and t.user_id in (select w.userid from org_emp_level w where w.isworkrate=1) and x.orgid is not null and x.DEGREE in ('2','3')
+						 group by user_id,x.orgid ) q 
+          LEFT JOIN (
+              select distinct a.USERID,b.orgid from OM_EMPLOYEE a,OM_EMPORG c,OM_ORGANIZATION b 
+							where  a.EMPID=c.EMPID and c.ORGID=b.ORGID and b.orgtype in ($type$)
+          ) x on q.userID=x.USERID
+					left join (select case when indate &gt;= cast(#enddate# as datetime) then 0 when outdate &lt;= cast(#startdate# as datetime) then 0 else(datediff(DD,(case when indate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then indate else cast(#startdate# as datetime) end),(case when outdate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then outdate else cast(#enddate# as datetime) end))
+				-datediff(week,DateAdd(dd,-1,(case when indate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then indate else cast(#startdate# as datetime) end)),(case when outdate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then outdate else cast(#enddate# as datetime) end))*2+1
+				+(select count(*) where datename(weekday,(case when indate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then indate else cast(#startdate# as datetime) end)) in ('星期日','Sunday'))
+				-(select count(*) where datename(weekday,(case when outdate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then outdate else cast(#enddate# as datetime) end)) in ('星期六','Saturday'))
+				-(select count(*) from MIS_ISWORKDAY x where x.moddate&gt;=(case when indate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then indate else cast(#startdate# as datetime) end) and x.moddate&lt;=(case when outdate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then outdate else cast(#enddate# as datetime) end) and x.isworkday='n') 
+				+(select count(*) from MIS_ISWORKDAY x where x.moddate&gt;=(case when indate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then indate else cast(#startdate# as datetime) end) and x.moddate&lt;=(case when outdate between cast(#startdate# as datetime) and cast(#enddate# as datetime) then outdate else cast(#enddate# as datetime) end) and x.isworkday='y' and datepart(dw,x.moddate) in (7,1)))
+				end as stdworkdays , f.userid from OM_EMPLOYEE f) g
+				on q.userID = g.userid
+				) d group by userorgid ) d
+		left join om_organization c  on d.userorgid=c.orgid 
+		left join OM_ORGANIZATION y2 on c.orgseq like y2.orgseq+'%' and y2.orglevel=2
+		where 
+		<isNotNull property="org">
+			c.orgseq like #org#+'%' and 
+		</isNotNull>
+		c.orgid in ($orgids$) 
+		order by $sortField$ $sortOrder$
+	</select>
+    
+    <select id="labor_rate" parameterClass="java.util.HashMap" resultMap="resultMap">
+    	<![CDATA[
+			select distinct q.userID,cast(#startdate# as datetime) as laborDate,q.perActHours,q.actWorkDays,o.orgname,orgseq,p.empID,empname,p.stdworkdays,p.stdworkdays*8 as stdworkhour,(q.perActHours*1.0)/(case when p.stdworkdays=0 then 1 else (p.stdworkdays*8.0) end) as laborRate,w.isworkrate,otwhours from(
+				select t.user_id as userID, sum((case when t.project_id != 1 then t.act_hours else 0 end)) as perActHours, count(distinct t.labor_date) as actWorkDays,case when sum(otw_hours) is null then 0 else sum(otw_hours) end as otwhours
+				from RD_LABOR_DETAIL t where labor_date between cast(#startdate# as datetime) and cast(#enddate#as datetime)
+				group by user_id  ) as q
+			left JOIN ( select userid,isworkrate from org_emp_level where currentstate = 1)as w
+				on w.userid = q.userID
+			LEFT JOIN (select DISTINCT USERID,empid from OM_EMPLOYEE) as x on x.USERID=q.userID
+			left JOIN ( select distinct a.orgid, a.orgname, a.orgseq,b.empid from OM_ORGANIZATION a,OM_EMPORG b where a.orgid=b.orgid and a.orgtype in (3,4))as o
+			on o.empid =x.empid
+			left JOIN (select userid as empID, empname,
+					(select case when indate >= cast(#enddate#as datetime) then 0 when outdate <= cast(#startdate# as datetime) then 0 else (datediff(DD,(case when indate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then indate else cast(#startdate# as datetime) end),(case when outdate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then outdate else cast(#enddate#as datetime) end))
+					-datediff(week,DateAdd(dd,-1,(case when indate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then indate else cast(#startdate# as datetime) end)),(case when outdate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then outdate else cast(#enddate#as datetime) end))*2+1
+					+(select count(*) where datename(weekday,(case when indate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then indate else cast(#startdate# as datetime) end))in('星期日','Sunday'))
+					-(select count(*) where datename(weekday,(case when outdate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then outdate else cast(#enddate#as datetime) end))in ('星期六','Saturday'))
+					-(select count(*) from MIS_ISWORKDAY x where x.moddate>=(case when indate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then indate else cast(#startdate# as datetime) end) and x.moddate<=(case when outdate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then outdate else cast(#enddate#as datetime) end) and x.isworkday='n' ) 
+					+(select count (*) from MIS_ISWORKDAY x where x.moddate>=(case when indate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then indate else cast(#startdate# as datetime) end) and x.moddate<=(case when outdate between cast(#startdate# as datetime) and cast(#enddate#as datetime) then outdate else cast(#enddate#as datetime) end) and x.isworkday='y' and datepart(dw,x.moddate) in (7,1))) end)
+					as stdworkdays from OM_EMPLOYEE f  ) as p
+			on p.empID = q.userID 
+			where o.orgname=#orgname#
+			order by $sortField$ $sortOrder$
+    	]]>
+    </select>
+     
+     <select id="LaborInput" parameterClass="java.util.HashMap" resultMap="laborinputMap">
+    	<![CDATA[
+			select q.userid,q.labordate,q.acthours,q.otwhours,p.empname,o.orgname,w.projectname
+    		from( select t.user_id as userid, user_org_id as userorgid,t.labor_date as labordate,t.act_hours as acthours,t.project_id,
+					case when t.otw_hours is null then 0 else t.otw_hours end as otwhours from RD_LABOR_DETAIL t
+				where t.labor_date between #startdate# and #enddate# and t.user_org_id is not null and t.user_id = #userid# ) as q
+			left JOIN (select distinct orgid,orgname from OM_ORGANIZATION )as o
+				on o.orgid =q.userorgid
+			left JOIN (select userid as empID, empname from OM_EMPLOYEE) as p
+				on p.empID = q.userid
+			left JOIN (select project_id,project_name as projectname from RD_PROJECT)as w on w.project_id = q.project_id 
+			where o.orgname=#orgname#
+			order by q.labordate
+    	]]>
+    </select>
+    
+     <select id="getDegree" parameterClass="java.util.HashMap" resultMap="getDegree">
+		WITH CTE AS(
+			 SELECT a.degree,a.degreename,b.orglevel,a.PERCOSTID,a.pricetype as ORGID from mis_price a
+		     LEFT JOIN OM_ORGANIZATION b on b.ORGID=a.pricetype
+			 LEFT JOIN PARA_PERCOSTSET c on c.PERCOSTID=a.PERCOSTID
+			 where 1=1
+			  <isNotNull prepend = "and" property="percostid">
+			  a.percostid = #percostid#
+			</isNotNull>
+			 <isNotNull prepend = "and" property="startdate">
+			   (#startdate# BETWEEN 
+			c.STARTDATE and c.CLOSEDATE) and (#enddate# BETWEEN c.STARTDATE and c.CLOSEDATE)
+			</isNotNull>
+			<isNotNull prepend = "and" property="orgid">
+			(select orgseq from om_organization where orgid = #orgid#) like b.ORGSEQ +'%'
+			 </isNotNull>
+			 <isNotNull prepend = "and" property="orgseq">
+			#orgseq# like b.ORGSEQ +'%'
+			 </isNotNull>
+		)
+		SELECT degree,degreename,PERCOSTID,orgid FROM CTE 
+		<isNotNull property="orgid">
+			WHERE orglevel = (SELECT max(orglevel) FROM CTE)
+			 </isNotNull>
+			  <isNotNull property="orgseq">
+			WHERE orglevel = (SELECT max(orglevel) FROM CTE)
+			 </isNotNull>
+		
+    </select>
+    <select id="getempReturns" parameterClass="java.util.HashMap" resultMap="resultMap6">
+	SELECT  x.NOWDATE,x.EMPNAME,x.emptype,x.nature,x.INDATE,x.ORGID,x.MAJOR,x.majorname,x.ORGNAME,x.ORGSEQ,x.yjbm,x.ejbm,x.sjbm,
+			y.USERID,y.RETURNDATE,
+			CASE WHEN y.RETRUNSTATUS is null then '未填报' else y.RETRUNSTATUS END AS RETRUNSTATUS,
+			y.RETURNCITY,y.CONFIRMUSERID,
+			CONVERT(nvarchar(16),y.INSERTDATE,120) as INSERTDATE,y.INLOCATION,
+            CASE WHEN y.CONFIRMSTATUS is null then '未填报' else y.CONFIRMSTATUS END AS CONFIRMSTATUS,
+            y.INLONGITUDE,y.INLATITUDE,y.REMARK,y.RETURNPROVINCE,
+			g.EMPNAME as confirmname FROM (
+			SELECT CONVERT(NVARCHAR(10),DATEADD(DAY,number,#startdate#),120) AS NOWDATE,c.userid,c.EMPNAME,c.emptype,c.nature,c.INDATE,c.ORGID,c.MAJOR,
+			   q.EMPNAME as majorname,d.ORGNAME,d.ORGSEQ,e.ORGNAME as yjbm,f.ORGNAME as ejbm,g.ORGNAME as sjbm FROM  
+			   master..spt_values a
+			   CROSS JOIN  OM_EMPLOYEE c 
+			   LEFT JOIN OM_EMPLOYEE q on c.major = q.USERID
+			   LEFT JOIN OM_ORGANIZATION d on c.ORGID = d.ORGID
+			   LEFT JOIN OM_ORGANIZATION e on d.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL = '2'
+			   LEFT JOIN OM_ORGANIZATION f on d.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL = '3'
+			   LEFT JOIN OM_ORGANIZATION g on d.ORGSEQ like g.ORGSEQ+'%' and g.ORGLEVEL = '4'
+			   WHERE a.type = 'p' AND number &lt;= DATEDIFF(DAY,#startdate#,#enddate#) AND c.EMPSTATUS = 'on' and (c.INDATE is null or c.INDATE&lt;=#startdate#)
+			UNION ALL
+			SELECT CONVERT(NVARCHAR(10),DATEADD(DAY,number,c.INDATE),120) AS NOWDATE,c.userid,c.EMPNAME,c.emptype,c.nature,c.INDATE,c.ORGID,c.MAJOR,
+			   q.EMPNAME as majorname,d.ORGNAME,d.ORGSEQ,e.ORGNAME as yjbm,f.ORGNAME as ejbm,g.ORGNAME as sjbm FROM  
+			   master..spt_values a
+			   CROSS JOIN  OM_EMPLOYEE c 
+			   LEFT JOIN OM_EMPLOYEE q on c.major = q.USERID
+			   LEFT JOIN OM_ORGANIZATION d on c.ORGID = d.ORGID
+			   LEFT JOIN OM_ORGANIZATION e on d.ORGSEQ like e.ORGSEQ+'%' and e.ORGLEVEL = '2'
+			   LEFT JOIN OM_ORGANIZATION f on d.ORGSEQ like f.ORGSEQ+'%' and f.ORGLEVEL = '3'
+			   LEFT JOIN OM_ORGANIZATION g on d.ORGSEQ like g.ORGSEQ+'%' and g.ORGLEVEL = '4'
+			   WHERE a.type = 'p' AND number &lt;= DATEDIFF(DAY,c.INDATE,#enddate#) AND c.EMPSTATUS = 'on' and c.INDATE&gt;#startdate# and c.INDATE&lt;=#enddate#
+			)x
+			LEFT JOIN AME_RETURN_WORK y on x.USERID=y.USERID and x.NOWDATE=y.RETURNDATE
+			LEFT JOIN OM_EMPLOYEE g on y.CONFIRMUSERID = g.USERID
+			LEFT JOIN 
+			(
+			select y.NOWDATE,
+			  case when ((datename(weekday,y.NOWDATE) in ('星期日','星期六','Saturday','Sunday') and x.ISWORKDAY ='y')
+			   or (datename(weekday,y.NOWDATE) not in ('星期日','星期六','Saturday','Sunday') and (x.ISWORKDAY = 'y' or x.ISWORKDAY is null))) then 1 else 0 end as isneed
+			  from
+			  (
+			select CONVERT(NVARCHAR(10),DATEADD(DAY,number,#startdate#),120) AS NOWDATE FROM 
+			master..spt_values a WHERE a.type = 'p' AND number &lt;= DATEDIFF(DAY,#startdate#,#enddate#)
+			) y LEFT JOIN MIS_ISWORKDAY x on  x.MODDATE=y.NOWDATE
+			)z
+			on  x.NOWDATE=z.NOWDATE  
+			WHERE z.isneed = '1' 
+			<isNotNull property="empname">
+			AND x.empname like '%'+#empname#+'%'
+			</isNotNull>
+			<isNotNull property="majorname">
+			AND x.majorname like '%'+#majorname#+'%' 
+			</isNotNull>
+			<isNotNull property="userid">
+			AND y.USERID = #userid# 
+			</isNotNull>
+			<isNotNull property="orgseq">
+			AND x.ORGSEQ like #orgseq#+'%' 
+			</isNotNull>
+            <isNotNull property="cond">
+    		AND ($cond$)
+    	    </isNotNull>
+            <isNotNull property="confirmname">
+            AND g.EMPNAME like '%'+#confirmname#+'%' 
+            </isNotNull>
+            <isNotNull property="min1">
+            AND y.INSERTDATE &gt;= #min1# 
+            </isNotNull>
+            <isNotNull property="max1">
+            AND y.INSERTDATE &lt;= #max1#
+            </isNotNull>
+            <isNotNull property="min3">
+            AND x.INDATE &gt;= #min3# 
+            </isNotNull>
+            <isNotNull property="max3">
+            AND x.INDATE &lt;= #max3#
+            </isNotNull>
+            <isNotNull property="returncity">
+            AND y.RETURNCITY in (#returncity#) 
+            </isNotNull>
+            <isNotNull property="retrunstatus">
+            AND y.RETRUNSTATUS in (#retrunstatus#) 
+            </isNotNull>
+            <isNotNull property="confirmstatus">
+            AND y.CONFIRMSTATUS in (#confirmstatus#)
+            </isNotNull>
+            <isNotNull property="emptype">
+            AND x.emptype in (#emptype#)
+            </isNotNull>
+            <isNotNull property="nature">
+            AND x.nature in (#nature#)
+            </isNotNull>
+	  </select>
+</sqlMap>

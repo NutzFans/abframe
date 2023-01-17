@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wanglqps -->
+<sqlMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="outperno" javaType="int" property="outperno"/>
+        <result column="outpername" javaType="string" property="outpername"/>
+        <result column="workunit" javaType="string" property="workunit"/>
+        <result column="price" javaType="float" property="price"/>
+        <result column="startdate" javaType="string" property="startdate"/>
+        <result column="expenddate" javaType="string" property="expenddate"/>
+        <result column="currentstatus" javaType="String" property="currentstatus"/>
+        <result column="managername" javaType="String" property="managername"/>
+        <result column="pcprotype" javaType="String" property="pcprotype"/>
+        <result column="comment" javaType="String" property="comment"/>
+        <result column="purorderid" javaType="int" property="purorderid"/>
+    </resultMap>
+    <select id="queryOrderOutper" parameterClass="java.util.HashMap" resultMap="resultMap1">
+	    <![CDATA[
+		    	select 
+		    	a.outperno,a.outpername,b.workunit,b.price,convert(nvarchar(10),b.startdate,120) as startdate,
+		    	convert(nvarchar(10),b.expenddate,120) as expenddate,b.currentstatus,b.managername,b.pcprotype,b.comment,b.purorderid
+		    from  
+		    	PUR_OUTPERSON a 
+		    LEFT JOIN 
+		    	PUR_ORDER_OUTPER b 
+		    on a.OUTPERNO = b.OUTPERNO 
+		    where 
+		    	b.PURORDERID=#purorderid# 
+	    ]]>
+    </select>
+</sqlMap>

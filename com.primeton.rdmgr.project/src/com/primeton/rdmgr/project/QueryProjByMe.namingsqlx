@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:yaoyi -->
+<sqlMap>
+	<parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+	
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="PROJECT_ID" javaType="decimal" property="projectId"/>
+        <result column="PROJECT_STATUS" javaType="string" property="projectStatus"/>
+        <result column="PROJECT_TYPE" javaType="string" property="projectType"/>
+        <result column="USER_ID" javaType="string" property="userid"/>
+        <result column="PROJECT_NO" javaType="string" property="projectNo"/>
+        <result column="PROJECT_NAME" javaType="string" property="projectName"/>
+        <result column="CREATEDATE" javaType="date" property="createdate"/>
+        <result column="EMPNAME" javaType="string" property="empname"/>
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="CUSTJC" javaType="string" property="custjc"/>
+        <result column="CUSTNAME" javaType="string" property="custname"/>
+        <result column="mindate" javaType="date" property="mindate"/>
+        <result column="maxdate" javaType="date" property="maxdate"/>
+        <result column="costs" javaType="decimal" property="costs"/>
+        <result column="acthours" javaType="decimal" property="acthours"/>
+    </resultMap>
+    
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+        <result column="ORGNAME" javaType="string" property="orgname"/>
+        <result column="mindate" javaType="date" property="mindate"/>
+        <result column="maxdate" javaType="date" property="maxdate"/>
+        <result column="costs" javaType="decimal" property="costs"/>
+        <result column="acthours" javaType="decimal" property="acthours"/>
+    </resultMap>
+    
+    <select id="queryProjByMe" parameterClass="java.util.HashMap" resultMap="resultMap">
+    	SELECT DISTINCT
+			a.PROJECT_ID,
+			a.PROJECT_STATUS,
+			a.PROJECT_TYPE,
+			s.USERID as USER_ID,
+			a.PROJECT_NO,
+			a.PROJECT_NAME,
+			a.CREATEDATE,
+			e.EMPNAME,
+			f.ORGNAME,
+			d.CUSTJC,
+			d.CUSTNAME,
+			c.mindate,
+			c.maxdate,
+			c.costs,
+			c.acthours
+		FROM
+			RD_EMP_PROJ s
+		LEFT JOIN RD_PROJECT a on a.PROJECT_ID = s.PROJECT_ID
+		LEFT JOIN (
+			SELECT
+				MIN(i.LABOR_DATE) AS mindate,
+				MAX(i.LABOR_DATE) AS maxdate,
+				SUM(i.ACT_HOURS) AS acthours,
+				SUM(i.COST) AS costs,
+				i.PROJECT_ID,
+				i.USER_ID
+			FROM
+				(
+					(
+						SELECT
+							LABOR_DATE,
+							ACT_HOURS,
+							COST,
+							PROJECT_ID,
+							USER_ID
+						FROM
+							RD_LABOR_DETAIL
+						WHERE
+							1=1
+						<isNotNull property="maxdate">
+							AND LABOR_DATE &lt;= #maxdate#
+						</isNotNull>
+						<isNotNull property="mindate">
+							AND LABOR_DATE &gt;= #mindate#
+						</isNotNull>
+					)
+				) i
+			GROUP BY
+				i.PROJECT_ID,
+				i.USER_ID
+		) c ON a.PROJECT_ID = c.PROJECT_ID AND c.USER_ID=#userid#
+		LEFT JOIN MIS_CUSTINFO d ON d.CUSTID = a.CUSTID
+		LEFT JOIN OM_EMPLOYEE e ON e.USERID = a.MANAGER
+		LEFT JOIN OM_ORGANIZATION f ON f.ORGID = a.FIN_UNIT_ID
+		WHERE
+			s.USERID = #userid#
+		<isNotNull property="maxdate">
+			AND c.mindate &lt;= #maxdate#
+		</isNotNull>
+		<isNotNull property="mindate">
+			AND c.maxdate &gt;= #mindate#
+		</isNotNull>
+		<isNotNull property="projectName">
+			AND a.PROJECT_NAME like '%'+#projectName#+'%'
+		</isNotNull>
+		<isNotNull property="custname">
+			AND d.CUSTNAME like '%'+#custname#+'%'
+		</isNotNull>
+		<isNotNull property="orgname">
+			AND f.ORGNAME like '%'+#orgname#+'%'
+		</isNotNull>
+		<isNotNull property="belongto">
+			AND f.orgseq like #belongto#+'%'
+		</isNotNull>
+		<isNotNull property="projectno">
+			AND a.PROJECT_NO = #projectno#
+		</isNotNull>
+	union ALL
+		SELECT DISTINCT
+			a.PROJECT_ID,
+			a.PROJECT_STATUS,
+			a.PROJECT_TYPE,
+			c.USER_ID,
+			a.PROJECT_NO,
+			a.PROJECT_NAME,
+			a.CREATEDATE,
+			e.EMPNAME,
+			f.ORGNAME,
+			d.CUSTJC,
+			d.CUSTNAME,
+			c.mindate,
+			c.maxdate,
+			c.costs,
+			c.acthours
+		FROM RD_PROJECT a 
+		LEFT JOIN (
+			SELECT
+				MIN(i.LABOR_DATE) AS mindate,
+				MAX(i.LABOR_DATE) AS maxdate,
+				SUM(i.ACT_HOURS) AS acthours,
+				SUM(i.COST) AS costs,
+				i.PROJECT_ID,
+				i.USER_ID
+			FROM
+				(
+					(
+						SELECT
+							LABOR_DATE,
+							ACT_HOURS,
+							COST,
+							PROJECT_ID,
+							USER_ID
+						FROM
+							RD_LABOR_DETAIL
+						WHERE
+							1=1
+						<isNotNull property="maxdate">
+							AND LABOR_DATE &lt;= #maxdate#
+						</isNotNull>
+						<isNotNull property="mindate">
+							AND LABOR_DATE &gt;= #mindate#
+						</isNotNull>
+					)
+				) i
+			GROUP BY
+				i.PROJECT_ID,
+				i.USER_ID
+		) c ON a.PROJECT_ID = c.PROJECT_ID AND c.USER_ID=#userid#
+		LEFT JOIN MIS_CUSTINFO d ON d.CUSTID = a.CUSTID
+		LEFT JOIN OM_EMPLOYEE e ON e.USERID = a.MANAGER
+		LEFT JOIN OM_ORGANIZATION f ON f.ORGID = a.FIN_UNIT_ID
+		WHERE
+			c.USER_ID = #userid# and a.PROJECT_ID in (1,2)
+		<isNotNull property="maxdate">
+			AND c.mindate &lt;= #maxdate#
+		</isNotNull>
+		<isNotNull property="mindate">
+			AND c.maxdate &gt;= #mindate#
+		</isNotNull>
+		<isNotNull property="projectName">
+			AND a.PROJECT_NAME like '%'+#projectName#+'%'
+		</isNotNull>
+		<isNotNull property="custname">
+			AND d.CUSTNAME like '%'+#custname#+'%'
+		</isNotNull>
+		<isNotNull property="orgname">
+			AND f.ORGNAME like '%'+#orgname#+'%'
+		</isNotNull>
+		<isNotNull property="belongto">
+			AND f.orgseq like #belongto#+'%'
+		</isNotNull>
+		<isNotNull property="projectno">
+			AND a.PROJECT_NO = #projectno#
+		</isNotNull>
+		ORDER BY costs DESC
+    </select>
+    
+    
+    <select id="queryProjectByMe" parameterClass="java.util.HashMap" resultMap="resultMap">
+    	SELECT
+			a.PROJECT_ID,
+			a.PROJECT_STATUS,
+			a.PROJECT_TYPE,
+			c.USER_ID,
+			a.PROJECT_NO,
+			a.PROJECT_NAME,
+			a.CREATEDATE,
+			e.EMPNAME,
+			f.ORGNAME,
+			d.CUSTJC,
+			d.CUSTNAME,
+			c.mindate,
+			c.maxdate,
+			c.costs,
+			c.acthours
+		FROM
+			RD_PROJECT a
+		LEFT JOIN (
+			SELECT
+				MIN(i.LABOR_DATE) AS mindate,
+				MAX(i.LABOR_DATE) AS maxdate,
+				SUM(i.ACT_HOURS) AS acthours,
+				SUM(i.COST) AS costs,
+				i.PROJECT_ID,
+				i.USER_ID
+			FROM
+				(
+					(
+						SELECT
+							LABOR_DATE,
+							ACT_HOURS,
+							COST,
+							PROJECT_ID,
+							USER_ID
+						FROM
+							RD_LABOR_DETAIL
+						WHERE
+							1=1
+						<isNotNull property="maxdate">
+							AND LABOR_DATE &lt;= #maxdate#
+						</isNotNull>
+						<isNotNull property="mindate">
+							AND LABOR_DATE &gt;= #mindate#
+						</isNotNull>
+					)
+				) i
+			GROUP BY
+				i.PROJECT_ID,
+				i.USER_ID
+		) c ON a.PROJECT_ID = c.PROJECT_ID
+		LEFT JOIN MIS_CUSTINFO d ON d.CUSTID = a.CUSTID
+		LEFT JOIN OM_EMPLOYEE e ON e.USERID = a.MANAGER
+		LEFT JOIN OM_ORGANIZATION f ON f.ORGID = a.FIN_UNIT_ID
+		WHERE
+			c.USER_ID = #userid#
+			and a.PROJECT_NAME != '组织级工时'
+			ORDER BY c.acthours DESC
+    </select>
+    
+    
+    <select id="queryProjectByMes" parameterClass="java.util.HashMap" resultMap="resultMap">
+    	SELECT
+			a.PROJECT_ID,
+			a.PROJECT_STATUS,
+			a.PROJECT_TYPE,
+			c.USER_ID,
+			a.PROJECT_NO,
+			a.PROJECT_NAME,
+			a.CREATEDATE,
+			e.EMPNAME,
+			f.ORGNAME,
+			d.CUSTJC,
+			d.CUSTNAME,
+			c.mindate,
+			c.maxdate,
+			c.costs,
+			c.acthours
+		FROM
+			RD_PROJECT a
+		LEFT JOIN (
+			SELECT
+				MIN(i.LABOR_DATE) AS mindate,
+				MAX(i.LABOR_DATE) AS maxdate,
+				SUM(i.ACT_HOURS) AS acthours,
+				SUM(i.COST) AS costs,
+				i.PROJECT_ID,
+				i.USER_ID
+			FROM
+				(
+					(
+						SELECT
+							LABOR_DATE,
+							ACT_HOURS,
+							COST,
+							PROJECT_ID,
+							USER_ID
+						FROM
+							RD_LABOR_DETAIL
+						WHERE
+							1=1
+						<isNotNull property="maxdate">
+							AND LABOR_DATE &lt;= #maxdate#
+						</isNotNull>
+						<isNotNull property="mindate">
+							AND LABOR_DATE &gt;= #mindate#
+						</isNotNull>
+					)
+				) i
+			GROUP BY
+				i.PROJECT_ID,
+				i.USER_ID
+		) c ON a.PROJECT_ID = c.PROJECT_ID
+		LEFT JOIN MIS_CUSTINFO d ON d.CUSTID = a.CUSTID
+		LEFT JOIN OM_EMPLOYEE e ON e.USERID = a.MANAGER
+		LEFT JOIN OM_ORGANIZATION f ON f.ORGID = a.FIN_UNIT_ID
+		WHERE
+			c.USER_ID = #userid#
+			and a.PROJECT_NAME != '组织级工时'
+			ORDER BY c.costs DESC
+    </select>
+    
+    <select id="queryLaborPorj" parameterClass="java.util.HashMap" resultMap="resultMap1">
+    	select m.mindate,m.maxdate,m.acthours,m.costs,m.orgname FROM (SELECT
+				MIN(i.LABOR_DATE) AS mindate,
+				MAX(i.LABOR_DATE) AS maxdate,
+				SUM(i.ACT_HOURS) AS acthours,
+				SUM(i.COST) AS costs,
+				i.orgname
+			FROM
+					(
+						SELECT
+							LABOR_DATE,
+							ACT_HOURS,
+							COST,
+							PROJECT_ID,
+							n.ORGNAME,
+							USER_ID
+						FROM
+							RD_LABOR_DETAIL
+						LEFT JOIN OM_ORGANIZATION n ON SALES_NAME = n.ORGID
+						WHERE
+							1=1 AND PROJECT_ID != 1 
+							and USER_ID = #userid#
+							<isNotNull property="maxdate">
+								AND LABOR_DATE &lt; #maxdate#
+							</isNotNull>
+							<isNotNull property="mindate">
+								AND LABOR_DATE &gt; #mindate#
+							</isNotNull>
+					) i
+			GROUP BY
+				i.orgname) m WHERE 1=1 ORDER BY m.costs DESC;
+    </select>
+    
+    
+    <select id="queryLaborPorjs" parameterClass="java.util.HashMap" resultMap="resultMap1">
+    	select m.mindate,m.maxdate,m.acthours,m.costs,m.orgname FROM (SELECT
+				MIN(i.LABOR_DATE) AS mindate,
+				MAX(i.LABOR_DATE) AS maxdate,
+				SUM(i.ACT_HOURS) AS acthours,
+				SUM(i.COST) AS costs,
+				i.orgname
+			FROM
+					(
+						SELECT
+							LABOR_DATE,
+							ACT_HOURS,
+							COST,
+							PROJECT_ID,
+							n.ORGNAME,
+							USER_ID
+						FROM
+							RD_LABOR_DETAIL
+						LEFT JOIN OM_ORGANIZATION n ON SALES_NAME = n.ORGID
+						WHERE
+							1=1 AND PROJECT_ID != 1 
+							and USER_ID = #userid#
+							<isNotNull property="maxdate">
+								AND LABOR_DATE &lt; #maxdate#
+							</isNotNull>
+							<isNotNull property="mindate">
+								AND LABOR_DATE &gt; #mindate#
+							</isNotNull>
+					) i
+			GROUP BY
+				i.orgname) m WHERE 1=1 ORDER BY m.acthours DESC;
+    </select>
+    
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="MANAGERID" javaType="string" property="managerid"/>
+        <result column="ORGSEQ" javaType="string" property="orgseq"/>
+    </resultMap>
+    
+    <select id="queryParOrgByUserid" parameterClass="java.util.HashMap" resultMap="resultMap5">
+    	SELECT
+			MANAGERID,ORGSEQ
+		FROM
+			OM_ORGANIZATION
+		WHERE
+			ORGID = (
+				SELECT
+					PARENTORGID
+				FROM
+					OM_ORGANIZATION
+				WHERE
+					ORGID = (
+						SELECT
+							ORGID
+						FROM
+							OM_EMPLOYEE
+						WHERE
+							USERID = #userid#
+					)
+			);
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="getDictname">
+        <result column="DICTNAME" javaType="string" property="dictname"/>
+    </resultMap>
+    
+    <select id="getDictname" parameterClass="java.util.HashMap" resultMap="getDictname">
+    	SELECT DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID=#dicttypeid# AND PARENTID=#parentid#
+    </select>
+</sqlMap>

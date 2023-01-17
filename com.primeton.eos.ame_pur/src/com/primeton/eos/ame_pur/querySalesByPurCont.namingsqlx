@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wanglq -->
+<sqlMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap">
+        <result column="saleid" javaType="string" property="saleid"/>
+        <result column="salename" javaType="string" property="salename"/>
+    </resultMap>
+    <select id="querySalesByPurCont"  resultMap="resultMap">
+    <![CDATA[
+    	select DISTINCT c.userid as saleid,c.empname as salename from (
+		select FIN_UNIT_ID,PROJECT_ID,PROJECT_NO from RD_PROJECT 
+		where FIN_UNIT_ID is not null) a
+		left join OM_ORGANIZATION b on  a.FIN_UNIT_ID=b.orgid
+		left join om_employee c on b.MANAGERID =c.empid
+		where a.PROJECT_ID in ($projectIds$)
+    ]]>
+    </select>
+</sqlMap>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:JYW -->
+<sqlMap>
+	<resultMap class="commonj.sdo.DataObject" id="resultMap">
+       <result column="DICTNAME" javaType="String" property="dictname"/>
+       <result column="DICTID" javaType="String" property="dictid"/>
+    </resultMap>
+    <resultMap class="commonj.sdo.DataObject" id="resultMap1">
+       <result column="DICTNAME" javaType="String" property="dictname"/>
+       <result column="DICTID" javaType="String" property="dictid"/>
+       <result column="FILTER1" javaType="String" property="filter1"/>
+    </resultMap>
+    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
+        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
+    </parameterMap>
+    <select id="select_mis_area" parameterClass="java.lang.String" resultMap="resultMap"><![CDATA[
+    	select DICTID,DICTNAME from EOS_DICT_ENTRY WHERE DICTTYPEID='MIS_AREA' AND (FILTER1 <> #filter1# OR FILTER1 IS NULL)order by SORTNO ASC
+    ]]></select>
+    <select id="select_company_filter" parameterClass="java.lang.String" resultMap="resultMap1"><![CDATA[
+    	select DICTID,DICTNAME,FILTER1 from EOS_DICT_ENTRY WHERE DICTTYPEID='company' AND DICTID = #dictId#
+    ]]></select>
+</sqlMap>
