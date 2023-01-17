@@ -110,7 +110,7 @@
 			}else{
 				var textname=objvalue.split("\\");
 				textname=textname[textname.length-1];
-				textname=textname.split(".")[0];
+				textname= textname.substring(0, textname.lastIndexOf("."));
 				eval("document.getElementById('"+flag+"')").value = textname;
 				eval("document.getElementById('"+flag+"')").disabled =false;
 				
