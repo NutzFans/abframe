@@ -14,12 +14,11 @@
     <div class="nui-fit">
        <div id="datagrid1"    showPager="false" dataField="data"  sortMode="client" 
     	class="nui-datagrid" style="width:100%;height:100%;" url="com.zhonghe.ame.purchase.purchaseplan.queryItemsByOrgid.biz.ext" 
-    		multiSelect="false" allowSortColumn=true onshowrowdetail="onShowRowDetail">
+    		multiSelect="true" allowSortColumn=true onshowrowdetail="onShowRowDetail" showfooter="false">
         <div property="columns">
-	       <div type="indexcolumn" align="center" headerAlign="center">序号</div>
-       		<div  type="checkcolumn"></div>
-        	<div field="dlName" width="120" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">大类名称</div>
-            <div field="zlName" width="200" align="center" headerAlign="center" allowSort="true">中类名称</div>
+       		<div  type="checkcolumn"  field="zlName" name="a"></div>
+        	<div field="dlName" name="dlName" width="120" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">大类名称</div>
+			<div field="zlName" name="zlName" width="200" align="center" headerAlign="center" allowSort="true">中类名称</div>
             <div field="xlName" width="100" align="center" headerAlign="center" allowSort="true" >小类名称</div>
             <div field="type" width="100" align="center" headerAlign="center" allowSort="true" renderer="dictIshavebak">采购类型</div>
             <div field="org_id" width="100" align="center" headerAlign="center" allowSort="true" renderer="zhPutUnder">物项归口部门</div>
@@ -42,8 +41,7 @@
     var purType = "<%=request.getParameter("purType") %>";
     grid.load({param:{"orgid":orgid,"purType":purType}})
     function GetData() {
-		grid.getSelected();
-        return grid.getSelected();
+        return grid.getSelecteds();
     }
     function dictIshavebak(e) {
 		return nui.getDictText('ZH_PURCHASE',e.value);//设置业务字典值
@@ -51,6 +49,14 @@
     function zhPutUnder(e) {
 		return nui.getDictText('ZH_PUTUNDER',e.value);//设置业务字典值
 	}
+	
+	grid.on("load", function () {
+	    grid.mergeColumns([ "dlName","zlName", "a"]);
+	    
+	    if(purType==2){
+	    	grid.mergeColumns(["dlName", "zlName", "a"]);
+	    }
+	});
 	
 </script>
 </html>

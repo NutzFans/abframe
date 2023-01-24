@@ -1,20 +1,11 @@
-
-<%@page import="org.json.simple.JSONObject"%>
-<%@page import="java.util.List"%>
-<%@page import="commonj.sdo.DataObject"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@page import="com.eos.data.datacontext.UserObject"%>
-<%@ page import="java.util.Map" %>
-<%
-String contextPath=request.getContextPath();
-%>
+<%@include file="/purchase/common/common.jsp"%>
 <html>
 
 <head>
     <title>采购方案 </title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <script src="<%= request.getContextPath() %>/common/nui/nui.js" type="text/javascript"></script>
     <style type="text/css">
         body{
             margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
@@ -25,37 +16,95 @@ String contextPath=request.getContextPath();
 <%long workitemid = (Long)request.getAttribute("workItemID");%>
 <div class="nui-fit">
     <div class="mini-panel" title="" style="width: 100%;">
-        <fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 100%;">
+        <fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
             <legend>评审报告信息</legend>
             <form id="form1" method="post">
                 <input name="files" id="fileids" class="nui-hidden"/>
                 <input name="files1" id="fileids1" class="nui-hidden"/>
-                <input class="nui-hidden" name="id"/>
+                <input class="nui-hidden" name="id" />
+								<input class="nui-hidden" name="processid"/>
                 <div style="padding: 5px;">
-                    <table style="table-layout: fixed;">
-                        <tr>
-                            <td class="form_label" align = "right">评审报告编号：</td>
-                            <td>
-                                <input name="reportName" id="reportName" enabled="false"  class="nui-textbox" style="width: 200px" />
-                            </td>
-                            <td align="right" style="width:160px">采购立项编号：</td>
-                            <td><input name="proappId" id="proappId" enabled="false"  onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 200px" /></td>
-                            <td align="right" style="width: 120px">采购计划编号：</td>
-                            <td >
-                                <input name="planId" id="planId" class="nui-buttonedit" enabled="false" style="width: 200px;"  />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="form_label"  align="right" style="width:140px;">评审报告说明：</td>
-                            <td colspan="7">
-                                <input style="width:100%;height: 40px;" name="remark" enabled="false" id="remark" class="nui-textarea"  id="technologyNeed" dictTypeId="ZH_PURCHASE" />
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+								<table style="table-layout: fixed;">
+									<tr>
+										<td width="100" align="right">评审结果名称：</td>
+										<td colspan="3">
+											<input name="reportName" id="reportName" class="nui-textbox"style="width: 100%" />
+										</td>
+										<td align="right" style="width: 80px">申请单位：</td>
+										<td colspan="3">
+											<input name="createdOrgname"  class="nui-textbox"style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td align="right" style="width:100px">立项编号：</td>
+										<td colspan="3">
+											<input name="proappId" id="proappId"  class="nui-textbox" style="width: 100%" />
+										</td>
+										<td align="right" style="width: 100px">立项名称：</td>
+										<td colspan="3">
+											<input name="proAppName" id="proAppName" class="nui-textbox"
+												style="width: 100%;" readonly="readonly" />
+										</td>
+									</tr>
+									<tr>
+										<td align="right" style="width: 80px">申请人：</td>
+										<td colspan="1">
+											<input name="createdByName" class="nui-textbox" style="width: 100%" />
+										</td>
+										<td align="right" style="width: 100px">采购方式：</td>
+										<td colspan="1">
+			            	<input id="purchasMode" name="purchasMode" class="nui-textbox"  readonly="readonly" style="width:100%;"/>
+										</td>
+										<td class="form_label" align="right" style="width:120px;">归口部门：</td>
+										<td colspan="3">
+											<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" readonly="readonly" style="width:100%;" />
+										</td>
+									</tr>
+									<tr>
+										<td align="right">集采类型：</td>
+										<td >    
+											<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" style="width:100%;"  readonly="readonly" />
+										</td>
+										<td align="right" style="width: 100px">立项金额：</td>
+										<td colspan="1">
+											<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox"
+												style="width: 100%;" readonly="readonly" />
+										</td>
+									</tr>
+									<tr>
+										<td class="form_label" align="right" style="width:140px;">评审结果说明：</td>
+										<td colspan="5">
+											<input style="width:100%;height: 60px;" name="remark" id="remark"
+												class="nui-textarea" />
+										</td>
+									</tr>
+								</table>
+							</div>
             </form>
         </fieldset>
-
+				<fieldset style="height:80%; border:solid 1px #aaa;padding:1px;width: 99%">
+					<legend>采购计划明细</legend>
+					<div class="fieldset-body" style="width:100%; height:100%; margin: 0px auto">
+						<div id="grid_detail" class="nui-datagrid" style="width: 100%;height: auto;"
+							dataField="datas" showPager="false" multiSelect="true"
+							url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext">
+							<div property="columns">
+								<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
+								<div field="planName" width="110" align="center" headerAlign="center">计划名称</div>
+								<div field="code" width="100" align="center" headerAlign="center">计划编号</div>
+								<div field="materialName" width="110" align="center" headerAlign="center">采购物项名称
+								</div>
+								<div field="budgetAmount" width="100" align="center" headerAlign="center">预算金额(万元)
+								</div>
+								<div field="amount" width="100" align="center" headerAlign="center">立项金额(万元)</div>
+								<div field="sumamount" width="110" align="center" headerAlign="center"
+									vtype="required">剩余可立项金额(万元)</div>
+								<div field="needOrgName" width="80" align="left" headerAlign="center">采购单位</div>
+							</div>
+						</div>
+					</div>
+			</fieldset>
+		</div>
         <fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
             <legend>评审报告附件</legend>
             <div style="visibility: hidden;display: none;">
@@ -63,13 +112,13 @@ String contextPath=request.getContextPath();
             </div>
             <jsp:include page="/ame_common/inputFile.jsp"/>
         </fieldset>
-        <%-- <fieldset id="field3" style="border:solid 1px #aaa;padding:3px;">
-        <legend>采购文件附件</legend>
-        <jsp:include page="/ame_common/addFiles1.jsp"/>
-    </fieldset> --%>
-    </div>
+    
+		<fieldset style="border:solid 1px #aaa;padding:3px;">
+        <legend>审批信息</legend>
+        <jsp:include page="/ame_common/misOpinion.jsp"/>
+    </fieldset>
+	
 </div>
-<jsp:include page="/ame_common/misOpinion.jsp"/>
 <div style="text-align: center;padding: 10px;" class="nui-toolbar">
     <a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px;margin-right: 20px;">加签</a>
     <a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;">提交</a>
@@ -77,19 +126,11 @@ String contextPath=request.getContextPath();
 </div>
 <script type="text/javascript">
     nui.parse();
-    <%
-        UserObject user = (UserObject) session.getAttribute("userObject");
-        String username = user.getUserName();
-        String userno = user.getUserId();
-        String userOrgName = user.getUserOrgName();
-        String userOrgId = user.getUserOrgId();
-        Map<String,Object> a = user.getAttributes();
-        String empid = (String) a.get("empid");
-        DataObject[] roles = (DataObject[])a.get("roles");
-    %>
     var id = <%=request.getParameter("id")%>;
+ 		var form = new nui.Form("#form1");
     var countersignUsers,titleText;
     init();
+    var gridDtl = nui.get("grid_detail");
     function init(){
         var data = {workitemid:<%=workitemid%>};
         var json = nui.encode(data);
@@ -100,16 +141,12 @@ String contextPath=request.getContextPath();
             cache: false,
             contentType: 'text/json',
             success: function (o) {
-                console.log(o.reviewReport[0]);
                 var result=o.reviewReport[0];
-                nui.get("reportName").setValue(result.reportName);
-                nui.get("proappId").setValue(result.proappId);
-                nui.get("proappId").setText(result.proAppCode);
-                nui.get("planId").setValue(result.planId);
-                nui.get("planId").setText(result.purchaseNumber);
+                form.setData(result);
+								nui.get("proappId").setValue(result.proAppCode);
+                gridDtl.load({"pid":result.proappId})
                 nui.get("backTo").setData(result.backList);
-                nui.get("remark").setValue(result.remark);
-
+								
                 var grid_0 = nui.get("grid_0");
                 grid_0.load({"groupid":"purReviewReport","relationid":result.id});
                 grid_0.sortBy("fileTime","desc");
@@ -119,6 +156,7 @@ String contextPath=request.getContextPath();
                 grid.sortBy("time", "desc");
                 //初始化处理意见
                 initMisOpinion({auditstatus:"1"});
+                labelModel();
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -127,73 +165,15 @@ String contextPath=request.getContextPath();
         });
     }
 
-    function selectProjectList(){
-        //var allpurProj = purProjOutper_grid.getData();
-        var btnEdit = this;
-        nui.open({
-            url:"<%=request.getContextPath() %>/ame_common/SelectProject.jsp",
-            title: "选择项目",
-            width: 850,
-            height: 420,
-            allowResize: false,
-            ondestroy: function (action) {
-                if (action == "ok") {
-                    var iframe = this.getIFrameEl();
-                    var data = iframe.contentWindow.GetData();
-                    data = nui.clone(data);    //必须
-                    if (data) {
-                        btnEdit.setValue(data.projectId);
-                        btnEdit.setText(data.projectName);
-                    }
-                }
-            }
-        });
-    }
 
-
-    function selectOmEmployee(){
-        var btnEdit = this;
-        nui.open({
-            url: "<%=request.getContextPath() %>/machine/SelectEmployee.jsp",
-            title: "选择报销人",
-            width: 430,
-            height: 400,
-            ondestroy: function (action) {
-                if (action == "ok") {
-                    var iframe = this.getIFrameEl();
-                    var data = iframe.contentWindow.GetData();
-                    data = nui.clone(data);    //必须
-                    if (data) {
-                        btnEdit.setValue(data.userid);
-                        btnEdit.setText(data.empname);
-                    }
-                }
-            }
-        });
-    }
-
-
-    function selectOmEmployee1(){
-        var btnEdit = this;
-        nui.open({
-            url: "<%=request.getContextPath() %>/machine/SelectEmployee.jsp",
-            title: "选择报销人",
-            width: 430,
-            height: 400,
-            ondestroy: function (action) {
-                if (action == "ok") {
-                    var iframe = this.getIFrameEl();
-                    var data = iframe.contentWindow.GetData();
-                    data = nui.clone(data);    //必须
-                    if (data) {
-                        btnEdit.setValue(data.userid);
-                        btnEdit.setText(data.empname);
-                    }
-                }
-            }
-        });
-    }
-
+ 		function labelModel() {
+		    var fields = form.getFields();                
+		    for (var i = 0, l = fields.length; i < l; i++) {
+		        var c = fields[i];
+		        if (c.setReadOnly) c.setReadOnly(true);     //只读
+		        if (c.setIsValid) c.setIsValid(true);      //去除错误提示
+		    }
+		}
     
     //添加加签
     function countersign(){
@@ -260,9 +240,9 @@ String contextPath=request.getContextPath();
      function submitProcess(title){
             nui.confirm("确定" + titleText + "流程吗？", "操作提示",function (action) {
                 if (action == "ok") {
+                		var data = form.getData();
                     var misOpinion = opioionform.getData().misOpinion;//审核意见
-
-                    var json = {misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers};
+                    var json = {'param':data,misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers};
                     mini.mask({
                         el: document.body,
                         cls: 'mini-mask-loading',
@@ -272,12 +252,6 @@ String contextPath=request.getContextPath();
                 }
             })
         }
-
-    // 提交 
-    function SaveData(){
-        saveData();
-    }
-
     function saveData(json){
             nui.ajax({
                 url: "com.zhonghe.ame.purchase.purchaseReviewReport.purReviewReportApproval.biz.ext",
@@ -286,7 +260,7 @@ String contextPath=request.getContextPath();
                 contentType: "text/json",
                 success: function (o){
                     nui.unmask(document.body);
-                    if(o.result == "success"){
+                    if(o.result == "1"){
                         nui.alert(titleText + "成功","系统提示",function(){
                             CloseWindow("ok");
                         });

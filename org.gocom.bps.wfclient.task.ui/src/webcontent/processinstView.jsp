@@ -14,13 +14,13 @@
 		}
 	</style>
 </head>
-<body style="height:93%;width: 97%;">
+<body style="height:96%;width: 97%;">
 	<div id="workItemTabs" class="nui-tabs" style="margin:0 auto;width: 100%;height: 99%" activeIndex="0" onactivechanged="changeTabs">
 	    <div id="processGraphTab" style="background-color:blue" name="processGraphTab" title="<%=I18nUtil.getMessage(request, "bps.wfclient.myTask.ProcessGraph")%>">
 			<div id="processgraph" class="nui-bps-processgraph" showParticipants="true" height="350px"></div>
 				<!-- 添加审批意见列表 -->
 
-        <fieldset style="border:solid 1px #aaa;padding:3px;" >
+        <fieldset style="border:solid 1px #aaa;padding:1px;width: 98%" >
 	        <legend>审批意见列表</legend>
         	<div id="datagrid1" class="nui-datagrid" style="width:100%;height:auto;" dataField="misOpinion"
 			    url="com.primeton.eos.ame_pur.purContractProcess.queryopinion.biz.ext"  idField="id" allowResize="true"

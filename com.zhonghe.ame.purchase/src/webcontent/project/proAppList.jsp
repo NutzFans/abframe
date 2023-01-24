@@ -51,18 +51,16 @@
 	      </table>
 		</div>
 </div>
-
 	<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
         <table style="width:100%;">
         	<tr>
-                <td style="width:20%;">
-                	<a class="nui-button" id="cglx_add" iconCls="icon-add" onclick="add()">新增</a>
-                	<a class="nui-button" id="cglx_change" iconCls="icon-edit" onclick="changeInfo()">变更</a>
-		           <!-- <a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">删除</a>-->
-		            <a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
+            <td style="width:20%;">
+            	<a class="nui-button" id="cglx_add1" iconCls="icon-add" onclick="add()">新增</a>
+<!-- 							<a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">作废</a> -->
+	            <a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 		        	<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 		        </td>
-            </tr>
+        	</tr>
         </table>           
     </div>
     <div class="nui-fit">
@@ -73,13 +71,14 @@
             <div name="temp123" type="checkcolumn"></div>
             <div type="indexcolumn" align="center" headerAlign="center">序号</div>
         	<!-- <div type="expandcolumn" width="20"></div> -->
-        	<div field="proAppName" width="100" align="center" headerAlign="center" allowSort="true" >立项名称</div>
-            <div field="proAppCode" width="100" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">立项编号</div>
-            <div field="proAppOrgName" width="200" align="center" headerAlign="center" allowSort="true" >立项单位</div>
-            <div field="projectId" width="200" align="center" headerAlign="center" allowSort="true" >所属项目名称</div>
+        		<div field="proAppName" width="190" align="left" headerAlign="center" allowSort="true" >立项名称</div>
+            <div field="proAppCode" width="140" align="left" headerAlign="center" allowSort="true" renderer="lookInfo">立项编号</div>
+            <div field="proAppOrgName" width="150" align="left" headerAlign="center" allowSort="true" >立项单位</div>
+            <div field="projectId" width="150" align="left" headerAlign="center" allowSort="true" >所属项目名称</div>
             <div field="proAppApplyPrice" width="100" align="center" headerAlign="center" allowSort="true"  >立项申请金额(万元)</div>
-            <div field="proAppImplTime"  dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" >项目拟实施日期</div>
-            <div field="status"  align="center" renderer="onActionRenderer" headerAlign="center" >状态</div>
+            <div field="createdTime"  dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" >申请日期</div>
+<!--             <div field="proAppImplTime"  dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" >拟实施日期</div> -->
+            <div field="status" width="60"  align="center" renderer="onActionRenderer" headerAlign="center" >状态</div>
         </div>
         </div>
 </div>
@@ -133,12 +132,12 @@
 	        var processId=selectRow.processid;
 			var url = "/default/bps/wfclient/task/processinstView.jsp";
 			var title = "流程图查看";
-			var width=1000;
+			var width="100%";
 		    nui.open({
 				url: url,
 				title: title,
 				width: width,
-				height: 550,
+				height: "100%",
 				onload: function () {
 					var iframe = this.getIFrameEl();
 					if(iframe.contentWindow.initData) {
@@ -180,8 +179,8 @@
 	    		}else{
 					nui.open({ 
 						url: "/default/purchase/project/proAppChange.jsp?id="+row.id,
-						width: '90%',
-						height: '90%',
+						width: '100%',
+						height: '100%',
 						onload: function () {
 							var iframe = this.getIFrameEl();
 						},
@@ -262,8 +261,8 @@
      function add(){
 		nui.open({
 			url: "/default/purchase/project/addProApp.jsp",
-			width: '90%',
-			height: '90%',
+			width: '100%',
+			height: '100%',
 			title: "采购立项申请",
 			onload: function () {
 				var iframe = this.getIFrameEl();

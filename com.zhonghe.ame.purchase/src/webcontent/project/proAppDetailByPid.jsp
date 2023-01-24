@@ -34,6 +34,7 @@
 					<input name="files" id="fileids" class="nui-hidden"/>
 					<input name="files1" id="fileids1" class="nui-hidden"/>
 					<input class="nui-hidden" name="id"/>
+					<input class="nui-hidden" name="processid"/>
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;">
 							<tr>

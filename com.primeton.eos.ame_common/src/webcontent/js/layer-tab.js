@@ -44,7 +44,7 @@
     		if(urlTemp == "该文件暂不支持预览"){
     			_this_content = "该文件暂不支持预览"
     		}else{
-    			_this_content = '<iframe src="'+urlTemp+'" style="width:100%;height:440px;" scrolling="auto" frameborder="0"></iframe>';
+    			_this_content = '<iframe src="'+urlTemp+'" style="width:100%;height:100%;" scrolling="auto" frameborder="0"></iframe>';
     		}
     		if(isagain){
     			layui.use(['element'],function(){
@@ -72,7 +72,7 @@
     				layer.open({
     					type: 1, 
     					content: html, //这里content是一个普通的String
-    					area: ['900px', '530px'],
+    					area: ['100%', '100%'],
     					shade: 0,
     					title:false,
     					move: '.layui-tab-content',

@@ -33,6 +33,16 @@
 						<td><input name="purSupplier.registercap" id="registercap" class="nui-spinner" maxValue="9999999999999999" style="width:100%"/></td>
 					</tr>
 					<tr>
+						<td align="right" style="width:120px">供应商类型:</td>
+						<td>
+							<input name="purSupplier.custtype"  class="nui-dictcombobox" dictTypeId="AME_SUPTYPE" required="true"  style="width:100%"/>
+						</td>
+						<td align="right" style="width:80px">企业类型:</td>
+						<td>
+							<input name="purSupplier.custnature"  class="nui-dictcombobox" dictTypeId="MIS_CUSTNATURE" required="true"  style="width:100%"/>
+						</td>
+					</tr>
+					<tr>
 						<td align="right" style="width:120px">供应商联系人:</td>
 						<td><input onblur="checkName()" name="purSupplier.linkman" id="linkman" class="nui-textbox" required="true" style="width:100%"/></td>
 						<td><span id="checktext1"></span></td>
@@ -41,12 +51,6 @@
 						<td align="right" style="width:120px">供应商联系电话:</td>
 						<td><input onblur="checkPhone()" name="purSupplier.linktel" id="linktel" class="nui-textbox" required="true" style="width:100%"/> </td>
 						<td><span id="checktext"></span></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:120px">供应商类型:</td>
-						<td>
-							<input name="purSupplier.custtype"  class="nui-dictcombobox" dictTypeId="AME_SUPTYPE" required="true"  style="width:100%"/>
-						</td>
 					</tr>
 					<tr>
 						<td colspan="1" align="right" style="width:120px">供货范围:</td>

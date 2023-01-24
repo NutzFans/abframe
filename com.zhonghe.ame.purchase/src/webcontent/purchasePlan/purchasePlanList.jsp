@@ -53,6 +53,7 @@
 	        	<tr>
 	                <td style="width:40%;">
 	                	<a class="nui-button"  id="cgjh_add" iconCls="icon-add" onclick="getDate()">新增</a>
+	                	<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="addChange()">补充计划</a>
 	                	<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="openEdit(2)">变更</a>
 			           <!-- <a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">删除</a> -->
 			            <a class="nui-button" id="cgjh_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
@@ -84,7 +85,10 @@
 	            </div>
 	            <div field="year" width="80" align="center" headerAlign="center" allowSort="true" >计划年度</div>
 	            <div field="budgetAmount" width="100" align="center"  headerAlign="center" allowSort="true">计划金额
-	            	 <input name="criteria._expr[8].budgetAmount" class="nui-textbox"property="filter" dictTypeId="ZH_PURCHASE"  shownullItem="true" width="100%" onvaluechanged="search"/>
+	            	 <input name="criteria._expr[8].budgetAmount" class="nui-textbox"property="filter"   width="100%" onvaluechanged="search"/>
+	            </div>
+	            <div field="newBudgetAmount" width="100" align="center"  headerAlign="center" allowSort="true">变更后计划金额
+	            	 <input name="criteria._expr[9].newBudgetAmount" class="nui-textbox" property="filter"   width="100%" onvaluechanged="search"/>
 	            </div>
 	            <div field="createdUsername" width="80" align="center" headerAlign="center" allowSort="true" >创建人</div>
 	            <div field="updatedTime" width="80" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true" >更新时间</div>
@@ -170,6 +174,36 @@
 				reset();
 				}
 			})
+		}
+		
+		function addChange(){
+			var info=nui.getDictText('zh_purplan_open', 'chang_open');//季度字典信息
+			var arrayInfo=info.split(',');
+			var date = new Date();
+			var month=date .getMonth()+1;
+			for(var i=0;i<arrayInfo.length;i++){
+				if(month==arrayInfo[i]||planOpenDict=='true'){
+					nui.open({
+						url: "/default/purchase/planchange/addPurchasePlanChange.jsp?judge="+getJudge(),
+						width: '100%',
+						height: '100%',
+						title:'补充采购计划',
+						onload: function () {
+							var iframe = this.getIFrameEl();
+						},
+						ondestroy: function (action){
+						reset();
+						}
+					})
+					return;
+				}else{
+					if(i==arrayInfo.length-1){
+						showTips("每季度第一个月开发计划变更","danger")
+					}
+					
+				}
+			}
+			
 		}
 		
 		function openEdit(e){

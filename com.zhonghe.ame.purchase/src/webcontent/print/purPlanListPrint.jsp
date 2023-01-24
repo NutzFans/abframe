@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>打印页面</title>
+  <title>采购计划打印页面</title>
   <meta name="renderer" content="webkit">
   <script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -46,7 +46,7 @@
   	<h3 id="name" align="center"></h3>
   	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
     <blockquote class="layui-elem-quote" style="width: 97%">基本信息
-    <i id="status" class="layui-icon layui-icon-close" style="font-size: 15px;float:right; color: #5FB878;">审批通过</i> 
+    <i id="status" class="layui-icon" style="font-size: 15px;float:right; color: #5FB878;">审批通过</i> 
     </blockquote>
   	  
 	  <div class="layui-row">
@@ -105,6 +105,12 @@
 		    <label class="layui-form-label">计划金额(万元)</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="budgetAmount" id="budgetAmount" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">变更后计划金额</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="newBudgetAmount" id="newBudgetAmount" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
@@ -185,6 +191,7 @@
 								 document.getElementById("status").innerHTML = "审批通过 ";
 							}else if(status==1 ||status==0){
 									document.getElementById("status").innerHTML = "审批中 ";
+									document.getElementById("status").setAttribute("style", "color:#1E9FFF;font-size: 15px;float:right;");
 							}else if(status==4){
 									document.getElementById("status").innerHTML = "已终止 ";
 									document.getElementById("status").setAttribute("style", "color:red;font-size: 15px;float:right;");
@@ -216,11 +223,11 @@
 							  }
 				  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 						    ,cols: [[
-						      {field:'max_time', width:180, title: '处理时间',templet: "<div>{{layui.util.toDateString(d.max_time, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+						      {field:'time', width:180, title: '处理时间',templet: "<div>{{layui.util.toDateString(d.time, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
 						      ,{field:'workitemname',  title: '节点名称'}
-						      ,{field:'operatorname', width:100, title: '操作人'}
-// 						      ,{field:'auditstatus', width:100, title: '操作人'}
-						      ,{field:'auditstatus',  title: '处理结果',templet: "<div>同意。</div>"}
+						      ,{field:'operatorname', width:90, title: '操作人'}
+						      ,{field:'auditstatus', width:90, title: '处理结果',templet: "<div>{{onCheckRenderer(d.auditstatus)}}</div>"}
+						      ,{field:'auditopinion',  title: '审批意见'}
 						      
 						    ]]
 						    ,parseData: function(res){ //res 即为原始返回的数据
@@ -244,14 +251,14 @@
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
 		      {field:'code',width:100, title: '计划编号'}
-		      ,{field:'materialName', width:100, title: '物项名称'}
-		      ,{field:'purchaseFirstName', width:140, title: '物项大类名称'}
-		      ,{field:'purchaseTwoName', width:100, title: '中类名称'}
-		      ,{field:'newNumber',width:60, title: '数量'}
-		      ,{field:'newBudgetAmount',width:90, title: '预算金额'}
-		      ,{field:'sumamount',width:110, title: '已立项金额'}  
-		      ,{field:'sumamount',width:90, title: '计划执行',templet: "<div>{{Implementation(d)}}</div>"}
-		      ,{field:'budgetAmounts',width:100, title: '计划执行情况',templet: "<div>{{Implementation1(d)}}</div>"}
+		      ,{field:'materialName', width:130, title: '物项名称'}
+		      ,{field:'purchaseFirstName', width:160, title: '物项大类名称'}
+		      ,{field:'purchaseTwoName', width:140, title: '中类名称'}
+		      ,{field:'newNumber',width:50, title: '数量'}
+		      ,{field:'oldBudgetAmount',width:80, title: '原预算金额'}
+		      ,{field:'newBudgetAmount',width:80, title: '变更后金额'}
+		      ,{field:'sumamount',width:80, title: '已立项金额'}  
+		      ,{field:'sumamount',width:70, title: '计划执行情况',templet: "<div>{{Implementation(d)}}</div>"}
 		    ]]
 		    ,parseData: function(res){ //res 即为原始返回的数据
 			    return {
@@ -268,8 +275,8 @@
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
 // 		      {field:'fileId', title: '附件ID' }
-		      {field:'fileName', title: '附件名称' ,templet: "<div>{{getdetail(d)}}</div>"}
-		      ,{field:'fileSize',  title: '文件大小',templet: "<div>{{getFileSize(d.fileSize)}}</div>"}
+		      {field:'fileName',width:700, title: '附件名称' ,templet: "<div>{{getdetail(d)}}</div>"}
+		      ,{field:'fileSize', width:200, title: '文件大小',templet: "<div>{{getFileSize(d.fileSize)}}</div>"}
 		    ]]
 		    ,parseData: function(res){ //res 即为原始返回的数据
 			    return {
@@ -339,6 +346,10 @@
         print();
         document.getElementById('checkview').style.display="";
     };
+    
+     function onCheckRenderer(e) {
+			return nui.getDictText('MIS_AUDITSTATUS',e);
+		}
 </script>
 </body>
 </html>

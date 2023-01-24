@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-    <title>编辑采购计划</title>
+    <title>编辑采购计划变更</title>
 	
 	<style type="text/css">
 	    html,body{
@@ -13,204 +13,215 @@
 </head>
 <body>
 <div class="nui-fit" >
-		<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
-			<legend>采购计划信息</legend>
-			<form id="form1" method="post">
-				<input name="files" id="fileids" class="nui-hidden"/>
-				<div style="padding: 5px;  ">
-			<table style="table-layout: fixed;" id="table_file">
-        	<tr>
-        		<td class="form_label" align="right" style="width:100px;">采购计划名称：</td>
-                <td colspan="3">
-                	<input id="id" name="id" class="nui-hidden"readonly="readonly"/>
-                    <input id="name" name="name" class="nui-textbox" required="true"  style="width:100%;"/>
-                </td>
-            	</tr>
-            	<tr>
-            		<td  class="form_label" align="right" style="width:100px;">计划年度：</td>
-                <td colspan="1">
-                    <input id="year" name="year" style="width:100%;" class="nui-combobox" style="width:150px;" required="true"/>   
-                </td>
-                <td class="form_label" align="right" style="width:100px;">提报人姓名：</td>
-                <td>
-                    <input class="nui-textbox"  name="infomantUser" id="infomantUser" required="true" style="width:100%;"    readonly="readonly"/>
-                </td>
-                <td class="form_label" align="right" style="width:80px;">采购单位：</td>
-                <td>
-               	 	<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width:100%;"  readonly="readonly"/>
-            		<input id="needOrgId" name="needOrgId" class="nui-hidden"/>
-            	</tr>
-               	<tr>
-                    <td class="form_label" align="right" style="width:100px;">采购类型：</td>
-                <td >    
-                    <input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" required="true" onvaluechanged="loadItem()" style="width:100%;" readonly="readonly"/>
-                </td>
-                <td class="form_label" align="right" style="width:120px;">计划总金额(万元)：</td>
-                <td >
-                    <input id="budgetAmount" name="budgetAmount" class="nui-textbox" required="true"   readOnly="readOnly"  style="width:100%;" />
-                </td>
-                 <td class="form_label" align="right" style="width:100px;">物项归口部门：</td>
-                <td >
-                    <input id="putunder" name="putunder" class="nui-dictcombobox"  dictTypeId="ZH_PUTUNDER"  onvaluechanged="loadItem()"  style="width:100%;" readonly="readonly"/>
-                </td>
-             </tr>
-             <tr>
-          		<td class="form_label" style="width:120px;" align="right">归口部门下可采购物项：</td>
-                <td  colspan="7">    
-                    <input style="width:100%;height:50px;" id="items" class="nui-textarea" readonly="readonly"/>
-                </td>
-          	</tr>
-          	<tr>
-          		<td class="form_label" style="width:120px;" align="right">调整原因：</td>
-                <td  colspan="7">    
-                    <input style="width:100%;height:70px;" name="remark" class="nui-textarea" id="remark"/>
-                </td>
-          	</tr>
-        </table>
-    </div>
-    </form>
- <div class="fieldset-body"  style="width:100%; margin: 0px auto">
- <a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a> 
-        <a class="nui-button" id="delbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a> 
-    	<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%;height: auto;" allowCellSelect="true" 
-    	 	showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ" >
-           <div property="columns">
-   				<div  type="checkcolumn"></div>
-           		<div  field="code" width="110" align="center" headerAlign="center"  visible="false" >计划编号
-						<input  name="code"  property="editor"  enabled="true" class="nui-textbox" readOnly="true" >
-                </div>
-                <div  field="purchaseFirstCode" width="110" align="center" headerAlign="center"  visible="false">物项大类编码
+	<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
+		<legend>采购计划信息</legend>
+		<form id="form1" method="post">
+		<input name="files" id="fileids" class="nui-hidden"/>
+			<div style="padding: 5px;  ">
+				<table style="table-layout: fixed; width: 100%" id="table_file">
+		        	<tr>
+		        		<td colspan="1" class="form_label" align="right" style="width:120px;">年度采购计划名称：</td>
+		                <td colspan="3">
+		                	<input id="id" name="id" class="nui-hidden" readonly="readonly"/>
+		                    <input id="name" name="name" class="nui-textbox" required="true"  style="width:100%;" />
+		                </td>
+		                <td colspan="1" class="form_label" align="right" style="width:120px;">提报人姓名：</td>
+		                <td colspan="1">
+		                    <input class="nui-textbox"  name="infomantUser" id="infomantUser" required="true" style="width:100%;" readonly="readonly"/>
+		                </td>
+		                 <td colspan="1" class="form_label" align="right" style="width:120px;">采购单位：</td>
+		                <td colspan="1">
+		                	<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width:100%;" readonly="readonly"/>
+		                	<input id="needOrgId" name="needOrgId" class="nui-hidden" required="true" style="width:100%;"/>
+						</td>
+		        	</tr>
+		           	<tr>
+		           		<td class="form_label" align="right" style="width:120px;">计划年度：</td>
+		                <td colspan="1">
+		                    <input id="year" name="year" style="width:100%;" class="nui-combobox" style="width:100%;" required="true"/>   
+		                </td>
+		                <td class="form_label" align="right" style="width:100px;">采购类型：</td>
+		                <td colspan="1">    
+		                    <input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" readonly="readonly" onvaluechanged="changeexptype" onbeforeshowpopup="beforechanged" required="true"  style="width:100%;"/>
+		                </td>
+		                <td colspan="1" class="form_label" align="right" style="width:130px;">变更前总金额(万元)：</td>
+			            <td colspan="1">
+			                <input id="budgetAmount" name="budgetAmount" class="nui-textbox" required="true"   readOnly="readOnly"  style="width:100%;" />
+			            </td>
+		               	<td class="form_label" align="right" style="width:120px;">财务年度预算科目：</td>
+		                <td colspan="1">
+		                    <input id="SUBJECT" name="subject" class="nui-textbox"  style="width:100%;" />
+		                </td>
+		             </tr>
+		           	<tr>
+		           		<td class="form_label" align="right" style="width:120px;">物项归口部门：</td>
+		                <td colspan="3">
+		                    <input id="putunder" name="putunder" class="nui-dictcombobox"  dictTypeId="ZH_PUTUNDER"  multiSelect="true"  onvaluechanged="putunderChanged"  style="width:100%;" />
+		                </td>
+		                
+		                 <td class="form_label" align="right" style="width:120px;">变更后总金额(万元)：</td>
+		                <td colspan="1">
+		                    <input id="newBudgetAmount" name="newBudgetAmount" class="nui-textbox" required="true"   readOnly="readOnly"  style="width:100%;" />
+		                </td>
+<!-- 		                <td class="form_label" align="right" style="width:120px;color: red;">变更金额(万元)：</td> -->
+<!-- 		                <td colspan="1"> -->
+<!-- 		                    <input id="changeAmount"  class="nui-textbox" readonly="readonly" style="width:100%;" /> -->
+<!-- 		                </td> -->
+		           	</tr>
+		             <tr>
+		          		<td class="form_label" style="width:120px;" align="right">归口部门可采购物项：</td>
+		                <td  colspan="7">    
+		                    <input style="width:100%;height:60px;" id="items" type="checkbox" class="nui-textarea" readonly="readonly"/>
+		                </td>
+		          	</tr>
+		          	<tr>
+		          		<td class="form_label" style="width:120px;color: red" align="right">
+		              		提示：
+		          		</td>
+		          		<td colspan="6" style="color: red">
+		          			添加年度采购计划，选择一级集采物项时细分到物项大类即可。整理好的小类细分项填写到备注框或以附件形式添加。
+		          		</td>
+		          	</tr>
+		          	<tr>
+		          		<td class="form_label" style="width:120px;" align="right">备注：</td>
+		                <td  colspan="7">    
+		                    <input style="width:100%;height:70px;" name="remark" class="nui-textarea" id="remark"/>
+		                </td>
+		          	</tr>
+		          	<tr>
+			      		<td class="form_label" style="width:120px;" align="right">调整原因：</td>
+			            <td  colspan="8">    
+			                <input style="width:100%;height:70px;" name="changeReason" class="nui-textarea" id="changeReason"/>
+			            </td>
+			      	</tr>
+		    	</table>
+		    </div>
+   	 	</form>
+    </fieldset>
+	<fieldset  style=" border:solid 1px #aaa;padding:3px;width: 99%">
+	 	<div class="fieldset-body"  style="width:100%;  margin: 0px auto">
+	 	 	<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a> 
+	        <a class="nui-button" id="delbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a>
+	    	<div id="grid_traveldetail" class="nui-datagrid" style="width: 95%;height: auto;" allowCellSelect="true" allowCellwrap="true"
+		    		showPager="false" allowCellEdit="true" multiSelect="true" dataField="purPlanItem"  oncellendedit="getHTZQ"
+		    		url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext">
+	           <div property="columns">
+	   				<div  type="checkcolumn"></div>
+	           		<div  field="code" width="110" align="center" headerAlign="center"  visible="false" >计划编号
+<!-- 						<input  name="code"  property="editor"  enabled="true" class="nui-textbox" readOnly="true" > -->
+	                </div>
+	                <div  field="purchaseFirstCode" width="100" align="center" headerAlign="center"  visible="false">物项大类编码
 						<input  name="purchaseFirstCode"  property="editor"  enabled="true" class="nui-textbox" readOnly="true"  />
-                </div>
-                <div field=purchaseFirstName width="110" align="center" headerAlign="center"  >物项大类名称 
-                	<input  name="purchaseFirstName" property="editor" class="nui-textbox"   readOnly="true" />
-                </div> 
-                <div  field="purchaseTwoCode" width="110" align="center" headerAlign="center" visible="false">物项中类编码
-						<input  property="editor"  name="purchaseTwoCode" class="nui-textbox"   enabled="false" />
-                </div>
-                <div  field="purchaseTwoName" width="110" align="center" headerAlign="center">物项中类名称 
-                	<input  property="editor"  name="purchaseTwoName" class="nui-textbox"   readOnly="true"  />
-                </div> 
-                <div field="purchaseThreeCode" width="110" align="center" headerAlign="center"  visible="false">物项小类编码
-							<input  property="editor"  name="purchaseThreeCode" class="nui-textbox" enabled="true" />
-                </div>
-                <div field="purchaseThreeName"  width="110" align="center" headerAlign="center">物项小类名称 
-                	<input   property="editor" class="nui-textbox"  name="purchaseThreeName" readOnly="true"/>
-                </div>
-                <div field="materialName"  width="110" align="center" headerAlign="center" vtype="required">采购物项名称 
-                	<input   property="editor" class="nui-textbox" name="materialName"  required="true"/>
-                </div>
-                <div field="unit"  width="80" align="center" headerAlign="center" renderer="unitValue">单位
-                	<input property="editor" class="nui-dictcombobox" dictTypeId="ZH_UNIT"   name="unit"/>
-                </div> 
-               
-                <div field="budgetAmount"  width="100" align="center" headerAlign="center"  vtype="required">预算金额(万元)
-                	<input property="editor" class="nui-spinner" minValue="0"  maxValue="999999999" name="budgetAmount" visible="true"/>
-                </div>
-                <div field="technologyNeed"  width="100" align="center" headerAlign="center" >技术要求
-                	<input property="editor" class="nui-textbox"   name="technologyNeed" />
-                </div>
-                <div field="keyIssus"  width="100" align="center" headerAlign="center"  renderer="onYn">是否关键事项
-                	<!-- <input property="editor" class="nui-textbox" id="contractname" name="contractname" /> -->
-                	<input property="editor"  class="nui-dictcombobox" name="keyIssus"  dictTypeId="MIS_YN" required="true"  style="width:100%;"/>
-                </div>
-                <div field="isProject"  width="100" align="center" headerAlign="center" value="1" renderer="onYn">是否工程建设下项目采购
-                	<input property="editor" class="nui-dictcombobox" name="isProject" dictTypeId="MIS_YN" onvaluechanged="isProject(e)"  required="true" style="width:100%;"/>
-                </div>
-                <div field="projectname"  width="100" align="center" headerAlign="center" >所属项目名称
-                	<input property="editor" class="nui-textbox"  name="projectname" />
-                </div>
-                <div field="remark"  width="100" align="center" headerAlign="center"  >备注
-                	<input property="editor" class="nui-textarea" name="remark" />
-                </div>
-                <div field="number"  width="80" align="center" headerAlign="center" visible="false" vtype="required">数量
-                	<input property="editor"  class="nui-spinner" minValue="0"  maxValue="999999999"  id="number" name="number" />
-                </div> 
-                <div field="contractname"  width="100" align="center" headerAlign="center"visible="false">拟签合同名称
-                	<input property="editor" class="nui-textbox" id="contractname" name="contractname" />
-                </div>
-                <div field="plansimplementtime"  width="100" align="center" headerAlign="center"  visible="false" vtype="required">拟实施采购时间
-                	<input property="editor" class="nui-datepicker" id="plansimplementtime" name="plansimplementtime"/>
-                </div>
-                <div field="contractamount"  width="100" align="center" headerAlign="center"visible="false">拟签合同金额(元)
-                	<input property="editor"   class="nui-spinner"  minValue="0"  maxValue="999999999"  id="contractamount" name="contractamount" />
-                </div>
-            </div>
-        </div>
-	</div>
+	                </div>
+	                <div field=purchaseFirstName width="110" align="center" headerAlign="center"  readOnly="true">大类名称 
+	                	<input  name="purchaseFirstName" property="editor" class="nui-textbox"  />
+	                </div> 
+	                <div  field="purchaseTwoCode" width="110" align="center" headerAlign="center" visible="false" readOnly="true">中类编码
+							<input  property="editor"  name="purchaseTwoCode" class="nui-textbox" />
+	                </div>
+	                <div  field="purchaseTwoName" width="110" align="center" headerAlign="center" readOnly="true">中类名称 
+	                	<input  property="editor"  name="purchaseTwoName" class="nui-textbox"   readOnly="true"  />
+	                </div> 
+	                <div field="materialName"  width="110" align="center" headerAlign="center" vtype="required">采购物项名称 
+	                	<input   property="editor" class="nui-textbox" name="materialName"  width="100%" required="true"/> 
+	                </div>
+	                
+	                <div header="调整前" headerAlign="center">
+		                <div property="columns">
+		                	<div field="unit"  width="40" align="center" headerAlign="center" renderer="unitValue">单位</div> 
+			                <div  field="number" width="50"  align="center" headerAlign="center"  vtype="required" headerStyle="color:red">数量</div>
+			                <div field="budgetAmount"  width="80" align="center" headerAlign="center" headerStyle="color:red" vtype="required">预算金额(万元)</div>
+		                </div>
+		            </div>
+	               <div header="调整后" headerAlign="center">
+		                <div property="columns">
+		                	<div  field="onePrice" width="70"  align="center" headerAlign="center" vtype="required" headerStyle="color:red">单价(万元)
+				            	<input id="supplierName" name="onePrice" width="100%" property="editor"  class="nui-textbox" />
+				            </div>
+		                    <div field="newUnit"  width="40" align="center" headerAlign="center" renderer="unitValue">单位
+			                	<input property="editor"  width="100%" class="nui-dictcombobox" dictTypeId="ZH_UNIT" name="newUnit"/>
+			                </div> 
+			                <div field="newNumber"  width="40" align="center" headerAlign="center" vtype="int">数量
+			                	<input property="editor"   width="100%" class="nui-spinner" minValue="0" decimalPlaces="0"  maxValue="999999999"  id="newNumber" name="newNumber" />
+			                </div>
+			                <div field="newBudgetAmount"  width="70" align="center" headerAlign="center"  vtype="required" headerStyle="color:red">预算金额(万元)
+			                	<input property="editor"  width="100%" class="nui-spinner" minValue="0"  maxValue="999999999" name="newBudgetAmount" visible="true" />
+			                </div>
+			                
+		                </div>
+		            </div>
+		            
+	                 <div field="remark"  width="100" align="center" headerAlign="center"  vtype="required" headerStyle="color:red" >调整原因
+	                	<input property="editor"  width="100%"  class="nui-textarea" name="remark"   visible="true"/>
+	                </div>
+	                
+	            </div>
+	        </div>
+		</div>
 	</fieldset>
-    <fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-		<legend>上传相关附件</legend>
+	<fieldset id="field2" style="border:solid 1px #aaa;padding:3px; width: 98%">
 		<jsp:include page="/ame_common/inputFile.jsp"/>
+     	<jsp:include page="/ame_common/misOpinion.jsp"/>	
 	</fieldset>
-     <jsp:include page="/ame_common/misOpinion_Freeflow.jsp"/>	
 </div>
-	<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">               
-	    <a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px;margin-right: 20px;">保存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onOk(2)" id="zzFeame" style="width: 80px;margin-right: 20px;">中止</a>	
-		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px;margin-right: 140px;">关闭</a>
-	</div>  
+<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">               
+    <a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px;margin-right: 20px;">保存</a>
+	<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px;margin-right: 20px;">提交</a>
+	<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px;margin-right: 20px;">中止</a>	
+	<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px;margin-right: 140px;">关闭</a>
+</div>  
 <script type="text/javascript">
 	   
-	    nui.parse();
-	      //工作项id
-		<%  long workItemID=(Long)request.getAttribute("workItemID");%>
-	    var form = new nui.Form("#form1");
-	    var grid = nui.get("grid_traveldetail");
-	    var opioionform = new nui.Form("opioionform");
-	    var purType,orgid; //采购类型,归口部门ID
-	   	var istype,info;
-	  
-	   	var yeariterm = [{id: 2021,text: 2021},
-	               		   {id: 2022,text: 2022},
-	               		   {id: 2023,text: 2023},
-	               		   {id: 2024,text: 2024},
-	               		   {id: 2025,text: 2025},
-	               		   {id: 2026,text: 2026}];
-	               		   
-	    nui.get("year").setData(yeariterm);
-	   	function unitValue(e){
-	   		return nui.getDictText("ZH_UNIT",e.value);
-		}	   		
-	   	function onYn(e){
-	   		return nui.getDictText("MIS_YN",e.value);
-		}	   	
-	   	loadData();
-	   function loadData(){
-			//流程提示信息
-			var data={workItemID:<%=workItemID %>};
-			var json=nui.encode(data);
-			ajaxCommon({
-				"url": "com.zhonghe.ame.purchase.purchaseplan.getPurPlanByWorkitemId.biz.ext",
-				"data": json,
-				"success": function(o) {
-					//付款申请基本信息
-					form.setData(o.data)
-	       			grid.setData(o.datas)
-	       			if(o.data.type!=2){
-	   					grid.hideColumns([13,14,12])
-		        	}
-		        	if(o.data.type==3){
-		        		grid.hideColumns([4,6,8])
-		        	}
-					 //设置审核意见基本信息
-				nui.get("processinstid").setValue(o.workitem.processInstID);
-               	nui.get("processinstname").setValue(o.workitem.processInstName);
-               	nui.get("activitydefid").setValue(o.workitem.activityDefID);
-               	nui.get("workitemname").setValue(o.workitem.workItemName);
-				nui.get("workitemid").setValue(<%=workItemID %>);
+	nui.parse();
+  //工作项id
+	<%  long workItemID=(Long)request.getAttribute("workItemID");%>
+    var form = new nui.Form("#form1");
+    var grid = nui.get("grid_traveldetail");
+    var opioionform = new nui.Form("opioionform");
+    var purType,orgid; //采购类型,归口部门ID
+	var isExcess;//变更金额是否超限
+   	var istype,info,fileMsgBoxId;
+  	//设置计划年份
+   	var year=new Date().getFullYear();
+   	var yeariterm = [];
+	for(var i = 0;i<5;i++){
+	  yeariterm.push({"id":year+i,"text":year+i});
+	}         		   
+    nui.get("year").setData(yeariterm);
+    
+   	loadData();
+	function loadData(){
+		//流程提示信息
+		var data={workItemID:<%=workItemID %>};
+		var json=nui.encode(data);
+		ajaxCommon({
+			"url": "com.zhonghe.ame.purchase.purchaseplan.getPurPlanByWorkitemId.biz.ext",
+			"data": json,
+			"success": function(o) {
+				//付款申请基本信息
+				form.setData(o.data)
+       			grid.setData(o.datas)
+       			grid.showColumns([3,5])
+	        	if(o.data.type==3){
+	        		grid.hideColumns([3,5])
+	        	} 
+				 //设置审核意见基本信息
+			nui.get("processinstid").setValue(o.workitem.processInstID);
+           	nui.get("processinstname").setValue(o.workitem.processInstName);
+           	nui.get("activitydefid").setValue(o.workitem.activityDefID);
+           	nui.get("workitemname").setValue(o.workitem.workItemName);
+			nui.get("workitemid").setValue(<%=workItemID %>);
                	nui.get("isshow").setValue("1");
                	nui.get("auditstatus").setValue(3);
                	document.getElementById("salesEdit").style.display="none";
+               	document.getElementById("auditop").style.display="none";
                	nui.get("auditopinion").setValue("");
-				
 				
 				var grid_0 = nui.get("grid_0");
 				 grid_0.load({"groupid":"PurchasePlan","relationid":o.data.id});
 				 grid_0.sortBy("fileTime","desc");	
-               	
-               	nui.get("auditopinion").setValue("");
+				 	
+	               	nui.get("auditopinion").setValue("");
 	            	//查询审核意见
 					var grid1 = nui.get("datagrid1");
 					if(o.workitem.processInstID!=null||o.workitem.processInstID!=""){
@@ -222,22 +233,19 @@
 			});
 	    }
 	   	
-	   	function unitValue(e){
-	   		return nui.getDictText("ZH_UNIT",e.value);
-		}	   		
-	   	function onYn(e){
-	   		return nui.getDictText("MIS_YN",e.value);
-		}
 			   		
 	   	function loadItem(){
 	   		 purType = nui.get("type").getValue();
 	   		 orgid = nui.get("putunder").getValue();
+	   		  grid.showColumns([3,4,5])
+        	if(purType==3){
+        		grid.hideColumns([3,4,5])
+        	} 
 	   		if(purType!="" &&orgid!=""&&purType!=undefined &&orgid!=undefined){
 	   			nui.get("addbtn").enable();
-	   			nui.get("delbtn").enable();
 	   			var json = nui.encode({param:{"orgid":orgid,"purType":purType}})
 		   		ajaxCommon({
-					"url": "com.zhonghe.ame.purchase.purchaseplan.queryItemsByOrgid.biz.ext",
+					"url": "com.zhonghe.ame.purchase.purchaseplan.getItemsByOrgid.biz.ext",
 					"data": json,
 					"success": function(data) {
 						var items;
@@ -255,148 +263,117 @@
 				});
 			}else if(purType ==3){
 				nui.get("addbtn").enable();
-	   			nui.get("delbtn").enable();
 	   			nui.get("items").setValue("");
 	   		}else{
 	   			nui.get("addbtn").disable();
-   				nui.get("delbtn").disable();
    				nui.get("items").setValue("");
 	   		}
-	   	}   
+	   	}
 	   	
-	   	
-	   function onOk(e){
-	   		document.getElementById("fileCatalog").value="PurchasePlan";
-	   		istype=e;
-	   		if(!form.validate()){
+   	function onOk(e){
+   		isChangeExcess();
+   		document.getElementById("fileCatalog").value="PurchasePlan";
+   		istype=e;
+		if(istype==1){
+			info="提交？"
+			if(!form.validate()){
 				showTips("请检查表单的完整性!");
 				return;
 			}
-			
 			if(grid.getData()==0){
 				showTips("请填写计划明细")
 				return;
 			}
-			
-			 grid.validate();
+		 	grid.validate();
 			if (grid.isValid() == false) {
 				var error = grid.getCellErrors()[0];
 				grid.beginEditCell(error.record, error.column);
 				return;
 			} 
-			
-			if(istype==1){
-				info="是否提交？"
-			}else if(istype==0){
-				info="是否暂时保存？"
-			}else{
-				info="是否中止流程？"
-				nui.get("auditstatus").setValue(2);
+		}else if(istype==0){
+			info="暂时保存？"
+		}else{
+			info="中止流程？"
+			nui.get("auditstatus").setValue(2);
+		}
+		nui.confirm("确定"+info,"系统提示",
+        function(action){
+            if(action=="ok"){
+            	fileMsgBoxId = nui.loading("附件上传中...", "请稍后");
+	    		form2.submit();
+			} else {
+				nui.get("auditstatus").setValue(3);
 			}
-			
-			form2.submit();		
-    	}
-    	
-    	
-    	function SaveData(){
-	   		var formData = form.getData();
-			var gridData = grid.getChanges(),data_opioion =opioionform.getData();
-			
-			formData.files = nui.get("fileids").getValue();
-			formData.istype = istype;
-			// 1为公司本部 2为分子公司
-			var judge = getJudge();
-			var json = nui.encode({"purPlan":formData,"purPlanItem":gridData,"judge":judge,"misOpinion": data_opioion.misOpinion});
-			//判断采购类型 如为一级集采二级集采归口部门必填
-			var type = nui.get("type").value;
-			if(type!=3){
-				var putunder = nui.get("putunder").value;
-					if(putunder==null || putunder==''){
-						showTips("公司本部职能部分发起采购计划时归口部门不能够为空");
-						return;
-					}
-				}
-			if(!confirm(info)){
-		       nui.get("saveReimb").enable();
-       		 	nui.get("creatReimbProcess").enable();
-       		 	nui.get("zzFeame").enable();
-				return;
-    		}else{	
-    			ajaxCommon({
-					"url": "com.zhonghe.ame.purchase.planchange.approvalPurchasePlanEdit.biz.ext",
-					"data": json,
-					"success": function(data) {
-						if(istype==1){
-	        					showTips("提交成功");
-								closeOk();
-	               		 }else if(istype==0){
-	               			 showTips("暂时保存成功")
-	               			 closeOk();
-	               		 }else{
-	               		 	showTips("中止成功")
-	               		 	closeOk();
-	               		 }
-					}
-				});
-    		}
-	   	
-	   	}
-	   	
-	   function setBudgetAmount(){
-        	var tempData = nui.get(grid_traveldetail).data;
-        	var a=tempData.length;
-        	var b=0;
-        	for(var i=0;i<a;i++){
-        		if(tempData[i].budgetAmount!=undefined){
-		    		/* b+=tempData[i].budgetAmount; */
-		    		b = addFloat(b,tempData[i].budgetAmount)
-        		}else{
-        			/* var x = 0;
-        			b+=x; */
-        		}
-	    	}
-	    	 nui.get("budgetAmount").setValue(b)
+		})
 	}   		
+   function SaveData(){
+		var formData = form.getData();
+		var gridData = grid.getChanges(),data_opioion =opioionform.getData() ;
+		formData.istype = istype;
+		formData.files = nui.get("fileids").getValue();
+		// 1为公司本部 2为分子公司
+		var judge = <%=request.getParameter("judge")%>;
+		var json = nui.encode({"purPlan":formData,"purPlanItem":gridData,"judge":judge,"isExcess":isExcess,"misOpinion": data_opioion.misOpinion});
+		//判断采购类型 如为一级集采二级集采归口部门必填
+		var type = nui.get("type").value;
+		if(type!=3){
+			var putunder = nui.get("putunder").value;
+				if(putunder==null || putunder==''){
+					showTips("公司本部职能部分发起采购计划时归口部门不能够为空");
+					return;
+				}
+			}
+		nui.hideMessageBox(fileMsgBoxId);
+		/* if(!confirm(info)){
+	       nui.get("saveReimb").enable();
+   		 	nui.get("creatReimbProcess").enable();
+   		 	nui.get("zzFeame").enable();
+			return;
+		}else{	 */
+			ajaxCommon({
+				"url": "com.zhonghe.ame.purchase.planchange.approvalPurchasePlanEdit.biz.ext",
+				"data": json,
+				"success": function(data) {
+					if(istype==1){
+        					showTips("提交成功");
+							closeOk();
+               		 }else if(istype==0){
+               			 showTips("暂时保存成功")
+               			 closeOk();
+               		 }else{
+               		 	showTips("中止成功")
+               		 	closeOk();
+               		 }
+				}
+			});
+		/* } */
+	}
 	   	
-	  function getHTZQ(e){
-    	if(e.field == "budgetAmount"){
-        	var tempData = nui.get(grid_traveldetail).data;
-        	console.log(tempData)
-        	var a=tempData.length;
-        	var b=0;
-        	  debugger
-        	for(var i=0;i<a;i++){
-        		if(tempData[i].budgetAmount!=undefined){
-        			b = addFloat(b,tempData[i].budgetAmount)
-		    		/* b+=tempData[i].budgetAmount; */
-        		}else{
-        			/* var x = 0;
-        			b+=x; */
-        		}
-	    	}
-	    	 nui.get("budgetAmount").setValue(b)
-    	}
-   	  }
-   	  
-   	 function addTicket(){
+   /**
+	  选择物项明细 	
+	*/   	
+	function addTicket(){
 		if(purType!="" &&orgid!=""&&purType!=undefined &&orgid!=undefined&&purType != 3){
 			 mini.open({
                 url: "<%=request.getContextPath() %>/purchase/planchange/selectItems.jsp?orgid="+orgid+"&purType="+purType,
                 showMaxButton: false,
                 title: "选择树",
-                width: "60%",
-                height: 400,
+                width: "80%",
+                height: "80%",
                 ondestroy: function (action) {   
-                	var row ="";
                     if (action == "ok") {
-                    	var row = grid.getSelected();
                         var iframe = this.getIFrameEl();
                         var data = iframe.contentWindow.GetData();
                        	  data = mini.clone(data);
-                       	  row = {"name":"New Row","purchaseFirstName":data.dlName,"purchaseFirstCode":data.dlCode,"purchaseTwoName":data.zlName,"purchaseTwoCode":data.zlCode}
-                       	  clog(row)
-							grid.addRow(row);
-							//setReadonly();
+                       	  for(var i=0;i<data.length;i++){
+                       	  	var row  = {"name":"New Row",
+                       	  	 	 "purchaseFirstName":data[i].dlName,"purchaseFirstCode":data[i].dlCode,
+                       	  		 "purchaseTwoName":data[i].zlName,"purchaseTwoCode":data[i].zlCode,
+                       	  		 "purchaseThreeName":data[i].xlName,"purchaseThreeCode":data[i].xlCode,
+                       	  		 "budgetAmount":0,"number":0,
+                       	  		 centralizedDept:data[i].org_id}
+                       	 	 grid.addRow(row);
+                       	  }
                         }
                     }
             }); 
@@ -406,33 +383,153 @@
 	   			nui.get("delbtn").enable();
 				var rowS = {name: "New Row"} 
 				grid.addRow(rowS);
-				setReadonly();
 		}else{
 			showTips("请先选择采购类型及归口部门")
 		}
     }
     
-    //设置新增删除按钮是否可用
-    function setReadonly(){
-    	if(grid.getData().length>0){
-			nui.get("type").setReadOnly(true);
-	   		nui.get("putunder").setReadOnly(true);
-		}else{
-			nui.get("type").setReadOnly(false);
-	   		nui.get("putunder").setReadOnly(false);
-		}
+      /**
+    * 判断是否超限额
+    */
+    function isChangeExcess(){
+    	isExcess=false;
+    	var newBudgetAmount = nui.get("newBudgetAmount").getValue();
+    	var budgetAmount = nui.get("budgetAmount").getValue();
+    	if(budgetAmount!=null && newBudgetAmount !=null){
+	    	var excess = math.subtract(newBudgetAmount, budgetAmount)
+	    	var ratio = math.divide(excess,budgetAmount) 
+	    	if(purType==1){
+	    		if(excess>=5){
+	    			isExcess = true;
+	    		}else if(ratio>=0.2){
+	    			isExcess = true;
+	    		}
+	    	
+	    	}else{
+	    		if(excess>=10){
+	    			isExcess = true;
+	    		}else if(ratio>=0.1){
+	    			isExcess = true;
+	    		}
+	    	}
+    	}
     }
     
-    //删除行
+    /**
+     * 采购类型改变前
+     */
+    var exptypeOld;
+    function beforechanged(){
+    	exptypeOld = nui.get("type").getValue();
+    }
+    /**
+     * 采购类型改变,不能删除已存在物项的归口部门
+     */
+    function changeexptype(){
+    	purType = nui.get("type").getValue();
+    	//切换采购类型提示。
+    	var detailRows = grid.getData();
+    	
+    	if(detailRows.length > 0){
+			if(confirm("切换采购类型将会清空已填写物项明细，请确定是否切换吗？")){
+    			grid.clearRows();
+    		}else{
+    			nui.get("type").setValue(exptypeOld);
+    			return;
+    		}
+    	}
+    	loadItem();
+    }
+    
+     /**
+     * 物项归口部门改变,不能删除已存在物项的归口部门
+     */
+    function putunderChanged(){
+    	var putunder = nui.get("putunder").getValue()
+    	var rowsData = grid.data;
+    	
+    	if(putunder){
+	    	var putunders = putunder.split(",") ;
+    	}else{
+    		putunders=[];
+    	}
+    	if(rowsData.length>0){
+    		for(var i=0;i< rowsData.length;i++){ 
+	    		if(!putunders.includes(rowsData[i].centralizedDept.toString())){
+	    			putunders.push(rowsData[i].centralizedDept.toString())
+	    		}
+	    	}
+	    	nui.get("putunder").setValue(putunders.toString());
+    	}
+    	loadItem();
+    }
+    
+    
+	/**
+   	* 删除行
+   	*/
     function removeTicket(){
 		var rows = grid.getSelecteds();
         if (rows.length>0) {
+        	for(var i=0;i< rows.length;i++){ 
+  				 if(rows[i].id){
+  				 	nui.alert("原有计划不允许删除只允许修改！");
+  				 	return;
+  				 }     	
+        	}
             grid.removeRows(rows, true);
-            setReadonly();
         }else{
         	nui.alert("请至少选中一条记录！");
         }
-        setBudgetAmount();
+        totalAmount();
 	}
+	
+	/**
+   	* 计算当前行金额
+   	*/
+	function getHTZQ(e){
+		var record = e.record;
+		if(e.field=="newNumber"||e.field=="onePrice"){
+			if(record.newNumber!=null && record.onePrice!=null){
+				var budgetAmount1 =mulFloat(record.newNumber,record.onePrice).toString() ;
+				 grid.updateRow(e.row,{newBudgetAmount:budgetAmount1}); 
+                  	totalAmount();
+			}else{
+				 grid.updateRow(e.row,{totalPrice:""}); 
+			}
+		}
+	}
+	
+	
+   	/**
+   	* 计算计划总金额
+   	*/
+	function totalAmount(){
+		var tempData = grid.data;
+    	var a=tempData.length;
+    	var b=0;
+    	for(var i=0;i<a;i++){
+    		if(!!tempData[i].newBudgetAmount&&tempData[i].newBudgetAmount>0){
+    			b = addFloat(b,tempData[i].newBudgetAmount)
+    		}else{
+    			var x = 0;
+    			b = addFloat(b,x)
+    		}
+    	}
+ 		nui.get("newBudgetAmount").setValue(b);
+	}
+	
+	function zhPutUnder(e) {
+		return nui.getDictText('ZH_PUTUNDER',e.value);//设置业务字典值
+	}
+	
+	function unitValue(e){
+   		return nui.getDictText("ZH_UNIT",e.value);
+	}
+	
+	function onYn(e){
+   		return nui.getDictText("MIS_YN",e.value);
+	}
+	
 </script></body>
 </html>

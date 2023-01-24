@@ -15,8 +15,8 @@
     <node>start0</node>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" collapsed="false" type="end">
-    <targetConnections>link39</targetConnections>
-    <location x="871" y="136"/>
+    <targetConnections>link0</targetConnections>
+    <location x="932" y="136"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
@@ -24,7 +24,7 @@
     </process:returns>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
-    <location x="873" y="172"/>
+    <location x="934" y="172"/>
     <figSize height="17" width="25"/>
     <node>end0</node>
   </nodes>
@@ -70,7 +70,7 @@
   <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" displayName="事务提交" collapsed="false" type="transactioncommit">
     <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>transactioncommit0</sourceNode>
-      <targetNode>end0</targetNode>
+      <targetNode>assign4</targetNode>
     </sourceConnections>
     <targetConnections>link38</targetConnections>
     <location x="750" y="136"/>
@@ -84,7 +84,7 @@
   </nodes>
   <nodes xsi:type="process:tThrow" description="" id="throw0" name="异常抛出" displayName="异常抛出" collapsed="false" type="throw">
     <targetConnections>link5</targetConnections>
-    <location x="959" y="495"/>
+    <location x="922" y="495"/>
     <size height="28" width="28"/>
     <nodeLabel>throw0label</nodeLabel>
     <process:exception code="B600100" message="采购文件提交失败" type="com.eos.system.exception.EOSException">
@@ -92,7 +92,7 @@
     </process:exception>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="throw0label" name="label" nodeType="label">
-    <location x="949" y="531"/>
+    <location x="912" y="531"/>
     <figSize height="17" width="49"/>
     <node>throw0</node>
   </nodes>
@@ -100,6 +100,7 @@
     <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService5</sourceNode>
       <targetNode>assign2</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link33" name="link33" displayName="连接线" type="transition">
       <sourceNode>invokeService5</sourceNode>
@@ -182,27 +183,48 @@
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link29</targetConnections>
-    <location x="294" y="136"/>
+    <location x="294" y="134"/>
     <size height="28" width="28"/>
     <nodeLabel>assign2label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">m:userObject/userId</process:from>
-      <process:to type="query">purPlan/updatedBy</process:to>
+      <process:to type="query">purProgramme/updatedBy</process:to>
     </process:copy>
     <process:copy>
       <process:from type="expression" pattern="reference">new Date()</process:from>
-      <process:to type="query">purPlan/updatedTime</process:to>
+      <process:to type="query">purProgramme/updatedTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">purProgramme/type</process:from>
+      <process:to type="query">params/type</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">purProgramme/putunder</process:from>
+      <process:to type="query">params/headOrgid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">purProgramme/judge</process:from>
+      <process:to type="query">params/deptType</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userOrgId</process:from>
+      <process:to type="query">params/needOrgId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">purProgramme/istype</process:from>
+      <process:to type="query">purProgramme/status</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
-    <location x="292" y="172"/>
+    <location x="292" y="170"/>
     <figSize height="17" width="32"/>
     <node>assign2</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="终止流程" displayName="终止流程" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService1</sourceNode>
-      <targetNode>subprocess5</targetNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <targetConnections>link33</targetConnections>
     <location x="202" y="498"/>
@@ -222,18 +244,13 @@
     <node>invokeService1</node>
   </nodes>
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess5" name="approvalOp" displayName="approvalOp" collapsed="false" type="subprocess">
-    <sourceConnections xsi:type="process:tLink" description="" id="link45" name="link45" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link45" name="link45" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess5</sourceNode>
       <targetNode>invokePojo0</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
+      <process:transitionCondition/>
     </sourceConnections>
-    <targetConnections>link34</targetConnections>
     <targetConnections>link43</targetConnections>
+    <targetConnections>link1</targetConnections>
     <location x="600" y="495"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess5label</nodeLabel>
@@ -257,12 +274,12 @@
     </sourceConnections>
     <targetConnections>link40</targetConnections>
     <targetConnections>link44</targetConnections>
-    <location x="795" y="495"/>
+    <location x="761" y="495"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionrollback1label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="transactionrollback1label" name="label" nodeType="label">
-    <location x="785" y="531"/>
+    <location x="751" y="531"/>
     <figSize height="17" width="49"/>
     <node>transactionrollback1</node>
   </nodes>
@@ -396,6 +413,44 @@
     <figSize height="17" width="32"/>
     <node>assign3</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值4" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <location x="833" y="136"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="831" y="172"/>
+    <figSize height="17" width="32"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess5</targetNode>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <location x="405" y="495"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">4</process:from>
+      <process:to type="query">purProgramme/status</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="407" y="531"/>
+    <figSize height="17" width="25"/>
+    <node>assign0</node>
+  </nodes>
   <topRuler>
     <guides position="-71" horizontal="true"/>
   </topRuler>
@@ -404,17 +459,9 @@
   </leftRuler>
   <process:info author="huangqj" createTime="2021-02-24 14:16:18" date="2021-02-24Z" description="" name="addPurProgramme" version="7.0.0.0"/>
   <process:variables>
-    <process:variable description="" historyStateLocation="client" isArray="false" name="str" primitiveType="String"/>
-    <process:variable description="" historyStateLocation="client" isArray="true" name="strs" primitiveType="String"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.AtFileupload" name="atFileUpload"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.OmEmployee" name="emp"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="wfp1"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="wfp2"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.OmEmployee" name="emp1"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="userName" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="ppName" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="desc" primitiveType="String"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.ZhPurchasePlan" name="plan"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.ZhPurchaseProgramme" name="purProgramme"/>

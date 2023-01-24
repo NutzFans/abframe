@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@page import="com.eos.data.datacontext.UserObject"%>
-<%
-	String contextPath=request.getContextPath();
- %>
+<%@include file="/purchase/common/common.jsp"%>
 <html>
 <!-- 
   - Author(s): 朱海翔
@@ -13,9 +10,6 @@
 <head>
 <title>选择人员（多选）</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<%@include file="/common/common.jsp"%>
-<h:script src='<%="/common/scripts/eos-web.js"%>' />
-<script src="<%= request.getContextPath() %>/common/nui/nui.js" type="text/javascript"></script>
 	<style type="text/css">
 	    body{
 	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
@@ -28,12 +22,12 @@
 	        <div style="padding:5px;" id="opinionHide">
 	            <table style="table-layout:fixed;">
 		            <tr>
-	                    <td style="width:100px;" align="right">人员姓名：</td>
-	                    <td  align="left" >
-		   					<input id="lookup2" class="nui-textboxlist"  searchField="name" style="width:70%"
-        						url="com.primeton.eos.ame_budget.budgetOrgManager.queryEmpByName.biz.ext" value="" text=""
-        						textField="EMPNAME" valueField="USERID" />
-		   				</td>
+                    <td style="width:100px;" align="right">人员姓名：</td>
+                    <td  align="left" >
+					   					<input id="lookup2" class="nui-textboxlist"  searchField="name" style="width:240px"
+			        						url="com.primeton.eos.ame_budget.budgetOrgManager.queryEmpByName.biz.ext" value="" text=""
+			        						textField="EMPNAME" valueField="USERID" />
+	   								</td>
 	                </tr>
 	            </table>
 	        </div>

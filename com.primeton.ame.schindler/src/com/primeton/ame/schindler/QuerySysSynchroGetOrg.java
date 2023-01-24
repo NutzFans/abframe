@@ -404,9 +404,6 @@ public class QuerySysSynchroGetOrg {
 			List<AcOperator> listUpdate = new ArrayList<AcOperator>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				if (jo.getString("no")== "" || jo.getString("no") == null) {
 					continue;
 				}
@@ -518,9 +515,6 @@ public class QuerySysSynchroGetOrg {
 			List<OmOrganization> listUpdate = new ArrayList<OmOrganization>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				OmOrganization impl = new OmOrganizationImpl();
 				String id = jo.getString("id");
 				DataObject criteria = DataFactory.INSTANCE.create("com.primeton.das.criteria", "criteriaType");
@@ -698,9 +692,6 @@ public class QuerySysSynchroGetOrg {
 			List<OmOrganization> listUpdate = new ArrayList<OmOrganization>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				OmOrganization impl = new OmOrganizationImpl();
 //				AaOrgtestImpl impl = new AaOrgtestImpl();
 				String id = jo.getString("id");
@@ -894,9 +885,6 @@ public class QuerySysSynchroGetOrg {
 			List<String> list = new ArrayList<String>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 //				System.out.println(jo);
 				ZhGroup impl = new ZhGroupImpl();
 				String uuid = UUID.randomUUID().toString().trim().replace("-", "");
@@ -1034,9 +1022,6 @@ public class QuerySysSynchroGetOrg {
 			List<ZhPost> listUpdate = new ArrayList<ZhPost>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				System.out.println(jo);
 				ZhPost impl = new ZhPostImpl();
 				String id = jo.getString("id");
@@ -1213,9 +1198,6 @@ public class QuerySysSynchroGetOrg {
 			List<OmEmployee> listUpdate = new ArrayList<OmEmployee>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				if (jo.getString("no")== "" || jo.getString("no") == null) {
 					continue;
 				}
@@ -1245,8 +1227,6 @@ public class QuerySysSynchroGetOrg {
 					impl.setRealname(jo.getString("name"));
 					if (jo.getString("isAvailable") == "true" ) {
 						impl.setEmpstatus("on");
-					}else{
-						continue;
 					}
 					impl.setDegree("1");
 					String parent = jo.getString("parent");
@@ -1281,8 +1261,6 @@ public class QuerySysSynchroGetOrg {
 					impl.setRealname(jo.getString("name"));
 					if (jo.getString("isAvailable") == "true" ) {
 						impl.setEmpstatus("on");
-					}else{
-						continue;
 					}
 					impl.setDegree("1");
 					String parent = jo.getString("parent");
@@ -1410,9 +1388,6 @@ public class QuerySysSynchroGetOrg {
 			List<OmOrganization> listUpdate = new ArrayList<OmOrganization>();
 			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				OmOrganization impl = new OmOrganizationImpl();
 				String id = jo.getString("id");
 				String orgname = jo.getString("name");
@@ -1498,9 +1473,6 @@ public class QuerySysSynchroGetOrg {
 			List<OmOrganization> listUpdate = new ArrayList<OmOrganization>();
 			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				OmOrganization impl = new OmOrganizationImpl();
 				String id = jo.getString("id");
 				String orgname = jo.getString("name");
@@ -1589,9 +1561,6 @@ public class QuerySysSynchroGetOrg {
 			List<AcOperator> listUpdate = new ArrayList<AcOperator>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				if (jo.getString("no")== "" || jo.getString("no") == null) {
 					continue;
 				}
@@ -1678,9 +1647,6 @@ public class QuerySysSynchroGetOrg {
 			List<OmEmployee> listUpdate = new ArrayList<OmEmployee>();
  			for (int i = 0; i < array.size(); i++) {
 				JSONObject jo = array.getJSONObject(i);
-				if (jo.getString("isAvailable") == "false" ) {
-					continue;
-				}
 				if (jo.getString("no")== "" || jo.getString("no") == null) {
 					continue;
 				}

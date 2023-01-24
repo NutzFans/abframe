@@ -58,13 +58,16 @@
 			<div field="custtype" width="110" align="center" headerAlign="center" renderer="dictcusttype">供应商类型
 				<input name="criteria._expr[4].custtype" class="nui-dictcombobox" multiSelect="true"  dictTypeId="AME_SUPTYPE" property="filter" showNullItem="true" width="100%" onvaluechanged="search""/>
 			</div>
-			<div field="isqualified" width="110" align="center" headerAlign="center" renderer="dictstatus" >是否合格供应商
+			<div field="isqualified" width="110" align="center" headerAlign="center" renderer="dictstatus" >是否合格
 				<input name="criteria._expr[3].isqualified" property="filter" multiSelect="true" class="nui-dictcombobox" dictTypeId="MIS_YN" width="100%" showNullItem="true" onvaluechanged="search""/>
 				<input  property="editor" class="nui-dictcombobox" dictTypeId="MIS_YN" showNullItem="true" />
 			</div>
-			<div field="isgroupqualified" width="110" align="center" headerAlign="center" renderer="dictstatus" >是否合格集团供应商
+			<div field="isgroupqualified" width="110" align="center" headerAlign="center" renderer="dictstatus" >是否合格(集团)
 				<input name="criteria._expr[10].isgroupqualified" property="filter" multiSelect="true" class="nui-dictcombobox" dictTypeId="MIS_YN" width="100%" showNullItem="true" onvaluechanged="search""/>
 				<input  property="editor" class="nui-dictcombobox" dictTypeId="MIS_YN" showNullItem="true" />
+			</div>
+			<div field="effectiveEndTime" width="110" align="center" headerAlign="center" dateFormat="yyyy-MM-dd">合格有效期
+				<input name="effectiveEndTime" property="editor" class="nui-datepicker"  />
 			</div>
 			<div field="appraise" width="110" align="center" headerAlign="center" renderer="onAppraise">综合评价
 				<input name="criteria._expr[5].appraise" class="nui-dictcombobox" multiSelect="true" dictTypeId="ZH_APPRAISE" property="filter" showNullItem="true" width="100%" onvaluechanged="search""/>
@@ -77,6 +80,14 @@
 			<div field="misconduct" width="110" align="center" headerAlign="center" allowSort="true">不良行为
 				<input  name="criteria._expr[7].misconduct" property="filter" class="nui-textbox" style="width:100%;"onvaluechanged="search" />
 				<input  name="misconduct" property="editor" class="nui-textarea" style="width:100%;" />
+			</div>
+			<div field="blackList" width="90" align="center" headerAlign="center"  renderer="dictstatus" allowSort="true">黑名单
+				<input  name="criteria._expr[8].blackList" property="filter"  class="nui-dictcombobox" style="width:100%;" dictTypeId="ZH_YN" showNullItem="true"onvaluechanged="search" />
+				<input  name="blackList" property="editor" class="nui-dictcombobox" dictTypeId="ZH_YN"  style="width:100%;" />
+			</div>
+			<div field="greyList" width="90" align="center" headerAlign="center" renderer="dictstatus" allowSort="true">灰名单
+				<input  name="criteria._expr[9].greyList" property="filter"  class="nui-dictcombobox"style="width:100%;" dictTypeId="ZH_YN" showNullItem="true"onvaluechanged="search" />
+				<input  name="greyList" property="editor"class="nui-dictcombobox" dictTypeId="ZH_YN"  style="width:100%;" />
 			</div>
 			<div field="createDate"  align="center" headerAlign="center" dateFormat="yyyy-MM-dd"allowSort="true">创建时间
 			</div>
@@ -101,7 +112,7 @@
     	//按钮权限的控制
 	    getOpeatorButtonAuth("gys_delbtn,gys_addBtn,gys_saveBtn,gys_updateBtn,gys_exportExcel");
 		function dictstatus(e) {
-			return nui.getDictText('MIS_YN',e.value);//设置业务字典值
+			return nui.getDictText('ZH_QUALIFIED',e.value);//设置业务字典值
 		}
 		function dictcusttype(e) {
 			return nui.getDictText('AME_SUPTYPE',e.value);//设置业务字典值
@@ -207,12 +218,12 @@
         }
         
         function onExportExcel(){
-			var data = form.getData();
-			exportExcel({
-				url: "com.primeton.eos.ame_pur.PurOtherSettlePay.exportPurSupplier.biz.ext",
-				fileName:"供应商记录",
-				data:data
-			})
+				var data = form.getData();
+				exportExcel({
+					url: "com.primeton.eos.ame_pur.PurOtherSettlePay.exportPurSupplier.biz.ext",
+					fileName:"供应商记录",
+					data:data
+				})
         }
         
         function getDetail(e){

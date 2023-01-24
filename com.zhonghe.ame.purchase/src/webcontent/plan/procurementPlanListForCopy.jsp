@@ -48,7 +48,6 @@
 			 <div property="columns">
 	       		<div  type="checkcolumn"></div>
 		       	<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-		       	
 	        	<div field="putunderName"  align="center" headerAlign="center" allowSort="true">归口部门</div>
 	        	<div field="name" width="160" align="center" headerAlign="center" allowSort="true">采购计划名称</div>
 	            <div field="code" width="120" align="center" headerAlign="center" allowSort="true">采购计划编号</div>

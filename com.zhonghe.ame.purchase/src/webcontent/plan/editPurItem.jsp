@@ -69,10 +69,11 @@
 							归口部门：
 						</td>
 						<td>
-							<input name="orgId" id="orgId" style="width:80%" class="nui-combobox" required="true"
+							<input id="orgId" name="orgId" class="nui-dictcombobox"  dictTypeId="ZH_PUTUNDER" required="true" style="width:80%;"/>
+							<!-- <input name="orgId" id="orgId" style="width:80%" class="nui-combobox" required="true"
 								url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext" filterType="like"
 								textField="orgname" valueField="orgid" dataField="allorgs" valueFromSelect="true"
-								allowInput="true" />
+								allowInput="true" /> -->
 						</td>
 					</tr>
 				</table>

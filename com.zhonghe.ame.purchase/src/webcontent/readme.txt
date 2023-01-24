@@ -1,5 +1,5 @@
-采购计划：
-/purchase/plan/purPlanList.jsp
+采购计划purchasePlan：
+purchase/purchasePlan/purchasePlanList.jsp
 /purchase/plan/addPurchasePlan.jsp 
 purPlanDetailById 查看页面
 

@@ -16,7 +16,7 @@
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 98%;">
 				<legend>采购验收单信息</legend>
 				<form id="form1" method="post">
-					
+					<input name="files" id="fileids" class="nui-hidden"/>
 					<input class="nui-hidden" name="id"/>
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;">
@@ -53,11 +53,11 @@
 									<td><input name="totalAmount"  id="totalAmount" class="nui-textbox" style="width: 100%" /></td>
 							</tr>
 							<tr>
-			              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
-			                    <td colspan="3">    
-			                        <input style="width:100%;height: 70px;" name="remark" id="remark"  class="nui-textarea"/>
-			                    </td>
-			              	</tr>
+              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
+                    <td colspan="3">    
+                        <input style="width:100%;height: 70px;" name="remark" id="remark"  class="nui-textarea"/>
+                    </td>
+              	</tr>
 						</table>
 					</div>
 				</form>
@@ -72,31 +72,34 @@
 			            <div property="columns">
 			            	<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 			                <div field="goodsName"  width="130" align="center" headerAlign="center" vtype="required">货物名称
-									<input id="goodsName"  onbuttonclick="chosePurItem" class="nui-buttonedit" name="goodsName" property="editor" />
+												<input id="goodsName"  onbuttonclick="chosePurItem" width="100%" class="nui-buttonedit" name="goodsName" property="editor" />
 			                </div>
 			               <div  field="model" width="130" align="center" headerAlign="center" renderer="dictstatus">型号规格
-									<input id="model" name="model" property="editor"  class="nui-textbox"   />
+									<input id="model" name="model" property="editor" width="100%" class="nui-textbox"   />
 			                </div>
 			                <div  field="supId" displayField="custname" width="130" align="center" headerAlign="center">供应商名称
-									<input id="supId" name="supId" property="editor" allowInput="false" onbuttonclick="onButtonEdit1" class="nui-buttonedit"  />
+									<input id="supId" name="supId" property="editor" width="100%" allowInput="false" onbuttonclick="onButtonEdit1" class="nui-buttonedit"  />
 			                </div>
 			                <div  field="number"  width="130" align="center" headerAlign="center" vtype="required">数量
 									<input id="number" name="number" maxValue="999999999"property="editor"  class="nui-spinner" />
 			                </div>
 			                <div   field="singlePrice" width="130" align="center" headerAlign="center" vtype="required">单价(万元)
-									<input id="singlePrice" name="singlePrice" property="editor"  class="nui-spinner" />
+									<input id="singlePrice" name="singlePrice" property="editor" width="100%" class="nui-spinner" />
 			                </div>
 			                <div   field="totalPriceDetail" width="130" align="center" headerAlign="center"  >总价(万元)
 								<!-- 	<input id="totalPriceDetail" name="totalPriceDetail" property="editor"  class="nui-spinner"  /> -->
 			                </div>
 			                 <div   field="qualitySituation" width="130" align="center" headerAlign="center"  >质量情况
-									<input id="qualitySituation" name="qualitySituation" property="editor"  class="nui-textbox"  />
+									<input id="qualitySituation" name="qualitySituation" property="editor" width="100%" class="nui-textbox"  />
 			                </div>
 			            </div>
 			        </div>
 		</div>
 		</fieldset>
-			
+		<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
+			<legend>发票（若仅有发票）、合同中约定的结算单或验收报告等</legend>
+			<jsp:include page="/ame_common/addFiles.jsp"/>
+		</fieldset>
 		</div>
 	</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
@@ -236,59 +239,30 @@
 	    	}
 	 		nui.get("totalPrice").setValue(b)
 		}
-	/* 	
-		function changeValue(e){
-			var record = e.record;
-			if(e.field=="number"||e.field=="singlePrice"){
-				if(record.number!=null && record.singlePrice!=null){
-					var totalPrice1 = record.number * record.singlePrice;
-					 grid_traveldetail.updateRow(e.row,{
-						totalPriceDetail:totalPrice1
-                  	}); 
-				}else{
-					 grid_traveldetail.updateRow(e.row,{
-						totalPriceDetail:""
-                  	}); 
-				}
-			}
-			
-			var data = grid_traveldetail.getData();
-			var totalPrice=0;
-		    for(var i = 0 ; i<data.length; i++){
-				if(data[i].totalPriceDetail != undefined){
-						console.log(data[i].totalPriceDetail);
-						totalPrice=totalPrice+data[i].totalPriceDetail;
-						nui.get("totalPrice").setValue(totalPrice);
-				}
-				
-			}          	
-		} */
 		
-        function onButtonEdit1(e) {
-            var btnEdit = this;
-            mini.open({
-                url: "/default/purchase/packagemethod/zhPurSup.jsp",
-                title: "供应商列表",
-                width: '73%',
-                height: '75%',
-                ondestroy: function (action) {
-                    if (action == "ok") {
-                   
-                        var iframe = this.getIFrameEl();
-                        var data = iframe.contentWindow.GetData();
-                        data = nui.clone(data);    //必须
-                        if (data) {
-                            btnEdit.setValue(data.custid);
-                        	btnEdit.setText(data.custname);
-                        	
-                        	/* nui.get("proAppOrgId").setValue(data.orgid);
-                        	nui.get("proAppOrgId").setText(data.orgname); */
-                        }
+    function onButtonEdit1(e) {
+        var btnEdit = this;
+        mini.open({
+            url: "/default/purchase/packagemethod/zhPurSup.jsp",
+            title: "供应商列表",
+            width: '73%',
+            height: '75%',
+            ondestroy: function (action) {
+                if (action == "ok") {
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.GetData();
+                    data = nui.clone(data);    //必须
+                    if (data) {
+                        btnEdit.setValue(data.custid);
+                    	btnEdit.setText(data.custname);
+                    	
+                    	/* nui.get("proAppOrgId").setValue(data.orgid);
+                    	nui.get("proAppOrgId").setText(data.orgname); */
                     }
                 }
-            });
-
-        }
+            }
+        });
+    }
         
 		
 		function addTicket(){
@@ -325,58 +299,144 @@
             });
         }
         
-    	function onOk(e){
-    	    type=e;
-    		var purVerify = form.getData(),purVerifyDetail = grid_traveldetail.getData();
+        
+        
+        
+    function onOk(e){
+    		type=e;
+			if(type==0){
+				info = "暂存";
+			}else if(type==1){
+				info = "提交";
+				var purVerify = form.getData(),purVerifyDetail = grid_traveldetail.getData();
     		purVerify.type = type;
     		if(!form.validate()||purVerifyDetail.length<1){
-				nui.alert("请检查表单和货物信息填写是否完整!");
-				return;
+					nui.alert("请检查表单和货物信息填写是否完整!");
+					return;
+				}
+				grid_traveldetail.validate();
+   			if (grid_traveldetail.isValid() == false) {
+            var error = grid_traveldetail.getCellErrors()[0];
+            grid_traveldetail.beginEditCell(error.record, error.column);
+            return;
+        }
+				var filePaths = document.getElementsByName("uploadfile").length;
+    		if(filePaths==0){
+    			showTips("'发票（若仅有发票）、合同中约定的结算单或验收报告'等附件不能为空","danger");
+    			return;
+    		}else{
+    			for(var j=0;j<filePaths;j++){
+			      var a=document.getElementsByName("remarkList")[j].value;
+				      if(a==null||a==""){
+				       showTips("估算表和支撑材料附件不可以为空","danger");
+				       	nui.get("saveReimbProcess").enable();
+								nui.get("creatReimbProcess").enable();	
+				       return;
+				      }
+			     }
+    		}
 			}
-			
-			grid_traveldetail.validate();
-       		if (grid_traveldetail.isValid() == false) {
-                var error = grid_traveldetail.getCellErrors()[0];
-                grid_traveldetail.beginEditCell(error.record, error.column);
-                return;
-            }
+			document.getElementById("fileCatalog").value="purVerify";
+			nui.confirm("确定"+info+"单据","系统提示",
+        function(action){
+        if(action=="ok"){
+    			form2.submit();
+				}
+			})
+    }    
+        
+	function SaveData(){
+			var purVerify = form.getData(),purVerifyDetail = grid_traveldetail.getData();
+			purVerify.type = type;
+			purVerify.judge = getJudge();
+			purVerify.files = nui.get("fileids").getValue();
 			var json = nui.encode({'purVerify':purVerify,'purVerifyDetail':purVerifyDetail});
-			
-			if(type==1){
-				info="是否提交？"
-			}else{
-				info="是否暂时保存？"
-			}
-			if(!confirm(info)){
-		        nui.get("saveReimb").enable();
-       		 	nui.get("creatReimbProcess").enable();
-				return;
-			}else{	
-		    	nui.ajax({
-		                url: "com.zhonghe.ame.purchase.purchaseVerify.addPurVerify.biz.ext",
-		                data: json,
-		                type: 'POST',
-		                cache: false,
-		                contentType: 'text/json',
-		                success: function (text) {
-		               
-		                if(text.result == "1"){
-		               		 nui.alert("提交成功",null,function(){
-		               		 window.CloseOwnerWindow("save");
-		               		 });
-		                }else{
-		                	nui.alert("提交失败",null,function(){
-		               		// window.CloseOwnerWindow("save");
-		               		 });
-		                }
-		                },
-		                error: function (jqXHR, textStatus, errorThrown) {
-		                    alert(jqXHR.responseText);
-		                }
-		            }); 
+    		ajaxCommon({
+            url: "com.zhonghe.ame.purchase.purchaseVerify.addPurVerify.biz.ext",
+            data: json,
+            contentType: 'text/json',
+            success: function (text) {
+                if(text.result == "1"){
+               		 showTips(info+"成功")
+               		 closeOk();
+                }else{
+     			  			showTips(info+"失败,请联系管理员","danger")
+               		 /* closeOk(); */
+                }
             }
+        });
+    	}
+        
+        
+// 		function onOk(e){
+// 	    	type=e;
+//     		var purVerify = form.getData(),purVerifyDetail = grid_traveldetail.getData();
+//     		purVerify.type = type;
+//     		if(!form.validate()||purVerifyDetail.length<1){
+// 				nui.alert("请检查表单和货物信息填写是否完整!");
+// 				return;
+// 			}
+			
+// 			grid_traveldetail.validate();
+//    		if (grid_traveldetail.isValid() == false) {
+//             var error = grid_traveldetail.getCellErrors()[0];
+//             grid_traveldetail.beginEditCell(error.record, error.column);
+//             return;
+//         }
+// 			var json = nui.encode({'purVerify':purVerify,'purVerifyDetail':purVerifyDetail});
+			
+// 			if(type==1){
+// 				info="是否提交？"
+				
+// 				var filePaths = document.getElementsByName("uploadfile").length;
+//     		if(filePaths==0){
+//     			showTips("发票（若仅有发票）、合同中约定的结算单或验收报告等","danger");
+//     			return;
+//     		}else{
+//     			for(var j=0;j<filePaths;j++){
+// 			      var a=document.getElementsByName("remarkList")[j].value;
+// 				      if(a==null||a==""){
+// 				       showTips("估算表和支撑材料附件不可以为空","danger");
+// 				       	nui.get("saveReimbProcess").enable();
+// 								nui.get("creatReimbProcess").enable();	
+// 				       return;
+// 				      }
+// 			     }
+//     		}
+    		
+// 			}else{
+// 				info="是否暂时保存？"
+// 			}
+// 			if(!confirm(info)){
+// 		        nui.get("saveReimb").enable();
+//        		 	nui.get("creatReimbProcess").enable();
+// 				return;
+// 			}else{	
+// 		    	nui.ajax({
+// 		                url: "com.zhonghe.ame.purchase.purchaseVerify.addPurVerify.biz.ext",
+// 		                data: json,
+// 		                type: 'POST',
+// 		                cache: false,
+// 		                contentType: 'text/json',
+// 		                success: function (text) {
+		               
+// 		                if(text.result == "1"){
+// 		               		 nui.alert("提交成功",null,function(){
+// 		               		 window.CloseOwnerWindow("save");
+// 		               		 });
+// 		                }else{
+// 		                	nui.alert("提交失败",null,function(){
+// 		               		// window.CloseOwnerWindow("save");
+// 		               		 });
+// 		                }
+// 		                },
+// 		                error: function (jqXHR, textStatus, errorThrown) {
+// 		                    alert(jqXHR.responseText);
+// 		                }
+// 		            }); 
+//             }
 		  	
-	    }
+// 	    }
         function onButtonEdit(e) {
             var btnEdit = this;
             mini.open({

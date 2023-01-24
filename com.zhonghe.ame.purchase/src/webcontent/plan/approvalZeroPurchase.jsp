@@ -3,74 +3,62 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-    <title>新增采购计划</title>
+    <title>零星采购审批信息</title>
 </head>
 <body>
 <%long workitemid = (Long)request.getAttribute("workItemID");%>
-    	<div class="nui-fit" >
-		<div class="mini-panel" title="" style="width: 100%;">
-			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 100%;">
-				<legend>采购计划信息</legend>
+	<div class="nui-fit" >
+			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
+				<legend>零星采购审批信息</legend>
 				<form id="form1" method="post">
 					<div style="padding: 5px; margin-left:5%;">
-				<table style="table-layout: fixed;" id="table_file">
-            	
-            	<tr>
-            		<td width="120px" class="form_label" align="right">零星采购名称：</td>
-	                <td >
-	                    <input id="purchaseName" name="purchaseName" class="nui-textbox" required="true" style="width: 200px" readonly="readonly"/>
-	                </td>
-	                <td class="form_label" align="right">部门负责人：</td>
-					<td >
-						<input name="manager" id="manager"  class="nui-buttonedit" 
-							onbuttonclick="selectManager" style="width: 200px" required="true"/>
-						<input name="managerName" id="managerName"  class="nui-hidden"/>
-							
-					</td>
-	                <td class="form_label leader" align="right" style="display:none">分管领导：</td>
-	                <td >
-	                    <input name="leader" id="leader"  class="nui-buttonedit leader"  
-							onbuttonclick="selectLeader" style="width: 200px;display:none" required="true"/>
-						<input name="leaderName" id="leaderName"  class="nui-hidden" />
-	                </td>
-            	</tr>
-            	<tr>
-            		<td  width="120px" class="form_label" align="right">编号：</td>
-	                <td >
-	                    <input id="purchaseCode" name="purchaseCode" class="nui-textbox" emptyText="系统自动生成" readonly="readonly"style="width: 200px"/>
-	                </td>
-	                <td class="form_label" align="right">总金额(万元)：</td>
-	                <td >
-						<input name="totalAmount" id="totalAmount"  style="width: 200px" class="nui-textbox" readonly="readonly"/>
-	                </td>
-	                <td width="100px" class="form_label" align="right">采购单位：</td>
-                    <td >
-                    	<input name="orgId" id="orgId" class="nui-combobox" required="true" 
-								url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext"
-								filterType="like" textField="orgname" valueField="orgid" value="<%=userOrgId %>"
-								dataField="allorgs" valueFromSelect="true" allowInput="true" style="width:240px;" readonly="readonly" />    
-                    </td>
-                  
-            	</tr>
-            	<tr>
-        		   <td class="form_label selectReportUser" align="right" style="display:none">采购备案人员：</td>
-	                <td >
-	                    <input name="reportUser" id="reportUser"  class="nui-buttonedit selectReportUser"  
-							onbuttonclick="selectReportUser" style="width: 200px;display:none" required="true"/>
-						<input name="reportUserName" id="reportUserName"  class="nui-hidden" />
-	                </td>
-            	</tr>
-            	<tr>
-            		<td class="form_label" align="right">申请原因：</td>
-	                 <td  colspan="7">    
-                        <input style="width:100%;height: 40px;" name="applyReason" class="nui-textarea" id="applyReason"  required="true"/>
-                    </td>
-            	</tr>
-            </table>
+				<table style="table-layout: fixed;" id="table_file" width="60%">
+							<tr>
+								<td align="right" style="width:140px">零星采购名称：</td>
+								<td colspan="4">
+									<input name="purchaseName" id="purchaseName" class="nui-textbox"
+										required="true" style="width: 100%" required="true" />
+								</td>
+								<td width="120px" class="form_label" align="right">采购单位：</td>
+								<td colspan="2">
+									<input name="orgname" id="orgname" class="nui-textbox" required="true"  style="width:100%;" readonly="readonly" />
+											</td>
+										</tr>
+										<tr>
+											<td align="right" style="width: 140px">合同名称<span
+										style="color: red;">(若有)</span>：</td>
+								<td colspan="4">
+									<input name="contract" id="contract" class="nui-textbox"
+										style="width: 100%;" />
+								</td>
+								<td width="120px" class="form_label" align="right">总金额(万元)：</td>
+								<td colspan="2">
+									<input name="totalAmount" id="totalAmount" style="width: 100%"
+										class="nui-textbox" readonly="readonly" />
+								</td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 140px">供方/乙方/承包人全称：</td>
+								<td colspan="4">
+									<input name="contractor" id="contractor" class="nui-textbox"
+										style="width: 100%;" />
+								</td>
+								<td align="right" style="width:100px">预计采购时间：</td>
+								<td colspan="2">
+									<input name="purchaseDate" id="purchaseDate" class="nui-datepicker"
+										style="width: 100%" required="true" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_label" align="right">申请原因：</td>
+								<td colspan="7">
+									<input style="width:100%;height: 40px;" name="applyReason"
+										class="nui-textarea" id="remark" required="true" />
+								</td>
+							</tr>
+						</table>
         </div>
-        </form>
-        
-     <fieldset  style="height:100%; border:solid 1px #aaa;padding:3px;">
+    	</form>
      <div class="fieldset-body"  style="width:100%; height:100%; margin: 0px auto">
 	    	<div id="grid_traveldetail" class="nui-datagrid" style="width: 80%;height: auto;" allowCellSelect="true" 
 	    		showPager="false" allowCellEdit="false" multiSelect="true" dataField="purZeroItem" 
@@ -100,28 +88,17 @@
 	            </div>
 	        </div>
 		</div>
-			</fieldset>
-				<div style="visibility: hidden;display: none;">	
-					<jsp:include page="/ame_common/inputFile.jsp"/>
-				</div>
-				<jsp:include page="/ame_common/misOpinion.jsp"/>
-        </fieldset>
-        
-        
-   
-
+<!-- 				<div style="visibility: hidden;display: none;">	 -->
+<%-- 					<jsp:include page="/ame_common/inputFile.jsp"/> --%>
+<!-- 				</div> -->
+		<jsp:include page="/ame_common/misOpinion.jsp"/>
+	</fieldset>
 	</div>
-</div>
-
 	<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">     
 		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px;margin-right: 20px;">加签</a>          
-	    <a class="nui-button" onclick="submit" style="width:60px;margin-right:20px;">提交</a>       
-	    <a class="nui-button" onclick="onCancel" style="width:60px;">关闭</a>
+    <a class="nui-button" onclick="submit" style="width:60px;margin-right:20px;">提交</a>       
+    <a class="nui-button" onclick="onCancel" style="width:60px;">关闭</a>
 	</div>  
-   
-
-      
-
 <script type="text/javascript">
 	    nui.parse();
 	    //var updateURL = "com.primeton.mis.contract.contract.updateContract.biz.ext";
@@ -139,50 +116,24 @@
 				    type: 'POST',
 			        data: json,
 			        success: function (o) {
-						 form.setData(o.purZero);
-						 form.setEnabled(false);
-						 if(!!o.purZero.leader){
-			        		 $(".leader").css("display","");
-			        	}
-			       	  	 nui.get("orgId").setText(o.purZero.orgname);
-			       	  	 nui.get("leader").setText(o.purZero.leaderName);
-			       	  	 nui.get("manager").setText(o.purZero.managerName);
-			       		 var grid = nui.get("datagrid1");
-			       		 
-						 grid.load({processInstID:o.purZero.processid});
-						 grid.sortBy("time", "desc");
-						 //初始化处理意见
-						 initMisOpinion({auditstatus:"1"});
-						 nui.get("backTo").setData(o.seal.backList);
-						 var jsonData = {"zeroId":o.purZero.id}
-						 
-			       		 grid_traveldetail.load(jsonData);
+							 form.setData(o.purZero);
+							 form.setEnabled(false);
+		       		 var grid = nui.get("datagrid1");
+							 grid.load({processInstID:o.purZero.processid});
+							 grid.sortBy("time", "desc");
+							 //初始化处理意见
+							 initMisOpinion({auditstatus:"1"});
+							 nui.get("backTo").setData(o.seal.backList);
+							 var jsonData = {"zeroId":o.purZero.id}
+		       		 grid_traveldetail.load(jsonData);
 			       		 
 			        },
 				    error: function (jqXHR, textStatus, errorThrown) {
 				        alert(jqXHR.responseText);
 				    }
 			    }); 
-	   		
-	   	
 	   	}
 	   	
-	   	
-	   	  	function submit(){
-	    	var auditstatus = nui.get("auditstatus").getValue();
-	    	console.log(auditstatus);
-	    	if(auditstatus == "2"){	//终止流程
-	    		titleText = "终止";
-	    	}else if(auditstatus == "0"){	//退回流程
-	    		if(!nui.get("backTo").getValue()){
-	    			nui.alert("退回环节不能为空！");
-	    			return;
-	    		}
-	    		titleText = "退回";
-	    	}else if(auditstatus == "1"){	//提交流程
-	    		titleText = "提交";
-	    	}
-    }
     //经办人查找
     	function countersign(){
         	selectOmEmployee();
@@ -220,7 +171,7 @@
                         	}
                         	users = users+"】";
                         	titleText ="增加审批人员"+ users +"并提交";
-		                    form2.submit();
+		                    		saveData();
 	                       }
 	                    }
 	
@@ -242,13 +193,9 @@
 	    	}else if(auditstatus == "1"){	//提交流程
 	    		titleText = "提交";
 	    	}
-	    	form2.submit();
-    	}
-	   	// 提交 
-	    function SaveData(){
 	    	saveData();
-	    }
-	   function saveData(json){
+    	}
+	   function saveData(){
 			nui.confirm("确定" + titleText + "流程吗？", "操作提示",function (action) {            
 	            if (action == "ok") {
 					var misOpinion = opioionform.getData().misOpinion;//审核意见

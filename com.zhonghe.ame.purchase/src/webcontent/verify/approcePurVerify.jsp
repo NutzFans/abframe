@@ -93,8 +93,8 @@
 		</div>
 		</fieldset>
 			<jsp:include page="/ame_common/misOpinion.jsp"/>	
-			<div style="visibility: hidden;display: none;">	
-				<jsp:include page="/ame_common/inputFile.jsp"/>
+			<div >	
+				<jsp:include page="/ame_common/detailFile.jsp"/>
 			</div>
 		</div>
 	</div>
@@ -133,22 +133,29 @@
 					//设置审核意见基本信息
 					 nui.get("backTo").setData(o.backList);
 					nui.get("processinstid").setValue(o.workitem.processInstID);
-	               	nui.get("processinstname").setValue(o.workitem.processInstName);
-	               	nui.get("activitydefid").setValue(o.workitem.activityDefID);
-	               	nui.get("workitemname").setValue(o.workitem.workItemName);
+	       	nui.get("processinstname").setValue(o.workitem.processInstName);
+	       	nui.get("activitydefid").setValue(o.workitem.activityDefID);
+	       	nui.get("workitemname").setValue(o.workitem.workItemName);
 					nui.get("workitemid").setValue(<%=workItemID %>);
-	               	nui.get("isshow").setValue("1");
-	               	nui.get("auditstatus").setValue("4");
-	               	<!--document.getElementById("salesEdit").style.display="none";-->
-	               	nui.get("auditopinion").setValue("");
+	       	nui.get("isshow").setValue("1");
+	       	nui.get("auditstatus").setValue("4");
+	       	<!--document.getElementById("salesEdit").style.display="none";-->
+	       	nui.get("auditopinion").setValue("");
 	            	//查询审核意见
 					var grid = nui.get("datagrid1");
 					if(o.workitem.processInstID!=null||o.workitem.processInstID!=""){
 						grid.load({processInstID:o.workitem.processInstID});
 						grid.sortBy("time", "desc");
 					}
+					
+					var grid_0 = nui.get("grid_0");
+			 		grid_0.load({"groupid":"purVerify","relationid":o.data.id});
+					grid_0.sortBy("fileTime","desc");
+					
 						 //初始化处理意见
 						 initMisOpinion({auditstatus:"1"});
+						 nui.get("auditopinion").setValue("验收通过");
+						 
 					 grid_traveldetail.load({'id':nui.get("id").getValue()});	
 					
 				},
@@ -174,7 +181,8 @@
 	    		titleText = "提交";
 	    		
 	    	}
-	    	form2.submit();
+// 	    	form2.submit();
+					SaveData();
     	}
     	function countersign(){
         	selectOmEmployee();

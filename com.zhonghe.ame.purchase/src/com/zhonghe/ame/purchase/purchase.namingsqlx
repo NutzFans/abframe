@@ -48,6 +48,13 @@ a.OPERATORID = b.OPERATORID and b.USERID = c.USERID and c.empid=d.empid and d.OR
 		WHERE ORGCODE in ($orgid$)
 	]]></select>
 	
+	<!--根据orgcodes查询分管领导 -->
+	<select id="queryRepleaderByOrgcodes" parameterClass="java.util.HashMap" resultMap="resultMap1">
+	    SELECT DISTINCT emp.USERID,emp.EMPNAME,'person' as typeCode from OM_ORGANIZATION org
+		left join OM_EMPLOYEE emp on org.REPLEADER=emp.USERID
+		WHERE ORGCODE in ($orgids$)
+	</select>
+	
 	<select id="queryZhProjectApprovalDetailsById" parameterClass="java.util.HashMap" resultMap="resultMap5">
     <![CDATA[
 	    SELECT zpis.org_id FROM zh_project_approval_details  zpad
@@ -314,12 +321,14 @@ a.OPERATORID = b.OPERATORID and b.USERID = c.USERID and c.empid=d.empid and d.OR
 			t2.item_code xlCode,
  		 	t2.item_name xlName,
 			t.parent_id,
-			t1.*
+			t1.org_id,
+			t1.type
 		FROM
 			zh_purchase_items t
 		LEFT JOIN zh_purchase_items t1 ON t.parent_id = t1.id
 		LEFT JOIN zh_purchase_items t2 on t2.parent_id = t.id
-		WHERE  t1.org_id in ($orgid$) and t1.type = #purType#
+    	WHERE  t1.org_id in ($orgid$) and t1.type = #purType#
+    	ORDER BY t1.org_id	
     </select>
     <!-- 查询二级集采 -->
     <select id="queryItemsByOrgid2" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
@@ -338,6 +347,34 @@ a.OPERATORID = b.OPERATORID and b.USERID = c.USERID and c.empid=d.empid and d.OR
 		LEFT JOIN zh_purchase_items t2 on t2.parent_id = t.id
 		 where t.org_id in ($orgid$) and t.type = #purType#
     </select>
-    
-
+    <!-- 查询一级集采 -->
+	<select id="getItemsByOrgid1" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    	SELECT
+			t.item_code zlCode,
+			t.item_name zlName,
+			t1.item_code dlCode,
+			t1.item_name dlName,
+			t.parent_id,
+			t1.org_id,
+			t1.type
+		FROM
+			zh_purchase_items t
+		LEFT JOIN zh_purchase_items t1 ON t.parent_id = t1.id
+	 	WHERE  t1.org_id in ($orgid$) and t1.type = #purType#
+    </select>
+      <!-- 查询二级集采 -->
+    <select id="getItemsByOrgid2" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">
+    	SELECT
+			t.item_code zlCode,
+			t.item_name zlName,
+			t1.item_code dlCode,
+			t1.item_name dlName,
+			t.parent_id,
+			t1.org_id,
+			t1.type
+		FROM
+			zh_purchase_items t
+		LEFT JOIN zh_purchase_items t1 ON t.parent_id = t1.id
+	 	where t.org_id in ($orgid$) and t.type = #purType#
+    </select>
 </sqlMap>

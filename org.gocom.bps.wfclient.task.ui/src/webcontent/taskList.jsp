@@ -5,24 +5,29 @@
 <html>
 <head>
 	<title><%=I18nUtil.getMessage(request, "bps.wfclient.myTask.TList")%></title>
+	<style type="text/css">
+	    body{
+	        margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
+	    } 
+	</style>
 </head>
-<body style="width: 98%;"  class="body-font" > 
+<body class="body-font" > 
 	<div style="width:100%;">
-        <div class="nui-toolbar" style="border-bottom:0;padding:0px;">
-            <table style="width:100%;">
-            	<tr>
-                    <td style="width:20%;">
-                    	<% String taskType = request.getParameter("taskType");
-                    	   if(taskType.equals("self")){
-                    	 %>
-                       	我的待办任务列表
-                       	<%}else if(taskType.equals("finishedSelf")){ %>
-                       	我的已办任务列表
-                       	<%} %>
-                    </td>
-                </tr>
-             </table>           
-        </div>
+    <div class="nui-toolbar" style="border-bottom:0;padding:0px;">
+        <table style="width:100%;">
+        	<tr>
+                <td style="width:20%;">
+                	<% String taskType = request.getParameter("taskType");
+                	   if(taskType.equals("self")){
+                	 %>
+                   	我的待办任务列表
+                   	<%}else if(taskType.equals("finishedSelf")){ %>
+                   	我的已办任务列表
+                   	<%} %>
+                </td>
+            </tr>
+         </table>           
+    </div>
 	</div>
 	<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
 	    <table id="tableSearch" style="table-layout:fixed;" width="100%" height="72px">
@@ -37,12 +42,12 @@
 	                <div id="taskFromList" class="nui-checkboxlist" onitemclick="onItemClick" textField="text" valueField="id">
 	                </div>
 	            </td>
-				<td width="10%" align="right">业务目录:</td>
-				<td width="15%" align="left">
-					<input id="catalogName" class="nui-combobox" valueField="catalogId" textField="catalogName" multiSelect="true" showNullItem="true">
-					<input class="nui-hidden" name="criteria._expr[6]._property" value="catalogName">
-					<input class="nui-hidden" name="criteria._expr[6]._op" value="in">
-				</td>
+<!-- 				<td width="10%" align="right">业务目录:</td> -->
+						<td width="15%" align="left">
+							<input id="catalogName" class="nui-hidden"valueField="catalogId" textField="catalogName" multiSelect="true" showNullItem="true">
+							<input class="nui-hidden" name="criteria._expr[6]._property" value="catalogName">
+							<input class="nui-hidden" name="criteria._expr[6]._op" value="in">
+						</td>
 	        </tr>
 	        <tr>
 	            <td  width="10%" align="right" style="white-space:nowrap" id="a1">工作项名称：</td>
@@ -65,9 +70,7 @@
 	            <td align="left" width="15%" id="c2"> 
 	                <input class="nui-combobox" id="currentState" multiSelect="true" valueField="id" textField="text" showNullItem="true" data=[{"id":4,"text":"待领取"},{"id":8,"text":"挂起"},{"id":10,"text":"运行"},{"id":12,"text":"完成"},{"id":13,"text":"终止"}]>
 	            </td>
-	        </tr>
-	        <tr>
-	            <td align="center" valign="middle" colspan="8">  
+	            <td align="center" valign="middle" colspan="1">  
 	                <a class="nui-button grayBtn" iconCls="icon-search" onclick="doSearch()"><%=I18nUtil.getMessage(request, "bps.wfclient.common.Query")%></a>
 	                <a class="nui-button" id="export" iconCls="icon-download" onclick="doExport()">导出</a>
 	            </td>
@@ -89,7 +92,7 @@
 	        <div field="createTime" headerAlign="center" align="left" dateFormat="yyyy-MM-dd HH:mm:ss" width="90">任务启动时间</div> 
 	        <div name="endTime" field="endTime" headerAlign="center" align="left" dateFormat="yyyy-MM-dd HH:mm:ss" width="90">任务结束时间</div> 
 	        <div headerAlign="center" align="center" renderer="onTimeoutRenderer" width="30"><%=I18nUtil.getMessage(request, "bps.wfclient.myTask.IsTimeOut")%></div>    
-	        <div field="workItemDesc" headerAlign="center" align="left" width="100"  >工作项备注</div> 
+<!-- 	        <div field="workItemDesc" headerAlign="center" align="left" width="100"  >工作项备注</div>  -->
 	    </div>
 	</div>
 	
@@ -512,7 +515,7 @@
     	var url = contextPath + "/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+row.workItemID;
     	console.log(taskType);
     	var title = "<%=I18nUtil.getMessage(request, "bps.wfclient.myTask.WorkExecu")%>"+"-"+row.workItemName;
-    	var width=1100;
+    	var width="100%";
     	if (isShowDetail) {
     		url = contextPath + "/bps/wfclient/task/task.jsp";
 	    	title = "<%=I18nUtil.getMessage(request, "bps.wfclient.myTask.WorkDetail")%>"+"-"+row.workItemName;
@@ -527,7 +530,7 @@
 			url: url,
 			title: title,
 			width: width,
-			height: 600,
+			height: "100%",
 			enableDragProxy: false,
 			onload: function () {
 				var iframe = this.getIFrameEl();
@@ -570,7 +573,7 @@
 				            showModal: false,
 				            contentType: 'text/json',
 				            success: function (o) {
-				            	alert("改派成功！");
+				            	nui.alert("改派成功！");
 				            	taskListDataGridObj.reload();
 				            },
 				            error: function (jqXHR, textStatus, errorThrown) {

@@ -99,12 +99,13 @@
 						归口部门：
 					</td>
 					<td >
-						<input name="orgId" id="orgId" style="width:80%"
+						<input id="orgId" name="orgId" class="nui-dictcombobox"  dictTypeId="ZH_PUTUNDER" required="true"   style="width:80%;"/>
+						<!-- <input name="orgId" id="orgId" style="width:80%"
 									class="nui-combobox" required="true"
 									url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext"
 									filterType="like" textField="orgname" valueField="orgid"
 									dataField="allorgs" valueFromSelect="true" allowInput="true"
-									  />
+									  /> -->
 					</td>
 				</tr>
 			</table>
@@ -247,49 +248,6 @@
 		
 		nui.get("parentCode").setUrl("com.zhonghe.ame.purchase.purchaseItems.queryPurItem.biz.ext?grade="+(e.value-1)+"&type="+typeValue);
 	
-	}
-	
-	
-	//回车触发事件
-	function onKeyEnter(){
-		var data = document.getElementById("inputInfo").value;
-		var type = nui.get("type").getValue();
-		if(type=="1"){
-			type = "财务初审,财务审核";
-		}
-		if(event.keyCode ==13){  
-			if(data == "" || data == null){
-				nui.alert("请输入报销单。","提示",function(e){
-					$("#inputInfo").focus();
-				});
-				return false;
-			}
-			var json = {expno:data,type:type};
-		  	nui.ajax({
-				url: "com.primeton.eos.ame_fee.myExpenseReimbursement.queryFinceVerfiyAuth.biz.ext",
-				type: "post",
-				data: json,
-				contentType: "text/json",
-				success: function (o){
-					if(o.result == 2){
-						nui.alert("你没有该报销单的处理权限。","提示",function(e){
-							$("#inputInfo").focus();
-						});
-					}else if(o.result == 0){
-						workItemID = o.workItemId;
-						var src = "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+workItemID;
-						var h = $("#reiInfo").height();
-						h = h+"px";
-						$("#ifrmid").attr("src",src).attr("height",h);
-						$("#inputInfo").attr("disabled",true);
-					}else{
-						nui.alert("没有该报销单。","提示",function(e){
-							$("#inputInfo").focus();
-						});
-					}
-				}
-			});
-	  	} 
 	}
 	
 	//重新刷新页面

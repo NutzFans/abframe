@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:Primeton -->
+<sqlMap>
+    <select id="selectSupplier" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+		SELECT
+			* 
+		FROM
+			PUR_SUPPLIER 
+		WHERE
+			isgroupqualified != '3' 
+			OR isqualified != '3' 
+			AND effective_End_Time IS NOT NULL
+		]]>
+	</select>
+	
+	 <!-- 变更采购计划状态 -->
+    <update id="updateSupplierIsqualified" parameterClass="java.util.HashMap">
+     <![CDATA[
+		UPDATE PUR_SUPPLIER set isqualified='3',isgroupqualified='3' WHERE
+		effective_End_Time < CONVERT(VARCHAR (8), GETDATE(), 112) 
+		AND effective_End_Time IS NOT NULL
+	]]>
+    </update>
+</sqlMap>

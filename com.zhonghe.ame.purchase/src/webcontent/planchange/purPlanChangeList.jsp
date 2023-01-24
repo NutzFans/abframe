@@ -64,14 +64,14 @@
 	    <div id="datagrid1"  sizeList="[10,20,50,100]" showPager="true" dataField="data" 
 	    	sortMode="client"  pageSize="20" showFilterRow="true"
 	    	class="nui-datagrid" style="width:100%;height:95%;" url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanList.biz.ext" 
-	    	multiSelect="true" allowSortColumn=true>
+	    	multiSelect="false" allowSortColumn=true>
 	        <div property="columns"> 
-	            <div name="temp123" type="checkcolumn"></div>    
+	            <div name="temp123" type="checkcolumn" width="30"></div>    
 	            <div type="indexcolumn" align="center" headerAlign="center">序号</div>
-	        	<div field="name" width="100" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">采购计划名称
+	        	<div field="name" width="140" align="left" headerAlign="center" allowSort="true" renderer="lookInfo">采购计划名称
 	        		<input name="criteria._expr[0].name"  property="filter" class="nui-textbox" style="width:100%;" onvaluechanged="search"/>
 	        	</div>
-	            <div field="needOrgName" width="100" align="center" headerAlign="center" allowSort="true" >采购单位
+	            <div field="needOrgName" width="100" align="left" headerAlign="center" allowSort="true" >采购单位
 	            	<input id="orgid2"  name="criteria._ref[0]._expr[0]._value" style="width:100%;" class="nui-combobox" property="filter"
 						textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" onvaluechanged="search"/>
 	            </div>
@@ -97,31 +97,8 @@
  			init();
  			
 			//查询季度数据字典
-			var filter1;//业务字典参数
-			function openEdit(e){
-				
-				var info=nui.getDictText('zh_purplan_open', 'chang_open');//季度字典信息
-				var arrayInfo=info.split(',');
-				var date = new Date();
-				var month=date .getMonth()+1;
-				for(var i=0;i<arrayInfo.length;i++){
-					if(month==arrayInfo[i]||filter1=='true'){
-						if(e=='1'){
-							add();
-						}
-						else{
-							editTaskMng();
-						}
-						return;
-					}else{
-						if(i==arrayInfo.length-1){
-							showTips("每季度第一个月开发计划变更","danger")
-						}
-						
-					}
-				}
-			}
-	 			
+			var changeDict;
+			
 			function init(){
     		//按钮权限的控制
 		    	getOpeatorButtonAuth("cgjh_add","cgjh_exportExcel");
@@ -163,10 +140,82 @@
 					type:'POST',
 					contentType:'text/json',
 					success:function(text){
-						filter1=text.dictEntry[0].filter1;
+						changeDict=text.dictEntry[0].filter1;
 					}
 				});
 			}
+			
+			function add(){
+				nui.open({
+					url: "/default/purchase/planchange/addPurchasePlanChange.jsp?judge="+getJudge(),
+					width: '100%',
+					height: '100%',
+					title:"采购计划变更新增",
+					onload: function () {
+						var iframe = this.getIFrameEl();
+					},
+					ondestroy: function (action){
+					search();
+					}
+				})
+			}
+			
+			
+			function openEdit(e){
+				var info=nui.getDictText('zh_purplan_open', 'chang_open');//季度字典信息
+				var arrayInfo=info.split(',');
+				var date = new Date();
+				var month=date .getMonth()+1;
+				for(var i=0;i<arrayInfo.length;i++){
+					if(month==arrayInfo[i]||changeDict=='true'){
+						if(e=='1'){
+							add();
+						}
+						else{
+							editTaskMng();
+						}
+						return;
+					}else{
+						if(i==arrayInfo.length-1){
+							showTips("每季度第一个月开发计划变更","danger")
+						}
+						
+					}
+				}
+			}
+	 		
+	 		//修改
+ 			function editTaskMng() {
+ 				var row = grid.getSelecteds();
+ 				if (row.length > 1) {
+ 					nui.alert("只能选中一条项目记录进行编辑");
+ 				} else {
+ 					var row = row[0];
+ 					if (row) {
+ 						if (row.status == 2) {
+ 							nui.open({
+ 								url: "/default/purchase/planchange/editPurPlanChange.jsp?processid=" + row.processid +
+ 									"&id=" + row.id,
+ 								width: '100%',
+ 								title: "采购计划变更",
+ 								height: '100%',
+ 								onload: function() {
+ 									var iframe = this.getIFrameEl();
+ 								},
+ 								ondestroy: function(action) {
+ 									if (action == "ok") {
+ 										grid.reload();
+ 									}
+ 								}
+ 							})
+ 						}else{
+ 							showTips("审批中无法修改");
+ 						}
+ 					} else {
+ 						nui.alert("请选中一条记录", "提示");
+ 					}
+ 				}
+ 			}	
 			
 			function search() {
 				var form = new nui.Form("#form1");
@@ -178,7 +227,6 @@
 		    		nui.get("tempCond2").setValue("1");
 		    	}
 				var data = form.getData(); //获取表单JS对象数据
-				clog(data)
 			  	grid.load(data); //datagrid加载数据
 			}
 			
@@ -258,38 +306,6 @@
  				search();
  			}
 
- 			//修改
- 			function editTaskMng() {
- 				var row = grid.getSelecteds();
- 				if (row.length > 1) {
- 					nui.alert("只能选中一条项目记录进行编辑");
- 				} else {
- 					var row = row[0];
- 					if (row) {
- 						if (row.status == 2) {
- 							nui.open({
- 								url: "/default/purchase/planchange/editPurPlanChange.jsp?processid=" + row.processid +
- 									"&id=" + row.id,
- 								width: '90%',
- 								title: "采购计划变更",
- 								height: '90%',
- 								onload: function() {
- 									var iframe = this.getIFrameEl();
- 								},
- 								ondestroy: function(action) {
- 									if (action == "ok") {
- 										grid.reload();
- 									}
- 								}
- 							})
- 						}else{
- 							showTips("审批中无法修改");
- 						}
- 					} else {
- 						nui.alert("请选中一条记录", "提示");
- 					}
- 				}
- 			}
 
  			function deleteInfo() {
  				if (!confirm("确定删除吗？")) {
@@ -353,20 +369,6 @@
 
  			}
 
-		 	function add(){
-				nui.open({
-					url: "/default/purchase/planchange/addPurchasePlanChange.jsp?judge="+getJudge(),
-					width: '80%',
-					height: '90%',
-					title:"采购计划变更新增",
-					onload: function () {
-						var iframe = this.getIFrameEl();
-					},
-					ondestroy: function (action){
-					search();
-					}
-				})
-			}
 			
 			function print() {
 				var row = grid.getSelected();

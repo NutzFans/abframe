@@ -1,184 +1,349 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page pageEncoding="UTF-8"%>
 <%@include file="/purchase/common/common.jsp"%>
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>采购计划信息</title>
-		<style type="text/css">
-			html,
-			body {
-				font-size: 14px;
-				padding: 0;
-				margin: 0;
-				border: 0;
-				height: 100%;
-				overflow: hidden;
-				width: 100%;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="nui-fit">
-			<div id="form1" method="post">
-				<fieldset style="border:solid 1px #aaa;padding:1px;width: 98%">
-            <legend>采购计划信息</legend>
-            <form id="form1" method="post">
-				<div style="padding: 5px;  ">
-					<table style="table-layout: fixed; width: 100%" id="table_file">
-		        	<tr>
-		        		<td colspan="1" class="form_label" align="right" style="width:120px;">年度采购计划名称：</td>
-		                <td colspan="5">
-		                	<input id="id" name="id" class="nui-hidden"readonly="readonly"/>
-		                    <input id="name" name="name" class="nui-textbox" style="width:100%;" readonly="readonly"/>
-		                </td>
-		        	</tr>
-		        	<tr>
-		                <td colspan="1" class="form_label" align="right" style="width:100px;">提报人姓名：</td>
-	                    <td colspan="1">
-	                        <input class="nui-textbox"  name="infomantUser" id="infomantUser" style="width:100%;" readonly="readonly"/>
-	                    </td>
-		                <td colspan="1" class="form_label" align="right" style="width:100px;">采购单位：</td>
-	                    <td colspan="3">
-	                    	<input id="needOrgName" name="needOrgName" class="nui-textbox" style="width:100%;" readonly="readonly"/>
-						</td>
-	            	</tr>
-	            	<tr>
-	               		<td class="form_label" align="right" style="width:120px;">计划年度：</td>
-		                <td colspan="1">
-		                    <input id="year" name="year" style="width:100%;" class="nui-textbox" style="width:100%;" readonly="readonly"//>   
-		                </td>
-	                    <td class="form_label" align="right" style="width:100px;">采购类型：</td>
-	                    <td colspan="1">    
-	                        <input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" readonly="readonly"  style="width:100%;"/>
-	                    </td>
-	                    <td class="form_label" align="right" style="width:120px;">计划总金额(万元)：</td>
-		                <td colspan="1">
-		                    <input id="budgetAmount" name="budgetAmount" class="nui-textbox" readonly="readonly" style="width:100%;" />
-		                </td>
-	                 </tr>
-	               	<tr>
-	               		<td class="form_label" align="right" style="width:120px;">物项归口部门：</td>
-		                <td colspan="3">
-		                    <input id="putunder" name="putunder" class="nui-dictcombobox"  dictTypeId="ZH_PUTUNDER"  multiSelect="true"  readonly="readonly" style="width:100%;" />
-		                </td>
-		                <td class="form_label" align="right" style="width:120px;">财务年度预算科目：</td>
-		                <td colspan="1">
-		                    <input id="SUBJECT" name="subject" class="nui-textbox"  style="width:100%;" readonly="readonly"/>
-		                </td>
-	               	</tr>
-	                 <!-- <tr>
-	              		<td class="form_label" style="width:120px;" align="right">归口部门下可采购物项：</td>
-	                    <td  colspan="6">    
-	                        <input style="width:100%;height:60px;" id="items" type="checkbox" class="nui-textarea" readonly="readonly"/>
-	                    </td>
-	              	</tr> -->
-	              	<tr>
-	              		<td class="form_label" style="width:120px;" align="right">备注：</td>
-	                    <td  colspan="6">    
-	                        <input style="width:100%;height:70px;" name="remark" class="nui-textarea" id="remark"/>
-	                    </td>
-	              	</tr>
-		        </table>
+<head>
+  <meta charset="utf-8">
+  <title>采购计划申请查看</title>
+  <meta name="renderer" content="webkit">
+  <script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
+	<style type="text/css">
+	 .layui-form-label {
+			width: 130px !important;
+			text-align: left !important;
+		}
+	.layui-input-block {
+    margin-left: 130px !important;
+    }
+    .layui-elem-quote{
+        font-weight: bold;
+		}
+		.layui-textarea{
+				height: 20px;
+				min-height: 20px!important;
+		}
+	.layui-table-cell {
+            font-size:14px;
+            padding:0 5px;
+            height:auto;
+            overflow:visible;
+            text-overflow:inherit;
+            white-space:normal;
+            word-break: break-all;
+        }
+	</style>
+</head>
+<body>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<div style="margin: 0 auto; width: 98%;height: auto;">
+  <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm" >
+  	<h2 id="name" align="center"></h2>
+  	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <blockquote class="layui-elem-quote" style="width: 97%">基本信息
+    <i id="status" class="layui-icon" style="font-size: 15px;float:right; color: #5FB878;">审批通过</i> 
+    </blockquote>
+	  <div class="layui-row">
+	    <div class="layui-col-xs12">
+		    <label class="layui-form-label" style="width: 120px">计划名称</label>
+		    <div class="layui-input-block" >
+		      <input type="text" name="name" disabled="disabled" class="layui-input">
 		    </div>
-    	</form>
-    	</fieldset>
-    	<fieldset style="border:solid 1px #aaa;padding:1px;width: 98%">
-	    	<legend>采购预算明细</legend>
-	    	<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%;height: auto;" allowCellSelect="true" 
-	    		showPager="false" allowCellEdit="false" multiSelect="true" dataField="purPlanItem"  
-	    		url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext">
-	            <div property="columns">
-	           		<div type="checkcolumn"></div>
-	           		<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-	           			<div field="code" width="110" align="center" headerAlign="center" >计划编号</div>
-	                <div field="purchaseFirstCode" width="110" align="center" headerAlign="center"  visible="false">物项大类编码</div>
-	                <div field=purchaseFirstName width="100" align="center" headerAlign="center"  >物项大类名称  </div> 
-	                <div field="purchaseTwoCode" width="110" align="center" headerAlign="center" visible="false">中类编码</div>
-	                <div field="purchaseTwoName" width="110" align="center" headerAlign="center"  >中类名称 </div> 
-	                <!-- <div field="purchaseThreeCode" width="110" align="center" headerAlign="center"  readOnly="true"  visible="false">小类编码</div>
-	                <div field="purchaseThreeName"  width="100" align="center" headerAlign="center"  readOnly="true" >小类名称</div> -->
-	                <div field="materialName"  width="110" align="center" headerAlign="center" vtype="required" headerStyle="color:red">采购物项名称 
-	                	<input property="editor" class="nui-textbox" name="materialName"  width="100%"  height="100%" required="true"/>
-	                </div>
-	                <div field="unit"  width="60" align="center" headerAlign="center" renderer="unitValue">单位
-	                	<input property="editor" class="nui-dictcombobox" width="100%" dictTypeId="ZH_UNIT"   name="unit"/>
-	                </div> 
-	                <div  field="onePrice" width="100"  align="center" headerAlign="center" vtype="required" headerStyle="color:red">单价(万元)
-										<input id="supplierName" name="onePrice" width="100%" property="editor"  class="nui-textbox" />
-	                </div>
-	                <div  field="number" width="100"  align="center" headerAlign="center"  vtype="required" headerStyle="color:red">数量
-										<input id="number" name="onePrice" property="editor" width="100%"  class="nui-textbox"/>
-	                </div>
-	                <div field="budgetAmount"  width="100" align="center" headerAlign="center" headerStyle="color:red" vtype="required">预算金额(万元)
-	                	<input property="editor" class="nui-spinner" minValue="0" width="100%" maxValue="999999999" name="budgetAmount" readonly="readonly" visible="true"/>
-	                </div>
-	                <div field="remark"  width="100" align="center" headerAlign="center"  >备注
-	                	<input property="editor" class="nui-textarea" name="remark" width="100%" />
-	                </div>
-	                <div field="centralizedDept"  width="100" align="center" headerAlign="center"  renderer="zhPutUnder">物项归口部门</div>
-	            </div>
-        	</div>
-         </fieldset>
-				<div id="detailFile"  activeIndex="0" style="width:100%;height:auto">
-					<jsp:include page="/ame_common/detailFile.jsp"/>
-				</div>
-			</div>
-		</div>
-		<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">
-			<a class="nui-button" onclick="onCancel" style="width:60px;">关闭</a>
-		</div>
-	</body>
-	<script type="text/javascript">
-		nui.parse();
-		var form = new nui.Form("#form1");
-		var grid_traveldetail = nui.get("grid_traveldetail");
-		var competBidPrice = nui.get("competBidPrice");
-		var id = <%=request.getParameter("id") %> ;
-		isViewDelete = false;
-		form.setEnabled(false)
-		var processid = <%=request.getParameter("processid") %> ;
-		if (processid == null) {
-			processid = <%=request.getParameter("processInstID") %> ;
-		}
-		init();
-		function init() {
-			var json = nui.encode({
-				"id": id
-			});
-			nui.ajax({
-				url: "com.zhonghe.ame.purchase.purchaseItems.queryPurPlanDetailById.biz.ext",
-				type: 'POST',
-				data: json,
-				success: function(o) {
-					console.log(o)
-					form.setData(o.purPlan)
-					var jsonData = {
-						"planId": o.purPlan.id
-					}
-					var grid_0 = nui.get("grid_0");
-        			grid_0.load({"groupid":"PURCHASEPLAN","relationid":o.purPlan.id});
-					grid_0.sortBy("fileTime","desc");
-					grid_traveldetail.load(jsonData);
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					alert(jqXHR.responseText);
+	    </div>
+	  </div>
+	  
+	  <div class="layui-row">
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">申请人</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="infomantUser" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">申请单位</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="needOrgName" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+	  <div class="layui-row">
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">申请时间</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="createdTime" disabled="disabled" placeholder="yyyy-MM-dd" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">财务预算科目</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="title" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+	  <div class="layui-row">
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">计划年度</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="year" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">采购类型</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="type" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+	  <div class="layui-row">
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">计划金额(万元)</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="budgetAmount" id="budgetAmount" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">变更后计划金额</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="newBudgetAmount" id="newBudgetAmount" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+<!-- 	  <div class="layui-row"> -->
+<!-- 	    <div class="layui-col-xs6"> -->
+<!-- 		    <label class="layui-form-label">立项金额(万元)</label> -->
+<!-- 		    <div class="layui-input-block"> -->
+<!-- 		      <input type="text" name="title" disabled="disabled" class="layui-input"> -->
+<!-- 		    </div> -->
+<!-- 	    </div> -->
+<!-- 	    <div class="layui-col-xs6"> -->
+<!-- 		    <label class="layui-form-label">计划执行情况</label> -->
+<!-- 		    <div class="layui-input-block"> -->
+<!-- 		      <input type="text" name="title" disabled="disabled" class="layui-input"> -->
+<!-- 		    </div> -->
+<!-- 	    </div> -->
+<!-- 	  </div> -->
+	  <div class="layui-row">
+	    <div class="layui-col-xs12">
+		    <label class="layui-form-label">备注</label>
+		    <div class="layui-input-block">
+		      <textarea autoHeight="true" name ="remark" disabled="disabled" class="layui-textarea"></textarea>
+		    </div>
+	    </div>
+	  </div>
+	  
+	  </fieldset>
+	   </form>
+	  <fieldset class="layui-elem-field layui-field-title" id="fieldsetFileGrid"  style="margin-top: 20px;">
+    	<blockquote class="layui-elem-quote">附件信息</blockquote>
+    	<table class="layui-hide" id="fileGrid"></table>
+ 	  </fieldset>
+	  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    	<blockquote class="layui-elem-quote">计划明细(单位万元)</blockquote>
+    	<table class="layui-hide" id="grid"></table>
+ 	  </fieldset>
+<!-- 	  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;"> -->
+<!--     	<blockquote class="layui-elem-quote">审批记录</blockquote> -->
+<!--     	<table class="layui-hide" id="approvalGrid"></table> -->
+<!--  	  </fieldset> -->
+</div>
+<script src="<%= request.getContextPath() %>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+<script>
+ layui.use([ 'jquery', 'layer', 'form', 'table'], function() {
+ 			var $ = layui.jquery;
+			var layer = layui.layer;
+			var form = layui.form;
+			var table = layui.table;
+ 			var processInstID;
+//  			var id = 916
+ 			id = <%= request.getParameter("id") %> ;
+ 			form.render();
+ 			getData();
+ 			function getData(){
+				$.ajax({
+				    url: "purchase/plan/com.zhonghe.ame.purchase.purchaseItems.queryPurPlanDetailById.biz.ext",
+				    data: {id: id},
+				    type: "POST",//或 “GET”
+				    dataType: "json",
+				    success: function(data) {
+				    	var formData = data.purPlan;
+				    	formData.createdTime = layui.util.toDateString(formData.createdTime,'yyyy-MM-dd')
+				    	if(formData.type =="1"){
+				    		formData.type = "一级集采"
+				    	}else if(formData.type == "2"){
+				    		formData.type = "二级集采"
+				    	}else if(formData.type =="3"){
+				    		formData.type = "自行采购"
+				    	}
+				    	form.val("dataFrm",formData);
+				    	processInstID= formData.processid;
+				    	 document.getElementById("name").innerHTML = formData.name;
+							//textarea 自适应高度
+							
+							var status = formData.status;
+							if(status==2){
+								 document.getElementById("status").innerHTML = "审批通过 ";
+							}else if(status==1 ||status==0){
+									document.getElementById("status").innerHTML = "审批中 ";
+									document.getElementById("status").setAttribute("style", "color:#1E9FFF;font-size: 15px;float:right;");
+							}else if(status==4){
+									document.getElementById("status").innerHTML = "已终止 ";
+									document.getElementById("status").setAttribute("style", "color:red;font-size: 15px;float:right;");
+							}
+				    	$(function(){
+					        $.fn.autoHeight = function(){    
+							        function autoHeight(elem){
+							            elem.style.height = 'auto';
+							            elem.scrollTop = 0; //防抖动
+							            elem.style.height = elem.scrollHeight +5+ 'px';
+							        }
+							        this.each(function(){
+							            autoHeight(this);
+							            $(this).on('keyup', function(){
+							                autoHeight(this);
+							            });
+							        });     
+							    }                
+							    $('textarea[autoHeight]').autoHeight();    
+							})
+				    	
+// 				    	table.render({
+// 						    elem: '#approvalGrid'
+// 						    ,url: 'com.zhonghe.ame.purchase.common.queryApproval.biz.ext'
+// 						    ,where: {"processInstID": processInstID,"sortField":"time","sortOrder":"desc"} //如果无需传递额外参数，可不加该参数
+// 								,request: {
+// 							    pageName: 'page.begin' //页码的参数名称，默认：page
+// 							    ,limitName: 'page.count' //每页数据量的参数名，默认：limit
+// 							  }
+// 				  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+// 						    ,cols: [[
+// 						      {field:'max_time', width:180, title: '处理时间',templet: "<div>{{layui.util.toDateString(d.max_time, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+// 						      ,{field:'workitemname',  title: '节点名称'}
+// 						      ,{field:'operatorname', width:100, title: '操作人'}
+// // 						      ,{field:'auditstatus', width:100, title: '操作人'}
+// 						      ,{field:'auditstatus',  title: '处理结果',templet: "<div>同意。</div>"}
+						      
+// 						    ]]
+// 						    ,parseData: function(res){ //res 即为原始返回的数据
+// 							    return {
+// 							      "code": "0", //解析接口状态
+// 							      "data": res.misOpinions //解析数据列表
+// 							    };
+// 							  }
+// 						  });
+						//data为 后台传回的数据 json 格式
+				    }
+				});
+ 			}
+  
+		var gridInt = table.render({
+		    elem: '#grid'
+		    ,url: 'com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext'
+		    ,where: {"planId": id} //如果无需传递额外参数，可不加该参数
+// 		    nui.encode({"id": id});
+				,cellMinWidth: 90
+  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+		    ,cols: [[
+		      {field:'code', title: '计划编号'}
+		      ,{field:'materialName', title: '物项名称'}
+		      ,{field:'purchaseFirstName', title: '物项大类名称'}
+		      ,{field:'purchaseTwoName', title: '中类名称'}
+		      ,{field:'newNumber', title: '数量'}
+		      ,{field:'oldBudgetAmount', title: '原预算金额'}
+		      ,{field:'newBudgetAmount', title: '变更后金额'}
+		      ,{field:'sumamount', title: '已立项金额'}  
+		      ,{field:'sumamount', title: '计划执行情况',templet: "<div>{{Implementation(d)}}</div>"}
+		      ,{field:'remark', width:300, title: '备注'}  
+// 		      ,{field:'budgetAmounts',width:100, title: '计划执行情况',templet: "<div>{{Implementation1(d)}}</div>"}
+		    ]]
+		    ,parseData: function(res){ //res 即为原始返回的数据
+			    return {
+			      "code": "0", //解析接口状态
+			      "data": res.purPlanItem //解析数据列表
+			    };
+			  }
+		  });
+		  
+		 var fileGridInt =  table.render({
+		    elem: '#fileGrid'
+		    ,url: 'com.primeton.eos.ame_common.file.getFiles.biz.ext'
+		    ,where: {"groupid": "PURCHASEPLAN","relationid":id,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
+  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+		    ,cols: [[
+// 		      {field:'fileId', title: '附件ID' }
+		      {field:'fileName',width:700, title: '附件名称' ,templet: "<div>{{getdetail(d)}}</div>"}
+		      ,{field:'fileSize', width:200, title: '文件大小',templet: "<div>{{getFileSize(d.fileSize)}}</div>"}
+		    ]]
+		    ,parseData: function(res){ //res 即为原始返回的数据
+			    return {
+			      "code": "0", //解析接口状态
+			      "data": res.files //解析数据列表
+			    };
+			  }
+			   ,done: function(res, curr, count){
+				   var data =  res.data
+				   if(data.length == 0){
+				   		var audio_enable = document.getElementById('fieldsetFileGrid');		//通过表格ID获取元素
+							audio_enable.style.display = 'none';		
+				   }
+				  }
+		  });
+		
+ });
+   
+		  //附件下载
+    function getdetail(e){
+    	return "<a href='javascript:void(0)' style ='color: #1b3fba;'  onclick='checkDetail("+e.fileId+");' title='点击查看'>" + e.fileName + "</a>";
+    }
+    
+     function checkDetail(e){
+//     	var grid = nui.get("grid_0");
+//     	var selectRow = grid.getSelected();
+		
+    	var url="com.primeton.components.web.fileupload.getfile.flow?fileId="+e;
+			window.open(url,"_self");
+    }
+    
+    function getFileSize(e){
+			var value = e;
+			var unit="KB";
+			if(value>0){
+				value = (value/1024).toFixed(3);
+				if(value >=1024){
+					value = (value/1024).toFixed(3);
+					unit = "MB";
 				}
-		    });
+			}
+			return value+unit;
+		} 
+		
+		function Implementation (d){
+			var num1 = parseFloat(d.sumamount);
+			var num2 = parseFloat(d.newBudgetAmount);
+		
+		 	var num = parseFloat(num1 / num2).toFixed(2);
+			num = num*100 +"%"
+			
+			return num
 		}
-		function unitValue(e) {
-			return nui.getDictText("ZH_UNIT", e.value);
+		
+		function Implementation1 (d){
+			var num1 = parseFloat(d.sumamount);
+			var num2 = parseFloat(d.budgetamounts);
+		 	var num = parseFloat(num1 / num2).toFixed(2);
+			num = num*100 +"%"
+			return num
 		}
-
-		function onCancel() {
-			CloseWindow("cancel");
-		}
-
-		function CloseWindow(action) {
-			if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
-			else window.close();
-		}
-		function zhPutUnder(e) {
-		return nui.getDictText("ZH_PUTUNDER", e.value);
-	}
-	</script>
+		 setWatermark('<%=userName %>')
+		  //打印按钮
+		function preview() {
+        document.getElementById('checkview').style.display="none";
+        /* window.document.body.innerHTML = document.documentElement.innerHTML; */
+        print();
+        document.getElementById('checkview').style.display="";
+    };
+</script>
+</body>
 </html>

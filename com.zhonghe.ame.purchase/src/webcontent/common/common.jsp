@@ -98,7 +98,11 @@
 	 	if(typeof(params.async) == "undefined") {
 	 		params.async = true;
 	 	}
-	 	var msgBoxId = nui.loading("正在处理...", "请稍后");
+	 	var msgBoxId = nui.mask({
+		            el: document.body,
+		            cls: 'mini-mask-loading',
+		            html: '处理中...'
+		        });
 		nui.ajax({
 	        url: params.url,
 	        data: params.data,
@@ -107,7 +111,8 @@
 	        cache: false,
 	        contentType: 'text/json',
 	        success: function (data) {
-	        	nui.hideMessageBox(msgBoxId);
+// 	        	nui.hideMessageBox(msgBoxId);
+	        	nui.unmask(document.body);
 	        	if(data.exception) {
 	        		clog(data.exception.message);
 	        		showTips(data.exception.message,"danger");
@@ -122,7 +127,8 @@
 				if(params.error) {
 	        		params.error(jqXHR, textStatus, errorThrown);
 	        	}
-	        	nui.hideMessageBox(msgBoxId);
+// 	        	nui.hideMessageBox(msgBoxId);
+						nui.unmask(document.body);
 	        }
 	    });
 	}
@@ -132,7 +138,7 @@
     	var btnEdit = this;
         nui.open({
             url: "<%=request.getContextPath() %>/machine/SelectEmployee.jsp",
-            title: "选择验收人",
+            title: "选择人员",
             width: 430,
             height: 400,
             ondestroy: function (action) {
@@ -153,7 +159,7 @@
     	var btnEdit = this;
         nui.open({
             url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
-            title: "选择验收人",
+            title: "选择人员",
             width: 430,
             height: 400,
             ondestroy: function (action) {
