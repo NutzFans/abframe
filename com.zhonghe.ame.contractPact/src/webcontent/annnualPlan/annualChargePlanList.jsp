@@ -14,73 +14,71 @@
 </style>
 </head>
 <body>
-	<div class="nui-panel" title="付款计划查询" style="width: 100%; height: 100%">
+	<div style="width: auto; height: 99%; padding: 5px; overflow: hidden;">
 		<div id="form1">
 			<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.annualPlan.annualPlan.AnnualChargePlanEntity" />
-			<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-				<table align="center" border="0" width="100%" class="form_table">
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+				<table>
 					<tr>
-						<td class="form_label" align="right" style="width: 3%">经办人:</td>
-						<td colspan="1" style="width: 7%">
-							<input name="critria._expr[1]._value" class="nui-textbox" style="width: 200px;" />
+						<td style="width: 60px; text-align: right;">年份:</td>
+						<td style="width: 105px">
+							<input name="critria._expr[7]._value" class="nui-textbox" style="width: 100px;" />
+							<input class="nui-hidden" name="critria._expr[7]._property" value="years" />
+							<input class="nui-hidden" name="critria._expr[7]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">经办人:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[1]._value" class="nui-textbox" style="width: 150px;" />
 							<input class="nui-hidden" name="critria._expr[1]._property" value="createUsername" />
 							<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
 						</td>
-
-						<td class="form_label" align="right" style="width: 3%">合同名称:</td>
-						<td colspan="1" style="width: 7%">
+						<td style="width: 60px; text-align: right;">合同名称:</td>
+						<td style="width: 205px">
 							<input name="critria._expr[2]._value" class="nui-textbox" style="width: 200px;" />
 							<input class="nui-hidden" name="critria._expr[2]._property" value="contractName" />
 							<input class="nui-hidden" name="critria._expr[2]._op" value="like" />
 						</td>
-						<td align="right" style="width: 3%">收款方：</td>
-						<td colspan="1" style="width: 7%">
-							<input class="nui-dictcombobox" name="critria._expr[3]._value" style="width: 200px;" dictTypeId="PAYER" nullItemText="全部" showNullItem="true" />
+						<td style="width: 60px; text-align: right;">收款方:</td>
+						<td style="width: 155px">
+							<input class="nui-dictcombobox" name="critria._expr[3]._value" style="width: 150px;" dictTypeId="PAYER" nullItemText="全部" showNullItem="true" />
 							<input class="nui-hidden" name="critria._expr[3]._property" value="payee" />
 							<input class="nui-hidden" name="critria._expr[3]._op" value="=" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 3%">专业类别：</td>
-						<td colspan="1" style="width: 7%">
-							<input class="nui-dictcombobox" name="critria._expr[4]._value" style="width: 200px;" dictTypeId="ZH_MAJOR_TYPE" nullItemText="全部" showNullItem="true" />
-							<input class="nui-hidden" name="critria._expr[4]._property" value="major" />
-							<input class="nui-hidden" name="critria._expr[4]._op" value="=" />
-						</td>
-						<td align="right" style="width: 3%">工程类别：</td>
-						<td colspan="1" style="width: 7%">
-							<input class="nui-dictcombobox" name="critria._expr[5]._value" style="width: 200px;" dictTypeId="ZH_PROJECT_TYPE" nullItemText="全部" showNullItem="true" />
-							<input class="nui-hidden" name="critria._expr[5]._property" value="projectType" />
-							<input class="nui-hidden" name="critria._expr[5]._op" value="=" />
-						</td>
-						<td align="right" style="width: 3%">集团内/外：</td>
-						<td colspan="1" style="width: 7%">
-							<input class="nui-dictcombobox" name="critria._expr[6]._value" style="width: 200px;" dictTypeId="ZH_GROUP" nullItemText="全部" showNullItem="true" />
+						<td style="width: 90px; text-align: right;">集团内/外:</td>
+						<td style="width: 105px">
+							<input class="nui-dictcombobox" name="critria._expr[6]._value" style="width: 100px;" dictTypeId="ZH_GROUP" nullItemText="全部" showNullItem="true" />
 							<input class="nui-hidden" name="critria._expr[6]._property" value="headquarterGroup" />
 							<input class="nui-hidden" name="critria._expr[6]._op" value="=" />
 						</td>
+						<td style="width: 60px; text-align: right;">专业类别:</td>
+						<td style="width: 155px">
+							<input class="nui-dictcombobox" name="critria._expr[4]._value" style="width: 150px;" dictTypeId="ZH_MAJOR_TYPE" nullItemText="全部" showNullItem="true" />
+							<input class="nui-hidden" name="critria._expr[4]._property" value="major" />
+							<input class="nui-hidden" name="critria._expr[4]._op" value="=" />
+						</td>
+						<td style="width: 60px; text-align: right;">工程类别:</td>
+						<td style="width: 205px">
+							<input class="nui-dictcombobox" name="critria._expr[5]._value" style="width: 200px;" dictTypeId="ZH_PROJECT_TYPE" nullItemText="全部" showNullItem="true" />
+							<input class="nui-hidden" name="critria._expr[5]._property" value="projectType" />
+							<input class="nui-hidden" name="critria._expr[5]._op" value="=" />
+						</td>						
+						<td colspan="2">
+							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
+							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+						</td>
 					</tr>
-
 				</table>
 			</div>
 		</div>
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-			<table style="width: 100%;">
-				<tr>
-					<td align="center">
-						<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
-						<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-					</td>
-				</tr>
-			</table>
-		</div>
+
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" sortMode="client" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.annualPlan.annualPlan.payPlanAll.biz.ext" multiSelect="true" showSummaryRow="true">
+				url="com.zhonghe.ame.annualPlan.annualPlan.payPlanAll.biz.ext" multiSelect="true" showSummaryRow="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
 				<div property="columns">
-					<div name="temp123" type="checkcolumn"></div>
+					<div type="checkcolumn"></div>
 					<div type="indexcolumn" width="50" align="center" headerAlign="center">序号</div>
-					<!-- <div type="expandcolumn" width="20"></div> -->
 					<div field="years" width="120" align="center" headerAlign="center" allowSort="true">年份</div>
 					<div field="createUsername" width="120" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="organizer" width="120" align="center" headerAlign="center" allowSort="true">承办部门</div>
@@ -120,7 +118,7 @@
 			String userName = user.getUserName();
 			String userId = user.getUserId();
 			String orgName = user.getUserOrgName();
-		%>
+		%>		
 		var type = <%=request.getParameter("type")%>;
 		var reve_grid = nui.get("reve_grid");
 		var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
@@ -130,14 +128,14 @@
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
-			grid.sortBy("createTime", "desc");
+			grid.sortBy("years", "desc");
 			grid.load(data); //datagrid加载数据
 		}
-
+		
 		function lookInfo(e) {
 			return "<a href='javascript:void(0)' onclick='doView();' title='点击查看'>" + e.value + "</a>";
 		}
-
+		
 		function doView() {
 			var row = grid.getSelected();
 			if (row) {
@@ -147,7 +145,7 @@
 				showTips("请选中一条记录");
 			}
 		}
-		
+
 		function printBtn() {
 			var row = grid.getSelected();
 			if (row) {
@@ -231,39 +229,39 @@
 		function dictGetType(e) {
 			return nui.getDictText('EXP_EXPTYPE', e.value);
 		}
-		
+
 		function dictGetStatus(e) {
 			return nui.getDictText('EXP_CHECKFLAG', e.value);
 		}
-		
+
 		function zhContractType(e) {
 			return nui.getDictText("ZH_CONTRACT_TYPE", e.value);
 		}
-		
+
 		function zhFlowType(e) {
 			return nui.getDictText("ZH_FLOW_TYPE", e.value);
 		}
-		
+
 		function zhLaborDispatchingFlag(e) {
 			return nui.getDictText("ZH_LABOR_DISPATCHING_FLAG", e.value);
 		}
-		
+
 		function payType(e) {
 			return nui.getDictText("payType", e.value);
 		}
-		
+
 		function PAYER(e) {
 			return nui.getDictText("PAYER", e.value);
 		}
-		
+
 		function MIS_MA_INVOICETYPE(e) {
 			return nui.getDictText("MIS_MA_INVOICETYPE", e.value);
 		}
-		
+
 		function CONTRACT_NATURE(e) {
 			return nui.getDictText("CONTRACT_NATURE", e.value);
 		}
-		
+
 		function ZH_CONTRACT_TYPE(e) {
 			return nui.getDictText("ZH_CONTRACT_TYPE", e.value);
 		}
@@ -271,15 +269,15 @@
 		function ZH_INVOICE_NAME_TYPE(e) {
 			return nui.getDictText("ZH_INVOICE_NAME_TYPE", e.value);
 		}
-		
+
 		function ZH_MAJOR_TYPE(e) {
 			return nui.getDictText("ZH_MAJOR_TYPE", e.value);
 		}
-		
+
 		function ZH_PROJECT_TYPE(e) {
 			return nui.getDictText("ZH_PROJECT_TYPE", e.value);
 		}
-		
+
 		function ZH_GROUP(e) {
 			return nui.getDictText("ZH_GROUP", e.value);
 		}
