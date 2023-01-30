@@ -11,9 +11,9 @@
 <title>付费合同签订申请</title>
 </head>
 <body>
-	<div class="nui-fit">
-		<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 99%;">
-			<legend>付费合同签订申请</legend>
+	<div class="nui-fit" style="padding: 5px">
+		<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>付费合同信息</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
@@ -144,16 +144,16 @@
 				</div>
 			</form>
 		</fieldset>
-		<fieldset id="field3" style="border: solid 1px #aaa; padding: 3px;">
+		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>未来年度付款计划</legend>
-			<div style="width: 95%;">
+			<div>
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table style="width: 100%;">
 						<tr>
 							<td style="width: 100%;">
 								<a class="nui-button" iconCls="icon-add" onclick="addRow()" plain="true">增加</a>
 								<a class="nui-button" iconCls="icon-remove" onclick="removeRow()" plain="true">删除</a>
-								<span class="separator" style="color: red">(总计应与合同金额一致)</span>
+								<span style="color: red">(总计应与合同金额一致)</span>
 							</td>
 						</tr>
 					</table>
@@ -223,7 +223,7 @@
 				</div>
 			</div>
 		</fieldset>
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
+		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>上传附件</legend>
 			<jsp:include page="/ame_common/inputFile.jsp" />
 		</fieldset>
@@ -247,7 +247,7 @@
 		</div>
 	</form>
 
-	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
+	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
@@ -261,7 +261,6 @@
 		
 		init();
 		
-
 		function init() {
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
@@ -272,7 +271,6 @@
 			nui.get("auditstatus").setValue(3);//1：通过,0：退回，2：终止流程，3:发起
 			document.getElementById("salesEdit").style.display = "none";
 		}
-		
 
 		function getOrgs() {
 			var a2 = [];
@@ -294,9 +292,24 @@
 			var scalingSum = nui.get("scalingSum").getValue();
 			//定义变量接受form表单数据
 			if (type == 1) {
+				var grid2 = nui.get("datagrid2");
+				var payPlans = grid2.getData();
 				title = "提交";
 				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
+					return;
+				}
+				if (payPlans.length > 0) {
+					var payPlansStr = JSON.stringify(payPlans);
+					var payPlansJson = JSON.parse(payPlansStr);
+					for(var i = 0; i < payPlansJson.length; i++){
+						if(payPlansJson[i].years == undefined){
+							showTips("请填写未来年度付款计划中的 '年份' 字段!", "danger");
+							return;
+						}
+					}
+				}else{
+					showTips("请填写未来年度付款计划!", "danger");
 					return;
 				}
 				if (budgetSum == "" || budgetSum == null) {
@@ -311,7 +324,6 @@
 						return;
 					}
 				}
-
 			}
 			nui.get("saveReimb").disable();
 			nui.get("creatReimbProcess").disable();
@@ -329,7 +341,7 @@
 			}
 			form2.submit();
 		}
-		
+
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var opioionform = new nui.Form("#opioionform");
@@ -338,7 +350,6 @@
 			var data = form.getData(), data_opioion = opioionform.getData();
 			data.type = type;
 			var info = "";
-
 			if (type == 1) {
 				info = "是否提交？"
 			} else {
@@ -363,16 +374,14 @@
 					"success" : function(data) {
 						if (data.result == "1") {
 							if (type == 1) {
-								nui.alert("付费合同提交成功", null, function() {
-									closeOk();
-								});
+								showTips("付费合同提交成功");
+								closeOk();
 							} else {
-								nui.alert("付费合同暂时保存成功", null, function() {
-									closeOk();
-								});
+								showTips("付费合同提交成功");
+								closeOk();
 							}
 						} else {
-							showTips("付费合同提交失败");
+							showTips("付费合同提交失败！", "danger");
 							nui.get("saveReimb").enable();
 							nui.get("creatReimbProcess").enable();
 						}
@@ -380,24 +389,22 @@
 				});
 			}
 		}
-		
+
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			mini.open({
 				url : "/default/contractPact/payContract/procurementPlanList.jsp",
 				title : "采购立项列表",
-				width : '90%',
-				height : '90%',
+				width : '80%',
+				height : '80%',
 				ondestroy : function(action) {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
 						if (data) {
-							console.log(data);
 							btnEdit.setValue(data.proAppCode);
 							btnEdit.setText(data.proAppCode);
-
 							var budgetSum = data.proAppApplyPrice * 10000;
 							abs = function(val) {
 								var str = (val).toFixed(2) + '';
@@ -415,7 +422,7 @@
 				}
 			});
 		}
-		
+
 		function onFgshqbm(e) {
 			nui.get("fDeptCountersignName").setValue(e.source.text)
 		}
@@ -423,15 +430,15 @@
 		function onZbhqbm(e) {
 			nui.get("zDeptCountersignName").setValue(e.source.text)
 		}
-		
+
 		function onFUseridsValueChanged() {
 			nui.get("fDeptCountersignName").setValue(nui.get("fDeptCountersignId").getText());
 		}
-		
+
 		function onZUseridsValueChanged() {
 			nui.get("zDeptCountersignName").setValue(nui.get("userLookup_multiple1").getText());
 		}
-		
+
 		function addRow() {
 			var newRow = {
 				name : "New Row"
@@ -467,14 +474,14 @@
 			var l = grid2.getData().length;
 			grid2.addRow(newRow, l + 1);
 		}
-		
+
 		function removeRow() {
 			var rows = grid2.getSelecteds();
 			if (rows.length > 0) {
 				grid2.removeRows(rows, true);
 			}
 		}
-		
+
 		function onvaluechanged() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
@@ -487,7 +494,7 @@
 			}
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
-		
+
 		function onvaluechanged1() {
 			var purchasePlan = nui.get("purchasePlan").getValue();
 			if (purchasePlan == null || purchasePlan == "") {
@@ -496,7 +503,7 @@
 				nui.get("scalingSum").setValue();
 			}
 		}
-		
+
 		grid2.on("cellendedit", function(e) {
 			var row = e.row;
 			var jan = row.jan * 1;
@@ -516,7 +523,7 @@
 				sum : sum
 			});
 		});
-		
+
 		grid2.on("cellbeginedit", function(e) {
 			if (e.field == "sum") {
 				e.cancel = "true";

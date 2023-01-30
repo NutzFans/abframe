@@ -306,7 +306,6 @@ html,body {
 		
 		function wh_edit() {
 			var row = grid.getSelecteds();
-			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条项目记录进行维护", "danger");
 				return;

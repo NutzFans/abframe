@@ -1,6 +1,6 @@
 <%@page pageEncoding="UTF-8"%>
 <%@include file="/common/common.jsp"%>
-<%@include file="/common/skins/skin0/component.jsp" %>
+<%@include file="/common/skins/skin0/component.jsp"%>
 <html>
 <head>
 <title>Title</title>
@@ -9,15 +9,16 @@
 </head>
 <body>
 	<form enctype="multipart/form-data" id="batchUpload" method="post" class="form-horizontal">
-		<div style="margin-left: 200px; margin-top: 15px">
-			<input class="nui-htmlfile" name="ecdPath" id="ecdPath" />
-			<input id="saveButton" class="nui-button" text="提交" style="margin-left: 20px" onclick="uploadBtn()" />
+		<div>
+			<input class="nui-htmlfile" name="ecdPath" id="ecdPath" style="width: 250px"/>
+			<input id="saveButton" class="nui-button" text="导入" style="margin-left: 10px" onclick="uploadBtn()" iconCls="icon-upload" />
 		</div>
 	</form>
-	
+
 	<script type="text/javascript">
 		nui.parse();
 		var contextPath = "<%=request.getContextPath()%>";
+		
 		function uploadBtn() {
 			nui.loading("保存中...");
 			var uploadEventFile = nui.get("ecdPath").getValue();
@@ -34,6 +35,6 @@
 
 		}
 	</script>
-	
+
 </body>
 </html>

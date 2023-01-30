@@ -11,160 +11,140 @@
 <title>付费合同管理</title>
 </head>
 <body>
-	<div id="form1">
-		<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.payContract.payContract.ZhPayContractEntity" />
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-			<table align="center" border="0" width="100%" class="form_table">
+	<div style="width: auto; height: 99%; padding: 5px; overflow: hidden;">
+		<div id="form1">
+			<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.payContract.payContract.ZhPayContractEntity" />
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+				<table>
+					<tr>
+						<td style="width: 60px; text-align: right;">申请人:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createname" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
+							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
+						</td>
+						<td style="width: 90px; text-align: right;">合同实施部门:</td>
+						<td style="width: 205px">
+							<input id="orgid2" name="critria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
+								style="width: 200px" />
+							<input class="nui-hidden" name="critria._expr[2]._property" value="implementOrg" />
+							<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="tempCond1" />
+							<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="tempCond2" />
+							<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
+							<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
+							<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
+							<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
+							<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
+						</td>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">签约方:</td>
+						<td style="width: 205px">
+							<input name="critria._expr[20]._value" class="nui-combobox" valueField="custname" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
+								textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 200px" />
+							<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryname" />
+							<input class="nui-hidden" name="critria._expr[20]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">申请日期:</td>
+						<td style="width: 280px">
+							<input class="nui-hidden" name="critria._expr[8]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[8]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[8]._property" value="createTime" />
+							<input class="nui-datepicker" name="critria._expr[8]._min" style="width: 125px" />
+							<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
+							<input class="nui-datepicker" name="critria._expr[8]._max" style="width: 125px" />
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 60px; text-align: right;">合同编号:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[10]._value" class="nui-textbox" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[10]._property" value="contractNo" />
+							<input class="nui-hidden" name="critria._expr[10]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">合同名称:</td>
+						<td style="width: 205px">
+							<input name="critria._expr[6]._value" class="nui-textbox" style="width: 200px" />
+							<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
+							<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">合同类型:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[9].contractType" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td colspan="2">
+							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
+							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+			<table style="width: 100%;">
 				<tr>
-					<td class="form_label" align="right">申请人:</td>
-					<td colspan="1">
-						<input name="critria._expr[1].createUsername" class="nui-textbox" style="width: 65%;" id="createname" />
-						<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
-						<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
-					</td>
-					<td class="form_label" align="right">合同实施部门:</td>
-					<td colspan="1">
-						<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 50%;" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" />
-						<input class="nui-hidden" name="critria._expr[2]._property" value="implementOrg" />
-						<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="tempCond1" />
-						<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="tempCond2" />
-						<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
-						<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
-						<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
-						<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
-						<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
-						<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
-					</td>
-					<td class="form_label" align="right">签约方:</td>
-					<td colspan="1">
-						<input name="critria._expr[20]._value" class="nui-textbox" style="width: 79%;" />
-						<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryname" />
-						<input class="nui-hidden" name="critria._expr[20]._op" value="like" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">标的规模:</td>
-					<td colspan="1">
-						<input name="critria._expr[11]._value" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[11]._property" value="projectSize" />
-						<input class="nui-hidden" name="critria._expr[11]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">合同金额（元）:</td>
-					<td colspan="1">
-						<input class="nui-textbox" name="critria._expr[7]._min" width="24%" />
-						~
-						<input class="nui-textbox" name="critria._expr[7]._max" width="24%" />
-						<input class="nui-hidden" name="critria._expr[7]._property" value="contractSum" />
-						<input class="nui-hidden" name="critria._expr[7]._op" value="between" />
-					</td>
-					<td class="form_label" align="right">合同名称:</td>
-					<td colspan="1">
-						<input name="critria._expr[6]._value" class="nui-textbox" style="width: 79%;" />
-						<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
-						<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">合同编号:</td>
-					<td colspan="1">
-						<input name="critria._expr[10]._value" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[10]._property" value="contractNo" />
-						<input class="nui-hidden" name="critria._expr[10]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">签订日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[5]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[5]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[5]._property" value="signingDate" />
-						<input class="nui-datepicker" name="critria._expr[5]._min" style="width: 50%;" />
-					</td>
-					<td class="form_label" align="right">审批状态:</td>
-					<td colspan="1">
-						<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 79%;" showNullItem="true" nullItemText="全部" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">合同类型:</td>
-					<td colspan="1">
-						<input name="critria._expr[9].contractType" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 65%;" showNullItem="true" nullItemText="全部" />
-					</td>
-					<td class="form_label" align="right">申请日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[8]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[8]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[8]._property" value="createTime" />
-						<input class="nui-datepicker" name="critria._expr[8]._min" style="width: 23%;" />
-						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[8]._max" style="width: 23%;" />
+					<td>
+						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="ffhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
+						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
+						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
+						<a class="nui-button" id="improt" iconCls="icon-upload" onclick="improt()">导入</a>
 					</td>
 				</tr>
 			</table>
 		</div>
-	</div>
 
-	<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-		<table style="width: 100%;">
-			<tr>
-				<td>
-					<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
-					<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
-					<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
-					<a class="nui-button" id="ffhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
-					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
-					<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
-					<a class="nui-button" id="improt" iconCls="icon-print" onclick="improt()">导入</a>
-				</td>
-				<td align="right">
-					<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
-					<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" showSummaryRow="true" pageSize="15" align="left" class="nui-datagrid" style="width: 100%; height: 100%;"
-			url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
-			<div property="columns">
-				<div type="checkcolumn"></div>
-				<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
-				<div field="createTime" headerAlign="center" allowSort="true" visible="false">创建时间</div>
-				<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
-				<div field="createUsername" width="60" headerAlign="center" allowSort="true">申请人</div>
-				<div field="implementOrgname" width="120" headerAlign="center" allowSort="true">合同实施部门</div>
-				<div field="contractNo" width="180" headerAlign="center" allowSort="true">合同编号</div>
-				<div field="contractName" width="250" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
-				<div field="appStatus" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
-				<div field="contractSum" width="120" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同金额（元）</div>
-				<div field="finalSum" width="140" headerAlign="center" allowSort="true">合同最终金额（元）</div>
-				<div field="noTaxSum" width="150" headerAlign="center" allowSort="true">合同不含税金额（元）</div>
-				<div field="payTax" width="120" headerAlign="center" allowSort="true">税额（元）</div>
-				<div field="contractBalance" width="120" headerAlign="center" allowSort="true" summaryType="sum">合同余额（元）</div>
-				<div field="executeStatus" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS">执行状态</div>
-				<div field="signatoryname" width="190" headerAlign="center" allowSort="true">签约方</div>
-				<div field="contractSubject" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">合同签约主体</div>
-				<div field="payer" width="150" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">付款方</div>
-				<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center">签订日期</div>
-				<div field="contractType" width="120" headerAlign="center" allowSort="true" renderer="zhContractType">合同类型</div>
-				<div field="contractSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_SECRET_LEVEL">合同密级</div>
-				<div field="projectSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
-				<div field="issm" width="180" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否为SM协作配套</div>
-				<div field="issupagreement" width="120" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否为补充协议</div>
-				<div field="contractNature" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_NATURE">合同性质</div>
-				<div field="contractPrice" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_PRICE">合同价款形式</div>
-				<div field="planYear" width="120" headerAlign="center" allowSort="true">采购计划年份</div>
-				<div field="budgetSum" width="150" headerAlign="center" allowSort="true">合同预算金额（元）</div>
-				<div field="markType" width="120" headerAlign="center" allowSort="true" renderer="MARK_TYPE">标的类型</div>
-				<div field="intype" width="120" headerAlign="center" allowSort="true" renderer="INTYPE">集采类型</div>
-				<div field="procurementType" width="120" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE">采购方式</div>
-				<div field="supplierSource" width="120" headerAlign="center" allowSort="true" renderer="SUPPLIER_SOURCE">供应商来源</div>
-				<div field="iselectronic" width="120" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否电子采购</div>
+		<div class="nui-fit">
+			<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" showSummaryRow="true" pageSize="15" align="left" class="nui-datagrid" style="width: 100%; height: 100%;"
+				url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
+				<div property="columns">
+					<div type="checkcolumn"></div>
+					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
+					<div field="createTime" headerAlign="center" allowSort="true" visible="false">创建时间</div>
+					<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
+					<div field="createUsername" width="60" headerAlign="center" allowSort="true">申请人</div>
+					<div field="implementOrgname" width="120" headerAlign="center" allowSort="true">合同实施部门</div>
+					<div field="contractNo" width="180" headerAlign="center" allowSort="true">合同编号</div>
+					<div field="contractName" width="250" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
+					<div field="appStatus" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
+					<div field="contractSum" width="120" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同金额（元）</div>
+					<div field="finalSum" width="140" headerAlign="center" dataType="currency" allowSort="true">合同最终金额（元）</div>
+					<div field="noTaxSum" width="150" headerAlign="center" dataType="currency" allowSort="true">合同不含税金额（元）</div>
+					<div field="payTax" width="120" headerAlign="center" dataType="currency" allowSort="true">税额（元）</div>
+					<div field="contractBalance" width="120" headerAlign="center" dataType="currency" allowSort="true" summaryType="sum">合同余额（元）</div>
+					<div field="executeStatus" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS">执行状态</div>
+					<div field="signatoryname" width="190" headerAlign="center" allowSort="true">签约方</div>
+					<div field="contractSubject" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">合同签约主体</div>
+					<div field="payer" width="150" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">付款方</div>
+					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center">签订日期</div>
+					<div field="contractType" width="120" headerAlign="center" allowSort="true" renderer="zhContractType">合同类型</div>
+					<div field="contractSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_SECRET_LEVEL">合同密级</div>
+					<div field="projectSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
+					<div field="issm" width="180" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否为SM协作配套</div>
+					<div field="issupagreement" width="120" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否为补充协议</div>
+					<div field="contractNature" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_NATURE">合同性质</div>
+					<div field="contractPrice" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_PRICE">合同价款形式</div>
+					<!-- <div field="planYear" width="120" headerAlign="center" allowSort="true">采购计划年份</div> -->
+					<div field="budgetSum" width="150" headerAlign="center" dataType="currency" allowSort="true">合同预算金额（元）</div>
+					<!-- <div field="markType" width="120" headerAlign="center" allowSort="true" renderer="MARK_TYPE">标的类型</div> -->
+					<!-- <div field="intype" width="120" headerAlign="center" allowSort="true" renderer="INTYPE">集采类型</div> -->
+					<div field="procurementType" width="120" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE">采购方式</div>
+					<!-- <div field="supplierSource" width="120" headerAlign="center" allowSort="true" renderer="SUPPLIER_SOURCE">供应商来源</div> -->
+					<!-- <div field="iselectronic" width="120" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否电子采购</div> -->
+				</div>
 			</div>
 		</div>
 	</div>
+
 
 	<script type="text/javascript">
 		nui.parse();
@@ -340,6 +320,7 @@
 								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+ result.workItemID,
 								width : '100%',
 								height : '100%',
+								title : "付费合同签订草稿",
 								ondestroy : function(action) {
 									grid.reload();
 									search();
@@ -478,8 +459,8 @@
 			if (data.appStatus == "2") {
 				nui.open({
 					url : "/default/contractPact/payContract/payContractAlteration.jsp",
-					width : '90%',
-					height : '90%',
+					width : '100%',
+					height : '100%',
 					title : "付费合同协议变更",
 					onload : function() {
 						var iframe = this.getIFrameEl();
@@ -549,9 +530,9 @@
 		function improt() {
 			nui.open({
 				url : "<%=request.getContextPath()%>/contractPact/payContract/improtPayContract.jsp",
-				title : "选择文件",
-				width : 700,
-				height : 200,
+				title : "选择导入文件",
+				width : 350,
+				height : 50,
 				allowResize : false
 			});
 		}

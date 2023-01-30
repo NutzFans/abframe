@@ -15,9 +15,9 @@
 		long workitemid = (Long)request.getAttribute("workItemID");
 	%>
 
-	<div class="nui-fit">
-		<fieldset id="field1" style="border: solid 1px #aaa; padding: 1px; width: 97%;">
-			<legend>付费合同签订信息</legend>
+	<div class="nui-fit" style="padding: 5px">
+		<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>付费合同信息</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input name="id" id="id" class="nui-hidden" />
@@ -145,76 +145,77 @@
 					</table>
 				</div>
 			</form>
-			<fieldset id="field3" style="border: solid 1px #aaa; padding: 3px;">
-				<legend>未来年度付款计划</legend>
-				<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 200px;" allowResize="true" showSummaryRow="true" datafield="data" allowCellEdit="true" allowCellSelect="true"
-					multiSelect="true" allowSortColumn="false" showPager="false">
-					<div property="columns">
-						<div field="years" width="80" headerAlign="center" allowSort="true">
-							年份
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="jan" width="80" headerAlign="center" allowSort="true">
-							一月
-							<input property="editor" class="nui-textbox" id="jan" style="width: 100%;" />
-						</div>
-						<div field="feb" width="80" headerAlign="center" allowSort="true">
-							二月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="mar" width="80" headerAlign="center" allowSort="true">
-							三月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="apr" width="80" headerAlign="center" allowSort="true">
-							四月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="may" width="80" headerAlign="center" allowSort="true">
-							五月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="jun" width="80" headerAlign="center" allowSort="true">
-							六月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="jul" width="80" headerAlign="center" allowSort="true">
-							七月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="aug" width="80" headerAlign="center" allowSort="true">
-							八月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="sep" width="80" headerAlign="center" allowSort="true">
-							九月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="oct" width="80" headerAlign="center" allowSort="true">
-							十月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="nov" width="80" headerAlign="center" allowSort="true">
-							十一月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="dec" width="80" headerAlign="center" allowSort="true">
-							十二月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="sum" width="120" headerAlign="center" allowSort="true" summaryType="sum">
-							总计
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-
-					</div>
-				</div>
-			</fieldset>
-			<fieldset id="field2" style="border: solid 1px #aaa; padding: 1px;">
-				<jsp:include page="/ame_common/inputFile.jsp" />
-			</fieldset>
-			<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 		</fieldset>
+		<fieldset id="field3" style="border: solid 1px #aaa;">
+			<legend>未来年度付款计划</legend>
+			<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 200px;" allowResize="true" showSummaryRow="true" datafield="data" allowCellEdit="true" allowCellSelect="true" multiSelect="true"
+				allowSortColumn="false" showPager="false">
+				<div property="columns">
+					<div field="years" width="80" headerAlign="center" allowSort="true">
+						年份
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="jan" width="80" headerAlign="center" allowSort="true">
+						一月
+						<input property="editor" class="nui-textbox" id="jan" style="width: 100%;" />
+					</div>
+					<div field="feb" width="80" headerAlign="center" allowSort="true">
+						二月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="mar" width="80" headerAlign="center" allowSort="true">
+						三月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="apr" width="80" headerAlign="center" allowSort="true">
+						四月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="may" width="80" headerAlign="center" allowSort="true">
+						五月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="jun" width="80" headerAlign="center" allowSort="true">
+						六月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="jul" width="80" headerAlign="center" allowSort="true">
+						七月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="aug" width="80" headerAlign="center" allowSort="true">
+						八月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="sep" width="80" headerAlign="center" allowSort="true">
+						九月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="oct" width="80" headerAlign="center" allowSort="true">
+						十月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="nov" width="80" headerAlign="center" allowSort="true">
+						十一月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="dec" width="80" headerAlign="center" allowSort="true">
+						十二月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="sum" width="120" headerAlign="center" allowSort="true" summaryType="sum">
+						总计
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+
+				</div>
+			</div>
+		</fieldset>
+		<fieldset id="field2" style="border: solid 1px #aaa;">
+			<legend>附件</legend>
+			<jsp:include page="/ame_common/inputFile.jsp" />
+		</fieldset>
+		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 	</div>
 
 	<div style="text-align: center; padding: 5px;" class="nui-toolbar">

@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- author:huangqj -->
 <sqlMap>
+
     <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
         <parameter javaType="date" jdbcType="DATE" property="dateType"/>
     </parameterMap>
+    
     <resultMap class="commonj.sdo.DataObject" id="resultMap">
         <result column="TYPEID" javaType="string" property="typeId"/>
     </resultMap>
+    
+    <resultMap class="commonj.sdo.DataObject" id="resultMap5">
+        <result column="EMPCODE" javaType="String" property="empcode"/>
+        <result column="EMPID" javaType="String" property="empid"/>
+        <result column="EMPNAME" javaType="String" property="empname"/>
+    </resultMap>
+    
     <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
     
     <select id="queryPaidByContractNo" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.payment.payMent.ZhPayment">
     	select contract_id,apply_pay_contract_sum from zh_payment  where contract_id = #contractNo# and app_status = '2'
     </select>
     
+    <select id="queryUserEmpByName" parameterClass="java.util.HashMap"  resultMap="resultMap5">
+    	select EMPCODE, EMPID, EMPNAME from OM_EMPLOYEE where EMPNAME = #EMPNAME#
+    </select>
     
     <select id="queryPayPlan" parameterClass = "java.lang.String" resultClass = "com.zhonghe.ame.annualPlan.annualPlan.AnnualPaymentPlan">
     	select * from annual_payment_plan w where w.pay_id = #payId#

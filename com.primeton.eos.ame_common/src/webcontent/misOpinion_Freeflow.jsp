@@ -30,7 +30,7 @@
 	    <input name="misOpinion.workitemname" id="workitemname" class="nui-hidden" />
 	    <input name="misOpinion.isshow" id="isshow" class="nui-hidden" />
 		<input name="misOpinion.fileids" id="fileids"  class="nui-hidden"/>
-		<fieldset style="border:solid 1px #aaa;padding:3px;">
+		<fieldset style="border: solid 1px #aaa;">
 	        <legend>处理意见列表</legend>
 	        	<div id="datagrid1" class="nui-datagrid" style="width:100%;height:auto;" dataField="misOpinions"
 				    url="com.primeton.eos.ame_pur.purContractProcess.queryAuditOpinions.biz.ext"  idField="id" allowResize="true"

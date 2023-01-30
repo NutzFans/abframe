@@ -13,225 +13,223 @@
 </style>
 </head>
 <body>
-	<div class="nui-fit">
-		<div class="mini-panel" title="付费合同签订编辑" style="width: 100%;">
-			<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 100%;">
-				<legend>付费合同签订编辑</legend>
-				<form id="form1" method="post">
-					<input name="processid" id="processid" class="nui-hidden" />
-					<input name="files" id="fileids" class="nui-hidden" />
-					<input class="nui-hidden" name="id" />
-					<input name="proAppId" id="proAppId" class="nui-hidden" />
-					<div style="padding: 5px;">
-						<table style="table-layout: fixed;">
-							<tr>
-								<td align="right" style="width: 120px">合同名称:</td>
-								<td colspan="7">
-									<input name="contractName" id="contractName" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							<tr>
-								<td class="form_label" align="right">申请人:</td>
-								<td>
-									<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 100%" />
-									<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
-								</td>
-								<td align="right" style="width: 120px">合同实施部门:</td>
-								<td>
-									<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-										showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-										onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" />
-									<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
-								</td>
-								<td align="right" style="width: 120px">申请日期:</td>
-								<td>
-									<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" required="true" enabled="false" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 120px">合同类型:</td>
-								<td>
-									<input name="contractType" id="contractType" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 100%" required="true" />
-								</td>
-								<td align="right" style="width: 100px">标的规模:</td>
-								<td>
-									<input name="projectSize" id="projectSize" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-								<td align="right" style="width: 100px">实施地点:</td>
-								<td>
-									<input name="projectLocal" id="projectLocal" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 120px">合同金额(元):</td>
-								<td>
-									<input name="contractSum" id="contractSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="onvaluechanged" />
-								</td>
-								<td align="right" style="width: 120px">合同不含税金额(元):</td>
-								<td>
-									<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="onvaluechanged" />
-								</td>
-								<td align="right" style="width: 120px">税额(元):</td>
-								<td>
-									<input name="payTax" id="payTax" class="nui-textbox" vtype="float" style="width: 100%" required="true" enabled="false" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 100px">
-									<nobr>签约方:</nobr>
-								</td>
-								<td>
-									<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-										textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 300px;" />
-								</td>
-								<td align="right" style="width: 100px">合同签约主体:</td>
-								<td>
-									<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
-								</td>
-								<td align="right" style="width: 100px">付款方:</td>
-								<td>
-									<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 100px">合同文本密级:</td>
-								<td>
-									<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%" required="true" />
-								</td>
+	<div class="nui-fit" style="padding: 5px">
+		<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>付费合同信息</legend>
+			<form id="form1" method="post">
+				<input name="processid" id="processid" class="nui-hidden" />
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input class="nui-hidden" name="id" />
+				<input name="proAppId" id="proAppId" class="nui-hidden" />
+				<div style="padding: 5px;">
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 120px">合同名称:</td>
+							<td colspan="7">
+								<input name="contractName" id="contractName" class="nui-textbox" style="width: 100%" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td class="form_label" align="right">申请人:</td>
+							<td>
+								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 100%" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 120px">合同实施部门:</td>
+							<td>
+								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
+									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
+									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+							</td>
+							<td align="right" style="width: 120px">申请日期:</td>
+							<td>
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 120px">合同类型:</td>
+							<td>
+								<input name="contractType" id="contractType" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">标的规模:</td>
+							<td>
+								<input name="projectSize" id="projectSize" class="nui-textbox" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">实施地点:</td>
+							<td>
+								<input name="projectLocal" id="projectLocal" class="nui-textbox" style="width: 100%" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 120px">合同金额(元):</td>
+							<td>
+								<input name="contractSum" id="contractSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="onvaluechanged" />
+							</td>
+							<td align="right" style="width: 120px">合同不含税金额(元):</td>
+							<td>
+								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="onvaluechanged" />
+							</td>
+							<td align="right" style="width: 120px">税额(元):</td>
+							<td>
+								<input name="payTax" id="payTax" class="nui-textbox" vtype="float" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">
+								<nobr>签约方:</nobr>
+							</td>
+							<td>
+								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
+									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 300px;" />
+							</td>
+							<td align="right" style="width: 100px">合同签约主体:</td>
+							<td>
+								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">付款方:</td>
+							<td>
+								<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">合同文本密级:</td>
+							<td>
+								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%" required="true" />
+							</td>
 
-								<td align="right" style="width: 100px">项目密级:</td>
-								<td>
-									<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 100%" required="true" />
-								</td>
-								<td align="right" style="width: 100px">是否为SM协作配套:</td>
-								<td>
-									<input id="issm" name="issm" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 100px">合同价款形式:</td>
-								<td>
-									<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
-								</td>
+							<td align="right" style="width: 100px">项目密级:</td>
+							<td>
+								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">是否为SM协作配套:</td>
+							<td>
+								<input id="issm" name="issm" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 100%" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">合同价款形式:</td>
+							<td>
+								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
+							</td>
 
-								<td align="right" style="width: 100px">合同性质:</td>
-								<td>
-									<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" />
-								</td>
-								<td align="right" style="width: 100px">采购立项编号:</td>
-								<td>
-									<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" allowInput="true" onvaluechanged="onvaluechanged1" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 100px">采购方式:</td>
-								<td>
-									<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 100%" required="false" enabled="true" />
-								</td>
-								<td align="right" style="width: 120px">预算金额(元):</td>
-								<td>
-									<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
-								</td>
-								<td align="right" style="width: 120px">定标金额(元):</td>
-								<td>
-									<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 120px">备注:</td>
-								<td colspan="5">
-									<input name="remark" class="nui-textarea" style="width: 100%" />
-								</td>
-							</tr>
-						</table>
-					</div>
-				</form>
-			</fieldset>
-			<fieldset id="field3" style="border: solid 1px #aaa; padding: 3px;">
-				<legend>未来年度付款计划</legend>
-				<div style="width: 95%;">
-					<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-						<table style="width: 100%;">
-							<tr>
-								<td style="width: 100%;">
-									<a class="nui-button" iconCls="icon-add" onclick="addRow()" plain="true">增加</a>
-									<a class="nui-button" iconCls="icon-remove" onclick="removeRow()" plain="true">删除</a>
-									<span class="separator" style="color: red">(总计应与合同金额一致)</span>
-								</td>
-							</tr>
-						</table>
-					</div>
+							<td align="right" style="width: 100px">合同性质:</td>
+							<td>
+								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">采购立项编号:</td>
+							<td>
+								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" allowInput="true" onvaluechanged="onvaluechanged1" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">采购方式:</td>
+							<td>
+								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 100%" required="false" enabled="true" />
+							</td>
+							<td align="right" style="width: 120px">预算金额(元):</td>
+							<td>
+								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
+							</td>
+							<td align="right" style="width: 120px">定标金额(元):</td>
+							<td>
+								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 120px">备注:</td>
+							<td colspan="5">
+								<input name="remark" class="nui-textarea" style="width: 100%" />
+							</td>
+						</tr>
+					</table>
 				</div>
-				<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 200px;" allowResize="true" showSummaryRow="true" datafield="data" allowCellEdit="true" allowCellSelect="true"
-					multiSelect="true" allowSortColumn="false" showPager="false">
-					<div property="columns">
-						<div field="years" width="80" headerAlign="center" allowSort="true">
-							年份
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="jan" width="80" headerAlign="center" allowSort="true">
-							一月
-							<input property="editor" class="nui-textbox" id="jan" style="width: 100%;" />
-						</div>
-						<div field="feb" width="80" headerAlign="center" allowSort="true">
-							二月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="mar" width="80" headerAlign="center" allowSort="true">
-							三月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="apr" width="80" headerAlign="center" allowSort="true">
-							四月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="may" width="80" headerAlign="center" allowSort="true">
-							五月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="jun" width="80" headerAlign="center" allowSort="true">
-							六月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="jul" width="80" headerAlign="center" allowSort="true">
-							七月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="aug" width="80" headerAlign="center" allowSort="true">
-							八月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="sep" width="80" headerAlign="center" allowSort="true">
-							九月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="oct" width="80" headerAlign="center" allowSort="true">
-							十月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="nov" width="80" headerAlign="center" allowSort="true">
-							十一月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="dec" width="80" headerAlign="center" allowSort="true">
-							十二月
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-						<div field="sum" width="120" headerAlign="center" allowSort="true" summaryType="sum">
-							总计
-							<input property="editor" class="nui-textbox" style="width: 100%;" />
-						</div>
-
-					</div>
+			</form>
+		</fieldset>
+		<fieldset id="field3" style="border: solid 1px #aaa;">
+			<legend>未来年度付款计划</legend>
+			<div>
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table style="width: 100%;">
+						<tr>
+							<td style="width: 100%;">
+								<a class="nui-button" iconCls="icon-add" onclick="addRow()" plain="true">增加</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="removeRow()" plain="true">删除</a>
+								<span style="color: red">(总计应与合同金额一致)</span>
+							</td>
+						</tr>
+					</table>
 				</div>
-			</fieldset>
-			<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
-				<legend>上传附件</legend>
-				<jsp:include page="/ame_common/inputFile.jsp" />
-			</fieldset>
-			<jsp:include page="/ame_common/misOpinion.jsp" />
+			</div>
+			<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 200px;" allowResize="true" showSummaryRow="true" datafield="data" allowCellEdit="true" allowCellSelect="true" multiSelect="true"
+				allowSortColumn="false" showPager="false">
+				<div property="columns">
+					<div type="checkcolumn"></div>
+					<div field="years" width="80" headerAlign="center" allowSort="true">
+						年份
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="jan" width="80" headerAlign="center" allowSort="true">
+						一月
+						<input property="editor" class="nui-textbox" id="jan" style="width: 100%;" />
+					</div>
+					<div field="feb" width="80" headerAlign="center" allowSort="true">
+						二月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="mar" width="80" headerAlign="center" allowSort="true">
+						三月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="apr" width="80" headerAlign="center" allowSort="true">
+						四月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="may" width="80" headerAlign="center" allowSort="true">
+						五月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="jun" width="80" headerAlign="center" allowSort="true">
+						六月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="jul" width="80" headerAlign="center" allowSort="true">
+						七月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="aug" width="80" headerAlign="center" allowSort="true">
+						八月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="sep" width="80" headerAlign="center" allowSort="true">
+						九月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="oct" width="80" headerAlign="center" allowSort="true">
+						十月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="nov" width="80" headerAlign="center" allowSort="true">
+						十一月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="dec" width="80" headerAlign="center" allowSort="true">
+						十二月
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
+					<div field="sum" width="120" headerAlign="center" allowSort="true" summaryType="sum">
+						总计
+						<input property="editor" class="nui-textbox" style="width: 100%;" />
+					</div>
 
-		</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset id="field2" style="border: solid 1px #aaa;">
+			<legend>上传附件</legend>
+			<jsp:include page="/ame_common/inputFile.jsp" />
+		</fieldset>
+		<jsp:include page="/ame_common/misOpinion.jsp" />
 	</div>
 
 	<div style="text-align: center; padding: 10px; border-width: 1px 0px 0px 0px;" class="nui-toolbar">
@@ -255,10 +253,37 @@
 			//定义变量接受form表单数据
 			var form = new nui.Form("#form1");
 			if (type == 1) {
-				form.validate();
-				if (form.isValid() == false) {
+				var grid2 = nui.get("datagrid2");
+				var payPlans = grid2.getData();
+				title = "提交";
+				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
 					return;
+				}
+				if (payPlans.length > 0) {
+					var payPlansStr = JSON.stringify(payPlans);
+					var payPlansJson = JSON.parse(payPlansStr);
+					for (var i = 0; i < payPlansJson.length; i++) {
+						if (payPlansJson[i].years == undefined) {
+							showTips("请填写未来年度付款计划中的 '年份' 字段!", "danger");
+							return;
+						}
+					}
+				} else {
+					showTips("请填写未来年度付款计划!", "danger");
+					return;
+				}
+				if (budgetSum == "" || budgetSum == null) {
+				} else if (budgetSum < contractSum) {
+					showTips("合同金额不可大于预算金额！", "danger");
+					return;
+				}
+				if (procurementType == 1) {
+					if (scalingSum == null || scalingSum == "") {
+					} else if (contractSum != scalingSum) {
+						showTips("合同金额应等于定标金额！", "danger");
+						return;
+					}
 				}
 			}
 			var filePaths = document.getElementsByName("uploadfile").length;
@@ -276,7 +301,7 @@
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
 		}
-		
+
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
@@ -329,14 +354,14 @@
 				});
 			}
 		}
-		
+
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			mini.open({
 				url : "/default/contractPact/payContract/procurementPlanList.jsp",
 				title : "采购立项列表",
-				width : '90%',
-				height : '90%',
+				width : '80%',
+				height : '80%',
 				ondestroy : function(action) {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
@@ -364,12 +389,14 @@
 			});
 
 		}
-		
+
 		loadData();
-		
+
 		function loadData() {
 			//流程提示信息
-			var data={workItemID:<%=workItemID %>};
+			var data = {
+				workItemID :
+	<%=workItemID %>};
 			var json=nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.payContract.payContract.getPayContract.biz.ext",
@@ -486,8 +513,14 @@
 		function onvaluechanged() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
-			var payTax = contractSum - noTaxSum;
-			nui.get("payTax").setValue(payTax);
+			abs = function(val) {
+				var str = (val).toFixed(2) + '';
+				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+				var dot = str.substring(str.length, str.indexOf("."))
+				var ret = intSum + dot;
+				return ret;
+			}
+			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
 		
 		grid2.on("cellendedit", function(e) {
