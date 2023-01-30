@@ -40,7 +40,7 @@
 						<tr>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
-								<input id="contractNo" name="contractNo" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true"/>
+								<input id="contractNo" name="contractNo" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" emptyText="如无对应关联合同编号，请输入 / 字符"/>
 							</td>
 							<td align="right" style="width: 160px">合同名称：</td>
 							<td colspan="6">
@@ -82,7 +82,7 @@
 							</td>
 							<td align="right" style="width: 160px">合同金额（元）：</td>
 							<td>
-								<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" style="width: 300px"/>
+								<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" required="true" style="width: 300px"/>
 							</td>
 						</tr>
 						<tr>
@@ -98,6 +98,12 @@
 							<td>
 								<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
 							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">开票金额大写：</td>
+							<td colspan="8">
+								<input id="invoiceSumChinese" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>							
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">名称：</td>
@@ -364,7 +370,30 @@
 			}
 			nui.get("bookIncome").setValue(abs(bookIncome));
 			nui.get("invoiceTax").setValue(abs(invoiceSum - abs(bookIncome)));
+			nui.get("invoiceSumChinese").setValue(functiondigitUppercase(invoiceSum));
 		}
+		
+		function functiondigitUppercase(price) {
+			var fraction = ["角", "分"];
+			var digit = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
+			var unit = [["元", "万", "亿"],["", "拾", "佰", "仟"],];
+			var num = Math.abs(price);
+			var s = "";
+			for(var i = 0; i < fraction.length; i++){
+				s += (digit[Math.floor(num * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./,"");
+			}
+			s = s || "整";
+			num = Math.floor(num);
+			for (var i = 0; i < unit[0].length && num > 0; i += 1) {
+				var p = "";
+				for (var j = 0; j < unit[1].length && num > 0; j += 1) {
+					p = digit[num % 10] + unit[1][j] + p;
+					num = Math.floor(num / 10);
+				}
+				s = p.replace(/(零.)*零$/, "").replace(/^$/, "零") + unit[0][i] + s;
+			}
+			return s.replace(/(零.)*零元/, "元").replace(/(零.)+/g, "零").replace(/^整$/, "零元整");
+		}				
 	</script>
 </body>
 </html>

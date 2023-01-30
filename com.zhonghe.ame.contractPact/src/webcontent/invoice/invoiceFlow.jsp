@@ -98,6 +98,12 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 160px">开票金额大写：</td>
+							<td colspan="8">
+								<input id="invoiceSumChinese" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>							
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">名称：</td>
 							<td colspan="8">
 								<input name="payerName" id="payerName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
@@ -209,6 +215,7 @@
 					id = o.data.id;
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);
+					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
 					nui.ajax({
 						url : "com.zhonghe.ame.invoice.invoice.queryInvoiceById.biz.ext",
 						type : "post",
@@ -299,6 +306,28 @@
 				myWindow.document.title = "打印页面";
 				myWindow.setViewData(selectRow);
 			};
+		}
+		
+		function functiondigitUppercase(price) {
+			var fraction = ["角", "分"];
+			var digit = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
+			var unit = [["元", "万", "亿"],["", "拾", "佰", "仟"],];
+			var num = Math.abs(price);
+			var s = "";
+			for(var i = 0; i < fraction.length; i++){
+				s += (digit[Math.floor(num * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./,"");
+			}
+			s = s || "整";
+			num = Math.floor(num);
+			for (var i = 0; i < unit[0].length && num > 0; i += 1) {
+				var p = "";
+				for (var j = 0; j < unit[1].length && num > 0; j += 1) {
+					p = digit[num % 10] + unit[1][j] + p;
+					num = Math.floor(num / 10);
+				}
+				s = p.replace(/(零.)*零$/, "").replace(/^$/, "零") + unit[0][i] + s;
+			}
+			return s.replace(/(零.)*零元/, "元").replace(/(零.)+/g, "零").replace(/^整$/, "零元整");
 		}
 	</script>
 </body>
