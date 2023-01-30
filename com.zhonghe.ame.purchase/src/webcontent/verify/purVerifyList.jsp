@@ -42,10 +42,13 @@ html,body {
 						name="critria._expr[4]._op" value="like" /></td>
 				</tr>
 				<tr>
-					<td colspan="9" align="center"><a class="nui-button"
+					<td colspan="5"></td>
+					<td  align="center" style="padding-right: 32px;">
+						<a class="nui-button"
 						id="search" iconCls="icon-search" onclick="search()">查询</a> <a
 						class="nui-button" id="reset" iconCls="icon-reload"
-						onclick="reset()">重置</a></td>
+						onclick="reset()">重置</a>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -72,17 +75,17 @@ html,body {
 						<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 						<!-- <div type="expandcolumn" width="20"></div> -->
 			<div field="verifyCode" width="200" headerAlign="center"
-				allowSort="true" renderer="lookInfo">验收单编号</div>
-			<div field="contractNo" width="200" align="center"
+				allowSort="true" renderer="lookInfo" align="left">验收单编号</div>
+			<div field="contractNo" width="200" align="left"
 				headerAlign="center" allowSort="true">合同编号</div>
-			<div field="totalPrice" align="center" headerAlign="center"
+			<div field="totalPrice" align="right" headerAlign="center"
 				allowSort="true">货品总价(万元)</div>
-			<div field="orgname" width="200" align="center"
+			<div field="orgname" width="200" align="left"
 				headerAlign="center" allowSort="true">验收部门</div>
-			<div field="empname" width="80" align="center"
+			<div field="empname" width="80" align="left"
 				headerAlign="center" allowSort="true">验收人</div>
-			<div field="createTime" align="center" headerAlign="center">创建时间</div>
-			<div field="status" align="center" renderer="onActionRenderer"
+			<div field="createTime" align="left" headerAlign="center">创建时间</div>
+			<div field="status" align="left" renderer="onActionRenderer"
 				headerAlign="center">状态</div>
 		</div>
 	</div>

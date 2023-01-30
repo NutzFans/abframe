@@ -178,6 +178,7 @@
 	</div>
 </div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar ">
+			<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px;margin-right: 20px;">加签</a> 
 			<a class="nui-button" onclick="submit" id="creatReimbProcess" style="width: 80px;margin-right: 20px;">提交</a>
 			<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
 		</div>
@@ -185,6 +186,7 @@
     nui.parse();
 		var form = new nui.Form("form1");
 		var gridDtl = nui.get("grid_detail");
+		var countersignUsers;
 		init();
     function init(){
     	var json = nui.encode({"workitemid":<%=workitemid%>});
@@ -240,7 +242,7 @@
             	var data = form.getData();
 							var misOpinion = opioionform.getData().misOpinion;//审核意见
             	/* nui.get("appButton").setEnabled(false); */
-            	var json = {"param":data,misOpinion:misOpinion,workItemID: <%=workitemid %>};
+            	var json = {"param":data,misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers};
             	saveData(json);
             }
         });
@@ -278,5 +280,48 @@
 		}
 	}
 	
+		function countersign(){
+    	selectOmEmployee();
+    }
+       	
+   	function selectOmEmployee(){
+    	var btnEdit = this;
+        nui.open({
+            url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
+            title: "立项单位经办人",
+            width: 430,
+            height: 400,
+            ondestroy: function (action) {
+            	console.log(action)
+            	var user,users = "【";
+            	countersignUsers =[];
+                if (action == "ok") {
+                    var iframe = this.getIFrameEl();
+                    var data = iframe.contentWindow.GetData();
+                    data = nui.clone(data);    //必须
+                    if (data) {
+                    	console.log(data)
+                    	for(var i = 0;i<data.length ;i++){
+                    		user = {};
+                    		user.id = data[i].userid
+                    		user.name = data[i].empname
+                    		user.typeCode = "person"
+                    		countersignUsers.push(user);
+                    		if(i==0){
+                    			users = users +data[i].empname;
+                    		}else{
+                    		
+                        		users = users +","+data[i].empname;
+                    		}
+                    	}
+                    	users = users+"】";
+                    	titleText ="增加审批人员"+ users +"并提交";
+	                    submitProcess(titleText);
+                       }
+                    }
+
+                }
+            });
+        }
     </script></body>
 </html>
