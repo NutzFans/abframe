@@ -287,7 +287,7 @@
 			var btnEdit = this;
 			nui.open({
 				url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
-				title : "立项单位经办人",
+				title : "选择需要加签的人员",
 				width : 430,
 				height : 400,
 				ondestroy : function(action) {
