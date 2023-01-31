@@ -122,6 +122,16 @@
       <targetNode>invokeService4</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link31" name="link31" displayName="连接线" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>invokeService7</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">countersignUsers</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link11</targetConnections>
     <location x="91" y="272"/>
     <size height="28" width="22"/>
@@ -443,6 +453,7 @@
       <process:transitionCondition/>
     </sourceConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link32</targetConnections>
     <location x="87" y="352"/>
     <size height="22" width="28"/>
     <nodeLabel>invokeService4label</nodeLabel>
@@ -533,7 +544,7 @@
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link3</targetConnections>
-    <location x="488" y="540"/>
+    <location x="488" y="504"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess2label</nodeLabel>
     <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
@@ -546,7 +557,7 @@
     </process:flow>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
-    <location x="467" y="575"/>
+    <location x="467" y="539"/>
     <figSize height="17" width="69"/>
     <node>subprocess2</node>
   </nodes>
@@ -627,6 +638,29 @@
     <figSize height="17" width="97"/>
     <node>subprocess0</node>
   </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService7" name="加签" displayName="addWorkItem4SDO" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link32" name="link32" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService7</sourceNode>
+      <targetNode>invokeService4</targetNode>
+    </sourceConnections>
+    <targetConnections>link31</targetConnections>
+    <location x="-37" y="352"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService7label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.addWorkItem4SDO</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="activityInstID" type="query" value="long" valueType="Java" pattern="reference">wfWorkItem/activityInstID</process:inputVariable>
+      <process:inputVariable id="1" name="participant" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">countersignUsers</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService7label" name="label" nodeType="label">
+    <location x="-35" y="382"/>
+    <figSize height="17" width="25"/>
+    <node>invokeService7</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="zhang-yb" createTime="2018-09-11 17:36:40" date="2018-09-11Z" description="受益部门审批" name="受益部门审批" version="7.0.0.0"/>
@@ -641,6 +675,7 @@
     <process:input description="" isArray="false" name="workItemID" primitiveType="String"/>
     <process:input description="" isArray="false" modelType="com.primeton.eos.ame_common.ame_common.MisOpinion" name="misOpinion"/>
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.ZhProjectApproval" name="param"/>
+    <process:input description="" isArray="true" modelType="com.eos.workflow.data.WFParticipant" name="countersignUsers"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="result" primitiveType="String"/>
