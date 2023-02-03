@@ -11,7 +11,7 @@
 <title>付费合同管理</title>
 </head>
 <body>
-	<div style="width: auto; height: 99%; padding: 5px; overflow: hidden;">
+	<div style="width: auto; height: 99%; padding: 5px;">
 		<div id="form1">
 			<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.payContract.payContract.ZhPayContractEntity" />
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
@@ -116,13 +116,13 @@
 						<td style="width: 155px">
 							<input name="critria._expr[28].issupagreement" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>	
-						<td style="width: 60px; text-align: right;">合同性质:</td>
+						<td style="width: 60px; text-align: right;">是否采购:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[29].contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>		
 						<td style="width: 60px; text-align: right;">采购方式:</td>
 						<td style="width: 155px">
-							<input name="critria._expr[30].procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="critria._expr[30].procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>			
 					</tr>
 				</table>
@@ -165,7 +165,7 @@
 					<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
 					<div field="createTime" headerAlign="center" allowSort="true" align="center">申请日期</div>
 					<div field="createUsername" width="60" headerAlign="center" allowSort="true" align="center">申请人</div>
-					<div field="implementOrgname" width="120" headerAlign="center" allowSort="true" align="center">合同实施部门</div>
+					<div field="implementOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同实施部门</div>
 					<div field="contractNo" width="180" headerAlign="center" allowSort="true" align="center">合同编号</div>
 					<div field="contractName" width="250" headerAlign="center" allowSort="true" renderer="lookInfo" align="center">合同名称</div>
 					<div field="appStatus" headerAlign="center" allowSort="true" renderer="onActionRenderer" align="center">审批状态</div>
@@ -174,7 +174,6 @@
 					<div field="noTaxSum" width="150" headerAlign="center" dataType="currency" allowSort="true" align="center">合同不含税金额（元）</div>
 					<div field="payTax" width="120" headerAlign="center" dataType="currency" allowSort="true" align="center">税额（元）</div>
 					<div field="contractBalance" width="120" headerAlign="center" dataType="currency" allowSort="true" summaryType="sum" align="center">合同余额（元）</div>
-					<div field="budgetSum" width="150" headerAlign="center" dataType="currency" allowSort="true" align="center">合同预算金额（元）</div>
 					<div field="executeStatus" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS" align="center">执行状态</div>
 					<div field="signatoryname" width="190" headerAlign="center" allowSort="true" align="center">签约方</div>
 					<div field="contractSubject" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType" align="center">合同签约主体</div>
@@ -185,14 +184,16 @@
 					<div field="projectSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL" align="center">项目密级</div>
 					<div field="issm" width="180" headerAlign="center" allowSort="true" renderer="ABF_YESORNO" align="center">是否为SM协作配套</div>
 					<div field="issupagreement" width="120" headerAlign="center" allowSort="true" renderer="ABF_YESORNO" align="center">是否为补充协议</div>
-					<div field="contractNature" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_NATURE" align="center">合同性质</div>
+					<div field="contractNature" width="190" headerAlign="center" allowSort="true" renderer="CONTRACT_NATURE" align="center">是否为采购合同</div>
 					<div field="contractPrice" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_PRICE" align="center">合同价款形式</div>
-					<!-- <div field="planYear" width="120" headerAlign="center" allowSort="true">采购计划年份</div> -->
-					<!-- <div field="markType" width="120" headerAlign="center" allowSort="true" renderer="MARK_TYPE">标的类型</div> -->
-					<!-- <div field="intype" width="120" headerAlign="center" allowSort="true" renderer="INTYPE">集采类型</div> -->
-					<div field="procurementType" width="120" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE" align="center">采购方式</div>
-					<!-- <div field="supplierSource" width="120" headerAlign="center" allowSort="true" renderer="SUPPLIER_SOURCE">供应商来源</div> -->
-					<!-- <div field="iselectronic" width="120" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否电子采购</div> -->
+					<div field="planYear" width="120" headerAlign="center" allowSort="true" align="center">采购计划年份</div>
+					<div field="budgetSum" width="150" headerAlign="center" dataType="currency" allowSort="true" align="center">立项金额（元）</div>
+					<div field="proAppObjType" width="100" headerAlign="center" allowSort="true" renderer="MIS_APPOBJTYPE" align="center">物项类别</div>
+					<div field="cgType" width="100" headerAlign="center" allowSort="true" renderer="ZH_PURCHASE" align="center">采集类型</div>
+					<div field="procurementType" width="100" headerAlign="center" allowSort="true" renderer="ZH_CGFS" align="center">采购方式</div>
+					<div field="cgNature" width="100" headerAlign="center" allowSort="true" renderer="ZH_NATURE" align="center">合同/订单性质</div>
+					<div field="cgSupplierScope" width="100" headerAlign="center" allowSort="true" renderer="ZH_SUPPLIER_SCOPE" align="center">供货商来源</div>
+					<div field="isDzcg" width="100" headerAlign="center" allowSort="true" renderer="ZH_YN" align="center">是否电子采购</div>
 				</div>
 			</div>
 		</div>
@@ -519,7 +520,7 @@
 					url : "/default/contractPact/payContract/payContractAlteration.jsp",
 					width : '100%',
 					height : '100%',
-					title : "付费合同协议变更",
+					title : "付费合同签订申请 - 补充协议",
 					onload : function() {
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setEditData(data);
@@ -657,6 +658,30 @@
 		
 		function SUPPLIER_SOURCE(e) {
 			return nui.getDictText("SUPPLIER_SOURCE", e.value);
+		}
+		
+		function MIS_APPOBJTYPE(e){
+			return nui.getDictText("MIS_APPOBJTYPE", e.value);
+		}
+		
+		function ZH_PURCHASE(e){
+			return nui.getDictText("ZH_PURCHASE", e.value);
+		}
+		
+		function ZH_CGFS(e){
+			return nui.getDictText("ZH_CGFS", e.value);
+		}
+		
+		function ZH_NATURE(e){
+			return nui.getDictText("ZH_NATURE", e.value);
+		}
+		
+		function ZH_SUPPLIER_SCOPE(e){
+			return nui.getDictText("ZH_SUPPLIER_SCOPE", e.value);
+		}
+		
+		function ZH_YN(e){
+			return nui.getDictText("ZH_YN", e.value);
 		}
 		
 		//导出

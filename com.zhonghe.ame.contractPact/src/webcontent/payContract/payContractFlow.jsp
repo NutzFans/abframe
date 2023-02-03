@@ -113,27 +113,33 @@
 								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" enabled="false" />
 							</td>
 
-							<td align="right" style="width: 100px">合同性质:</td>
+							<td align="right" style="width: 100px">是否为采购合同:</td>
 							<td>
 								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" enabled="false" />
 							</td>
-							<td align="right" style="width: 100px">采购立项编号:</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px" id="purchasePlanLable">采购立项编号:</td>
 							<td>
-								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" enabled="false" style="width: 100%" allowInput="true" onvaluechanged="onvaluechanged1" />
+								<input name="purchasePlan" id="purchasePlan" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
+							</td>
+							<td align="right" style="width: 100px">采购方式:</td>
+							<td>
+								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="false" />
+							</td>
+							<td align="right" style="width: 100px">采购计划年份:</td>
+							<td>
+								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">采购方式:</td>
+							<td align="right" style="width: 120px">立项金额(元):</td>
 							<td>
-								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 100%" required="false" enabled="false" />
-							</td>
-							<td align="right" style="width: 120px">预算金额(元):</td>
-							<td>
-								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
+								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
 							</td>
 							<td align="right" style="width: 120px">定标金额(元):</td>
 							<td>
-								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
+								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
@@ -247,6 +253,9 @@
 				success : function(o) {
 					form.setData(o.data);
 					queryPlan(o.data.id);
+					if (nui.get("contractNature").getValue() == 3) {
+						$("#purchasePlanLable").html("零星采购编号:");
+					}
 					nui.get("backTo").setData(o.data.backList);
 					//查询并加载附件
 					var grid_0 = nui.get("grid_0");

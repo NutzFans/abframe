@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-	<div class="nui-fit" style="padding: 5px; overflow-x: hidden;">
+	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>付费合同信息</legend>
 			<form id="form1" method="post">
@@ -119,11 +119,11 @@
 								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
 							</td>
 
-							<td align="right" style="width: 100px">合同性质:</td>
+							<td align="right" style="width: 100px">是否为采购合同:</td>
 							<td>
-								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" />
+								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" onvaluechanged="contractNatureChanged" />
 							</td>
-							<td align="right" style="width: 100px">采购立项编号:</td>
+							<td align="right" style="width: 100px" id="purchasePlanLable">采购立项编号:</td>
 							<td>
 								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" allowInput="true" onvaluechanged="onvaluechanged1" />
 							</td>
@@ -131,9 +131,9 @@
 						<tr>
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
-								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 100%" required="false" enabled="true" />
+								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="true" />
 							</td>
-							<td align="right" style="width: 120px">预算金额(元):</td>
+							<td align="right" style="width: 120px">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
 							</td>
@@ -151,15 +151,20 @@
 							<td>
 								<input id="signingDate" name="signingDate" class="nui-datepicker" style="width: 100%" required="true" />
 							</td>
-							<td align="right" style="width: 120px">合同余额(元):</td>
+							</td>
+							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
-								<input name="contractBalance" id="contractBalance" class="nui-textbox" vtype="float" style="width: 100%" required="true" enabled="true" />
+								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" required="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">执行状态:</td>
 							<td>
-								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" required="true" enabled="true" />
+								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" />
+							</td>
+							<td align="right" style="width: 120px">合同余额(元):</td>
+							<td>
+								<input name="contractBalance" id="contractBalance" class="nui-textbox" vtype="float" style="width: 100%" />
 							</td>
 						</tr>
 						<tr>
@@ -288,25 +293,6 @@
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
-			var procurementType = nui.get("procurementType").getValue();
-			var contractSum = nui.get("contractSum").getValue();
-			var budgetSum = nui.get("budgetSum").getValue();
-			var scalingSum = nui.get("scalingSum").getValue();
-			if (budgetSum == "" || budgetSum == null) {
-
-			} else if (budgetSum < contractSum) {
-				showTips("合同金额不可大于预算金额！", "danger");
-				return;
-			}
-
-			if (procurementType == 1) {
-				if (scalingSum == null || scalingSum == "") {
-
-				} else if (contractSum != scalingSum) {
-					showTips("合同金额应等于定标金额！", "danger");
-					return;
-				}
-			}
 			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
@@ -350,39 +336,103 @@
 		
 		function onButtonEdit(e) {
 			var btnEdit = this;
-			mini.open({
-				url : "/default/contractPact/payContract/procurementPlanList.jsp",
-				title : "采购立项列表",
-				width : '90%',
-				height : '90%',
-				ondestroy : function(action) {
-					if (action == "ok") {
-						var iframe = this.getIFrameEl();
-						var data = iframe.contentWindow.GetData();
-						data = mini.clone(data); //必须
-						if (data) {
-							btnEdit.setValue(data.proAppCode);
-							btnEdit.setText(data.proAppCode);
-							var budgetSum = data.proAppApplyPrice * 10000;
-							abs = function(val) {
-								var str = (val).toFixed(2) + '';
-								var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
-								var dot = str.substring(str.length, str.indexOf("."))
-								var ret = intSum + dot;
-								return ret;
+			if (nui.get("contractNature").getValue() == 1) {
+				mini.open({
+					url : "/default/contractPact/payContract/procurementPlanList.jsp",
+					title : "采购立项列表",
+					width : '80%',
+					height : '80%',
+					ondestroy : function(action) {
+						if (action == "ok") {
+							var iframe = this.getIFrameEl();
+							var data = iframe.contentWindow.GetData();
+							data = mini.clone(data); //必须
+							if (data) {
+								btnEdit.setValue(data.proAppCode);
+								btnEdit.setText(data.proAppCode);
+								var budgetSum = data.proAppApplyPrice;
+								abs = function(val) {
+									var str = (val).toFixed(2) + '';
+									var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+									var dot = str.substring(str.length, str.indexOf("."))
+									var ret = intSum + dot;
+									return ret;
+								}
+								nui.get("budgetSum").setValue("");
+								if (budgetSum != null && budgetSum != "") {
+									nui.get("budgetSum").setValue(abs(budgetSum * 10000));
+								}
+								nui.get("proAppId").setValue(data.id);
+								nui.get("procurementType").setValue("");
+								nui.get("procurementType").setValue(data.purchasMode);
+								btnEdit.doValueChanged();
+								var json = {
+									"critria" : {
+										"_entity" : "com.zhonghe.ame.contractPact.frameAgreement.ZhAgreementEntity",
+										"_expr" : [ {
+											"proAppCode" : data.proAppCode,
+											"_op" : "like"
+										} ]
+									}
+								}
+								nui.ajax({
+									"url" : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext",
+									"data" : json,
+									"type" : 'POST',
+									"cache" : false,
+									"contentType" : 'text/json',
+									"success" : function(data) {
+										if (data.reviewReport.length != 0) {
+											var awardAmount = data.reviewReport[0].awardAmount;
+											nui.get("scalingSum").setValue("");
+											if (awardAmount != null && awardAmount != "") {
+												nui.get("scalingSum").setValue(abs(awardAmount * 10000));
+											}
+										} else {
+											console.log("未找到对应的评审结果");
+										}
+									}
+								});
 							}
-							nui.get("budgetSum").setValue(abs(budgetSum));
-							nui.get("proAppId").setValue(data.id);
-							nui.get("procurementType").setValue(data.purchasMode);
-							btnEdit.doValueChanged();
 						}
 					}
-
-				}
-			});
+				});
+			} else if (nui.get("contractNature").getValue() == 3) {
+				mini.open({
+					url : "/default/contractPact/payContract/purZeroPlanList.jsp",
+					title : "零星采购列表",
+					width : '80%',
+					height : '80%',
+					ondestroy : function(action) {
+						if (action == "ok") {
+							var iframe = this.getIFrameEl();
+							var data = iframe.contentWindow.GetData();
+							data = mini.clone(data); //必须
+							if (data) {
+								btnEdit.setValue(data.purchaseCode);
+								btnEdit.setText(data.purchaseCode);
+								var budgetSum = data.totalAmount;
+								abs = function(val) {
+									var str = (val).toFixed(2) + '';
+									var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+									var dot = str.substring(str.length, str.indexOf("."))
+									var ret = intSum + dot;
+									return ret;
+								}
+								nui.get("budgetSum").setValue("");
+								if (budgetSum != null && budgetSum != "") {
+									nui.get("budgetSum").setValue(abs(budgetSum * 10000));
+								}
+								nui.get("proAppId").setValue(data.id);
+								nui.get("procurementType").setValue("零星采购");
+								btnEdit.doValueChanged();
+							}
+						}
+					}
+				});
+			}
 		}
 		
-
 		function setEditData(data) {
 			var form = new nui.Form("form1");
 			form.setData(data)
@@ -390,6 +440,19 @@
 			nui.get("implementOrg").setText(data.implementOrgname);
 			nui.get("custId").setText(data.signatoryname);
 			nui.get("purchasePlan").setText(data.purchasePlan);
+			if (nui.get("contractNature").getValue() == 3) {
+				$("#purchasePlanLable").html("零星采购编号:");
+				nui.get("purchasePlan").setRequired(true);
+				nui.get("procurementType").setRequired(true);
+				nui.get("budgetSum").setRequired(true);
+			}
+			if (nui.get("contractNature").getValue() == 1) {
+				nui.get("purchasePlan").setRequired(true);
+				nui.get("planYear").setRequired(true);
+				nui.get("procurementType").setRequired(true);
+				nui.get("budgetSum").setRequired(true);
+				nui.get("scalingSum").setRequired(true);
+			}
 			var grid_0 = nui.get("grid_0");
 			grid_0.load({
 				"groupid" : "PAY_CONTRACT",
@@ -537,6 +600,52 @@
 				});
 			}
 		}
+		
+		function contractNatureChanged() {
+			if (nui.get("contractNature").getValue() == 1) {
+				$("#purchasePlanLable").html("采购立项编号:");
+				nui.get("purchasePlan").setRequired(true);
+				nui.get("purchasePlan").setValue("");
+				nui.get("purchasePlan").setText("");
+				nui.get("proAppId").setValue("");
+				nui.get("procurementType").setRequired(true);
+				nui.get("procurementType").setValue("");
+				nui.get("planYear").setRequired(true);
+				nui.get("planYear").setValue("");
+				nui.get("budgetSum").setRequired(true);
+				nui.get("budgetSum").setValue("");
+				nui.get("scalingSum").setRequired(true);
+				nui.get("scalingSum").setValue("");
+			} else if (nui.get("contractNature").getValue() == 2) {
+				$("#purchasePlanLable").html("采购立项编号:");
+				nui.get("purchasePlan").setRequired(false);
+				nui.get("purchasePlan").setValue("");
+				nui.get("purchasePlan").setText("");
+				nui.get("proAppId").setValue("");
+				nui.get("procurementType").setRequired(false);
+				nui.get("procurementType").setValue("");
+				nui.get("planYear").setRequired(false);
+				nui.get("planYear").setValue("");
+				nui.get("budgetSum").setRequired(false);
+				nui.get("budgetSum").setValue("");
+				nui.get("scalingSum").setRequired(false);
+				nui.get("scalingSum").setValue("");
+			} else if (nui.get("contractNature").getValue() == 3) {
+				$("#purchasePlanLable").html("零星采购编号:");
+				nui.get("purchasePlan").setRequired(true);
+				nui.get("purchasePlan").setValue("");
+				nui.get("purchasePlan").setText("");
+				nui.get("proAppId").setValue("");
+				nui.get("procurementType").setRequired(true);
+				nui.get("procurementType").setValue("");
+				nui.get("planYear").setRequired(false);
+				nui.get("planYear").setValue("");
+				nui.get("budgetSum").setRequired(true);
+				nui.get("budgetSum").setValue("");
+				nui.get("scalingSum").setRequired(false);
+				nui.get("scalingSum").setValue("");
+			}
+		}		
 	</script>
 </body>
 </html>

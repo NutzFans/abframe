@@ -4,7 +4,7 @@
 <%@include file="/common/common.jsp"%>
 <html>
 <head>
-<title>采购立项列表</title>
+<title>零星采购列表</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
@@ -19,30 +19,17 @@
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 60px; text-align: right;">立项名称:</td>
+						<td style="width: 130px; text-align: right;">零星采购名称:</td>
 						<td style="width: 205px">
 							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 200px" />
-							<input class="nui-hidden" name="criteria._expr[1]._property" value="proAppName" />
+							<input class="nui-hidden" name="criteria._expr[1]._property" value="purchaseName" />
 							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
 						</td>
-						<td style="width: 60px; text-align: right;">立项编号:</td>
+						<td style="width: 130px; text-align: right;">零星采购编号:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
-							<input class="nui-hidden" name="criteria._expr[2]._property" value="proAppCode" />
+							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 200px;" />
+							<input class="nui-hidden" name="criteria._expr[2]._property" value="purchaseCode" />
 							<input class="nui-hidden" name="criteria._expr[2]._op" value="like" />
-						</td>
-						<td style="width: 90px; text-align: right;">采购计划编号:</td>
-						<td style="width: 155px">
-							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 150px" />
-							<input class="nui-hidden" name="criteria._expr[3]._property" value="purchaseNumber" />
-							<input class="nui-hidden" name="criteria._expr[3]._op" value="like" />
-							<input class="nui-hidden" id="ischange" name="criteria._expr[4].ischange" value="1" />
-							<input class="nui-hidden" name="criteria._expr[4]._op" value="=" />
-							<input class="nui-hidden" name="criteria._expr[7]._property" value="createdOrgid" />
-							<input class="nui-hidden" name="criteria._expr[7]._op" value="in" />
-							<input class="nui-hidden" name="criteria._expr[7]._value" id="orgids2" />
-							<input class="nui-hidden" name="criteria._expr[6].createdBy" id="createdBy" />
-							<input class="nui-hidden" name="criteria._expr[6]._op" value="=" />
 						</td>
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
@@ -54,19 +41,15 @@
 		</div>
 		
 		<div class="nui-fit">
-			<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true" dataField="proApp" showSummaryRow="true" sortMode="client" ondrawsummarycell="onDrawSummaryCell"
-				onrowdblclick="onRowDblClick" class="nui-datagrid" style="width: 100%; height: 550px" url="com.zhonghe.ame.purchase.purchaseProApp.queryProApp.biz.ext" multiSelect="false" allowSortColumn=true>
+			<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true" dataField="purZeroList" showSummaryRow="true" sortMode="client" ondrawsummarycell="onDrawSummaryCell"
+				onrowdblclick="onRowDblClick" class="nui-datagrid" style="width: 100%; height: 550px" url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext" multiSelect="false" allowSortColumn=true>
 				<div property="columns">
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 					<div type="checkcolumn"></div>
-					<div field="proAppName" width="100" align="center" headerAlign="center" allowSort="true">立项名称</div>
-					<div field="proAppCode" width="100" align="center" headerAlign="center" allowSort="true">立项编号</div>
-					<div field="purchaseNumber" width="80" align="center" headerAlign="center" allowSort="true">采购计划编号</div>
-					<div field="proapporgname" width="200" align="center" headerAlign="center" allowSort="true">立项单位</div>
-					<div field="projectName" width="200" align="center" headerAlign="center" allowSort="true">所属项目名称</div>
-					<div field="purchasMode" width="200" align="center" headerAlign="center" allowSort="true" renderer="getPurchasMode">采购方式</div>
-					<div field="proAppApplyPrice" width="100" align="center" headerAlign="center" allowSort="true">立项申请金额(万元)</div>
-					<div field="proAppImplTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center">项目拟实施日期</div>
+					<div field="purchaseName" width="100" align="center" headerAlign="center" allowSort="true">零星采购名称</div>
+					<div field="purchaseCode" width="100" align="center" headerAlign="center" allowSort="true">零星采购编号</div>
+					<div field="orgname" width="200" align="center" headerAlign="center" allowSort="true">采购单位</div>
+					<div field="totalAmount" width="100" align="center" headerAlign="center" allowSort="true">总金额(万元)</div>
 					<div field="status" width="80" align="center" headerAlign="center" allowSort="true" renderer="getStatus">状态</div>
 				</div>
 			</div>
@@ -110,7 +93,7 @@
 		function onOk() {
 			var row = grid.getSelected();
 			if (row.status != 2) {
-				alert("请选择审批通过的采购立项");
+				alert("请选择审批通过的零星采购");
 				return;
 			}
 			CloseWindow("ok");
@@ -175,10 +158,6 @@
 
 		function getStatus(e) {
 			return nui.getDictText('ZH_FLOW_TYPE', e.value);//设置业务字典值
-		}
-		
-		function getPurchasMode(e){
-			return nui.getDictText('ZH_CGFS', e.value);
 		}
 
 		function zhContractType(e) {

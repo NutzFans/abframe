@@ -147,23 +147,23 @@ table,table tr td {
 								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
 							</td>
 
-							<td align="right" style="width: 100px">合同性质:</td>
+							<td align="right" style="width: 100px">是否为采购合同:</td>
 							<td>
 								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 160px">采购立项编号：</td>
+							<td align="right" style="width: 160px" id="purchasePlanLable">采购立项编号：</td>
 							<td>
 								<input id="purchasePlan" name="purchasePlan" enabled="false" class="nui-textbox" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
-								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 100%" required="false" enabled="true" />
+								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 120px">预算金额(元):</td>
+							<td align="right" style="width: 120px">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
 							</td>
@@ -252,6 +252,9 @@ table,table tr td {
 					nui.get("contractSum").setValue(data.contractSum);
 					$("#remark").html(data.remark);
 					nui.get("createUsername").setValue(data.createUsername);
+					if (nui.get("contractNature").getValue() == 3) {
+						$("#purchasePlanLable").html("零星采购编号:");
+					}
 					if (data.createUsername != null) {
 						createUsername = data.createUsername
 					} else {
