@@ -43,10 +43,10 @@
 								<td colspan="1">
 									<input id="isSmpt" name="isSmpt" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" visible="true" style="width:100%;"/>
 								</td>
-								<td align="right">采购文本密级：</td>
-								<td colspan="1">
-									<input id="classified" name="classified" class="nui-dictcombobox" dictTypeId="ZH_CLASSIFIED" required="true" visible="true" onvaluechanged="isClassified" style="width:100%;"/>
-								</td>
+<!-- 								<td align="right">采购文本密级：</td> -->
+<!-- 								<td colspan="1"> -->
+<!-- 									<input id="classified" name="classified" class="nui-dictcombobox" dictTypeId="ZH_CLASSIFIED" required="true" visible="true" onvaluechanged="isClassified" style="width:100%;"/> -->
+<!-- 								</td> -->
 								<td  align="right">所属项目名称：</td>
 								<td colspan="1">
 									<input name="projectId"  class="nui-textbox" required="true" style="width: 100%" />
