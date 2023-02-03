@@ -64,10 +64,10 @@
 								<td colspan="1">
 									<input id="isSmpt" name="isSmpt" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width:100%;"/>
 								</td>
-								<td colspan="1" align="right" style="width: 110px">采购密级：</td>
-								<td colspan="1">
-									<input id="classified" name="classified" class="nui-dictcombobox" dictTypeId="ZH_CLASSIFIED"  style="width:100%;"/>
-								</td>
+<!-- 								<td colspan="1" align="right" style="width: 110px">采购密级：</td> -->
+<!-- 								<td colspan="1"> -->
+<!-- 									<input id="classified" name="classified" class="nui-dictcombobox" dictTypeId="ZH_CLASSIFIED"  style="width:100%;"/> -->
+<!-- 								</td> -->
 								<td colspan="1" align="right">费用来源：</td>
 								<td colspan="2">
 									<input name="costFrom" class="nui-dictcombobox" dictTypeId="ZH_COST_FROM" style="width:100%;"/>

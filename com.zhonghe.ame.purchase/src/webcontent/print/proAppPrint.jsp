@@ -93,12 +93,12 @@
 		      <input type="text" name="isSmpt" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">采购文本密级</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="classified" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
+<!-- 	    <div class="layui-col-xs6"> -->
+<!-- 		    <label class="layui-form-label">采购文本密级</label> -->
+<!-- 		    <div class="layui-input-block"> -->
+<!-- 		      <input type="text" name="classified" disabled="disabled" class="layui-input"> -->
+<!-- 		    </div> -->
+<!-- 	    </div> -->
 	  </div>
 	  <div class="layui-row">
 	    <div class="layui-col-xs6">
