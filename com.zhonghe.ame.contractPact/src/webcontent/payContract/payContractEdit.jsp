@@ -160,7 +160,7 @@
 						<tr>
 							<td align="right" style="width: 100px">执行状态:</td>
 							<td>
-								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" />
+								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" required="true"  />
 							</td>
 							<td align="right" style="width: 120px">合同余额(元):</td>
 							<td>
@@ -442,16 +442,16 @@
 			nui.get("purchasePlan").setText(data.purchasePlan);
 			if (nui.get("contractNature").getValue() == 3) {
 				$("#purchasePlanLable").html("零星采购编号:");
-				nui.get("purchasePlan").setRequired(true);
 				nui.get("procurementType").setRequired(true);
-				nui.get("budgetSum").setRequired(true);
+				/* nui.get("purchasePlan").setRequired(true); */
+				/* nui.get("budgetSum").setRequired(true); */
 			}
 			if (nui.get("contractNature").getValue() == 1) {
-				nui.get("purchasePlan").setRequired(true);
-				nui.get("planYear").setRequired(true);
 				nui.get("procurementType").setRequired(true);
-				nui.get("budgetSum").setRequired(true);
-				nui.get("scalingSum").setRequired(true);
+				/* nui.get("purchasePlan").setRequired(true); */
+				/* nui.get("planYear").setRequired(true); */
+				/* nui.get("budgetSum").setRequired(true); */
+				/* nui.get("scalingSum").setRequired(true); */
 			}
 			var grid_0 = nui.get("grid_0");
 			grid_0.load({
@@ -604,17 +604,17 @@
 		function contractNatureChanged() {
 			if (nui.get("contractNature").getValue() == 1) {
 				$("#purchasePlanLable").html("采购立项编号:");
-				nui.get("purchasePlan").setRequired(true);
+				/* nui.get("purchasePlan").setRequired(true); */
 				nui.get("purchasePlan").setValue("");
 				nui.get("purchasePlan").setText("");
 				nui.get("proAppId").setValue("");
 				nui.get("procurementType").setRequired(true);
 				nui.get("procurementType").setValue("");
-				nui.get("planYear").setRequired(true);
+				/* nui.get("planYear").setRequired(true); */
 				nui.get("planYear").setValue("");
-				nui.get("budgetSum").setRequired(true);
+				/* nui.get("budgetSum").setRequired(true); */
 				nui.get("budgetSum").setValue("");
-				nui.get("scalingSum").setRequired(true);
+				/* nui.get("scalingSum").setRequired(true); */
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 2) {
 				$("#purchasePlanLable").html("采购立项编号:");
@@ -632,17 +632,17 @@
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 3) {
 				$("#purchasePlanLable").html("零星采购编号:");
-				nui.get("purchasePlan").setRequired(true);
+				/* nui.get("purchasePlan").setRequired(true); */
 				nui.get("purchasePlan").setValue("");
 				nui.get("purchasePlan").setText("");
 				nui.get("proAppId").setValue("");
 				nui.get("procurementType").setRequired(true);
 				nui.get("procurementType").setValue("");
-				nui.get("planYear").setRequired(false);
+				/* nui.get("planYear").setRequired(false); */
 				nui.get("planYear").setValue("");
-				nui.get("budgetSum").setRequired(true);
+				/* nui.get("budgetSum").setRequired(true); */
 				nui.get("budgetSum").setValue("");
-				nui.get("scalingSum").setRequired(false);
+				/* nui.get("scalingSum").setRequired(false); */
 				nui.get("scalingSum").setValue("");
 			}
 		}		
