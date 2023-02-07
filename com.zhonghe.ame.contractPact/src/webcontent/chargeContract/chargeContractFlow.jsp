@@ -373,7 +373,6 @@
 				},
 				success : function(data) {
 					grid2.setData(data.data);
-					console.log(data.data);
 				}
 			})
 		}

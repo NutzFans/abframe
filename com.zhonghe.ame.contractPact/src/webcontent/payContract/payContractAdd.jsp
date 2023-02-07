@@ -621,7 +621,7 @@
 			var oct = row.oct * 1;
 			var nov = row.nov * 1;
 			var dec = row.dec * 1;
-			var sum = jan + feb + mar + apr + may + jun + jul + aug + sep + oct + nov + dec;
+			var sum = (jan + feb + mar + apr + may + jun + jul + aug + sep + oct + nov + dec).toFixed(2);
 			grid2.updateRow(row, {
 				sum : sum
 			});
