@@ -27,6 +27,8 @@
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" id="payId" />
 				<input name="proAppId" id="proAppId" class="nui-hidden" />
+				<input name="actContractSum" id="actContractSum" class="nui-hidden">
+				<input id="finalSum" name="finalSum" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -305,6 +307,11 @@
 			var payPlans = grid2.getData();
 			data.id = nui.get("payId").getValue();
 			data.files = nui.get("fileids").getValue();
+			var finalSum = nui.get("finalSum").getValue() * 1;
+			var actContractSum = nui.get("actContractSum").getValue() * 1;
+			var contractSum = nui.get("contractSum").getValue() * 1;
+			finalSum = (finalSum-actContractSum+contractSum).toFixed(2);
+			data.finalSum = finalSum;
 			var json = nui.encode({
 				'data' : data,
 				"payPlans" : payPlans

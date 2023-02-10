@@ -3,21 +3,21 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>付费合同补充协议申请</title>
+<title>付费合同补充协议编辑</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
 	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
+		 margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
 	}
 </style>
 </head>
 <body>
-	<%
-		long workitemid = (Long)request.getAttribute("workItemID");
-	%>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>原 - 付费合同信息</legend>
 			<form>
+				<input id="historyFinalSum" name="historyFinalSum" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -72,25 +72,27 @@
 				</div>
 			</form>
 		</fieldset>
-	
+		
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>补充协议 - 付费合同信息</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input name="id" id="id" class="nui-hidden" />
+				<input name="relateCont" id="relateCont" class="nui-hidden" />
+				<input name="actContractSum" id="actContractSum" class="nui-hidden">
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden"/>
-								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" enabled="false" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 200px;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
+									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-hidden"/>
 							</td>
 							<td align="right" style="width: 130px">申请日期：</td>
@@ -101,26 +103,26 @@
 						<tr>
 							<td align="right" style="width: 130px">补充协议名称：</td>
 							<td>
-								<input id="contractName" name="contractName" class="nui-textbox" style="width: 200px" required="true" enabled="false" />
+								<input id="contractName" name="contractName" class="nui-textbox" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">签约方：</td>
 							<td>
 								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 200px" enabled="false" />
+									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 130px">付款方：</td>
 							<td>
-								<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" enabled="false" />
+								<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">变更金额(元)：</td>
 							<td>
-								<input id="contractSum" name="contractSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" enabled="false" />
+								<input id="contractSum" name="contractSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" emptyText="增加正数，减少负数，无变化0" onvaluechanged="onvaluechanged" />
 							</td>
 							<td align="right" style="width: 130px">不含税金额(元)：</td>
 							<td>
-								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" enabled="false"/>
+								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" emptyText="增加正数，减少负数，无变化0" onvaluechanged="onvaluechanged"/>
 							</td>
 							<td align="right" style="width: 130px">税额(元):</td>
 							<td>
@@ -128,16 +130,30 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 100px">合同编号：</td>
+							<td>
+								<input id="contractNo" name="contractNo" class="nui-textbox" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 100px">签订日期：</td>
+							<td>
+								<input id="signingDate" name="signingDate" class="nui-datepicker" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 100px">执行状态:</td>
+							<td>
+								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 200px" required="true"  />
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">补充协议说明：</td>
 							<td colspan="6">
-								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="true" enabled="false" />
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="true" />
 							</td>
 						</tr>
 					</table>
 				</div>
 			</form>
-		</fieldset>	
-	
+		</fieldset>		
+		
 		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>原 - 付费合同附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
@@ -147,58 +163,26 @@
 			<legend>补充协议 - 上传附件</legend>
 			<jsp:include page="/ame_common/inputFileExpand.jsp" />
 		</fieldset>
-		
-		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />	
 	</div>
 	
-	<div style="text-align: center; padding: 5px;" class="nui-toolbar">
-		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
-		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 0px;">关闭</a>
-	</div>	
-		
+	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
+		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
+		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
+	</div>
+	
 	<script type="text/javascript">
 		nui.parse();
-		var form = new nui.Form("#form1");
-		var opioionform = new nui.Form("#opioionform");
-		var workItemID = <%=request.getParameter("workItemID")%>;
-		var titleText,countersignUsers;
+		var form = new nui.Form("#form1");		
 		
-		init();
-		
-		function init() {
-			var data = {workitemid:<%=workitemid%>};
-			var json = nui.encode(data);
-			nui.ajax({
-				url : "com.zhonghe.ame.payContract.payContract.queryPayContractInfo.biz.ext",
-				type : "post",
-				data : json,
-				contentType : 'text/json',
-				success : function(o) {
-					form.setData(o.data);
-					queryHistory(o.data.relateCont);
-					nui.get("backTo").setData(o.data.backList);
-					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
-					inputFileExpandGrid.load({
-						"groupid" : "PAY_CONTRACT",
-						"relationid" : o.data.id
-					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");
-					var misOpinionGrid = nui.get("datagrid1");
-					misOpinionGrid.load({
-						processInstID : o.data.processid
-					});
-					misOpinionGrid.sortBy("time", "desc");
-					setTimeout(function() {
-						//注销掉删除操作
-						$(".Delete_Button").hide();
-					}, 300);
-					//初始化处理意见
-					initMisOpinion({
-						auditstatus : "1"
-					});					
-				}
-			});
+		function setEditData(data) {
+			form.setData(data);
+			queryHistory(data.relateCont);
+			var inputFileExpandGrid = nui.get("inputFileExpandGrid");
+				inputFileExpandGrid.load({
+					"groupid" : "PAY_CONTRACT",
+					"relationid" : data.id
+				});
+			inputFileExpandGrid.sortBy("fileTime", "desc");
 		}
 		
 		function queryHistory(str) {
@@ -215,7 +199,8 @@
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setValue(data.contractNo);
 					nui.get("historyContractName").setValue(data.contractName);
-					nui.get("historyContractSum").setValue(data.contractSum);
+					nui.get("historyContractSum").setValue(data.contractSum);			
+					nui.get("historyFinalSum").setValue(data.finalSum);
 					nui.get("historySigningDate").setValue(data.signingDate);
 					nui.get("historySignatoryname").setValue(data.signatoryname);
 					nui.get("historyPayer").setValue(data.payer);
@@ -230,107 +215,77 @@
 			})
 		}
 		
-		function countersign() {
-			selectOmEmployee();
-		}
-		
-		function selectOmEmployee() {
-			var btnEdit = this;
-			nui.open({
-				url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
-				title : "选择需要加签的人员",
-				width : 430,
-				height : 400,
-				ondestroy : function(action) {
-					countersignUsers = [];
-					var user, users = "【";
-					if (action == "ok") {
-						var iframe = this.getIFrameEl();
-						var data = iframe.contentWindow.GetData();
-						data = nui.clone(data); //必须
-						if (data) {
-							for (var i = 0; i < data.length; i++) {
-								user = {};
-								user.id = data[i].userid
-								user.name = data[i].empname
-								user.typeCode = "person"
-								countersignUsers.push(user);
-								if (i == 0) {
-									users = users + data[i].empname;
-								} else {
-
-									users = users + "," + data[i].empname;
-								}
-							}
-							users = users + "】";
-							titleText = "增加审批人员" + users + "并提交";
-							inputFileExpandForm.submit();
-						}
-					}
-				}
-			});
-		}
-		
-		function submit() {
-			var auditstatus = nui.get("auditstatus").getValue();
-			if (auditstatus == "2") { //终止流程
-				titleText = "终止";
-			} else if (auditstatus == "0") { //退回流程
-				if (!nui.get("backTo").getValue()) {
-					nui.alert("退回环节不能为空！");
-					return;
-				}
-				titleText = "退回";
-			} else if (auditstatus == "1") { //提交流程
-				titleText = "提交";
+		function onOk() {
+			form.validate();
+			if (form.isValid() == false) {
+				showTips("请检查表单的完整性!", "danger");
+				return;
 			}
+			document.getElementById("fileCatalog").value = "payContractinfo";
 			inputFileExpandForm.submit();
-		}		
-				
-		function SaveData() {
-			saveData();
 		}
 		
-		function saveData() {
-			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
-				if (action == "ok") {
-					var data = form.getData();
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					nui.get("creatReimbProcess").setEnabled(false);
-					data.files = nui.get("fileids").getValue();
-					var json = {
-						"cpData" : data,
-						"misOpinion" : misOpinion,
-						"workItemID": <%=workitemid %>,
-						"countersignUsers" : countersignUsers
-					};
-					ajaxCommon({
-						url : "com.zhonghe.ame.payContract.payContract.payContractAlterationReview.biz.ext",
-						data : json,
-						success : function(o) {
-							if (o.result == "success") {
-								showTips("提交成功", "系统提示")
-								closeOk();
-							} else {
-								showTips("提交失败，请联系信息技术部人员！")
-								closeOk();
-							}
-						}
-					})
-				}
+		function SaveData() {
+			var data = form.getData();
+			var historyFinalSum = nui.get("historyFinalSum").getValue() * 1;
+			var actContractSum = nui.get("actContractSum").getValue() * 1;
+			var contractSum = nui.get("contractSum").getValue() * 1;
+			finalSum = (historyFinalSum-actContractSum+contractSum).toFixed(2);
+			data.finalSum = finalSum;
+			var json = nui.encode({
+				'data' : data
 			});
-		}
+			if (!confirm("是否保存？")) {
+				return;
+			}else{
+				nui.ajax({
+					url : "com.zhonghe.ame.payContract.payContract.updatePayContractAlteration.biz.ext",
+					data : json,
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == 1) {
+							showTips("维护成功");
+							window.CloseOwnerWindow("save");
+						} else {
+							showTips("编辑失败", "danger");
+						}
 
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(jqXHR.responseText);
+					}
+				});				
+			}
+		}				
+				
+				
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
 		
+		//标准方法接口定义
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
 				return window.CloseOwnerWindow(action);
 			else
 				window.close();
+		}		
+		
+		function onvaluechanged() {
+			var contractSum = nui.get("contractSum").getValue();
+			var noTaxSum = nui.get("noTaxSum").getValue();
+			abs = function(val) {
+				var str = (val).toFixed(2) + '';
+				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+				var dot = str.substring(str.length, str.indexOf("."))
+				var ret = intSum + dot;
+				return ret;
+			}
+			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
-	</script>		
+	</script>	
+	
 </body>
 </html>

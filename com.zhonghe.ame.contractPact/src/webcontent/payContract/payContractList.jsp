@@ -194,6 +194,7 @@
 					<div field="cgNature" width="100" headerAlign="center" allowSort="true" renderer="ZH_NATURE" align="center">合同/订单性质</div>
 					<div field="cgSupplierScope" width="100" headerAlign="center" allowSort="true" renderer="ZH_SUPPLIER_SCOPE" align="center">供货商来源</div>
 					<div field="isDzcg" width="100" headerAlign="center" allowSort="true" renderer="ZH_YN" align="center">是否电子采购</div>
+					<div field="relateCont" headerAlign="center" allowSort="true" visible="false">relateCont</div>
 				</div>
 			</div>
 		</div>
@@ -288,8 +289,13 @@
 		function doView() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractListPrint.jsp?id=" + row.id;
-				window.open(executeUrl);
+				if(row.issupagreement == "y"){
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractAlterationPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}else{
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractListPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}
 			} else {
 				showTips("请选中一条记录", "danger");
 			}
@@ -336,23 +342,41 @@
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				nui.open({
-					url : "/default/contractPact/payContract/payContractEdit.jsp",
-					width : '100%',
-					height : '100%',
-					title : "付费合同签订维护",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						if (action == "ok") {
-							grid.reload();
+				if(data.issupagreement == "y"){
+					nui.open({
+						url : "/default/contractPact/payContract/payContractAlterationEdit.jsp",
+						width : '100%',
+						height : '100%',
+						title : "付费合同签订维护 - 补充协议",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+							search();
 						}
-						search();
-					}
-				})
-				
+					})					
+				}else{
+					nui.open({
+						url : "/default/contractPact/payContract/payContractEdit.jsp",
+						width : '100%',
+						height : '100%',
+						title : "付费合同签订维护",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+							search();
+						}
+					})				
+				}
 			}else{
 				showTips("只能维护审批状态为【审批通过】的数据", "danger");
 			}
@@ -516,19 +540,23 @@
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				nui.open({
-					url : "/default/contractPact/payContract/payContractAlteration.jsp",
-					width : '100%',
-					height : '100%',
-					title : "付费合同签订申请 - 补充协议",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
-					}
-				})
+				if(data.issupagreement != "y"){
+					nui.open({
+						url : "/default/contractPact/payContract/payContractAlteration.jsp",
+						width : '100%',
+						height : '100%',
+						title : "付费合同签订申请 - 补充协议",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							search();
+						}
+					})				
+				}else{
+					showTips("不能对补充协议的合同，再次发起补充协议签订请求", "danger");
+				}
 			} else {
 				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
 			}

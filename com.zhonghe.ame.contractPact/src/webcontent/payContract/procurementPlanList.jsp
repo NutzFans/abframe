@@ -26,23 +26,10 @@
 							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
 						</td>
 						<td style="width: 60px; text-align: right;">立项编号:</td>
-						<td style="width: 155px">
-							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
+						<td style="width: 205px">
+							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 200px" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="proAppCode" />
 							<input class="nui-hidden" name="criteria._expr[2]._op" value="like" />
-						</td>
-						<td style="width: 90px; text-align: right;">采购计划编号:</td>
-						<td style="width: 155px">
-							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 150px" />
-							<input class="nui-hidden" name="criteria._expr[3]._property" value="purchaseNumber" />
-							<input class="nui-hidden" name="criteria._expr[3]._op" value="like" />
-							<input class="nui-hidden" id="ischange" name="criteria._expr[4].ischange" value="1" />
-							<input class="nui-hidden" name="criteria._expr[4]._op" value="=" />
-							<input class="nui-hidden" name="criteria._expr[7]._property" value="createdOrgid" />
-							<input class="nui-hidden" name="criteria._expr[7]._op" value="in" />
-							<input class="nui-hidden" name="criteria._expr[7]._value" id="orgids2" />
-							<input class="nui-hidden" name="criteria._expr[6].createdBy" id="createdBy" />
-							<input class="nui-hidden" name="criteria._expr[6]._op" value="=" />
 						</td>
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
@@ -59,15 +46,14 @@
 				<div property="columns">
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 					<div type="checkcolumn"></div>
-					<div field="proAppName" width="100" align="center" headerAlign="center" allowSort="true">立项名称</div>
-					<div field="proAppCode" width="100" align="center" headerAlign="center" allowSort="true">立项编号</div>
-					<div field="purchaseNumber" width="80" align="center" headerAlign="center" allowSort="true">采购计划编号</div>
-					<div field="proapporgname" width="200" align="center" headerAlign="center" allowSort="true">立项单位</div>
-					<div field="projectName" width="200" align="center" headerAlign="center" allowSort="true">所属项目名称</div>
-					<div field="purchasMode" width="200" align="center" headerAlign="center" allowSort="true" renderer="getPurchasMode">采购方式</div>
+					<div field="proAppName" width="200" align="center" headerAlign="center" allowSort="true">立项名称</div>
+					<div field="proAppCode" width="150" align="center" headerAlign="center" allowSort="true">立项编号</div>
+					<div field="proAppOrgName" width="100" align="center" headerAlign="center" allowSort="true">立项单位</div>
+					<div field="projectId" width="100" align="center" headerAlign="center" allowSort="true">所属项目名称</div>
+					<div field="purchasMode" width="100" align="center" headerAlign="center" allowSort="true" renderer="getPurchasMode">采购方式</div>
 					<div field="proAppApplyPrice" width="100" align="center" headerAlign="center" allowSort="true">立项申请金额(万元)</div>
-					<div field="proAppImplTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center">项目拟实施日期</div>
-					<div field="status" width="80" align="center" headerAlign="center" allowSort="true" renderer="getStatus">状态</div>
+					<div field="createdTime" dateFormat="yyyy-MM-dd" width="100" allowSort="true" align="center" headerAlign="center">申请日期</div>
+					<div field="status" width="100" align="center" headerAlign="center" allowSort="true" renderer="getStatus">状态</div>
 				</div>
 			</div>
 		</div>
@@ -91,6 +77,7 @@
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy("createdTime", "desc");
 			grid.load(data); //datagrid加载数据
 		}
 		

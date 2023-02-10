@@ -3,10 +3,10 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>付费合同补充协议申请</title>
+<title>付费合同签订申请</title>
 <style type="text/css">
 	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
+		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
 	}
 </style>
 </head>
@@ -18,6 +18,7 @@
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>原 - 付费合同信息</legend>
 			<form>
+				<input id="historyFinalSum" name="historyFinalSum" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -72,12 +73,13 @@
 				</div>
 			</form>
 		</fieldset>
-	
+		
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>补充协议 - 付费合同信息</legend>
 			<form id="form1" method="post">
-				<input name="files" id="fileids" class="nui-hidden" />
+				<input name="files" id="fileids1" class="nui-hidden" />
 				<input name="id" id="id" class="nui-hidden" />
+				<input name="relateCont" id="relateCont" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -135,37 +137,58 @@
 						</tr>
 					</table>
 				</div>
+				<fieldset id="field6" style="border: solid 1px #aaa;">
+					<legend style="color: red;">请补充合同信息</legend>
+					<div style="padding: 5px; padding-left: 25px;">
+						<table style="table-layout: fixed;">
+							<tr>
+								<td align="right" style="width: 100px">合同编号：</td>
+								<td>
+									<input id="contractNo" name="contractNo" class="nui-textbox" style="width: 200px" required="true" />
+								</td>
+								<td align="right" style="width: 100px">签订日期：</td>
+								<td>
+									<input id="signingDate" name="signingDate" class="nui-datepicker" style="width: 200px" required="true" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</fieldset>
 			</form>
-		</fieldset>	
-	
+		</fieldset>
+		
 		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>原 - 付费合同附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
-
+		
 		<fieldset id="field4" style="border: solid 1px #aaa;">
-			<legend>补充协议 - 上传附件</legend>
-			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+			<legend>补充协议 - 相关附件</legend>
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
 		</fieldset>
 		
-		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />	
+		<fieldset id="field5" style="border: solid 1px #aaa;">
+			<legend style="color: red;">请上传签字盖章版合同</legend>
+			<jsp:include page="/ame_common/addFiles1.jsp" />
+			<div style="color: red; font-size: 14px;">此项为必填项</div>
+		</fieldset>
+
+		<jsp:include page="/ame_common/misOpinion.jsp" />
 	</div>
 	
-	<div style="text-align: center; padding: 5px;" class="nui-toolbar">
-		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
+	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
 		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 0px;">关闭</a>
-	</div>	
-		
+	</div>
+	
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var opioionform = new nui.Form("#opioionform");
 		var workItemID = <%=request.getParameter("workItemID")%>;
-		var titleText,countersignUsers;
 		
 		init();
-		
+
 		function init() {
 			var data = {workitemid:<%=workitemid%>};
 			var json = nui.encode(data);
@@ -177,13 +200,12 @@
 				success : function(o) {
 					form.setData(o.data);
 					queryHistory(o.data.relateCont);
-					nui.get("backTo").setData(o.data.backList);
-					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
-					inputFileExpandGrid.load({
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
 						"groupid" : "PAY_CONTRACT",
 						"relationid" : o.data.id
 					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");
+					detailFileExpandGrid.sortBy("fileTime", "desc");
 					var misOpinionGrid = nui.get("datagrid1");
 					misOpinionGrid.load({
 						processInstID : o.data.processid
@@ -193,10 +215,9 @@
 						//注销掉删除操作
 						$(".Delete_Button").hide();
 					}, 300);
-					//初始化处理意见
-					initMisOpinion({
-						auditstatus : "1"
-					});					
+					//初始化审核意见
+					nui.get("auditstatus").setValue(1);//1：通过,0：退回，2：终止流程，3:发起
+					document.getElementById("salesEdit").style.display = "none";				
 				}
 			});
 		}
@@ -216,6 +237,7 @@
 					nui.get("historyContractNo").setValue(data.contractNo);
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyContractSum").setValue(data.contractSum);
+					nui.get("historyFinalSum").setValue(data.finalSum);
 					nui.get("historySigningDate").setValue(data.signingDate);
 					nui.get("historySignatoryname").setValue(data.signatoryname);
 					nui.get("historyPayer").setValue(data.payer);
@@ -230,107 +252,82 @@
 			})
 		}
 		
-		function countersign() {
-			selectOmEmployee();
-		}
-		
-		function selectOmEmployee() {
-			var btnEdit = this;
-			nui.open({
-				url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
-				title : "选择需要加签的人员",
-				width : 430,
-				height : 400,
-				ondestroy : function(action) {
-					countersignUsers = [];
-					var user, users = "【";
-					if (action == "ok") {
-						var iframe = this.getIFrameEl();
-						var data = iframe.contentWindow.GetData();
-						data = nui.clone(data); //必须
-						if (data) {
-							for (var i = 0; i < data.length; i++) {
-								user = {};
-								user.id = data[i].userid
-								user.name = data[i].empname
-								user.typeCode = "person"
-								countersignUsers.push(user);
-								if (i == 0) {
-									users = users + data[i].empname;
-								} else {
-
-									users = users + "," + data[i].empname;
-								}
-							}
-							users = users + "】";
-							titleText = "增加审批人员" + users + "并提交";
-							inputFileExpandForm.submit();
-						}
-					}
-				}
-			});
+		function changeOrgForm(e) {
+			nui.get("implementOrgname").setValue(e.source.text);
 		}
 		
 		function submit() {
+			form.validate();
+			if (form.isValid() == false) {
+				showTips("请检查表单的完整性!", "danger");
+				return;
+			}
+			var filePaths = document.getElementsByName("uploadfile1").length;
+			if (filePaths == 0) {
+				showTips("请上传'签字盖章版合同'", "danger");
+				return;
+			} else {
+				for (var j = 0; j < filePaths; j++) {
+					var a = document.getElementsByName("remarkList1")[j].value;
+					if (a == null || a == "") {
+						showTips("请上传'签字盖章版合同'", "danger");
+						return;
+					}
+				}
+			}
 			var auditstatus = nui.get("auditstatus").getValue();
 			if (auditstatus == "2") { //终止流程
 				titleText = "终止";
+				submitProcess("终止");
 			} else if (auditstatus == "0") { //退回流程
 				if (!nui.get("backTo").getValue()) {
-					nui.alert("退回环节不能为空！");
+					showTips("退回环节不能为空！", "danger");
 					return;
 				}
 				titleText = "退回";
+				submitProcess("退回");
 			} else if (auditstatus == "1") { //提交流程
+				document.getElementById("fileCatalog1").value = "payContractInfo";
 				titleText = "提交";
+				submitProcess("提交");
 			}
-			inputFileExpandForm.submit();
-		}		
-				
-		function SaveData() {
-			saveData();
 		}
 		
-		function saveData() {
-			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
+		function submitProcess(title) {
+			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
-					var data = form.getData();
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					nui.get("creatReimbProcess").setEnabled(false);
-					data.files = nui.get("fileids").getValue();
-					var json = {
-						"cpData" : data,
-						"misOpinion" : misOpinion,
-						"workItemID": <%=workitemid %>,
-						"countersignUsers" : countersignUsers
-					};
-					ajaxCommon({
-						url : "com.zhonghe.ame.payContract.payContract.payContractAlterationReview.biz.ext",
-						data : json,
-						success : function(o) {
-							if (o.result == "success") {
-								showTips("提交成功", "系统提示")
-								closeOk();
-							} else {
-								showTips("提交失败，请联系信息技术部人员！")
-								closeOk();
-							}
-						}
-					})
+					document.getElementById("fileCatalog1").value = "payContractinfo";
+					form4.submit();
 				}
 			});
 		}
-
-		function onCancel(e) {
-			CloseWindow("cancel");
-		}
 		
-		function CloseWindow(action) {
-			if (window.CloseOwnerWindow)
-				return window.CloseOwnerWindow(action);
-			else
-				window.close();
+		function SaveData1() {
+			var misOpinion = opioionform.getData().misOpinion;//审核意见
+			var data = form.getData();
+			var historyFinalSum = nui.get("historyFinalSum").getValue() * 1;
+			var contractSum = nui.get("contractSum").getValue() * 1;
+			var finalSum = (historyFinalSum + contractSum).toFixed(2);
+			data.finalSum = finalSum;
+			var json = {
+				"cpData" : data,
+				"misOpinion" : misOpinion,
+				"workItemID" : <%=workitemid%>
+			};
+			ajaxCommon({
+				url : "com.zhonghe.ame.payContract.payContract.payContractAlterationReview.biz.ext",
+				data : json,
+				success : function(o) {
+					if (o.result == "success") {
+						showTips(titleText + "成功")
+						closeOk();
+					} else {
+						showTips("提交失败，请联系信息技术部人员！", "danger")
+						closeOk();
+					}
+				}
+			})
 		}
-	</script>		
+	</script>
 </body>
 </html>
