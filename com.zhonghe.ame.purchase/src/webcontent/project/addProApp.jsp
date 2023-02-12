@@ -173,7 +173,7 @@
 				</div>
 			</fieldset>
 			<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-				<legend>估算表和支撑材料(可上传多个附件)<a href="<%=request.getContextPath() %>/purProgramMoneyTable.docx" download="采购立项费用估算表">采购立项费用估算表下载</a></legend>
+				<legend>估算表、采购方案和支撑材料(可上传多个附件)<a href="<%=request.getContextPath() %>/purProgramMoneyTable.docx" download="采购立项费用估算表">采购立项费用估算表下载</a></legend>
 				<jsp:include page="/ame_common/addFiles.jsp"/>
 			</fieldset>
 			<form id="opioionform" method="post">

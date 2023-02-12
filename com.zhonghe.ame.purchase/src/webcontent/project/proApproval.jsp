@@ -169,7 +169,7 @@
 			</div>
 		</fieldset>
 		<fieldset id="field2" style="border:solid 1px #aaa;padding:1px;width: 98%">
-			<legend>估算表和支撑材料</legend>
+			<legend>估算表、采购方案和支撑材料</legend>
 			<jsp:include page="/ame_common/detailFile.jsp"/>
 <!-- 			<legend>立项支持材料附件</legend> -->
 <%-- 			<jsp:include page="/ame_common/detailFile2.jsp"/> --%>
