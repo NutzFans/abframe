@@ -608,6 +608,10 @@
 			}
 		}
 		
+		function changeOrgForm(e) {
+			nui.get("implementOrgname").setValue(e.source.text);
+		}		
+		
 		function contractNatureChanged() {
 			if (nui.get("contractNature").getValue() == 1) {
 				$("#purchasePlanLable").html("采购立项编号:");
