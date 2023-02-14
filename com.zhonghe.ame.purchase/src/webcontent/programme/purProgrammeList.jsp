@@ -40,7 +40,6 @@
 					</td>
 					<td class="form_label" align="right">文件名称:</td>
 					<td colspan="1">
-						<input name="critria._expr[0].type" class="nui-hidden" value="1" />
 						<input name="critria._expr[1].programmeName" class="nui-textbox" style="width:65%;" />
 						<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
 					</td>
