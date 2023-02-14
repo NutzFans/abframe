@@ -71,11 +71,11 @@
 							</td>
 							<td align="right" style="width: 160px">累计已付金额(元)：</td>
 							<td>
-								<input id="paidContractSum" name="paidContractSum" class="nui-textbox" onvaluechanged="editPaidContractSum" style="width: 300px" required="false" enabled="false" />
+								<input id="paidContractSum" name="paidContractSum" class="nui-textbox" style="width: 300px" required="false" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">本次支付金额(元)：</td>
 							<td>
-								<input id="applyPayContractSum" name="applyPayContractSum" onvaluechanged="editApplyPayContractSum" class="nui-textbox" style="width: 300px" required="true" />
+								<input id="applyPayContractSum" name="applyPayContractSum" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
 
 						</tr>
@@ -96,8 +96,8 @@
 						<tr>
 							<td align="right">收款单位：</td>
 							<td colspan="8">
-								<input name="signatory" id="signatory" class="nui-hidden" style="width: 300px" />
-								<input id="signatoryname" name="signatoryname" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+								<input name="signatory" id="signatory" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
+									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
@@ -272,16 +272,6 @@
 					alert(jqXHR.responseText);
 				}
 			});
-		}
-		
-		function editPaidContractSum(e) {
-			var money = e.value;
-			nui.get("paidContractSumCapital").setValue(numberParseChina(money));
-		}
-		
-		function editApplyPayContractSum(e) {
-			var money = e.value;
-			nui.get("applyPayContractSumCapital").setValue(numberParseChina(money));
 		}
 		
 		function onCancel(e) {

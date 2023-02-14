@@ -72,11 +72,11 @@
 							</td>
 							<td align="right" style="width: 160px">累计已付金额(元)：</td>
 							<td>
-								<input id="paidContractSum" name="paidContractSum" class="nui-textbox" onvaluechanged="editPaidContractSum" style="width: 300px" required="false" enabled="false" />
+								<input id="paidContractSum" name="paidContractSum" class="nui-textbox" style="width: 300px" required="false" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">本次支付金额(元)：</td>
 							<td>
-								<input id="applyPayContractSum" name="applyPayContractSum" onvaluechanged="editApplyPayContractSum" class="nui-textbox" style="width: 300px" required="true" />
+								<input id="applyPayContractSum" name="applyPayContractSum" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
 
 						</tr>
@@ -97,8 +97,8 @@
 						<tr>
 							<td align="right">收款单位：</td>
 							<td colspan="8">
-								<input name="signatory" id="signatory" class="nui-hidden" style="width: 300px" />
-								<input id="signatoryname" name="signatoryname" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+								<input name="signatory" id="signatory" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
+									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
@@ -237,7 +237,6 @@
 			}
 			if (null != data.contractSum) {
 				nui.get("actContractSum").setValue(data.contractSum);
-				nui.get("actContractSumCapital").setValue(numberParseChina(data.contractSum));
 			}
 			if (null != data.id) {
 				var json = nui.encode({
@@ -258,7 +257,6 @@
 						nui.get("paidContractSumCapital").setValue(numberParseChina(payAll.toFixed(2)));
 						if (isNaN(payAll.toFixed(2)) || payAll.toFixed(2) == 0.00) {
 							nui.get("paidContractSum").setValue(0.00);
-							nui.get("paidContractSumCapital").setValue("零元整");
 						}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
@@ -333,12 +331,10 @@
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
 						if (data) {
-							console.log(data);
 							btnEdit.setValue(data.contractNo);
 							btnEdit.setText(data.contractNo);
 							nui.get("contractName").setValue(data.contractName);
 							nui.get("contractSum").setValue(data.contractSum);
-							nui.get("signatoryname").setValue(data.signatoryname);
 							nui.get("signatory").setValue(data.signatory);
 							nui.get("contractType").setValue(data.contractType);
 							nui.get("contractNature").setValue(data.contractNature);
@@ -387,7 +383,8 @@
 
 		function zhInvoiceNameType(e) {
 			return nui.getDictText("ZH_INVOICE_NAME_TYPE", e.value);
-		}
+		}		
+		
 	</script>
 
 </body>
