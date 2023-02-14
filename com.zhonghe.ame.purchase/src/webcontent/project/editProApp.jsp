@@ -166,7 +166,7 @@
 				</div>
 			</fieldset>
 			<fieldset id="field3" style="border:solid 1px #aaa;padding:0px;">
-				<legend>估算表和支撑材料(可上传多个附件)</legend>
+				<legend>估算表、采购方案和支撑材料(可上传多个附件)</legend>
 				<jsp:include page="/purchase/common/inputFilePurchase.jsp"/>
 			</fieldset>
 		<jsp:include page="/ame_common/misOpinion.jsp"/>	

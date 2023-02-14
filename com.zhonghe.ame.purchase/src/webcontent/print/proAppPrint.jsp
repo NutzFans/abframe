@@ -62,7 +62,7 @@
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">申请人</label>
 		    <div class="layui-input-block">
-		      <input type="text" name="proAppName" disabled="disabled" class="layui-input">
+		      <input type="text" name="createdUsername" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	    <div class="layui-col-xs6">
@@ -340,12 +340,12 @@
 				,cellMinWidth: 90
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
-		      {field:'code',width:175, title: '计划编号'}
-		      ,{field:'planName', width:215, title: '计划名称'}
-		      ,{field:'materialName', width:200, title: '采购物项名称 '}
+		      {field:'code',width:185, title: '计划编号'}
+		      ,{field:'planName', width:255, title: '计划名称'}
+		      ,{field:'materialName', width:250, title: '采购物项名称 '}
 		      ,{field:'budgetAmount',width:90, title: '预算金额'}
 		      ,{field:'amount',width:110, title: '立项金额'}  
-		      ,{field:'needOrgName', width:100, title: '采购单位'}
+// 		      ,{field:'needOrgName', width:100, title: '采购单位'}
 		    ]]
 		    ,parseData: function(res){ //res 即为原始返回的数据
 			    return {
