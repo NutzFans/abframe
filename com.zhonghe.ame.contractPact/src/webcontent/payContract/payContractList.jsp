@@ -6,6 +6,10 @@
 	html,body {
 		margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
 	}
+	
+	.mini-grid-cell-nowrap{
+		white-space: nowrap;
+	}	
 </style>
 <head>
 <title>付费合同管理</title>
@@ -157,7 +161,7 @@
 		</div>
 
 		<div class="nui-fit">
-			<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" showSummaryRow="true" pageSize="15" align="center" class="nui-datagrid" style="width: 100%; height: 100%;"
+			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" align="center" class="nui-datagrid" style="width: 100%; height: 100%;"
 				url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
 				<div property="columns">
 					<div type="checkcolumn"></div>
