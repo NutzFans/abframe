@@ -20,11 +20,12 @@
 				<div class="nui-toolbar" style="border-left: 0px; border-right: 0px; border-top: 0px; padding: 5px;">客户</div>
 				<div class="nui-toolbar" style="border-left: 0px; border-right: 0px; border-top: 0px; padding: 5px;">
 					<div id="form1">
-						<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.marketInfo.customerInfo.MisCustinfo" />
+						<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.marketInfo.customerInfo.MisCustinfoNew" />
 						<table>
 							<td style="width: 60px; text-align: right;">客户名称:</td>
 							<td style="width: 205px">
-								<input class="nui-textbox" name="criteria._expr[0]._value" style="width: 200px;" />
+								<input name="criteria._expr[0]._value" class="nui-combobox" valueField="custname" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.queryCustInfoLike.biz.ext" filterType="like"
+									textField="custname" dataField="custinfos" valueFromSelect="true" allowInput="true" style="width: 200px" onvaluechanged="triggerSearch" />
 								<input class="nui-hidden" name="criteria._expr[0]._property" value="custname" />
 								<input class="nui-hidden" name="criteria._expr[0]._op" value="like" />
 							</td>
@@ -72,7 +73,7 @@
 				</div>
 				<div class="nui-fit" style="padding: 2px">
 					<div id="visitgrid1" class="nui-datagrid" style="width: 100%; height: 100%;" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.queryCustVisit.biz.ext" dataField="custVisits"
-						sizeList="[25,30,50,100]" pageSize="25" allowAlternating="true">
+						sizeList="[25,30,50,100]" pageSize="25" allowAlternating="true" onrowdblclick="doView" onpreload="isIncludeFile">
 						<div property="columns">
 							<div type="checkcolumn" width="15"></div>
 							<div field="id" visible="false">主键</div>
@@ -81,13 +82,12 @@
 							<div field="orgname" visible="false">组织名称</div>
 							<div field="createUserid" visible="false">填报人主键</div>
 							<div field="empname" visible="false">填报人名称</div>
-							<div field="custname" align="left" headerAlign="center">客户名称</div>
-							<div field="visitDate" dateFormat="yyyy-MM-dd" align="center" headerAlign="center" width="50" renderer="lookInfo">接洽时间</div>
-							<div field="visitAddress" align="center" headerAlign="center">接洽地点</div>
-							<div field="visitResult" align="center" headerAlign="center">主要议题及成果</div>
-							<div field="visitMeetingPerson" align="center" headerAlign="center">主要参会人员</div>
-							<div align="center" headerAlign="center" renderer="onActionRenderer">填报人/部门</div>
-							<div field="createDate" dateFormat="yyyy-MM-dd" allowSort="true" align="center" headerAlign="center" width="50">填报时间</div>
+							<div field="visitDate" dateFormat="yyyy-MM-dd" align="center" headerAlign="center" width="30" allowSort="true" renderer="lookInfo">接洽时间</div>
+							<div field="visitAddress" headerAlign="center">接洽地点</div>
+							<div field="visitResult" headerAlign="center">主要议题及成果</div>
+							<div field="visitMeetingPerson" headerAlign="center">主要参会人员</div>
+							<div align="center" headerAlign="center" renderer="onActionRenderer" width="30">填报人/部门</div>
+							<div field="isIncludeFile" align="center" headerAlign="center" width="20">含附件</div>
 						</div>
 					</div>
 				</div>
@@ -108,8 +108,7 @@
 			currentSelRow = null;
 			grid.sortBy("createDate", "desc");
 			grid.load();
-			visitGrid.sortBy("createDate", "desc");
-			visitGrid.load();
+			visitGrid.clearRows();
 		}
 		
 		function search() {
@@ -117,8 +116,7 @@
 			var data = form.getData();
 			grid.sortBy("createDate", "desc");
 			grid.load(data);
-			visitGrid.sortBy("createDate", "desc");
-			visitGrid.load();
+			visitGrid.clearRows();
 		}
 		
 		function reset() {
@@ -187,8 +185,7 @@
 								var data = form.getData();
 								grid.sortBy("createDate", "desc");
 								grid.load(data);
-								visitGrid.sortBy("createDate", "desc");
-								visitGrid.load();
+								visitGrid.clearRows();
 							} else {
 								showTips("删除失败，请联系管理员！", "danger");
 							}
@@ -216,7 +213,7 @@
 				}
 			};
 			var data = nui.decode(json, true);
-			visitGrid.sortBy("createDate", "desc");
+			visitGrid.sortBy("visitDate", "desc");
 			visitGrid.load(data);
 		}
 		
@@ -243,7 +240,7 @@
 							}
 						};
 						var data = nui.decode(json, true);
-						visitGrid.sortBy("createDate", "desc");
+						visitGrid.sortBy("visitDate", "desc");
 						visitGrid.load(data);						
 					}
 				})			
@@ -279,7 +276,7 @@
 								}
 							};
 							var data = nui.decode(json, true);
-							visitGrid.sortBy("createDate", "desc");
+							visitGrid.sortBy("visitDate", "desc");
 							visitGrid.load(data);
 						}
 					}
@@ -318,7 +315,7 @@
 										}
 									};
 									var data = nui.decode(json, true);
-									visitGrid.sortBy("createDate", "desc");
+									visitGrid.sortBy("visitDate", "desc");
 									visitGrid.load(data);
 								}
 							} else {
@@ -331,7 +328,7 @@
 		}
 		
 		function lookInfo(e) {
-			return "<a href='javascript:void(0)' onclick='doView();' title='查看详情'>" + e.value + "</a>";
+			return "<a href='javascript:void(0)' onclick='doView();' title='查看详情'>" + nui.formatDate (e.value,'yyyy-MM-dd') + "</a>";
 		}
 		
 		function doView() {
@@ -352,7 +349,31 @@
 					}
 				})	
 			}
-		}				
+		}
+		
+		function triggerSearch(){
+			search();
+		}
+		
+		function isIncludeFile(e){
+			for(i=0;i<e.result.custVisits.length;i++){
+				var json = nui.encode({'relationId' : e.result.custVisits[i].id, 'groupId': 'CUST_VISIT', 'fileCatalog': 'customerVisit'});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.isIncludeFile.biz.ext",
+					async: false,
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if(o.result=="1"){
+							e.result.custVisits[i].isIncludeFile = "有";
+						}else{
+							e.result.custVisits[i].isIncludeFile = "无";
+						}
+					}
+				});	
+			}
+		}
 		
 	</script>
 </body>
