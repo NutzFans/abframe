@@ -72,14 +72,13 @@
 				<div name="temp123" type="checkcolumn"></div>
 				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 				<!-- <div type="expandcolumn" width="20"></div> -->
-				<div field="custname" width="120" align="left" headerAlign="center" allowSort="true"
-					renderer="lookInfo">供应商名称</div>
-				<div field="contractName" width="200" align="left" headerAlign="center" allowSort="true">合同名称
+				<div field="custname" width="120" align="left" headerAlign="center" renderer="lookInfo">供应商名称</div>
+				<div field="contractName" width="200" align="left" headerAlign="center">合同名称
 				</div>
-				<div field="contractNo" width="120" align="center" headerAlign="center" allowSort="true">合同编号</div>
-				<div field="evaluationGrade" width="80" align="center" headerAlign="center" allowSort="true">评价等级</div>
-				<div field="scoring" width="80" align="center" headerAlign="center" allowSort="true">主观评分</div>
-				<div field="createTime" align="center" headerAlign="center">创建时间</div>
+				<div field="contractNo" width="120" align="center" headerAlign="center">合同编号</div>
+				<div field="evaluationGrade" width="80" align="center" headerAlign="center">评价等级</div>
+				<div field="scoring" width="80" align="center" headerAlign="center">主观评分</div>
+				<div field="createTime" align="center" headerAlign="center" allowSort="true">创建时间</div>
 			</div>
 		</div>
 	</div>
@@ -92,8 +91,8 @@
 		var reve_grid = nui.get("reve_grid");
 		var json = nui.encode({ "iden": "1", "expseq": null, "feeseq": null, "parentfeetypeid": null });
 		function init() {
+			grid.sortBy("createTime","desc");
 			grid.load({ type: type });
-			grid.sortBy("tbdate", "desc");
 		}
 		function getStatus(e) {
 			if (e.value == 1) {
@@ -156,12 +155,13 @@
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
-
+			grid.sortBy("createTime","desc");
 			grid.load(data); //datagrid加载数据
 		}
 		function reset() {
 			var form = new nui.Form("#form1");
 			form.reset();
+			grid.sortBy("createTime","desc");
 			grid.load();
 			search()
 		}

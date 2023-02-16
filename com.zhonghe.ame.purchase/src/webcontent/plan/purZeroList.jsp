@@ -92,19 +92,19 @@
 	</div>
 	<div class="nui-fit">
 		<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true"
-			dataField="purZeroList" sortMode="client" class="nui-datagrid" style="width:100%;height:100%;"
+			dataField="purZeroList" class="nui-datagrid" style="width:100%;height:100%;"
 			pageSize="20" url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext"
 			multiSelect="false">
 			<div property="columns">
 				<div name="temp123" type="checkcolumn"></div>
 				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-				<div field="purchaseName" width="100" align="left" headerAlign="center" allowSort="true" renderer="lookInfo">零星采购名称</div>
-				<div field="purchaseCode" width="100" align="left" headerAlign="center" allowSort="true"> 零星采购编号</div>
-				<div field="orgname" width="100" align="left" headerAlign="center" allowSort="true">采购单位</div>
-				<div field="totalAmount" width="100" align="left" headerAlign="center" allowSort="true">金额</div>
-				<div field="status" width="80" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">状态</div>
-				<div field="createdName" width="100" align="center" headerAlign="center" allowSort="true">申请人</div>
-				<div field="createdTime" width="100" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">申请时间</div>
+				<div field="purchaseName" width="100" align="left" headerAlign="center" renderer="lookInfo">零星采购名称</div>
+				<div field="purchaseCode" width="100" align="left" headerAlign="center"> 零星采购编号</div>
+				<div field="orgname" width="100" align="left" headerAlign="center">采购单位</div>
+				<div field="totalAmount" width="100" align="left" headerAlign="center">金额</div>
+				<div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer">状态</div>
+				<div field="createdName" width="100" align="center" headerAlign="center">申请人</div>
+				<div field="createdTime" width="100" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">申请日期</div>
 			</div>
 		</div>
 	</div>
@@ -170,6 +170,7 @@
 				}
 				var form = new nui.Form("#form1");
 				var data = form.getData(); //获取表单JS对象数据
+				grid.sortBy('createdTime', 'desc');
 				grid.load(data); //datagrid加载数据
 			}
 

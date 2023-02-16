@@ -70,11 +70,12 @@
 	            <div name="temp123" type="checkcolumn"></div>
 	        	<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 	        	<!-- <div type="expandcolumn" width="20"></div> -->
-	        	<div field="purchaseName" width="100" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">紧急采购名称</div>
-	            <div field="purchaseCode" width="100" align="center" headerAlign="center" allowSort="true">紧急采购编号</div>
-	            <div field="orgname" width="100" align="center" headerAlign="center" allowSort="true" >采购单位</div>
-	            <div field="contrctType" width="100" align="center" headerAlign="center" allowSort="true" renderer="onContrctType">合同发包方式</div>
+	        	<div field="purchaseName" width="100" align="center" headerAlign="center" renderer="lookInfo">紧急采购名称</div>
+	            <div field="purchaseCode" width="100" align="center" headerAlign="center">紧急采购编号</div>
+	            <div field="orgname" width="100" align="center" headerAlign="center">采购单位</div>
+	            <div field="contrctType" width="100" align="center" headerAlign="center" renderer="onContrctType">合同发包方式</div>
 	           <div field="status" width="80" align="center" headerAlign="center" aRproAppListllowSort="true"  renderer="onActionRenderer" >状态</div>
+	           <div field="createdTime" align="center" headerAlign="center" allowSort="true">申请日期</div>
 	        </div>
         </div>
 	</div>
@@ -145,8 +146,8 @@
 	    }
     	init();
     	function init(){
+    		grid.sortBy('createdTime', 'desc');
     		grid.load();
-    		grid.sortBy("tbdate","desc");
 		}
 		function onContrctType(e) {
 				
@@ -207,11 +208,13 @@
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy('createdTime', 'desc');
 		  	grid.load(data); //datagrid加载数据
 		}
 		function reset(){
 			var form = new nui.Form("#form1");
 			form.reset();
+			grid.sortBy('createdTime', 'desc');
 			grid.load();
 		}
 		

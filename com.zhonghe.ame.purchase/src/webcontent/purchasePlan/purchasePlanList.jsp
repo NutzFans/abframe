@@ -40,7 +40,6 @@
 						    <input class="nui-hidden" name="criteria._expr[6]._op" value="="/>
 						    <input name="criteria._expr[7].ischange" class="nui-hidden"  value="1"/>
 						    <input class="nui-hidden" name="criteria._expr[7]._op" value="="/>
-						    <input class="nui-hidden" name="criteria._order[1]._desc" value="updatedTime" >
 		          </td>		          
 		      </tr>
 			  <tr>
@@ -66,34 +65,33 @@
 	            </tr>
 	        </table>           
 	    </div>
-	    <div id="datagrid1"  sizeList="[10,20,50,100]" showPager="true" dataField="data" 
-	    	sortMode="client"  pageSize="20" showFilterRow="true" allowAlternating="true"
+	    <div id="datagrid1"  sizeList="[10,20,50,100]" showPager="true" dataField="data"  pageSize="20" showFilterRow="true" allowAlternating="true"
 	    	class="nui-datagrid" style="width:100%;height:95%;" url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanList.biz.ext" 
 	    	multiSelect="false" allowSortColumn=true>
 	        <div property="columns"> 
 	            <div name="temp123" type="checkcolumn"></div>    
 	            <div type="indexcolumn" align="center" headerAlign="center">序号</div>
-	        	<div field="name" width="160" align="left" headerAlign="center" allowSort="true" renderer="lookInfo">采购计划名称
+	        	<div field="name" width="160" align="left" headerAlign="center" renderer="lookInfo">采购计划名称
 	        		<input name="criteria._expr[0].name"  property="filter" class="nui-textbox" style="width:100%;" onvaluechanged="search"/>
 	        	</div>
-	            <div field="needOrgName" width="100" align="center" headerAlign="center" allowSort="true" >采购单位
+	            <div field="needOrgName" width="100" align="center" headerAlign="center" >采购单位
 	            	<input id="orgid2"  name="criteria._ref[0]._expr[0]._value" style="width:100%;" class="nui-combobox" property="filter"
 						textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" onvaluechanged="search"/>
 	            </div>
-	            <div field="type" width="80" align="center"  headerAlign="center" allowSort="true" renderer="dictIshavebak">采购类型
+	            <div field="type" width="80" align="center"  headerAlign="center" renderer="dictIshavebak">采购类型
 	            	 <input name="criteria._expr[4].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE"  shownullItem="true" width="100%" onvaluechanged="search"/>
 	            </div>
-	            <div field="year" width="80" align="center" headerAlign="center" allowSort="true" >计划年度</div>
-	            <div field="budgetAmount" width="100" align="center"  headerAlign="center" allowSort="true">计划金额
-	            	 <input name="criteria._expr[8].budgetAmount" class="nui-textbox"property="filter"   width="100%" onvaluechanged="search"/>
+	            <div field="year" width="80" align="center" headerAlign="center" >计划年度</div>
+	            <div field="budgetAmount" width="100" align="center"  headerAlign="center">计划金额
+	            	 <input name="criteria._expr[8].budgetAmount" class="nui-textbox"property="filter"   width="100%" onvaluechanged="search" />
 	            </div>
-	            <div field="newBudgetAmount" width="100" align="center"  headerAlign="center" allowSort="true">变更后计划金额
+	            <div field="newBudgetAmount" width="100" align="center"  headerAlign="center">变更后计划金额
 	            	 <input name="criteria._expr[9].newBudgetAmount" class="nui-textbox" property="filter"   width="100%" onvaluechanged="search"/>
 	            </div>
-	            <div field="createdUsername" width="80" align="center" headerAlign="center" allowSort="true" >创建人</div>
+	            <div field="createdUsername" width="80" align="center" headerAlign="center">创建人</div>
 	            <div field="updatedTime" width="80" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true" >更新时间</div>
-	            <div field="status" width="80" align="center" headerAlign="center" allowSort="true"  renderer="onActionRenderer" >状态</div>
-	            <div field="changeState" width="80" align="center" headerAlign="center" allowSort="true"  renderer="onYn" >是否变更</div>
+	            <div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer" >状态</div>
+	            <div field="changeState" width="80" align="center" headerAlign="center"  renderer="onYn" >是否变更</div>
 	        </div>
 	    </div>
 	</div>
@@ -267,6 +265,7 @@
 	    		nui.get("tempCond2").setValue("1");
 	    	}
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy('updatedTime', 'desc');
 		  	grid.load(data); //datagrid加载数据
 		}
 		

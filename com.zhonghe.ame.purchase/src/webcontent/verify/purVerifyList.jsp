@@ -66,7 +66,7 @@ html,body {
 </div>
 <div class="nui-fit">
 	<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]"
-		showPager="true" dataField="purVerify" sortMode="client"
+		showPager="true" dataField="purVerify"
 		class="nui-datagrid" style="width: 100%; height: 100%;"
 		url="com.zhonghe.ame.purchase.purchaseVerify.queryVerify.biz.ext"
 					multiSelect="false" allowSortColumn=true align="left">
@@ -74,17 +74,15 @@ html,body {
 						<div name="temp123" type="checkcolumn"></div>
 						<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 						<!-- <div type="expandcolumn" width="20"></div> -->
-			<div field="verifyCode" width="200" headerAlign="center"
-				allowSort="true" renderer="lookInfo" align="left">验收单编号</div>
+			<div field="verifyCode" width="200" headerAlign="center" renderer="lookInfo" align="left">验收单编号</div>
 			<div field="contractNo" width="200" align="left"
-				headerAlign="center" allowSort="true">合同编号</div>
-			<div field="totalPrice" align="right" headerAlign="center"
-				allowSort="true">货品总价(万元)</div>
+				headerAlign="center">合同编号</div>
+			<div field="totalPrice" align="right" headerAlign="center">货品总价(万元)</div>
 			<div field="orgname" width="200" align="left"
-				headerAlign="center" allowSort="true">验收部门</div>
+				headerAlign="center">验收部门</div>
 			<div field="empname" width="80" align="left"
-				headerAlign="center" allowSort="true">验收人</div>
-			<div field="createTime" align="left" headerAlign="center">创建时间</div>
+				headerAlign="center">验收人</div>
+			<div field="createTime" align="left" headerAlign="center" allowSort="true">申请日期</div>
 			<div field="status" align="left" renderer="onActionRenderer"
 				headerAlign="center">状态</div>
 		</div>
@@ -104,8 +102,8 @@ html,body {
 //     	}
 //     	init();
     	function init(){
+    		grid.sortBy("createTime","desc");
     		grid.load({type:type});
-    		grid.sortBy("tbdate","desc");
 		}
 		function getStatus(e){
     		if(e.value==1){
@@ -123,7 +121,6 @@ html,body {
 		function onActionRenderer(e) {
             var record = e.record;
         	var processId=record.processid;
-        	console.log(e.value);
 			var s = "<a  href='javascript:void(0)' onclick='feeView();' >"+nui.getDictText('ZH_FLOW_TYPE',e.value)+"</a>";
             return s;
     	}
@@ -203,12 +200,13 @@ html,body {
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
-			
+			grid.sortBy("createTime","desc");
 		  	grid.load(data); //datagrid加载数据
 		}
 		function reset(){
 			var form = new nui.Form("#form1");
 			form.reset();
+			grid.sortBy("createTime","desc");
 			grid.load();
 			search()
 		}

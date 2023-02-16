@@ -21,6 +21,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">sortField</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <location x="100" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>start0label</nodeLabel>
@@ -90,6 +100,8 @@
     </sourceConnections>
     <targetConnections>link5</targetConnections>
     <targetConnections>link6</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="414" y="150"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -141,6 +153,16 @@
       <targetNode>assign2</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">sortField</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link1</targetConnections>
     <location x="240" y="315"/>
     <size height="22" width="28"/>
@@ -156,8 +178,8 @@
     </process:outputVariables>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
-    <location x="175" y="345"/>
-    <figSize height="17" width="158"/>
+    <location x="176" y="345"/>
+    <figSize height="17" width="157"/>
     <node>invokeService0</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值1" displayName="赋值" collapsed="false" type="assign">
@@ -191,9 +213,95 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
-    <location x="385" y="348"/>
-    <figSize height="17" width="32"/>
+    <location x="386" y="348"/>
+    <figSize height="17" width="30"/>
     <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值2" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="226" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">true</process:from>
+      <process:to type="query">page/isCount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.zhonghe.ame.purchase.purchase.queryPurProgramme</process:from>
+      <process:to type="query">critria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">critria/_expr[5]/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">id</process:from>
+      <process:to type="query">critria/_expr[5]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">id</process:from>
+      <process:to type="query">critria/_expr[5]/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">sortField</process:from>
+      <process:to type="query">critria/_orderby[1]/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">sortOrder</process:from>
+      <process:to type="query">critria/_orderby[1]/_sort</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="224" y="116"/>
+    <figSize height="17" width="32"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值3" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="465" y="400"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem/processInstID</process:from>
+      <process:to type="query">purPlan1/processid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">processid</process:from>
+      <process:to type="query">critria/_expr/_property</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">=</process:from>
+      <process:to type="query">critria/_expr/_op</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem/processInstID</process:from>
+      <process:to type="query">critria/_expr/_value</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">com.zhonghe.ame.purchase.purchase.queryPurProgramme</process:from>
+      <process:to type="query">critria/_entity</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">sortOrder</process:from>
+      <process:to type="query">critria/_orderby[1]/_sort</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">sortField</process:from>
+      <process:to type="query">critria/_orderby[1]/_property</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="463" y="436"/>
+    <figSize height="17" width="32"/>
+    <node>assign4</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
@@ -206,6 +314,8 @@
     <process:input anyType="com.eos.das.entity.criteria.CriteriaType" description="" isArray="false" name="critria"/>
     <process:input description="" isArray="false" name="id" primitiveType="String"/>
     <process:input description="" isArray="false" name="workitemid" primitiveType="String"/>
+    <process:input description="" isArray="false" name="sortField" primitiveType="String"/>
+    <process:input description="" isArray="false" name="sortOrder" primitiveType="String"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="true" modelType="com.zhonghe.ame.purchase.purchase.queryPurProgramme" name="purProgrammes"/>

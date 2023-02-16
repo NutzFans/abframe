@@ -36,7 +36,6 @@
 						<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
 						<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
 						<input class="nui-hidden" name="critria._expr[4].createdBy" id="createdBy" />
-				    <input class="nui-hidden" name="critria._order[1]._desc" value="createdTime" >
 					</td>
 					<td class="form_label" align="right">文件名称:</td>
 					<td colspan="1">
@@ -68,18 +67,16 @@
 		</table>
 	</div>
 	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="purProgrammes"
-			sortMode="client" class="nui-datagrid" style="width:100%;height:100%;"
+		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="purProgrammes" class="nui-datagrid" style="width:100%;height:100%;"
 			url="com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgramme.biz.ext" multiSelect="false"
 			allowSortColumn=true>
 			<div property="columns">
 				<div type="checkcolumn"></div>
 				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-				<div field="programmeName" width="180" align="left" headerAlign="center" allowSort="true"
-					renderer="lookInfo">采购项目名称</div>
+				<div field="programmeName" width="180" align="left" headerAlign="center" renderer="lookInfo">采购项目名称</div>
 <!-- 				<div field="code" width="80" align="center" headerAlign="center" allowSort="true">采购方案编号</div> -->
-				<div field="proAppCode" width="200" align="center" headerAlign="center" allowSort="true">采购立项编号</div>
-				<div field="createdTime" align="center"  headerAlign="center">创建时间</div>
+				<div field="proAppCode" width="200" align="center" headerAlign="center">采购立项编号</div>
+				<div field="createdTime" align="center"  headerAlign="center" allowSort="true">申请日期</div>
 				<div field="status" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
 			</div>
 		</div>
@@ -157,6 +154,7 @@
 		}
 		function search() {
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy('createdTime','desc');
 			grid.load(data); //datagrid加载数据
 		}
 		function reset() {

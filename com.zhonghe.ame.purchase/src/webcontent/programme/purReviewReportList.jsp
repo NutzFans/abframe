@@ -83,11 +83,10 @@
 						<div type="checkcolumn"></div>
 						<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 						<div field="code" width="80" align="center" headerAlign="center">评审结果编号</div>
-						<div field="reportName" width="80" align="center" headerAlign="center" allowSort="true"
-							renderer="lookInfo">评审结果名称</div>
-						<div field="proAppCode" width="200" align="center" headerAlign="center" allowSort="true">采购立项编号
-						</div>
+						<div field="reportName" width="80" align="center" headerAlign="center" renderer="lookInfo">评审结果名称</div>
+						<div field="proAppCode" width="200" align="center" headerAlign="center">采购立项编号</div>
 						<div field="status" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
+						<div field="createdTime" align="center" headerAlign="center" allowSort="true">申请日期</div>
 					</div>
 				</div>
 			</div>
@@ -183,7 +182,7 @@
 				function search() {
 					var form = new nui.Form("#form1");
 					var data = form.getData(); //获取表单JS对象数据
-
+					grid.sortBy('createdTime', 'desc');
 					grid.load(data); //datagrid加载数据
 				}
 				function reset() {

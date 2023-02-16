@@ -89,7 +89,7 @@
 				<input  name="criteria._expr[9].greyList" property="filter"  class="nui-dictcombobox"style="width:100%;" dictTypeId="ZH_YN" showNullItem="true"onvaluechanged="search" />
 				<input  name="greyList" property="editor"class="nui-dictcombobox" dictTypeId="ZH_YN"  style="width:100%;" />
 			</div>
-			<div field="createDate"  align="center" headerAlign="center" dateFormat="yyyy-MM-dd"allowSort="true">创建时间
+			<div field="createDate"  align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">创建时间
 			</div>
 			<div field="inflag" width="60" align="center"  headerAlign="center" >创建人
 				<input name="criteria._expr[8].inflag" property="filter" class="nui-textbox"  width="100%" onvaluechanged="search"/>
@@ -125,11 +125,12 @@
 		}
     	function search() {
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy("createDate","desc");
 		  	grid.load(data); //datagrid加载数据
-		  	grid.sortBy("custid","desc");
 		}
 		function reset(){
 			form.reset();
+			grid.sortBy("createDate","desc");
 			grid.load();
 			
 		}
