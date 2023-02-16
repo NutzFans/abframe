@@ -108,7 +108,7 @@
 			</fieldset>
 			<fieldset style="border:solid 1px #aaa;padding:3px;width: 99%">
 				<legend>审批信息</legend>
-				<jsp:include page="/ame_common/misOpinion.jsp" />
+				<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 			</fieldset>
 		</div>
 	</div>
@@ -142,7 +142,7 @@
 								form.setData(result);
 								gridDtl.load({"pid":result.proappId})
 									
-								
+								nui.get("backTo").setData(o.backList);
                 var grid_0 = nui.get("grid_0");
 								grid_0.load({ "groupid": "purProgramme", "relationid": result.id });
 								grid_0.sortBy("fileTime", "desc");
@@ -150,7 +150,7 @@
 								var grid = nui.get("datagrid1");
 								grid.load({ processInstID: result.processid });
 								grid.sortBy("time", "desc");
-								document.getElementById("salesEdit").style.display = "none";
+// 								document.getElementById("salesEdit").style.display = "none";
                 //初始化处理意见
                 initMisOpinion({auditstatus:"1"});
             },
