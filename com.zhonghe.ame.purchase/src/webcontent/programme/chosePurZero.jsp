@@ -69,7 +69,7 @@
 		</div>
 	<div class="nui-fit">
 		<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true"
-			dataField="purZeroList" sortMode="client" class="nui-datagrid" style="width:100%;height:80%;"
+			dataField="purZeroList" class="nui-datagrid" style="width:100%;height:80%;"
 			pageSize="20" url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext"
 			multiSelect="false">
 			<div property="columns">
@@ -113,6 +113,7 @@
 				}
 				var form = new nui.Form("#form1");
 				var data = form.getData(); //获取表单JS对象数据
+				grid.sortBy('createdTime', 'desc');
 				grid.load(data); //datagrid加载数据
 			}
 

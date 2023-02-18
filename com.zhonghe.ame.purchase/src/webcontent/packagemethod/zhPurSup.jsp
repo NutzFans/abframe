@@ -63,10 +63,11 @@
     	nui.parse();
     	var grid = nui.get("datagrid1");
     	//init();
+    	grid.sortBy("createDate","desc");
     	grid.load();
     	function init(){
+    		grid.sortBy("createDate","desc");
     		grid.load();
-			grid.sortBy("custid","desc");
 		}
 		function dictstatus(e) {
 			return nui.getDictText('MIS_YN',e.value);//设置业务字典值
@@ -83,11 +84,13 @@
     	function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy("createDate","desc");
 		  	grid.load(data); //datagrid加载数据
 		}
 		function reset(){
 			var form = new nui.Form("#form1");
 			form.reset();
+			grid.sortBy("createDate","desc");
 			grid.load();
 		}
 		 function GetData() {
