@@ -41,7 +41,7 @@
 		</div>
 		
 		<div class="nui-fit">
-			<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true" dataField="purZeroList" showSummaryRow="true" sortMode="client" ondrawsummarycell="onDrawSummaryCell"
+			<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true" dataField="purZeroList" showSummaryRow="true" ondrawsummarycell="onDrawSummaryCell"
 				onrowdblclick="onRowDblClick" class="nui-datagrid" style="width: 100%; height: 550px" url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext" multiSelect="false" allowSortColumn=true>
 				<div property="columns">
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
@@ -74,6 +74,7 @@
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy('createdTime', 'desc');
 			grid.load(data); //datagrid加载数据
 		}
 		
@@ -86,6 +87,7 @@
 		function reset() {
 			var form = new nui.Form("#form1");
 			form.reset();
+			grid.sortBy('createdTime', 'desc');
 			grid.load();
 			search()
 		}

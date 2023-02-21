@@ -132,6 +132,14 @@
 		    </div>
 	    </div>
 	  </div>
+	  <div id="changeReasonDiv" class="layui-row">
+	    <div class="layui-col-xs12">
+		    <label class="layui-form-label">调整原因</label>
+		    <div class="layui-input-block">
+		      <textarea autoHeight="true" name ="changeReason" disabled="disabled" class="layui-textarea"></textarea>
+		    </div>
+	    </div>
+	  </div>
 	  
 	  </fieldset>
 	   </form>
@@ -159,6 +167,7 @@
  			var processInstID;
 //  			var id = 916
  			id = <%= request.getParameter("id") %> ;
+ 			$("#changeReasonDiv").hide();
  			form.render();
  			getData();
  			function getData(){
@@ -176,6 +185,9 @@
 				    		formData.type = "二级集采"
 				    	}else if(formData.type =="3"){
 				    		formData.type = "自行采购"
+				    	}
+				    	if(formData.changeReason != null && formData.changeReason !=""){
+				    		$("#changeReasonDiv").show();
 				    	}
 				    	form.val("dataFrm",formData);
 				    	processInstID= formData.processid;

@@ -509,6 +509,14 @@
 					nui.get("purchasePlan").setText(o.payContract.purchasePlan);
 					if (nui.get("contractNature").getValue() == 3) {
 						$("#purchasePlanLable").html("零星采购编号:");
+						nui.get("purchasePlan").setRequired(true);
+						nui.get("purchasePlan").enable();
+					}else if(nui.get("contractNature").getValue() == 1){
+						$("#purchasePlanLable").html("采购立项编号:");
+						nui.get("purchasePlan").setRequired(true);
+						nui.get("purchasePlan").enable();
+						nui.get("planYear").setRequired(true);
+						nui.get("planYear").enable();	
 					}
 					//附件查询
 					var grid_0 = nui.get("grid_0");
