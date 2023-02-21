@@ -308,14 +308,14 @@
             return;
         }
         debugger
-        var filePaths1 = document.getElementsByName("uploadfile1").length;
+        var filePaths1 = document.getElementsByName("uploadfile").length;
     		var grid_1 = nui.get("grid_0").getData();
     		if(filePaths1==0&&grid_1.length<1){
     			showTips("'发票（若仅有发票）、合同中约定的结算单或验收报告'等附件不能为空","danger");
 					return;
     		}else{
     			for(var j=0;j<filePaths1;j++){
-			      var a=document.getElementsByName("remarkList1")[j].value;
+			      var a=document.getElementsByName("remarkList")[j].value;
 				      if(a==null||a==""){
 				        showTips("'发票（若仅有发票）、合同中约定的结算单或验收报告'等附件不能为空","danger");
 				        nui.get("saveReimbProcess").enable();
