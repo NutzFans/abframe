@@ -5,7 +5,7 @@
  *
  * Created on Apr 11, 2008
  *******************************************************************************/
-package com.zhonghe.ame.marketInfo.marketinfo.khxx;
+package com.zhonghe.ame.marketInfo.bid;
 
 import com.eos.data.sdo.IObjectFactory;
 
@@ -22,10 +22,10 @@ import commonj.sdo.helper.TypeHelper;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getId <em>Id</em>}</li>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getBidId <em>BidId</em>}</li>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getCompetId <em>CompetId</em>}</li>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getCompetBidPrice <em>CompetBidPrice</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getId <em>Id</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getBidId <em>BidId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getCompetId <em>CompetId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getCompetContractPrice <em>CompetContractPrice</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,9 +33,9 @@ import commonj.sdo.helper.TypeHelper;
  */
 public interface ZhBidinfoCompetitor extends DataObject {
 
-	public static final String QNAME = "com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor";
+	public static final String QNAME = "com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor";
 
-	public static final Type TYPE = TypeHelper.INSTANCE.getType("com.zhonghe.ame.marketInfo.myCreatedBid", "ZhBidinfoCompetitor");
+	public static final Type TYPE = TypeHelper.INSTANCE.getType("com.zhonghe.ame.marketInfo.bid", "ZhBidinfoCompetitor");
 
 	public static final IObjectFactory<ZhBidinfoCompetitor> FACTORY = new IObjectFactory<ZhBidinfoCompetitor>() {
 		public ZhBidinfoCompetitor create() {
@@ -57,7 +57,7 @@ public interface ZhBidinfoCompetitor extends DataObject {
 	public int getId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getId <em>Id</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Id</em>' attribute.
@@ -79,7 +79,7 @@ public interface ZhBidinfoCompetitor extends DataObject {
 	public int getBidId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getBidId <em>BidId</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getBidId <em>BidId</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>BidId</em>' attribute.
@@ -101,7 +101,7 @@ public interface ZhBidinfoCompetitor extends DataObject {
 	public int getCompetId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getCompetId <em>CompetId</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getCompetId <em>CompetId</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>CompetId</em>' attribute.
@@ -110,26 +110,26 @@ public interface ZhBidinfoCompetitor extends DataObject {
 	public void setCompetId(int competId);
 
 	/**
-	 * Returns the value of the '<em><b>CompetBidPrice</b></em>' attribute.
+	 * Returns the value of the '<em><b>CompetContractPrice</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>CompetBidPrice</em>' attribute isn't clear,
+	 * If the meaning of the '<em>CompetContractPrice</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>CompetBidPrice</em>' attribute.
-	 * @see #setCompetBidPrice(java.lang.String)
+	 * @return the value of the '<em>CompetContractPrice</em>' attribute.
+	 * @see #setCompetContractPrice(java.lang.String)
 	 */
-	public String getCompetBidPrice();
+	public String getCompetContractPrice();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.myCreatedBid.ZhBidinfoCompetitor#getCompetBidPrice <em>CompetBidPrice</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor#getCompetContractPrice <em>CompetContractPrice</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>CompetBidPrice</em>' attribute.
-	 * @see #getCompetBidPrice()
+	 * @param value the new value of the '<em>CompetContractPrice</em>' attribute.
+	 * @see #getCompetContractPrice()
 	 */
-	public void setCompetBidPrice(String competBidPrice);
+	public void setCompetContractPrice(String competContractPrice);
 
 
 }

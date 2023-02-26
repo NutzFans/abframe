@@ -27,7 +27,6 @@ import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
 import com.eos.system.annotation.Bizlet;
 import com.primeton.ame.schindler.sqlUtils;
-import com.zhonghe.ame.marketInfo.marketinfo.khxx.ZhCompetitorImpl;
 
 import commonj.sdo.DataObject;
 

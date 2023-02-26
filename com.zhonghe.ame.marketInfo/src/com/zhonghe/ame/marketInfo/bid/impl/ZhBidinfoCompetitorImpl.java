@@ -5,10 +5,12 @@
  *
  * Created on Apr 11, 2008
  *******************************************************************************/
-package com.zhonghe.ame.marketInfo.marketinfo.khxx;
+package com.zhonghe.ame.marketInfo.bid.impl;
 
 import com.primeton.ext.data.sdo.DataUtil;
 import com.primeton.ext.data.sdo.ExtendedDataObjectImpl;
+import com.zhonghe.ame.marketInfo.bid.ZhBidinfoCompetitor;
+
 import commonj.sdo.Type;
 
 /**
@@ -19,10 +21,10 @@ import commonj.sdo.Type;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.impl.ZhBidinfoCompetitorImpl#getId <em>Id</em>}</li>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.impl.ZhBidinfoCompetitorImpl#getBidId <em>BidId</em>}</li>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.impl.ZhBidinfoCompetitorImpl#getCompetId <em>CompetId</em>}</li>
- *   <li>{@link com.zhonghe.ame.marketInfo.myCreatedBid.impl.ZhBidinfoCompetitorImpl#getCompetBidPrice <em>CompetBidPrice</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.impl.ZhBidinfoCompetitorImpl#getId <em>Id</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.impl.ZhBidinfoCompetitorImpl#getBidId <em>BidId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.impl.ZhBidinfoCompetitorImpl#getCompetId <em>CompetId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.marketInfo.bid.impl.ZhBidinfoCompetitorImpl#getCompetContractPrice <em>CompetContractPrice</em>}</li>
  * </ul>
  * </p>
  *
@@ -39,7 +41,7 @@ public class ZhBidinfoCompetitorImpl extends ExtendedDataObjectImpl implements Z
 	public final static int INDEX_ID = 0;
 	public final static int INDEX_BIDID = 1;
 	public final static int INDEX_COMPETID = 2;
-	public final static int INDEX_COMPETBIDPRICE = 3;
+	public final static int INDEX_COMPETCONTRACTPRICE = 3;
 	public static final int SDO_PROPERTY_COUNT = 4;
 
 	public static final int EXTENDED_PROPERTY_COUNT = -1;
@@ -143,29 +145,29 @@ public class ZhBidinfoCompetitorImpl extends ExtendedDataObjectImpl implements Z
 	}
 
 	/**
-	 * Returns the value of the '<em><b>CompetBidPrice</b></em>' attribute.
+	 * Returns the value of the '<em><b>CompetContractPrice</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>CompetBidPrice</em>' attribute isn't clear,
+	 * If the meaning of the '<em>CompetContractPrice</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>CompetBidPrice</em>' attribute.
-	 * @see #setCompetBidPrice(java.lang.String)
+	 * @return the value of the '<em>CompetContractPrice</em>' attribute.
+	 * @see #setCompetContractPrice(java.lang.String)
 	 */
-	public String getCompetBidPrice() {
-		return DataUtil.toString(super.getByIndex(INDEX_COMPETBIDPRICE, true));
+	public String getCompetContractPrice() {
+		return DataUtil.toString(super.getByIndex(INDEX_COMPETCONTRACTPRICE, true));
 	}
 
 	/**
-	 * Sets the value of the '{@link com.primeton.eos.Test#getCompetBidPrice <em>CompetBidPrice</em>}' attribute.
+	 * Sets the value of the '{@link com.primeton.eos.Test#getCompetContractPrice <em>CompetContractPrice</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>CompetBidPrice</em>' attribute.
-	 * @see #getCompetBidPrice()
+	 * @param value the new value of the '<em>CompetContractPrice</em>' attribute.
+	 * @see #getCompetContractPrice()
 	 */
-	public void setCompetBidPrice(String competBidPrice) {
-		super.setByIndex(INDEX_COMPETBIDPRICE, competBidPrice);
+	public void setCompetContractPrice(String competContractPrice) {
+		super.setByIndex(INDEX_COMPETCONTRACTPRICE, competContractPrice);
 	}
 
 
