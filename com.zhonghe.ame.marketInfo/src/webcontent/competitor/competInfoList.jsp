@@ -61,16 +61,16 @@
 	</div>
 	
 	<div id="competBidProject" style="display: none;">
-		<div id="competBidGrid" sizeList="[100]" dataField="competBidProjects" pageSize="100" class="nui-datagrid" style="width: 100%; height: 568px;"
-			url="com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.queryCompetBidProject.biz.ext" enableHotTrack="false" allowRowSelect="false">
+		<div id="competBidGrid" sizeList="[500]" dataField="competBidProjects" pageSize="500" class="nui-datagrid" style="width: 100%; height: 568px;"
+			url="com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.queryCompetBidProject.biz.ext" enableHotTrack="false" allowRowSelect="false" virtualScroll="true">
 			<div property="columns">
 				<div field="projectName" name="projectName" headerAlign="center" align="center" width="300">项目名称</div>
 				<div field="recordDate" name="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70">备案日期</div>
 				<div field="custname" name="custname" headerAlign="center" align="center" width="300">甲方全称</div>
 				<div field="bidUnitsName" name="bidUnitsName" headerAlign="center" align="center" width="250">参与单位</div>
 				<div field="contractPrice" name="contractPrice" headerAlign="center" align="center" width="150">报价/合同价/万元/%</div>
-				<div field="competName" headerAlign="center" align="center" width="250">竞争对手单位</div>
-				<div field="competContractPrice" headerAlign="center" align="center" width="150">报价/合同价/万元/%</div>
+				<div field="competName" headerAlign="center" align="center" width="250" renderer="setTextColor">竞争对手单位</div>
+				<div field="competContractPrice" headerAlign="center" align="center" width="150" renderer="setTextColor">报价/合同价/万元/%</div>
 			</div>	
 		</div>
 	</div>	
@@ -81,6 +81,7 @@
 		var grid = nui.get("datagrid1");
 		var competBidGrid = nui.get("competBidGrid");
 		var competBidProject = document.getElementById("competBidProject");
+		var competId;
 		
 		search();
 		
@@ -101,6 +102,7 @@
 			var td = projectGrid.getRowDetailCellEl(row);
 			td.appendChild(competBidProject);
 			competBidProject.style.display = "block";
+			competId = row.competId;
 			var data = {
 				'competId' : row.competId
 			};
@@ -114,6 +116,13 @@
 		
 		function triggerSearch(){
 			search();
+		}
+		
+		function setTextColor(e){
+			if(e.record.competId == competId){
+				e.cellStyle="color: red";
+			}
+			return e.value;
 		}						
 		
 	</script>

@@ -285,6 +285,9 @@
 		}		
 
 		function ZH_BID_STATUS(e) {
+			if(e.value == '2'){
+				e.cellStyle="color: red";
+			}
 			return nui.getDictText("ZH_BID_STATUS", e.value);
 		}
 
@@ -344,7 +347,7 @@
 				height : 50,
 				allowResize : false
 			});
-		}		
+		}	
 		
 	</script>
 	
