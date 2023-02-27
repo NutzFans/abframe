@@ -123,7 +123,30 @@
 				e.cellStyle="color: red";
 			}
 			return e.value;
-		}						
+		}
+		
+		function edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条记录进行编辑", "danger");
+				return;
+			}else{
+				var data = row[0];
+				nui.open({
+					url : "/default/marketInfo/competitor/editCompetInfo.jsp",
+					width : '580',
+					height : '360',
+					title : "简介信息维护",
+					onload : function() {
+						var iframe = this.getIFrameEl();
+						iframe.contentWindow.setEditData(data);
+					},
+					ondestroy : function(action) {
+						search();
+					}
+				})				
+			}			
+		}								
 		
 	</script>
 	

@@ -35,7 +35,13 @@ body {
 					<tr>
 						<td align="right" style="width: 120px">竞争对手单位全称：</td>
 						<td colspan="3">
-							<input id="competName" class="nui-textbox" name="competName" required="true" style="width: 100%" />
+							<input id="competName" class="nui-textbox" name="competName" required="true" style="width: 100%" enabled="false"/>
+						</td>
+					</tr>
+					<tr>
+						<td align="right" style="width: 120px">简介：</td>
+						<td colspan="3">
+							<input id="competRemark" name="competRemark" class="nui-textarea" style="width: 100%; height: 200px"/>
 						</td>
 					</tr>
 				</table>
@@ -58,6 +64,7 @@ body {
 			nui.get("createUser").setValue(data.empname);
 			nui.get("orgName").setValue(data.orgname);
 			nui.get("competName").setValue(data.competName);
+			nui.get("competRemark").setValue(data.competRemark);
 		}
 
 		function onOk() {
