@@ -119,7 +119,7 @@
 		init();
 		labelModel();
     function init(){
-    	var json = nui.encode({"id":id});
+    	var json = nui.encode({"processid":processid});
    			nui.ajax({
 					url: "com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgramme.biz.ext",
 					type: 'POST',
