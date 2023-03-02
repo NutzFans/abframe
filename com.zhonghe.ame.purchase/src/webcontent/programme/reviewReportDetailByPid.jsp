@@ -25,7 +25,7 @@
 	<div class="nui-fit">
 		<div class="mini-panel" title="" style="width: 100%;">
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 100%;">
-				<legend>评审报告信息</legend>
+				<legend>评审结果信息</legend>
 				<form id="form1" method="post">
 					<input name="files" id="fileids" class="nui-hidden"/>
 					<input name="files1" id="fileids1" class="nui-hidden"/>
@@ -34,7 +34,7 @@
 						<table style="table-layout: fixed;">
 							<tr>
 							
-							<td class="form_label" align = "right">评审报告编号：</td>
+							<td class="form_label" align = "right">评审结果编号：</td>
 								<td>
 									<input name="reportName" id="reportName" class="nui-textbox" style="width: 300px" />
 								</td>
@@ -56,10 +56,10 @@
 							<tr></tr>
 							<tr></tr>
 							<tr>
-								<td align="right" style="width: 120px">评审报告审核人：</td>
+								<td align="right" style="width: 120px">评审结果审核人：</td>
 									<td><input name="examineUserId" id="examineUserId"  class="nui-buttonedit" 
 									onbuttonclick="selectOmEmployee" style="width: 300px" /></td>
-								<td align="right" style="width: 130px">评审报告审批人：</td>
+								<td align="right" style="width: 130px">评审结果审批人：</td>
 									<td><input name="approvalUserId" id="approvalUserId" class="nui-buttonedit" 
 									onbuttonclick="selectOmEmployee1" style="width: 300px"/></td>
 							</tr>
@@ -70,7 +70,7 @@
 							<tr></tr>
 							<tr></tr>
 							<tr></tr>
-              		<td class="form_label"  align="right" style="width:140px;">评审报告说明：</td>
+              		<td class="form_label"  align="right" style="width:140px;">评审结果说明：</td>
                     <td colspan="7">    
                         <input style="width:100%;height: 40px;" name="remark" id="remark" class="nui-textarea"  id="technologyNeed" dictTypeId="ZH_PURCHASE" />
                     </td>
@@ -81,7 +81,7 @@
 			</fieldset>
 
 			<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-				<legend>评审报告附件</legend>
+				<legend>评审结果附件</legend>
 				<jsp:include page="/ame_common/detailFile.jsp"/>
 			</fieldset>
 			<%-- <fieldset id="field3" style="border:solid 1px #aaa;padding:3px;">

@@ -17,7 +17,7 @@
 <div class="nui-fit">
     <div class="mini-panel" title="" style="width: 100%;">
         <fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
-            <legend>评审报告信息</legend>
+            <legend>评审结果信息</legend>
             <form id="form1" method="post">
                 <input name="files" id="fileids" class="nui-hidden"/>
                 <input name="files1" id="fileids1" class="nui-hidden"/>
@@ -106,7 +106,7 @@
 			</fieldset>
 		</div>
         <fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-            <legend>评审报告附件</legend>
+            <legend>评审结果附件</legend>
             <div style="visibility: hidden;display: none;">
                 <jsp:include page="/ame_common/detailFile.jsp"/>
             </div>
