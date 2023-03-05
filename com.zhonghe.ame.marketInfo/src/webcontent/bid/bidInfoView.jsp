@@ -28,7 +28,7 @@
 							</td>
 							<td align="right" style="width: 130px">备案日期：</td>
 							<td>
-								<input name="recordDate" id="recordDate" class="mini-monthpicker" required="true" style="width: 250px" enabled="false" />
+								<input name="recordDate" id="recordDate" class="nui-monthpicker" required="true" style="width: 250px" enabled="false" />
 							</td>
 							<td align="right" style="width: 130px">填报人：</td>
 							<td>
@@ -55,7 +55,7 @@
 						<tr>
 							<td align="right" style="width: 130px">投资额(万元)：</td>
 							<td>
-								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 250px" required="true" emptyText="必填项，无数据请输入 / 字符填充" enabled="false" />
+								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 250px" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 130px">标的额：</td>
 							<td>
@@ -97,11 +97,25 @@
 						<tr>
 							<td align="right" style="width: 130px">主要项目特征：</td>
 							<td colspan="3">
-								<input name="projectFeatures" id="projectFeatures" class="nui-textbox" style="width: 100%" required="true" emptyText="必填项，无数据请输入 / 字符填充" enabled="false" />
+								<input name="projectFeatures" id="projectFeatures" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 130px">采购方式：</td>
 							<td>
 								<input name="procurementType" id="procurementType" class="nui-dictcombobox" dictTypeId="ZH_BID_PROCUREMENT_TYPE" style="width: 250px" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">创建时间：</td>
+							<td>
+								<input name="createDate" id="createDate" class="nui-datepicker" format="yyyy-MM-dd HH:mm:ss" required="true" style="width: 250px" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">最后更新人：</td>
+							<td>
+								<input name="updatename" id="updatename" class="nui-textbox" required="true" style="width: 250px" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">最后更新时间：</td>
+							<td>
+								<input name="updateDate" id="updateDate" class="nui-datepicker" format="yyyy-MM-dd HH:mm:ss" required="true" style="width: 250px" enabled="false" />
 							</td>
 						</tr>
 					</table>
@@ -129,7 +143,7 @@
 							</td>
 							<td align="right" style="width: 130px">折合万/人月：</td>
 							<td>
-								<input name="bidConvert" id="bidConvert" class="nui-textbox" style="width: 250px" emptyText="无数据请输入 / 字符填充"  enabled="false"/>
+								<input name="bidConvert" id="bidConvert" class="nui-textbox" style="width: 250px"  enabled="false"/>
 							</td>
 							<td align="right" style="width: 130px">中标结果：</td>
 							<td>
@@ -139,7 +153,7 @@
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%" emptyText="无数据请输入 / 字符填充" enabled="false"/>
+								<input name="remark" class="nui-textarea" style="width: 100%" enabled="false"/>
 							</td>
 						</tr>						
 					</table>

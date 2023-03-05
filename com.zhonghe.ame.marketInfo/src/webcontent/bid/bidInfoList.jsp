@@ -136,11 +136,11 @@
 		</div>
 
 		<div class="nui-fit">
-			<div id="datagrid1" sizeList="[20,50,100,500]" dataField="bidInfos" pageSize="20" class="nui-datagrid" style="width: 100%; height: 100%;"
+			<div id="datagrid1" sizeList="[50,100,500]" dataField="bidInfos" pageSize="50" class="nui-datagrid" style="width: 100%; height: 100%;"
 				url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidInfo.biz.ext" frozenStartColumn="0" frozenEndColumn="9" allowAlternating="true" idField="id" onshowrowdetail="onShowRowDetail" onrowdblclick="doView">
 				<div property="columns">
 					<div type="checkcolumn">○</div>
-					<div type="expandcolumn" >+</div>
+					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" visible="false">id</div>
 					<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
 					<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
@@ -172,7 +172,7 @@
 	</div>
 
 	<div id="bidCompetInfo" style="display: none;">
-		<div id="bidCompetGrid" sizeList="[5]" dataField="bidCompets" pageSize="5" class="nui-datagrid" style="width: 510px; height: 203px;"
+		<div id="bidCompetGrid" sizeList="[5]" dataField="bidCompets" pageSize="5" class="nui-datagrid" style="width: 510px; height: 203px; margin-left: 1088px"
 			url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCompetByBid.biz.ext" allowAlternating="true">
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
@@ -237,35 +237,54 @@
 			})
 		}
 		
+
 		function edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行编辑", "danger");
 				return;
-			}else{
+			} else {
 				var data = row[0];
-				nui.open({
-					url : "/default/marketInfo/bid/editBidInfo.jsp",
-					width : '100%',
-					height : '100%',
-					title : "编辑市场经营信息",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'createUserId' : data.createUserid,
+					'bidOrg' : data.bidOrg
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.queryBidAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							nui.open({
+								url : "/default/marketInfo/bid/editBidInfo.jsp",
+								width : '100%',
+								height : '100%',
+								title : "编辑市场经营信息",
+								onload : function() {
+									var iframe = this.getIFrameEl();
+									iframe.contentWindow.setEditData(data);
+								},
+								ondestroy : function(action) {
+									search();
+								}
+							})
+						} else {
+							showTips("您没有编辑该条数据的权限，只有创建者及对应牵头部门指定人员可以编辑！", "danger");
+							return;
+						}
 					}
-				})				
-			}			
+				});
+			}
 		}
-		
+
 		function doView() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("需要选中一条记录", "danger");
 				return;
-			}else{
+			} else {
 				var data = row[0];
 				nui.open({
 					url : "/default/marketInfo/bid/bidInfoView.jsp",
@@ -276,42 +295,62 @@
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setViewData(data);
 					}
-				})	
+				})
 			}
 		}
-		
+
 		function deleteInfo() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行删除", "danger");
 				return;
-			}else{
+			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				}else{
-					var json = nui.encode({'data' : row});	
-					nui.ajax({
-						url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.deleteBidInfo.biz.ext",
-						type : 'POST',
-						data : json,
-						contentType : 'text/json',
-						success : function(o) {
-							if (o.result == 1) {
-								showTips("删除成功");
-								search();
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'createUserId' : row.createUserid,
+					'bidOrg' : row.bidOrg
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.queryBidAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							if (!confirm("是否删除？")) {
+								return;
 							} else {
-								showTips("删除失败，请联系管理员！", "danger");
+								var json = nui.encode({
+									'data' : row
+								});
+								nui.ajax({
+									url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.deleteBidInfo.biz.ext",
+									type : 'POST',
+									data : json,
+									contentType : 'text/json',
+									success : function(o) {
+										if (o.result == 1) {
+											showTips("删除成功");
+											search();
+										} else {
+											showTips("删除失败，请联系管理员！", "danger");
+										}
+									}
+								});
 							}
+						} else {
+							showTips("您没有删除该条数据的权限，只有创建者及对应牵头部门指定人员可以删除！", "danger");
+							return;
 						}
-					});				
-				}				
-			}			
-		}		
+					}
+				});
+			}
+		}
 
 		function ZH_BID_STATUS(e) {
-			if(e.value == '2'){
-				e.cellStyle="color: red";
+			if (e.value == '2') {
+				e.cellStyle = "color: red";
 			}
 			return nui.getDictText("ZH_BID_STATUS", e.value);
 		}
@@ -363,7 +402,7 @@
 		function ZH_BID_RESULT(e) {
 			return nui.getDictText("ZH_BID_RESULT", e.value);
 		}
-		
+
 		function improt() {
 			nui.open({
 				url : "<%=request.getContextPath()%>/marketInfo/bid/improtBidInfo.jsp",
@@ -433,6 +472,14 @@
 					showTips("导出数据异常，请联系管理员！", "danger");
 				}
 			});
+		}
+		
+		function expandColumn(e){
+			if(e.record.isCompet == "0"){
+				return "";
+			}else{
+				return "<div class='mini-grid-cell-inner  mini-grid-cell-nowrap' style=''><a class='mini-grid-ecIcon' href='javascript:#' onclick='return false'></a></div>"
+			}
 		}			
 		
 	</script>

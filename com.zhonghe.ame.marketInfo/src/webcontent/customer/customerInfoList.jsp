@@ -139,68 +139,105 @@
 			})
 		}
 		
+
 		function edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行编辑", "danger");
 				return;
-			}else{
+			} else {
 				var data = row[0];
-				nui.open({
-					url : "/default/marketInfo/customer/editCustomerInfo.jsp",
-					width : '580',
-					height : '150',
-					title : "编辑客户信息",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'createUserId' : data.createUserid
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.queryCustVisitAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							nui.open({
+								url : "/default/marketInfo/customer/editCustomerInfo.jsp",
+								width : '580',
+								height : '150',
+								title : "编辑客户信息",
+								onload : function() {
+									var iframe = this.getIFrameEl();
+									iframe.contentWindow.setEditData(data);
+								},
+								ondestroy : function(action) {
+									search();
+								}
+							})
+						} else {
+							showTips("您没有编辑权限，只有创建者及指定用户可以编辑！", "danger");
+							return;
+						}
 					}
-				})				
-			}			
+				});
+			}
 		}
-		
+
 		function deleteInfo() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行删除", "danger");
 				return;
-			}else{
+			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				}else{
-					var json = nui.encode({'data' : row});	
-					nui.ajax({
-						url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.deleteCustInfo.biz.ext",
-						type : 'POST',
-						data : json,
-						contentType : 'text/json',
-						success : function(o) {
-							if (o.result == 1) {
-								showTips("删除成功");
-								currentSelRow = null;
-								var data = form.getData();
-								grid.sortBy("createDate", "desc");
-								grid.load(data);
-								visitGrid.clearRows();
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'createUserId' : row.createUserid
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.queryCustVisitAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							if (!confirm("是否删除？")) {
+								return;
 							} else {
-								showTips("删除失败，请联系管理员！", "danger");
+								var json = nui.encode({
+									'data' : row
+								});
+								nui.ajax({
+									url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.deleteCustInfo.biz.ext",
+									type : 'POST',
+									data : json,
+									contentType : 'text/json',
+									success : function(o) {
+										if (o.result == 1) {
+											showTips("删除成功");
+											currentSelRow = null;
+											var data = form.getData();
+											grid.sortBy("createDate", "desc");
+											grid.load(data);
+											visitGrid.clearRows();
+										} else {
+											showTips("删除失败，请联系管理员！", "danger");
+										}
+									}
+								});
 							}
+						} else {
+							showTips("您没有删除权限，只有创建者及指定用户可以删除！", "danger");
+							return;
 						}
-					});				
-				}				
-			}			
+					}
+				});
+			}
 		}
-		
+
 		function onActionRenderer(e) {
 			var record = e.record;
-			var s = record.empname +"/"+ record.orgname
+			var s = record.empname + "/" + record.orgname
 			return s;
 		}
-		
+
 		function onSelectionChanged() {
 			currentSelRow = null;
 			var row = grid.getSelected();
@@ -216,12 +253,12 @@
 			visitGrid.sortBy("visitDate", "desc");
 			visitGrid.load(data);
 		}
-		
+
 		function addVisit() {
-			if(currentSelRow == null){
+			if (currentSelRow == null) {
 				showTips("请先在左侧选中一个客户，再新增交流拜访信息", "danger");
-				return;				
-			}else{
+				return;
+			} else {
 				nui.open({
 					url : "/default/marketInfo/customer/addCustomerVisit.jsp",
 					width : '880',
@@ -241,102 +278,138 @@
 						};
 						var data = nui.decode(json, true);
 						visitGrid.sortBy("visitDate", "desc");
-						visitGrid.load(data);						
+						visitGrid.load(data);
 					}
-				})			
+				})
 			}
 		}
-		
-		function editVisit(){
+
+		function editVisit() {
 			var row = visitGrid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行编辑", "danger");
 				return;
-			}else{
+			} else {
 				var data = row[0];
-				nui.open({
-					url : "/default/marketInfo/customer/editCustomerVisit.jsp",
-					width : '880',
-					height : '750',
-					title : "编辑交流拜访信息",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						if(currentSelRow == null){
-							visitGrid.sortBy("createDate", "desc");
-							visitGrid.load();
-						}else{
-							var json = {
-								"criteria" : {
-									"_expr" : [ {
-										"custinfoId" : currentSelRow.custid
-									} ]
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'createUserId' : data.createUserid
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.queryCustVisitAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							nui.open({
+								url : "/default/marketInfo/customer/editCustomerVisit.jsp",
+								width : '880',
+								height : '750',
+								title : "编辑交流拜访信息",
+								onload : function() {
+									var iframe = this.getIFrameEl();
+									iframe.contentWindow.setEditData(data);
+								},
+								ondestroy : function(action) {
+									if (currentSelRow == null) {
+										visitGrid.sortBy("createDate", "desc");
+										visitGrid.load();
+									} else {
+										var json = {
+											"criteria" : {
+												"_expr" : [ {
+													"custinfoId" : currentSelRow.custid
+												} ]
+											}
+										};
+										var data = nui.decode(json, true);
+										visitGrid.sortBy("visitDate", "desc");
+										visitGrid.load(data);
+									}
 								}
-							};
-							var data = nui.decode(json, true);
-							visitGrid.sortBy("visitDate", "desc");
-							visitGrid.load(data);
+							})
+						} else {
+							showTips("您没有编辑权限，只有创建者及指定用户可以编辑！", "danger");
+							return;
 						}
 					}
-				})	
+				});
 			}
-		}		
-		
-		function deleteVisit(){
+		}
+
+		function deleteVisit() {
 			var row = visitGrid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行删除", "danger");
 				return;
-			}else{
+			} else {
 				var row = row[0];
-				if (!confirm("是否删除？")) {
-					return;
-				}else{
-					var json = nui.encode({'data' : row});	
-					nui.ajax({
-						url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.deleteCustVisit.biz.ext",
-						type : 'POST',
-						data : json,
-						contentType : 'text/json',
-						success : function(o) {
-							if (o.result == 1) {
-								showTips("删除成功");
-								if(currentSelRow == null){
-									visitGrid.sortBy("createDate", "desc");
-									visitGrid.load();
-								}else{
-									var json = {
-										"criteria" : {
-											"_expr" : [ {
-												"custinfoId" : currentSelRow.custid
-											} ]
-										}
-									};
-									var data = nui.decode(json, true);
-									visitGrid.sortBy("visitDate", "desc");
-									visitGrid.load(data);
-								}
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'createUserId' : row.createUserid
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.queryCustVisitAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							if (!confirm("是否删除？")) {
+								return;
 							} else {
-								showTips("删除失败，请联系管理员！", "danger");
+								var json = nui.encode({
+									'data' : row
+								});
+								nui.ajax({
+									url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.deleteCustVisit.biz.ext",
+									type : 'POST',
+									data : json,
+									contentType : 'text/json',
+									success : function(o) {
+										if (o.result == 1) {
+											showTips("删除成功");
+											if (currentSelRow == null) {
+												visitGrid.sortBy("createDate", "desc");
+												visitGrid.load();
+											} else {
+												var json = {
+													"criteria" : {
+														"_expr" : [ {
+															"custinfoId" : currentSelRow.custid
+														} ]
+													}
+												};
+												var data = nui.decode(json, true);
+												visitGrid.sortBy("visitDate", "desc");
+												visitGrid.load(data);
+											}
+										} else {
+											showTips("删除失败，请联系管理员！", "danger");
+										}
+									}
+								});
 							}
+						} else {
+							showTips("您没有删除权限，只有创建者及指定用户可以删除！", "danger");
+							return;
 						}
-					});				
-				}
+					}
+				});
 			}
 		}
-		
+
 		function lookInfo(e) {
-			return "<a href='javascript:void(0)' onclick='doView();' title='查看详情'>" + nui.formatDate (e.value,'yyyy-MM-dd') + "</a>";
+			return "<a href='javascript:void(0)' onclick='doView();' title='查看详情'>" + nui.formatDate(e.value, 'yyyy-MM-dd') + "</a>";
 		}
-		
+
 		function doView() {
 			var row = visitGrid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("需要选中一条记录", "danger");
 				return;
-			}else{
+			} else {
 				var data = row[0];
 				nui.open({
 					url : "/default/marketInfo/customer/customerVisit.jsp",
@@ -347,34 +420,37 @@
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setViewData(data);
 					}
-				})	
+				})
 			}
 		}
-		
-		function triggerSearch(){
+
+		function triggerSearch() {
 			search();
 		}
-		
-		function isIncludeFile(e){
-			for(i=0;i<e.result.custVisits.length;i++){
-				var json = nui.encode({'relationId' : e.result.custVisits[i].id, 'groupId': 'CUST_VISIT', 'fileCatalog': 'customerVisit'});
+
+		function isIncludeFile(e) {
+			for (i = 0; i < e.result.custVisits.length; i++) {
+				var json = nui.encode({
+					'relationId' : e.result.custVisits[i].id,
+					'groupId' : 'CUST_VISIT',
+					'fileCatalog' : 'customerVisit'
+				});
 				nui.ajax({
 					url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.isIncludeFile.biz.ext",
-					async: false,
+					async : false,
 					type : 'POST',
 					data : json,
 					contentType : 'text/json',
 					success : function(o) {
-						if(o.result=="1"){
+						if (o.result == "1") {
 							e.result.custVisits[i].isIncludeFile = "有";
-						}else{
+						} else {
 							e.result.custVisits[i].isIncludeFile = "无";
 						}
 					}
-				});	
+				});
 			}
 		}
-		
 	</script>
 </body>
 </html>

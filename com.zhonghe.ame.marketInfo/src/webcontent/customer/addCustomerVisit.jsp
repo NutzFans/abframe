@@ -43,7 +43,7 @@
 						<tr>
 							<td align="right" style="width: 130px">接洽地点：</td>
 							<td colspan="4">
-								<input name="visitAddress" id="visitAddress" class="nui-textbox" style="width: 100%" required="true"/>
+								<input name="visitAddress" id="visitAddress" class="nui-textbox" style="width: 100%" required="true" emptyText="参考格式：某某公司，上海 - 只需要填写接洽使用的公司及城市即可"/>
 							</td>
 						</tr>
 						<tr>

@@ -67,10 +67,10 @@
 				<div field="projectName" name="projectName" headerAlign="center" align="center" width="300">项目名称</div>
 				<div field="recordDate" name="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70">备案日期</div>
 				<div field="custname" name="custname" headerAlign="center" align="center" width="300">甲方全称</div>
-				<div field="bidUnitsName" name="bidUnitsName" headerAlign="center" align="center" width="250">参与单位</div>
-				<div field="contractPrice" name="contractPrice" headerAlign="center" align="center" width="150">报价/合同价/万元/%</div>
 				<div field="competName" headerAlign="center" align="center" width="250" renderer="setTextColor">竞争对手单位</div>
 				<div field="competContractPrice" headerAlign="center" align="center" width="150" renderer="setTextColor">报价/合同价/万元/%</div>
+				<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
+				<div field="remark" headerAlign="center" align="center" width="250">备注</div>
 			</div>	
 		</div>
 	</div>	
@@ -110,10 +110,6 @@
 			competBidGrid.load(data);
 		}
 		
-		competBidGrid.on("load", function(){
-			competBidGrid.mergeColumns(["projectName", "recordDate", "custname", "bidUnitsName", "contractPrice"]);
-		})
-		
 		function triggerSearch(){
 			search();
 		}
@@ -122,15 +118,18 @@
 			if(e.record.competId == competId){
 				e.cellStyle="color: red";
 			}
+			if(e.record.bidId !=0){
+				e.cellStyle="color: blue";
+			}
 			return e.value;
 		}
-		
+
 		function edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行编辑", "danger");
 				return;
-			}else{
+			} else {
 				var data = row[0];
 				nui.open({
 					url : "/default/marketInfo/competitor/editCompetInfo.jsp",
@@ -144,10 +143,13 @@
 					ondestroy : function(action) {
 						search();
 					}
-				})				
-			}			
-		}								
-		
+				})
+			}
+		}
+
+		function ZH_BID_RESULT(e) {
+			return nui.getDictText("ZH_BID_RESULT", e.value);
+		}
 	</script>
 	
 </body>

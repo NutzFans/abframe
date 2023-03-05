@@ -139,7 +139,8 @@
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%" emptyText="无数据请输入 / 字符填充"/>
+								<input name="remark" class="nui-textarea" style="width: 100%" emptyText="填写要求：
+写明报价条件（如最高限价/预算、要求人月数、依据某规定报折扣率）、商务分计算规则、中标人及我方排名、暂定总价时的报价折扣率或新能源的单价水平等"/>
 							</td>
 						</tr>						
 					</table>
@@ -291,6 +292,7 @@
 			data.bidUnitsCode = nui.get("bidUnits").getValue();
 			data.bidUnitsName = nui.get("bidUnits").getText();
 			data.recordDate = nui.get("recordDate").getValue() + "-01";
+			data.createDate = getTimeStamp();
 			var compets = grid2.getData();
 			delete data.criteria;
 			var json = nui.encode({
@@ -304,12 +306,21 @@
 					if (data.result == "1") {
 						showTips("新增市场经营信息成功");
 						closeOk();
+					} else if (data.result == "3") {
+						showTips("已存在相同数据无法新增，请联系企发部咨询", "danger");
 					} else {
 						showTips("新增市场经营信息失败，请联系管理员！", "danger");
 					}
 				}
 			});
 		}
+		
+		function getTimeStamp() {
+			var now = new Date();
+			return (now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " " + now.getHours() + ':'
+					+ ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes())) + ':' + ((now.getSeconds() < 10) ? ("0" + now.getSeconds()) : (now.getSeconds())));
+		}		
+		
 	</script>
 	
 </body>
