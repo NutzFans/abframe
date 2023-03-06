@@ -129,7 +129,7 @@
 						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="edit()">编辑</a>
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="improt" iconCls="icon-upload" onclick="improt()">导入</a>
-						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<!-- <a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a> -->
 					</td>
 				</tr>
 			</table>
@@ -144,7 +144,7 @@
 					<div field="id" headerAlign="center" visible="false">id</div>
 					<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
 					<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
-					<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70">备案日期</div>
+					<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70" allowSort="true">备案日期</div>
 					<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
 					<div field="bidNxwl" headerAlign="center" align="center" renderer="ZH_BID_NXWL" width="65">内协外联</div>
 					<div field="custId" displayField="custname" headerAlign="center" align="center" width="300">甲方全称</div>
@@ -160,8 +160,8 @@
 					<div field="projectFeatures" headerAlign="center" align="center">主要项目特征</div>
 					<div field="contractType" headerAlign="center" align="center" renderer="ZH_BID_CONTRACT_TYPE">合同类型</div>
 					<div field="procurementType" headerAlign="center" align="center" renderer="ZH_BID_PROCUREMENT_TYPE">采购方式</div>
-					<div field="bidUnitsCode" displayField="bidUnitsName" headerAlign="center" align="center" width="250">参与单位全称</div>
-					<div field="contractPrice" headerAlign="center" align="center" width="150">报价/合同价/万元/%</div>
+					<div field="bidUnitsCode" displayField="bidUnitsName" headerAlign="center" align="center" width="300px">参与单位全称</div>
+					<div field="contractPrice" headerAlign="center" align="center" width="150px">报价/合同价/万元/%</div>
 					<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 					<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 					<div field="remark" headerAlign="center" align="center" width="300">备注</div>
@@ -172,14 +172,14 @@
 	</div>
 
 	<div id="bidCompetInfo" style="display: none;">
-		<div id="bidCompetGrid" sizeList="[5]" dataField="bidCompets" pageSize="5" class="nui-datagrid" style="width: 510px; height: 203px; margin-left: 1088px"
+		<div id="bidCompetGrid" sizeList="[5]" dataField="bidCompets" pageSize="5" class="nui-datagrid" style="width: 455px; height: 203px; margin-left: 1088px"
 			url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCompetByBid.biz.ext" allowAlternating="true">
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
 				<div field="bidId" headerAlign="center" visible="false">bidId</div>
 				<div field="competId" headerAlign="center" visible="false">competId</div>
 				<div field="competName" headerAlign="center" width="300px">竞争对手单位全称</div>
-				<div field="competContractPrice" headerAlign="center" align="center">报价/合同价/万元/%</div>
+				<div field="competContractPrice" headerAlign="center" align="center" width="150px">报价/合同价/万元/%</div>
 			</div>	
 		</div>
 	</div>

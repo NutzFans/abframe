@@ -121,6 +121,9 @@
 							<td>
 								<input name="contractPrice" id="" contractPrice"" class="nui-textbox" style="width: 100%" />
 							</td>
+							<td rowspan="3" style="padding-left: 10px">
+								备注填写参考：限价656万，基准价=报价平均值的90%=满分50分（高1%扣0.5，低1%扣0.2）。工期300天，要求312人月/实际投入20人月（兼职），最终按照合同约定综合单价及实际发生工作量结算。固定单价合同1.3万/MV（35万/人年，1000元/人天），据实结算。发改价格[2007]670号文取费*95%。XXX中标，我方排名第2。
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">价格模式：</td>
@@ -142,7 +145,7 @@
 								<input name="remark" class="nui-textarea" style="width: 100%" emptyText="填写要求：
 写明报价条件（如最高限价/预算、要求人月数、依据某规定报折扣率）、商务分计算规则、中标人及我方排名、暂定总价时的报价折扣率或新能源的单价水平等"/>
 							</td>
-						</tr>						
+						</tr>					
 					</table>
 				</div>
 			</fieldset>

@@ -50,11 +50,11 @@
 				url="com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.queryCompetBidInfo.biz.ext" allowAlternating="true" idField="id" onshowrowdetail="onShowRowDetail">
 				<div property="columns">
 					<div type="checkcolumn" width="10">○</div>
-					<div type="expandcolumn" width="10">+</div>
+					<div type="expandcolumn" width="20">+</div>
 					<div field="competId" headerAlign="center" visible="false">competId</div>
-					<div field="competName" headerAlign="center" align="left" width="100">竞争单位全称</div>
-					<div field="competRemark" headerAlign="center" align="left" width="400">简介</div>
+					<div field="competName" headerAlign="center" align="left" width="150">竞争单位全称</div>
 					<div field="bidNum" headerAlign="center" align="center"width="50">共同投标项目数</div>
+					<div field="competRemark" headerAlign="center" align="left" width="400">简介</div>
 				</div>
 			</div>
 		</div>
@@ -119,7 +119,7 @@
 				e.cellStyle="color: red";
 			}
 			if(e.record.bidId !=0){
-				e.cellStyle="color: blue";
+				e.rowStyle="background: #e3f9e9";
 			}
 			return e.value;
 		}

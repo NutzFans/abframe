@@ -127,7 +127,7 @@
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 130px">参与单位：</td>
-							<td colspan="3">
+							<td colspan="3" style="background: #f0f0f0">
 								<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnits.biz.ext" valueField="dictid"
 									textField="dictname" inputMode="false" style="width: 638px" enabled="false" />
 							</td>
