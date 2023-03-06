@@ -110,7 +110,7 @@
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">立项金额</label>
 		    <div class="layui-input-block">
-		      <input type="text" name=proAppApplyPrice disabled="disabled" class="layui-input">
+		      <input type="text" name="proAppApplyPrice" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
@@ -119,6 +119,20 @@
 		    <label class="layui-form-label">立项编号</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="proAppCode" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+	  <div class="layui-row">
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">中标单位</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="winner" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">中标金额（万元）</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="proAppApplyPrice" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
@@ -173,7 +187,7 @@
 				    	formData.type = nui.getDictText('ZH_PURCHASE',formData.type)
 				    	form.val("dataFrm",formData);
 				    	processInstID= formData.processid;
-				    	 document.getElementById("name").innerHTML = formData.purchaseName;
+				    	document.getElementById("name").innerHTML = formData.reportName;
 							//textarea 自适应高度
 							
 							var status = formData.status;
@@ -257,7 +271,7 @@
 		 var fileGridInt =  table.render({
 		    elem: '#fileGrid'
 		    ,url: 'com.primeton.eos.ame_common.file.getFiles.biz.ext'
-		    ,where: {"groupid": "proAppSup","relationid":id,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
+		    ,where: {"groupid": "purReviewReport","relationid":id,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
 		      {field:'fileName',width:690, title: '附件名称' ,templet: "<div>{{getdetail(d)}}</div>"}
