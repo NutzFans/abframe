@@ -132,7 +132,7 @@
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">中标金额（万元）</label>
 		    <div class="layui-input-block">
-		      <input type="text" name="proAppApplyPrice" disabled="disabled" class="layui-input">
+		      <input type="text" name="awardAmount" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
