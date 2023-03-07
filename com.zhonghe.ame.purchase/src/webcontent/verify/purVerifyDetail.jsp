@@ -216,7 +216,7 @@
 		    ,cols: [[
 		      {field:'goodsName',width:175, title: '货物名称'}
 		      ,{field:'model', width:215, title: '型号规格'}
-		      ,{field:'supId', width:170, title: '供应商名称 '}
+		      ,{field:'custname', width:170, title: '供应商名称 '}
 		      ,{field:'singlePrice',width:80, title: '单价(万元)'}
 		      ,{field:'number',width:60, title: '数量'}  
 		      ,{field:'totalPriceDetail', width:90, title: '总价(万元)'}

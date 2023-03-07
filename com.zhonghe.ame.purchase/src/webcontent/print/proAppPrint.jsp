@@ -179,17 +179,18 @@
 		    </div>
 	    </div>
 	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">供应商信息</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="supplierId" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	  </div>
-	  <div class="layui-row">
-	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">合同/订单性质</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="nature" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+
+	  <div class="layui-row">
+	  <div class="layui-col-xs12">
+		    <label class="layui-form-label">供应商信息</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="supplierName" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
