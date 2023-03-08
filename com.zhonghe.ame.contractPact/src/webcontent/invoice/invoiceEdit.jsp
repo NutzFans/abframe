@@ -90,7 +90,7 @@
 							<td>
 								<input id="invoiceSum" name="invoiceSum" id="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum"/>
 							</td>
-							<td align="right" style="width: 160px">开票金额账面收入（元）：</td>
+							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
 								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false"/>
 							</td>

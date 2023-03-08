@@ -88,9 +88,9 @@
 							<td>
 								<input id="invoiceSum" name="invoiceSum" id="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" enabled="false" />
 							</td>
-							<td align="right" style="width: 160px">开票金额账面收入（元）：</td>
+							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
-								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" onvaluechanged="editInvoiceTax" />
 							</td>
 							<td align="right" style="width: 160px">税额：</td>
 							<td>
@@ -193,6 +193,8 @@
 		var workItemID = <%=request.getParameter("workItemID")%>;
 		var opioionform = new nui.Form("#opioionform");
 		var id;
+		var workItemInfo;
+		var beforeBookIncome;
 		
 		init();
 		
@@ -211,11 +213,16 @@
 				data : json,
 				contentType : 'text/json',
 				success : function(o) {
+					workItemInfo = o.workitemInfo;
 					form.setData(o.data)
 					id = o.data.id;
+					beforeBookIncome = o.data.bookIncome;
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);
 					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
+					if(workItemInfo.workItemName == '财务开票1'){
+						nui.get('bookIncome').enable();
+					}
 					nui.ajax({
 						url : "com.zhonghe.ame.invoice.invoice.queryInvoiceById.biz.ext",
 						type : "post",
@@ -252,6 +259,19 @@
 			});
 		}
 		
+		function editInvoiceTax(){
+			var invoiceSum = nui.get("invoiceSum").getValue();
+			var bookIncome = nui.get("bookIncome").getValue();
+			abs = function(val) {
+				var str = (val).toFixed(2) + '';
+				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+				var dot = str.substring(str.length, str.indexOf("."))
+				var ret = intSum + dot;
+				return ret;
+			}
+			nui.get("invoiceTax").setValue(abs(invoiceSum - bookIncome));
+		}		
+		
 		function submit() {
 			var auditstatus = nui.get("auditstatus").getValue();
 			if (auditstatus == "2") { //终止流程
@@ -285,6 +305,12 @@
 		}
 		
 		function saveData(json) {
+			var bookIncome = nui.get("bookIncome").getValue();
+			var invoiceTax = nui.get("invoiceTax").getValue();
+			if(beforeBookIncome != bookIncome){
+				json.bookIncome = bookIncome;
+				json.invoiceTax = invoiceTax;
+			}
 			ajaxCommon({
 				url : "com.zhonghe.ame.invoice.invoice.invoiceReview.biz.ext",
 				data : json,
