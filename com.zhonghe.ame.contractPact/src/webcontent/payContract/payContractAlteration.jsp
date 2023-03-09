@@ -18,11 +18,11 @@
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 130px">申请人：</td>
+							<td align="right" style="width: 130px">经办人：</td>
 							<td>
 								<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 200px" />
 							</td>
-							<td align="right" style="width: 130px">合同实施部门：</td>
+							<td align="right" style="width: 130px">合同承办部门：</td>
 							<td>
 								<input id="historyImplementOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
 							</td>
@@ -78,16 +78,16 @@
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 130px">申请人：</td>
+							<td align="right" style="width: 130px">经办人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden"/>
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
-							<td align="right" style="width: 130px">合同实施部门：</td>
+							<td align="right" style="width: 130px">合同承办部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 200px;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" />
+									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-hidden"/>
 							</td>
 							<td align="right" style="width: 130px">申请日期：</td>

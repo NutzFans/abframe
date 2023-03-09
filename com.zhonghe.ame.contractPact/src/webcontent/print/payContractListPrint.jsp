@@ -71,11 +71,11 @@ table,table tr td {
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" align="right">申请人：</td>
+							<td class="form_label" align="right">经办人：</td>
 							<td>
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
-							<td align="right" style="width: 160px">合同实施部门：</td>
+							<td align="right" style="width: 160px">合同承办部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
 								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />

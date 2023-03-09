@@ -21,13 +21,13 @@
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 60px; text-align: right;">申请人:</td>
+						<td style="width: 60px; text-align: right;">经办人:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createname" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
 							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
 						</td>
-						<td style="width: 90px; text-align: right;">合同实施部门:</td>
+						<td style="width: 90px; text-align: right;">合同承办部门:</td>
 						<td style="width: 155px">
 							<input id="orgid2" name="critria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
 								style="width: 150px" />
@@ -162,14 +162,13 @@
 
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" align="center" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
+				url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
 				<div property="columns">
-					<div type="checkcolumn"></div>
+					<div type="checkcolumn">○</div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
-					<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
+					<div field="createUsername" width="60" headerAlign="center" allowSort="true" align="center">经办人</div>
+					<div field="implementOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同承办部门</div>
 					<div field="createTime" headerAlign="center" allowSort="true" align="center">申请日期</div>
-					<div field="createUsername" width="60" headerAlign="center" allowSort="true" align="center">申请人</div>
-					<div field="implementOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同实施部门</div>
 					<div field="contractNo" width="180" headerAlign="center" allowSort="true" align="center">合同编号</div>
 					<div field="contractName" width="250" headerAlign="center" allowSort="true" renderer="lookInfo" align="center">合同名称</div>
 					<div field="appStatus" headerAlign="center" allowSort="true" renderer="onActionRenderer" align="center">审批状态</div>
@@ -278,8 +277,13 @@
 		function print() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractListPrint.jsp?id=" + row.id;
-				window.open(executeUrl);
+				if(row.issupagreement == "y"){
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractAlterationPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}else{
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractListPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}
 			} else {
 				showTips("请选中一条记录", "danger");
 			}

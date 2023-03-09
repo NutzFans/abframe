@@ -30,12 +30,12 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" align="right">申请人:</td>
+							<td class="form_label" align="right">经办人:</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 100%" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
-							<td align="right" style="width: 120px">合同实施部门:</td>
+							<td align="right" style="width: 120px">合同承办部门:</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
