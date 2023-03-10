@@ -43,7 +43,15 @@
 							</td>
 							<td align="right" style="width: 130px">甲方全称：</td>
 							<td colspan="3">
-								<input name="custId" allowInput="false" id="custId" class="nui-buttonedit" onbuttonclick="selectCustInfo" style="width: 100%" required="true" enabled="false" />
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 620px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext" valueField="custid" textField="custname" allowInput="false" enabled="false"/>
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
 							</td>
 						</tr>
 						<tr>
@@ -186,11 +194,14 @@
 		var form = new nui.Form("#form1");
 		var grid2 = nui.get("datagrid2");
 		
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
+		
 		function setViewData(data) {
 			form.setData(data);
 			queryBidCompet(data.id);
 			nui.get('createUser').setValue(data.empname);
-			nui.get('custId').setText(data.custname);
+			nui.get('custInfo').setValue(data.custId);
+			nui.get('custInfo').setText(data.custName);
 			nui.get('bidUnits').setValue(data.bidUnitsCode);
 			nui.get('bidUnits').setText(data.bidUnitsName);
 			var grid_0 = nui.get("grid_0");

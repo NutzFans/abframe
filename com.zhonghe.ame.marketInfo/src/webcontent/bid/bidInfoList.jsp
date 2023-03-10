@@ -35,8 +35,10 @@
 						</td>
 						<td style="width: 60px; text-align: right;">甲方全称:</td>
 						<td colspan="2" style="width: 320px">
-							<input name="criteria._expr[5].custId" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname" valueField="custid"
+							<input name="criteria._expr[5]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname" valueField="custname"
 								dataField="custs" valueFromSelect="true" allowInput="true" style="width: 315px;" />
+							<input class="nui-hidden" name="criteria._expr[5]._property" value="custName" />
+							<input class="nui-hidden" name="criteria._expr[5]._op" value="like" />
 						</td>
 						<td style="width: 60px; text-align: right;">备案日期:</td>
 						<td colspan="2" style="width: 245px">
@@ -147,7 +149,7 @@
 					<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70" allowSort="true">备案日期</div>
 					<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
 					<div field="bidNxwl" headerAlign="center" align="center" renderer="ZH_BID_NXWL" width="65">内协外联</div>
-					<div field="custId" displayField="custname" headerAlign="center" align="center" width="300">甲方全称</div>
+					<div field="custId" displayField="custName" headerAlign="center" align="center" width="300">甲方全称</div>
 					<div field="projectName" headerAlign="center" align="center" width="300">项目名称</div>
 					<div field="investAmount" headerAlign="center" align="center">投资额(万元)</div>
 					<div field="bidBde" headerAlign="center" align="center" renderer="ZH_BID_BDE">标的额</div>

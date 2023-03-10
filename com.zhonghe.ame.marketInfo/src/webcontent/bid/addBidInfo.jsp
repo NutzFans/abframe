@@ -43,7 +43,15 @@
 							</td>
 							<td align="right" style="width: 130px">甲方全称：</td>
 							<td colspan="3">
-								<input name="custId" allowInput="false" id="custId" class="nui-buttonedit" onbuttonclick="selectCustInfo" style="width: 100%" required="true" />
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 620px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext" valueField="custid" textField="custname" allowInput="false"/>
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
 							</td>
 						</tr>
 						<tr>
@@ -196,6 +204,8 @@
 		var form = new nui.Form("#form1");
 		var grid2 = nui.get("datagrid2");
 		
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFE6;")
+		
 		init();
 		
 		function init() {
@@ -203,8 +213,7 @@
 			nui.get("createUser").setValue(userName);		
 		}
 		
-		function selectCustInfo(){
-			var custIdBtnEdit = this;
+		function selectCustInfo() {
 			mini.open({
 				url : "/default/marketInfo/bid/selectCustInfo.jsp",
 				title : "选择甲方客户（请先查找客户，如不存在再新增）",
@@ -215,34 +224,39 @@
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
-						if (data) {
-							custIdBtnEdit.setValue(data.custid);
-							custIdBtnEdit.setText(data.custname);
-							custIdBtnEdit.focus();
-							custIdBtnEdit.blur();
+						var custid = nui.get("custInfo").getValue();
+						var custname = nui.get("custInfo").getText();
+						if (custid != "" && custname != "") {
+							custid = custid + "," + data.custid;
+							custname = custname + "," + data.custname;
+						} else {
+							custid = data.custid;
+							custname = data.custname;
 						}
+						nui.get("custInfo").setValue(""+custid+"");
+						nui.get("custInfo").setText(""+custname+"");
 					}
 				}
 			});
 		}
-		
+
 		function addRow() {
 			var newRow = {
 				name : "New Compet"
 			};
 			var index = grid2.getData().length;
-			grid2.addRow(newRow, index+1);
+			grid2.addRow(newRow, index + 1);
 			grid2.beginEditRow(newRow);
 		}
-		
-		function removeRow(){
+
+		function removeRow() {
 			var rows = grid2.getSelecteds();
 			if (rows.length > 0) {
 				grid2.removeRows(rows, false);
 			}
 		}
-		
-		function selectCompetInfo(){
+
+		function selectCompetInfo() {
 			var competIdBtnEdit = this;
 			mini.open({
 				url : "/default/marketInfo/bid/selectCompetInfo.jsp",
@@ -263,8 +277,8 @@
 					}
 				}
 			});
-		}				
-		
+		}
+
 		function onOk() {
 			if (!form.validate()) {
 				showTips("请检查表单的完整性!", "danger");
@@ -292,6 +306,8 @@
 		function SaveData() {
 			var data = form.getData();
 			data.files = nui.get("fileids").getValue();
+			data.custId = nui.get("custInfo").getValue();
+			data.custName = nui.get("custInfo").getText();
 			data.bidUnitsCode = nui.get("bidUnits").getValue();
 			data.bidUnitsName = nui.get("bidUnits").getText();
 			data.recordDate = nui.get("recordDate").getValue() + "-01";
@@ -317,13 +333,12 @@
 				}
 			});
 		}
-		
+
 		function getTimeStamp() {
 			var now = new Date();
 			return (now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " " + now.getHours() + ':'
 					+ ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes())) + ':' + ((now.getSeconds() < 10) ? ("0" + now.getSeconds()) : (now.getSeconds())));
-		}		
-		
+		}
 	</script>
 	
 </body>
