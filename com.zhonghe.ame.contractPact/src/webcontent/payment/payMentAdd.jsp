@@ -41,7 +41,7 @@
 						<tr>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
-								<input id="contractId" name="contractId" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" enabled="true" />
+								<input id="contractId" name="contractId" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" enabled="true" allowInput="false" emptyText="点击右侧按钮，通过弹出框选择合同" />
 							</td>
 							<td align="right" style="width: 160px">合同名称：</td>
 							<td colspan="6">

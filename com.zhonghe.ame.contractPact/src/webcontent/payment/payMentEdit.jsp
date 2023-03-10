@@ -24,7 +24,8 @@
 						<tr>
 							<td class="form_label" align="right">申请人</td>
 							<td>
-								<input id="empname" name="empname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+								<input name="createUserid" id="createUserid" class="nui-hidden"/>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请部门：</td>
 							<td>
@@ -240,7 +241,6 @@
 				contentType : 'text/json',
 				success : function(o) {
 					form.setData(o.payment);
-					nui.get("empname").setValue(o.payment.createUsername);
 					nui.get("contractId").setText(o.payment.contractId);
 					//附件查询
 					var grid_0 = nui.get("grid_0");
@@ -311,7 +311,7 @@
 			var btnEdit = this;
 			mini.open({
 				url : "/default/contractPact/payment/payMentContracList.jsp",
-				title : "采购立项列表",
+				title : "付款合同信息",
 				width : '90%',
 				height : '90%',
 				ondestroy : function(action) {
@@ -323,11 +323,11 @@
 							btnEdit.setValue(data.contractNo);
 							btnEdit.setText(data.contractNo);
 							nui.get("contractName").setValue(data.contractName);
-							nui.get("createdOrgid").setValue(data.implementOrg);
 							nui.get("contractSum").setValue(data.contractSum);
 							nui.get("signatory").setValue(data.signatory);
-							nui.get("createUsername").setValue(data.createUsername);
-							nui.get("createUserid").setValue(data.createUserid);
+							nui.get("contractType").setValue(data.contractType);
+							nui.get("contractNature").setValue(data.contractNature);
+							nui.get("payer").setValue(data.payer);
 							queryPaid(data.contractNo);
 							btnEdit.doValueChanged();
 						}
@@ -335,6 +335,20 @@
 
 				}
 			});
+		}
+		
+		function queryPaid(str) {
+			nui.ajax({
+				url : "com.zhonghe.ame.payment.payMent.queryPaid.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : {
+					"contractNo" : str
+				},
+				success : function(text) {
+					nui.get("paidContractSum").setValue(text.paidSum);
+				}
+			})
 		}
 		
 		function onCancel(e) {
