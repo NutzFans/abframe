@@ -236,13 +236,17 @@
 					function onOk(e) {
 						type = e;
 						var formData = form.getData(), gridChanges = grid_traveldetail.getChanges(), gridData = grid_traveldetail.getData();
+						var totalAmount = nui.get("totalAmount").getValue();
 						formData.type = type;
 						if (type == 1) {
 							if (!form.validate() || gridData.length < 1) {
 								nui.alert("请检查表单和采购明细填写是否完整!");
 								return;
 							}
-	
+							if(totalAmount>=10){
+								alert("零星采购总金额不能大于10万元");
+								return;
+							}
 							grid_traveldetail.validate();
 							if (grid_traveldetail.isValid() == false) {
 								var error = grid_traveldetail.getCellErrors()[0];

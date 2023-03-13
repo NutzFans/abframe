@@ -101,7 +101,7 @@
 				<div field="purchaseName" width="100" align="left" headerAlign="center" renderer="lookInfo">零星采购名称</div>
 				<div field="purchaseCode" width="100" align="left" headerAlign="center"> 零星采购编号</div>
 				<div field="orgname" width="100" align="left" headerAlign="center">采购单位</div>
-				<div field="totalAmount" width="100" align="left" headerAlign="center">金额</div>
+				<div field="totalAmount" width="100" align="left" headerAlign="center">金额（万元）</div>
 				<div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer">状态</div>
 				<div field="createdName" width="100" align="center" headerAlign="center">申请人</div>
 				<div field="createdTime" width="100" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">申请日期</div>
