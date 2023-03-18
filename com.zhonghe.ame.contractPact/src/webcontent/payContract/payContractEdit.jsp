@@ -47,7 +47,7 @@
 							<td>
 								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" />
+									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
 							</td>
 							<td align="right" style="width: 120px">申请日期:</td>
@@ -330,7 +330,7 @@
 							showTips("维护成功");
 							window.CloseOwnerWindow("save");
 						} else {
-							showTips("编辑失败", "danger");
+							showTips("维护失败", "danger");
 						}
 
 					},

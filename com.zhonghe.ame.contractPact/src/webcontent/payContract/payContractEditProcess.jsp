@@ -380,8 +380,11 @@
 							if (type == 1) {
 								showTips("付费合同提交成功")
 								closeOk();
-							} else {
+							} else if (type == 0) {
 								showTips("付费合同暂时保存成功")
+								closeOk();
+							} else {
+								showTips("中止成功")
 								closeOk();
 							}
 						} else {

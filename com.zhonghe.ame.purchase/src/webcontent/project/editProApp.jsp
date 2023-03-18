@@ -310,14 +310,14 @@
 					gridDtl.beginEditCell(error.record, error.column);
 					return;
 				}
-				var filePaths1 = document.getElementsByName("uploadfile1").length;
+				var filePaths1 = document.getElementsByName("uploadfile").length;
 				var grid_1 = nui.get("grid_0").getData();
 				if (filePaths1 == 0 && grid_1.length < 1) {
 					showTips("估算表和支撑材料不可以为空", "danger");
 					return;
 				} else {
 					for (var j = 0; j < filePaths1; j++) {
-						var a = document.getElementsByName("remarkList1")[j].value;
+						var a = document.getElementsByName("remarkList")[j].value;
 						if (a == null || a == "") {
 							showTips("估算表和支撑材料不可以为空", "danger");
 							nui.get("saveReimbProcess").enable();

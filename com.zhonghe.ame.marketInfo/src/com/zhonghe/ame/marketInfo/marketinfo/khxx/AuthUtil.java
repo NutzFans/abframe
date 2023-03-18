@@ -19,5 +19,11 @@ public class AuthUtil {
 	public boolean includeBidOrg(String bidOrg, String orgSeq) {
 		return ArrayUtil.contains(ArrayUtil.toArray(StrUtil.split(orgSeq, "."), String.class), bidOrg);
 	}
+	
+	@Bizlet("获取组织层级中组织编码（第2层级）")
+	public String getBidOrg(String orgSeq){
+		String[] orgSeqs =  ArrayUtil.toArray(StrUtil.split(orgSeq, "."), String.class);
+		return orgSeqs[2];
+	}
 
 }

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,13 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.NumberUtil;
 
 import com.eos.foundation.data.DataObjectUtil;
 import com.eos.foundation.database.DatabaseExt;
@@ -41,23 +49,30 @@ public class excelPayContractMessage {
 		String err = "";
 		try {
 			InputStream is = new FileInputStream(Url);
-			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
-			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(0);
+			Workbook workbook;
+			Sheet sheet;
+			if (CharSequenceUtil.endWith(Url, ".xlsx", true)) {
+				workbook = new XSSFWorkbook(is);
+				sheet = workbook.getSheetAt(0);
+			} else {
+				workbook = new HSSFWorkbook(is);
+				sheet = workbook.getSheetAt(0);
+			}
 			List<ZhPayContract> listAdd = new ArrayList<ZhPayContract>();
 			DecimalFormat dFormat = new DecimalFormat("0.00");
 			double jine = 0;
 			String twoJine = "";
-			for (int rowNum = 1; rowNum <= hssfSheet.getLastRowNum(); rowNum++) {
-				HSSFRow hssfRow = hssfSheet.getRow(rowNum);
+			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
+				Row row = sheet.getRow(rowNum);
 				int nub = rowNum + 1;
-				if (hssfRow.getCell(rowNum) == null) {
+				if (row.getCell(rowNum) == null) {
 					break;
 				}
 				ZhPayContractImpl book = new ZhPayContractImpl();
 				DatabaseExt.getPrimaryKey(book);
 
 				// 合同经办人
-				if (hssfRow.getCell((short) 1) == null || hssfRow.getCell((short) 1).getStringCellValue() == "") {
+				if (row.getCell((short) 1) == null || row.getCell((short) 1).getStringCellValue() == "") {
 					err = "第" + nub + "行，第2列合同经办人为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -66,11 +81,11 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					if ("sysadmin".equals(hssfRow.getCell((short) 1).getStringCellValue().trim()) || "SYSADMIN".equals(hssfRow.getCell((short) 1).getStringCellValue().trim())) {
+					if ("sysadmin".equals(row.getCell((short) 1).getStringCellValue().trim()) || "SYSADMIN".equals(row.getCell((short) 1).getStringCellValue().trim())) {
 						continue;
 					}
-					book.setCreateUsername(hssfRow.getCell((short) 1).getStringCellValue().trim());
-					String userId = queryUserEmpByName(hssfRow.getCell((short) 1).getStringCellValue().trim());
+					book.setCreateUsername(row.getCell((short) 1).getStringCellValue().trim());
+					String userId = queryUserEmpByName(row.getCell((short) 1).getStringCellValue().trim());
 					if (userId != null) {
 						book.setCreateUserid(userId);
 					} else {
@@ -85,7 +100,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同承办部门
-				if (hssfRow.getCell((short) 2) == null || hssfRow.getCell((short) 2).getStringCellValue() == "") {
+				if (row.getCell((short) 2) == null || row.getCell((short) 2).getStringCellValue() == "") {
 					err = "第" + nub + "行，第3列合同承办部门为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -94,14 +109,14 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 2).setCellType(CellType.STRING);
-					book.setImplementOrgname(hssfRow.getCell((short) 2).getStringCellValue());
-					String orgid = queryOrganizationId(hssfRow.getCell((short) 2).getStringCellValue());
+					row.getCell((short) 2).setCellType(CellType.STRING);
+					book.setImplementOrgname(row.getCell((short) 2).getStringCellValue());
+					String orgid = queryOrganizationId(row.getCell((short) 2).getStringCellValue());
 					book.setImplementOrg(orgid);
 				}
 
 				// 合同编号
-				if (hssfRow.getCell((short) 3) == null || hssfRow.getCell((short) 3).getStringCellValue() == "") {
+				if (row.getCell((short) 3) == null || row.getCell((short) 3).getStringCellValue() == "") {
 					err = "第" + nub + "行，第4列合同编号为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -110,12 +125,12 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 3).setCellType(CellType.STRING);
-					book.setContractNo(hssfRow.getCell((short) 3) + "");
+					row.getCell((short) 3).setCellType(CellType.STRING);
+					book.setContractNo(row.getCell((short) 3) + "");
 				}
 
 				// 合同名称
-				if (hssfRow.getCell((short) 4) == null || hssfRow.getCell((short) 4).getStringCellValue() == "") {
+				if (row.getCell((short) 4) == null || row.getCell((short) 4).getStringCellValue() == "") {
 					err = "第" + nub + "行，第5列合同名称为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -124,12 +139,12 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 4).setCellType(CellType.STRING);
-					book.setContractName(hssfRow.getCell((short) 4) + "");
+					row.getCell((short) 4).setCellType(CellType.STRING);
+					book.setContractName(row.getCell((short) 4) + "");
 				}
 
 				// 合同金额
-				if (hssfRow.getCell((short) 5) == null) {
+				if (row.getCell((short) 5) == null) {
 					err = "第" + nub + "行，第6列合同金额为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -138,13 +153,14 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 5).setCellType(CellType.STRING);
-					String sum = hssfRow.getCell((short) 5).getStringCellValue().trim();
+					row.getCell((short) 5).setCellType(CellType.STRING);
+					String sum = row.getCell((short) 5).getStringCellValue().trim();
 					Boolean boolean1 = isNumber(sum);
 					if (boolean1.equals(true)) {
 						jine = Double.parseDouble(sum);
 						twoJine = dFormat.format(jine);
 						book.setContractSum(twoJine);
+						book.setActContractSum(NumberUtil.round(twoJine, 2));
 					} else {
 						err = "第" + nub + "行，第6列合同金额内容格式为00.00，请检查！";
 						if (error == "" || error == null) {
@@ -157,7 +173,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同最终金额
-				if (hssfRow.getCell((short) 6) == null) {
+				if (row.getCell((short) 6) == null) {
 					err = "第" + nub + "行，第7列合同最终金额为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -166,8 +182,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 6).setCellType(CellType.STRING);
-					String sum = hssfRow.getCell((short) 6).getStringCellValue().trim();
+					row.getCell((short) 6).setCellType(CellType.STRING);
+					String sum = row.getCell((short) 6).getStringCellValue().trim();
 					Boolean boolean1 = isNumber(sum);
 					if (boolean1.equals(true)) {
 						jine = Double.parseDouble(sum);
@@ -185,7 +201,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同不含税金额
-				if (hssfRow.getCell((short) 7) == null) {
+				if (row.getCell((short) 7) == null) {
 					err = "第" + nub + "行，第8列合同不含税金额为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -194,8 +210,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 7).setCellType(CellType.STRING);
-					String sum2 = hssfRow.getCell((short) 7).getStringCellValue().trim();
+					row.getCell((short) 7).setCellType(CellType.STRING);
+					String sum2 = row.getCell((short) 7).getStringCellValue().trim();
 					Boolean boolean2 = isNumber(sum2);
 					if (boolean2.equals(true)) {
 						jine = Double.parseDouble(sum2);
@@ -213,7 +229,7 @@ public class excelPayContractMessage {
 				}
 
 				// 税额
-				if (hssfRow.getCell((short) 8) == null) {
+				if (row.getCell((short) 8) == null) {
 					err = "第" + nub + "行，第9列税额为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -222,8 +238,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 8).setCellType(CellType.STRING);
-					String sum3 = hssfRow.getCell((short) 8).getStringCellValue().trim();
+					row.getCell((short) 8).setCellType(CellType.STRING);
+					String sum3 = row.getCell((short) 8).getStringCellValue().trim();
 					Boolean boolean3 = isNumber(sum3);
 					if (boolean3.equals(true)) {
 						jine = Double.parseDouble(sum3);
@@ -241,7 +257,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同余额
-				if (hssfRow.getCell((short) 9) == null) {
+				if (row.getCell((short) 9) == null) {
 					err = "第" + nub + "行，第10列合同余额为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -250,8 +266,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 9).setCellType(CellType.STRING);
-					String sum4 = hssfRow.getCell((short) 9).getStringCellValue().trim();
+					row.getCell((short) 9).setCellType(CellType.STRING);
+					String sum4 = row.getCell((short) 9).getStringCellValue().trim();
 					Boolean boolean4 = isNumber(sum4);
 					if (boolean4.equals(true)) {
 						jine = Double.parseDouble(sum4);
@@ -269,7 +285,7 @@ public class excelPayContractMessage {
 				}
 
 				// 执行状态
-				if (hssfRow.getCell((short) 10) == null || hssfRow.getCell((short) 10).getStringCellValue() == "") {
+				if (row.getCell((short) 10) == null || row.getCell((short) 10).getStringCellValue() == "") {
 					err = "第" + nub + "行，第11列执行状态为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -278,8 +294,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 10).setCellType(CellType.STRING);
-					String ExecuteStatus = queryDict("EXECUTE_STATUS", hssfRow.getCell((short) 10).getStringCellValue());
+					row.getCell((short) 10).setCellType(CellType.STRING);
+					String ExecuteStatus = queryDict("EXECUTE_STATUS", row.getCell((short) 10).getStringCellValue());
 					if (ExecuteStatus != null && ExecuteStatus != "") {
 						book.setExecuteStatus(ExecuteStatus);
 					} else {
@@ -294,7 +310,7 @@ public class excelPayContractMessage {
 				}
 
 				// 签约方
-				if (hssfRow.getCell((short) 11) == null || hssfRow.getCell((short) 11).getStringCellValue() == "") {
+				if (row.getCell((short) 11) == null || row.getCell((short) 11).getStringCellValue() == "") {
 					err = "第" + nub + "行，第12列签约方为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -303,8 +319,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 11).setCellType(CellType.STRING);
-					String signatory = querySignatoryName(hssfRow.getCell((short) 11).getStringCellValue().trim());
+					row.getCell((short) 11).setCellType(CellType.STRING);
+					String signatory = querySignatoryName(row.getCell((short) 11).getStringCellValue().trim());
 					if (signatory != null && signatory != "") {
 						book.setSignatory(signatory);
 					} else {
@@ -319,7 +335,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同签约主体
-				if (hssfRow.getCell((short) 12) == null || hssfRow.getCell((short) 12).getStringCellValue() == "") {
+				if (row.getCell((short) 12) == null || row.getCell((short) 12).getStringCellValue() == "") {
 					err = "第" + nub + "行，第13列合同签约主体为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -328,8 +344,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 12).setCellType(CellType.STRING);
-					String type = queryDict("ZH_INVOICE_NAME_TYPE", hssfRow.getCell((short) 12).getStringCellValue());
+					row.getCell((short) 12).setCellType(CellType.STRING);
+					String type = queryDict("ZH_INVOICE_NAME_TYPE", row.getCell((short) 12).getStringCellValue());
 					if (type != null && type != "") {
 						book.setContractSubject(type);
 					} else {
@@ -344,7 +360,7 @@ public class excelPayContractMessage {
 				}
 
 				// 付款方
-				if (hssfRow.getCell((short) 13) == null || hssfRow.getCell((short) 13).getStringCellValue() == "") {
+				if (row.getCell((short) 13) == null || row.getCell((short) 13).getStringCellValue() == "") {
 					err = "第" + nub + "行，第14列付款方为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -353,8 +369,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 13).setCellType(CellType.STRING);
-					String type = queryDict("ZH_INVOICE_NAME_TYPE", hssfRow.getCell((short) 13).getStringCellValue());
+					row.getCell((short) 13).setCellType(CellType.STRING);
+					String type = queryDict("ZH_INVOICE_NAME_TYPE", row.getCell((short) 13).getStringCellValue());
 					if (type != null && type != "") {
 						book.setPayer(type);
 					} else {
@@ -372,7 +388,7 @@ public class excelPayContractMessage {
 				try {
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					String format = "yyyy-MM-dd";
-					String signingDate = simpleDateFormat.format(hssfRow.getCell((short) 14).getDateCellValue());
+					String signingDate = simpleDateFormat.format(row.getCell((short) 14).getDateCellValue());
 					if (signingDate == null || signingDate == "") {
 						err = "第" + nub + "行，第15列签订日期为必填项，不可为空！";
 						if (error == "" || error == null) {
@@ -408,7 +424,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同类型/标的.
-				if (hssfRow.getCell((short) 15) == null || hssfRow.getCell((short) 15).getStringCellValue() == "") {
+				if (row.getCell((short) 15) == null || row.getCell((short) 15).getStringCellValue() == "") {
 					err = "第" + nub + "行，第16列合同类型为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -417,8 +433,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 15).setCellType(CellType.STRING);
-					String type = queryDict("ZH_CONTRACT_TYPE", hssfRow.getCell((short) 15).getStringCellValue());
+					row.getCell((short) 15).setCellType(CellType.STRING);
+					String type = queryDict("ZH_CONTRACT_TYPE", row.getCell((short) 15).getStringCellValue());
 					if (type != null && type != "") {
 						book.setContractType(type);
 					} else {
@@ -433,7 +449,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同密级
-				if (hssfRow.getCell((short) 16) == null || hssfRow.getCell((short) 16).getStringCellValue() == "") {
+				if (row.getCell((short) 16) == null || row.getCell((short) 16).getStringCellValue() == "") {
 					err = "第" + nub + "行，第17列合同密级为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -442,8 +458,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 16).setCellType(CellType.STRING);
-					String type = queryDict("CONTRACT_SECRET_LEVEL", hssfRow.getCell((short) 16).getStringCellValue());
+					row.getCell((short) 16).setCellType(CellType.STRING);
+					String type = queryDict("CONTRACT_SECRET_LEVEL", row.getCell((short) 16).getStringCellValue());
 					if (type != null && type != "") {
 						book.setContractSecretLevel(type);
 					} else {
@@ -458,7 +474,7 @@ public class excelPayContractMessage {
 				}
 
 				// 项目密级
-				if (hssfRow.getCell((short) 17) == null || hssfRow.getCell((short) 17).getStringCellValue() == "") {
+				if (row.getCell((short) 17) == null || row.getCell((short) 17).getStringCellValue() == "") {
 					err = "第" + nub + "行，第18列项目密级为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -467,8 +483,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 17).setCellType(CellType.STRING);
-					String type = queryDict("PROJECT_SECRET_LEVEL", hssfRow.getCell((short) 17).getStringCellValue());
+					row.getCell((short) 17).setCellType(CellType.STRING);
+					String type = queryDict("PROJECT_SECRET_LEVEL", row.getCell((short) 17).getStringCellValue());
 					if (type != null && type != "") {
 						book.setProjectSecretLevel(type);
 					} else {
@@ -483,7 +499,7 @@ public class excelPayContractMessage {
 				}
 
 				// 是否为SM协作配套
-				if (hssfRow.getCell((short) 18) == null || hssfRow.getCell((short) 18).getStringCellValue() == "") {
+				if (row.getCell((short) 18) == null || row.getCell((short) 18).getStringCellValue() == "") {
 					err = "第" + nub + "行，第19列是否为SM协作配套为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -492,8 +508,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 18).setCellType(CellType.STRING);
-					String type = queryDict("ABF_YESORNO", hssfRow.getCell((short) 18).getStringCellValue());
+					row.getCell((short) 18).setCellType(CellType.STRING);
+					String type = queryDict("ABF_YESORNO", row.getCell((short) 18).getStringCellValue());
 					if (type != null && type != "") {
 						book.setIssm(type);
 					} else {
@@ -508,7 +524,7 @@ public class excelPayContractMessage {
 				}
 
 				// 是否为补充协议
-				if (hssfRow.getCell((short) 19) == null || hssfRow.getCell((short) 19).getStringCellValue() == "") {
+				if (row.getCell((short) 19) == null || row.getCell((short) 19).getStringCellValue() == "") {
 					err = "第" + nub + "行，第20列是否为补充协议为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -517,8 +533,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 19).setCellType(CellType.STRING);
-					String type = queryDict("ABF_YESORNO", hssfRow.getCell((short) 19).getStringCellValue());
+					row.getCell((short) 19).setCellType(CellType.STRING);
+					String type = queryDict("ABF_YESORNO", row.getCell((short) 19).getStringCellValue());
 					if (type != null && type != "") {
 						book.setIssupagreement(type);
 					} else {
@@ -533,7 +549,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同性质contract_nature
-				if (hssfRow.getCell((short) 20) == null || hssfRow.getCell((short) 20).getStringCellValue() == "") {
+				if (row.getCell((short) 20) == null || row.getCell((short) 20).getStringCellValue() == "") {
 					err = "第" + nub + "行，第21列合同性质为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -542,8 +558,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 20).setCellType(CellType.STRING);
-					String type = queryDict("CONTRACT_NATURE", hssfRow.getCell((short) 20).getStringCellValue());
+					row.getCell((short) 20).setCellType(CellType.STRING);
+					String type = queryDict("CONTRACT_NATURE", row.getCell((short) 20).getStringCellValue());
 					if (type != null && type != "") {
 						book.setContractNature(type);
 					} else {
@@ -558,7 +574,7 @@ public class excelPayContractMessage {
 				}
 
 				// 合同价款形式
-				if (hssfRow.getCell((short) 21) == null || hssfRow.getCell((short) 21).getStringCellValue() == "") {
+				if (row.getCell((short) 21) == null || row.getCell((short) 21).getStringCellValue() == "") {
 					err = "第" + nub + "行，第22列合同价款形式为必填项，不可为空！";
 					if (error == "" || error == null) {
 						error = err;
@@ -567,8 +583,8 @@ public class excelPayContractMessage {
 					}
 					continue;
 				} else {
-					hssfRow.getCell((short) 21).setCellType(CellType.STRING);
-					String type = queryDict("CONTRACT_PRICE", hssfRow.getCell((short) 21).getStringCellValue());
+					row.getCell((short) 21).setCellType(CellType.STRING);
+					String type = queryDict("CONTRACT_PRICE", row.getCell((short) 21).getStringCellValue());
 					if (type != null && type != "") {
 						book.setContractPrice(type);
 					} else {
@@ -583,25 +599,25 @@ public class excelPayContractMessage {
 				}
 
 				// 采购计划年份
-				if (hssfRow.getCell((short) 22) == null) {
-					hssfRow.createCell((short) 22).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 22).getStringCellValue())));
+				if (row.getCell((short) 22) == null) {
+					row.createCell((short) 22).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 22).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 22).setCellType(CellType.STRING);
-					if (hssfRow.getCell((short) 22).getStringCellValue() == "") {
-						hssfRow.createCell((short) 22).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 22).getStringCellValue())));
+					row.getCell((short) 22).setCellType(CellType.STRING);
+					if (row.getCell((short) 22).getStringCellValue() == "") {
+						row.createCell((short) 22).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 22).getStringCellValue())));
 					} else {
-						book.setPlanYear(hssfRow.getCell((short) 22) + "");
+						book.setPlanYear(row.getCell((short) 22) + "");
 					}
 				}
 
 				// 预算金额
-				if (hssfRow.getCell((short) 23) == null) {
-					hssfRow.createCell((short) 23).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 23).getStringCellValue())));
+				if (row.getCell((short) 23) == null) {
+					row.createCell((short) 23).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 23).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 23).setCellType(CellType.STRING);
-					String sum6 = hssfRow.getCell((short) 23).getStringCellValue();
-					if (hssfRow.getCell((short) 23).getStringCellValue() == "") {
-						hssfRow.createCell((short) 23).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 23).getStringCellValue())));
+					row.getCell((short) 23).setCellType(CellType.STRING);
+					String sum6 = row.getCell((short) 23).getStringCellValue();
+					if (row.getCell((short) 23).getStringCellValue() == "") {
+						row.createCell((short) 23).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 23).getStringCellValue())));
 					} else {
 						Boolean boolean6 = isNumber(sum6);
 						if (boolean6.equals(true)) {
@@ -621,48 +637,48 @@ public class excelPayContractMessage {
 				}
 
 				// 标的类型
-				if (hssfRow.getCell((short) 24) == null || hssfRow.getCell((short) 24).getStringCellValue() == "") {
-					hssfRow.createCell((short) 24).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 24).getStringCellValue())));
+				if (row.getCell((short) 24) == null || row.getCell((short) 24).getStringCellValue() == "") {
+					row.createCell((short) 24).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 24).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 24).setCellType(CellType.STRING);
-					String type = queryDict("MARK_TYPE", hssfRow.getCell((short) 24).getStringCellValue());
+					row.getCell((short) 24).setCellType(CellType.STRING);
+					String type = queryDict("MARK_TYPE", row.getCell((short) 24).getStringCellValue());
 					book.setMarkType(type);
 				}
 
 				// 集采类型
-				if (hssfRow.getCell((short) 25) == null || hssfRow.getCell((short) 25).getStringCellValue() == "") {
-					hssfRow.createCell((short) 25).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 25).getStringCellValue())));
+				if (row.getCell((short) 25) == null || row.getCell((short) 25).getStringCellValue() == "") {
+					row.createCell((short) 25).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 25).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 25).setCellType(CellType.STRING);
-					String type = queryDict("INTYPE", hssfRow.getCell((short) 25).getStringCellValue());
+					row.getCell((short) 25).setCellType(CellType.STRING);
+					String type = queryDict("INTYPE", row.getCell((short) 25).getStringCellValue());
 					book.setIntype(type);
 				}
 
 				// 采购方式
-				if (hssfRow.getCell((short) 26) == null || hssfRow.getCell((short) 26).getStringCellValue() == "") {
-					hssfRow.createCell((short) 26).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 26).getStringCellValue())));
+				if (row.getCell((short) 26) == null || row.getCell((short) 26).getStringCellValue() == "") {
+					row.createCell((short) 26).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 26).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 26).setCellType(CellType.STRING);
-					String type = queryDict("ZH_PROCUREMENT_TYPE", hssfRow.getCell((short) 26).getStringCellValue());
+					row.getCell((short) 26).setCellType(CellType.STRING);
+					String type = queryDict("ZH_PROCUREMENT_TYPE", row.getCell((short) 26).getStringCellValue());
 					book.setProcurementType(type);
 				}
 
 				// 供应商来源
-				if (hssfRow.getCell((short) 27) == null || hssfRow.getCell((short) 27).getStringCellValue() == "") {
-					hssfRow.createCell((short) 27).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 27).getStringCellValue())));
+				if (row.getCell((short) 27) == null || row.getCell((short) 27).getStringCellValue() == "") {
+					row.createCell((short) 27).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 27).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 27).setCellType(CellType.STRING);
-					String type = queryDict("SUPPLIER_SOURCE", hssfRow.getCell((short) 27).getStringCellValue());
+					row.getCell((short) 27).setCellType(CellType.STRING);
+					String type = queryDict("SUPPLIER_SOURCE", row.getCell((short) 27).getStringCellValue());
 					book.setSupplierSource(type);
 
 				}
 
 				// 是否电子采购
-				if (hssfRow.getCell((short) 28) == null || hssfRow.getCell((short) 28).getStringCellValue() == "") {
-					hssfRow.createCell((short) 28).setCellValue(new HSSFRichTextString(String.valueOf(hssfRow.getCell((short) 28).getStringCellValue())));
+				if (row.getCell((short) 28) == null || row.getCell((short) 28).getStringCellValue() == "") {
+					row.createCell((short) 28).setCellValue(new HSSFRichTextString(String.valueOf(row.getCell((short) 28).getStringCellValue())));
 				} else {
-					hssfRow.getCell((short) 28).setCellType(CellType.STRING);
-					String type = queryDict("ABF_YESORNO", hssfRow.getCell((short) 28).getStringCellValue());
+					row.getCell((short) 28).setCellType(CellType.STRING);
+					String type = queryDict("ABF_YESORNO", row.getCell((short) 28).getStringCellValue());
 					book.setIselectronic(type);
 
 				}

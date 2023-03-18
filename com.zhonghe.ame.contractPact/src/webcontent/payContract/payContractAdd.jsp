@@ -235,7 +235,7 @@
 		</fieldset>
 	</div>
 	
-	<form id="opioionform" method="post">
+	<form id="opioionform" method="post" style="display: none;">
 		<div style="padding: 5px;" id="opinionHide">
 			<table style="table-layout: fixed;">
 				<tr id="salesEdit">
@@ -355,7 +355,7 @@
 					var payPlansStr = JSON.stringify(payPlans);
 					var payPlansJson = JSON.parse(payPlansStr);
 					for (var i = 0; i < payPlansJson.length; i++) {
-						if (payPlansJson[i].years == undefined) {
+						if (payPlansJson[i].years == undefined || payPlansJson[i].years == "") {
 							showTips("请填写未来年度付款计划中的 '年份' 字段!", "danger");
 							return;
 						}

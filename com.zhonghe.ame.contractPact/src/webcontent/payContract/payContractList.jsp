@@ -628,7 +628,10 @@
 				title : "选择导入文件",
 				width : 350,
 				height : 50,
-				allowResize : false
+				allowResize : false,
+				ondestroy : function(action) {
+					search();
+				}
 			});
 		}
 

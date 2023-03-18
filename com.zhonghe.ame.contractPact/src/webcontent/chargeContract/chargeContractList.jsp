@@ -2,182 +2,212 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@include file="/purchase/common/common.jsp"%>
 <html>
-<head>
 <style type="text/css">
-html,body {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-}
+	html,body {
+		margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
+	}
+	
+	.mini-grid-cell-nowrap{
+		white-space: nowrap;
+	}	
 </style>
-<title>收费合同签订</title>
+<head>
+<title>收费合同管理</title>
 </head>
 <body>
-	<div id="form1">
-		<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractEntity" />
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-			<table align="center" border="0" width="100%" class="form_table">
+	<div style="width: auto; height: 99%; padding: 5px;">
+		<div id="form1">
+			<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractEntity" />
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+				<table>
+					<tr>
+						<td style="width: 60px; text-align: right;">经办人:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createname" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
+							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
+						</td>
+						<td style="width: 90px; text-align: right;">合同承办部门:</td>
+						<td style="width: 155px">
+							<input id="orgid2" name="critria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
+								style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[2]._property" value="implementOrg" />
+							<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="tempCond1" />
+							<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="tempCond2" />
+							<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
+							<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
+							<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
+							<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
+							<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
+						</td>
+						<td style="width: 60px; text-align: right;">合同编号:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[10]._value" class="nui-textbox" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[10]._property" value="contractNo" />
+							<input class="nui-hidden" name="critria._expr[10]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">合同名称:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[6]._value" class="nui-textbox" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
+							<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">合同金额:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[21]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[21]._property" value="contractSum" />
+							<input class="nui-textbox" name="critria._expr[21]._min" style="width: 110px" />
+							<span>至</span>
+							<input class="nui-textbox" name="critria._expr[21]._max" style="width: 110px" />
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 60px; text-align: right;">执行状态:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[22].executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">签约方:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[20]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname"
+								valueField="custname" dataField="custs" valueFromSelect="true" allowInput="true" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryname" />
+							<input class="nui-hidden" name="critria._expr[20]._op" value="like" />
+						</td>
+						<td style="width: 90px; text-align: right;">合同签约主体:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[23].contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">收款方:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[24].payee" class="nui-dictcombobox" dictTypeId="PAYER" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">合同密级:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[9].contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">签订日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[8]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[8]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[8]._property" value="signingDate" />
+							<input class="nui-datepicker" name="critria._expr[8]._min" style="width: 110px" />
+							<span >至</span>
+							<input class="nui-datepicker" name="critria._expr[8]._max" style="width: 110px" />
+						</td>												
+					</tr>
+					<tr>
+						<td style="width: 60px; text-align: right;">项目密级:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[26].projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 90px; text-align: right;">计划对外分包:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[27].isfb" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">补充协议:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[28].issupagreement" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">专业类别:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[29].major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">工程类别:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[30].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>	
+					</tr>
+					<tr>
+						<td style="width: 70px; text-align: right;">集团内/外:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[31].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 100px; text-align: right;">招标人采购方式:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[32].procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 1px;">
+				<table style="width: 100%; text-align: center;">
+					<tr>
+						<td>
+							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
+							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+						</td>
+					</tr>
+				</table>
+			</div>			
+		</div>
+
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+			<table style="width: 100%;">
 				<tr>
-					<td class="form_label" align="right">申请人:</td>
-					<td colspan="1">
-						<input name="critria._expr[0]._value" class="nui-textbox" style="width: 65%;" id="createUsername" />
-						<input class="nui-hidden" name="critria._expr[0]._property" value="createUsername" />
-						<input class="nui-hidden" name="critria._expr[0]._op" value="like" />
-						<input name="critria._expr[1]._value" class="nui-hidden" id="createUserid" />
-						<input class="nui-hidden" name="critria._expr[1]._property" value="createUserid" />
-					</td>
-					<td class="form_label" align="right">合同实施部门:</td>
-					<td colspan="1">
-						<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 50%;" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" />
-						<input class="nui-hidden" name="critria._expr[2]._property" value="implementOrg" />
-						<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="tempCond1" />
-						<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="tempCond2" />
-						<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
-						<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
-						<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
-						<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
-						<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
-						<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
-					</td>
-					<td class="form_label" align="right">签约方:</td>
-					<td colspan="1">
-						<input name="critria._expr[7]._value" class="nui-textbox" style="width: 79%;" />
-						<input class="nui-hidden" name="critria._expr[7]._property" value="signatoryname" />
-						<input class="nui-hidden" name="critria._expr[7]._op" value="like" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">合同名称:</td>
-					<td colspan="1">
-						<input name="critria._expr[5]._value" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[5]._property" value="contractName" />
-						<input class="nui-hidden" name="critria._expr[5]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">合同金额(元):</td>
-					<td colspan="1">
-						<input class="nui-textbox" name="critria._expr[6]._min" width="24%" />
-						~
-						<input class="nui-textbox" name="critria._expr[6]._max" width="24%" />
-						<input class="nui-hidden" name="critria._expr[6]._property" value="contractSum" />
-						<input class="nui-hidden" name="critria._expr[6]._op" value="between" />
-					</td>
-					<td class="form_label" align="right">实施地点:</td>
-					<td colspan="1">
-						<input name="critria._expr[9]._value" class="nui-textbox" style="width: 79%;" />
-						<input class="nui-hidden" name="critria._expr[9]._property" value="projectLocal" />
-						<input class="nui-hidden" name="critria._expr[9]._op" value="like" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">专业类别:</td>
-					<td colspan="1">
-						<input name="critria._expr[8]._value" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 65%;" showNullItem="true" nullItemText="全部" />
-						<input class="nui-hidden" name="critria._expr[8]._property" value="major" />
-						<input class="nui-hidden" name="critria._expr[8]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">申请日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[4]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[4]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[4]._property" value="createTime" />
-						<input class="nui-datepicker" name="critria._expr[4]._min" style="width: 22.5%;" />
-						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[4]._max" style="width: 23%;" />
-					</td>
-					<td class="form_label" align="right">标的规模:</td>
-					<td colspan="1">
-						<input name="critria._expr[10]._value" class="nui-textbox" style="width: 79%;" />
-						<input class="nui-hidden" name="critria._expr[10]._property" value="projectSize" />
-						<input class="nui-hidden" name="critria._expr[10]._op" value="like" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">合同编号:</td>
-					<td colspan="1">
-						<input name="critria._expr[11]._value" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[11]._property" value="contractNo" />
-						<input class="nui-hidden" name="critria._expr[11]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">签订日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[13]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[13]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[13]._property" value="signingDate" />
-						<input class="nui-datepicker" name="critria._expr[13]._min" style="width: 50%;" />
-					</td>
-					<td class="form_label" align="right">审批状态:</td>
-					<td colspan="1">
-						<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 79%;" showNullItem="true" nullItemText="全部" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="9" align="center">
-						<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
-						<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+					<td>
+						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="sfhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
+						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
+						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
+						<a class="nui-button" id="improt" iconCls="icon-upload" onclick="improt()">导入</a>
+						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 					</td>
 				</tr>
 			</table>
 		</div>
-	</div>
-
-	<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-		<table style="width: 100%;">
-			<tr>
-				<td style="width: 20%;">
-					<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
-					<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
-					<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
-					<a class="nui-button" id="sfhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
-					<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
-					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
-					<a class="nui-button" id="improt" iconCls="icon-print" onclick="improt()">导入</a>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" showSummaryRow="true" ondrawsummarycell="onDrawSummaryCell" pageSize="15" class="nui-datagrid"
-			style="width: 100%; height: 100%;" url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" multiSelect="true" allowSortColumn=true frozenStartColumn="0"
-			frozenEndColumn="8" ondrawcell="setBackGroundColor">
-			<div property="columns">
-				<div type="checkcolumn"></div>
-				<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
-				<div field="createTime" headerAlign="center" allowSort="true" visible="false">创建时间</div>
-				<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
-				<div field="createUsername" width="100" align="center" headerAlign="center" allowSort="true">合同经办人</div>
-				<div field="implementOrgname" width="120" headerAlign="center" allowSort="true">合同承办部门</div>
-				<div field="contractNo" width="180" headerAlign="center" allowSort="true">合同编号</div>
-				<div field="contractName" width="150" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
-				<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
-				<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同金额</div>
-				<div field="finContractSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同最终金额（元）</div>
-				<div field="noTaxSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同不含税金额（元）</div>
-				<div field="payTax" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">税额（元）</div>
-				<div field="contractBalance" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同余额（元）</div>
-				<div field="executeStatus" width="80" align="center" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS">执行状态</div>
-				<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true">签约方</div>
-				<div field="contractSubject" width="120" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">合同签约主体</div>
-				<div field="payee" width="80" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
-				<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center">签订日期</div>
-				<div field="contractSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_SECRET_LEVEL">合同密级</div>
-				<div field="projectSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
-				<div field="isfb" width="120" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否计划对外分包</div>
-				<div field="issupagreement" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否协议变更</div>
-				<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
-				<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
-				<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
-				<div field="contractModel" width="100" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_MODEL">合同价格模式</div>
-				<div field="procurementType" width="150" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE">招标人采购方式</div>
+		
+		<div class="nui-fit">
+			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" class="nui-datagrid"
+				style="width: 100%; height: 100%;" url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
+				<div property="columns">
+					<div type="checkcolumn">○</div>
+					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
+					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
+					<div field="implementOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同承办部门</div>
+					<div field="createTime" headerAlign="center" allowSort="true" align="center">申请日期</div>
+					<div field="contractNo" width="180" headerAlign="center" allowSort="true" align="center">合同编号</div>
+					<div field="contractName" width="250" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
+					<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
+					<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同金额（元）</div>
+					<div field="finContractSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同最终金额（元）</div>
+					<div field="noTaxSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同不含税金额（元）</div>
+					<div field="payTax" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">税额（元）</div>
+					<div field="contractBalance" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同余额（元）</div>
+					<div field="executeStatus" width="80" align="center" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS">执行状态</div>
+					<div field="signatoryName" width="250" align="center" headerAlign="center" allowSort="true">签约方</div>
+					<div field="contractSubject" width="120" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">合同签约主体</div>
+					<div field="payee" width="80" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
+					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">签订日期</div>
+					<div field="contractSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_SECRET_LEVEL">合同密级</div>
+					<div field="projectSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
+					<div field="isfb" width="120" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否计划对外分包</div>
+					<div field="issupagreement" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否协议变更</div>
+					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
+					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
+					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
+					<div field="contractModel" width="100" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_MODEL">合同价格模式</div>
+					<div field="procurementType" width="150" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE">招标人采购方式</div>
+				</div>
 			</div>
 		</div>
 	</div>
+	
+	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false"/>
+		<input type="hidden" name="downloadFile" filter="false"/>
+		<input type="hidden" name="fileName" filter="false"/>
+	</form>	
 	
 	<script type="text/javascript">
 		nui.parse();
@@ -189,16 +219,22 @@ html,body {
 		
 		init();
 		
-
 		function init() {
 			// 按钮权限
-			if(userId !='sysadmin'){
+			if (userId != 'sysadmin') {
 				// 维护按钮 - sfhtlist_wh
 				getOpeatorButtonAuth("sfhtlist_wh");
 			}
-			
+
 			//code:对应功能编码，map：对于机构的查询条件
-			var json = {"code":"sfhtlist","map":{"property":"status","op":"=","value":"running"}};
+			var json = {
+				"code" : "sfhtlist",
+				"map" : {
+					"property" : "status",
+					"op" : "=",
+					"value" : "running"
+				}
+			};
 			nui.ajax({
 				url : "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
 				data : json,
@@ -232,31 +268,41 @@ html,body {
 			});
 		}
 		
-		function isStr(str, val) {
-			if (str.indexOf(val) != -1) {
-				return true
-			} else {
-				return false
-			}
+		function search() {
+			var form = new nui.Form("#form1");
+			var data = form.getData();
+			grid.sortBy("createTime", "desc");
+			grid.load(data);
 		}
 		
-		function check(e) {
-			if (e.value == 1) {
-				return "是";
+		function reset() {
+			var form = new nui.Form("#form1");
+			form.reset();
+			init();
+		}		
+		
+		function isStr(str, val) {
+			if (str.indexOf(val) != -1) {
+				return true;
 			} else {
-				return "否";
+				return false;
 			}
 		}
 		
 		function lookInfo(e) {
 			return "<a href='javascript:void(0)' onclick='doView();' title='点击查看'>" + e.value + "</a>";
-		}
+		}						
 		
 		function doView() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
-				window.open(executeUrl);
+				if(row.issupagreement == "y"){
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeAlterationPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}else{
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}
 			} else {
 				showTips("请选中一条记录", "danger");
 			}
@@ -265,47 +311,17 @@ html,body {
 		function printBtn() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
-				window.open(executeUrl);
+				if(row.issupagreement == "y"){
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeAlterationPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}else{
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
+					window.open(executeUrl);
+				}
 			} else {
 				showTips("请选中一条记录", "danger");
 			}
-		}
-		
-		function dictGetType(e) {
-			return nui.getDictText('EXP_EXPTYPE', e.value);
-		}
-		
-		function dictGetStatus(e) {
-			return nui.getDictText('EXP_CHECKFLAG', e.value);
-		}
-		
-		function search() {
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			grid.sortBy("createTime", "desc");
-			grid.load(data); //datagrid加载数据
-		}
-		
-		function reset() {
-			var form = new nui.Form("#form1");
-			form.reset();
-			init();
-		}
-		
-		function setBackGroundColor(e) {
-			return;
-			var record = e.record;
-			if (record.appStatus == "0") {
-				e.rowStyle = "background-color: #FFFF99";
-			} else if (record.appStatus == "1") {
-				e.rowStyle = "background-color: #FF99CC";
-			}
-		}
-
-		function onOk() {
-			search();
-		}
+		}				
 		
 		function wh_edit() {
 			var row = grid.getSelecteds();
@@ -315,28 +331,46 @@ html,body {
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				nui.open({
-					url : "/default/contractPact/chargeContract/chargeContractEdit.jsp",
-					width : '100%',
-					height : '100%',
-					title : "收费合同签订维护",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						if (action == "ok") {
-							grid.reload();
+				if (data.issupagreement == "y") {
+					nui.open({
+						url : "/default/contractPact/chargeContract/chargeContractAlterationEdit.jsp",
+						width : '100%',
+						height : '100%',
+						title : "收费合同签订维护 - 补充协议",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+							search();
 						}
-						search();
-					}
-				})
-				
-			}else{
+					})
+				} else {
+					nui.open({
+						url : "/default/contractPact/chargeContract/chargeContractEdit.jsp",
+						width : '100%',
+						height : '100%',
+						title : "收费合同签订维护",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+							search();
+						}
+					})
+				}
+			} else {
 				showTips("只能维护审批状态为【审批通过】的数据", "danger");
 			}
 		}
-		
+
 		// 暂存编辑
 		function zc_edit() {
 			var row = grid.getSelecteds();
@@ -353,9 +387,9 @@ html,body {
 					url : "com.zhonghe.ame.chargeContract.chargeContract.getWorkItemByProcessInstID.biz.ext",
 					data : json,
 					success : function(result) {
-						if(JSON.stringify(result) !== '{}'){
+						if (JSON.stringify(result) !== '{}') {
 							nui.open({
-								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+ result.workItemID,
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID=" + result.workItemID,
 								width : '100%',
 								height : '100%',
 								ondestroy : function(action) {
@@ -366,11 +400,11 @@ html,body {
 						}
 					}
 				});
-			}else{
+			} else {
 				showTips("只能编辑审批状态为【草稿】的数据", "danger");
 			}
 		}
-		
+
 		function deleteInfo() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
@@ -404,31 +438,12 @@ html,body {
 							showTips("只能选中一条项目记录进行删除", "danger");
 						}
 					}
-				}else{
+				} else {
 					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
 
-		//回车触发
-		function onKeyEnter() {
-			search();
-		}
-		
-		function onActionRenderer(e) {
-			var grid = e.sender;
-			var record = e.record;
-			var uid = record._uid;
-			var processInstID = record.processinstid;
-			var s = " <a  href='javascript:void(0)' onclick='feeView();' >流程</a>";
-			return s;
-		}
-		
-		function onDrawSummaryCell(e) {
-			var result = e.result;
-			var grid = e.sender;
-		}
-		
 		function add() {
 			nui.open({
 				url : "/default/contractPact/chargeContract/chargeContractAdd.jsp",
@@ -443,127 +458,13 @@ html,body {
 				}
 			})
 		}
-		
-		function alteration() {
-			var row = grid.getSelecteds();
-			if (row.length != 1) {
-				showTips("只能选中一条项目记录发起补充协议签订", "danger");
-				return;
-			}
-			var data = row[0];
-			if (data.appStatus == "2") {
-				nui.open({
-					url : "/default/contractPact/chargeContract/chargeContractAlteration.jsp",
-					width : '90%',
-					height : '90%',
-					title : "收费合同协议变更",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
-					}
-				})
-			} else {
-				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
-			}
-		}
-		
-		function invoiceAdd() {
-			var row = grid.getSelecteds();
-			if (row.length != 1) {
-				showTips("请选中一条记录", "提示");
-				return;
-			}
-			var data = row[0];
-			if (data.issupagreement == "1") {
-				showTips("请选中一条主合同进行开票", "提示");
-				return;
-			}
-			if (data.appStatus != "2") {
-				showTips("请选中一条“审批通过”的合同进行开票", "提示");
-				return;
-			}
-			if (data) {
-				nui.open({
-					url : "/default/contractPact/invoice/invoiceAdd.jsp",
-					width : '90%',
-					height : '90%',
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
-					}
-				})
-			} else {
-				showTips("请选中一条记录", "提示");
-			}
-		}
-		
-		function editInvoiceAdd() {
-			var row = grid.getSelecteds();
-			if (row.length != 1) {
-				showTips("请选中一条记录", "提示");
-				return;
-			}
-			var data = row[0];
-			if (data.issupagreement == "1") {
-				showTips("请选中一条主合同进行开票", "提示");
-				return;
-			}
-			if (data.appStatus != "2") {
-				showTips("请选中一条“审批通过”的合同进行开票", "提示");
-				return;
-			}
-			if (data) {
-				nui.open({
-					url : "/default/contractPact/invoice/invoiceAdd_bc.jsp",
-					width : '90%',
-					height : '90%',
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
-					}
-				})
-			} else {
-				showTips("请选中一条记录", "提示");
-			}
-		}
-		
-		function contractHistory() {
-			var row = grid.getSelecteds();
-			var data = row[0];
-			if (data) {
-				nui.open({
-					url : "/default/contractPact/chargeContract/chargeContractHistoryList.jsp",
-					width : '90%',
-					height : '70%',
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setContractHistoryData(data);
-					},
-					ondestroy : function(action) {
-						search();
-					}
-				})
-			} else {
-				showTips("请选中一条记录", "提示");
-			}
-		}
-		
+
 		function onActionRenderer(e) {
 			var record = e.record;
-			var processId = record.processid;
 			var s = "<a  href='javascript:void(0)' onclick='feeView();' >" + nui.getDictText('ZH_FLOW_TYPE', e.value) + "</a>";
 			return s;
 		}
-		
+
 		function feeView() {
 			var selectRow = grid.getSelected();
 			var processId = selectRow.processid;
@@ -587,87 +488,184 @@ html,body {
 				}
 			});
 		}
-		
+
 		function zhContractType(e) {
 			return nui.getDictText("ZH_CONTRACT_TYPE", e.value);
 		}
-		
+
 		function zhFlowType(e) {
 			return nui.getDictText("ZH_FLOW_TYPE", e.value);
 		}
-		
+
 		function zhProjectType(e) {
 			return nui.getDictText("ZH_PROJECT_TYPE", e.value);
 		}
-		
+
 		function zhInvoiceNameType(e) {
 			return nui.getDictText("ZH_INVOICE_NAME_TYPE", e.value);
 		}
-		
+
 		function zhExecuteStatus(e) {
 			return nui.getDictText("ZH_EXECUTESTATUS", e.value);
 		}
 		function zhInvoiceGroup(e) {
 			return nui.getDictText("ZH_GROUP", e.value);
 		}
-		
+
 		function zhMajorType(e) {
 			return nui.getDictText("ZH_MAJOR_TYPE", e.value);
 		}
-		
+
 		function zhIsSupagreement(e) {
 			return nui.getDictText("ZH_ISSUPAGREEMENT", e.value);
 		}
-		
+
 		function EXECUTE_STATUS(e) {
 			return nui.getDictText("EXECUTE_STATUS", e.value);
 		}
-		
+
 		function PAYER(e) {
 			return nui.getDictText("PAYER", e.value);
 		}
-		
+
 		function CONTRACT_SECRET_LEVEL(e) {
 			return nui.getDictText("CONTRACT_SECRET_LEVEL", e.value);
 		}
-		
+
 		function PROJECT_SECRET_LEVEL(e) {
 			return nui.getDictText("PROJECT_SECRET_LEVEL", e.value);
 		}
-		
+
 		function ABF_YESORNO(e) {
 			return nui.getDictText("ABF_YESORNO", e.value);
 		}
-		
-		function improt() {
-			nui.open({
-				url: "<%=request.getContextPath()%>/contractPact/chargeContract/improtChargeContract.jsp",
-				title : "选择文件",
-				width : 700,
-				height : 200,
-				allowResize : false
-			});
-		}
-		
+
 		function ZH_MAJOR_TYPE(e) {
 			return nui.getDictText("ZH_MAJOR_TYPE", e.value);
 		}
-		
+
 		function ZH_PROJECT_TYPE(e) {
 			return nui.getDictText("ZH_PROJECT_TYPE", e.value);
 		}
-		
+
 		function CONTRACT_MODEL(e) {
 			return nui.getDictText("CONTRACT_MODEL", e.value);
 		}
-		
+
 		function ZH_GROUP(e) {
 			return nui.getDictText("ZH_GROUP", e.value);
 		}
-		
+
 		function ZH_PROCUREMENT_TYPE(e) {
 			return nui.getDictText("ZH_PROCUREMENT_TYPE", e.value);
 		}
+
+		function improt() {
+			nui.open({
+				url : "<%=request.getContextPath()%>/contractPact/chargeContract/improtChargeContract.jsp",
+				title : "选择导入文件",
+				width : 350,
+				height : 50,
+				allowResize : false,
+				ondestroy : function(action) {
+					search();
+				}
+			});
+		}
+		
+		function alteration() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录发起补充协议签订", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.appStatus == "2") {
+				if(data.issupagreement != "y"){
+					nui.open({
+						url : "/default/contractPact/chargeContract/chargeContractAlteration.jsp",
+						width : '100%',
+						height : '100%',
+						title : "收费合同签订申请 - 补充协议",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							search();
+						}
+					})				
+				}else{
+					showTips("不能对补充协议的合同，再次发起补充协议签订请求", "danger");
+				}
+			} else {
+				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
+			}
+		}
+		
+		//导出
+		function exportExcel() {
+			if (!confirm("是否确认导出？")) {
+				return;
+			}
+			var form = new nui.Form("#form1");
+			var data = form.getData(); //获取表单JS对象数据
+			var json = nui.encode(data);
+			nui.ajax({
+				url : "com.zhonghe.ame.chargeContract.chargeContract.exportChargeContractExcel.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+			     		var filePath = o.downloadFile;
+			        	var fileName = "收费合同";
+			        	var myDate = new Date();
+			        	var year = myDate.getFullYear();
+			        	var month = myDate.getMonth()+1;
+			        	var day = myDate.getDate();
+			        	var hours = myDate.getHours();
+			        	var minutes = myDate.getMinutes();
+			        	var seconds = myDate.getSeconds();
+			        	var curDateTime = year;
+		        		if(month>9){
+						curDateTime = curDateTime + "" + month;
+					}else{
+						curDateTime = curDateTime + "0" + month;
+					}
+		        		if(day>9){
+						curDateTime = curDateTime + day;
+					}else{
+						curDateTime = curDateTime + "0" + day;
+					}
+					if(hours>9){
+						curDateTime = curDateTime + hours;
+					}else{
+						curDateTime = curDateTime + "0" + hours;
+					}
+					if(minutes>9){
+						curDateTime = curDateTime + minutes;
+					}else{
+						curDateTime = curDateTime + "0" + minutes;
+					}
+					if(seconds>9){
+						curDateTime = curDateTime + seconds;
+					}else{
+						curDateTime = curDateTime + "0" + seconds;
+					}
+					fileName = fileName + "_" + curDateTime + ".xls";
+					var frm = document.getElementById("exprotExcelFlow");
+	        			frm.elements["downloadFile"].value = filePath;
+	        			frm.elements["fileName"].value = fileName;
+			    		frm.submit();
+				},
+				error : function() {
+					showTips("导出数据异常，请联系管理员！", "danger");
+				}
+			});
+		}										
+		
 	</script>
+	
 </body>
 </html>
