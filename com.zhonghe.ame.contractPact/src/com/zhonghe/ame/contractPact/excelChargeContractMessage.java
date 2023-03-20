@@ -96,7 +96,6 @@ public class excelChargeContractMessage {
 				}
 				
 				// 合同承办部门
-				row.getCell((short) 2).setCellType(CellType.STRING);
 				if (row.getCell((short) 2).getStringCellValue() == null || row.getCell((short) 2).getStringCellValue() == "") {
 					err = "第" + nub + "行，第3列合同承办部门为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -106,13 +105,13 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 2).setCellType(CellType.STRING);
 					book.setImplementOrgname(row.getCell((short) 2) + "");
 					String orgid = queryOrganizationId(row.getCell((short) 2).getStringCellValue());
 					book.setImplementOrg(orgid);
 				}
 				
 				// 合同编号
-				row.getCell((short) 3).setCellType(CellType.STRING);
 				if (row.getCell((short) 3).getStringCellValue() == null || row.getCell((short) 3).getStringCellValue() == "") {
 					err = "第" + nub + "行，第4列合同编号为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -122,11 +121,11 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 3).setCellType(CellType.STRING);
 					book.setContractNo(row.getCell((short) 3) + "");
 				}
 				
 				// 合同名称
-				row.getCell((short) 4).setCellType(CellType.STRING);
 				if (row.getCell((short) 4).getStringCellValue() == null || row.getCell((short) 4).getStringCellValue() == "") {
 					err = "第" + nub + "行，第5列合同名称为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -136,6 +135,7 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 4).setCellType(CellType.STRING);
 					book.setContractName(row.getCell((short) 4) + "");
 				}
 				
@@ -281,7 +281,6 @@ public class excelChargeContractMessage {
 				}
 				
 				// 执行状态
-				row.getCell((short) 10).setCellType(CellType.STRING);
 				if (row.getCell((short) 10).getStringCellValue() == null || row.getCell((short) 10).getStringCellValue() == "") {
 					err = "第" + nub + "行，第11列执行状态为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -291,12 +290,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 10).setCellType(CellType.STRING);
 					String ExecuteStatus = queryDict("EXECUTE_STATUS", row.getCell((short) 10).getStringCellValue());
 					book.setExecuteStatus(ExecuteStatus);
 				}
 				
 				// 签约方
-				row.getCell((short) 11).setCellType(CellType.STRING);
 				if (row.getCell((short) 11).getStringCellValue() == null || row.getCell((short) 11).getStringCellValue() == "") {
 					err = "第" + nub + "行，第12列签约方为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -306,12 +305,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 11).setCellType(CellType.STRING);
 					book.setSignatory(querySignatoryName(row.getCell((short) 11).getStringCellValue()));
 					book.setSignatoryName(row.getCell((short) 11).getStringCellValue());
 				}
 				
 				// 合同签约主体
-				row.getCell((short) 12).setCellType(CellType.STRING);
 				if (row.getCell((short) 12).getStringCellValue() == null || row.getCell((short) 12).getStringCellValue() == "") {
 					err = "第" + nub + "行，第13列合同签约主体为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -321,12 +320,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 12).setCellType(CellType.STRING);
 					type = queryDict("PAYER", row.getCell((short) 12).getStringCellValue());
 					book.setContractSubject(type);
 				}
 				
 				// 收款方
-				row.getCell((short) 13).setCellType(CellType.STRING);
 				if (row.getCell((short) 13).getStringCellValue() == null || row.getCell((short) 13).getStringCellValue() == "") {
 					err = "第" + nub + "行，第14列收款方为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -336,6 +335,7 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 13).setCellType(CellType.STRING);
 					type = queryDict("PAYER", row.getCell((short) 13).getStringCellValue());
 					book.setPayee(type);
 				}
@@ -380,7 +380,6 @@ public class excelChargeContractMessage {
 				}
 
 				// 合同密级
-				row.getCell((short) 15).setCellType(CellType.STRING);//
 				if (row.getCell((short) 15).getStringCellValue() == null || row.getCell((short) 15).getStringCellValue() == "") {
 					err = "第" + nub + "行，第16列合同密级为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -390,12 +389,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 15).setCellType(CellType.STRING);
 					type = queryDict("CONTRACT_SECRET_LEVEL", row.getCell((short) 15).getStringCellValue());
 					book.setContractSecretLevel(type);
 				}
 				
 				// 项目密级
-				row.getCell((short) 16).setCellType(CellType.STRING);
 				if (row.getCell((short) 16).getStringCellValue() == null || row.getCell((short) 16).getStringCellValue() == "") {
 					err = "第" + nub + "行，第17列项目密级为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -405,12 +404,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 16).setCellType(CellType.STRING);
 					type = queryDict("PROJECT_SECRET_LEVEL", row.getCell((short) 16).getStringCellValue());
 					book.setProjectSecretLevel(type);
 				}
 				
 				// 是否计划对外分包
-				row.getCell((short) 17).setCellType(CellType.STRING);
 				if (row.getCell((short) 17).getStringCellValue() == null || row.getCell((short) 17).getStringCellValue() == "") {
 					err = "第" + nub + "行，第18列是否计划对外分包为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -420,12 +419,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 17).setCellType(CellType.STRING);
 					type = queryDict("ABF_YESORNO", row.getCell((short) 17).getStringCellValue());
 					book.setIsfb(type);
 				}
 				
 				// 是否协议变更
-				row.getCell((short) 18).setCellType(CellType.STRING);
 				if (row.getCell((short) 18).getStringCellValue() == null || row.getCell((short) 18).getStringCellValue() == "") {
 					err = "第" + nub + "行，第19列是否协议变更为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -435,12 +434,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 18).setCellType(CellType.STRING);
 					type = queryDict("ABF_YESORNO", row.getCell((short) 18).getStringCellValue());
 					book.setIssupagreement(type);
 				}
 				
 				// 专业类别
-				row.getCell((short) 19).setCellType(CellType.STRING);
 				if (row.getCell((short) 19).getStringCellValue() == null || row.getCell((short) 19).getStringCellValue() == "") {
 					err = "第" + nub + "行，第20列专业类别为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -450,12 +449,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 19).setCellType(CellType.STRING);
 					type = queryDict("ZH_MAJOR_TYPE", row.getCell((short) 19).getStringCellValue());
 					book.setMajor(type);
 				}
 				
 				// 工程类别
-				row.getCell((short) 20).setCellType(CellType.STRING);
 				if (row.getCell((short) 20).getStringCellValue() == null || row.getCell((short) 20).getStringCellValue() == "") {
 					err = "第" + nub + "行，第21列工程类别为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -465,12 +464,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 20).setCellType(CellType.STRING);
 					type = queryDict("ZH_PROJECT_TYPE", row.getCell((short) 20).getStringCellValue());
 					book.setProjectType(type);
 				}
 				
 				// 集团内外
-				row.getCell((short) 21).setCellType(CellType.STRING);
 				if (row.getCell((short) 21).getStringCellValue() == null || row.getCell((short) 21).getStringCellValue() == "") {
 					err = "第" + nub + "行，第22列集团内外为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -480,12 +479,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 21).setCellType(CellType.STRING);
 					type = queryDict("ZH_GROUP", row.getCell((short) 21).getStringCellValue());
 					book.setHeadquarterGroup(type);
 				}
 				
 				// 合同价格模式
-				row.getCell((short) 22).setCellType(CellType.STRING);
 				if (row.getCell((short) 22).getStringCellValue() == null || row.getCell((short) 22).getStringCellValue() == "") {
 					err = "第" + nub + "行，第23列合同价格模式为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -495,12 +494,12 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 22).setCellType(CellType.STRING);
 					type = queryDict("CONTRACT_MODEL", row.getCell((short) 22).getStringCellValue());
 					book.setContractModel(type);
 				}
 				
 				// 招标人采购方式
-				row.getCell((short) 23).setCellType(CellType.STRING);
 				if (row.getCell((short) 23).getStringCellValue() == null || row.getCell((short) 23).getStringCellValue() == "") {
 					err = "第" + nub + "行，第24列招标人采购方式为必填项，不可为空！";
 					if (error == "" || error == null) {
@@ -510,6 +509,7 @@ public class excelChargeContractMessage {
 					}
 					continue;
 				} else {
+					row.getCell((short) 23).setCellType(CellType.STRING);
 					type = queryDict("ZH_PROCUREMENT_TYPE", row.getCell((short) 23).getStringCellValue());
 					book.setProcurementType(type);
 				}
