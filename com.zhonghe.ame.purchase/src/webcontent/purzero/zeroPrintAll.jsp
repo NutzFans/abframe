@@ -88,9 +88,9 @@
 	  </div>
 	  <div class="layui-row">
 	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">合同名称</label>
+		    <label class="layui-form-label">供应商名称</label>
 		    <div class="layui-input-block">
-		      <input type="text" name="contract" disabled="disabled" class="layui-input">
+		      <input type="text" name="contractor" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	    <div class="layui-col-xs6">

@@ -113,9 +113,9 @@
             <jsp:include page="/ame_common/inputFile.jsp"/>
         </fieldset>
     
-		<fieldset style="border:solid 1px #aaa;padding:3px;">
+	<fieldset style="border:solid 1px #aaa;padding:3px;">
         <legend>审批信息</legend>
-        <jsp:include page="/ame_common/misOpinion.jsp"/>
+        <jsp:include page="/ame_common/misOpinion_Freeflow.jsp"/>
     </fieldset>
 	
 </div>
