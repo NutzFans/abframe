@@ -125,8 +125,10 @@
 							<input name="critria._expr[29].contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>		
 						<td style="width: 60px; text-align: right;">采购方式:</td>
-						<td style="width: 155px">
+						<td style="width: 400px">
 							<input name="critria._expr[30].procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<span style="width: 60px; text-align: right; vertical-align: inherit; margin-left: 10px">企业类型:</span>
+							<input name="critria._expr[31].custnature" class="nui-dictcombobox" dictTypeId="MIS_CUSTNATURE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>			
 					</tr>
 				</table>
@@ -179,6 +181,7 @@
 					<div field="contractBalance" width="120" headerAlign="center" dataType="currency" allowSort="true" summaryType="sum" align="center">合同余额（元）</div>
 					<div field="executeStatus" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS" align="center">执行状态</div>
 					<div field="signatoryname" width="190" headerAlign="center" allowSort="true" align="center">签约方</div>
+					<div field="custnature" width="190" headerAlign="center" allowSort="true" align="center" renderer="MIS_CUSTNATURE">企业类型</div>
 					<div field="contractSubject" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType" align="center">合同签约主体</div>
 					<div field="payer" width="150" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType" align="center">付款方</div>
 					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">签订日期</div>
@@ -721,6 +724,10 @@
 		
 		function ZH_YN(e){
 			return nui.getDictText("ZH_YN", e.value);
+		}
+		
+		function MIS_CUSTNATURE(e){
+			return nui.getDictText("MIS_CUSTNATURE", e.value);
 		}
 		
 		//导出
