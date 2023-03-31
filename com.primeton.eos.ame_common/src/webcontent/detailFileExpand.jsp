@@ -72,14 +72,31 @@
 	        var groupId = record.groupId;
 	        var s;
 	        if(isViewDelete){
-	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="preview(this)" href="javascript:void(0)" >预览</a>'
+	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="openFile()" href="javascript:void(0)" >预览</a>'
                     + " <a href='javascript:void(0)' type='"+groupId+"' uid='"+uid+"' onclick='deleteFile(this)'>删除</a>";
 	        }else{
-	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="preview(this)" href="javascript:void(0)" >预览</a>';
+	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="openFile()" href="javascript:void(0)" >预览</a>';
             
 	        }
 	        return s;
 	    
+    }
+    
+    // 新增一个方法 将预览文件直接用新新窗口打开
+    function openFile() {
+    	var grid = nui.get("grid_0");
+    	var selectRow = grid.getSelected();
+    	var filePath = selectRow.filePath;
+    	var fileType = selectRow.fileType;
+    	var fileName = selectRow.fileName;
+    	if (fileType == "jpg文件" || fileType == "pdf文件" || fileType == "png文件"){
+    		// 传递过程中需要传递一个文件ID ，去查询目标文件存储路径
+	    	executeUrl = "<%= request.getContextPath() %>/ame_common/medioPreview.jsp?fileName=" + fileName +"&filePath=" + filePath;
+			window.open(executeUrl);
+    	} else {
+    		nui.alert("该文件类型不支持预览。如要查看，请下载。");
+    		return
+    	}
     }
     
   function removeFileExpandGrid(row_uid) {

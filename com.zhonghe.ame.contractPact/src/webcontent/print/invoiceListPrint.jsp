@@ -3,14 +3,20 @@
 <%@page import="com.eos.data.datacontext.UserObject"%>
 <%@page import="commonj.sdo.DataObject"%>
 <%@page import="java.util.Map"%>
+<%@include file="/common/common.jsp"%>
 <html>
 <head>
 <title>打印页面</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery-barcode.js"></script>
+<% 
+	UserObject user = (UserObject)session.getAttribute("userObject");
+	String userName = user.getUserName();
+%>
 <style type="text/css">
 .link-top {
 	width: 100%;
@@ -405,6 +411,8 @@ table,table tr td {
 			document.getElementById('checkview').style.display = "";
 		};
 		
+		// 设置水印用户
+		setWatermark('<%=userName %>')
 		//打印按钮
 		function preview() {
 			document.getElementById('checkview').style.display = "none";

@@ -1,4 +1,7 @@
 <%@page pageEncoding="UTF-8"%>
+<%
+	String contextPath=request.getContextPath();
+ %>
 <html>
 <!-- 
   - Author(s): 朱海翔
@@ -10,19 +13,27 @@
 </head>
 <body>
 <div id="handout_wrap_inner"></div>
-	
 </body>
 <script type="text/javascript" src="<%= request.getContextPath() %>/ame_common/js/jquery.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/ame_common/js/jquery.media.js"></script>
 <script type="text/javascript">
-	SetData();
+	
+	$(function(){
+		SetData();	
+	})
+	
 	function SetData(){
-		$('#handout_wrap_inner').media({
-	        width: '100%',
-	        height: '95%',
-	        autoplay: true,
-	        src:"/file/"+parent.rowTemp.filePath.substring(parent.rowTemp.filePath.lastIndexOf("upload")+7,parent.rowTemp.filePath.length)
-	    }); 
+			//调用
+		    var filepath = window.location.href.substring(window.location.href.lastIndexOf("upload")+7,window.location.href.length);
+			$('#handout_wrap_inner').media({
+		        width: '100%',
+		        height: '95%',
+		        autoplay: true,
+		        src: "/file/"+filepath
+		 
+		    }); 
 	}
+	
+    
 </script>
 </html>
