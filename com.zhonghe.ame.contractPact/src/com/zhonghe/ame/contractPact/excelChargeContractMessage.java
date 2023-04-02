@@ -55,6 +55,7 @@ public class excelChargeContractMessage {
 				workbook = new HSSFWorkbook(is);
 				sheet = workbook.getSheetAt(0);
 			}
+			OrgUtil orgUtil = new OrgUtil();
 			List<ZhChargeContract> listAdd = new ArrayList<ZhChargeContract>();
 			DecimalFormat dFormat = new DecimalFormat("0.00");
 			double jine = 0;
@@ -94,7 +95,7 @@ public class excelChargeContractMessage {
 						continue;
 					}
 				}
-				
+
 				// 合同承办部门
 				if (row.getCell((short) 2).getStringCellValue() == null || row.getCell((short) 2).getStringCellValue() == "") {
 					err = "第" + nub + "行，第3列合同承办部门为必填项，不可为空！";
@@ -109,8 +110,11 @@ public class excelChargeContractMessage {
 					book.setImplementOrgname(row.getCell((short) 2) + "");
 					String orgid = queryOrganizationId(row.getCell((short) 2).getStringCellValue());
 					book.setImplementOrg(orgid);
+					HashMap<String, String> orgMap = orgUtil.getSecOrg(orgid);
+					book.setSecondaryOrg(orgMap.get("ORGID"));
+					book.setSecondaryOrgname(orgMap.get("ORGNAME"));
 				}
-				
+
 				// 合同编号
 				if (row.getCell((short) 3).getStringCellValue() == null || row.getCell((short) 3).getStringCellValue() == "") {
 					err = "第" + nub + "行，第4列合同编号为必填项，不可为空！";
@@ -124,7 +128,7 @@ public class excelChargeContractMessage {
 					row.getCell((short) 3).setCellType(CellType.STRING);
 					book.setContractNo(row.getCell((short) 3) + "");
 				}
-				
+
 				// 合同名称
 				if (row.getCell((short) 4).getStringCellValue() == null || row.getCell((short) 4).getStringCellValue() == "") {
 					err = "第" + nub + "行，第5列合同名称为必填项，不可为空！";
@@ -138,7 +142,7 @@ public class excelChargeContractMessage {
 					row.getCell((short) 4).setCellType(CellType.STRING);
 					book.setContractName(row.getCell((short) 4) + "");
 				}
-				
+
 				// 合同金额
 				row.getCell((short) 5).setCellType(CellType.STRING);
 				if (row.getCell((short) 5).getStringCellValue() == null || row.getCell((short) 5).getStringCellValue() == "") {
@@ -167,7 +171,7 @@ public class excelChargeContractMessage {
 						continue;
 					}
 				}
-				
+
 				// 合同最终金额
 				row.getCell((short) 6).setCellType(CellType.STRING);
 				if (row.getCell((short) 6).getStringCellValue() == null || row.getCell((short) 6).getStringCellValue() == "") {
@@ -195,7 +199,7 @@ public class excelChargeContractMessage {
 						continue;
 					}
 				}
-				
+
 				// 合同不含税金额（元）
 				row.getCell((short) 7).setCellType(CellType.STRING);
 				if (row.getCell((short) 7).getStringCellValue() == null || row.getCell((short) 7).getStringCellValue() == "") {
@@ -223,7 +227,7 @@ public class excelChargeContractMessage {
 						continue;
 					}
 				}
-				
+
 				// 税额
 				row.getCell((short) 8).setCellType(CellType.STRING);
 				if (row.getCell((short) 8).getStringCellValue() == null || row.getCell((short) 8).getStringCellValue() == "") {
@@ -251,7 +255,7 @@ public class excelChargeContractMessage {
 						continue;
 					}
 				}
-				
+
 				// 余额
 				row.getCell((short) 9).setCellType(CellType.STRING);
 				if (row.getCell((short) 9).getStringCellValue() == null || row.getCell((short) 9).getStringCellValue() == "") {
@@ -279,7 +283,7 @@ public class excelChargeContractMessage {
 						continue;
 					}
 				}
-				
+
 				// 执行状态
 				if (row.getCell((short) 10).getStringCellValue() == null || row.getCell((short) 10).getStringCellValue() == "") {
 					err = "第" + nub + "行，第11列执行状态为必填项，不可为空！";
@@ -294,7 +298,7 @@ public class excelChargeContractMessage {
 					String ExecuteStatus = queryDict("EXECUTE_STATUS", row.getCell((short) 10).getStringCellValue());
 					book.setExecuteStatus(ExecuteStatus);
 				}
-				
+
 				// 签约方
 				if (row.getCell((short) 11).getStringCellValue() == null || row.getCell((short) 11).getStringCellValue() == "") {
 					err = "第" + nub + "行，第12列签约方为必填项，不可为空！";
@@ -309,7 +313,7 @@ public class excelChargeContractMessage {
 					book.setSignatory(querySignatoryName(row.getCell((short) 11).getStringCellValue()));
 					book.setSignatoryName(row.getCell((short) 11).getStringCellValue());
 				}
-				
+
 				// 合同签约主体
 				if (row.getCell((short) 12).getStringCellValue() == null || row.getCell((short) 12).getStringCellValue() == "") {
 					err = "第" + nub + "行，第13列合同签约主体为必填项，不可为空！";
@@ -324,7 +328,7 @@ public class excelChargeContractMessage {
 					type = queryDict("PAYER", row.getCell((short) 12).getStringCellValue());
 					book.setContractSubject(type);
 				}
-				
+
 				// 收款方
 				if (row.getCell((short) 13).getStringCellValue() == null || row.getCell((short) 13).getStringCellValue() == "") {
 					err = "第" + nub + "行，第14列收款方为必填项，不可为空！";
@@ -339,9 +343,9 @@ public class excelChargeContractMessage {
 					type = queryDict("PAYER", row.getCell((short) 13).getStringCellValue());
 					book.setPayee(type);
 				}
-				
+
 				// 签订日期
-				try{
+				try {
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					String format = "yyyy-MM-dd";
 					String signingDate = simpleDateFormat.format(row.getCell((short) 14).getDateCellValue());
@@ -369,7 +373,7 @@ public class excelChargeContractMessage {
 							continue;
 						}
 					}
-				}catch(Exception e){
+				} catch (Exception e) {
 					err = "第" + nub + "行，第15列签订日期格式异常，请设置该单元格为日期类型，格式为yyyy-MM-dd！";
 					if (error == "" || error == null) {
 						error = err;
@@ -393,7 +397,7 @@ public class excelChargeContractMessage {
 					type = queryDict("CONTRACT_SECRET_LEVEL", row.getCell((short) 15).getStringCellValue());
 					book.setContractSecretLevel(type);
 				}
-				
+
 				// 项目密级
 				if (row.getCell((short) 16).getStringCellValue() == null || row.getCell((short) 16).getStringCellValue() == "") {
 					err = "第" + nub + "行，第17列项目密级为必填项，不可为空！";
@@ -408,7 +412,7 @@ public class excelChargeContractMessage {
 					type = queryDict("PROJECT_SECRET_LEVEL", row.getCell((short) 16).getStringCellValue());
 					book.setProjectSecretLevel(type);
 				}
-				
+
 				// 是否计划对外分包
 				if (row.getCell((short) 17).getStringCellValue() == null || row.getCell((short) 17).getStringCellValue() == "") {
 					err = "第" + nub + "行，第18列是否计划对外分包为必填项，不可为空！";
@@ -423,7 +427,7 @@ public class excelChargeContractMessage {
 					type = queryDict("ABF_YESORNO", row.getCell((short) 17).getStringCellValue());
 					book.setIsfb(type);
 				}
-				
+
 				// 是否协议变更
 				if (row.getCell((short) 18).getStringCellValue() == null || row.getCell((short) 18).getStringCellValue() == "") {
 					err = "第" + nub + "行，第19列是否协议变更为必填项，不可为空！";
@@ -438,7 +442,7 @@ public class excelChargeContractMessage {
 					type = queryDict("ABF_YESORNO", row.getCell((short) 18).getStringCellValue());
 					book.setIssupagreement(type);
 				}
-				
+
 				// 专业类别
 				if (row.getCell((short) 19).getStringCellValue() == null || row.getCell((short) 19).getStringCellValue() == "") {
 					err = "第" + nub + "行，第20列专业类别为必填项，不可为空！";
@@ -453,7 +457,7 @@ public class excelChargeContractMessage {
 					type = queryDict("ZH_MAJOR_TYPE", row.getCell((short) 19).getStringCellValue());
 					book.setMajor(type);
 				}
-				
+
 				// 工程类别
 				if (row.getCell((short) 20).getStringCellValue() == null || row.getCell((short) 20).getStringCellValue() == "") {
 					err = "第" + nub + "行，第21列工程类别为必填项，不可为空！";
@@ -468,7 +472,7 @@ public class excelChargeContractMessage {
 					type = queryDict("ZH_PROJECT_TYPE", row.getCell((short) 20).getStringCellValue());
 					book.setProjectType(type);
 				}
-				
+
 				// 集团内外
 				if (row.getCell((short) 21).getStringCellValue() == null || row.getCell((short) 21).getStringCellValue() == "") {
 					err = "第" + nub + "行，第22列集团内外为必填项，不可为空！";
@@ -483,7 +487,7 @@ public class excelChargeContractMessage {
 					type = queryDict("ZH_GROUP", row.getCell((short) 21).getStringCellValue());
 					book.setHeadquarterGroup(type);
 				}
-				
+
 				// 合同价格模式
 				if (row.getCell((short) 22).getStringCellValue() == null || row.getCell((short) 22).getStringCellValue() == "") {
 					err = "第" + nub + "行，第23列合同价格模式为必填项，不可为空！";
@@ -498,7 +502,7 @@ public class excelChargeContractMessage {
 					type = queryDict("CONTRACT_MODEL", row.getCell((short) 22).getStringCellValue());
 					book.setContractModel(type);
 				}
-				
+
 				// 招标人采购方式
 				if (row.getCell((short) 23).getStringCellValue() == null || row.getCell((short) 23).getStringCellValue() == "") {
 					err = "第" + nub + "行，第24列招标人采购方式为必填项，不可为空！";
@@ -517,7 +521,7 @@ public class excelChargeContractMessage {
 				book.setCreateTime(new Date());
 				listAdd.add(book);
 			}
-			
+
 			ZhChargeContract[] arrAdd = new ZhChargeContract[listAdd.size()];
 			if (error == null || error == "") {
 				if (arrAdd.length != 0) {
@@ -790,7 +794,7 @@ public class excelChargeContractMessage {
 		}
 		return DICTID;
 	}
-	
+
 	public static String queryUserEmpByName(String str) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EMPNAME", str);
@@ -800,6 +804,6 @@ public class excelChargeContractMessage {
 		} else {
 			return null;
 		}
-	}	
+	}
 
 }

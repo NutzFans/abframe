@@ -25,59 +25,61 @@ import java.util.Date;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getId <em>Id</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreateUserid <em>CreateUserid</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreateTime <em>CreateTime</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getImplementOrg <em>ImplementOrg</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractName <em>ContractName</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getSignatory <em>Signatory</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractSum <em>ContractSum</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectSize <em>ProjectSize</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectLocal <em>ProjectLocal</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getStartTime <em>StartTime</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getEndTime <em>EndTime</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getAppStatus <em>AppStatus</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProcessid <em>Processid</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractSubject <em>ContractSubject</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractNo <em>ContractNo</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getPayMethod <em>PayMethod</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getExecuteStatus <em>ExecuteStatus</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getOrganizer <em>Organizer</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getDevelopmentOrg <em>DevelopmentOrg</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCachet <em>Cachet</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getPayee <em>Payee</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getSigningDate <em>SigningDate</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractPeriod <em>ContractPeriod</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFinishTime <em>FinishTime</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getHeadquarterGroup <em>HeadquarterGroup</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectType <em>ProjectType</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getMajor <em>Major</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getRelateCont <em>RelateCont</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getActContractSum <em>ActContractSum</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getIssupagreement <em>Issupagreement</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getRemark <em>Remark</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getIncreaseDecreaseSum <em>IncreaseDecreaseSum</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreateUsername <em>CreateUsername</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getUpdatedBy <em>UpdatedBy</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getUpdatedTime <em>UpdatedTime</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getRevision <em>Revision</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreatedOrgid <em>CreatedOrgid</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getImplementOrgname <em>ImplementOrgname</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFDeptCountersignId <em>FDeptCountersignId</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFDeptCountersignName <em>FDeptCountersignName</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getZDeptCountersignName <em>ZDeptCountersignName</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getZDeptCountersignId <em>ZDeptCountersignId</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractSecretLevel <em>ContractSecretLevel</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectSecretLevel <em>ProjectSecretLevel</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractBalance <em>ContractBalance</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProcurementType <em>ProcurementType</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getNoTaxSum <em>NoTaxSum</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getPayTax <em>PayTax</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractModel <em>ContractModel</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getTenderId <em>TenderId</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getIsfb <em>Isfb</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFinContractSum <em>FinContractSum</em>}</li>
- *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getSignatoryName <em>SignatoryName</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getId <em>Id</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreateUserid <em>CreateUserid</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreateTime <em>CreateTime</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getImplementOrg <em>ImplementOrg</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractName <em>ContractName</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSignatory <em>Signatory</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractSum <em>ContractSum</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectSize <em>ProjectSize</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectLocal <em>ProjectLocal</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getStartTime <em>StartTime</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getEndTime <em>EndTime</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getAppStatus <em>AppStatus</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProcessid <em>Processid</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractSubject <em>ContractSubject</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractNo <em>ContractNo</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getPayMethod <em>PayMethod</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getExecuteStatus <em>ExecuteStatus</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getOrganizer <em>Organizer</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getDevelopmentOrg <em>DevelopmentOrg</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCachet <em>Cachet</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getPayee <em>Payee</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSigningDate <em>SigningDate</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractPeriod <em>ContractPeriod</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFinishTime <em>FinishTime</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getHeadquarterGroup <em>HeadquarterGroup</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectType <em>ProjectType</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getMajor <em>Major</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getRelateCont <em>RelateCont</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getActContractSum <em>ActContractSum</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getIssupagreement <em>Issupagreement</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getRemark <em>Remark</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getIncreaseDecreaseSum <em>IncreaseDecreaseSum</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreateUsername <em>CreateUsername</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getUpdatedBy <em>UpdatedBy</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getUpdatedTime <em>UpdatedTime</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getRevision <em>Revision</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreatedOrgid <em>CreatedOrgid</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getImplementOrgname <em>ImplementOrgname</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFDeptCountersignId <em>FDeptCountersignId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFDeptCountersignName <em>FDeptCountersignName</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getZDeptCountersignName <em>ZDeptCountersignName</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getZDeptCountersignId <em>ZDeptCountersignId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractSecretLevel <em>ContractSecretLevel</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectSecretLevel <em>ProjectSecretLevel</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractBalance <em>ContractBalance</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProcurementType <em>ProcurementType</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getNoTaxSum <em>NoTaxSum</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getPayTax <em>PayTax</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractModel <em>ContractModel</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getTenderId <em>TenderId</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getIsfb <em>Isfb</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFinContractSum <em>FinContractSum</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSignatoryName <em>SignatoryName</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSecondaryOrg <em>SecondaryOrg</em>}</li>
+ *   <li>{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSecondaryOrgname <em>SecondaryOrgname</em>}</li>
  * </ul>
  * </p>
  *
@@ -109,7 +111,7 @@ public interface ZhChargeContract extends DataObject {
 	public int getId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getId <em>Id</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Id</em>' attribute.
@@ -131,7 +133,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getCreateUserid();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreateUserid <em>CreateUserid</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreateUserid <em>CreateUserid</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>CreateUserid</em>' attribute.
@@ -153,7 +155,7 @@ public interface ZhChargeContract extends DataObject {
 	public Date getCreateTime();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreateTime <em>CreateTime</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreateTime <em>CreateTime</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>CreateTime</em>' attribute.
@@ -175,7 +177,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getImplementOrg();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getImplementOrg <em>ImplementOrg</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getImplementOrg <em>ImplementOrg</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ImplementOrg</em>' attribute.
@@ -197,7 +199,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractName();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractName <em>ContractName</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractName <em>ContractName</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractName</em>' attribute.
@@ -219,7 +221,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getSignatory();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getSignatory <em>Signatory</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSignatory <em>Signatory</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Signatory</em>' attribute.
@@ -241,7 +243,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractSum();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractSum <em>ContractSum</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractSum <em>ContractSum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractSum</em>' attribute.
@@ -263,7 +265,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getProjectSize();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectSize <em>ProjectSize</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectSize <em>ProjectSize</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ProjectSize</em>' attribute.
@@ -285,7 +287,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getProjectLocal();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectLocal <em>ProjectLocal</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectLocal <em>ProjectLocal</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ProjectLocal</em>' attribute.
@@ -307,7 +309,7 @@ public interface ZhChargeContract extends DataObject {
 	public Date getStartTime();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getStartTime <em>StartTime</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getStartTime <em>StartTime</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>StartTime</em>' attribute.
@@ -329,7 +331,7 @@ public interface ZhChargeContract extends DataObject {
 	public Date getEndTime();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getEndTime <em>EndTime</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getEndTime <em>EndTime</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>EndTime</em>' attribute.
@@ -351,7 +353,7 @@ public interface ZhChargeContract extends DataObject {
 	public int getAppStatus();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getAppStatus <em>AppStatus</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getAppStatus <em>AppStatus</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>AppStatus</em>' attribute.
@@ -373,7 +375,7 @@ public interface ZhChargeContract extends DataObject {
 	public int getProcessid();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProcessid <em>Processid</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProcessid <em>Processid</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Processid</em>' attribute.
@@ -395,7 +397,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractSubject();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractSubject <em>ContractSubject</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractSubject <em>ContractSubject</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractSubject</em>' attribute.
@@ -417,7 +419,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractNo();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractNo <em>ContractNo</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractNo <em>ContractNo</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractNo</em>' attribute.
@@ -439,7 +441,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getPayMethod();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getPayMethod <em>PayMethod</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getPayMethod <em>PayMethod</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>PayMethod</em>' attribute.
@@ -461,7 +463,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getExecuteStatus();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getExecuteStatus <em>ExecuteStatus</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getExecuteStatus <em>ExecuteStatus</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ExecuteStatus</em>' attribute.
@@ -483,7 +485,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getOrganizer();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getOrganizer <em>Organizer</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getOrganizer <em>Organizer</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Organizer</em>' attribute.
@@ -505,7 +507,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getDevelopmentOrg();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getDevelopmentOrg <em>DevelopmentOrg</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getDevelopmentOrg <em>DevelopmentOrg</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>DevelopmentOrg</em>' attribute.
@@ -527,7 +529,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getCachet();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCachet <em>Cachet</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCachet <em>Cachet</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Cachet</em>' attribute.
@@ -549,7 +551,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getPayee();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getPayee <em>Payee</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getPayee <em>Payee</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Payee</em>' attribute.
@@ -571,7 +573,7 @@ public interface ZhChargeContract extends DataObject {
 	public Date getSigningDate();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getSigningDate <em>SigningDate</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSigningDate <em>SigningDate</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>SigningDate</em>' attribute.
@@ -593,7 +595,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractPeriod();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractPeriod <em>ContractPeriod</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractPeriod <em>ContractPeriod</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractPeriod</em>' attribute.
@@ -615,7 +617,7 @@ public interface ZhChargeContract extends DataObject {
 	public Date getFinishTime();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFinishTime <em>FinishTime</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFinishTime <em>FinishTime</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>FinishTime</em>' attribute.
@@ -637,7 +639,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getHeadquarterGroup();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getHeadquarterGroup <em>HeadquarterGroup</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getHeadquarterGroup <em>HeadquarterGroup</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>HeadquarterGroup</em>' attribute.
@@ -659,7 +661,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getProjectType();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectType <em>ProjectType</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectType <em>ProjectType</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ProjectType</em>' attribute.
@@ -681,7 +683,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getMajor();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getMajor <em>Major</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getMajor <em>Major</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Major</em>' attribute.
@@ -703,7 +705,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getRelateCont();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getRelateCont <em>RelateCont</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getRelateCont <em>RelateCont</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>RelateCont</em>' attribute.
@@ -725,7 +727,7 @@ public interface ZhChargeContract extends DataObject {
 	public BigDecimal getActContractSum();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getActContractSum <em>ActContractSum</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getActContractSum <em>ActContractSum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ActContractSum</em>' attribute.
@@ -747,7 +749,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getIssupagreement();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getIssupagreement <em>Issupagreement</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getIssupagreement <em>Issupagreement</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Issupagreement</em>' attribute.
@@ -769,7 +771,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getRemark();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getRemark <em>Remark</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getRemark <em>Remark</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Remark</em>' attribute.
@@ -791,7 +793,7 @@ public interface ZhChargeContract extends DataObject {
 	public BigDecimal getIncreaseDecreaseSum();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getIncreaseDecreaseSum <em>IncreaseDecreaseSum</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getIncreaseDecreaseSum <em>IncreaseDecreaseSum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>IncreaseDecreaseSum</em>' attribute.
@@ -813,7 +815,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getCreateUsername();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreateUsername <em>CreateUsername</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreateUsername <em>CreateUsername</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>CreateUsername</em>' attribute.
@@ -835,7 +837,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getUpdatedBy();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getUpdatedBy <em>UpdatedBy</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getUpdatedBy <em>UpdatedBy</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>UpdatedBy</em>' attribute.
@@ -857,7 +859,7 @@ public interface ZhChargeContract extends DataObject {
 	public Date getUpdatedTime();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getUpdatedTime <em>UpdatedTime</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getUpdatedTime <em>UpdatedTime</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>UpdatedTime</em>' attribute.
@@ -879,7 +881,7 @@ public interface ZhChargeContract extends DataObject {
 	public int getRevision();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getRevision <em>Revision</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getRevision <em>Revision</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Revision</em>' attribute.
@@ -901,7 +903,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getCreatedOrgid();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getCreatedOrgid <em>CreatedOrgid</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getCreatedOrgid <em>CreatedOrgid</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>CreatedOrgid</em>' attribute.
@@ -923,7 +925,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getImplementOrgname();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getImplementOrgname <em>ImplementOrgname</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getImplementOrgname <em>ImplementOrgname</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ImplementOrgname</em>' attribute.
@@ -945,7 +947,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getFDeptCountersignId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFDeptCountersignId <em>FDeptCountersignId</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFDeptCountersignId <em>FDeptCountersignId</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>FDeptCountersignId</em>' attribute.
@@ -967,7 +969,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getFDeptCountersignName();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFDeptCountersignName <em>FDeptCountersignName</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFDeptCountersignName <em>FDeptCountersignName</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>FDeptCountersignName</em>' attribute.
@@ -989,7 +991,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getZDeptCountersignName();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getZDeptCountersignName <em>ZDeptCountersignName</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getZDeptCountersignName <em>ZDeptCountersignName</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ZDeptCountersignName</em>' attribute.
@@ -1011,7 +1013,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getZDeptCountersignId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getZDeptCountersignId <em>ZDeptCountersignId</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getZDeptCountersignId <em>ZDeptCountersignId</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ZDeptCountersignId</em>' attribute.
@@ -1033,7 +1035,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractSecretLevel();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractSecretLevel <em>ContractSecretLevel</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractSecretLevel <em>ContractSecretLevel</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractSecretLevel</em>' attribute.
@@ -1055,7 +1057,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getProjectSecretLevel();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProjectSecretLevel <em>ProjectSecretLevel</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProjectSecretLevel <em>ProjectSecretLevel</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ProjectSecretLevel</em>' attribute.
@@ -1077,7 +1079,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractBalance();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractBalance <em>ContractBalance</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractBalance <em>ContractBalance</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractBalance</em>' attribute.
@@ -1099,7 +1101,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getProcurementType();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getProcurementType <em>ProcurementType</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getProcurementType <em>ProcurementType</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ProcurementType</em>' attribute.
@@ -1121,7 +1123,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getNoTaxSum();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getNoTaxSum <em>NoTaxSum</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getNoTaxSum <em>NoTaxSum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>NoTaxSum</em>' attribute.
@@ -1143,7 +1145,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getPayTax();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getPayTax <em>PayTax</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getPayTax <em>PayTax</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>PayTax</em>' attribute.
@@ -1165,7 +1167,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getContractModel();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getContractModel <em>ContractModel</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getContractModel <em>ContractModel</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>ContractModel</em>' attribute.
@@ -1187,7 +1189,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getTenderId();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getTenderId <em>TenderId</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getTenderId <em>TenderId</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>TenderId</em>' attribute.
@@ -1209,7 +1211,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getIsfb();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getIsfb <em>Isfb</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getIsfb <em>Isfb</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Isfb</em>' attribute.
@@ -1231,7 +1233,7 @@ public interface ZhChargeContract extends DataObject {
 	public String getFinContractSum();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getFinContractSum <em>FinContractSum</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getFinContractSum <em>FinContractSum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>FinContractSum</em>' attribute.
@@ -1253,13 +1255,57 @@ public interface ZhChargeContract extends DataObject {
 	public String getSignatoryName();
 
 	/**
-	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.impl.ZhChargeContract#getSignatoryName <em>SignatoryName</em>}' attribute.
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSignatoryName <em>SignatoryName</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>SignatoryName</em>' attribute.
 	 * @see #getSignatoryName()
 	 */
 	public void setSignatoryName(String signatoryName);
+
+	/**
+	 * Returns the value of the '<em><b>SecondaryOrg</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>SecondaryOrg</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>SecondaryOrg</em>' attribute.
+	 * @see #setSecondaryOrg(java.lang.String)
+	 */
+	public String getSecondaryOrg();
+
+	/**
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSecondaryOrg <em>SecondaryOrg</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>SecondaryOrg</em>' attribute.
+	 * @see #getSecondaryOrg()
+	 */
+	public void setSecondaryOrg(String secondaryOrg);
+
+	/**
+	 * Returns the value of the '<em><b>SecondaryOrgname</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>SecondaryOrgname</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>SecondaryOrgname</em>' attribute.
+	 * @see #setSecondaryOrgname(java.lang.String)
+	 */
+	public String getSecondaryOrgname();
+
+	/**
+	 * Sets the value of the '{@link com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContract#getSecondaryOrgname <em>SecondaryOrgname</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>SecondaryOrgname</em>' attribute.
+	 * @see #getSecondaryOrgname()
+	 */
+	public void setSecondaryOrgname(String secondaryOrgname);
 
 
 }

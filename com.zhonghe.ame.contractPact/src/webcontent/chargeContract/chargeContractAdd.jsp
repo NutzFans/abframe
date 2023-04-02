@@ -157,7 +157,7 @@
 					<div type="checkcolumn"></div>
 					<div field="years" width="80" headerAlign="center" allowSort="true">
 						年份
-						<input property="editor" class="nui-textbox" style="width: 100%;" />
+						<input property="editor" class="nui-textbox" style="width: 100%;" required="true"/>
 					</div>
 					<div field="jan" width="120" headerAlign="center" allowSort="true">
 						一月
@@ -322,6 +322,7 @@
 			});
 		}
 		
+
 		function onOk(e) {
 			type = e;
 			if (type == 1) {
@@ -334,8 +335,15 @@
 					var chargePlansStr = JSON.stringify(chargePlans);
 					var chargePlansJson = JSON.parse(chargePlansStr);
 					for (var i = 0; i < chargePlansJson.length; i++) {
-						if (chargePlansJson[i].years == undefined) {
-							showTips("请填写未来年度收款计划中的 '年份' 字段!", "danger");
+						if (isNotNum(chargePlansJson[i].years)) {
+							showTips("请填写未来年度收款计划中的 ‘年份’ 字段（格式为数字）", "danger");
+							return;
+						}
+						if (isNotNum(chargePlansJson[i].jan) || isNotNum(chargePlansJson[i].feb) || isNotNum(chargePlansJson[i].mar) || isNotNum(chargePlansJson[i].apr)
+								|| isNotNum(chargePlansJson[i].may) || isNotNum(chargePlansJson[i].jun) || isNotNum(chargePlansJson[i].jul)
+								|| isNotNum(chargePlansJson[i].aug) || isNotNum(chargePlansJson[i].sep) || isNotNum(chargePlansJson[i].oct)
+								|| isNotNum(chargePlansJson[i].nov) || isNotNum(chargePlansJson[i].dec)) {
+							mini.alert("收款计划中各月份收款值必须为数字且不允许为空（月份无收款请填充数字0）");
 							return;
 						}
 					}
@@ -409,19 +417,19 @@
 			var newRow = {
 				name : "New Row"
 			};
-			var jan = 0;
-			var feb = 0;
-			var mar = 0;
-			var apr = 0;
-			var may = 0;
-			var jun = 0;
-			var jul = 0;
-			var aug = 0;
-			var sep = 0;
-			var oct = 0;
-			var nov = 0;
-			var dec = 0;
-			var sum = 0;
+			var jan = "0";
+			var feb = "0";
+			var mar = "0";
+			var apr = "0";
+			var may = "0";
+			var jun = "0";
+			var jul = "0";
+			var aug = "0";
+			var sep = "0";
+			var oct = "0";
+			var nov = "0";
+			var dec = "0";
+			var sum = "0";
 			newRow = {
 				jan : jan,
 				feb : feb,
@@ -450,18 +458,18 @@
 
 		grid2.on("cellendedit", function(e) {
 			var row = e.row;
-			var jan = row.jan * 1;
-			var feb = row.feb * 1;
-			var mar = row.mar * 1;
-			var apr = row.apr * 1;
-			var may = row.may * 1;
-			var jun = row.jun * 1;
-			var jul = row.jul * 1;
-			var aug = row.aug * 1;
-			var sep = row.sep * 1;
-			var oct = row.oct * 1;
-			var nov = row.nov * 1;
-			var dec = row.dec * 1;
+			var jan = Number(row.jan);
+			var feb = Number(row.feb);
+			var mar = Number(row.mar);
+			var apr = Number(row.apr);
+			var may = Number(row.may);
+			var jun = Number(row.jun);
+			var jul = Number(row.jul);
+			var aug = Number(row.aug);
+			var sep = Number(row.sep);
+			var oct = Number(row.oct);
+			var nov = Number(row.nov);
+			var dec = Number(row.dec);
 			var sum = (jan + feb + mar + apr + may + jun + jul + aug + sep + oct + nov + dec).toFixed(2);
 			grid2.updateRow(row, {
 				sum : sum
@@ -485,6 +493,20 @@
 				return ret;
 			}
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
+		}
+
+		function isNotNum(data) {
+			if (data == "") {
+				return true;
+			}
+			var num = Number(data);
+			var numStr = num + "";
+			console.log(numStr)
+			if (numStr == "NaN") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	</script>
 </body>
