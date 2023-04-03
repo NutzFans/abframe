@@ -39,7 +39,7 @@
 	<div class="nui-fit">
     <div id="datagrid1" class="nui-datagrid" style="width: 100%;height: 100%;" allowCellSelect="true" 
 	    		showPager="true" allowCellEdit="true" multiSelect="true"  dataField="purSuppliers" 
-	    		showFilterRow="true"
+	    		showFilterRow="true" oncellcommitedit="OnCellCommitEdit"
 	    		 sizeList="[10,20,50,100,200]" allowResize="true" pageSize="20" 
 	    		 url="com.zhonghe.ame.purchase.purSupplier.querySuppliers.biz.ext">
 		<div property="columns">
@@ -108,7 +108,22 @@
     	nui.parse();
 		var form = new nui.Form("#form1");
     	var grid = nui.get("datagrid1");
-    	search()
+    	$(document).ready(function() {
+    		// 页面加载首个进行调用， 匹配将所有数据： 合格有效期小于当前时间，则进行置空操作，  并且同时把是否合格 置为 空
+		    $.ajax({
+	            url: "com.primeton.eos.ame_pur.PurSupplier.changePurSupplierEffEndTime.biz.ext",
+	            type: 'POST',
+	            cache: false,
+	            contentType: 'text/json',
+	            success: function (text) {
+	            	search()
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                alert(jqXHR.responseText);
+	            }
+	        });
+		});
+    	
     	//按钮权限的控制
 	    getOpeatorButtonAuth("gys_delbtn,gys_addBtn,gys_saveBtn,gys_updateBtn,gys_exportExcel");
 		function dictstatus(e) {
@@ -250,6 +265,36 @@
 	            }
             });
 	    }
+	    
+	    // 判断如果 是否合格 选择是，则将合格有效期自动默认赋值为  当前时间 + 5年； 如果 是否合格 选择非是，则将合格有效期 清空
+		function OnCellCommitEdit(e) {
+			var field = e.field;
+			var record = e.record;
+			if (field == "isqualified"){
+				// 判断如果 是否合格 选择是，则将合格有效期自动默认赋值为  当前时间 + 5年； 如果 是否合格 选择非是，则将合格有效期 清空
+	        	if (e.value == "1"){
+					 var nowTime = new Date();
+					 var nowDate = nowTime.getFullYear() + "-" + (nowTime.getMonth() + 1) + "-" + nowTime.getDate();
+					 var year =  nowTime.getFullYear() + 5;
+					 var month = nowTime.getMonth() + 1;
+					 var day = nowTime.getDate();
+					 
+					 //考虑二月份场景，若N年后的二月份日期大于该年的二月份的最后一天，//则取该年二月份最后一天
+					 if(month == '02' || month == 2){
+						 var monthEndDate = new Date(year ,month,0).getDate();
+						 if(parseInt(day) > monthEndDate){
+						 	 //为月底时间 二月份最后一天
+							 day = monthEndDate;
+						 }
+					 }
+					 var afterDate = year + "-" + month + "-" + day;
+					 record.effectiveEndTime = afterDate;
+	        	} 
+	        	if (e.value != "1"){
+					 record.effectiveEndTime = null;
+	        	}
+			}
+        }
 	    
   </script>
 </body>

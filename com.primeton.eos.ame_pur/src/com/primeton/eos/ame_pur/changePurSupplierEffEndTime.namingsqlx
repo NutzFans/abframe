@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:hanzhuo -->
+<sqlMap>
+    <update id="changePurSupplierEffEndTime">
+	    <![CDATA[
+		    UPDATE PUR_SUPPLIER SET EFFECTIVE_END_TIME = NULL,isqualified = NULL  WHERE CUSTID in( 
+
+			select t.CUSTID from PUR_SUPPLIER t where t.EFFECTIVE_END_TIME < cast(convert(varchar(10), getdate(), 120) as datetime)
+			
+			)
+		]]>
+    </update>
+</sqlMap>
