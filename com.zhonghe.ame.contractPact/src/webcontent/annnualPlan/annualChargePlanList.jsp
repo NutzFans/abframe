@@ -111,7 +111,7 @@
 
 		<div class="nui-fit">
 			<div id="annualChargeGrid" sizeList="[500]" dataField="chargePlanInfos" pageSize="500" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext" idField="id" frozenStartColumn="0" frozenEndColumn="10" showSummaryRow="true" onshowrowdetail="onShowRowDetail" virtualScroll="true" virtualColumns="true">
+				url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext" idField="id" frozenStartColumn="0" frozenEndColumn="8" showSummaryRow="true" onshowrowdetail="onShowRowDetail" virtualScroll="true" virtualColumns="true">
 				<div property="columns">
 					<div type="checkcolumn">○</div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>

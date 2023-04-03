@@ -78,7 +78,7 @@
 						<td style="width: 155px">
 							<input name="critria._expr[20]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname"
 								valueField="custname" dataField="custs" valueFromSelect="true" allowInput="true" style="width: 150px" />
-							<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryname" />
+							<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryName" />
 							<input class="nui-hidden" name="critria._expr[20]._op" value="like" />
 						</td>
 						<td style="width: 90px; text-align: right;">合同签约主体:</td>
