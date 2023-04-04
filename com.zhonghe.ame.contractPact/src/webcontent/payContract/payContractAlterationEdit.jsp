@@ -107,7 +107,7 @@
 							</td>
 							<td align="right" style="width: 130px">签约方：</td>
 							<td>
-								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
+								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersIsqualified.biz.ext" filterType="like"
 									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 130px">付款方：</td>
