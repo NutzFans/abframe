@@ -24,24 +24,24 @@
 						<td style="width: 60px; text-align: right;">经办人:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createUsername" style="width: 150px" />
-							<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
+							<input class="nui-hidden" name="critria._expr[1]._op" value="like" id="createUsernameOp" />
 							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
 						</td>
 						<td style="width: 90px; text-align: right;">合同承办部门:</td>
 						<td style="width: 155px">
 							<input id="orgid2" name="critria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
-								style="width: 150px" />
-							<input class="nui-hidden" name="critria._expr[2]._property" value="implementOrg" />
-							<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="tempCond1" />
-							<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="tempCond2" />
+								style="width: 150px" valueFromSelect="true" />
+							<input class="nui-hidden" name="critria._expr[2]._property" value="implementOrg" id="implementOrgProp" />
+							<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="implementOrgOp" />
+							<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="implementOrgRef" />
 							<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
 							<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
 							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
 							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
 							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
 							<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
-							<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
-							<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
+							<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" id="implementOrgProp2" />
+							<input class="nui-hidden" name="critria._expr[3]._op" value="in" id="implementOrgOp2" />
 							<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
 						</td>
 						<td style="width: 60px; text-align: right;">合同编号:</td>
@@ -216,6 +216,7 @@
 		var type = <%=request.getParameter("type")%>;
 		var reve_grid = nui.get("reve_grid");
 		var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
+		var authOrg;
 		
 		init();
 		
@@ -241,27 +242,25 @@
 				type : 'POST',
 				contentType : 'text/json',
 				success : function(text) {
-					if (text.orgs) {
-						var orgids = text.orgids;
-						if (text.orgs.length == 0) {
-							//当没有有权的机构时将申请人设置为登陆人
-							nui.get("createUserid").setValue(userId);
-							nui.get("createUsername").setValue(userName);
-							nui.get("createUsername").setReadOnly(true);
-						}
-						nui.get("orgid2").setData(text.orgs);
-						if (orgids != null) {
-							orgids = orgids.split(",");
-							if (!isStr(orgids, "1")) {
-								//根据情况选择一种
-								nui.get("orgids2").setValue(text.orgids);
-							}
-						}
-					} else {
-						//当没有有权的机构时将申请人设置为登陆人
+					if(text.errcode == "没有有权的机构"){
 						nui.get("createUserid").setValue(userId);
 						nui.get("createUsername").setValue(userName);
 						nui.get("createUsername").setReadOnly(true);
+						authOrg = false;						
+					}else{
+						nui.get("createUsername").setName("critria._or[0]._and[0]._expr[1].createUsername");
+						nui.get("createUsernameOp").setName("critria._or[0]._and[0]._expr[1]._op");
+						nui.get("createUserid").setName("critria._or[0]._and[0]._expr[0].createUserid");
+						nui.get("createUserid").setValue(userId);
+						nui.get("implementOrgProp").setName("critria._or[0]._and[1]._expr[2]._property");
+						nui.get("implementOrgOp").setName("critria._or[0]._and[1]._expr[2]._op");
+						nui.get("implementOrgRef").setName("critria._or[0]._and[1]._expr[2]._ref");
+						nui.get("orgid2").setData(text.orgs);
+						nui.get("implementOrgProp2").setName("critria._or[0]._and[1]._expr[3]._property");
+						nui.get("implementOrgOp2").setName("critria._or[0]._and[1]._expr[3]._op");
+						nui.get("orgids2").setName("critria._or[0]._and[1]._expr[3]._value");
+						nui.get("orgids2").setValue(text.orgids);
+						authOrg = true;
 					}
 					search();
 				}
@@ -269,14 +268,41 @@
 		}
 		
 		function search() {
-			var form = new nui.Form("#form1");
+			if(authOrg){
+				if(nui.get("createUsername").getValue() != "" || nui.get("orgid2").getValue() != ""){
+					if(nui.get("createUsername").getValue() == userName){
+						nui.get("createUsername").setName("critria._expr[1].createUsername");
+						nui.get("createUsernameOp").setName("critria._expr[1]._op");
+						nui.get("createUserid").setName("critria._expr[0].createUserid");
+						nui.get("createUserid").setValue(userId);
+						nui.get("implementOrgProp").setName("critria._expr[2]._property");
+						nui.get("implementOrgOp").setName("critria._expr[2]._op");
+						nui.get("implementOrgRef").setName("critria._expr[2]._ref");
+						nui.get("implementOrgProp2").setName("critria._expr[3]._property");
+						nui.get("implementOrgOp2").setName("critria._expr[3]._op");
+						nui.get("orgids2").setName("critria._expr[3]._value");
+						nui.get("orgid2").setValue("");
+						nui.get("orgids2").setValue("");						
+					}else{
+						nui.get("createUsername").setName("critria._expr[1].createUsername");
+						nui.get("createUsernameOp").setName("critria._expr[1]._op");
+						nui.get("createUserid").setName("critria._expr[0].createUserid");
+						nui.get("createUserid").setValue("");
+						nui.get("implementOrgProp").setName("critria._expr[2]._property");
+						nui.get("implementOrgOp").setName("critria._expr[2]._op");
+						nui.get("implementOrgRef").setName("critria._expr[2]._ref");
+						nui.get("implementOrgProp2").setName("critria._expr[3]._property");
+						nui.get("implementOrgOp2").setName("critria._expr[3]._op");
+						nui.get("orgids2").setName("critria._expr[3]._value");						
+					}
+				}
+			}
 			var data = form.getData();
 			grid.sortBy("createTime", "desc");
 			grid.load(data);
 		}
 		
 		function reset() {
-			var form = new nui.Form("#form1");
 			form.reset();
 			init();
 		}		
