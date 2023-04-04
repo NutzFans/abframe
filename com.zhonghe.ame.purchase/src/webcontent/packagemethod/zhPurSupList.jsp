@@ -272,7 +272,7 @@
 			var record = e.record;
 			if (field == "isqualified"){
 				// 判断如果 是否合格 选择是，则将合格有效期自动默认赋值为  当前时间 + 5年； 如果 是否合格 选择非是，则将合格有效期 清空
-	        	if (e.value == "1"){
+	        	if (e.value == "1" || e.value == "2" ){
 					 var nowTime = new Date();
 					 var nowDate = nowTime.getFullYear() + "-" + (nowTime.getMonth() + 1) + "-" + nowTime.getDate();
 					 var year =  nowTime.getFullYear() + 5;
@@ -287,10 +287,16 @@
 							 day = monthEndDate;
 						 }
 					 }
+					 if(month < 10){
+					 	month = "0" + month;
+					 }
+					 if (day<10){
+					 	day = "0" + day;
+					 }
 					 var afterDate = year + "-" + month + "-" + day;
 					 record.effectiveEndTime = afterDate;
 	        	} 
-	        	if (e.value != "1"){
+	        	if (e.value == "0"){
 					 record.effectiveEndTime = null;
 	        	}
 			}
