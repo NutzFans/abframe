@@ -155,7 +155,7 @@
 						<a class="nui-button" id="ffhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
-						<a class="nui-button" id="improt" iconCls="icon-upload" onclick="improt()">导入</a>
+						<a class="nui-button" id="ffhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 					</td>
 				</tr>
@@ -226,8 +226,8 @@
 		function init() {
 			// 按钮权限
 			if(userId !='sysadmin'){
-				// 维护按钮 - ffhtlist_wh
-				getOpeatorButtonAuth("ffhtlist_wh");
+				// 维护按钮 - ffhtlist_wh，导入按钮 - ffhtlist_import
+				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
