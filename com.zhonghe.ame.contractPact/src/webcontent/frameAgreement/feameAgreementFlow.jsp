@@ -57,7 +57,8 @@
 									<td align="right" style="width: 140px">标的规模：</td>
 									<td><input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 200px"/></td>
 							</tr>
-							<tr>
+							<!-- 20230404 此两个字段在审批过程中不显示  -->
+							<tr class="nui-hidden" >
 								<td align="right" style="width:140px">合同起始日期：</td>
 									<td><input id="startTime" name="startTime" enabled="false" class="nui-datepicker" style="width: 200px"/></td>
 								<td align="right" style="width:140px">合同结束日期：</td>
@@ -65,7 +66,7 @@
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%" required="false" enabled="false" /></td>
 							</tr>
 						</table>
 					</div>

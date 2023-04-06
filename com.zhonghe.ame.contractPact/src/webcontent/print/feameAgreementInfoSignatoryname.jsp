@@ -9,6 +9,9 @@
 	html, body{
         margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
     }    
+    .mini-grid-cell-nowrap{
+		white-space: nowrap;
+	}
 </style>
 <head>
 <title>收付费合同信息</title>
@@ -21,12 +24,11 @@
 	<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
 		<p style="color: red;font-weight: bold;"  align="center">付费合同信息:</p>
     </div>
-    
 <div class="nui-fit">
     <div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" 
     	showSummaryRow="true"  pageSize="10" align="left"
-    	class="nui-datagrid" style="width:100%;height:100%;" url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext"  
-    	allowSortColumn=true multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="6">
+    	class="nui-datagrid" style="width:100%;height:100%;" 
+    	allowSortColumn=true multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="6" url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext">
         <div property="columns">
         <div type="checkcolumn"></div>
         <div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
@@ -36,10 +38,10 @@
         	 <div field="contractNo" width="180" headerAlign="center" allowSort="true" >合同编号</div>
         	 <div field="contractName" width="250"  headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
         	 <div field="contractSum" width="120"  headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同金额（元）</div>
-        	 <div field="finalSum" width="140"  headerAlign="center" allowSort="true" >合同最终金额（元）</div>
-        	 <div field="noTaxSum" width="150"  headerAlign="center" allowSort="true" >合同不含税金额（元）</div>
-        	 <div field="payTax" width="120"  headerAlign="center" allowSort="true" >税额（元）</div>
-        	 <div field="contractBalance" width="120"  headerAlign="center" allowSort="true" summaryType="sum">合同余额（元）</div>
+        	 <div field="finalSum" width="140" dataType="currency"  headerAlign="center" allowSort="true" >合同最终金额（元）</div>
+        	 <div field="noTaxSum" width="150" dataType="currency" headerAlign="center" allowSort="true" >合同不含税金额（元）</div>
+        	 <div field="payTax" width="120" dataType="currency" headerAlign="center" allowSort="true" >税额（元）</div>
+        	 <div field="contractBalance" dataType="currency" width="120"  headerAlign="center" allowSort="true" summaryType="sum">合同余额（元）</div>
         	 <div field="executeStatus"    headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS" >执行状态</div>
         	 <div field="appStatus"    headerAlign="center" allowSort="true" renderer="onActionRenderer" >审批状态</div>
         	  <div field="signatoryname" width="190"  headerAlign="center" allowSort="true" >签约方</div>
@@ -54,7 +56,7 @@
         	 <div field="contractNature" width="120"  headerAlign="center" allowSort="true"  renderer="CONTRACT_NATURE">合同性质</div>
         	 <div field="contractPrice" width="120"  headerAlign="center" allowSort="true"  renderer="CONTRACT_PRICE">合同价款形式</div>
         	 <div field="planYear" width="120"  headerAlign="center" allowSort="true" >采购计划年份</div>
-        	 <div field="budgetSum" width="150"  headerAlign="center" allowSort="true" >合同预算金额（元）</div>
+        	 <div field="budgetSum" width="150"  dataType="currency" headerAlign="center" allowSort="true" >合同预算金额（元）</div>
         	 <div field="markType" width="120"  headerAlign="center" allowSort="true"  renderer="MARK_TYPE">标的类型</div>
         	 <div field="intype" width="120"  headerAlign="center" allowSort="true"  renderer="INTYPE">集采类型</div>
         	 <div field="procurementType" width="120"  headerAlign="center" allowSort="true"  renderer="PROCUREMENT_TYPE">采购方式</div>
@@ -73,8 +75,8 @@
     <div class="nui-fit">
     <div id="datagrid2" sizeList="[10,20,50,100]" showPager="true" dataField="data" 
     	showSummaryRow="true"  pageSize="10"
-    	class="nui-datagrid" style="width:100%;height:450px;" url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" 
-    	multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="5">
+    	class="nui-datagrid" style="width:100%;height:450px;" 
+    	multiSelect="true" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="5" url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext">
         <div property="columns">
         <div name="temp123" type="checkcolumn"></div>
         <div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
@@ -89,7 +91,7 @@
             <div field="contractBalance" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同余额（元）</div>
         	<div field="executeStatus" width="80" align="center" headerAlign="center" allowSort="true"  renderer="EXECUTE_STATUS">执行状态</div>
         	<div field="appStatus"  align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer" >审批状态</div>
-        	<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true" >签约方</div>
+        	<div field="signatoryName" width="190" align="center" headerAlign="center" allowSort="true" >签约方</div>
         	<div field="contractSubject" width="120" align="center" headerAlign="center" allowSort="true"  renderer="PAYER">合同签约主体</div>
        		<div field="payee" width="80" align="center" headerAlign="center" allowSort="true"  renderer="PAYER">收款方</div>
         	<div field="signingDate"  dateFormat="yyyy-MM-dd" width="90"   headerAlign="center" >签订日期</div>
@@ -126,35 +128,37 @@
 		}
 		function setData(){
 			signatoryname = "<%= request.getParameter("signatoryname") %>" ;
-			var json = nui.encode({"id": signatoryname});
-			nui.ajax({
-	            url: "com.zhonghe.ame.contractPact.frameAgreement.getContractById.biz.ext",
-				type: 'POST',
-				data: json,	
-				contentType: 'text/json',
-	            success: function (o) {
-	            	var data = o.data;
-	            	console.log(data)
-	            	grid.setData(data)
-				}
-	     });
-	}
-	
-	function setData1(){
-			signatoryname = "<%= request.getParameter("signatoryname") %>" ;
-			var json = nui.encode({"id": signatoryname});
-			nui.ajax({
-	            url: "com.zhonghe.ame.contractPact.frameAgreement.getChargeContractById.biz.ext",
-				type: 'POST',
-				data: json,	
-				contentType: 'text/json',
-	            success: function (o) {
-	            	var data = o.data;
-	            	console.log(data)
-	            	grid1.setData(data)
-				}
-	     });
-	}
+			// 此时按照form 表单提交样式，自行组装请求体，将传递数据
+			var json = {
+						"critria": {
+							"_entity": "com.zhonghe.ame.payContract.payContract.ZhPayContractEntity",
+							"_expr": [{
+									"_op": "like",
+									"_property": "signatoryname",
+									"_value": signatoryname
+								}
+							]
+						}
+					}
+			grid.sortBy("createTime", "desc");
+			grid.load(json);
+			
+		}
+		
+		function setData1(){
+			signatoryName = "<%= request.getParameter("signatoryname") %>" ;
+			var json = {
+						"critria": {
+							"_entity": "com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractEntity",
+							"_expr": [{
+									"signatoryName": signatoryName,
+								}
+							]
+						}
+					}
+			grid1.sortBy("createTime", "desc");
+			grid1.load(json);
+		}
 		
 		function dictGetType(e){
 			return nui.getDictText('EXP_EXPTYPE',e.value);
@@ -163,7 +167,7 @@
 			return nui.getDictText('EXP_CHECKFLAG',e.value);
 		}
 		 
-		function search() {
+		/* function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
 		  	grid.sortBy("createTime","desc");
@@ -174,7 +178,7 @@
 			var data = form1.getData(); //获取表单JS对象数据
 			grid1.sortBy("createTime","desc");
 		  	grid1.load(data); //datagrid加载数据
-		}
+		} */
 		function isStr(str, val) {
 		  if (str.indexOf(val) != -1) {
 		    return true

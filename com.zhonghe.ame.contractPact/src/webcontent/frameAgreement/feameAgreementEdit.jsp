@@ -27,7 +27,7 @@
 </head>
 <body>
 	<div class="nui-fit">
-		<div class="mini-panel" title="框架协议签订编辑" style="width: 100%;">
+		<div class="mini-panel" title="框架协议签订维护" style="width: 100%;">
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 100%;">
 				<form id="form1" method="post">
 						<input name="files" id="fileids" class="nui-hidden"/>
@@ -90,6 +90,19 @@
 									<td><input id="projectSize" name="projectSize"  class="nui-textbox" style="width: 300px" required="true"/></td>
 								
 							</tr>
+							
+							<tr>
+								<td align="right" style="width: 160px">备注：</td>
+								<td  colspan="5"><input id="remark" name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
+							</tr>
+						</table>
+					</div>
+				
+				
+				<p style="color:red;">补充合同信息:</p>
+			
+					<div style="padding: 5px;">
+						<table style="table-layout: fixed;">
 							<tr>
 								
 								<td align="right" style="width: 100px">协议编号：</td>
@@ -107,11 +120,11 @@
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input id="remark1"  name="remark1"  class="nui-textarea" style="width: 100%" required="false"/></td>
 							</tr>
 						</table>
 					</div>
-				</form>
+				</form>	
 			</fieldset>
 
 			<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
@@ -121,8 +134,8 @@
 		</div>
 	</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;" iconCls="icon-save" >保存</a>
+		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close" >关闭</a>
 	</div>
 	<script type="text/javascript">
         nui.parse();
@@ -244,6 +257,7 @@
 		}
 		
 		function setEditData(data){
+			console.log("09999",data);
 			if(null != data.createUserid){
 				nui.get("createUserid").setValue(data.createUserid);
 			}
@@ -293,7 +307,12 @@
 			if(null != data.endTime){
 				nui.get("endTime").setValue(data.endTime);
 			}
-			
+			if(null != data.remark){
+				nui.get("remark").setValue(data.remark);
+			}
+			if(null != data.remark1){
+				nui.get("remark1").setValue(data.remark1);
+			}
 			var form = new nui.Form("#form1");
 			var grid_0 = nui.get("grid_0");
         	grid_0.load({"groupid":"ZH_CONTRACTFEAME","relationid":data.id});

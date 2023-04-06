@@ -7,6 +7,9 @@
 	html,body {
 		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
 	}
+	.mini-grid-cell-nowrap{
+		white-space: nowrap;
+	}
 </style>
 <title>框架协议</title>
 </head>
@@ -18,7 +21,7 @@
 				<tr>
 					<td class="form_label" align="right">申请人:</td>
 					<td colspan="1">
-						<input name="critria._expr[1]._value" class="nui-textbox" style="width: 64%;" id="createname" />
+						<input name="critria._expr[1]._value" class="nui-textbox" style="width: 100%;" id="createname" />
 						<input class="nui-hidden" name="critria._expr[1]._property" value="empname" />
 						<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
 						<input name="critria._expr[2]._value" class="nui-hidden" id="createUserid" />
@@ -26,7 +29,7 @@
 					</td>
 					<td class="form_label" align="right">协议实施部门:</td>
 					<td colspan="1">
-						<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 60%;" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" />
+						<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 100%;" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" />
 						<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
 						<input class="nui-hidden" name="critria._expr[3]._op" value="in" id="tempCond1" />
 						<input class="nui-hidden" name="critria._expr[3]._ref" value="1" id="tempCond2" />
@@ -40,22 +43,29 @@
 						<input class="nui-hidden" name="critria._expr[4]._op" value="in" />
 						<input class="nui-hidden" name="critria._expr[4]._value" id="orgids2" />
 					</td>
-					<td class="form_label" align="right" style="width: 100px">协议名称:</td>
-					<td colspan="1">
-						<input name="critria._expr[6]._value" class="nui-textbox" style="width: 79%;" />
-						<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
-						<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
-					</td>
-				</tr>
-				<tr>
 					<td class="form_label" align="right" style="width: 100px">申请日期:</td>
 					<td colspan="1">
 						<input class="nui-hidden" name="critria._expr[5]._op" value="between" />
 						<input class="nui-hidden" name="critria._expr[5]._pattern" value="yyyy-MM-dd" />
 						<input class="nui-hidden" name="critria._expr[5]._property" value="createTime" />
-						<input class="nui-datepicker" name="critria._expr[5]._min" style="width: 27%;" />
+						<input class="nui-datepicker" name="critria._expr[5]._min" style="width: 25%;" />
 						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[5]._max" style="width: 27%;" />
+						<input class="nui-datepicker" name="critria._expr[5]._max" style="width: 25%;" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_label" align="right" style="width: 100px">协议名称:</td>
+					<td colspan="1">
+						<input name="critria._expr[6]._value" class="nui-textbox" style="width: 100%;" />
+						<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
+						<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
+					</td>
+					<td class="form_label" align="right">签订日期:</td>
+					<td colspan="1">
+						<input class="nui-hidden" name="critria._expr[13]._op" value="between" />
+						<input class="nui-hidden" name="critria._expr[13]._pattern" value="yyyy-MM-dd" />
+						<input class="nui-hidden" name="critria._expr[13]._property" value="signingDate" />
+						<input class="nui-datepicker" name="critria._expr[13]._min" style="width: 100%;" />
 					</td>
 					<td class="form_label" align="right" style="width: 100px">协议起始日期:</td>
 					<td colspan="1">
@@ -66,33 +76,28 @@
 						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
 						<input class="nui-datepicker" name="critria._expr[10]._max" style="width: 25%;" />
 					</td>
+				</tr>
+				<tr>
+					
+					<td class="form_label" align="right">协议编号:</td>
+					<td colspan="1">
+						<input name="critria._expr[12]._value" class="nui-textbox" style="width: 100%;" />
+						<input class="nui-hidden" name="critria._expr[12]._property" value="contractNo" />
+						<input class="nui-hidden" name="critria._expr[12]._op" value="like" />
+					</td>
+					
+					<td class="form_label" align="right">审批状态:</td>
+					<td colspan="1">
+						<input name="critria._expr[14].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 100%;" showNullItem="true" nullItemText="全部" />
+					</td>
 					<td class="form_label" align="right">协议结束日期:</td>
 					<td colspan="1">
 						<input class="nui-hidden" name="critria._expr[11]._op" value="between" />
 						<input class="nui-hidden" name="critria._expr[11]._pattern" value="yyyy-MM-dd" />
 						<input class="nui-hidden" name="critria._expr[11]._property" value="endTime" />
-						<input class="nui-datepicker" name="critria._expr[11]._min" style="width: 35%;" />
+						<input class="nui-datepicker" name="critria._expr[11]._min" style="width: 25%;" />
 						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[11]._max" style="width: 35%;" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right">协议编号:</td>
-					<td colspan="1">
-						<input name="critria._expr[12]._value" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[12]._property" value="contractNo" />
-						<input class="nui-hidden" name="critria._expr[12]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">签订日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[13]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[13]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[13]._property" value="signingDate" />
-						<input class="nui-datepicker" name="critria._expr[13]._min" style="width: 60%;" />
-					</td>
-					<td class="form_label" align="right">审批状态:</td>
-					<td colspan="1">
-						<input name="critria._expr[14].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 79%;" showNullItem="true" nullItemText="全部" />
+						<input class="nui-datepicker" name="critria._expr[11]._max" style="width: 25%;" />
 					</td>
 				</tr>
 				<tr>
@@ -120,10 +125,10 @@
 	</div>
 
 	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" pageSize="15" class="nui-datagrid" style="width: 100%; height: 100%;"
-			url="com.zhonghe.ame.contractPact.frameAgreement.frameAgreementAll.biz.ext" multiSelect="true" allowSortColumn=true ondrawcell="setBackGroundColor">
+		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" pageSize="20" class="nui-datagrid" style="width: 100%; height: 100%;"
+			url="com.zhonghe.ame.contractPact.frameAgreement.frameAgreementAll.biz.ext"  allowSortColumn=true ondrawcell="setBackGroundColor">
 			<div property="columns">
-				<div type="checkcolumn"></div>
+				<div type="checkcolumn">○</div>
 				<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
 				<div field="empname" width="60" align="center" headerAlign="center" allowSort="true">申请人</div>
 				<div field="contractName" width="150" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">协议名称</div>
@@ -267,13 +272,14 @@
 			search()
 		}
 		
+		// 20230403去掉颜色提醒
 		function setBackGroundColor(e) {
-			var record = e.record;
+			/* var record = e.record;
 			if (record.appStatus == "0") {
 				e.rowStyle = "background-color: #FFFF99";
 			} else if (record.appStatus == "1") {
 				e.rowStyle = "background-color: #FF99CC";
-			}
+			} */
 		}
 		
 		function onOk() {

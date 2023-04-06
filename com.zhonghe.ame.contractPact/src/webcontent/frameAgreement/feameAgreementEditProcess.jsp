@@ -50,41 +50,14 @@
 									filterType="like" textField="custname" valueField="custid"
 									dataField="custs" valueFromSelect="true" allowInput="true" style="width: 100%;" />
 									</td>
-									
 							</tr>
-							<tr>
-								
+							<tr>				
 								<td align="right" style="width: 100px">合同签约主体：</td>
 								    <td><input id="contractSubject" name="contractSubject"  class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%"  required="true"/></td>
 								<td align="right" style="width: 100px">实施地点：</td>
 									<td><input name="projectLocal"  class="nui-textbox" style="width: 100%" required="true"/></td>	
 								<td align="right" style="width: 100px">标的规模：</td>
-									<td><input name="projectSize"  class="nui-textbox" style="width: 100%" required="true"/></td>
-								
-							</tr>
-							<tr>
-								
-								<td align="right" style="width:160px">合同起始日期：</td>
-									<td><input name="startTime"  class="nui-datepicker" style="width: 100%" /></td>
-								<td align="right" style="width:160px">合同结束日期：</td>
-									<td><input name="endTime"  class="nui-datepicker" style="width: 100%" /></td>
-								
-							</tr>
-							<tr>
-								<td align="right" style="width: 140px">分公司会签部门领导：</td>
-							    <td>
-								  	<input name="fDeptCountersignId" id="userLookup_multiple" width="100%" class="nui-lookup" textField="empname" valueField="empid"
-										popupWidth="auto" popup="#userPanel_lookup_multiple" grid="#userDatagrid_lookup_multiple" emptyText="请选择.." multiSelect="true"
-										onvaluechanged="onFUseridsValueChanged" />
-									<input name="fDeptCountersignName" id="fDeptCountersignName"  class="nui-hidden"/>
-								</td>
-							    <td align="right" style="width: 140px">本部会签部门领导：</td>
-							    <td>
-								  	<input name="zDeptCountersignId" id="userLookup_multiple1" width="100%" class="nui-lookup" textField="empname" valueField="empid"
-										popupWidth="auto" popup="#userPanel_lookup_multiple1" grid="#userDatagrid_lookup_multiple1" emptyText="请选择.." multiSelect="true"
-										onvaluechanged="onZUseridsValueChanged" />
-							     	<input name="zDeptCountersignName" id="zDeptCountersignName" class="nui-hidden">
-								</td>
+									<td><input name="projectSize"  class="nui-textbox" style="width: 100%" required="true"/></td>							
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
@@ -100,12 +73,12 @@
 			<jsp:include page="/ame_common/misOpinion.jsp"/>
 		</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveFeame" style="width: 80px;margin-right: 20px;">保存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatFeame" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onOk(2)" id="zzFeame" style="width: 80px;margin-right: 20px;">中止</a>
-		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="onOk(0)" id="saveFeame" style="width: 80px;margin-right: 20px;" iconCls="icon-save">保存</a>
+		<a class="nui-button" onclick="onOk(1)" id="creatFeame" style="width: 80px;margin-right: 20px;" iconCls="icon-ok">提交</a>
+		<a class="nui-button" onclick="onOk(2)" id="zzFeame" style="width: 80px;margin-right: 20px;" iconCls="icon-split">中止</a>
+		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
-	<%@include file="/contractPact/common/userLookup1.jsp"%>
+	
 	<script type="text/javascript">
         nui.parse();
 	    //工作项id
@@ -247,8 +220,6 @@
 				//付款申请基本信息
 				form.setData(o.agreement);
 				clog(o)
-				nui.get("userLookup_multiple").setText(o.agreement.fDeptCountersignName);
-				nui.get("userLookup_multiple1").setText(o.agreement.zDeptCountersignName);
 			  	//附件查询
 				var grid_0 = nui.get("grid_0");
 	        	grid_0.load({"groupid":"ZH_CONTRACTFEAME","relationid":o.agreement.id});
@@ -275,18 +246,8 @@
 		});
     }
     	
-        //多选lookup返回选中行，用户可以根据需要设置相关自定义值
-		function userSetDataMultiple(rows) {
-			//nui.get("fDeptCountersignName").setValue(nui.get("userLookup_multiple").getText());
-		}
+        
 		
-		//值改变的时候
-		function onFUseridsValueChanged() {
-			nui.get("fDeptCountersignName").setValue(nui.get("userLookup_multiple").getText());
-		}
-		//值改变的时候
-		function onZUseridsValueChanged() {
-			nui.get("zDeptCountersignName").setValue(nui.get("userLookup_multiple1").getText());
-		}
+		
     </script></body>
 </html>

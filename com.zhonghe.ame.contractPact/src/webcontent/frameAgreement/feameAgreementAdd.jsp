@@ -65,18 +65,19 @@
 							</td>
 
 						</tr>
-						<tr>
+						<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 -->
+						 <tr class="nui-hidden" >
 							<td align="right" style="width: 100px">分公司会签部门领导：</td>
 							<td style="width: 20%;">
 								<input name="fDeptCountersignId" id="userLookup_multiple" width="100%" class="nui-lookup" textField="empname" valueField="empid" popupWidth="auto" popup="#userPanel_lookup_multiple"
-									grid="#userDatagrid_lookup_multiple" emptyText="请选择.." multiSelect="true" onvaluechanged="onFUseridsValueChanged" />
-								<input name="fDeptCountersignName" id="fDeptCountersignName" class="nui-hidden" />
+									grid="#userDatagrid_lookup_multiple" emptyText="请选择.." multiSelect="true" onvaluechanged="" />
+								<input name="fDeptCountersignName" id="fDeptCountersignName" />
 							</td>
 							<td align="right" style="width: 100px">本部会签部门领导：</td>
 							<td style="width: 20%;">
 								<input name="zDeptCountersignId" id="userLookup_multiple1" width="100%" class="nui-lookup" textField="empname" valueField="empid" popupWidth="auto" popup="#userPanel_lookup_multiple1"
 									grid="#userDatagrid_lookup_multiple1" emptyText="请选择.." multiSelect="true" onvaluechanged="onZUseridsValueChanged" />
-								<input name="zDeptCountersignName" id="zDeptCountersignName" class="nui-hidden">
+								<input name="zDeptCountersignName" id="zDeptCountersignName" />
 							</td>
 						</tr>
 						<tr>
@@ -84,7 +85,7 @@
 							<td colspan="5">
 								<input name="remark" class="nui-textarea" style="width: 100%" required="false" />
 							</td>
-						</tr>
+						</tr> 
 					</table>
 				</div>
 			</form>
@@ -95,12 +96,13 @@
 	</div>
 
 	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveFeame" style="width: 80px; margin-right: 20px;">保存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatFeame" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="closeCancel" style="width: 80px; margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="onOk(0)" id="saveFeame" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
+		<a class="nui-button" onclick="onOk(1)" id="creatFeame" style="width: 80px; margin-right: 20px;" iconCls="icon-ok">提交</a>
+		<a class="nui-button" onclick="closeCancel" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
 
-	<%@include file="/contractPact/common/userLookup1.jsp"%>
+	<%-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示
+	<%@include file="/contractPact/common/userLookup1.jsp"%> --%>
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("form1");
@@ -204,14 +206,15 @@
 			}
 		}
 
+		/* 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 
 		//值改变的时候
-		function onFUseridsValueChanged() {
+		function () {
 			nui.get("fDeptCountersignName").setValue(nui.get("userLookup_multiple").getText());
 		}
 		//值改变的时候
 		function onZUseridsValueChanged() {
 			nui.get("zDeptCountersignName").setValue(nui.get("userLookup_multiple1").getText());
-		}
+		} */
 	</script>
 </body>
 </html>

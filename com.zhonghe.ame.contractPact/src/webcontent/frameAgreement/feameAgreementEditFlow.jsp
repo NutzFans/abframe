@@ -122,8 +122,8 @@
 		</div>
 	</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="submit()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="submit()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;" iconCls="icon-ok">提交</a>
+		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
 	
 	<script type="text/javascript">
@@ -186,8 +186,10 @@
         }
 		function submit(){
 		form = new nui.Form("#form1");
+		form3 = new nui.Form("#form3");
 			form.validate();
-			if(form.isValid()==false){
+			form3.validate();
+			if(form.isValid()==false || form3.isValid()==false){
 				nui.alert("请检查必填项");
 				return;
 			}
@@ -212,7 +214,7 @@
 	    	}else if(auditstatus == "1"){	//提交流程
 	    		document.getElementById("fileCatalog").value="frameAgreementInfo";
 		        form2.submit();
-	    		titleText = "提交";
+	    		titleText = "提交";	
 	    		submitProcess("提交");
 	    	}
     	}

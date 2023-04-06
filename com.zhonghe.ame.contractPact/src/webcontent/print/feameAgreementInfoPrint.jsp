@@ -107,10 +107,11 @@
 								<td align="right" style="width: 160px">标的规模：</td>
 									<td><input name="projectSize"   class="nui-textbox" style="width: 200px" required="true"/></td>
 								
+								<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示
 								<td align="right" style="width: 100px">会签部门领导：</td>
 							    <td  style="width: 20%;">
 									<input name="fDeptCountersignName"  id="fDeptCountersignName"  class="nui-textbox" width="100%"/>
-								</td>
+								</td> -->
 							</tr>
 							<!--<tr>
 								<td align="right" style="width: 160px">本部会签部门领导：</td>
