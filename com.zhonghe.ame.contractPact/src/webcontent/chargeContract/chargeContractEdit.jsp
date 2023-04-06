@@ -57,7 +57,7 @@
 						<tr>
 							<td align="right" style="width: 130px">投标记录：</td>
 							<td colspan="3">
-								<input id="tenderId" name="tenderId" class="nui-buttonedit" onbuttonclick="bidInfoSelect" style="width: 100%" required="false" enabled="true" />
+								<input id="tenderId" name="tenderId" class="nui-buttonedit" onbuttonclick="bidInfoSelect" style="width: 100%" required="false" enabled="true" allowInput="false" />
 							</td>
 							<td align="right" style="width: 130px">专业类别：</td>
 							<td>
