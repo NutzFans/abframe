@@ -13,6 +13,24 @@
 
     <select id="queryInvoiceByNo" parameterClass="java.util.HashMap"  resultMap="chargePlanInfo">
     	SELECT create_time, invoice_sum, book_income, invoice_tax, receivable_sum, balance_sum, receivable_data FROM zh_invoice WHERE app_status='2' AND contract_no = #contractNo#
-    </select> 
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="roleInfo">
+        <result column="ROLEID" javaType="String" property="ROLEID"/>
+    </resultMap>
+    
+    <select id="queryRoleByUserId" parameterClass="java.util.HashMap"  resultMap="roleInfo">
+    	SELECT aor.ROLEID FROM AC_OPERATORROLE AS aor, AC_OPERATOR AS ao WHERE aor.OPERATORID = ao.OPERATORID AND ao.USERID=#userId#
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="authConfigInfo">
+        <result column="ROLE" javaType="String" property="ROLE"/>
+        <result column="ORG" javaType="String" property="ORG"/>
+        <result column="USERID" javaType="String" property="USERID"/>
+    </resultMap>    
+
+    <select id="queryAuthConfigByCodeAndLevel" parameterClass="java.util.HashMap"  resultMap="authConfigInfo">
+    	SELECT ROLE, ORG, USERID FROM AME_AUTHCONFIG WHERE CODE=#code# AND ORGLEVEL=#orglevel#
+    </select>    
 
 </sqlMap>

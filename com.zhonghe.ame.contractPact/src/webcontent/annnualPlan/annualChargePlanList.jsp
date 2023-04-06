@@ -23,15 +23,17 @@
 					<tr>
 						<td style="width: 60px; text-align: right;">经办人:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 150px" />
+							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 150px" id="createUsername" />
 							<input class="nui-hidden" name="criteria._expr[1]._property" value="createUsername" />
 							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
+							<input name="critria._expr[13].createUserid" class="nui-hidden" id="createUserid" />
 						</td>
 						<td style="width: 90px; text-align: right;">合同承办部门:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
+							<input id="secOrgName" name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="secondaryOrgname" />
 							<input class="nui-hidden" name="criteria._expr[2]._op" value="like" />
+							<input id="secOrgId" name="criteria._expr[12].secondaryOrg" class="nui-hidden" />
 						</td>
 						<td style="width: 60px; text-align: right;">合同编号:</td>
 						<td style="width: 155px">
@@ -99,9 +101,9 @@
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
-						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="edit()">编辑</a>
-						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="chargeAnnualPlan_add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="chargeAnnualPlan_edit" iconCls="icon-edit" onclick="edit()">编辑</a>
+						<a class="nui-button" id="chargeAnnualPlan_del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 						<span style="color: red; vertical-align: inherit">说明：新增、编辑、删除只适用于待签、非合同，已签请通过收费合同管理模块进行维护</span>
 					</td>
@@ -178,8 +180,37 @@
 		init();
 		
 		function init(){
-			nui.get("years").setValue(now.getFullYear());
-			search();
+			// 按钮权限
+			if(userId !='sysadmin'){
+				// 新增按钮 - chargeAnnualPlan_add，编辑按钮 - chargeAnnualPlan_edit，删除按钮 - chargeAnnualPlan_del
+				getOpeatorButtonAuth("chargeAnnualPlan_add,chargeAnnualPlan_edit,chargeAnnualPlan_del");
+			}
+					
+			var json = nui.encode({
+				'loginUserId' : userId,
+				'loginUserOrgId': userOrgId,
+				'authCode': 'chargeAnnualPlan'
+			});
+			nui.ajax({
+				url : "com.zhonghe.ame.annualPlan.auth.queryAnnualPlanAuth.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(o) {
+					if(o.result == "2"){
+						nui.get("secOrgId").setValue(o.secOrgId);
+						nui.get("secOrgName").setValue(o.secOrgName);
+						nui.get("secOrgName").setReadOnly(true);
+						
+					}else if(o.result == "3"){
+						nui.get("createUserid").setValue(userId);
+						nui.get("createUsername").setValue(userName);
+						nui.get("createUsername").setReadOnly(true);						
+					}
+					nui.get("years").setValue(now.getFullYear());
+					search();
+				}
+			});
 		}
 		
 		function search() {
