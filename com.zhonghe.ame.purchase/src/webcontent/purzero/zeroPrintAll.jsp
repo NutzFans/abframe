@@ -214,32 +214,32 @@
 				    }
 				});
  			}
-		var gridInt = table.render({
-		    elem: '#grid'
-		    ,url: 'com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext'
-		    ,where: {"zeroId": id} //如果无需传递额外参数，可不加该参数
-				,cellMinWidth: 90
-  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
-		    ,cols: [[
-		      {field:'itemName', width:240, title: '采购物项名称 '}
-		      ,{field:'brandSpec', width:240, title: '品牌/型号/规格'}
-		      ,{field:'unit', width:110, title: '单位'}
-		      ,{field:'onePrice',width:90, title: '单价(万元)'}
-		      ,{field:'num',width:110, title: '数量'}  
-		      ,{field:'totalPrice', width:100, title: '总价(万元)'}
-		    ]]
-		    ,parseData: function(res){ //res 即为原始返回的数据
-			    return {
-			      "code": "0", //解析接口状态
-			      "data": res.purZeroItem //解析数据列表
-			    };
-			  }
+			var gridInt = table.render({
+			    elem: '#grid'
+			    ,url: 'com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext'
+			    ,where: {"zeroId": id} //如果无需传递额外参数，可不加该参数
+					,cellMinWidth: 90
+	  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+			    ,cols: [[
+			      {field:'itemName', width:240, title: '采购物项名称 '}
+			      ,{field:'brandSpec', width:240, title: '品牌/型号/规格'}
+			      ,{field:'unit', width:110, title: '单位'}
+			      ,{field:'onePrice',width:90, title: '单价(万元)'}
+			      ,{field:'num',width:110, title: '数量'}  
+			      ,{field:'totalPrice', width:100, title: '总价(万元)'}
+			    ]]
+			    ,parseData: function(res){ //res 即为原始返回的数据
+				    return {
+				      "code": "0", //解析接口状态
+				      "data": res.purZeroItem //解析数据列表
+				    };
+			    }
 		  });
 		  
-		 var fileGridInt =  table.render({
+		  var fileGridInt =  table.render({
 		    elem: '#fileGrid'
 		    ,url: 'com.primeton.eos.ame_common.file.getFiles.biz.ext'
-		    ,where: {"groupid": "proAppSup","relationid":id,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
+		    ,where: {"groupid": "purchaseZero","relationid":id,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
 		      {field:'fileName',width:690, title: '附件名称' ,templet: "<div>{{getdetail(d)}}</div>"}
@@ -261,16 +261,16 @@
 		  });
  });
 		  //附件下载
-    function getdetail(e){
-    	return "<a href='javascript:void(0)' style ='color: #1b3fba;'  onclick='checkDetail("+e.fileId+");' title='点击查看'>" + e.fileName + "</a>";
-    }
-    
- 		function checkDetail(e){
-    	var url="com.primeton.components.web.fileupload.getfile.flow?fileId="+e;
-			window.open(url,"_self");
-    }
-    
-    function getFileSize(e){
+	    function getdetail(e){
+	    	return "<a href='javascript:void(0)' style ='color: #1b3fba;'  onclick='checkDetail("+e.fileId+");' title='点击查看'>" + e.fileName + "</a>";
+	    }
+	    
+	 		function checkDetail(e){
+	    	var url="com.primeton.components.web.fileupload.getfile.flow?fileId="+e;
+				window.open(url,"_self");
+	    }
+	    
+	    function getFileSize(e){
 			var value = e;
 			var unit="KB";
 			if(value>0){
@@ -296,14 +296,14 @@
 		 setWatermark('<%=userName %>')
 		  //打印按钮
 		function preview() {
-        document.getElementById('checkview').style.display="none";
-        /* window.document.body.innerHTML = document.documentElement.innerHTML; */
-        print();
-        document.getElementById('checkview').style.display="";
-    };
+	        document.getElementById('checkview').style.display="none";
+	        /* window.document.body.innerHTML = document.documentElement.innerHTML; */
+	        print();
+	        document.getElementById('checkview').style.display="";
+	    };
     
     
-    function onCheckRenderer(e) {
+    	function onCheckRenderer(e) {
 			return nui.getDictText('MIS_AUDITSTATUS',e);
 		}
 </script>

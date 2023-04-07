@@ -22,6 +22,7 @@
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 98%;">
 				<legend>零星采购信息</legend>
 				<form id="form1" method="post">
+					<input name="files" id="fileids" class="nui-hidden" />
 					<input name="id" id="id" class="nui-hidden" />
 					<div style="padding: 5px; margin-left:5%;">
 						<table style="table-layout: fixed;" id="table_file" width="60%">
@@ -46,7 +47,7 @@
 								<td width="120px" class="form_label" align="right">总金额(万元)：</td>
 								<td colspan="2">
 									<input name="totalAmount" id="totalAmount" style="width: 100%"
-										class="nui-textbox" readonly="readonly" />
+										class="nui-textbox"  required="true" />
 								</td>
 							</tr>
 							<tr>
@@ -120,6 +121,11 @@
 					</div>
 				</fieldset>
 			</fieldset>
+			
+			<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
+				<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
+			</fieldset>
+			
 			<jsp:include page="/ame_common/misOpinion.jsp" />
 		</div>
 	</div>
@@ -141,49 +147,57 @@
 		init();
 		function init() {
 			var json = nui.encode({ "workitemid":<%=workItemID%>});
-		nui.ajax({
-			url: "com.zhonghe.ame.purchase.purchaseItems.queryPurZeroDetail.biz.ext",
-			type: 'POST',
-			data: json,
-			success: function (o) {
-				if (o.purZero.totalAmount >= 5) {
-					$(".leader").css("display", "");
+			nui.ajax({
+				url: "com.zhonghe.ame.purchase.purchaseItems.queryPurZeroDetail.biz.ext",
+				type: 'POST',
+				data: json,
+				success: function (o) {
+					if (o.purZero.totalAmount >= 5) {
+						$(".leader").css("display", "");
+					}
+					if (o.workitem.activityInstName == "提交备案") {
+						form.setEnabled(false);
+						$(".selectReportUser").css("display", "");
+						$("#saveFeame").css("display", "none");
+						$("#zzFeame").css("display", "none");
+						nui.get("reportUser").setEnabled(true)
+					}
+					form.setData(o.purZero)
+					//设置审核意见基本信息
+					nui.get("processinstid").setValue(o.workitem.processInstID);
+					nui.get("processinstname").setValue(o.workitem.processInstName);
+					nui.get("activitydefid").setValue(o.workitem.activityDefID);
+					nui.get("workitemname").setValue(o.workitem.workItemName);
+					nui.get("workitemid").setValue(<%=workItemID %>);
+					nui.get("isshow").setValue("1");
+					nui.get("auditstatus").setValue("4");
+					document.getElementById("salesEdit").style.display = "none";
+					nui.get("auditopinion").setValue("");
+					//查询审核意见
+					var grid = nui.get("datagrid1");
+					if (o.workitem.processInstID != null || o.workitem.processInstID != "") {
+						grid.load({ processInstID: o.workitem.processInstID });
+						grid.sortBy("time", "desc");
+					}
+					initMisOpinion({ auditstatus: "1" });
+
+					var jsonData = { "zeroId": o.purZero.id }
+
+					grid_traveldetail.load(jsonData);
+					
+					// 查询附件
+					var grid_0 = nui.get("grid_0");
+					grid_0.load({
+						"groupid" : "purchaseZero",
+						"relationid" : o.purZero.id
+					});
+					grid_0.sortBy("fileTime", "desc");
+	
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					alert(jqXHR.responseText);
 				}
-				if (o.workitem.activityInstName == "提交备案") {
-					form.setEnabled(false);
-					$(".selectReportUser").css("display", "");
-					$("#saveFeame").css("display", "none");
-					$("#zzFeame").css("display", "none");
-					nui.get("reportUser").setEnabled(true)
-				}
-				form.setData(o.purZero)
-				//设置审核意见基本信息
-				nui.get("processinstid").setValue(o.workitem.processInstID);
-				nui.get("processinstname").setValue(o.workitem.processInstName);
-				nui.get("activitydefid").setValue(o.workitem.activityDefID);
-				nui.get("workitemname").setValue(o.workitem.workItemName);
-				nui.get("workitemid").setValue(<%=workItemID %>);
-							nui.get("isshow").setValue("1");
-							nui.get("auditstatus").setValue("4");
-							document.getElementById("salesEdit").style.display = "none";
-							nui.get("auditopinion").setValue("");
-							//查询审核意见
-							var grid = nui.get("datagrid1");
-							if (o.workitem.processInstID != null || o.workitem.processInstID != "") {
-								grid.load({ processInstID: o.workitem.processInstID });
-								grid.sortBy("time", "desc");
-							}
-							initMisOpinion({ auditstatus: "1" });
-
-							var jsonData = { "zeroId": o.purZero.id }
-
-							grid_traveldetail.load(jsonData);
-
-						},
-						error: function (jqXHR, textStatus, errorThrown) {
-							alert(jqXHR.responseText);
-						}
-					}); 
+			}); 
 	   	}
 					function changeValueon(e) {
 						var record = e.record;
@@ -232,7 +246,8 @@
 							nui.get("reportUserName").setValue(data.empname)
 						})
 					}
-
+					
+					//添加附件功能
 					function onOk(e) {
 						type = e;
 						var formData = form.getData(), gridChanges = grid_traveldetail.getChanges(), gridData = grid_traveldetail.getData();
@@ -260,6 +275,24 @@
 							info = "是否中止流程？"
 							nui.get("auditstatus").setValue(2);
 						}
+						document.getElementById("fileCatalog").value = "purchaseZero";
+						nui.confirm("确定" + info, "系统提示", function(action) {
+							if (action == "ok") {
+								fileForm.submit();
+							}
+						})
+					}
+
+					function SaveData1() {
+						var formData = form.getData(), gridChanges = grid_traveldetail.getChanges(), gridData = grid_traveldetail.getData();
+						var totalAmount = nui.get("totalAmount").getValue();
+						formData.type = type;
+						if (type == 1) {
+						} else if (type == 0) {
+						} else {
+							nui.get("auditstatus").setValue(2);
+						}
+						formData.files = nui.get("fileids").getValue();
 						var data_opioion = opioionform.getData();
 						var json = nui.encode({ "purZero": formData, "purZeroItem": gridChanges, "misOpinion": data_opioion.misOpinion });
 						if (!confirm(info)) {
@@ -287,55 +320,55 @@
 						}
 					}
 
-				function addTicket() {
-					var rowS = { name: "New Row" }
-					grid_traveldetail.addRow(rowS);
-				}
-
-				function removeTicket() {
-					var rows = grid_traveldetail.getSelecteds();
-					if (rows.length > 0) {
-						grid_traveldetail.removeRows(rows, true);
-						totalAmount();
-					} else {
-						nui.alert("请至少选中一条记录！");
+					function addTicket() {
+						var rowS = { name: "New Row" }
+						grid_traveldetail.addRow(rowS);
 					}
-				}
-
-			//计算总金额
-			function totalAmount() {
-				var tempData = grid_traveldetail.data;
-				var a = tempData.length;
-				var b = 0;
-				for (var i = 0; i < a; i++) {
-					if (!!tempData[i].totalPrice && tempData[i].totalPrice > 0) {
-						b = addFloat(b, tempData[i].totalPrice)
-					} else {
-						var x = 0;
-						b = addFloat(b, x)
+	
+					function removeTicket() {
+						var rows = grid_traveldetail.getSelecteds();
+						if (rows.length > 0) {
+							grid_traveldetail.removeRows(rows, true);
+							totalAmount();
+						} else {
+							nui.alert("请至少选中一条记录！");
+						}
 					}
-				}
-				nui.get("totalAmount").setValue(b)
-			}
+
+					//计算总金额
+					function totalAmount() {
+						var tempData = grid_traveldetail.data;
+						var a = tempData.length;
+						var b = 0;
+						for (var i = 0; i < a; i++) {
+							if (!!tempData[i].totalPrice && tempData[i].totalPrice > 0) {
+								b = addFloat(b, tempData[i].totalPrice)
+							} else {
+								var x = 0;
+								b = addFloat(b, x)
+							}
+						}
+						nui.get("totalAmount").setValue(b)
+					}
 			
 					    //判断是否是项监部
-	function isExist(judge){
-	    var bool;
-	     var json = nui.encode({org:{"orgid":userOrgId}});
-	      nui.ajax({
-	        url:"com.zhonghe.ame.purchase.common.queryOrgByOrgId.biz.ext",
-	        data:json,
-	        async:false,
-	        type:"post",
-	        success:function(text){
-	        	if(text.res.branch == "4"||text.res.branch =="5"){
-	        		judge = 3;
-	        	}
-        		
-	        }
-	      });
-	      return judge;
-    }
-		</script>
+					function isExist(judge){
+					    var bool;
+					    var json = nui.encode({org:{"orgid":userOrgId}});
+					    nui.ajax({
+					        url:"com.zhonghe.ame.purchase.common.queryOrgByOrgId.biz.ext",
+					        data:json,
+					        async:false,
+					        type:"post",
+					        success:function(text){
+					        	if(text.res.branch == "4"||text.res.branch =="5"){
+					        		judge = 3;
+					        	}
+				        		
+					        }
+					    });
+					    return judge;
+				    }
+</script>
 </body>
 </html>

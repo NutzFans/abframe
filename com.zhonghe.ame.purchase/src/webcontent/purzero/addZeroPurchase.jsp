@@ -20,6 +20,7 @@
 		<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 98%;">
 			<legend>零星采购信息</legend>
 			<form id="form1" method="post">
+				<input name="files" id="fileids" class="nui-hidden" />
 				<div style="padding: 5px; margin-left:5px;">
 					<table style="table-layout: fixed;" id="table_file" width="60%">
 						<tr>
@@ -99,6 +100,12 @@
 					</div>
 				</div>
 			</fieldset>
+			
+			<fieldset id="field2" style="border: solid 1px #aaa;">
+				<legend>上传附件</legend>
+				<jsp:include page="/ame_common/inputFile.jsp" />
+			</fieldset>
+			
 		</fieldset>
 	</div>
 	<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">
@@ -151,7 +158,11 @@
 				nui.get("leaderName").setValue(data.empname)
 			})
 		}
+		
+		//添加附件之后， onOk 方法进行 附件提交， 附件页面回调父级页面SaveData 方法
+		// 因此改造 原先的onOk  方法中保存逻辑处理放置于 SaveData中
 		function onOk(e) {
+			// 进行原先效验逻辑处理，效验通过， 进行文件提交， 然后进行保存处理
 			type = e;
 			var judge = getJudge();
 			var formData = form.getData(), gridData = grid_traveldetail.getData();
@@ -177,10 +188,30 @@
 					grid_traveldetail.beginEditCell(error.record, error.column);
 					return;
 				}
+			} 
+			// 附件不是必填，不需要效验
+			// 添加附件提交
+			document.getElementById("fileCatalog").value = "purchaseZero";
+			form2.submit();
+		}
+		
+		function SaveData() {			
+			var judge = getJudge();
+			var formData = form.getData(), gridData = grid_traveldetail.getData();
+			var totalAmount = nui.get("totalAmount").getValue();
+			formData.type = type;
+			if(judge==1){
+				judge = isExist(judge);
+			}
+			formData.judge = judge;
+			formData.files = nui.get("fileids").getValue();
+			console.log("999-3",nui.get("fileids").getValue());
+			var json = nui.encode({ "purZero": formData, "purZeroItem": gridData });
+			if (type == 1) {	
 				info = "是否提交？"
 			} else {
 				info = "是否暂时保存？"
-			}
+			}	
 			if (!confirm(info)) {
 				nui.get("saveReimb").enable();
 				nui.get("creatReimbProcess").enable();

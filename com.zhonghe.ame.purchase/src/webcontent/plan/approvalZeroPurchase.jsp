@@ -11,8 +11,10 @@
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
 				<legend>零星采购审批信息</legend>
 				<form id="form1" method="post">
+					<input name="files" id="fileids" class="nui-hidden" />
+					<input name="id" id="id" class="nui-hidden" />
 					<div style="padding: 5px; margin-left:5%;">
-				<table style="table-layout: fixed;" id="table_file" width="60%">
+					<table style="table-layout: fixed;" id="table_file" width="60%">
 							<tr>
 								<td align="right" style="width:140px">零星采购名称：</td>
 								<td colspan="4">
@@ -88,9 +90,9 @@
 	            </div>
 	        </div>
 		</div>
-<!-- 				<div style="visibility: hidden;display: none;">	 -->
-<%-- 					<jsp:include page="/ame_common/inputFile.jsp"/> --%>
-<!-- 				</div> -->
+		<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
+				<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
+			</fieldset>
 		<jsp:include page="/ame_common/misOpinion.jsp"/>
 	</fieldset>
 	</div>
@@ -125,7 +127,14 @@
 							 initMisOpinion({auditstatus:"1"});
 							 nui.get("backTo").setData(o.seal.backList);
 							 var jsonData = {"zeroId":o.purZero.id}
-		       		 grid_traveldetail.load(jsonData);
+		       		 		 grid_traveldetail.load(jsonData);
+		       		 		 // 查询附件
+							 var grid_0 = nui.get("grid_0");
+							 grid_0.load({
+								 "groupid" : "purchaseZero",
+								 "relationid" : o.purZero.id
+							 });
+							 grid_0.sortBy("fileTime", "desc");
 			       		 
 			        },
 				    error: function (jqXHR, textStatus, errorThrown) {
@@ -179,7 +188,7 @@
 	            });
 	        }
     
-     // 提交 
+        // 提交 
     	function submit(){
 	    	var auditstatus = nui.get("auditstatus").getValue();
 	    	if(auditstatus == "2"){	//终止流程
@@ -193,47 +202,52 @@
 	    	}else if(auditstatus == "1"){	//提交流程
 	    		titleText = "提交";
 	    	}
-	    	saveData();
+	    	document.getElementById("fileCatalog").value = "purchaseZero";
+			nui.confirm("确定" + titleText + "流程吗？", "系统提示", function(action) {
+				if (action == "ok") {
+					fileForm.submit();
+				}
+			})
+	   
     	}
-	   function saveData(){
-			nui.confirm("确定" + titleText + "流程吗？", "操作提示",function (action) {            
-	            if (action == "ok") {
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-	            	/* nui.get("appButton").setEnabled(false); */
-	            	var json = {misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers};
-		           mini.mask({
-			            el: document.body,
-			            cls: 'mini-mask-loading',
-			            html: titleText+'中...'
-			        });
-			    	 nui.ajax({
-			  			url: "com.zhonghe.ame.purchase.purchaseItems.approvalPurZero.biz.ext",
-						type: "post",
-						data: json,
-						contentType: "text/json",
-						success: function (o){
-							nui.unmask(document.body);
-							if(o.result == "success"){
-					        	nui.alert(titleText + "成功","系统提示",function(){
-					        		//nui.get("sureButton").setEnabled(true);
-					        		CloseWindow("ok");
-					        	});
-							}else{
-								nui.alert("提交失败，请联系信息技术部人员！","系统提示", function(action){
-									//nui.get("sureButton").setEnabled(true);
-								    CloseWindow("ok");
-									
-								});
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown){
-							alert(jqXHR.responseText);
-						}
-			  		}) 
-		            }
-		        });
-			
-	}
+    	
+	    function SaveData1(){			         
+			var misOpinion = opioionform.getData().misOpinion;//审核意见
+        	/* nui.get("appButton").setEnabled(false); */
+        	var data = form.getData();
+        	data.files = nui.get("fileids").getValue();
+        	console.log("999-5",nui.get("fileids").getValue());
+        	var json = {misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers, "purZero": data};
+            mini.mask({
+	            el: document.body,
+	            cls: 'mini-mask-loading',
+	            html: titleText+'中...'
+	        });
+	    	nui.ajax({
+	  			url: "com.zhonghe.ame.purchase.purchaseItems.approvalPurZero.biz.ext",
+				type: "post",
+				data: json,
+				contentType: "text/json",
+				success: function (o){
+					nui.unmask(document.body);
+					if(o.result == "success"){
+			        	nui.alert(titleText + "成功","系统提示",function(){
+			        		//nui.get("sureButton").setEnabled(true);
+			        		CloseWindow("ok");
+			        	});
+					}else{
+						nui.alert("提交失败，请联系信息技术部人员！","系统提示", function(action){
+							//nui.get("sureButton").setEnabled(true);
+						    CloseWindow("ok");
+							
+						});
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					alert(jqXHR.responseText);
+				}
+			 }) 
+		}
 	   	
 	   	function typeChange(e){
 	   		
