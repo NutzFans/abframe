@@ -272,14 +272,14 @@
 			search()
 		}
 		
-		// 20230403去掉颜色提醒
+		
 		function setBackGroundColor(e) {
-			/* var record = e.record;
+			var record = e.record;
 			if (record.appStatus == "0") {
 				e.rowStyle = "background-color: #FFFF99";
 			} else if (record.appStatus == "1") {
 				e.rowStyle = "background-color: #FF99CC";
-			} */
+			}
 		}
 		
 		function onOk() {

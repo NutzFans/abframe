@@ -9,10 +9,10 @@
 <%long workitemid = (Long)request.getAttribute("workItemID");%>
     	<div class="nui-fit" >
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 98%;">
-				<legend>采购计划信息</legend>
+				<legend>供应商信息</legend>
 				<form id="form1" method="post">
 			<!-- 供应商id -->
-			<input name="files" id="fileids" class="nui-hidden"/>
+			<input name="purSupplier.files" id="fileids" class="nui-hidden"/>
 			<input name="custid" id="custid"  class="nui-hidden"/>
 			<!-- 创建人id，默认当前用户id -->
 			<input name="createUserid" id="createUserid" class="nui-hidden"/>
@@ -50,12 +50,16 @@
 				</table>
 			</fieldset>
 		</form>
+			<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
+				<legend>附件</legend>
+				<jsp:include page="/ame_common/detailFile.jsp"/>
+			</fieldset>
 			<jsp:include page="/ame_common/misOpinion.jsp"/>
         </fieldset>
 	</div>
 	<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">               
-	    <a class="nui-button" onclick="submit" style="width:60px;margin-right:20px;">提交</a>       
-	    <a class="nui-button" onclick="onCancel" style="width:60px;">关闭</a>
+	    <a class="nui-button" onclick="submit" style="width:60px;margin-right:20px;" iconCls="icon-ok">提交</a>       
+	    <a class="nui-button" onclick="onCancel" style="width:60px;" iconCls="icon-close">关闭</a>
 	</div>  
 <script type="text/javascript">
 	    nui.parse();
@@ -79,6 +83,11 @@
 						 initMisOpinion({auditstatus:"1"});
 						 document.getElementById("salesEdit").style.display="none";
 						 nui.get("backTo").setData(o.seal.backList);
+						 
+						 // 展示附件
+						 var grid_0 = nui.get("grid_0");
+        				 grid_0.load({"groupid":"purSupplier","relationid":o.data.custid});
+						 grid_0.sortBy("fileTime","desc");
 			       		 
 			        },
 				    error: function (jqXHR, textStatus, errorThrown) {
@@ -89,55 +98,40 @@
 	   	
 	   	}
 	   	
-	   	
-	   	  	function submit(){
-	    	var auditstatus = nui.get("auditstatus").getValue();
-	    	console.log(auditstatus);
-	    	if(auditstatus == "2"){	//终止流程
-	    		titleText = "终止";
-	    		submitProcess("终止");
-	    	}else if(auditstatus == "0"){	//退回流程
-	    		if(!nui.get("backTo").getValue()){
-	    			nui.alert("退回环节不能为空！");
-	    			return;
-	    		}
-	    		titleText = "退回";
-	    		submitProcess("退回");
-	    	}else if(auditstatus == "1"){	//提交流程
-	    		titleText = "提交";
-	    		submitProcess("提交");
-	    	}
-    }
+	   	// 知会  只有提交
+   	  	function submit(){
+	    	submitProcess("提交");
+    	}
     
     
-     // 提交 
+     	// 提交 
     	function submitProcess(title){
 	    	nui.confirm("确定" + title + "流程吗？", "操作提示",function (action) {            
 	            if (action == "ok") {
 					var misOpinion = opioionform.getData().misOpinion;//审核意见
 	            	/* nui.get("appButton").setEnabled(false); */
 	            	var json = {misOpinion:misOpinion,workItemID: <%=workitemid %>};
-	            	saveData(json);
+	            	saveData(json, title);
 	            }
 	        });
-	   }
+	    }
 	   	
-	   		function saveData(json){
+   		function saveData(json, title){
 			console.log(json);
 			mini.mask({
 		            el: document.body,
 		            cls: 'mini-mask-loading',
-		            html: titleText+'中...'
+		            html: title+'中...'
 		        });
 		    	 nui.ajax({
-		  			url: "com.zhonghe.ame.purchase.purchaseItems.approvalPurZero.biz.ext",
+		  			url: "com.zhonghe.ame.purchase.purchaseItems.approvalSupplier.biz.ext",
 					type: "post",
 					data: json,
 					contentType: "text/json",
 					success: function (o){
 						nui.unmask(document.body);
 						if(o.result == "success"){
-				        	nui.alert(titleText + "成功","系统提示",function(){
+				        	nui.alert(title + "成功","系统提示",function(){
 				        		//nui.get("sureButton").setEnabled(true);
 				        		CloseWindow("ok");
 				        	});
@@ -153,7 +147,7 @@
 						alert(jqXHR.responseText);
 					}
 		  		}) 
-	}
+		}
 	   	
 	   	function typeChange(e){
 	   		

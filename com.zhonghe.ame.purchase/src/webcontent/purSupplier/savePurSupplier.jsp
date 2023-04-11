@@ -35,7 +35,7 @@
 					<tr>
 						<td align="right" style="width:120px">供应商类型:</td>
 						<td>
-							<input name="purSupplier.custtype"  class="nui-dictcombobox" dictTypeId="AME_SUPTYPE" required="true"  style="width:100%"/>
+							<input id="custtype"  name="purSupplier.custtype"  class="nui-dictcombobox" dictTypeId="AME_SUPTYPE" required="true"  style="width:100%"/>
 						</td>
 						<td align="right" style="width:80px">企业类型:</td>
 						<td>
@@ -65,8 +65,8 @@
 		</fieldset>
 </div>
 <div style="text-align:center;padding:10px;" class="nui-toolbar">
-	<a class="nui-button" onclick="save()" id="onoKPurSupplier" style="width:60px;margin-right:20px;">确定</a>
-	<a class="nui-button" onclick="closeCancel()" style="width:60px;">关闭</a>
+	<a class="nui-button" onclick="save()" id="onoKPurSupplier" style="width:60px;margin-right:20px;" iconCls="icon-save">保存</a>
+	<a class="nui-button" onclick="closeCancel()" style="width:60px;" iconCls="icon-close" >关闭</a>
 </div>
 <script type="text/javascript">
         nui.parse();
@@ -83,6 +83,8 @@
 	    	dataAction = data.action;
 	    	if(data.action == "edit"){
 	    		nui.get("custname").setReadOnly(true);
+	    		//编辑进来将 供应商类型 置为不可编辑状态
+	    		nui.get("custtype").setReadOnly(true);
 	    		var json = nui.encode({purSupplier:data}); 
 	        	ajaxCommon({
 	        		url: "com.primeton.eos.ame_pur.PurSupplier.getPurSupplierDetail.biz.ext",
@@ -90,8 +92,8 @@
 	                success: function (o) {
 	                    form.setData(o);
 	                    var grid_0 = nui.get("grid_0");
-	        				 grid_0.load({"groupid":"purSupplier","relationid":o.purSupplier.custid});
-							 grid_0.sortBy("fileTime","desc");
+    				    grid_0.load({"groupid":"purSupplier","relationid":o.purSupplier.custid});
+					    grid_0.sortBy("fileTime","desc");
 	                }
 	        	});
     		}
