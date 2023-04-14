@@ -27,7 +27,7 @@
 								<td>
 									<input name="verifyCode" id="verifyCode" class="nui-textbox" style="width: 100%" readonly="readonly"/>
 								</td>
-								<td align="right" style="width: 120px">验收人：</td>
+								<td align="right" style="width: 120px">验收审核人：</td>
 								<td ><input name="userId" id="userId"  class="nui-buttonedit" 
 									onbuttonclick="selectOmEmployee" style="width: 100%" required="true"/>
 								</td>
@@ -43,10 +43,22 @@
 								
 							</tr>
 							<tr>
+						        <td align="right" style="width:160px">类型：</td>
+						        <td >
+						            <input id="verifyType" name="verifyType" required="true"  onvaluechanged="changeVal()" class="mini-radiobuttonlist" data="[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]"/>
+						        </td>
+    						</tr>
+							<tr>
 								<td align="right" style="width: 120px">合同编号：</td>
 									<td><input name="contractId" id="contractId" onbuttonclick="choseContrat" class="nui-buttonedit" style="width: 100%"/></td>
 								<td align="right" style="width: 130px">合同总价(万元)：</td>
 									<td><input name="totalPrice" readOnly="readOnly" id="totalPrice" class="nui-textbox" style="width: 100%" required="true"/></td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 120px">零星采购编号：</td>
+									<td><input name="purchaseCode" id="purchaseCode" onbuttonclick="chosePurZero" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%"/></td>
+								<td align="right" style="width: 130px">采购金额(万元)：</td>
+									<td><input name="totalAmount"  id="totalAmount" class="nui-textbox" readonly="readonly" style="width: 100%" /></td>
 							</tr>
 							<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
@@ -101,10 +113,10 @@
 		</div>
 	</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveFeame" style="width: 80px;margin-right: 20px;">保存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatFeame" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onOk(2)" id="zzFeame" style="width: 80px;margin-right: 20px;">中止</a>
-		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="onOk(0)" id="saveFeame" style="width: 80px;margin-right: 20px;" iconCls="icon-save">保存</a>
+		<a class="nui-button" onclick="onOk(1)" id="creatFeame" style="width: 80px;margin-right: 20px;" iconCls="icon-ok">提交</a>
+		<a class="nui-button" onclick="onOk(2)" id="zzFeame" style="width: 80px;margin-right: 20px;" iconCls="icon-split">中止</a>
+		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
 	<script type="text/javascript">
         nui.parse();
@@ -131,6 +143,24 @@
 					nui.get("userId").setText(o.data.empname)
 					nui.get("proAppOrgId").setText(o.data.orgname)
 					nui.get("contractId").setText(o.data.contractNo)
+					nui.get("purchaseCode").setText(o.data.purchaseCode)
+					var verifyType = nui.get("verifyType").value;
+					if (verifyType == "1"){ 
+						// 合同编号必填
+						nui.get("contractId").setRequired(true);
+						nui.get("purchaseCode").setRequired(false);
+					} else if (verifyType == "2" ){
+						// 采购零星编号必填
+						nui.get("purchaseCode").setRequired(true);
+						nui.get("contractId").setRequired(false);
+						nui.get("totalPrice").setRequired(false);
+					} else {
+						// 非条约事项验收 不效验
+						nui.get("purchaseCode").setRequired(false);
+						nui.get("contractId").setRequired(false);
+						nui.get("totalPrice").setRequired(false);
+					}
+					
 					//设置审核意见基本信息
 					nui.get("processinstid").setValue(o.workitem.processInstID);
 	       	nui.get("processinstname").setValue(o.workitem.processInstName);
@@ -190,6 +220,10 @@
                         
                         nui.get("totalPrice").setValue(data.contractSum/10000);
                     }
+                    
+                    // 重新选择合同编号，将货物信息清空，重新录入
+                    var purVerifyDetail = grid_traveldetail.getData();
+                    grid_traveldetail.removeRows(purVerifyDetail, true);
                 }
             }
         });
@@ -285,9 +319,39 @@
 	    		}
 	    	}
 	    	var b = new Number(b)+'';
-	 		nui.get("totalPrice").setValue(b)
+	    	var verifyType = nui.get("verifyType").value;
+	    	if (verifyType == "1"){ 
+				// 合同编号
+				nui.get("totalPrice").setValue(b)
+			} else if (verifyType == "2" ){
+				// 采购零星编号
+				nui.get("totalAmount").setValue(b)
+			} else {
+				// 非条约事项验收
+				nui.get("totalPrice").setValue(b)
+			}
+	 		
 		}
 		
+		// 根据选项进行动态必填项效验
+        function changeVal(){
+    		//不管是暂存还是提交 都需要判断选择的类型与填的数据是否是相同的
+			//[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]
+        	var verifyType = nui.get("verifyType").value;
+			if (verifyType == "1"){ 
+				// 合同编号必填
+				nui.get("contractId").setRequired(true);
+				nui.get("purchaseCode").setRequired(false);
+			} else if (verifyType == "2" ){
+				// 采购零星编号必填
+				nui.get("purchaseCode").setRequired(true);
+				nui.get("contractId").setRequired(false);
+			} else {
+				// 非条约事项验收 不效验
+				nui.get("purchaseCode").setRequired(false);
+				nui.get("contractId").setRequired(false);
+			}
+        }
 		
 		function onOk(e){
 		  type=e;
@@ -409,18 +473,48 @@
 // 	    }
 	    
 	    //科学计数法转普通计数法
-	function doIt(e){
-		var exp = null; 
-		var singlePrice='';
-		console.log(e.value);
-		console.log(!(typeof(e.value)=="undefined"));
-		if (!(typeof(e.value)=="undefined")) { 
-			console.log("aaa")
-			singlePrice = new Number(e.value)+'';
-			return singlePrice;
+		function doIt(e){
+			var exp = null; 
+			var singlePrice='';
+			console.log(e.value);
+			console.log(!(typeof(e.value)=="undefined"));
+			if (!(typeof(e.value)=="undefined")) { 
+				console.log("aaa")
+				singlePrice = new Number(e.value)+'';
+				return singlePrice;
+			}
 		}
-	}
         
+        function chosePurZero(e) {
+            var btnEdit = this;
+            mini.open({
+                url: "/default/purchase/programme/chosePurZero.jsp",
+                title: "",
+                width: '73%',
+                height: '75%',
+                ondestroy: function (action) {
+                    if (action == "ok") {
+                   
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.GetData();
+                        data = mini.clone(data);    //必须
+                        if (data) {
+                        	console.log(data);
+                            btnEdit.setValue(data.purchaseCode);
+                            btnEdit.setText(data.purchaseCode);
+                            
+                            nui.get("totalAmount").setValue(data.totalAmount);
+                        }
+                        
+                        // 重新选择采购编号，将货物信息清空，重新录入
+                        var purVerifyDetail = grid_traveldetail.getData();
+                        grid_traveldetail.removeRows(purVerifyDetail, true);
+                        
+                    }
+
+                }
+            });
+        }
 
     </script></body>
 </html>

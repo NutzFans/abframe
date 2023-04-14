@@ -28,26 +28,38 @@
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;">
 							<tr>
-							<td class="form_label" align = "right">验收单编号：</td>
-								<td colspan="3">
+								<td class="form_label" align = "right">验收单编号：</td>
+								<td>
 									<input name="verifyCode" id="verifyCode" class="nui-textbox" style="width: 100%" />
 								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 120px">验收人：</td>
+								<td align="right" style="width: 120px">验收审核人：</td>
 								<td >
 									<input name="empname" id="examineUserId"  class="nui-textbox"  style="width: 100%"/>
 								</td>
+							</tr>
+							<tr>
 								<td align="right" style="width:160px">验收部门：</td>
-								<td>
+								<td colspan="3">
 									<input name="orgname" class="nui-textbox"  style="width: 100%"  />
 								</td>
 							</tr>
+							<tr>
+						        <td align="right" style="width:160px">类型：</td>
+						        <td >
+						            <input id="verifyType" name="verifyType" required="true"  class="mini-radiobuttonlist" data="[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]"/>
+						        </td>
+    						</tr>
 							<tr>
 								<td align="right" style="width: 120px">合同编号：</td>
 									<td><input name="contractNo" id="contractNo"   class="nui-textbox" style="width: 100%"/></td>
 								<td align="right" style="width: 130px">合同总价(万元)：</td>
 									<td><input name="totalPrice" readOnly="readOnly" id="totalPrice" class="nui-textbox" style="width: 100%" required="true"/></td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 120px">零星采购编号：</td>
+									<td><input name="purchaseCode" id="purchaseCode" class="nui-textbox"  style="width: 100%"/></td>
+								<td align="right" style="width: 130px">采购金额(万元)：</td>
+									<td><input name="totalAmount"  id="totalAmount" class="nui-textbox" readonly="readonly" style="width: 100%" /></td>
 							</tr>
 							<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
@@ -92,16 +104,17 @@
 		        </div>
 		</div>
 		</fieldset>
-			<jsp:include page="/ame_common/misOpinion.jsp"/>	
 			<div >	
 				<jsp:include page="/ame_common/detailFile.jsp"/>
 			</div>
+			<jsp:include page="/ame_common/misOpinion.jsp"/>	
+			
 		</div>
 	</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
 		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px;margin-right: 20px;">加签</a>                  
-		<a class="nui-button" onclick="submit()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="submit()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;" iconCls="icon-ok">提交</a>
+		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
 	<script type="text/javascript">
         nui.parse();
@@ -130,6 +143,7 @@
 				success:function (o){
 					//付款申请基本信息
 					form.setData(o.data);
+					
 					//设置审核意见基本信息
 					 nui.get("backTo").setData(o.backList);
 					nui.get("processinstid").setValue(o.workitem.processInstID);
@@ -279,10 +293,14 @@
         }
         
 
-   //科学计数法转普通计数法
-	function doIt(e){
-		var singlePrice = new Number(e.value)+'';
-		return singlePrice;
-	}
+	   //科学计数法转普通计数法
+		function doIt(e){
+			var singlePrice = new Number(e.value)+'';
+			return singlePrice;
+		}
+		
+		
+	
+	
     </script></body>
 </html>

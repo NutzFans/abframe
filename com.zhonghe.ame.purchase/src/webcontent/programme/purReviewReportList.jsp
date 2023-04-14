@@ -44,7 +44,7 @@
 
 							<td class="form_label" align="right">评审结果编号:</td>
 							<td colspan="1">
-								<input name="critria._expr[0].reportName" class="nui-textbox" style="width:65%;" />
+								<input name="critria._expr[0].code" class="nui-textbox" style="width:65%;" />
 								<input class="nui-hidden" name="critria._expr[0]._op" value="like" />
 							</td>
 							<td class="form_label" align="right">采购立项编号:</td>

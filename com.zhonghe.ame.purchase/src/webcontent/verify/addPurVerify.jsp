@@ -41,23 +41,29 @@
 									style="width: 100%"  /></td>
 							</tr>
 							<tr>
+						        <td align="right" style="width:160px">类型：</td>
+						        <td >
+						            <input id="verifyType" name="verifyType" required="true"  onvaluechanged="changeVal()" class="mini-radiobuttonlist" data="[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]"/>
+						        </td>
+    						</tr>
+							<tr>
 								<td align="right" style="width: 120px">合同编号：</td>
-									<td><input name="contractId" id="contractId" onbuttonclick="choseContrat" class="nui-buttonedit" allowInput="false" style="width: 100%"/></td>
+									<td><input name="contractId" id="contractId" onbuttonclick="choseContrat" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%"/></td>
 								<td align="right" style="width: 130px">合同总价(万元)：</td>
-									<td><input name="totalPrice"  id="totalPrice" class="nui-textbox" style="width: 100%" /></td>
+									<td><input name="totalPrice"  id="totalPrice" class="nui-textbox" readonly="readonly" style="width: 100%" /></td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 120px">零星采购编号：</td>
-									<td><input name="purchaseCode" id="purchaseCode" onbuttonclick="chosePurZero" class="nui-buttonedit" allowInput="false" style="width: 100%"/></td>
+									<td><input name="purchaseCode" id="purchaseCode" onbuttonclick="chosePurZero" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%"/></td>
 								<td align="right" style="width: 130px">采购金额(万元)：</td>
-									<td><input name="totalAmount"  id="totalAmount" class="nui-textbox" style="width: 100%" /></td>
+									<td><input name="totalAmount"  id="totalAmount" class="nui-textbox" readonly="readonly" style="width: 100%" /></td>
 							</tr>
 							<tr>
-              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
-                    <td colspan="3">    
-                        <input style="width:100%;height: 70px;" name="remark" id="remark"  class="nui-textarea"/>
-                    </td>
-              	</tr>
+			              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
+			                    <td colspan="3">    
+			                        <input style="width:100%;height: 70px;" name="remark" id="remark"  class="nui-textarea"/>
+			                    </td>
+			              	</tr>
 						</table>
 					</div>
 				</form>
@@ -103,15 +109,17 @@
 		</div>
 	</div>
 	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" style="width: 80px;margin-right: 20px;">保存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" style="width: 80px;margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="onOk(0)" id="saveReimb" style="width: 80px;margin-right: 20px;" iconCls="icon-save">保存</a>
+		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" style="width: 80px;margin-right: 20px;" iconCls="icon-ok">提交</a>
+		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
 	<script type="text/javascript">
         nui.parse();
 	    var form = new nui.Form("#form1");
 	    var grid_traveldetail = nui.get("grid_traveldetail");
 	    var type ;
+	    
+	    
 
 	 	function removeTicket(){
 			var rows = grid_traveldetail.getSelecteds();
@@ -143,6 +151,11 @@
                             
                             nui.get("totalPrice").setValue(data.contractSum/10000);
                         }
+                        
+                        // 重新选择合同编号，将货物信息清空，重新录入
+	                    var purVerifyDetail = grid_traveldetail.getData();
+	                    grid_traveldetail.removeRows(purVerifyDetail, true);
+                        
                     }
 
                 }
@@ -171,13 +184,17 @@
                             
                             nui.get("totalAmount").setValue(data.totalAmount);
                         }
+                        
+                        // 重新选择采购编号，将货物信息清空，重新录入
+                        var purVerifyDetail = grid_traveldetail.getData();
+                        grid_traveldetail.removeRows(purVerifyDetail, true);
                     }
 
                 }
             });
-            }
+        }
             
-           function chosePurItem(e) {
+       function chosePurItem(e) {
             var btnEdit = this;
             mini.open({
                 url: "/default/purchase/programme/chosePurItem.jsp",
@@ -200,7 +217,7 @@
 
                 }
             });
-            }
+        }
 		function isUser(e){
 			clog(e)
 			
@@ -237,32 +254,43 @@
 	    			b = addFloat(b,x)
 	    		}
 	    	}
-	 		nui.get("totalPrice").setValue(b)
+	    	var verifyType = nui.get("verifyType").value;
+	    	if (verifyType == "1"){ 
+				// 合同编号
+				nui.get("totalPrice").setValue(b)
+			} else if (verifyType == "2" ){
+				// 采购零星编号
+				nui.get("totalAmount").setValue(b)
+			} else {
+				// 非条约事项验收
+				nui.get("totalPrice").setValue(b)
+			}
+	 		
 		}
 		
-    function onButtonEdit1(e) {
-        var btnEdit = this;
-        mini.open({
-            url: "/default/purchase/packagemethod/zhPurSup.jsp",
-            title: "供应商列表",
-            width: '73%',
-            height: '75%',
-            ondestroy: function (action) {
-                if (action == "ok") {
-                    var iframe = this.getIFrameEl();
-                    var data = iframe.contentWindow.GetData();
-                    data = nui.clone(data);    //必须
-                    if (data) {
-                        btnEdit.setValue(data.custid);
-                    	btnEdit.setText(data.custname);
-                    	
-                    	/* nui.get("proAppOrgId").setValue(data.orgid);
-                    	nui.get("proAppOrgId").setText(data.orgname); */
-                    }
-                }
-            }
-        });
-    }
+	    function onButtonEdit1(e) {
+	        var btnEdit = this;
+	        mini.open({
+	            url: "/default/purchase/packagemethod/zhPurSup.jsp",
+	            title: "供应商列表",
+	            width: '73%',
+	            height: '75%',
+	            ondestroy: function (action) {
+	                if (action == "ok") {
+	                    var iframe = this.getIFrameEl();
+	                    var data = iframe.contentWindow.GetData();
+	                    data = nui.clone(data);    //必须
+	                    if (data) {
+	                        btnEdit.setValue(data.custid);
+	                    	btnEdit.setText(data.custname);
+	                    	
+	                    	/* nui.get("proAppOrgId").setValue(data.orgid);
+	                    	nui.get("proAppOrgId").setText(data.orgname); */
+	                    }
+	                }
+	            }
+	        });
+	    }
         
 		
 		function addTicket(){
@@ -270,7 +298,7 @@
 			grid_traveldetail.addRow(rowS);
 		}
 		
-		 function selectOmEmployee(){
+	 	function selectOmEmployee(){
     	var btnEdit = this;
         nui.open({
             url: "<%=request.getContextPath() %>/machine/SelectEmployee.jsp",
@@ -299,53 +327,71 @@
             });
         }
         
+        // 根据选项进行动态必填项效验
+        function changeVal(){
+    		//不管是暂存还是提交 都需要判断选择的类型与填的数据是否是相同的
+			//[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]
+        	var verifyType = nui.get("verifyType").value;
+			if (verifyType == "1"){ 
+				// 合同编号必填
+				nui.get("contractId").setRequired(true);
+				nui.get("purchaseCode").setRequired(false);
+			} else if (verifyType == "2" ){
+				// 采购零星编号必填
+				nui.get("purchaseCode").setRequired(true);
+				nui.get("contractId").setRequired(false);
+			} else {
+				// 非条约事项验收 不效验
+				nui.get("purchaseCode").setRequired(false);
+				nui.get("contractId").setRequired(false);
+			}
+        }
         
-        
-        
-    function onOk(e){
+    	function onOk(e){
     		type=e;
 			if(type==0){
 				info = "暂存";
 			}else if(type==1){
 				info = "提交";
 				var purVerify = form.getData(),purVerifyDetail = grid_traveldetail.getData();
-    		purVerify.type = type;
-    		if(!form.validate()||purVerifyDetail.length<1){
+	    		purVerify.type = type;
+	    		if(!form.validate()||purVerifyDetail.length<1){
 					nui.alert("请检查表单和货物信息填写是否完整!");
 					return;
 				}
 				grid_traveldetail.validate();
-   			if (grid_traveldetail.isValid() == false) {
-            var error = grid_traveldetail.getCellErrors()[0];
-            grid_traveldetail.beginEditCell(error.record, error.column);
-            return;
-        }
+	   			if (grid_traveldetail.isValid() == false) {
+		            var error = grid_traveldetail.getCellErrors()[0];
+		            grid_traveldetail.beginEditCell(error.record, error.column);
+		            return;
+		        }
 				var filePaths = document.getElementsByName("uploadfile").length;
-    		if(filePaths==0){
-    			showTips("'发票（若仅有发票）、合同中约定的结算单或验收报告'等附件不能为空","danger");
-    			return;
-    		}else{
-    			for(var j=0;j<filePaths;j++){
-			      var a=document.getElementsByName("remarkList")[j].value;
+	    		if(filePaths==0){
+	    			showTips("'发票（若仅有发票）、合同中约定的结算单或验收报告'等附件不能为空","danger");
+	    			return;
+	    		}else{
+	    			for(var j=0;j<filePaths;j++){
+				      var a=document.getElementsByName("remarkList")[j].value;
 				      if(a==null||a==""){
 				       showTips("估算表和支撑材料附件不可以为空","danger");
 				       	nui.get("saveReimbProcess").enable();
 								nui.get("creatReimbProcess").enable();	
 				       return;
 				      }
-			     }
-    		}
+				    }
+    			}
 			}
+			
 			document.getElementById("fileCatalog").value="purVerify";
 			nui.confirm("确定"+info+"单据","系统提示",
-        function(action){
-        if(action=="ok"){
-    			form2.submit();
+	        function(action){
+		        if(action=="ok"){
+	    			form2.submit();
 				}
 			})
-    }    
+    	}    
         
-	function SaveData(){
+		function SaveData(){
 			var purVerify = form.getData(),purVerifyDetail = grid_traveldetail.getData();
 			purVerify.type = type;
 			purVerify.judge = getJudge();

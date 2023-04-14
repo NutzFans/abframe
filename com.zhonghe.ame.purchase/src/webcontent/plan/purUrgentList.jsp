@@ -19,7 +19,7 @@
         <tr>
           <td class="form_label" align = "right">紧急采购名称</td>
           <td >
-	    	<input name="criteria._expr[1].purchaseName class="nui-textbox" style="width:150px;" />
+	    	<input name="criteria._expr[1].purchaseName" class="nui-textbox" style="width:150px;" />
 		    <input class="nui-hidden" name="criteria._expr[1]._op" value="like"/>
           </td>
           <td class="form_label" align = "right">紧急采购编号</td>

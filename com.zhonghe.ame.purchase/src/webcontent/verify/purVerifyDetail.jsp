@@ -50,22 +50,22 @@
     </blockquote>
   	  
 	  <div class="layui-row">
-	    <div class="layui-col-xs12">
+	    <div class="layui-col-xs6">
 		    <label class="layui-form-label" style="width: 120px">验收单编号</label>
 		    <div class="layui-input-block" >
 		      <input type="text" name="verifyCode" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
-	  </div>
-	  
-	  <div class="layui-row">
 	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">验收人</label>
+		    <label class="layui-form-label">验收审核人</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="empname" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
-	    <div class="layui-col-xs6">
+	  </div>
+	  
+	  <div class="layui-row">
+	    <div class="layui-col-xs12">
 		    <label class="layui-form-label">验收部门</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="orgname" disabled="disabled" class="layui-input">
@@ -87,6 +87,14 @@
 	    </div>
 	  </div>
 	  <div class="layui-row">
+	    <div class="layui-col-xs12">
+		    <label class="layui-form-label">类型</label>
+		    <div class="layui-input-block">
+		      <input id="verifyType" name="verifyType" required="true"   class="mini-radiobuttonlist" data="[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]"/>
+		    </div>
+	    </div>
+	  </div>
+	  <div class="layui-row">
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">合同编号</label>
 		    <div class="layui-input-block">
@@ -97,6 +105,20 @@
 		    <label class="layui-form-label">总价(万元)</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="totalPrice" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	  </div>
+	  <div class="layui-row">
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">零星采购编号</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="purchaseCode" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">采购金额(万元)</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="totalAmount" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
@@ -127,7 +149,8 @@
 <script src="<%= request.getContextPath() %>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
 <script>
- layui.use([ 'jquery', 'layer', 'form', 'table'], function() {
+	nui.parse();
+ 	layui.use([ 'jquery', 'layer', 'form', 'table'], function() {
  			var $ = layui.jquery;
 			var layer = layui.layer;
 			var form = layui.form;
@@ -148,6 +171,7 @@
 				    	formData.createdTime = layui.util.toDateString(formData.createdTime,'yyyy-MM-dd')
 				    	//设置字典值
 // 				    	formData.contrctType = nui.getDictText('ZH_CGFS',formData.contrctType)
+						nui.get("verifyType").setValue(formData.verifyType);
 				    	form.val("dataFrm",formData);
 				    	processInstID= formData.processid;
 				    	 document.getElementById("name").innerHTML = "采购验收";

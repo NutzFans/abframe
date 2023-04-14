@@ -92,7 +92,7 @@
 			<div field="createDate"  align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">创建时间
 			</div>
 			<div field="inflag" width="60" align="center"  headerAlign="center" >创建人
-				<input name="criteria._expr[8].inflag" property="filter" class="nui-textbox"  width="100%" onvaluechanged="search"/>
+				<input name="criteria._expr[11].inflag" property="filter" class="nui-textbox"  width="100%" onvaluechanged="search"/>
 			</div>
 		</div>
 		</div>
