@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 import com.eos.foundation.data.DataObjectUtil;
@@ -34,6 +35,7 @@ public class WrapChargePlanInfo {
 			} else {
 				dataObjects[i].setString("isInvoice", "0");
 			}
+			dataObjects[i].setBigDecimal("sumExcludeTax", NumberUtil.div(dataObjects[i].getString("sum"), "1.06", 2));
 			warpDatas.add(dataObjects[i]);
 		}
 		return ArrayUtil.toArray(warpDatas, DataObject.class);

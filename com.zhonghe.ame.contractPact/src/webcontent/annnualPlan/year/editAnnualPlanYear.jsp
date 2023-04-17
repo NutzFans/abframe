@@ -11,14 +11,14 @@
 	}
 </style>
 <head>
-<title>编辑收款/开票计划</title>
+<title>编辑年度收入预算明细</title>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px">
 		<form id="form1" method="post">
 			<input id="id" class="nui-hidden" name="id" />
 			<fieldset id="field1" style="border: solid 1px #aaa;">
-				<legend>收款/开票计划</legend>
+				<legend>年度收入预算明细</legend>
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -44,7 +44,7 @@
 							</td>
 							<td align="right" style="width: 130px">合同/项目状态：</td>
 							<td>
-								<input name="contractStauts" id="contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_SEL" style="width: 250px" required="true" />
+								<input name="contractStauts" id="contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS" style="width: 250px" required="true" />
 							</td>
 						</tr>
 						<tr>
@@ -242,17 +242,17 @@
 			data.signatory = nui.get("custInfo").getValue();
 			data.signatoryName = nui.get("custInfo").getText();
 			var json = nui.encode({
-				'annualChargePlan' : data
+				'annualPlanYear' : data
 			});
 			ajaxCommon({
-				"url" : "com.zhonghe.ame.annualPlan.annualPlan.editAnnualChargePlan.biz.ext",
+				"url" : "com.zhonghe.ame.annualPlan.annualPlan.editAnnualPlanYear.biz.ext",
 				"data" : json,
 				"success" : function(data) {
 					if (data.result == "1") {
-						showTips("编辑收款/开票计划信息成功");
+						showTips("编辑年度收入预算信息成功");
 						closeOk();
 					} else {
-						showTips("编辑收款/开票计划信息失败，请联系管理员！", "danger");
+						showTips("编辑年度收入预算信息失败，请联系管理员！", "danger");
 					}
 				}
 			});

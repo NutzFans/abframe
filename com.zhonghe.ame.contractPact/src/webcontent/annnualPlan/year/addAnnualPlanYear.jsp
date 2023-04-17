@@ -11,14 +11,13 @@
 	}
 </style>
 <head>
-<title>编辑收款/开票计划</title>
+<title>新增年度收入预算明细</title>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px">
 		<form id="form1" method="post">
-			<input id="id" class="nui-hidden" name="id" />
 			<fieldset id="field1" style="border: solid 1px #aaa;">
-				<legend>收款/开票计划</legend>
+				<legend>年度收入预算明细</legend>
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -96,7 +95,7 @@
 							</td>
 							<td align="right" style="width: 130px">收款/开票年份：</td>
 							<td>
-								<input name="years" id="years" class="nui-textbox" vtype="int" style="width: 250px" required="true" />
+								<input name="years" id="years" class="nui-textbox" vtype="int" style="width: 250px" required="true" emptyText="格式：YYYY"/>
 							</td>
 							<td align="right" style="width: 130px">收款/开票金额(元)：</td>
 							<td>
@@ -106,57 +105,57 @@
 						<tr>
 							<td align="right" style="width: 130px">1月份金额(元)：</td>
 							<td>
-								<input name="jan" id="jan" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum"/>
+								<input name="jan" id="jan" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">2月份金额(元)：</td>
 							<td>
-								<input name="feb" id="feb" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="feb" id="feb" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">3月份金额(元)：</td>
 							<td>
-								<input name="mar" id="mar" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="mar" id="mar" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">4月份金额(元)：</td>
 							<td>
-								<input name="apr" id="apr" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="apr" id="apr" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">5月份金额(元)：</td>
 							<td>
-								<input name="may" id="may" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="may" id="may" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">6月份金额(元)：</td>
 							<td>
-								<input name="jun" id="jun" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="jun" id="jun" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">7月份金额(元)：</td>
 							<td>
-								<input name="jul" id="jul" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="jul" id="jul" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">8月份金额(元)：</td>
 							<td>
-								<input name="aug" id="aug" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="aug" id="aug" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">9月份金额(元)：</td>
 							<td>
-								<input name="sep" id="sep" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="sep" id="sep" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">10月份金额(元)：</td>
 							<td>
-								<input name="oct" id="oct" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="oct" id="oct" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">11月份金额(元)：</td>
 							<td>
-								<input name="nov" id="nov" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="nov" id="nov" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 							<td align="right" style="width: 130px">12月份金额(元)：</td>
 							<td>
-								<input name="dec" id="dec" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
+								<input name="dec" id="dec" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" emptyText="月份无收款请填写 0 "/>
 							</td>
 						</tr>
 					</table>
@@ -176,10 +175,24 @@
 		
 		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFFF;")
 		
-		function setEditData(data){
-			form.setData(data);
-			nui.get("custInfo").setValue(data.signatory);
-			nui.get("custInfo").setText(data.signatoryName);
+		init();
+
+		function init() {
+			nui.get("createUserid").setValue(userId);
+			nui.get("createUsername").setValue(userName);
+			nui.get("createTime").setValue(new Date());
+			var json = nui.encode({
+				'userOrgId' : userOrgId
+			});
+			ajaxCommon({
+				"url" : "com.zhonghe.ame.annualPlan.annualPlan.querySecOrg.biz.ext",
+				"data" : json,
+				"success" : function(result) {
+					var data = result.data;
+					nui.get("secondaryOrg").setValue(data.ORGID);
+					nui.get("secondaryOrgname").setValue(data.ORGNAME);
+				}
+			});
 		}
 
 		function selectCustInfo() {
@@ -241,18 +254,19 @@
 			var data = form.getData();
 			data.signatory = nui.get("custInfo").getValue();
 			data.signatoryName = nui.get("custInfo").getText();
+			data.dataSourceType = "2";
 			var json = nui.encode({
-				'annualChargePlan' : data
+				'annualPlanYear' : data
 			});
 			ajaxCommon({
-				"url" : "com.zhonghe.ame.annualPlan.annualPlan.editAnnualChargePlan.biz.ext",
+				"url" : "com.zhonghe.ame.annualPlan.annualPlan.addAnnualPlanYear.biz.ext",
 				"data" : json,
 				"success" : function(data) {
 					if (data.result == "1") {
-						showTips("编辑收款/开票计划信息成功");
+						showTips("新增年度收入预算信息成功");
 						closeOk();
 					} else {
-						showTips("编辑收款/开票计划信息失败，请联系管理员！", "danger");
+						showTips("新增年度收入预算信息失败，请联系管理员！", "danger");
 					}
 				}
 			});
