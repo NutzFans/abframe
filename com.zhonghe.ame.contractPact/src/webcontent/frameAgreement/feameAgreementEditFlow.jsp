@@ -68,9 +68,9 @@
 								<td > 
 									<input name="contractSubject" id="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" enabled="false" style="width: 200px;" />
 								</td>
-								<td align="right" style="width: 160px">实施地点：</td>
+								<td align="right" style="width: 160px">签署地点：</td>
 									<td><input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 200px"/></td>
-								<td align="right" style="width: 160px">标的规模：</td>
+								<td align="right" style="width: 160px">协议内容：</td>
 									<td><input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 200px"/></td>
 								
 							</tr>

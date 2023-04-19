@@ -101,27 +101,15 @@
 							    <td>
 								    <input id="contractSubject"  name="contractSubject"  class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px"  required="true"/>
 								</td>
-								<td align="right" style="width: 160px">实施地点：</td>
+								<td align="right" style="width: 160px">签署地点：</td>
 									<td><input name="projectLocal"  class="nui-textbox" style="width: 200px" required="true"/></td>	
 							<tr>
-								<td align="right" style="width: 160px">标的规模：</td>
-									<td><input name="projectSize"   class="nui-textbox" style="width: 200px" required="true"/></td>
-								
-								<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示
-								<td align="right" style="width: 100px">会签部门领导：</td>
-							    <td  style="width: 20%;">
-									<input name="fDeptCountersignName"  id="fDeptCountersignName"  class="nui-textbox" width="100%"/>
-								</td> -->
+								<td align="right" style="width: 160px">协议内容：</td>
+								<td colspan="3"><input name="projectSize" style="width: 100%"class="nui-textbox" required="true"/></td>
 							</tr>
-							<!--<tr>
-								<td align="right" style="width: 160px">本部会签部门领导：</td>
-								<td>
-									<input name="zDeptCountersignName"  id="zDeptCountersignName"  class="nui-textbox" style="width: 200px"/>
-								</td>
-							</tr>-->
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  id="remark" colspan="5" style="height: 68px;background:#F0F0F0;border:1px solid #A5ACB5">
+								<td  id="remark" colspan="3" style="height: 68px;background:#F0F0F0;border:1px solid #A5ACB5">
 									<!-- <input name="remark"  class="nui-textarea" style="width: 100%" required="false"/> -->
 								</td>
 							</tr>
@@ -217,7 +205,7 @@
 					}else{
 						createUsername ="";
 					}
-	            	document.getElementById("pipi").innerHTML="【"+createUsername+"发起的"+data.contractName+"收费合同】";
+	            	document.getElementById("pipi").innerHTML="【"+createUsername+"发起的"+data.contractName+"】";
 					form.setEnabled(false);
 					
 					var grid_0 = nui.get("grid_0");

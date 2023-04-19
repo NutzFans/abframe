@@ -135,8 +135,8 @@
 				<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true" renderer="lookInfo1">签约方</div>
 				<div field="orgname" width="240" align="center" headerAlign="center" allowSort="true">协议实施部门</div>
 				<div field="createTime" width="100" align="center" headerAlign="center" allowSort="true">申请日期</div>
-				<div field="projectLocal" align="center" headerAlign="center" allowSort="true">实施地点</div>
-				<div field="projectSize" width="100" align="center" headerAlign="center" allowSort="true">标的规模</div>
+				<div field="projectLocal" align="center" headerAlign="center" allowSort="true">签署地点</div>
+				<div field="projectSize" width="100" align="center" headerAlign="center" allowSort="true">协议内容</div>
 				<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
 				<div field="startTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议起始日期</div>
 				<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议结束日期</div>

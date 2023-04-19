@@ -54,9 +54,9 @@
 							<tr>				
 								<td align="right" style="width: 100px">合同签约主体：</td>
 								    <td><input id="contractSubject" name="contractSubject"  class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%"  required="true"/></td>
-								<td align="right" style="width: 100px">实施地点：</td>
+								<td align="right" style="width: 100px">签署地点：</td>
 									<td><input name="projectLocal"  class="nui-textbox" style="width: 100%" required="true"/></td>	
-								<td align="right" style="width: 100px">标的规模：</td>
+								<td align="right" style="width: 100px">协议内容：</td>
 									<td><input name="projectSize"  class="nui-textbox" style="width: 100%" required="true"/></td>							
 							</tr>
 							<tr>

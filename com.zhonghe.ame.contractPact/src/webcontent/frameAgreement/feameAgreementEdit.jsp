@@ -84,9 +84,9 @@
 <!-- 									filterType="like" textField="orgname" valueField="orgname" -->
 <!-- 									dataField="allorgs" valueFromSelect="true" allowInput="true" -->
 <!-- 									style="width: 300px;" required="true" /></td> -->
-								<td align="right" style="width: 100px">实施地点：</td>
+								<td align="right" style="width: 100px">签署地点：</td>
 									<td><input id="projectLocal" name="projectLocal"  class="nui-textbox" style="width: 300px" required="true"/></td>
-								<td align="right" style="width: 100px">标的规模：</td>
+								<td align="right" style="width: 100px">协议内容：</td>
 									<td><input id="projectSize" name="projectSize"  class="nui-textbox" style="width: 300px" required="true"/></td>
 								
 							</tr>
