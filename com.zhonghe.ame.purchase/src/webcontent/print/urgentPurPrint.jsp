@@ -204,7 +204,7 @@
 		var gridInt = table.render({
 		    elem: '#grid'
 		    ,url: 'com.zhonghe.ame.purchase.purchaseItems.queryPurUrgentItem.biz.ext'
-		    ,where: {"pid": id} //如果无需传递额外参数，可不加该参数
+		    ,where: {"urgentId": id} //如果无需传递额外参数，可不加该参数
 				,cellMinWidth: 90
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[

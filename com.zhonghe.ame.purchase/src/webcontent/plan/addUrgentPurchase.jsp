@@ -68,13 +68,19 @@
            		</div>
 	                <div  field="purchaseFirstCode" width="110px" align="center" headerAlign="center"  visible="false">采购物项大类编码
 	                </div>
+	                <div  field="purchaseFirstId" width="110px" align="center" headerAlign="center"  visible="false">采购物项大类主键ID
+	                </div>
 	                <div field="firstItemName"  width="110px" align="center" headerAlign="center"  >采购物项大类名称 
 	                </div> 
 	                <div  field="purchaseTwoCode" width="110px" align="center" headerAlign="center"  visible="false">采购物项中类编码
 	                </div>
+	                <div  field="purchaseTwoId" width="110px" align="center" headerAlign="center"  visible="false">采购物项中类主键ID
+	                </div>
 	                <div  field="secondItemName" width="110px" align="center" headerAlign="center" renderer="onViewL" >采购物项中类名称 
 	                </div> 
 	                <div field="purchaseThreeCode" width="110px"  align="center" headerAlign="center"  visible="false">采购物项小类编码
+	                </div>
+	                <div field="purchaseThreeId" width="110px"  align="center" headerAlign="center"  visible="false">采购物项小类主键ID
 	                </div>
 	                <div field="threeItemName" width="110px" align="center" headerAlign="center" renderer="onViewL" >采购物项小类名称 
 	                </div>
@@ -106,10 +112,13 @@
 	    var form = new nui.Form("#form1");
 	    var grid_traveldetail = nui.get("grid_traveldetail");
 	    var purchaseFirstCode = nui.get("purchaseFirstCode");
+	    var purchaseFirstId = nui.get("purchaseFirstId");
 	    var firstItemName = nui.get("firstItemName");
 	    var purchaseTwoCode = nui.get("purchaseTwoCode");
+	    var purchaseTwoId = nui.get("purchaseTwoId");
 	    var secondItemName = nui.get("secondItemName");
 	    var purchaseThreeCode = nui.get("purchaseThreeCode");
+	    var purchaseThreeId = nui.get("purchaseThreeId");
 	    var threeItemName = nui.get("threeItemName");
 	   	
 	   	function changeValueon(e){
@@ -188,7 +197,8 @@
                           	    var row = grid_traveldetail.getSelected();
 				                  	grid_traveldetail.updateRow(row,{
 				                  		firstItemName:tmp.itemName,
- 				       	           		purchaseFirstCode:tmp.itemCode
+ 				       	           		purchaseFirstCode:tmp.itemCode,
+ 				       	           		purchaseFirstId:tmp.id
 				                  	});                           		
                           	}
                           	
@@ -198,7 +208,8 @@
                           	    var row = grid_traveldetail.getSelected();
 				                  	grid_traveldetail.updateRow(row,{
 				                  		secondItemName:tmp.itemName,
- 				       	           		purchaseTwoCode:tmp.itemCode
+ 				       	           		purchaseTwoCode:tmp.itemCode,
+ 				       	           		purchaseTwoId:tmp.id
 				                  	});                           		
                           	}
                           	if(tmp.grade==3){
@@ -207,7 +218,8 @@
                           	    var row = grid_traveldetail.getSelected();
 				                  	grid_traveldetail.updateRow(row,{
 				                  		threeItemName:tmp.itemName,
- 				       	           		purchaseThreeCode:tmp.itemCode
+ 				       	           		purchaseThreeCode:tmp.itemCode,
+ 				       	           		purchaseThreeId:tmp.id
 				                  	});                           		
                           	}
                           }
