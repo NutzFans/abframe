@@ -40,7 +40,11 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import com.eos.data.xpath.XPathLocator;
 import com.eos.foundation.data.DataObjectUtil;
@@ -818,15 +822,19 @@ public class ExcelTemplate {
 		HSSFDataFormat df = wb.createDataFormat();
 		hssfCellStyleDate.setDataFormat(df.getFormat("yyyy-MM-dd"));
 		hssfCellStyleTime.setDataFormat(df.getFormat("yyyy-MM-dd hh:mm:ss"));
+		
+		HSSFCellStyle cellstyle = wb.createCellStyle();
+        cellstyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellstyle.setAlignment(HorizontalAlignment.CENTER);
 		//默认行号
 		int autoRowId=1;
-
+		int aaa = 0;
         for(Iterator it=resultset.iterator();it.hasNext();autoRowId++){
         	DataObject content=(DataObject)it.next();
 
         	HSSFRow sourceRow=sheet.getRow(startRow);
         	HSSFRow row=sheet.createRow(startRow++);
-        	int aaa = sourceRow.getPhysicalNumberOfCells();
+        	aaa = sourceRow.getPhysicalNumberOfCells();
         	
 
         	for(int i=0;i<sourceRow.getPhysicalNumberOfCells();i++){
@@ -842,6 +850,7 @@ public class ExcelTemplate {
         		if(fieldNames[i]!=null){
         			HSSFCell cell=row.createCell((short)i);        			
         			cell.setCellStyle(borderStyle);
+        			cell.setCellStyle(cellstyle);
         			if(content!=null){
         				//字段名支持xpath取值
         				Object value=XPathLocator.newInstance().getValue(content, fieldNames[i]);
@@ -853,7 +862,8 @@ public class ExcelTemplate {
             					if(fieldNames[i].equals("outpername") || fieldNames[i].equals("gender") || fieldNames[i].equals("degree") || 
             							fieldNames[i].equals("gradudate") || fieldNames[i].equals("currentstatus") || 
             							fieldNames[i].equals("startdate") || fieldNames[i].equals("expenddate") || fieldNames[i].equals("actenddate")){
-            						cell.setCellStyle(alignCenter);
+//            						cell.setCellStyle(alignCenter);
+            						
             					}
             				}
     	        			if(value instanceof Double|| value instanceof BigDecimal){
@@ -921,6 +931,14 @@ public class ExcelTemplate {
         	}
 
         }
+        
+        String fileNamePath = this.outputFile;
+        // 零星采购合并单元格
+    	if (fileNamePath.contains("exportPurZero")){
+    		// 通用合并方法，但是需要调整表格顺序，将合并的数据放在表格前列，  不合并放置在表格后列
+    		// 传递时间格式日期列数
+            mergeRowCell(wb, sheet, 0, 0, resultset.size(), true, aaa);
+    	}	
 	}
 	
 	/**
@@ -1776,12 +1794,15 @@ public class ExcelTemplate {
         font.setFontHeightInPoints((short)fontSize);
         font.setFontName(fontName);
         style.setFont(font);
-        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setAlignment(HorizontalAlignment.CENTER);
         return style;
 	}
+	
 	private HSSFCellStyle getNoneStyle(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         HSSFFont font=wb.createFont();
@@ -3188,5 +3209,75 @@ public class ExcelTemplate {
       }
      }
     }
+    
+    /**
+	 * 通用合并单元格方法，按列将相同的行进行合并
+     * @param wb  导出的EXCEL对象
+     * @param sheet  导出的 sheet 对象
+     * @param colIdx	合并的列 eg:  1
+     * @param startRow	起始行    eg:  1
+     * @param stopRow	结束行    eg:  最大行
+     * @param isForward	是否递进合并其它列   eg: 是
+     * @param forwardToColIdx 递进到的列    eg: 需要合并的列
+    */
+   public void mergeRowCell(HSSFWorkbook wb, HSSFSheet sheet,int colIdx,int startRow,int stopRow ,boolean isForward,int forwardToColIdx){
+       String compareValue = null;
+       Object typeValue = null;
+       String typeValueStr = null;
+       int beginRow = startRow;
+       int endRow = startRow;
+       for(int i=startRow;i<=stopRow; ++i){
+    	    // 获取起始行 第一个合并的列中的表格的值
+    	    String value = new DataFormatter().formatCellValue(sheet.getRow(i).getCell(colIdx))==null ? "":new DataFormatter().formatCellValue(sheet.getRow(i).getCell(colIdx));
+            if(i == startRow){
+               compareValue = value;
+            }else{
+               if(compareValue.equals(value)){//相同，则设置重复的值为空
+                   sheet.getRow(i).getCell(colIdx).setCellValue("");
+                   endRow = i;
+               }else {//不同，则合并之前相同的单元格
+                   if(beginRow < endRow){
+                       CellRangeAddress cellRangeAddress = new CellRangeAddress(beginRow, endRow, colIdx, colIdx);
+                       sheet.addMergedRegion(cellRangeAddress);
+                       if(isForward){//递进合并下一列
+                           int nextColIndex = colIdx;
+                           if(colIdx < forwardToColIdx){
+                               nextColIndex ++;
+                           }else if(colIdx > forwardToColIdx){
+                               nextColIndex --;
+                           }else{
+                               return;
+                           }
+                           mergeRowCell(wb, sheet, nextColIndex, beginRow, endRow, isForward, forwardToColIdx);
+                       }
+                   }
+
+                   compareValue = value;
+                   beginRow = i;
+                   endRow = i;
+               }
+           }
+       }
+       if(beginRow < endRow){
+           CellRangeAddress cellRangeAddress = new CellRangeAddress(beginRow, endRow, colIdx, colIdx);
+           sheet.addMergedRegion(cellRangeAddress);
+  		   sheet.getRow(beginRow).getCell(colIdx).setCellStyle(sheet.getRow(beginRow).getCell(colIdx).getCellStyle());
+  		   sheet.getRow(beginRow).getCell(colIdx).setCellValue(compareValue);
+           
+           if(isForward){//递进合并下一列
+               int nextColIndex = colIdx;
+               if(colIdx < forwardToColIdx){
+                   nextColIndex ++;
+               }else if(colIdx > forwardToColIdx){
+                   nextColIndex --;
+               }else{
+                   return;
+               }
+               mergeRowCell(wb, sheet, nextColIndex, beginRow, endRow, isForward, forwardToColIdx);
+           }
+       }
+   }
+
+
     
 }

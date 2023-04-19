@@ -44,7 +44,7 @@ import commonj.sdo.DataObject;
  * 淇敼鍘嗗彶
  * $Log: ExcelUtil.java,v $
  * Revision 1.10  2020/03/02 19:14:14  lipc
- * 采购合同导出模板
+ * 锟缴癸拷锟斤拷同锟斤拷锟斤拷模锟斤拷
  *
  * Revision 1.9  2018/04/10 21:43:31  yaoyi-ze
  * 锟疥工确锟斤拷票锟斤拷锟斤拷
@@ -616,5 +616,9 @@ public class ExcelUtil {
 		filename=filename+"_"+datetimeString+".xls";
 		return filename;
 	}
+	
+	
+
+
 
 }
