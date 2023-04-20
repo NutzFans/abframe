@@ -119,6 +119,7 @@
 					<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 					<a class="nui-button" id="kjxylist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
+					<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 				</td>
 			</tr>
 		</table>
@@ -145,7 +146,11 @@
 			</div>
 		</div>
 	</div>
-	
+	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false"/>
+		<input type="hidden" name="downloadFile" filter="false"/>
+		<input type="hidden" name="fileName" filter="false"/>
+	</form>
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
@@ -484,6 +489,67 @@
 			} else {
 				return false
 			}
+		}
+		
+		//导出
+		function exportExcel() {
+			if (!confirm("是否确认导出？")) {
+				return;
+			}
+			var data = form.getData(); //获取表单JS对象数据
+			var json = nui.encode(data);
+			nui.ajax({
+				url : "com.zhonghe.ame.contractPact.frameAgreement.feameAgreementExcel.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+			     		var filePath = o.downloadFile;
+			        	var fileName = "框架协议管理明细";
+			        	var myDate = new Date();
+			        	var year = myDate.getFullYear();
+			        	var month = myDate.getMonth()+1;
+			        	var day = myDate.getDate();
+			        	var hours = myDate.getHours();
+			        	var minutes = myDate.getMinutes();
+			        	var seconds = myDate.getSeconds();
+			        	var curDateTime = year;
+		        		if(month>9){
+						curDateTime = curDateTime + "" + month;
+					}else{
+						curDateTime = curDateTime + "0" + month;
+					}
+		        		if(day>9){
+						curDateTime = curDateTime + day;
+					}else{
+						curDateTime = curDateTime + "0" + day;
+					}
+					if(hours>9){
+						curDateTime = curDateTime + hours;
+					}else{
+						curDateTime = curDateTime + "0" + hours;
+					}
+					if(minutes>9){
+						curDateTime = curDateTime + minutes;
+					}else{
+						curDateTime = curDateTime + "0" + minutes;
+					}
+					if(seconds>9){
+						curDateTime = curDateTime + seconds;
+					}else{
+						curDateTime = curDateTime + "0" + seconds;
+					}
+					fileName = fileName + "_" + curDateTime + ".xls";
+					var frm = document.getElementById("exprotExcelFlow");
+	        			frm.elements["downloadFile"].value = filePath;
+	        			frm.elements["fileName"].value = fileName;
+			    		frm.submit();
+				},
+				error : function() {
+					showTips("导出数据异常，请联系管理员！", "danger");
+				}
+			});
 		}
 	</script>
 </body>
