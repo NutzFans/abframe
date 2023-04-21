@@ -61,7 +61,9 @@
 						</table>
         </div>
     	</form>
-     <div class="fieldset-body"  style="width:100%; height:100%; margin: 0px auto">
+    	<fieldset id="field2" style="border: solid 1px #aaa;">
+    	<legend>计划明细</legend>
+     	<div class="fieldset-body"  style="width:100%; height:100%; margin: 0px auto">
 	    	<div id="grid_traveldetail" class="nui-datagrid" style="width: 80%;height: auto;" allowCellSelect="true" 
 	    		showPager="false" allowCellEdit="false" multiSelect="true" dataField="purZeroItem" 
 	    		url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext">
@@ -90,6 +92,7 @@
 	            </div>
 	        </div>
 		</div>
+		</fieldset>
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
 				<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
 			</fieldset>

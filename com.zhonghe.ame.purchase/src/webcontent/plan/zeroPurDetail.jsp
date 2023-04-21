@@ -16,102 +16,100 @@
     </style>
 </head>
 <body>
-    	<div class="nui-fit" >
-		<div class="mini-panel" title="" style="width: 100%;">
-			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
-				<legend>采购计划信息</legend>
-				<form id="form1" method="post">
-					<div style="padding: 5px; margin-left:5%;">
-				<table style="table-layout: fixed;" id="table_file">
-            	
-            	<tr>
-            		<td class="form_label" align="right">零星采购名称：</td>
-	                <td >
-	                    <input enabled="false" id="purchaseName" name="purchaseName" class="nui-textbox" required="true" />
-	                </td>
-	                <td class="form_label" align="right">零星采购编号：</td>
-	                <td >
-	                    <input enabled="false" id="purchaseCode" name="purchaseCode" class="nui-textbox" required="true" />
-	                </td>
-	                <td class="form_label" align="right">采购单位：</td>
-                    <td >
-                    	<input enabled="false" name="orgId" id="orgId"
-									class="nui-combobox" required="true"
-									url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext"
-									filterType="like" textField="orgname" valueField="orgid"
-									dataField="allorgs" valueFromSelect="true" allowInput="true"
-									 style="width:200px;" />    
-                    </td>
-            	</tr>
-            	<tr>
-            		<td class="form_label" align="right">总金额：</td>
-	                <td >
-	                    <input enabled="false" id="totalAmount" name="totalAmount" class="nui-textbox" required="true" />
-	                </td>
-            	</tr>
-            	<tr>
-            		<td class="form_label" align="right">申请原因：</td>
-	                 <td  colspan="7">    
-                        <input enabled="false" style="width:100%;height: 40px;" name="applyReason" id="applyReason" class="nui-textarea" id="remark"  required="true"/>
-                    </td>
-            	</tr>
-            	
-         
-            </table>
-        </div>
-        </form>
-	         <fieldset  style="height:100%; border:solid 1px #aaa;padding:3px;">
-     <div class="fieldset-body"  style="width:100%; height:100%; margin: 0px auto">
-<!--      <a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a> 
-                  <a class="nui-button" id="deltbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a>  -->
-	    	<div id="grid_traveldetail" class="nui-datagrid" style="width: 80%;height: auto;" allowCellSelect="true" 
-	    		showPager="false" allowCellEdit="true" multiSelect="true" dataField="purZeroItem" 
-	    		url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext">
-	            <div property="columns">
-	                <div field="itemName"  width="130" align="center" headerAlign="center"  >采购物项名称
-							<input enabled="false" id="itemName" name="itemName" property="editor"  class="nui-textbox"  />
-	                </div>
-	               <div  field="brandSpec" width="130" align="center" headerAlign="center"  >品牌/型号/规格
-							<input enabled="false" id="brandSpec" name="brandSpec" property="editor"  class="nui-textbox"   />
-	                </div>
-	                <div  field="supplierName"  width="130" align="center" headerAlign="center"  >供应商
-							<input enabled="false" id="supplierName" name="supplierName" property="editor"  class="nui-textbox"  />
-	                </div>
-	                <div  field="onePrice"  width="130" align="center" headerAlign="center"  >单价(万元)
-							<input enabled="false" id="onePrice" name="onePrice" property="editor"  class="nui-textbox"  />
-	                </div>
-	                <div  field="num"  width="130" align="center" headerAlign="center" > 数量
-							<input enabled="false" id="num" name="num" property="editor"  class="nui-textbox"  />
-	                </div>
-	                <div   field="totalPrice" width="130" align="center" headerAlign="center"  >总价(万元)
-							<input enabled="false" id="totalPrice" name="totalPrice" property="editor"  class="nui-textbox"  />
-	                </div>
-	                <div   field="remark" width="130" align="center" headerAlign="center"  >备注
-							<input enabled="false" id="remark" name="remark" property="editor"  class="nui-textbox"   />
-	                </div>
-	            </div>
+	<div class="nui-fit" >
+	<div class="mini-panel" title="" style="width: 100%;">
+	<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
+			<legend>采购计划信息</legend>
+			<form id="form1" method="post">
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input name="id" id="id" class="nui-hidden" />
+				<div style="padding: 5px; margin-left:5%;">
+				<table style="table-layout: fixed;" id="table_file" width="60%">
+					<tr>
+						<td align="right" style="width:140px">零星采购名称：</td>
+						<td colspan="4">
+							<input name="purchaseName" id="purchaseName" class="nui-textbox"
+								required="true" style="width: 100%" required="true" />
+						</td>
+						<td width="120px" class="form_label" align="right">采购单位：</td>
+						<td colspan="2">
+							<input name="orgname" id="orgname" class="nui-textbox" required="true"  style="width:100%;" readonly="readonly" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 140px">合同名称<span
+								style="color: red;">(若有)</span>：</td>
+						<td colspan="4">
+							<input name="contract" id="contract" class="nui-textbox"
+								style="width: 100%;" />
+						</td>
+						<td width="120px" class="form_label" align="right">总金额(万元)：</td>
+						<td colspan="2">
+							<input name="totalAmount" id="totalAmount" style="width: 100%"
+								class="nui-textbox" readonly="readonly" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right" style="width: 140px">供方/乙方/承包人全称：</td>
+						<td colspan="4">
+							<input name="contractor" id="contractor" class="nui-textbox"
+								style="width: 100%;" />
+						</td>
+						<td align="right" style="width:100px">预计采购时间：</td>
+						<td colspan="2">
+							<input name="purchaseDate" id="purchaseDate" class="nui-datepicker"
+								style="width: 100%" required="true" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_label" align="right">申请原因：</td>
+						<td colspan="7">
+							<input style="width:100%;height: 40px;" name="applyReason"
+								class="nui-textarea" id="remark" required="true" />
+						</td>
+					</tr>
+				</table>
 	        </div>
-		</div>
+	    	</form>
+	    	
+	    	<fieldset id="field2" style="border: solid 1px #aaa;">
+	    	<legend>计划明细</legend>
+		    	<div class="fieldset-body"  style="width:100%; height:100%; margin: 0px auto">
+	    		<div id="grid_traveldetail" class="nui-datagrid" style="width: 80%;height: auto;" allowCellSelect="true" 
+	    		showPager="false" allowCellEdit="false" multiSelect="true" dataField="purZeroItem" 
+	    		url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext">
+		            <div property="columns">
+		                <div field="itemName"  width="130" align="center" headerAlign="center"  vtype="required">采购物项名称
+								<input id="itemName" name="itemName" property="editor"  class="nui-textbox"  />
+		                </div>
+		               <div  field="brandSpec" width="130" align="center" headerAlign="center"  >品牌/型号/规格
+								<input id="brandSpec" name="brandSpec" property="editor"  class="nui-textbox"   />
+		                </div>
+		                <div   field="unit" displayField="unit"  width="130" align="center" headerAlign="center"  >单位
+								<input  name="unit" property="editor"  class="nui-textbox"  style="width:200px;" />
+		                </div>
+		                <div  field="onePrice"  width="130" align="center" headerAlign="center"  vtype="required">单价(万元)
+								<input id="onePrice" name="onePrice" property="editor"  class="nui-spinner"  minValue="0"  maxValue="999999999"   />
+		                </div>
+		                <div  field="num"  width="130" align="center" headerAlign="center"   vtype="required">数量
+								<input id="num" name="num" property="editor"  class="nui-spinner" minValue="0"  maxValue="999999999"  />
+		                </div>
+		                <div   field="totalPrice" width="130" align="center" headerAlign="center"  >总价(万元)
+								<input id="totalPrice" name="totalPrice" property="editor"  class="nui-textbox"  readonly="readonly"/>
+		                </div>
+		            </div>
+		        </div>
+				</div>
+	 	  	</fieldset>
+			
+			<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
+				<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
 			</fieldset>
-        </fieldset>
-        
-        
-   
+    </fieldset>
 	</div>
 </div>
-
-<!--	<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">               
-	    <a class="nui-button" onclick="submit" style="width:60px;margin-right:20px;">提交</a>       
-	    <a class="nui-button" onclick="onCancel" style="width:60px;">关闭</a>
-	</div>  -->
-   
-
-      
-
 <script type="text/javascript">
 	    nui.parse();
-	    //var updateURL = "com.primeton.mis.contract.contract.updateContract.biz.ext";
-	    var saveURL = "com.primeton.mis.contract.contract.addContract.biz.ext";
 	    var form = new nui.Form("#form1");
 	    var grid_traveldetail = nui.get("grid_traveldetail");
 	    var purchaseFirstCode = nui.get("purchaseFirstCode");
@@ -133,29 +131,25 @@
 				    type: 'POST',
 			        data: json,
 			        success: function (o) {
+						 form.setData(o.purZero);
+						 form.setEnabled(false);
 						 
-	            		 nui.get("purchaseName").setValue(o.purZero.purchaseName);
-			       	  	 nui.get("purchaseCode").setValue(o.purZero.purchaseCode);
-			       	  	 nui.get("orgId").setText(o.purZero.orgname);
-             			 nui.get("applyReason").setValue(o.purZero.applyReason);
-			       	  	nui.get("totalAmount").setValue(o.purZero.totalAmount);
-			       		 
-			       		 var grid = nui.get("datagrid1");
-			       		 console.log()
-						/*  grid.load({processInstID:o.purZero.processid});
-						 grid.sortBy("time", "desc"); */
-						  //初始化处理意见
-						 /* initMisOpinion({auditstatus:"1"}); */
+						 // 查询明细
 						 var jsonData = {"zeroId":o.purZero.id}
-						 console.log(jsonData);
-			       		 grid_traveldetail.load(jsonData); 
+	       		 		 grid_traveldetail.load(jsonData); 
+			       		 
+			       		 // 查询附件
+						 var grid_0 = nui.get("grid_0");
+						 grid_0.load({
+							 "groupid" : "purchaseZero",
+							 "relationid" : o.purZero.id
+						 });
+						 grid_0.sortBy("fileTime", "desc");
 			        },
 				    error: function (jqXHR, textStatus, errorThrown) {
 				        alert(jqXHR.responseText);
 				    }
-			    }); 
-	   		
-	   	
+		    }); 
 	   	}
 	   	
 	   	

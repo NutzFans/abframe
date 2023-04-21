@@ -73,6 +73,7 @@
 					</div>
 				</form>
 				<fieldset style="height:100%; border:solid 1px #aaa;padding:3px ;width: 90%; ">
+				<legend>计划明细</legend>
 					<div class="fieldset-body" style="width:100%; height:100%; margin: 0px auto">
 						<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a>
 						<a class="nui-button" id="deltbtn" iconCls="icon-remove"
