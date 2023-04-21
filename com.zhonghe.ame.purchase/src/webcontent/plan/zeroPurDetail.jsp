@@ -103,7 +103,7 @@
 	 	  	</fieldset>
 			
 			<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
-				<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
+				<jsp:include page="/ame_common/detailFile.jsp"/>
 			</fieldset>
     </fieldset>
 	</div>
