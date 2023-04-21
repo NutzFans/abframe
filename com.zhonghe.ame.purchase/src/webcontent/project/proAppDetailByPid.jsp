@@ -31,88 +31,158 @@
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 100%;">
 				<legend>采购立项</legend>
 				<form id="form1" method="post">
-					<input name="files" id="fileids" class="nui-hidden"/>
-					<input name="files1" id="fileids1" class="nui-hidden"/>
-					<input class="nui-hidden" name="id"/>
-					<input class="nui-hidden" name="processid"/>
-					<div style="padding: 5px;">
-						<table style="table-layout: fixed;">
-							<tr>
-							<td class="form_label" align = "right" >立项名称：</td>
-								<td>
-									<input name="proAppName" id="proAppName"  class="nui-textbox" style="width: 100%" enabled="false"/>
-								</td>
-							<td align="right" style="width:100%">立项编号：</td>
-								<td><input name="proAppCode"  id="proAppCode" class="nui-textbox" style="width: 100%" enabled="false"/></td>
-							<td align="right" style="width: 100%">立项单位：</td>
-								<td ><input
-									name="proAppOrgId" id="proAppOrgId"
-									class="nui-combobox" 
-									url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext"
-									filterType="like" textField="orgname" valueField="orgid"
-									dataField="allorgs" valueFromSelect="true" allowInput="true"
-									style="width: 300px;" enabled="false" /></td>
-<!-- 								<td><input name="implementOrg"  class="nui-textbox" style="width: 300px"/></td> -->
-							</tr>
-							<tr>
-								<td align="right" style="width: 100%">立项单位经办人：</td>
-									<td><input name="proAppAgentUserid" id="proAppAgentUserid"  class="nui-buttonedit" 
-									onbuttonclick="selectOmEmployee" style="width: 300px" enabled="false" /></td>
-								<td align="right" style="width: 130px">立项单位负责人：</td>
-									<td><input name="proAppChargeUserid" id="proAppChargeUserid" class="nui-buttonedit" 
-									onbuttonclick="selectOmEmployee1" style="width: 300px" enabled="false"/></td>
-								<td align="right" style="width: 100px">采购计划编号：</td>
-									<td><input name="planId" id="palnId" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" enabled="false"/></td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 120px">采购审核单位：</td>
-									<td><input name="approvalOrgId"  id="approvalOrgId" class="nui-combobox" 
-									url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext"
-									filterType="like" textField="orgname" valueField="orgid"
-									dataField="allorgs" valueFromSelect="true" allowInput="true"
-									style="width: 300px;" enabled="false" /></td>
-								<td align="right" style="width: 130px">所属项目名称：</td>
-									<td><input name="projectId" id="projectId" class="nui-textbox"  style="width: 300px" enabled="false"/></td>
-								<td align="right" style="width: 100px">立项申请金额(万元)：</td>
-									<td><input name="proAppApplyPrice" id="proAppApplyPrice"  class="nui-textbox"  style="width: 300px" enabled="false" /></td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 100px">费用来源：</td>
-									<td><input name="costFrom" id="costFrom" class="nui-radiobuttonlist"  data="[{id: '1', text: '公司自筹资金'}, {id:'2', text: '中央预算内资金'}]" enabled="false"/></td>
-								<td align="right" style="width:160px">立项对象类别：</td>
-									<td><input name="proAppObjType" id="proAppObjType" class="nui-radiobuttonlist"  data="[{id: '1', text: '工程'}, {id:'2', text: '物资'}, {id:'3', text: '服务'}]" enabled="false"/></td>
-								<td align="right" style="width:160px">项目拟实施日期：</td>
-									<td><input name="proAppImplTime" id="proAppImplTime" class="nui-datepicker" style="width: 300px" enabled="false"/></td>
-							</tr>
-							<tr id="one111">
-              		<td class="form_label"  align="right" style="width:120px;">立项范围说明：</td>
-                    <td colspan="7">    
-                        <input enabled="false" style="width:100%;height: 40px;" id="proAppRange" name="proAppRange" class="nui-textarea"  id="technologyNeed" dictTypeId="ZH_PURCHASE" />
-                    </td>
-              	</tr>
-						</table>
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input name="files1" id="fileids1" class="nui-hidden" />
+				<input class="nui-hidden" name="id" />
+				<div style="padding: 5px;">
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 110px">立项名称：</td>
+							<td colspan="3">
+								<input name="proAppName" class="nui-textbox" style="width: 450px" />
+								<input name="putunder" id="putunder" class="nui-hidden" />
+							</td>
+							<td align="right" style="width: 110px">立项编号：</td>
+							<td>
+								<input name="proAppCode" class="nui-textbox" style="width: 250px" />
+							</td>
+							<td align="right" style="width: 110px">立项金额(万元)：</td>
+							<td>
+								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" readonly="readonly" style="width: 250px" emptyText="系统自动计算" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 110px">申请单位：</td>
+							<td colspan="3">
+								<input name="proAppOrgName" id="proAppOrgName" class="nui-textbox" style="width: 450px;" />
+							</td>
+							<td align="right" style="width: 110px">涉密协作配套：</td>
+							<td>
+								<input id="isSmpt" name="isSmpt" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 250px;" />
+							</td>
+							<td align="right" style="width: 110px">费用来源：</td>
+							<td>
+								<input name="costFrom" class="nui-dictcombobox" dictTypeId="ZH_COST_FROM" style="width: 250px;" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 110px">所属项目名称：</td>
+							<td colspan="3">
+								<input name="projectId" class="nui-textbox" style="width: 450px" />
+							</td>
+							<td align="right" style="width: 110px">集采类型：</td>
+							<td>
+								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" visible="true" style="width: 250px" />
+							</td>
+							<td align="right" style="width: 110px">物项类别：</td>
+							<td>
+								<input id="proAppObjType" name="proAppObjType" class="nui-dictcombobox" dictTypeId="MIS_APPOBJTYPE" style="width: 250px" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 110px">采购方式：</td>
+							<td>
+								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 165px" />
+							</td>
+							<td align="right" style="width: 110px;">是否招标限价：</td>
+							<td>
+								<input id="tenderLimit" name="tenderLimit" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 155px" />
+							</td>
+							<td align="right" style="width: 110px">招标限价金额：</td>
+							<td>
+								<input id="limit" name="limit" class="nui-textbox" required="ture" style="width: 250px" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 110px">采购方式理由：</td>
+							<td colspan="3">
+								<input id="wayReason" name="wayReason" class="nui-textarea" style="width: 450px" emptyText="若为一级集采，则此项非必填" />
+							</td>
+							<td align="right" style="width: 120px;">立项范围：</td>
+							<td colspan="3">
+								<input name="proAppRange" style="width: 630px" class="nui-textarea" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 110px">是否电子采购：</td>
+							<td>
+								<input id="isDzcg" name="isDzcg" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 165px" />
+							</td>
+							<td align="right" style="width: 120px">电采平台发布公告：</td>
+							<td>
+								<input id="isGb" name="isGb" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 155px" />
+							</td>
+							<td align="right" style="width: 120px">合同/订单性质：</td>
+							<td>
+								<input id="nature" name="nature" class="nui-dictcombobox" dictTypeId="ZH_NATURE" onvaluechanged="isSupplierScope" required="true" style="width: 250px" />
+							</td>
+							<td align="right" style="width: 120px">供应商选取范围：</td>
+							<td>
+								<input id="supplierScope" name="supplierScope" class="nui-dictcombobox" dictTypeId="ZH_SUPPLIER_SCOPE" style="width: 250px" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 110px">供应商信息：</td>
+							<td colspan="5" style="background: #f0f0f0">
+								<input class="nui-textboxlist" style="width: 828px;" textField="custname" valueField="custid" id="supplierSel" name="supplierSel"
+									url="com.zhonghe.ame.purchase.purSupplier.querySupplierByName.biz.ext" dataField="purSuppliers" inputMode="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">选择上述供应商原因：</td>
+							<td colspan="3">
+								<input id="supplierReason" name="supplierReason" class="nui-textarea" required="ture" style="width: 450px" />
+							</td>
+							<td align="right" style="width: 110px">相关情况说明：</td>
+							<td colspan="3">
+								<input name="remark" class="nui-textarea" style="width: 630px" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+			</fieldset>
+			
+			<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>计划明细</legend>
+			<div class="fieldset-body" style="width: 100%; height: auto; margin: 0px auto">
+				<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext" dataField="datas"
+					showPager="false" multiSelect="true">
+					<div property="columns">
+						<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
+						<div field="planName" width="110" align="left" headerAlign="center">计划名称</div>
+						<div field="planCode" width="110" align="center" headerAlign="center">计划编号</div>
+						<div field="materialName" width="110" align="center" headerAlign="center" vtype="required">采购物项名称</div>
+						<div field="budgetAmount" width="110" align="center" headerAlign="center" vtype="required">预算金额(万元)</div>
+						<div field="amount" width="110" align="center" headerAlign="center" vtype="required" headerStyle="color:red">立项金额(万元)</div>
+						<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
+						<div field="needOrgName" width="60" align="center" headerAlign="center">采购单位</div>
+						<div field="contractamount" width="100" align="center" headerAlign="center" vtype="true" visible="false">
+							拟签合同金额(元)
+							<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" id="contractamount" name="contractamount" />
+						</div>
 					</div>
-				</form>
+				</div>
+			</div>
 			</fieldset>
 
 			<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-				<legend>费用估算证明附件</legend>
+				<legend>估算表、采购方案和支撑材料</legend>
 				<jsp:include page="/ame_common/detailFile.jsp"/>
 			</fieldset>
-			<fieldset id="field3" style="border:solid 1px #aaa;padding:3px;">
+			<%-- <fieldset id="field3" style="border:solid 1px #aaa;padding:3px;">
 				<legend>立项支持材料附件</legend>
 				<jsp:include page="/ame_common/detailFile2.jsp"/>
-			</fieldset>
+			</fieldset> --%>
 
 
 
 		</div>
 	</div>
-<!--	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;">关闭</a>
-	</div>-->
 	<script type="text/javascript">
         nui.parse();
+        var form = new nui.Form("form1");
+		var gridDtl = nui.get("grid_detail");
         <%
 	   		UserObject user = (UserObject) session.getAttribute("userObject");
 	   		String username = user.getUserName();
@@ -136,27 +206,19 @@
         function init(){
         	var json = nui.encode({"processid":processid});
         	console.log(json);
+        	form.setEnabled(false);
 	   		nui.ajax({	
 					url: "com.zhonghe.ame.purchase.purchaseItems.queryProAppByPid.biz.ext",
 				    type: 'POST',
 			        data: json,
 			        success: function (o) {
-						 //var result=o.proApp[0];
 						 var result=o.proApp;
-						 //alert(nui.encode({"result":result}));
-						 //alert(nui.encode({"o":o}));
-						 nui.get("proAppName").setValue(result.proAppName);
-						 nui.get("proAppCode").setValue(result.proAppCode);
-						 nui.get("proAppOrgId").setValue(result.proAppOrgId);
-						 nui.get("proAppAgentUserid").setText(result.agentempname);
-						 nui.get("proAppChargeUserid").setText(result.chargeempname);
-						 nui.get("palnId").setText(result.purchaseNumber);
-						 nui.get("approvalOrgId").setValue(result.approvalOrgId);
-						 nui.get("proAppApplyPrice").setValue(result.proAppApplyPrice);
-						 nui.get("costFrom").setValue(result.costFrom);
-						 nui.get("proAppObjType").setValue(result.proAppObjType);
-						 nui.get("proAppImplTime").setValue(result.proAppImplTime);
-						 nui.get("proAppRange").setValue(result.proAppRange);
+						 form.setData(result);
+						 
+						 // 计划详细信息
+						 gridDtl.load({
+							"pid" : result.id
+						 })
 						 var grid_0 = nui.get("grid_0");
         				 grid_0.load({"groupid":"proAppCost","relationid":result.id});
 						 grid_0.sortBy("fileTime","desc");
