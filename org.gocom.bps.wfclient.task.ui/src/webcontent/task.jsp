@@ -228,7 +228,7 @@
     		//tips:这里已经有流程定义名称，不需要再去查询
     		var url= nui.getDictText('AME_SYSCONF',row.processDefName);
     		if(url != null && url != ""){
-			    tab.url = "<%=request.getContextPath() %>"+url+"?processInstID=" + row.processInstID;
+			    tab.url = "<%=request.getContextPath() %>"+url+"?processInstID=" + row.processInstID + "&workItemID=" + row.workItemID;
 		    }else{
     			tab.url = "<%=request.getContextPath() %>/bps/wfclient/task/noYWpage.jsp";
     			nui.get("printButton").setVisible(false);

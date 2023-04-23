@@ -222,9 +222,7 @@
 						 var grid_0 = nui.get("grid_0");
         				 grid_0.load({"groupid":"proAppCost","relationid":result.id});
 						 grid_0.sortBy("fileTime","desc");
-						 var grid_1 = nui.get("grid_1");
-        				 grid_1.load({"groupid":"proAppSup","relationid":result.id});
-						 grid_1.sortBy("fileTime","desc");
+						
 			        },
 				    error: function (jqXHR, textStatus, errorThrown) {
 				        alert(jqXHR.responseText);

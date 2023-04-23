@@ -30,7 +30,7 @@
     </div>
 	</div>
 	<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
-	    <table id="tableSearch" style="table-layout:fixed;" width="100%" height="72px">
+	    <table id="tableSearch" style="width: 100%;height:32px;font-size:12px;" align="center" >
 	        <tr>
 	            <td id="zxqx1" width="10%" align="right" style="white-space:nowrap"><%=I18nUtil.getMessage(request, "bps.wfclient.myTask.ExePer")%>：</td>
 	            <td id="zxqx2" align="left" width="15%">
@@ -50,24 +50,24 @@
 						</td>
 	        </tr>
 	        <tr>
-	            <td  width="10%" align="right" style="white-space:nowrap" id="a1">工作项名称：</td>
-	            <td align="left" width="15%" id="a2">
+	            <td  width="10%" align="right" id="a1">工作项名称：</td>
+	            <td align="left" width="10%" id="a2">
 	                <input class="nui-textbox" id="workItemName">
 	            </td>
-	            <td  width="10%" align="right" style="white-space:nowrap" id="b1">环节名称：</td>
-	            <td align="left" width="15%" id="b2">
+	            <td  width="10%" align="right" id="b1">环节名称：</td>
+	            <td align="left" width="10%" id="b2">
 	                <input id="workItemName1" valueField="workItemName" textField="workItemName" class="nui-combobox" shownullItem="true" onvaluechanged="changeWorkItemName" multiSelect="true" />
 	            </td>
-	            <td  width="10%" align="right" style="white-space:nowrap">流程定义名称：</td>
-	            <td align="left" width="15%">
+	            <td  width="10%" align="right" >流程定义名称：</td>
+	            <td align="left" width="10%">
 	                <input class="nui-textbox" id="processChName">
 	            </td>
-	            <td  width="10%" align="right" style="white-space:nowrap">流程实例名称：</td>
-	            <td align="left" width="15%">
+	            <td  width="10%" align="right" >流程实例名称：</td>
+	            <td align="left" width="10%">
 	                <input class="nui-textbox" id="processInstName">
 	            </td>
-	            <td  width="10%" align="right" style="white-space:nowrap" id="c1">状态：</td>
-	            <td align="left" width="15%" id="c2"> 
+	            <td  width="10%" align="right" id="c1">状态：</td>
+	            <td align="left" width="10%" id="c2"> 
 	                <input class="nui-combobox" id="currentState" multiSelect="true" valueField="id" textField="text" showNullItem="true" data=[{"id":4,"text":"待领取"},{"id":8,"text":"挂起"},{"id":10,"text":"运行"},{"id":12,"text":"完成"},{"id":13,"text":"终止"}]>
 	            </td>
 	            <td align="center" valign="middle" colspan="1">  
