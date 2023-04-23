@@ -9,7 +9,6 @@
     </style>
 </head>
 <body>
- <%long workitemid = (Long)request.getAttribute("workItemID");%> 
 <div class="nui-fit">
     <div>
         <fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
@@ -97,138 +96,36 @@
 					</div>
 				</form>
 			</fieldset>
-		<fieldset id="field2" style="border:solid 1px #aaa;padding:1px;width: 98%">
-	     <jsp:include page="/ame_common/misOpinion_Freeflow.jsp"/>
-		</fieldset>
 	</div>
 </div>
-<div style="text-align:center;padding:8px;border-width:1px 0px 0px 0px;" class="nui-toolbar">          
-<!-- 	<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px;margin-right: 20px;">加签</a>      -->
-    <a class="nui-button"  onclick="submit()" iconCls="icon-ok" style="width:60px;margin-right:20px;">提交</a>       
-    <a class="nui-button" onclick="closeCancel" iconCls="icon-close" style="width:60px;">关闭</a>
-</div>        
+        
 </body>	
 <script type="text/javascript">
 	    nui.parse();
-	    var workItemID = <%=request.getParameter("workItemID")%>;
 	    var form = new nui.Form("#form1");
-	    var opioionform = new nui.Form("opioionform");
-	   	var titleText;
-	   	var countersignUsers;
+	   	var workitemid = <%=request.getParameter("workItemID")%>;
+	   	form.setEnabled(false);
 	   	init();
 	   	
 	   	function init(){
-	   		var data = {workitemid:<%=workitemid%>};
+	   		console.log("999-1", workitemid);
+	   		var data = {"workitemid":workitemid};
 	   		var json = nui.encode(data);
 	   		nui.ajax({	
 					url: "com.zhonghe.ame.purchase.supplierEvaluate.querySupEvaluate.biz.ext",
 				    type: 'POST',
 			        data: json,
 			        success: function (o) {
-			        		var result = o.supEvaluate[0];
-									form.setData(result)
-// 			       		 	nui.get("backTo").setData(o.purPlan.backList);
-			       		 var grid1 = nui.get("datagrid1");
-								 grid1.load({processInstID:result.processid});
-								 grid1.sortBy("time", "desc");
-						 //初始化处理意见
-						 initMisOpinion({auditstatus:"1"});
-						 var jsonData = {"planId":o.purPlan.id}
-			       		 grid.load(jsonData);
+		        		var result = o.supEvaluate[0];
+						form.setData(result)
 			        },
 				    error: function (jqXHR, textStatus, errorThrown) {
 				        alert(jqXHR.responseText);
 				    }
-			    }); 
+		    }); 
 	   	}
 	   	
-       	function countersign(){
-        	selectOmEmployee();
-        }
        	
-       	function selectOmEmployee(){
-	    	var btnEdit = this;
-	        nui.open({
-	            url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
-	            title: "立项单位经办人",
-	            width: 430,
-	            height: 400,
-	            ondestroy: function (action) {
-	            	console.log(action)
-	            	var user,users = "【";
-	            	countersignUsers =[];
-	                if (action == "ok") {
-	                    var iframe = this.getIFrameEl();
-	                    var data = iframe.contentWindow.GetData();
-	                    data = nui.clone(data);    //必须
-	                    if (data) {
-	                    	console.log(data)
-                        	for(var i = 0;i<data.length ;i++){
-                        		user = {};
-                        		user.id = data[i].userid
-                        		user.name = data[i].empname
-                        		user.typeCode = "person"
-                        		countersignUsers.push(user);
-                        		if(i==0){
-                        			users = users +data[i].empname;
-                        		}else{
-                        		
-	                        		users = users +","+data[i].empname;
-                        		}
-                        	}
-                        	users = users+"】";
-                        	titleText ="增加审批人员"+ users +"并提交";
-		                    form2.submit();
-	                       }
-	                    }
-	
-	                }
-	            });
-	        }
-       	 
-	   	function submit(){
-	    	var auditstatus = nui.get("auditstatus").getValue();
-	    	if(auditstatus == "2"){	//终止流程
-	    		titleText = "终止";
-	    	}else if(auditstatus == "0"){	//退回流程
-	    		if(!nui.get("backTo").getValue()){
-	    			showTips("退回环节不能为空！");
-	    			return;
-	    		}
-	    		titleText = "退回";
-	    	}else if(auditstatus == "1"){	//提交流程
-	    		titleText = "提交";
-	    	}
-	    	saveData();
-    	}
-   		function saveData(json){
-   			nui.confirm("确定" + titleText + "流程吗？", "操作提示",function (action) {            
-        	if (action == "ok") {
-        	var data = form.getData();
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-	            	/* nui.get("appButton").setEnabled(false); */
-        	var json = {supEvaluate: data,misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers};
-//         	var msgBoxId = form.loading("正在处理...", "请稍后");
-        	ajaxCommon({
-		  			url: "com.zhonghe.ame.purchase.supplierEvaluate.approvalSupplierReview.biz.ext",
-						data: json,
-// 						type: 'POST',
-						cache: false,
-						contentType: 'text/json',
-						success: function (o){
-// 						nui.unmask(document.body);
-						if(o.result == "success"){
-				        	showTips(titleText + "成功","系统提示")
-				        		closeOk();
-						}else{
-							showTips("提交失败，请联系信息技术部人员！","danger" )
-						}
-					}
-	  				}) 
-	            }
-	        });
-	    	 
-		}
 		
 		function unitValue(e){
 	   		return nui.getDictText("ZH_UNIT",e.value);
@@ -237,8 +134,8 @@
 	   		return nui.getDictText("MIS_YN",e.value);
 		}
 		
-	function zhPutUnder(e) {
-		return nui.getDictText('ZH_PUTUNDER',e.value);//设置业务字典值
-	}
+		function zhPutUnder(e) {
+			return nui.getDictText('ZH_PUTUNDER',e.value);//设置业务字典值
+		}
 </script>
 </html>

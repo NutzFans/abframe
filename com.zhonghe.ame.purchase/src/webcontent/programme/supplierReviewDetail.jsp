@@ -97,7 +97,7 @@
 							<tr>
 								<td colspan="1" align="right">质保能力：</td>
 								<td colspan="9">
-									<input style="width:100%;hereadOnly="readOnly" me="warranty" id="warranty"
+									<input style="width:100%;hereadOnly="readOnly" name="warranty" id="warranty"
 										class="nui-textarea" readOnly="readOnly" 
 										emptyText="（简要评价供应商是否有较完善的质保/售后体系，是否满足中核咨询需求；满分2分）" />
 								</td>
