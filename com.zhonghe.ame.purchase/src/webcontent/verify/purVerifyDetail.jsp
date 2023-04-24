@@ -72,7 +72,7 @@
 		    </div>
 	    </div>
 	  </div>
-	  <div class="layui-row">
+	 <!-- <div class="layui-row">
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">申请时间</label>
 		    <div class="layui-input-block">
@@ -85,7 +85,7 @@
 		      <input type="text" name=verifyCode disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
-	  </div>
+	  </div>-->
 	  <div class="layui-row">
 	    <div class="layui-col-xs12">
 		    <label class="layui-form-label">类型</label>
@@ -102,7 +102,7 @@
 		    </div>
 	    </div>
 	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">总价(万元)</label>
+		    <label class="layui-form-label">合同总价(万元)</label>
 		    <div class="layui-input-block">
 		      <input type="text" name="totalPrice" disabled="disabled" class="layui-input">
 		    </div>

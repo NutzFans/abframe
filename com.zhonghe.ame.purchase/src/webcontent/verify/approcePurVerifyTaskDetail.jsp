@@ -17,7 +17,6 @@
     </style>
 </head>
 <body>
-<%long workitemid = (Long)request.getAttribute("workItemID");%>
 	<div class="nui-fit">
 		<div class="mini-panel" title="" style="width: 100%;">
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 98%;">
@@ -107,31 +106,26 @@
 			<div >	
 				<jsp:include page="/ame_common/detailFile.jsp"/>
 			</div>
-			<jsp:include page="/ame_common/misOpinion.jsp"/>	
 			
 		</div>
 	</div>
-	<div style="text-align: center;padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px;margin-right: 20px;">加签</a>                  
-		<a class="nui-button" onclick="submit()" id="creatReimbProcess" style="width: 80px;margin-right: 20px;" iconCls="icon-ok">提交</a>
-		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px;margin-right: 140px;" iconCls="icon-close">关闭</a>
-	</div>
+
 	<script type="text/javascript">
         nui.parse();
 	    var form = new nui.Form("#form1");
 	    var grid_traveldetail = nui.get("grid_traveldetail");
 	    var type ;
-	    var workItemID = <%=request.getParameter("workItemID")%>;
+	    var workitemid = <%=request.getParameter("workItemID")%>;
+	    var processid = <%=request.getParameter("processid")%>;
+	   	if(processid==null){
+	   		processid = <%=request.getParameter("processInstID")%>;
+	   	}
 	   	var countersignUsers,titleText;
 	    form.setEnabled(false); 
-	        //工作项id
-	<% 
-		long workItemID=(Long)request.getAttribute("workItemID");
-	%>
 		loadData();
-	   function loadData(){
+	    function loadData(){
 			//流程提示信息
-			var data = {workItemID:<%=workitemid%>,"processid":null};
+			var data = {"workItemID":workitemid,"processid":processid};
 	   		var json = nui.encode(data);
 	   		console.log(data);
 	   		console.log(json);
@@ -140,150 +134,28 @@
 				type:"post",
 				data:json,
 				contentType:"text/json",
-				success:function (o){
-					//付款申请基本信息
-					form.setData(o.data);
-					
-					//设置审核意见基本信息
-					 nui.get("backTo").setData(o.backList);
-					nui.get("processinstid").setValue(o.workitem.processInstID);
-	       	nui.get("processinstname").setValue(o.workitem.processInstName);
-	       	nui.get("activitydefid").setValue(o.workitem.activityDefID);
-	       	nui.get("workitemname").setValue(o.workitem.workItemName);
-					nui.get("workitemid").setValue(<%=workItemID %>);
-	       	nui.get("isshow").setValue("1");
-	       	nui.get("auditstatus").setValue("4");
-	       	<!--document.getElementById("salesEdit").style.display="none";-->
-	       	nui.get("auditopinion").setValue("");
-	            	//查询审核意见
-					var grid = nui.get("datagrid1");
-					if(o.workitem.processInstID!=null||o.workitem.processInstID!=""){
-						grid.load({processInstID:o.workitem.processInstID});
-						grid.sortBy("time", "desc");
-					}
-					
-					var grid_0 = nui.get("grid_0");
-			 		grid_0.load({"groupid":"purVerify","relationid":o.data.id});
-					grid_0.sortBy("fileTime","desc");
-					
-						 //初始化处理意见
-						 initMisOpinion({auditstatus:"1"});
-						 nui.get("auditopinion").setValue("验收通过");
-						 
-					 grid_traveldetail.load({'id':nui.get("id").getValue()});	
-					
-				},
-				error:function(){}
+					success:function (o){
+						console.log("999-8", o)
+						form.setData(o.data);
+						
+						// 附件信息
+						var grid_0 = nui.get("grid_0");
+				 		grid_0.load({"groupid":"purVerify","relationid":o.data.id});
+						grid_0.sortBy("fileTime","desc");
+						
+						// 货物信息
+						grid_traveldetail.load({'id':nui.get("id").getValue()});	
+					},
+					error:function(){}
 			});
 	    }
 		
-		
-			function submit(){
-	    	var auditstatus = nui.get("auditstatus").getValue();
-	    	console.log(auditstatus);
-	    	if(auditstatus == "2"){	//终止流程
-	    		titleText = "终止";
-	    		
-	    	}else if(auditstatus == "0"){	//退回流程
-	    		if(!nui.get("backTo").getValue()){
-	    			nui.alert("退回环节不能为空！");
-	    			return;
-	    		}
-	    		titleText = "退回";
-	    		
-	    	}else if(auditstatus == "1"){	//提交流程
-	    		titleText = "提交";
-	    		
-	    	}
-// 	    	form2.submit();
-					SaveData();
-    	}
+	
     	function countersign(){
         	selectOmEmployee();
         }
-	    function selectOmEmployee(){
-		    	var btnEdit = this;
-		        nui.open({
-		            url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
-		            title: "立项单位经办人",
-		            width: 430,
-		            height: 400,
-		            ondestroy: function (action) {
-		            	console.log(action)
-		            	var user,users = "【";
-		            	countersignUsers =[];
-		                if (action == "ok") {
-		                    var iframe = this.getIFrameEl();
-		                    var data = iframe.contentWindow.GetData();
-		                    data = nui.clone(data);    //必须
-		                    if (data) {
-		                    	console.log(data)
-	                        	for(var i = 0;i<data.length ;i++){
-	                        		user = {};
-	                        		user.id = data[i].userid
-	                        		user.name = data[i].empname
-	                        		user.typeCode = "person"
-	                        		countersignUsers.push(user);
-	                        		if(i==0){
-	                        			users = users +data[i].empname;
-	                        		}else{
-	                        		
-		                        		users = users +","+data[i].empname;
-	                        		}
-	                        	}
-	                        	users = users+"】";
-	                        	titleText ="增加审批人员"+ users +"并提交";
-			                    form2.submit();
-		                       }
-		                    }
-		
-		                }
-		            });
-		        }
     
-     // 提交 
-    	function SaveData(){
-	    	saveData();
-	    }
-    	function saveData(json){
-	    	nui.confirm("确定" + titleText + "流程吗？", "操作提示",function (action) {            
-	            if (action == "ok") {
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-	            	nui.get("creatReimbProcess").setEnabled(false);
-	            	var json = {misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers};
-		            mini.mask({
-			            el: document.body,
-			            cls: 'mini-mask-loading',
-			            html: titleText+'中...'
-			        }); 
-			    	 nui.ajax({
-			  			url: "com.zhonghe.ame.purchase.purchaseVerify.approvalPurVerify.biz.ext",
-						type: "post",
-						data: json,
-						contentType: "text/json",
-						success: function (o){
-							nui.unmask(document.body);
-							if(o.result == "success"){
-					        	nui.alert(titleText + "成功","系统提示",function(){
-					        		CloseWindow("ok");
-					        	});
-							}else{
-								nui.alert("提交失败，请联系信息技术部人员！","系统提示", function(action){
-								    CloseWindow("ok");
-								});
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown){
-							alert(jqXHR.responseText);
-						}
-			  		})  
-	            	saveData(json);
-	            }
-	        });
-			 
-		}
-    	
-    	 function onCancel(e) {
+    	function onCancel(e) {
             CloseWindow("cancel");
         }
         //标准方法接口定义
@@ -293,14 +165,10 @@
         }
         
 
-	   //科学计数法转普通计数法
+	    //科学计数法转普通计数法
 		function doIt(e){
 			var singlePrice = new Number(e.value)+'';
 			return singlePrice;
 		}
-		
-		
-	
-	
     </script></body>
 </html>

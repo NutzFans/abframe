@@ -130,7 +130,7 @@
 		loadData();
 	   function loadData(){
 			//流程提示信息
-			var data={workItemID:<%=workItemID %>};
+			var data={workItemID:<%=workItemID %>,"processid":null};
 			var json=nui.encode(data);
 			nui.ajax({
 				url:"com.zhonghe.ame.purchase.purchaseVerify.getVerify.biz.ext",
