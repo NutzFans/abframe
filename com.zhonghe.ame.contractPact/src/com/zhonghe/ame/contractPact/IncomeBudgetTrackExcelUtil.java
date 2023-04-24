@@ -35,21 +35,23 @@ public class IncomeBudgetTrackExcelUtil {
 		String annualPlanYearSecOrgSql = "SELECT secondary_org, secondary_orgname FROM annual_plan_year WHERE years=? GROUP BY secondary_org, secondary_orgname";
 		List<Entity> secOrgs = dbSession.query(annualPlanYearSecOrgSql, years);
 
-		// 查询开票数据获取真实的收入数据
-		String invoiceYearSql = "SELECT implement_org, book_income, create_time FROM zh_invoice WHERE YEAR(create_time)=?";
-		List<Entity> invoiceYears = dbSession.query(invoiceYearSql, years);
-		
-		trackDatas = CompletableFuture
-				.supplyAsync(() -> this.annualYearBySecOrg(secOrgs, years, dbSession))
-				.thenCombine(CompletableFuture.supplyAsync(() -> this.invoiceBySecOrg(invoiceYears, dbSession)),
-						new BiFunction<Map<String, Entity>, Map<String, Entity>, List<DataObject>>() {
+		if (secOrgs != null && secOrgs.size() > 0) {
+			// 查询开票数据获取真实的收入数据
+			String invoiceYearSql = "SELECT implement_org, book_income, create_time FROM zh_invoice WHERE YEAR(create_time)=? AND app_status='2'";
+			List<Entity> invoiceYears = dbSession.query(invoiceYearSql, years);
 
-							@Override
-							public List<DataObject> apply(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
-								return IncomeBudgetTrackUtil.analyzeMerge(annualMap, invoiceMap);
-							}
+			trackDatas = CompletableFuture
+					.supplyAsync(() -> this.annualYearBySecOrg(secOrgs, years, dbSession))
+					.thenCombine(CompletableFuture.supplyAsync(() -> this.invoiceBySecOrg(invoiceYears, dbSession)),
+							new BiFunction<Map<String, Entity>, Map<String, Entity>, List<DataObject>>() {
 
-						}).join();		
+								@Override
+								public List<DataObject> apply(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
+									return IncomeBudgetTrackUtil.analyzeMerge(annualMap, invoiceMap);
+								}
+
+							}).join();
+		}
 
 		return ArrayUtil.toArray(trackDatas, DataObject.class);
 	}

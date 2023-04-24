@@ -53,7 +53,7 @@ html,body {
 			<div id="trackGrid" class="nui-datagrid" style="width: 100%; height: 100%;" sizeList="[50]" pageSize="50" dataField="trackDatas" idField="secOrgId"
 				url="com.zhonghe.ame.contractPact.statisticalReport.incomeBudgetTrack.biz.ext" frozenStartColumn="0" frozenEndColumn="0" ondrawcell="setBackGroundColor">
 				<div property="columns">
-					<div field="secOrgName" width="250" align="center" headerAlign="center">中心及分公司</div>
+					<div field="secOrgName" width="250" align="center" headerAlign="center">单位</div>
 					<div header="1月份" headerAlign="center">
 						<div property="columns">
 							<div field="jarAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
