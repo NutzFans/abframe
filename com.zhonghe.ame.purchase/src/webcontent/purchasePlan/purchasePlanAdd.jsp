@@ -109,7 +109,7 @@
                 	<input property="editor" class="nui-dictcombobox" width="100%" dictTypeId="ZH_UNIT"   name="unit"/>
                 </div> 
                 <div  field="onePrice" width="100"  align="center" headerAlign="center" vtype="required" headerStyle="color:red">单价(万元)
-									<input name="onePrice" property="editor" width="100%"  class="nui-spinner"  minValue="0"  maxValue="999999999" />
+									<input name="onePrice" property="editor" width="100%"  class="nui-textbox"  minValue="0"  maxValue="999999999" />
                 </div>
                 <div  field="number" width="100"  align="center" headerAlign="center"  vtype="int" headerStyle="color:red">数量(整数)
 									<input name="number" property="editor" width="100%"  class="nui-spinner"  decimalPlaces="0"  minValue="0"  maxValue="999999999" />

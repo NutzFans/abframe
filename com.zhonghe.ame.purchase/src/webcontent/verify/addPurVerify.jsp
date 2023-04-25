@@ -90,10 +90,10 @@
 									<input id="number" name="number" maxValue="999999999"property="editor"  class="nui-spinner" />
 			                </div>
 			                <div   field="singlePrice" width="130" align="center" headerAlign="center" vtype="required">单价(万元)
-									<input id="singlePrice" name="singlePrice" property="editor" width="100%" class="nui-spinner" />
+									<input id="singlePrice" name="singlePrice" property="editor" width="100%" class="nui-textbox" />
 			                </div>
 			                <div   field="totalPriceDetail" width="130" align="center" headerAlign="center"  >总价(万元)
-								<!-- 	<input id="totalPriceDetail" name="totalPriceDetail" property="editor"  class="nui-spinner"  /> -->
+								<input id="totalPriceDetail" name="totalPriceDetail" property="editor"  class="nui-textbox"  />
 			                </div>
 			                 <div   field="qualitySituation" width="130" align="center" headerAlign="center"  >质量情况
 									<input id="qualitySituation" name="qualitySituation" property="editor" width="100%" class="nui-textbox"  />

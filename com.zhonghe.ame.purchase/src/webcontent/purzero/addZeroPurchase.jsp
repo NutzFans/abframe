@@ -84,10 +84,10 @@
 						</div>
 						<div field="onePrice" align="center" headerAlign="center" vtype="float">
 							<h4 style="color:red">单价(万元)</h4>
-							<input name="onePrice" property="editor" class="nui-spinner" minValue="0" value="0" maxValue="999999999" width="100%" />
+							<input name="onePrice" property="editor" class="nui-textbox"  width="100%" />
 						</div>
 						<div field="num" align="center" headerAlign="center" vtype="required">数量
-							<input name="num" property="editor" class="nui-spinner" minValue="0" value="0"maxValue="999999999" width="100%" />
+							<input name="num" property="editor" class="nui-spinner" minValue="0" value="0" maxValue="999999999" width="100%" />
 						</div>
 						<div field="totalPrice" width="130" align="center" headerAlign="center">
 							<h4 style="color:red">总价(万元)</h4>
