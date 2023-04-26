@@ -13,7 +13,7 @@ body {
 }
 </style>
 <head>
-<title>新增单位年度目标值及门槛值</title>
+<title>新增单位年度门槛值及期望值</title>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px">
@@ -33,25 +33,25 @@ body {
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">目标值（集团内）：</td>
+						<td align="right" style="width: 130px">门槛值（集团内）：</td>
 						<td>
 							<input name="nTargetValue" id="nTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">门槛值（集团内）：</td>
+						<td align="right" style="width: 130px">期望值（集团内）：</td>
 						<td>
 							<input name="nThresholdValue" id="nThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">目标值（集团外）：</td>
+						<td align="right" style="width: 130px">门槛值（集团外）：</td>
 						<td>
 							<input name="wTargetValue" id="wTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">门槛值（集团外）：</td>
+						<td align="right" style="width: 130px">期望值（集团外）：</td>
 						<td>
 							<input name="wThresholdValue" id="wThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
@@ -85,7 +85,7 @@ body {
 						showTips("新增成功");
 						closeOk();
 					} else if (data.result == "1") {
-						showTips("该单位在该年度已配置目标值及门槛值！", "danger");
+						showTips("该单位在该年度已配置门槛值及期望值！", "danger");
 					} else {
 						showTips("新增失败，请联系管理员！", "danger");
 					}

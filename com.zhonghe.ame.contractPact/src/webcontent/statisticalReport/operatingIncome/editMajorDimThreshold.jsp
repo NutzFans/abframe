@@ -13,7 +13,7 @@ body {
 }
 </style>
 <head>
-<title>编辑专业类别年度目标值及门槛值</title>
+<title>编辑专业类别年度门槛值及期望值</title>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px">
@@ -33,25 +33,25 @@ body {
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">目标值（集团内）：</td>
+						<td align="right" style="width: 130px">门槛值（集团内）：</td>
 						<td>
 							<input name="nTargetValue" id="nTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">门槛值（集团内）：</td>
+						<td align="right" style="width: 130px">期望值（集团内）：</td>
 						<td>
 							<input name="nThresholdValue" id="nThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">目标值（集团外）：</td>
+						<td align="right" style="width: 130px">门槛值（集团外）：</td>
 						<td>
 							<input name="wTargetValue" id="wTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>
 					</tr>
 					<tr>
-						<td align="right" style="width: 130px">门槛值（集团外）：</td>
+						<td align="right" style="width: 130px">期望值（集团外）：</td>
 						<td>
 							<input name="wThresholdValue" id="wThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
 						</td>

@@ -180,9 +180,9 @@ public class OrgDimOperatingIncomeTrackExcelUtil {
 		List<String> customSort = Arrays.asList("16", "17", "18", "20", "21", "13", "102199", "8", "19", "24", "25", "26", "27", "111", "193");
 
 		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, (t1, t2) -> {
-			int t1Index = customSort.indexOf(t1.getString("id"));
+			int t1Index = customSort.indexOf(t1.getString("secOrgId"));
 			t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
-			int t2Index = customSort.indexOf(t2.getString("id"));
+			int t2Index = customSort.indexOf(t2.getString("secOrgId"));
 			t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
 			return t1Index - t2Index;
 		});

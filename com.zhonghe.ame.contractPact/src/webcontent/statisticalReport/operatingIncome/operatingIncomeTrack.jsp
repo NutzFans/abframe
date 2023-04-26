@@ -61,8 +61,8 @@ html,body {
 					url="com.zhonghe.ame.contractPact.statisticalReport.orgDimOperatingIncomeTrack.biz.ext" ondrawcell="setBackGroundColor">
 					<div property="columns">
 						<div field="secOrgName" align="center" headerAlign="center" allowSort="true">单位</div>
-						<div field="targetValue" align="center" headerAlign="center" dataType="currency">目标值</div>
-						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
+						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
+						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值</div>
 						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成</div>
 						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成</div>
 						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入</div>
@@ -112,8 +112,8 @@ html,body {
 					url="com.zhonghe.ame.contractPact.statisticalReport.majorDimOperatingIncomeTrack.biz.ext" ondrawcell="setMajorBackGroundColor">
 					<div property="columns">
 						<div field="majorName" align="center" headerAlign="center" allowSort="true">专业类别</div>
-						<div field="targetValue" align="center" headerAlign="center" dataType="currency">目标值</div>
-						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
+						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
+						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值</div>
 						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成</div>
 						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成</div>
 						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入</div>
@@ -157,8 +157,8 @@ html,body {
 					url="com.zhonghe.ame.contractPact.statisticalReport.groupDimOperatingIncomeTrack.biz.ext" ondrawcell="setGroupBackGroundColor">
 					<div property="columns">
 						<div field="groupName" align="center" headerAlign="center" allowSort="true">集团内/外</div>
-						<div field="targetValue" align="center" headerAlign="center" dataType="currency">目标值</div>
-						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
+						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
+						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值</div>
 						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成</div>
 						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成</div>
 						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入</div>
@@ -254,8 +254,8 @@ html,body {
 			nui.open({
 				url : "/default/contractPact/statisticalReport/operatingIncome/addOrgDimThreshold.jsp",
 				width : '450px',
-				height : '280px',
-				title : "新增单位年度目标值及门槛值",
+				height : '300px',
+				title : "新增单位年度门槛值及期望值",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 				},
@@ -270,7 +270,7 @@ html,body {
 				url : "/default/contractPact/statisticalReport/operatingIncome/addMajorDimThreshold.jsp",
 				width : '450px',
 				height : '280px',
-				title : "新增专业类别年度目标值及门槛值",
+				title : "新增专业类别年度门槛值及期望值",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 				},
@@ -306,7 +306,7 @@ html,body {
 									url : "/default/contractPact/statisticalReport/operatingIncome/editOrgDimThreshold.jsp",
 									width : '450px',
 									height : '280px',
-									title : "编辑单位年度目标值及门槛值",
+									title : "编辑单位年度门槛值及期望值",
 									onload : function() {
 										var iframe = this.getIFrameEl();
 										iframe.contentWindow.setEditData(o.data);
@@ -350,7 +350,7 @@ html,body {
 									url : "/default/contractPact/statisticalReport/operatingIncome/editMajorDimThreshold.jsp",
 									width : '450px',
 									height : '280px',
-									title : "编辑专业类别年度目标值及门槛值",
+									title : "编辑专业类别年度门槛值及期望值",
 									onload : function() {
 										var iframe = this.getIFrameEl();
 										iframe.contentWindow.setEditData(o.data);
