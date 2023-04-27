@@ -132,6 +132,7 @@
 	</div>
 
 	<script type="text/javascript">
+		nui.parse();
 		<%
 			long workitemid = (Long) request.getAttribute("workItemID");
 		%>

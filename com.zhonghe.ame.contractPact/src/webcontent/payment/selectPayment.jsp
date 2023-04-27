@@ -21,59 +21,103 @@
  	<form id="form1" method="post" >
         <fieldset style="border:solid 1px #aaa;padding:3px;">
         	<legend>付款申请基本信息</legend>
-        	<table style="table-layout:fixed;" id="table_file1">
+        	<table style="table-layout: fixed;">
+						<tr>
+							<td class="form_label" align="right">申请人</td>
+							<td>
+								<input id="empname" name="empname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 160px">申请部门：</td>
+							<td>
+								<input id="orgname" name="orgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 160px">申请日期：</td>
+							<td>
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">合同编号：</td>
+							<td>
+								<input id="contractId" name="contractId" class="nui-textbox" onbuttonclick="onButtonEdit" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 160px">合同名称：</td>
+							<td colspan="6">
+								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">合同性质：</td>
+							<td>
+								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" enabled="false" />
+							</td>
+
+							<td align="right" style="width: 160px">合同类型：</td>
+							<td>
+								<input id="contractType" name="contractType" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 100%" required="true" enabled="false" />
+							</td>
+
+							<td align="right" style="width: 160px">付款方：</td>
+							<td>
+								<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">合同金额(元)：</td>
+							<td>
+								<input id="contractSum" name="contractSum" class="nui-textbox" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 160px">累计已付金额(元)：</td>
+							<td>
+								<input id="paidContractSum" name="paidContractSum" class="nui-textbox" onvaluechanged="editPaidContractSum" style="width: 200px" required="false" enabled="false" />
+							</td>
+							<td align="right" style="width: 160px">本次支付金额(元)：</td>
+							<td>
+								<input id="applyPayContractSum" name="applyPayContractSum" onvaluechanged="editApplyPayContractSum" class="nui-textbox" style="width: 200px" required="true" enabled="false" />
+							</td>
+
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">发票类型：</td>
+							<td>
+								<input id="invoiceType" name="invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 160px">本次付款进度：</td>
+							<td>
+								<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 160px">最晚付款日期：</td>
+							<td>
+								<input id="endTime" name="endTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">收款单位：</td>
+							<td colspan="8">
+								<input name="signatory" id="signatory" class="nui-hidden" style="width: 200px" />
+								<input id="signatoryname" name="signatoryname" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">收款单位开户行名称：</td>
+							<td colspan="8">
+								<input id="accountName" name="accountName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">收款单位开户行账号：</td>
+							<td colspan="8">
+								<input id="account" name="account" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">支付依据及情况说明：</td>
+							<td colspan="8">
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 150px" required="true" enabled="false" />
+							</td>
+						</tr>
+					</table>
         	
-		            <tr>
-						<td align="right" style="width:160px">申请人：</td>
-						<td id="empname" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">申请日期：</td>
-						<td id="createTime" style="width:250px" class = "asLabel"></td>	
-						<td align="right" style="width:160px">签约方：</td>
-						<td id="signatory" style="width:250px" class = "asLabel"></td>
-						
-					</tr>
-					<tr>
-						<td align="right" style="width:160px">付款方：</td>
-						<td id="payer" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px"> 合同名称：</td>
-						<td id="contractName" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">合同编号：</td>
-						<td id="contractId" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:160px">合同金额（元）：</td>
-						<td id="contractSum" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">累计已付金额（元）：</td>
-						<td id="paidContractSum" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">本次申请支付金额（元）：</td>
-						<td id="applyPayContractSum" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-						
-						<td align="right" style="width:160px"> 最晚付款日期：</td>
-						<td  style="width:250px" id="endTime" class = "asLabel"></td>
-						<td align="right" style="width:160px"> 收款单位开户行名称：</td>
-						<td  style="width:250px" id="accountName" class = "asLabel"></td>
-						<td align="right" style="width:160px">开户行账号：</td>
-						<td id="account" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-						
-						<td align="right" style="width:160px">是否为人力劳务派遣：</td>
-						<td id="laborDispatchingFlag" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">分公司归口部门：</td>
-						<td id="countersign0" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">本部归口部门：</td>
-						<td id="countersign1" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-	              		<td style="width:350px;" align="right">说明：</td>
-	                    <td style="width:150px;" colspan="7" class = "asLabel">    
-	                        <input style="width:90%;height: 40px;" class="nui-textarea" id="remark" dictTypeId="ZH_PURCHASE"  enabled="false"/>
-	                    </td>
-	              	</tr>
-		            
-        	</table>
         	<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
 					<legend>相关附件</legend>
 					<jsp:include page="/ame_common/detailFile.jsp"/>
@@ -99,29 +143,11 @@
 				data: json,	
 				contentType: 'text/json',
 	            success: function (o) {
-
-	            	o = nui.decode(o);
-	                document.getElementById("empname").innerHTML = o.payment.empname == null ?"":o.payment.empname;
-					document.getElementById("createTime").innerHTML = o.payment.createTime == null ?"":o.payment.createTime;
-					document.getElementById("signatory").innerHTML = o.payment.signatoryname == null ?"":o.payment.signatoryname;
-					document.getElementById("payer").innerHTML = o.payment.payer == null ?"":nui.getDictText('ZH_INVOICE_NAME_TYPE',o.payment.payer);
-					document.getElementById("contractName").innerHTML = o.payment.contractName == null ?"":o.payment.contractName;
-					document.getElementById("contractId").innerHTML = o.payment.contractId == null ?"":o.payment.contractId;
-					document.getElementById("contractSum").innerHTML = o.payment.actContractSum == null ?"":o.payment.actContractSum;
-					document.getElementById("paidContractSum").innerHTML = o.payment.paidContractSum == null ?"":o.payment.paidContractSum;
-					document.getElementById("applyPayContractSum").innerHTML = o.payment.applyPayContractSum == null ?"":o.payment.applyPayContractSum;
-					document.getElementById("endTime").innerHTML = o.payment.endTime == null ?"":o.payment.endTime;
-					document.getElementById("accountName").innerHTML = o.payment.accountName == null ?"":o.payment.accountName;
-					document.getElementById("account").innerHTML = o.payment.account == null ?"":o.payment.account;
-					document.getElementById("laborDispatchingFlag").innerHTML = o.payment.laborDispatchingFlag == null ?"":nui.getDictText('ZH_LABOR_DISPATCHING_FLAG',o.payment.laborDispatchingFlag);
-					document.getElementById("countersign0").innerHTML = o.payment.countersign0 == null ?"":o.payment.countersign0;
-					document.getElementById("countersign1").innerHTML = o.payment.countersign1 == null ?"":o.payment.countersign1;
-					document.getElementById("remark").innerHTML = o.payment.remark == null ?"":o.payment.remark;
-
-					
+					form.setData(o.payment);
+					console.log("999-9", o.payment);
 					var grid_0 = nui.get("grid_0");
-        				grid_0.load({"groupid":"PAY_CONTRACT","relationid":o.payContract.id});
-						grid_0.sortBy("fileTime","desc");
+    				grid_0.load({"groupid":"PAY_MENT","relationid":o.payment.id});
+					grid_0.sortBy("fileTime","desc");
 	                
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
