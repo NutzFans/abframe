@@ -82,7 +82,7 @@
 					</div>
 				</form>
 					
-				<p style="color:red;">补充合同信息:</p>
+				<p style="color:red;">补充协议信息:</p>
 			<form id="form3" method="post">
 				<div style="padding: 5px;">
 						<table style="table-layout: fixed;">

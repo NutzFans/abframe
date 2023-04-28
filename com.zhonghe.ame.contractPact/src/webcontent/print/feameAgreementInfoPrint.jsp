@@ -116,7 +116,7 @@
 						</table>
 					</div>
 				<div class="link-top"></div>
-				<p style="color: red;font-weight: bold;">补充合同信息:</p>
+				<p style="color: red;font-weight: bold;">补充协议信息:</p>
 				<div style="padding: 5px;" align="center">
 					<table style="table-layout: fixed;">
 						<tr>
