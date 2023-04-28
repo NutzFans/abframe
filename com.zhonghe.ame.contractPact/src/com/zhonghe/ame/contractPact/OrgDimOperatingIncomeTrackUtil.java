@@ -129,8 +129,9 @@ public class OrgDimOperatingIncomeTrackUtil {
 					if (StrUtil.isNotBlank(income)) {
 						data.set("book_income", NumberUtil.add(income, entity.getStr("book_income")));
 					} else {
-						data.set("fieldName", entity.getBigDecimal("book_income"));
+						data.set("book_income", entity.getBigDecimal("book_income"));
 					}
+					invoiceMap.put(secOrgId, data);
 				} else {
 					Entity data = new Entity();
 					data.set("book_income", entity.getBigDecimal("book_income"));

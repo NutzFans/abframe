@@ -56,14 +56,14 @@ public class GroupDimOperatingIncomeTrackExcelUtil {
 					String annualYearSql = "SELECT SUM( CAST ( acp.sum AS NUMERIC ( 18, 2) ) ) AS sum_total FROM ( SELECT temp.* FROM ( SELECT ap.years, ap.[sum], zc.headquarter_group FROM annual_payment_plan AS ap LEFT JOIN zh_charge_contract AS zc ON zc.id = ap.charge_id WHERE ap.charge_id IS NOT NULL AND zc.app_status= 2 ) AS temp UNION ALL SELECT ac.years, ac.[sum], ac.headquarter_group FROM annual_charge_plan AS ac ) AS acp WHERE years = ? AND headquarter_group IN ( '0', '3', '4' )";
 					Entity annualYear = dbSession.queryOne(annualYearSql, groupDimYear);
 					if (annualYear != null) {
-						trackData.setBigDecimal("totalYear", annualYear.getBigDecimal("sum_total"));
+						trackData.setBigDecimal("totalYear", NumberUtil.div(annualYear.getBigDecimal("sum_total"), 1.06, 2));
 					} else {
 						trackData.setBigDecimal("totalYear", new BigDecimal(0));
 					}
 					String annualYearBySignedSql = "SELECT SUM( CAST ( SUM AS NUMERIC ( 18, 2) ) ) AS sum_total FROM annual_charge_plan WHERE years = ? AND headquarter_group IN ( '0', '3', '4' ) ";
 					Entity annualYearBySigne = dbSession.queryOne(annualYearBySignedSql, groupDimYear);
 					if (annualYearBySigne != null && annualYearBySigne.getBigDecimal("sum_total") != null) {
-						trackData.setBigDecimal("toBeSigned", annualYearBySigne.getBigDecimal("sum_total"));
+						trackData.setBigDecimal("toBeSigned", NumberUtil.div(annualYearBySigne.getBigDecimal("sum_total"), 1.06, 2));
 					} else {
 						trackData.setBigDecimal("toBeSigned", new BigDecimal(0));
 					}
@@ -79,14 +79,14 @@ public class GroupDimOperatingIncomeTrackExcelUtil {
 					String annualYearSql = "SELECT SUM( CAST ( acp.sum AS NUMERIC ( 18, 2) ) ) AS sum_total FROM ( SELECT temp.* FROM ( SELECT ap.years, ap.[sum], zc.headquarter_group FROM annual_payment_plan AS ap LEFT JOIN zh_charge_contract AS zc ON zc.id = ap.charge_id WHERE ap.charge_id IS NOT NULL AND zc.app_status= 2 ) AS temp UNION ALL SELECT ac.years, ac.[sum], ac.headquarter_group FROM annual_charge_plan AS ac ) AS acp WHERE years = ? AND headquarter_group='1'";
 					Entity annualYear = dbSession.queryOne(annualYearSql, groupDimYear);
 					if (annualYear != null) {
-						trackData.setBigDecimal("totalYear", annualYear.getBigDecimal("sum_total"));
+						trackData.setBigDecimal("totalYear", NumberUtil.div(annualYear.getBigDecimal("sum_total"), 1.06, 2));
 					} else {
 						trackData.setBigDecimal("totalYear", new BigDecimal(0));
 					}
 					String annualYearBySignedSql = "SELECT SUM( CAST ( SUM AS NUMERIC ( 18, 2) ) ) AS sum_total FROM annual_charge_plan WHERE years = ? AND headquarter_group='1'";
 					Entity annualYearBySigne = dbSession.queryOne(annualYearBySignedSql, groupDimYear);
 					if (annualYearBySigne != null && annualYearBySigne.getBigDecimal("sum_total") != null) {
-						trackData.setBigDecimal("toBeSigned", annualYearBySigne.getBigDecimal("sum_total"));
+						trackData.setBigDecimal("toBeSigned", NumberUtil.div(annualYearBySigne.getBigDecimal("sum_total"), 1.06, 2));
 					} else {
 						trackData.setBigDecimal("toBeSigned", new BigDecimal(0));
 					}
