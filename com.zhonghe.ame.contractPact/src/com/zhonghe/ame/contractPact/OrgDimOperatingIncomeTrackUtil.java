@@ -155,19 +155,19 @@ public class OrgDimOperatingIncomeTrackUtil {
 				trackData.setBigDecimal("thresholdValue", secOrg.getBigDecimal("threshold_value"));
 				if (invoiceYearsMap.containsKey(secOrg.getStr("sec_org"))) {
 					Entity invoiceYear = invoiceYearsMap.get(secOrg.getStr("sec_org"));
-					trackData.setBigDecimal("cumulativeCompleted", invoiceYear.getBigDecimal("book_income"));
+					trackData.setBigDecimal("cumulativeCompleted", NumberUtil.div(invoiceYear.getBigDecimal("book_income"), 10000, 2));
 				} else {
 					trackData.setBigDecimal("cumulativeCompleted", new BigDecimal(0));
 				}
 				if (annualYearsMap.containsKey(secOrg.getStr("sec_org"))) {
 					Entity annualYear = annualYearsMap.get(secOrg.getStr("sec_org"));
-					trackData.setBigDecimal("totalYear", NumberUtil.div(annualYear.getBigDecimal("sum_total"), 1.06, 2));
+					trackData.setBigDecimal("totalYear", NumberUtil.div(NumberUtil.div(annualYear.getBigDecimal("sum_total"), 1.06, 2), 10000, 2));
 				} else {
 					trackData.setBigDecimal("totalYear", new BigDecimal(0));
 				}
 				if (annualYearBySignedsMap.containsKey(secOrg.getStr("sec_org"))) {
 					Entity annualYearBySigned = annualYearBySignedsMap.get(secOrg.getStr("sec_org"));
-					trackData.setBigDecimal("toBeSigned", NumberUtil.div(annualYearBySigned.getBigDecimal("sum_total"), 1.06, 2));
+					trackData.setBigDecimal("toBeSigned", NumberUtil.div(NumberUtil.div(annualYearBySigned.getBigDecimal("sum_total"), 1.06, 2), 10000, 2));
 				} else {
 					trackData.setBigDecimal("toBeSigned", new BigDecimal(0));
 				}

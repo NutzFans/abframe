@@ -61,12 +61,12 @@ html,body {
 					url="com.zhonghe.ame.contractPact.statisticalReport.orgDimOperatingIncomeTrack.biz.ext" ondrawcell="setBackGroundColor">
 					<div property="columns">
 						<div field="secOrgName" align="center" headerAlign="center" allowSort="true">单位</div>
-						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
-						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值</div>
-						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成</div>
-						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成</div>
-						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入</div>
-						<div field="totalYear" align="center" headerAlign="center" dataType="currency">全年合计</div>
+						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值（万元）</div>
+						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值（万元）</div>
+						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成（万元）</div>
+						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成（万元）</div>
+						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入（万元）</div>
+						<div field="totalYear" align="center" headerAlign="center" dataType="currency">全年合计（万元）</div>
 					</div>
 				</div>
 			</div>
@@ -112,12 +112,12 @@ html,body {
 					url="com.zhonghe.ame.contractPact.statisticalReport.majorDimOperatingIncomeTrack.biz.ext" ondrawcell="setMajorBackGroundColor">
 					<div property="columns">
 						<div field="majorName" align="center" headerAlign="center" allowSort="true">专业类别</div>
-						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
-						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值</div>
-						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成</div>
-						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成</div>
-						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入</div>
-						<div field="totalYear" align="center" headerAlign="center" dataType="currency">全年合计</div>
+						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值（万元）</div>
+						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值（万元）</div>
+						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成（万元）</div>
+						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成（万元）</div>
+						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入（万元）</div>
+						<div field="totalYear" align="center" headerAlign="center" dataType="currency">全年合计（万元）</div>
 					</div>
 				</div>
 			</div>
@@ -157,12 +157,12 @@ html,body {
 					url="com.zhonghe.ame.contractPact.statisticalReport.groupDimOperatingIncomeTrack.biz.ext" ondrawcell="setGroupBackGroundColor">
 					<div property="columns">
 						<div field="groupName" align="center" headerAlign="center" allowSort="true">集团内/外</div>
-						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值</div>
-						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值</div>
-						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成</div>
-						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成</div>
-						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入</div>
-						<div field="totalYear" align="center" headerAlign="center" dataType="currency">全年合计</div>
+						<div field="targetValue" align="center" headerAlign="center" dataType="currency">门槛值（万元）</div>
+						<div field="thresholdValue" align="center" headerAlign="center" dataType="currency">期望值（万元）</div>
+						<div field="cumulativeCompleted" align="center" headerAlign="center" dataType="currency">累计已完成（万元）</div>
+						<div field="followUpCcompleted" align="center" headerAlign="center" dataType="currency">后续待完成（万元）</div>
+						<div field="toBeSigned" align="center" headerAlign="center" dataType="currency">其中：待签合同收入（万元）</div>
+						<div field="totalYear" align="center" headerAlign="center" dataType="currency">全年合计（万元）</div>
 					</div>
 				</div>
 			</div>

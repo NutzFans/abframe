@@ -35,25 +35,25 @@ body {
 					<tr>
 						<td align="right" style="width: 130px">门槛值（集团内）：</td>
 						<td>
-							<input name="nTargetValue" id="nTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
+							<input name="nTargetValue" id="nTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" emptyText="单位：万元"/>
 						</td>
 					</tr>
 					<tr>
 						<td align="right" style="width: 130px">期望值（集团内）：</td>
 						<td>
-							<input name="nThresholdValue" id="nThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
+							<input name="nThresholdValue" id="nThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" emptyText="单位：万元" />
 						</td>
 					</tr>
 					<tr>
 						<td align="right" style="width: 130px">门槛值（集团外）：</td>
 						<td>
-							<input name="wTargetValue" id="wTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
+							<input name="wTargetValue" id="wTargetValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" emptyText="单位：万元" />
 						</td>
 					</tr>
 					<tr>
 						<td align="right" style="width: 130px">期望值（集团外）：</td>
 						<td>
-							<input name="wThresholdValue" id="wThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" />
+							<input name="wThresholdValue" id="wThresholdValue" class="nui-textbox" vtype="float" style="width: 250px" required="true" emptyText="单位：万元" />
 						</td>
 					</tr>
 				</table>

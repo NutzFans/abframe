@@ -86,8 +86,6 @@
      <div class="fieldset-body"  style="width:100%; height:100%; margin: 0px auto">
  		<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a> 
         <a class="nui-button" id="delbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a> 
-        <a href="<%=request.getContextPath() %>/onePurConcentratedPlan.xlsx" download="2023年度一级集中采购计划细分表">2023年度一级集中采购计划细分表</a>
-        <a href="<%=request.getContextPath() %>/twoPurConcentratedPlan.xlsx" download="2023年度二级集中采购计划细分表">2023年度二级集中采购计划细分表</a>
     	<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%;height: auto;" allowCellSelect="true" 
 	    	 	showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ" >
 	           <div property="columns">
@@ -136,7 +134,15 @@
 		</fieldset>
     </fieldset>
     <fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-		<legend>上传相关附件</legend>
+		<legend>
+			上传相关附件
+			&nbsp;&nbsp;
+			<a href="<%=request.getContextPath() %>/onePurConcentratedPlan.xlsx" download="2023年度一级集中采购计划细分表">2023年度一级集中采购计划细分表</a>
+			&nbsp;&nbsp;
+			<a href="<%=request.getContextPath() %>/twoPurConcentratedPlan.xlsx" download="2023年度二级集中采购计划细分表">2023年度二级集中采购计划细分表</a>
+			&nbsp;&nbsp;
+			<a href="<%=request.getContextPath() %>/purPlanRationalityDescription.xlsx" download="采购价格合理性说明">采购价格合理性说明</a>
+		</legend>
 		<jsp:include page="/ame_common/addFiles.jsp"/>
 	</fieldset>
 </div>

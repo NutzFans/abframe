@@ -386,6 +386,8 @@ public class IncomeBudgetTrackUtil {
 				@Override
 				public DataObject apply(BigDecimal jarAccBudget, BigDecimal jarAccActual) {
 					DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.TrackAnalyzeEntity");
+					jarAccBudget = NumberUtil.div(jarAccBudget, 10000, 2);
+					jarAccActual = NumberUtil.div(jarAccActual, 10000, 2);
 					trackData.setBigDecimal("jarAccBudget", jarAccBudget);
 					trackData.setBigDecimal("jarAccActual", jarAccActual);
 					String jarCompletionRate = "";
@@ -401,7 +403,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal febAccBudget) {
-					trackData.setBigDecimal("febAccBudget", febAccBudget);
+					trackData.setBigDecimal("febAccBudget", NumberUtil.div(febAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -409,6 +411,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal febAccActual) {
+					febAccActual = NumberUtil.div(febAccActual, 10000, 2);
 					trackData.setBigDecimal("febAccActual", febAccActual);
 					BigDecimal febAccBudget = trackData.getBigDecimal("febAccBudget");
 					String febCompletionRate = "";
@@ -425,7 +428,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal marAccBudget) {
-					trackData.setBigDecimal("marAccBudget", marAccBudget);
+					trackData.setBigDecimal("marAccBudget", NumberUtil.div(marAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -433,6 +436,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal marAccActual) {
+					marAccActual = NumberUtil.div(marAccActual, 10000, 2);
 					trackData.setBigDecimal("marAccActual", marAccActual);
 					BigDecimal marAccBudget = trackData.getBigDecimal("marAccBudget");
 					String marCompletionRate = "";
@@ -449,7 +453,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal aprAccBudget) {
-					trackData.setBigDecimal("aprAccBudget", aprAccBudget);
+					trackData.setBigDecimal("aprAccBudget", NumberUtil.div(aprAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -457,6 +461,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal aprAccActual) {
+					aprAccActual = NumberUtil.div(aprAccActual, 10000, 2);
 					trackData.setBigDecimal("aprAccActual", aprAccActual);
 					BigDecimal aprAccBudget = trackData.getBigDecimal("aprAccBudget");
 					String aprCompletionRate = "";
@@ -473,7 +478,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal mayAccBudget) {
-					trackData.setBigDecimal("mayAccBudget", mayAccBudget);
+					trackData.setBigDecimal("mayAccBudget", NumberUtil.div(mayAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -481,6 +486,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal mayAccActual) {
+					mayAccActual = NumberUtil.div(mayAccActual, 10000, 2);
 					trackData.setBigDecimal("mayAccActual", mayAccActual);
 					BigDecimal mayAccBudget = trackData.getBigDecimal("mayAccBudget");
 					String mayCompletionRate = "";
@@ -497,7 +503,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal junAccBudget) {
-					trackData.setBigDecimal("junAccBudget", junAccBudget);
+					trackData.setBigDecimal("junAccBudget", NumberUtil.div(junAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -505,6 +511,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal junAccActual) {
+					junAccActual = NumberUtil.div(junAccActual, 10000, 2);
 					trackData.setBigDecimal("junAccActual", junAccActual);
 					BigDecimal junAccBudget = trackData.getBigDecimal("junAccBudget");
 					String junCompletionRate = "";
@@ -521,7 +528,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal julAccBudget) {
-					trackData.setBigDecimal("julAccBudget", julAccBudget);
+					trackData.setBigDecimal("julAccBudget", NumberUtil.div(julAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -529,6 +536,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal julAccActual) {
+					julAccActual = NumberUtil.div(julAccActual, 10000, 2);
 					trackData.setBigDecimal("julAccActual", julAccActual);
 					BigDecimal julAccBudget = trackData.getBigDecimal("julAccBudget");
 					String julCompletionRate = "";
@@ -545,7 +553,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal augAccBudget) {
-					trackData.setBigDecimal("augAccBudget", augAccBudget);
+					trackData.setBigDecimal("augAccBudget", NumberUtil.div(augAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -553,6 +561,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal augAccActual) {
+					augAccActual = NumberUtil.div(augAccActual, 10000, 2);
 					trackData.setBigDecimal("augAccActual", augAccActual);
 					BigDecimal augAccBudget = trackData.getBigDecimal("augAccBudget");
 					String augCompletionRate = "";
@@ -569,7 +578,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal sepAccBudget) {
-					trackData.setBigDecimal("sepAccBudget", sepAccBudget);
+					trackData.setBigDecimal("sepAccBudget", NumberUtil.div(sepAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -577,6 +586,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal sepAccActual) {
+					sepAccActual = NumberUtil.div(sepAccActual, 10000, 2);
 					trackData.setBigDecimal("sepAccActual", sepAccActual);
 					BigDecimal sepAccBudget = trackData.getBigDecimal("sepAccBudget");
 					String sepCompletionRate = "";
@@ -593,7 +603,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal octAccBudget) {
-					trackData.setBigDecimal("octAccBudget", octAccBudget);
+					trackData.setBigDecimal("octAccBudget", NumberUtil.div(octAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -601,6 +611,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal octAccActual) {
+					octAccActual = NumberUtil.div(octAccActual, 10000, 2);
 					trackData.setBigDecimal("octAccActual", octAccActual);
 					BigDecimal octAccBudget = trackData.getBigDecimal("octAccBudget");
 					String octCompletionRate = "";
@@ -617,7 +628,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal novAccBudget) {
-					trackData.setBigDecimal("novAccBudget", novAccBudget);
+					trackData.setBigDecimal("novAccBudget", NumberUtil.div(novAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -625,6 +636,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal novAccActual) {
+					novAccActual = NumberUtil.div(novAccActual, 10000, 2);
 					trackData.setBigDecimal("novAccActual", novAccActual);
 					BigDecimal novAccBudget = trackData.getBigDecimal("novAccBudget");
 					String novCompletionRate = "";
@@ -641,7 +653,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal decAccBudget) {
-					trackData.setBigDecimal("decAccBudget", decAccBudget);
+					trackData.setBigDecimal("decAccBudget", NumberUtil.div(decAccBudget, 10000, 2));
 					return trackData;
 				}
 
@@ -649,6 +661,7 @@ public class IncomeBudgetTrackUtil {
 
 				@Override
 				public DataObject apply(DataObject trackData, BigDecimal decAccActual) {
+					decAccActual = NumberUtil.div(decAccActual, 10000, 2);
 					trackData.setBigDecimal("decAccActual", decAccActual);
 					BigDecimal decAccBudget = trackData.getBigDecimal("decAccBudget");
 					String decCompletionRate = "";

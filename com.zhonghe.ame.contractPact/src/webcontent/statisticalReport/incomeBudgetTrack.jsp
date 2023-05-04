@@ -56,85 +56,85 @@ html,body {
 					<div field="secOrgName" width="250" align="center" headerAlign="center">单位</div>
 					<div header="1月份" headerAlign="center">
 						<div property="columns">
-							<div field="jarAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="jarAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="jarAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="jarAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="jarCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 2月份" headerAlign="center">
 						<div property="columns">
-							<div field="febAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="febAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="febAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="febAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="febCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 3月份" headerAlign="center">
 						<div property="columns">
-							<div field="marAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="marAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="marAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="marAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="marCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 4月份" headerAlign="center">
 						<div property="columns">
-							<div field="aprAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="aprAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="aprAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="aprAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="aprCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 5月份" headerAlign="center">
 						<div property="columns">
-							<div field="mayAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="mayAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="mayAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="mayAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="mayCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 6月份" headerAlign="center">
 						<div property="columns">
-							<div field="junAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="junAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="junAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="junAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="junCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 7月份" headerAlign="center">
 						<div property="columns">
-							<div field="julAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="julAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="julAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="julAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="julCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 8月份" headerAlign="center">
 						<div property="columns">
-							<div field="augAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="augAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="augAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="augAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="augCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 9月份" headerAlign="center">
 						<div property="columns">
-							<div field="sepAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="sepAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="sepAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="sepAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="sepCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 10月份" headerAlign="center">
 						<div property="columns">
-							<div field="octAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="octAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="octAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="octAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="octCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 11月份" headerAlign="center">
 						<div property="columns">
-							<div field="novAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="novAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="novAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="novAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="novCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>
 					<div header="1 — 12月份" headerAlign="center">
 						<div property="columns">
-							<div field="decAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算</div>
-							<div field="decAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际</div>
+							<div field="decAccBudget" width="100" align="center" headerAlign="center" dataType="currency">预算（万元）</div>
+							<div field="decAccActual" width="100" align="center" headerAlign="center" dataType="currency">实际（万元）</div>
 							<div field="decCompletionRate" width="100" align="center" headerAlign="center">完成率</div>
 						</div>
 					</div>

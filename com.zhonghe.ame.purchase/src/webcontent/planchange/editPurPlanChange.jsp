@@ -43,7 +43,7 @@
 	            <td colspan="1">    
 	                <input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" readonly="readonly" onvaluechanged="changeexptype" onbeforeshowpopup="beforechanged" required="true"  style="width:100%;"/>
 	            </td>
-	            <td colspan="1" class="form_label" align="right" style="width:130px;">变更前总金额(万元)：</td>
+	            <td colspan="1" class="form_label" align="right" style="width:120px;">变更前总金额(万元)：</td>
 	            <td colspan="1">
 	                <input id="budgetAmount" name="budgetAmount" class="nui-textbox" required="true"   readOnly="readOnly"  style="width:100%;" />
 	            </td>
@@ -153,7 +153,18 @@
 	        </div>
 		</div>
 	</fieldset>
-	<jsp:include page="/ame_common/addFiles.jsp"/>
+	<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
+		<legend>
+			上传相关附件
+			&nbsp;&nbsp;
+			<a href="<%=request.getContextPath() %>/onePurConcentratedPlan.xlsx" download="2023年度一级集中采购计划细分表">2023年度一级集中采购计划细分表</a>
+			&nbsp;&nbsp;
+			<a href="<%=request.getContextPath() %>/twoPurConcentratedPlan.xlsx" download="2023年度二级集中采购计划细分表">2023年度二级集中采购计划细分表</a>
+			&nbsp;&nbsp;
+			<a href="<%=request.getContextPath() %>/purPlanRationalityDescription.xlsx" download="采购价格合理性说明">采购价格合理性说明</a>
+		</legend>
+		<jsp:include page="/ame_common/addFiles.jsp"/>
+	</fieldset>
 	<form id="opioionform" method="post">
         <div style="padding: 1px; width: 99%" id="opinionHide">
             <table style="table-layout: fixed;">
