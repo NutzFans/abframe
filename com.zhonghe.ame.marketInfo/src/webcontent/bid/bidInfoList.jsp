@@ -94,8 +94,17 @@
 								<input name="criteria._expr[13].majorType" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 							</td>
 							<td style="width: 60px; text-align: right;">服务范围:</td>
-							<td style="width: 155px">
-								<input name="criteria._expr[14].bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<td colspan="2" style="width: 320px">
+								<input name="criteria._expr[14].bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" showNullItem="true" nullItemText="全部" style="width: 315px" />
+							</td>
+							<td style="width: 60px; text-align: right;">定标时间:</td>
+							<td colspan="2" style="width: 245px">
+								<input class="nui-hidden" name="criteria._expr[20]._op" value="between" />
+								<input class="nui-hidden" name="criteria._expr[20]._pattern" value="yyyy-MM-dd" />
+								<input class="nui-hidden" name="criteria._expr[20]._property" value="bidDate" />
+								<input class="mini-datepicker" name="criteria._expr[20]._min" style="width: 110px" />
+								<span>至</span>
+								<input class="mini-datepicker" name="criteria._expr[20]._max" style="width: 110px" />
 							</td>
 						</tr>
 						<tr>
@@ -169,6 +178,7 @@
 						<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 						<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
+						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
 					</div>
 				</div>
@@ -253,8 +263,17 @@
 								<input name="criteria._expr[13].majorType" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 							</td>
 							<td style="width: 60px; text-align: right;">服务范围:</td>
-							<td style="width: 155px">
-								<input name="criteria._expr[14].bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<td colspan="2" style="width: 320px">
+								<input name="criteria._expr[14].bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" showNullItem="true" nullItemText="全部" style="width: 315px" />
+							</td>
+							<td style="width: 60px; text-align: right;">定标时间:</td>
+							<td colspan="2" style="width: 245px">
+								<input class="nui-hidden" name="criteria._expr[20]._op" value="between" />
+								<input class="nui-hidden" name="criteria._expr[20]._pattern" value="yyyy-MM-dd" />
+								<input class="nui-hidden" name="criteria._expr[20]._property" value="bidDate" />
+								<input class="mini-datepicker" name="criteria._expr[20]._min" style="width: 110px" />
+								<span>至</span>
+								<input class="mini-datepicker" name="criteria._expr[20]._max" style="width: 110px" />
 							</td>
 						</tr>
 						<tr>
@@ -327,6 +346,7 @@
 						<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 						<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
+						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
 					</div>
 				</div>

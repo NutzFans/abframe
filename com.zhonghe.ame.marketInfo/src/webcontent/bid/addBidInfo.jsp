@@ -3,12 +3,18 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
-	body .mini-textboxlist{
-		border-collapse: collapse;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body .mini-textboxlist {
+	border-collapse: collapse;
+}
 </style>
 <head>
 <title>新增市场经营信息</title>
@@ -44,10 +50,12 @@
 							<td align="right" style="width: 130px">甲方全称：</td>
 							<td colspan="3">
 								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
-									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 620px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext" valueField="custid" textField="custname" allowInput="false"/>
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 620px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext"
+										valueField="custid" textField="custname" allowInput="false" />
 									<span class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
-										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
 											<span class="mini-buttonedit-icon"></span>
 										</span>
 									</span>
@@ -121,39 +129,42 @@
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 130px">参与单位：</td>
-							<td colspan="3">
+							<td colspan="5">
 								<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnits.biz.ext" valueField="dictid"
-									textField="dictname" inputMode="false" style="width: 638px" />
+									textField="dictname" inputMode="false" style="width: 710px" />
 							</td>
 							<td align="right" style="width: 140px">报价/合同价/万元/%：</td>
 							<td>
-								<input name="contractPrice" id="" contractPrice"" class="nui-textbox" style="width: 100%" />
+								<input name="contractPrice" id="" contractPrice"" class="nui-textbox" style="width: 165px" />
 							</td>
 							<td rowspan="3" style="padding-left: 10px">
-								备注填写参考：限价656万，基准价=报价平均值的90%=满分50分（高1%扣0.5，低1%扣0.2）。工期300天，要求312人月/实际投入20人月（兼职），最终按照合同约定综合单价及实际发生工作量结算。固定单价合同1.3万/MV（35万/人年，1000元/人天），据实结算。发改价格[2007]670号文取费*95%。XXX中标，我方排名第2。
+								备注填写参考：限价656万，基准价=报价平均值的90%=满分50分（高1%扣0.5，低1%扣0.2）。工期300天，要求312人月/实际投入20人月（兼职），最终按照合同约定综合单价及实际发生工作量结算。固定单价合同1.3万/MV（35万/人年，1000元/人天），据实结算。发改价格[2007]670号文取费*95%。XXX中标，我方排名第2。</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">价格模式：</td>
+							<td>
+								<input name="contractModel" id="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 165px" />
+							</td>
+							<td align="right" style="width: 100px">折合万/人月：</td>
+							<td>
+								<input name="bidConvert" id="bidConvert" class="nui-textbox" style="width: 165px" emptyText="无数据请输入 / 字符填充" />
+							</td>
+							<td align="right" style="width: 100px">定标时间：</td>
+							<td>
+								<input name="bidDate" id="bidDate" class="mini-datepicker" style="width: 165px" />
+							</td>
+							<td align="right" style="width: 100px">中标结果：</td>
+							<td>
+								<input name="bidResult" id="bidResult" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" style="width: 165px" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 130px">价格模式：</td>
-							<td>
-								<input name="contractModel" id="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 250px" />
-							</td>
-							<td align="right" style="width: 130px">折合万/人月：</td>
-							<td>
-								<input name="bidConvert" id="bidConvert" class="nui-textbox" style="width: 250px" emptyText="无数据请输入 / 字符填充" />
-							</td>
-							<td align="right" style="width: 130px">中标结果：</td>
-							<td>
-								<input name="bidResult" id="bidResult" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" style="width: 250px" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 130px">备注：</td>
-							<td colspan="5">
+							<td align="right" style="width: 100px">备注：</td>
+							<td colspan="7">
 								<input name="remark" class="nui-textarea" style="width: 100%" emptyText="填写要求：
-写明报价条件（如最高限价/预算、要求人月数、依据某规定报折扣率）、商务分计算规则、中标人及我方排名、暂定总价时的报价折扣率或新能源的单价水平等"/>
+写明报价条件（如最高限价/预算、要求人月数、依据某规定报折扣率）、商务分计算规则、中标人及我方排名、暂定总价时的报价折扣率或新能源的单价水平等" />
 							</td>
-						</tr>					
+						</tr>
 					</table>
 				</div>
 			</fieldset>
@@ -178,7 +189,7 @@
 					<div type="checkcolumn" width="5"></div>
 					<div field="competId" displayField="competName" headerAlign="center">
 						竞争对手单位全称
-						<input property="editor" allowInput="false" class="nui-buttonedit" onbuttonclick="selectCompetInfo" style="width: 100%" required="true"/>
+						<input property="editor" allowInput="false" class="nui-buttonedit" onbuttonclick="selectCompetInfo" style="width: 100%" required="true" />
 					</div>
 					<div field="competContractPrice" headerAlign="center">
 						报价/合同价/万元/%
@@ -187,32 +198,32 @@
 				</div>
 			</div>
 		</fieldset>
-		
+
 		<fieldset id="field5" style="border: solid 1px #aaa;">
 			<legend>上传附件</legend>
 			<jsp:include page="/ame_common/inputFile.jsp" />
 		</fieldset>
 	</div>
-	
+
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
-	
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid2 = nui.get("datagrid2");
-		
+
 		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFE6;")
-		
+
 		init();
-		
+
 		function init() {
 			nui.get("createUserid").setValue(userId);
-			nui.get("createUser").setValue(userName);		
+			nui.get("createUser").setValue(userName);
 		}
-		
+
 		function selectCustInfo() {
 			mini.open({
 				url : "/default/marketInfo/bid/selectCustInfo.jsp",
@@ -233,8 +244,8 @@
 							custid = data.custid;
 							custname = data.custname;
 						}
-						nui.get("custInfo").setValue(""+custid+"");
-						nui.get("custInfo").setText(""+custname+"");
+						nui.get("custInfo").setValue("" + custid + "");
+						nui.get("custInfo").setText("" + custname + "");
 					}
 				}
 			});
@@ -340,6 +351,6 @@
 					+ ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes())) + ':' + ((now.getSeconds() < 10) ? ("0" + now.getSeconds()) : (now.getSeconds())));
 		}
 	</script>
-	
+
 </body>
 </html>

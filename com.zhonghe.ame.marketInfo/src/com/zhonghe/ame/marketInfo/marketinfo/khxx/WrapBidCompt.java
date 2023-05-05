@@ -27,7 +27,9 @@ public class WrapBidCompt {
 		List<DataObject> warpExcelDatas = new ArrayList<DataObject>();
 		for (int i = 0; i < dataObjects.length; i++) {
 			String recordDate = DateUtil.format(dataObjects[i].getDate("recordDate"), "yyyy-MM");
+			String bidDate = DateUtil.format(dataObjects[i].getDate("bidDate"), "yyyy-MM-dd");
 			dataObjects[i].setString("recordDate", recordDate);
+			dataObjects[i].setString("bidDate", bidDate);
 			warpExcelDatas.add(dataObjects[i]);
 			int bidId = dataObjects[i].getInt("id");
 			DataObject[] compets = this.queryCompetByBidId(bidId);
