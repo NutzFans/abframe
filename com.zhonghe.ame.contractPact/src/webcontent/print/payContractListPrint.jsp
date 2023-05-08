@@ -179,7 +179,7 @@ table,table tr td {
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
-							<td id="remark" colspan="5" style="height: 68px; background: #F0F0F0; border: 1px solid #A5ACB5"></td>
+							<td id="remark" colspan="5" style="height: 235px; background: #F0F0F0; border: 1px solid #A5ACB5"></td>
 						</tr>
 					</table>
 				</div>
@@ -383,7 +383,8 @@ table,table tr td {
 			document.getElementById('checkview').style.display = "none";
 			print();
 			document.getElementById('checkview').style.display = "";
-		}
+		}	
+		
 	</script>
 </body>
 </html>

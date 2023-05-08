@@ -145,7 +145,7 @@
 						<tr>
 							<td align="right" style="width: 120px">备注:</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" />
 							</td>
 						</tr>
 					</table>

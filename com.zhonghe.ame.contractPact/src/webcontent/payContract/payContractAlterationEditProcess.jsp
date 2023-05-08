@@ -67,7 +67,7 @@
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>
 							<td colspan="6">
-								<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 50px" enabled="false" />
+								<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 235px" enabled="false" />
 							</td>
 						</tr>
 					</table>
@@ -132,7 +132,7 @@
 						<tr>
 							<td align="right" style="width: 130px">补充协议说明：</td>
 							<td colspan="6">
-								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="true" />
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" />
 							</td>
 						</tr>
 					</table>
