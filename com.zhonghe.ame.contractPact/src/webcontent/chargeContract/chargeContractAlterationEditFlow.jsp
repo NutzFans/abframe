@@ -19,6 +19,7 @@
 			<legend>原 - 收费合同信息</legend>
 			<form>
 				<input id="historyFinContractSum" name="historyFinContractSum" class="nui-hidden" />
+				<input id="historyContractBalance" name="historyContractBalance" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -83,7 +84,7 @@
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>
 							<td colspan="6">
-								<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 68px" enabled="false" />
+								<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 235px" enabled="false" />
 							</td>
 						</tr>
 					</table>
@@ -165,7 +166,7 @@
 						<tr>
 							<td align="right" style="width: 130px">补充协议说明：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 68px" required="true" enabled="false"/>
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" enabled="false"/>
 							</td>
 						</tr>
 					</table>
@@ -276,6 +277,7 @@
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyContractSum").setValue(data.contractSum);
 					nui.get("historyFinContractSum").setValue(data.finContractSum);
+					nui.get("historyContractBalance").setValue(data.contractBalance);
 					nui.get("historySigningDate").setValue(data.signingDate);
 					nui.get("historyCustInfo").setValue(data.signatory);
 					nui.get("historyCustInfo").setText(data.signatoryName);
@@ -342,9 +344,12 @@
 			var misOpinion = opioionform.getData().misOpinion;//审核意见
 			var data = form.getData();
 			var historyFinContractSum = nui.get("historyFinContractSum").getValue() * 1;
+			var historyContractBalance = nui.get("historyContractBalance").getValue() * 1;
 			var contractSum = nui.get("contractSum").getValue() * 1;
 			var finContractSum = (historyFinContractSum + contractSum).toFixed(2);
+			var contractBalance = (historyContractBalance + contractSum).toFixed(2);
 			data.finContractSum = finContractSum;
+			data.contractBalance = contractBalance;
 			var json = {
 				"cpData" : data,
 				"misOpinion" : misOpinion,

@@ -18,6 +18,7 @@
 			<legend>原 - 收费合同信息</legend>
 			<form>
 				<input id="historyFinContractSum" name="historyFinContractSum" class="nui-hidden" />
+				<input id="historyContractBalance" name="historyContractBalance" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -82,7 +83,7 @@
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>
 							<td colspan="6">
-								<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 68px" enabled="false" />
+								<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 235px" enabled="false" />
 							</td>
 						</tr>
 					</table>
@@ -156,7 +157,7 @@
 							</td>
 							<td align="right" style="width: 130px">不含税金额(元)：</td>
 							<td>
-								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" onvaluechanged="editContractSum" emptyText="增加正数，减少负数，无变化0" />
+								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" onvaluechanged="editNoTaxSum" emptyText="增加正数，减少负数，无变化0" />
 							</td>
 							<td align="right" style="width: 130px">税额(元)：</td>
 							<td>
@@ -180,7 +181,7 @@
 						<tr>
 							<td align="right" style="width: 130px">补充协议说明：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 68px" required="true" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" />
 							</td>
 						</tr>
 					</table>
@@ -240,6 +241,7 @@
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyContractSum").setValue(data.contractSum);
 					nui.get("historyFinContractSum").setValue(data.finContractSum);
+					nui.get("historyContractBalance").setValue(data.contractBalance);
 					nui.get("historySigningDate").setValue(data.signingDate);
 					nui.get("historyCustInfo").setValue(data.signatory);
 					nui.get("historyCustInfo").setText(data.signatoryName);
@@ -285,6 +287,20 @@
 		
 		function editContractSum() {
 			var contractSum = nui.get("contractSum").getValue();
+			var noTaxSum = contractSum / 1.06;
+			abs = function(val) {
+				var str = (val).toFixed(2) + '';
+				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+				var dot = str.substring(str.length, str.indexOf("."))
+				var ret = intSum + dot;
+				return ret;
+			}
+			nui.get("noTaxSum").setValue(abs(noTaxSum));
+			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
+		}
+		
+		function editNoTaxSum() {
+			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
 			abs = function(val) {
 				var str = (val).toFixed(2) + '';
@@ -294,7 +310,7 @@
 				return ret;
 			}
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
-		}
+		}		
 		
 		function onOk() {
 			form.validate();
@@ -309,10 +325,13 @@
 		function SaveData() {
 			var data = form.getData();
 			var historyFinContractSum = nui.get("historyFinContractSum").getValue() * 1;
+			var historyContractBalance = nui.get("historyContractBalance").getValue() * 1;
 			var actContractSum = nui.get("actContractSum").getValue() * 1;
 			var contractSum = nui.get("contractSum").getValue() * 1;
-			finContractSum = (historyFinContractSum-actContractSum+contractSum).toFixed(2);
+			var finContractSum = (historyFinContractSum-actContractSum+contractSum).toFixed(2);
+			var contractBalance = (historyContractBalance-actContractSum+contractSum).toFixed(2);
 			data.finContractSum = finContractSum;
+			data.contractBalance = contractBalance;
 			data.signatory = nui.get("custInfo").getValue();
 			data.signatoryName = nui.get("custInfo").getText();
 			var json = nui.encode({

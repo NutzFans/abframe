@@ -118,7 +118,7 @@
 							</td>
 							<td align="right" style="width: 130px">合同不含税金额(元)：</td>
 							<td>
-								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" onvaluechanged="editContractSum" />
+								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 200px" required="true" onvaluechanged="editNoTaxSum" />
 							</td>
 							<td align="right" style="width: 130px">税额(元)：</td>
 							<td>
@@ -128,7 +128,7 @@
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 68px" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 							</td>
 						</tr>
 					</table>
@@ -483,6 +483,20 @@
 		});
 
 		function editContractSum() {
+			var contractSum = nui.get("contractSum").getValue();
+			var noTaxSum = contractSum / 1.06;
+			abs = function(val) {
+				var str = (val).toFixed(2) + '';
+				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+				var dot = str.substring(str.length, str.indexOf("."))
+				var ret = intSum + dot;
+				return ret;
+			}
+			nui.get("noTaxSum").setValue(abs(noTaxSum));
+			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
+		}
+		
+		function editNoTaxSum() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
 			abs = function(val) {
