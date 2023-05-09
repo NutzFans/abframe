@@ -135,7 +135,6 @@
 				data:json,
 				contentType:"text/json",
 					success:function (o){
-						console.log("999-8", o)
 						form.setData(o.data);
 						
 						// 附件信息

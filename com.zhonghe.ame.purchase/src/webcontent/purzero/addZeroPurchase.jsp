@@ -205,7 +205,6 @@
 			}
 			formData.judge = judge;
 			formData.files = nui.get("fileids").getValue();
-			console.log("999-3",nui.get("fileids").getValue());
 			var json = nui.encode({ "purZero": formData, "purZeroItem": gridData });
 			if (type == 1) {	
 				info = "是否提交？"

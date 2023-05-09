@@ -268,7 +268,6 @@
 						$("#purchasePlanLable").html("零星采购编号:");
 					}
 					
-					console.log("999-1", o.data);
 					// 补充合同信息
 					nui.get("contractNo").setValue(o.data.contractNo);
 					nui.get("signingDate").setValue(o.data.signingDate);

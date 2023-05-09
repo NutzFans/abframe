@@ -1,137 +1,261 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>项目详细信息</title>
-<%@include file="/common/skins/skin0/component.jsp" %>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<script src="<%= request.getContextPath() %>/common/nui/nui.js" type="text/javascript"></script>
-	<style type="text/css">
-	    body{
-	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
-	    }
-	    .asLabel
-	    {
-	        border:0;background-color:#F5F5F5;cursor:default;    
-	    }
-    </style>
+<title>收费合同基本信息 - 补充协议</title>
+<style type="text/css">
+	body {
+		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
+	}
+</style>
 </head>
 <body>
-	<div class="nui-fit">
- 	<form id="form1" method="post" >
-        <fieldset style="border:solid 1px #aaa;padding:3px;">
-        	<legend>补充协议基本信息</legend>
-        	<table style="table-layout:fixed;" id="table_file1">
-        	
-		            <tr>
-						<td align="right" style="width:160px">申请人：</td>
-						<td id="empname" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">协议名称：</td>
-						<td id="contractName" style="width:250px" class = "asLabel"></td>	
-						<td align="right" style="width:160px">协议编号：</td>
-						<td id="contractNo" style="width:250px" class = "asLabel"></td>
-						
-					</tr>
-					<tr>
-						<td align="right" style="width:160px">申请日期：</td>
-						<td id="createTime" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">合同实施部门：</td>
-						<td id="orgname" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">原合同名称：</td>
-						<td id="originalContractName" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:160px">原合同编号：</td>
-						<td id="originalContractNo" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">实施地点：</td>
-						<td id="projectLocal" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">签约方：</td>
-						<td id="signatoryname" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:160px">标的规模：</td>
-						<td id="projectSize" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">合同实际金额（元）：</td>
-						<td  style="width:250px" id="contractSum" class = "asLabel"></td>
-						<td align="right" style="width:160px">合同生效日期：</td>
-						<td  style="width:250px" id="startTime" class = "asLabel"></td>
-					</tr>
-					<tr>
-						<td align="right" style="width:160px">合同增加金额（元）：</td>
-						<td id="increaseDecreaseSum" style="width:250px" class = "asLabel"></td>
-						<td align="right" style="width:160px">是否协议变更：</td>
-						<td id="issupagreement" style="width:250px" class = "asLabel"></td>
-					</tr>
-					<tr>
-	              		<td style="width:350px;" align="right">变更说明：</td>
-	                    <td style="width:150px;" colspan="7" class = "asLabel">    
-	                        <input style="width:90%;height: 40px;" class="nui-textarea" id="remark" enabled="false"/>
-	                    </td>
-	              	</tr>
-		            
-        	</table>
-        	<fieldset id="field2" style="border:solid 1px #aaa;padding:3px;">
-					<legend>相关附件</legend>
-					<jsp:include page="/ame_common/detailFile.jsp"/>
-			</fieldset>
-        </fieldset>
-
-    </form>
-</div>
-
-
-
+	<div class="nui-fit" style="padding: 5px">
+		<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>原 - 收费合同信息</legend>
+			<form id="form1" method="post">
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input name="id" id="id" class="nui-hidden" />
+				<div style="padding: 5px;">
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 130px">合同名称：</td>
+							<td colspan="5">
+								<input id="contractName" name="contractName" enabled="false" class="nui-textbox" style="width: 100%" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">经办人：</td>
+							<td>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">合同承办部门：</td>
+							<td>
+								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">申请日期：</td>
+							<td>
+								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">签约方：</td>
+							<td colspan="5">
+								<input id="signatoryName" name="signatoryName" class="nui-textbox" style="width: 100%" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">合同签约主体：</td>
+							<td>
+								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" enabled="false"  style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">收款方：</td>
+							<td>
+								<input id="payee" name="payee" class="nui-dictcombobox" dictTypeId="PAYER" style="width: 200px" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">签订日期：</td>
+							<td>
+								<input id="signingDate" name="signingDate" class="nui-textbox" style="width: 200px" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">合同金额(元)：</td>
+							<td>
+								<input id="contractSum" name="contractSum" class="nui-textbox" style="width: 200px" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">合同编号：</td>
+							<td>
+								<input id="historyContractNo" name="historyContractNo" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">备注：</td>
+							<td colspan="5">
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 68px" enabled="false" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</fieldset>
+		
+		
+		<fieldset id="field2" style="border: solid 1px #aaa;">
+			<legend>补充协议 - 收费合同信息</legend>
+			<form id="form2" method="post">
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input name="id" id="id" class="nui-hidden" />
+				<div style="padding: 5px;">
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 130px">补充协议名称：</td>
+							<td colspan="5">
+								<input id="contractName" name="contractName" enabled="false" class="nui-textbox" style="width: 100%" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">经办人：</td>
+							<td>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">合同承办部门：</td>
+							<td>
+								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">申请日期：</td>
+							<td>
+								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">签约方：</td>
+							<td colspan="5">
+								<input id="signatoryName" name="signatoryName" class="nui-textbox" style="width: 100%" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">付合同签约主体方：</td>
+							<td>
+								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" enabled="false"  style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">收款方：</td>
+							<td>
+								<input id="payee" name="payee" class="nui-dictcombobox" dictTypeId="PAYER" style="width: 200px" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">变更金额(元)：</td>
+							<td>
+								<input id="contractSum" name="contractSum" class="nui-textbox" style="width: 200px" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">不含税金额(元)：</td>
+							<td>
+								<input id="noTaxSum" name="noTaxSum" enabled="false" class="nui-textbox" style="width: 200px" />
+							</td>
+							<td align="right" style="width: 130px">税额(元)：</td>
+							<td>
+								<input id="payTax" name="payTax" class="nui-textbox" style="width: 200px" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">补充协议说明：</td>
+							<td colspan="5">
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 68px" enabled="false" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</fieldset>
+		
+		
+		
+		<fieldset id="field3" style="border: solid 1px #aaa;">
+			<legend style="color: red;">补充合同信息（协议）</legend>
+			<form>
+				<div>
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 130px">合同编号：</td>
+							<td>
+								<input id="contractNo" name="contractNo" class="nui-textbox" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">签订日期：</td>
+							<td>
+								<input id="signingDate" name="signingDate" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</fieldset>	
+		
+		<fieldset id="field5" style="border: solid 1px #aaa;">
+			<legend>原 - 收费合同附件</legend>
+			<jsp:include page="/ame_common/detailFile.jsp" />
+		</fieldset>
+		
+		<fieldset id="field6" style="border: solid 1px #aaa;">
+			<legend>补充协议 - 上传附件</legend>
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
+		</fieldset>
+		
+	</div>
 	
 	<script type="text/javascript">
-        nui.parse();
-    	var form = new nui.Form("#form1");
-   		var processid = <%=request.getParameter("processInstID")%>;
-
-		 setData();
-		 function setData(){ 
-		 	 
-		 	var data = {processid:processid};            
-        	var json = nui.encode(data);
-        	nui.ajax({
-	            url: "com.zhonghe.ame.chargeContract.chargeContract.getChargeContractMessage.biz.ext",
-				type: 'POST',
-				data: json,	
-				contentType: 'text/json',
-	            success: function (o) {
-
-	            	o = nui.decode(o);
-	                document.getElementById("empname").innerHTML = o.chargeContract.empname == null ?"":o.chargeContract.empname;
-					document.getElementById("contractName").innerHTML = o.chargeContract.contractName == null ?"":o.chargeContract.contractName;
-					document.getElementById("contractNo").innerHTML = o.chargeContract.contractNo == null ?"":o.chargeContract.contractNo;
-					document.getElementById("createTime").innerHTML = o.chargeContract.createTime == null ?"":o.chargeContract.createTime;
-					document.getElementById("orgname").innerHTML = o.chargeContract.orgname == null ?"":o.chargeContract.orgname;
-					document.getElementById("originalContractName").innerHTML = o.chargeContract.originalContractName == null ?"":o.chargeContract.originalContractName;
-					document.getElementById("originalContractNo").innerHTML = o.chargeContract.originalContractNo == null ?"":o.chargeContract.originalContractNo;
-					document.getElementById("projectLocal").innerHTML = o.chargeContract.projectLocal == null ?"":o.chargeContract.projectLocal;
-					document.getElementById("signatoryname").innerHTML = o.chargeContract.signatoryname == null ?"":o.chargeContract.signatoryname;
-					document.getElementById("projectSize").innerHTML = o.chargeContract.projectSize == null ?"":o.chargeContract.projectSize;
-					document.getElementById("contractSum").innerHTML = o.chargeContract.contractSum == null ?"":o.chargeContract.contractSum;
-					document.getElementById("startTime").innerHTML = o.chargeContract.startTime == null ?"":o.chargeContract.startTime;
-					document.getElementById("increaseDecreaseSum").innerHTML = o.chargeContract.issupagreement == null ?"":o.chargeContract.issupagreement
-					document.getElementById("issupagreement").innerHTML = o.chargeContract.issupagreement == null ?"":nui.getDictText('ZH_ISSUPAGREEMENT',o.chargeContract.issupagreement);
-					document.getElementById("remark").innerHTML = o.chargeContract.remark == null ?"":o.chargeContract.remark;
-
+		nui.parse();
+		var form1 = new nui.Form("form1");
+		var form2 = new nui.Form("form2");
+		var processId = <%=request.getParameter("processInstID")%>;
+		var workItemID = <%=request.getParameter("workItemID")%>;
+		init();
+		
+		function init() {
+			var data = {"workitemid":workItemID,"processid":processId};
+			var json = nui.encode(data);
+			nui.ajax({
+				url: "com.zhonghe.ame.chargeContract.chargeContract.getChargeContractMessage.biz.ext",
+				type : "post",
+				data : json,
+				contentType : 'text/json',
+				success : function(o) {
+					form2.setData(o.chargeContract);
 					
+					// 原合同数据
+					queryHistory(o.chargeContract.relateCont);
+					
+					// 补充合同信息（协议）
+					nui.get("contractNo").setValue(o.chargeContract.contractNo);
+					nui.get("signingDate").setValue(o.chargeContract.signingDate);
+					
+					//查询补充协议附件
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
+						"groupid" : "CHARGE_CONTRACT",
+						"relationid" : o.chargeContract.id
+					});
+					detailFileExpandGrid.sortBy("fileTime", "desc");
+				}
+			});
+		}
+	
+	
+	
+	
+		
+		function onCancel(e) {
+			CloseWindow("cancel");
+		}
+		
+
+		function CloseWindow(action) {
+			if (window.CloseOwnerWindow)
+				return window.CloseOwnerWindow(action);
+			else
+				window.close();
+		}
+		
+		function queryHistory(str) {
+			var json = {"id": str};
+			nui.ajax({
+				url : "com.zhonghe.ame.chargeContract.chargeContract.getChargeContractById.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					form1.setData(data);
+					nui.get("historyContractNo").setValue(data.contractNo);
 					var grid_0 = nui.get("grid_0");
-        				grid_0.load({"groupid":"PAY_CONTRACT","relationid":o.payContract.id});
-						grid_0.sortBy("fileTime","desc");
-	                
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-				        alert(jqXHR.responseText);
-			    }
-	     });
-	}
-
-        
-         
-
-
-    </script>
-  </body>
+					grid_0.load({
+						"groupid" : "CHARGE_CONTRACT",
+						"relationid" : data.id
+					});
+					grid_0.sortBy("fileTime", "desc");
+				}
+			})
+		}
+	</script>
+</body>
 </html>

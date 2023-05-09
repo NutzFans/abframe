@@ -219,7 +219,6 @@
         	/* nui.get("appButton").setEnabled(false); */
         	var data = form.getData();
         	data.files = nui.get("fileids").getValue();
-        	console.log("999-5",nui.get("fileids").getValue());
         	var json = {misOpinion:misOpinion,workItemID: <%=workitemid %>,"countersignUsers":countersignUsers, "purZero": data};
             mini.mask({
 	            el: document.body,

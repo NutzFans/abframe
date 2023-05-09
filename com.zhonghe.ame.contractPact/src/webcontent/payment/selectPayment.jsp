@@ -144,7 +144,6 @@
 				contentType: 'text/json',
 	            success: function (o) {
 					form.setData(o.payment);
-					console.log("999-9", o.payment);
 					var grid_0 = nui.get("grid_0");
     				grid_0.load({"groupid":"PAY_MENT","relationid":o.payment.id});
 					grid_0.sortBy("fileTime","desc");

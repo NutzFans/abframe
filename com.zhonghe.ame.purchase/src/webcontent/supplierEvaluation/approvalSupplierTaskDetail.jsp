@@ -108,7 +108,6 @@
 	   	init();
 	   	
 	   	function init(){
-	   		console.log("999-1", workitemid);
 	   		var data = {"workitemid":workitemid};
 	   		var json = nui.encode(data);
 	   		nui.ajax({	
