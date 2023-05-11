@@ -3,13 +3,18 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <style type="text/css">
-	html,body {
-		margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
-	}
-	
-	.mini-grid-cell-nowrap{
-		white-space: nowrap;
-	}	
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
 </style>
 <head>
 <title>收费合同管理</title>
@@ -76,8 +81,8 @@
 						</td>
 						<td style="width: 60px; text-align: right;">签约方:</td>
 						<td style="width: 155px">
-							<input name="critria._expr[20]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname"
-								valueField="custname" dataField="custs" valueFromSelect="true" allowInput="true" style="width: 150px" />
+							<input name="critria._expr[20]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname" valueField="custname"
+								dataField="custs" valueFromSelect="true" allowInput="true" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryName" />
 							<input class="nui-hidden" name="critria._expr[20]._op" value="like" />
 						</td>
@@ -99,9 +104,9 @@
 							<input class="nui-hidden" name="critria._expr[8]._pattern" value="yyyy-MM-dd" />
 							<input class="nui-hidden" name="critria._expr[8]._property" value="signingDate" />
 							<input class="nui-datepicker" name="critria._expr[8]._min" style="width: 110px" />
-							<span >至</span>
+							<span>至</span>
 							<input class="nui-datepicker" name="critria._expr[8]._max" style="width: 110px" />
-						</td>												
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 60px; text-align: right;">项目密级:</td>
@@ -123,7 +128,7 @@
 						<td style="width: 60px; text-align: right;">工程类别:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[30].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>	
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 70px; text-align: right;">集团内/外:</td>
@@ -134,10 +139,14 @@
 						<td style="width: 155px">
 							<input name="critria._expr[32].procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 100px; text-align: right;">是否委托函:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[33].cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 					</tr>
 				</table>
 			</div>
-			
+
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 1px;">
 				<table style="width: 100%; text-align: center;">
 					<tr>
@@ -147,7 +156,7 @@
 						</td>
 					</tr>
 				</table>
-			</div>			
+			</div>
 		</div>
 
 		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
@@ -158,18 +167,20 @@
 						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="sfhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
-						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
+						<a class="nui-button" id="sfhtlist_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
+						<a class="nui-button" id="sfhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
+						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 						<a class="nui-button" id="sfhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 					</td>
 				</tr>
 			</table>
 		</div>
-		
+
 		<div class="nui-fit">
-			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" class="nui-datagrid"
-				style="width: 100%; height: 100%;" url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
+			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" class="nui-datagrid" style="width: 100%; height: 100%;"
+				url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
 				<div property="columns">
 					<div type="checkcolumn">○</div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
@@ -193,6 +204,7 @@
 					<div field="projectSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
 					<div field="isfb" width="120" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否计划对外分包</div>
 					<div field="issupagreement" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否协议变更</div>
+					<div field="cachet" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否委托函</div>
 					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
@@ -202,13 +214,13 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
-		<input type="hidden" name="_eosFlowAction" value="action0" filter="false"/>
-		<input type="hidden" name="downloadFile" filter="false"/>
-		<input type="hidden" name="fileName" filter="false"/>
-	</form>	
-	
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
@@ -223,8 +235,8 @@
 		function init() {
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				// 维护按钮 - sfhtlist_wh，导入按钮 - sfhtlist_import
-				getOpeatorButtonAuth("sfhtlist_wh,sfhtlist_import");
+				// 维护按钮 - sfhtlist_wh，导入按钮 - sfhtlist_import，变更经办人按钮 - sfhtlist_bgjbr，作废按钮 - sfhtlist_zf
+				getOpeatorButtonAuth("sfhtlist_wh,sfhtlist_import,sfhtlist_bgjbr,sfhtlist_zf");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -323,10 +335,10 @@
 			var row = grid.getSelected();
 			if (row) {
 				if(row.issupagreement == "y"){
-					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeAlterationPrint.jsp?id=" + row.id;
+					executeUrl = "<%=request.getContextPath()%>/contractPact/print/chargeAlterationPrint.jsp?id=" + row.id;
 					window.open(executeUrl);
 				}else{
-					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
+					executeUrl = "<%=request.getContextPath()%>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
 					window.open(executeUrl);
 				}
 			} else {
@@ -338,10 +350,10 @@
 			var row = grid.getSelected();
 			if (row) {
 				if(row.issupagreement == "y"){
-					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeAlterationPrint.jsp?id=" + row.id;
+					executeUrl = "<%=request.getContextPath()%>/contractPact/print/chargeAlterationPrint.jsp?id=" + row.id;
 					window.open(executeUrl);
 				}else{
-					executeUrl = "<%= request.getContextPath() %>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
+					executeUrl = "<%=request.getContextPath()%>/contractPact/print/chargeContractInfoPrint.jsp?id=" + row.id;
 					window.open(executeUrl);
 				}
 			} else {
@@ -428,6 +440,72 @@
 				});
 			} else {
 				showTips("只能编辑审批状态为【草稿】的数据", "danger");
+			}
+		}
+		
+		function zf_edit(){
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行作废", "danger");
+				return;
+			}else{
+				var row = row[0];
+				if (row.appStatus == '2') {
+					if (!confirm("是否作废？")) {
+						return;
+					} else {
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.chargeContract.chargeContract.zfChargeContractById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("作废成功");
+										grid.reload();
+									} else if (o.result == 2) {
+										showTips("该合同存在开票数据无法作废！", "danger");
+									}else{
+										showTips("作废失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行作废", "danger");
+						}
+					}
+				} else {
+					showTips("只能作废审批状态为【审批通过】的数据", "danger");
+				}
+			}			
+		}
+
+		function bgjbr_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行经办人变更", "danger");
+				return;
+			}else{
+				var row = row[0];
+				if (row.appStatus == '2') {
+					nui.open({
+						url: "/default/contractPact/chargeContract/selectTransactor.jsp?id=" + row.id,
+						title : "收费合同 - 变更经办人",
+						width : 500,
+						height : 350,
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+						}
+					});
+				} else {
+					showTips("只能对审批状态为【审批通过】的数据进行经办人变更", "danger");
+				}
 			}
 		}
 
@@ -598,7 +676,7 @@
 				}
 			});
 		}
-		
+
 		function alteration() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
@@ -607,7 +685,7 @@
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				if(data.issupagreement != "y"){
+				if (data.issupagreement != "y") {
 					nui.open({
 						url : "/default/contractPact/chargeContract/chargeContractAlteration.jsp",
 						width : '100%',
@@ -620,15 +698,15 @@
 						ondestroy : function(action) {
 							search();
 						}
-					})				
-				}else{
+					})
+				} else {
 					showTips("不能对补充协议的合同，再次发起补充协议签订请求", "danger");
 				}
 			} else {
 				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
 			}
 		}
-		
+
 		//导出
 		function exportExcel() {
 			if (!confirm("是否确认导出？")) {
@@ -644,54 +722,53 @@
 				cache : false,
 				contentType : 'text/json',
 				success : function(o) {
-			     		var filePath = o.downloadFile;
-			        	var fileName = "收费合同";
-			        	var myDate = new Date();
-			        	var year = myDate.getFullYear();
-			        	var month = myDate.getMonth()+1;
-			        	var day = myDate.getDate();
-			        	var hours = myDate.getHours();
-			        	var minutes = myDate.getMinutes();
-			        	var seconds = myDate.getSeconds();
-			        	var curDateTime = year;
-		        		if(month>9){
+					var filePath = o.downloadFile;
+					var fileName = "收费合同";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
 						curDateTime = curDateTime + "" + month;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + month;
 					}
-		        		if(day>9){
+					if (day > 9) {
 						curDateTime = curDateTime + day;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + day;
 					}
-					if(hours>9){
+					if (hours > 9) {
 						curDateTime = curDateTime + hours;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + hours;
 					}
-					if(minutes>9){
+					if (minutes > 9) {
 						curDateTime = curDateTime + minutes;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + minutes;
 					}
-					if(seconds>9){
+					if (seconds > 9) {
 						curDateTime = curDateTime + seconds;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + seconds;
 					}
 					fileName = fileName + "_" + curDateTime + ".xls";
 					var frm = document.getElementById("exprotExcelFlow");
-	        			frm.elements["downloadFile"].value = filePath;
-	        			frm.elements["fileName"].value = fileName;
-			    		frm.submit();
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
 				},
 				error : function() {
 					showTips("导出数据异常，请联系管理员！", "danger");
 				}
 			});
-		}										
-		
+		}
 	</script>
-	
+
 </body>
 </html>

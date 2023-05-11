@@ -45,9 +45,13 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 130px">是否委托函：</td>
+							<td>
+								<input id="cachet" name="cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" enabled="true" required="true" />
+							</td>						
 							<td align="right" style="width: 130px">投标记录：</td>
-							<td colspan="3">
-								<input id="tenderId" name="tenderId" class="nui-buttonedit" onbuttonclick="bidInfoSelect" style="width: 100%" required="true" enabled="true" allowInput="false" emptyText="必填项，数据来源于市场经营信息" />
+							<td>
+								<input id="tenderId" name="tenderId" class="nui-buttonedit" onbuttonclick="bidInfoSelect" style="width: 200px" required="true" enabled="true" allowInput="false" emptyText="必填项，数据来源于市场经营信息" />
 							</td>
 							<td align="right" style="width: 130px">专业类别：</td>
 							<td>
