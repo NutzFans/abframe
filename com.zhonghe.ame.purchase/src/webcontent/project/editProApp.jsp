@@ -79,7 +79,7 @@
 							</td>
 							<td align="right">采购方式：</td>
 							<td>
-								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" required="true" style="width: 100%;" />
+								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" required="true" style="width: 100%;" onvaluechanged="purchasModeChange" />
 							</td>
 						</tr>
 						<tr>
@@ -460,6 +460,15 @@
 				nui.get("classified").setValue("");
 			}
 		}
+		
+		function purchasModeChange(){
+			var purchasMode = nui.get("purchasMode").getValue();
+			if(purchasMode=="零星采购"){
+				nui.get("supplierScope").setValue("2");
+			}else{
+				nui.get("supplierScope").setValue(null);
+			}
+		}		
 
 		function isType() {
 			var type = nui.get("type").getValue();

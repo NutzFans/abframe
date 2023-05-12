@@ -77,7 +77,7 @@ body {
 								</td>
 								<td align="right">采购方式：</td>
 								<td>
-									<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" required="true" style="width: 100%;" />
+									<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" required="true" style="width: 100%;" onvaluechanged="purchasModeChange" />
 								</td>
 							</tr>
 							<tr>
@@ -397,6 +397,15 @@ body {
 			if (classified == "1") {
 				nui.alert("涉密采购请线下进行")
 				nui.get("classified").setValue("");
+			}
+		}
+		
+		function purchasModeChange(){
+			var purchasMode = nui.get("purchasMode").getValue();
+			if(purchasMode=="零星采购"){
+				nui.get("supplierScope").setValue("2");
+			}else{
+				nui.get("supplierScope").setValue(null);
 			}
 		}
 
