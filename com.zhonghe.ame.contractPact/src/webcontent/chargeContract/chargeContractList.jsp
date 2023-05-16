@@ -139,7 +139,7 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[32].procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
-						<td style="width: 100px; text-align: right;">是否委托函:</td>
+						<td style="width: 100px; text-align: right;">是否签订合同:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[33].cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
@@ -204,7 +204,7 @@ html,body {
 					<div field="projectSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
 					<div field="isfb" width="120" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否计划对外分包</div>
 					<div field="issupagreement" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否协议变更</div>
-					<div field="cachet" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否委托函</div>
+					<div field="cachet" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否签订合同</div>
 					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>

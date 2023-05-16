@@ -5,9 +5,14 @@
 <head>
 <title>收费合同签订申请</title>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -22,14 +27,14 @@
 						<tr>
 							<td align="right" style="width: 130px">合同名称：</td>
 							<td colspan="5">
-								<input name="contractName" class="nui-textbox" style="width: 100%" required="true" />
+								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" />
-								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px"/>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
@@ -44,7 +49,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 130px">是否委托函：</td>
+							<td align="right" style="width: 130px">是否签订合同：</td>
 							<td>
 								<input id="cachet" name="cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" enabled="true" required="true" />
 							</td>
@@ -136,7 +141,7 @@
 							</td>
 						</tr>
 					</table>
-				</div>				
+				</div>
 			</form>
 		</fieldset>
 
@@ -161,7 +166,7 @@
 					<div type="checkcolumn"></div>
 					<div field="years" width="80" headerAlign="center" allowSort="true">
 						年份
-						<input property="editor" class="nui-textbox" style="width: 100%;" required="true"/>
+						<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
 					</div>
 					<div field="jan" width="120" headerAlign="center" allowSort="true">
 						一月
@@ -256,11 +261,11 @@
 		var grid2 = nui.get("datagrid2");
 		var opioionform = new nui.Form("opioionform");
 		var type;//暂存还是发起
-		
+
 		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFE6;")
-		
+
 		init();
-		
+
 		function init() {
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
@@ -270,8 +275,8 @@
 			//初始化审核意见
 			nui.get("auditstatus").setValue(3);//1：通过,0：退回，2：终止流程，3:发起
 			document.getElementById("salesEdit").style.display = "none";
-		}		
-		
+		}
+
 		function bidInfoSelect() {
 			mini.open({
 				url : "/default/contractPact/chargeContract/selectBidInfo.jsp",
@@ -298,7 +303,7 @@
 				}
 			});
 		}
-		
+
 		function selectCustInfo() {
 			mini.open({
 				url : "/default/marketInfo/bid/selectCustInfo.jsp",
@@ -319,13 +324,12 @@
 							custid = data.custid;
 							custname = data.custname;
 						}
-						nui.get("custInfo").setValue(""+custid+"");
-						nui.get("custInfo").setText(""+custname+"");
+						nui.get("custInfo").setValue("" + custid + "");
+						nui.get("custInfo").setText("" + custname + "");
 					}
 				}
 			});
 		}
-		
 
 		function onOk(e) {
 			type = e;
@@ -353,6 +357,13 @@
 					}
 				} else {
 					showTips("请填写未来年度收款计划!", "danger");
+					return;
+				}
+			}
+			if (type == 0) {
+				var contractName = nui.get("contractName").getValue();
+				if (isStrEmpty(contractName)) {
+					showTips("请填写合同名称并确保其正确性！", "danger");
 					return;
 				}
 			}
@@ -499,7 +510,7 @@
 			nui.get("noTaxSum").setValue(abs(noTaxSum));
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
-		
+
 		function editNoTaxSum() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
@@ -521,6 +532,14 @@
 			var numStr = num + "";
 			console.log(numStr)
 			if (numStr == "NaN") {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
 				return true;
 			} else {
 				return false;

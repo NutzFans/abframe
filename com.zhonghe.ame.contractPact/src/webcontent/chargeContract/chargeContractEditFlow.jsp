@@ -45,7 +45,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 130px">是否委托函：</td>
+							<td align="right" style="width: 130px">是否签订合同：</td>
 							<td>
 								<input id="cachet" name="cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" enabled="false" required="false" />
 							</td>

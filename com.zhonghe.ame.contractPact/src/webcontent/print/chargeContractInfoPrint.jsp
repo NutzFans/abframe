@@ -94,7 +94,7 @@ table,table tr td {
 							<td>
 								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
 							</td>
-							<td align="right" style="width: 130px">是否委托函：</td>
+							<td align="right" style="width: 130px">是否签订合同：</td>
 							<td>
 								<input id="cachet" name="cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" enabled="false" required="false" />
 							</td>							
