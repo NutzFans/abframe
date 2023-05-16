@@ -118,7 +118,7 @@
 						<tr>
 							<td align="right" style="width: 100px" id="purchasePlanLable">采购立项编号:</td>
 							<td>
-								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" onvaluechanged="onvaluechanged1" required="false" enabled="false" />
+								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" onvaluechanged="onvaluechanged1" required="false" enabled="false" allowInput="false" />
 							</td>
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
@@ -316,10 +316,12 @@
 							alert(" '立项金额' 字段为必填项，数据来源于对应的采购立项");
 							return;
 						}
-						var scalingSum = nui.get("scalingSum").getValue();
-						if (scalingSum == null || scalingSum == "") {
-							alert(" '定标金额' 字段为必填项，数据来源于对应的采购立项评审结果");
-							return;
+						if(procurementType != "零星采购"){
+							var scalingSum = nui.get("scalingSum").getValue();
+							if (scalingSum == null || scalingSum == "") {
+								alert(" '定标金额' 字段为必填项，数据来源于对应的采购立项评审结果");
+								return;
+							}
 						}
 						var contractSum = nui.get("contractSum").getValue();
 						abs = function(val) {
@@ -336,11 +338,11 @@
 								alert("采购方式是招标，合同金额等于定标金额才能提交");
 								return;
 							}
-						} else {
+						} else if(procurementType != "零星采购"){
 							if (parseInt(contractSumAbs) > parseInt(scalingSumAbs)) {
 								alert("采购方式是招标以外的，合同金额应小于等于定标金额才能提交");
 								return;
-							}
+							}						
 						}
 					}
 				}
@@ -482,7 +484,7 @@
 												nui.get("scalingSum").setValue(abs(awardAmount * 10000));
 											}
 										} else {
-											console.log("未找到对应的评审结果");
+											nui.get("scalingSum").setValue(null);
 										}
 									}
 								});
