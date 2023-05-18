@@ -81,9 +81,13 @@ html,body {
 						<td style="width: 155px">
 							<input name="criteria._expr[10].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 70px; text-align: right;">风险等级:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[20].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 						<td style="width: 60px; text-align: right;">年份:</td>
 						<td colspan="3">
-							<input id="years" name="criteria._expr[11].years" class="nui-textbox" style="width: 150px" />
+							<input id="years" name="criteria._expr[11].years" class="nui-textbox" style="width: 65px" />
 							<span style="color: red; vertical-align: inherit">默认当前年份</span>
 						</td>
 					</tr>
@@ -151,6 +155,8 @@ html,body {
 					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
+					<div field="riskLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="RISK_LEVEL">风险等级</div>
+					<div field="estimatedDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">预计签署日期</div>
 				</div>
 			</div>
 		</div>
@@ -162,11 +168,11 @@ html,body {
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
 				<div field="createTime" dateFormat="yyyy-MM-dd" align="center" headerAlign="center">开票日期</div>
-				<div field="invoiceSum" align="center" headerAlign="center" summaryType="sum">开票金额（元）</div>
-				<div field="bookIncome" align="center" headerAlign="center" summaryType="sum">账面收入（元）</div>
-				<div field="invoiceTax" align="center" headerAlign="center" summaryType="sum">税额（元）</div>
-				<div field="receivableSum" align="center" headerAlign="center" summaryType="sum">回款金额（元）</div>
-				<div field="balanceSum" align="center" headerAlign="center" summaryType="sum">余额（元）</div>
+				<div field="invoiceSum" align="center" headerAlign="center" summaryType="sum" dataType="currency">开票金额（元）</div>
+				<div field="bookIncome" align="center" headerAlign="center" summaryType="sum" dataType="currency">账面收入（元）</div>
+				<div field="invoiceTax" align="center" headerAlign="center" summaryType="sum" dataType="currency">税额（元）</div>
+				<div field="receivableSum" align="center" headerAlign="center" summaryType="sum" dataType="currency">回款金额（元）</div>
+				<div field="balanceSum" align="center" headerAlign="center" summaryType="sum" dataType="currency">余额（元）</div>
 				<div field="receivableData" dateFormat="yyyy-MM-dd" align="center" headerAlign="center">回款时间</div>
 			</div>
 		</div>
@@ -489,6 +495,10 @@ html,body {
 
 		function ZH_GROUP(e) {
 			return nui.getDictText("ZH_GROUP", e.value);
+		}
+		
+		function RISK_LEVEL(e){
+			return nui.getDictText("RISK_LEVEL", e.value);
 		}
 
 		function ZH_CONTRACT_STATUS(e) {

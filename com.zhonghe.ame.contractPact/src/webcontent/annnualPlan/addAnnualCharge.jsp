@@ -80,6 +80,16 @@
 								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 250px" required="true" enabled="true" />
 							</td>
 						</tr>
+						<tr>
+							<td align="right" style="width: 130px">风险等级：</td>
+							<td>
+								<input id="riskLevel" name="riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" style="width: 250px" required="true"/>
+							</td>
+							<td align="right" style="width: 130px">预计签署日期：</td>
+							<td>
+								<input id="estimatedDate" name="estimatedDate" class="nui-datepicker" style="width: 250px" required="true"/>
+							</td>							
+						</tr>
 					</table>
 				</div>
 			</fieldset>
