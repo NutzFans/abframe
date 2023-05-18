@@ -78,7 +78,7 @@
 						<tr>
 							<td class="form_label" align="right" style="width:140px;">评审结果说明：</td>
 							<td colspan="5">
-								<input style="width:100%;height: 60px;" name="remark" id="remark"
+								<input style="width:100%;height: 120px;" name="remark" id="remark"
 									class="nui-textarea" required="true" />
 							</td>
 						</tr>

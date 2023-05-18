@@ -56,7 +56,7 @@
 							<tr>
 								<td colspan="1" align="right">履约情况：</td>
 								<td colspan="9">
-									<input style="width:100%;height: 60px;" name="performance" id="performance"
+									<input style="width:100%;height: 120px;" name="performance" id="performance"
 										class="nui-textarea" readOnly="readOnly" 
 										emptyText="（简要评价供应商供货速度、服务态度、配合程度、仓贮能力等；满分4分）" />
 								</td>
@@ -70,7 +70,7 @@
 							<tr>
 								<td colspan="1" align="right">技术评价：</td>
 								<td colspan="9">
-									<input style="width:100%;height: 60px;" name="technology" id="technology"
+									<input style="width:100%;height: 120px;" name="technology" id="technology"
 										class="nui-textarea" readOnly="readOnly" 
 										emptyText="（简要评价供应商提供产品/服务专业水平、供货/服务质量；满分4分）" />
 								</td>
@@ -82,7 +82,7 @@
 							<tr>
 								<td colspan="1" align="right">质保能力：</td>
 								<td colspan="9">
-									<input style="width:100%;hereadOnly="readOnly" name="warranty" id="warranty"
+									<input style="width:100%; height: 120px" hereadOnly="readOnly" name="warranty" id="warranty"
 										class="nui-textarea" readOnly="readOnly" 
 										emptyText="（简要评价供应商是否有较完善的质保/售后体系，是否满足中核咨询需求；满分2分）" />
 								</td>

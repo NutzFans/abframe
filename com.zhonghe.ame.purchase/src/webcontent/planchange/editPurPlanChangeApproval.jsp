@@ -57,13 +57,13 @@
              <tr>
           		<td class="form_label" style="width:120px;" align="right">归口部门下可采购物项：</td>
                 <td  colspan="7">    
-                    <input style="width:100%;height:50px;" id="items" class="nui-textarea" readonly="readonly"/>
+                    <input style="width:100%;height:120px;" id="items" class="nui-textarea" readonly="readonly"/>
                 </td>
           	</tr>
           	<tr>
           		<td class="form_label" style="width:120px;" align="right">调整原因：</td>
                 <td  colspan="7">    
-                    <input style="width:100%;height:70px;" name="remark" class="nui-textarea" id="remark"/>
+                    <input style="width:100%;height:120px;" name="remark" class="nui-textarea" id="remark"/>
                 </td>
           	</tr>
         </table>

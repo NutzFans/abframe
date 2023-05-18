@@ -69,13 +69,13 @@
 		          	<tr>
 		          		<td class="form_label" style="width:120px;" align="right">备注：</td>
 	                <td  colspan="7">    
-	                    <input style="width:100%;height:50px;" name="remark" class="nui-textarea" id="remark"  readonly="readonly" />
+	                    <input style="width:100%;height:120px;" name="remark" class="nui-textarea" id="remark"  readonly="readonly" />
 	                </td>
 		          	</tr>
 		          	<tr>
 				      		<td class="form_label" style="width:120px;" align="right">调整原因：</td>
 			            <td  colspan="7">    
-			                <input style="width:100%;height:50px;" name="changeReason" class="nui-textarea" id="changeReason"  readonly="readonly" />
+			                <input style="width:100%;height:120px;" name="changeReason" class="nui-textarea" id="changeReason"  readonly="readonly" />
 			            </td>
 				      	</tr>
 			    	</table>

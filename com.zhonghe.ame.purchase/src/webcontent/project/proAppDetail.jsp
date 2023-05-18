@@ -67,7 +67,7 @@
 							<tr id="one111">
 			              		<td class="form_label"  align="right" style="width:120px;">立项范围说明：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="proAppRange" class="nui-textarea"  id="technologyNeed" />
+			                        <input style="width:100%;height: 120px;" name="proAppRange" class="nui-textarea"  id="technologyNeed" />
 			                    </td>
 	              			</tr>
 					</table>

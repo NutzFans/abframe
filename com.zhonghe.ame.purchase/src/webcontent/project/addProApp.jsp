@@ -83,7 +83,7 @@ body {
 							<tr>
 								<td align="right">采购方式理由：</td>
 								<td colspan="8">
-									<input id="wayReason" name="wayReason" class="nui-textarea" required="true" style="width: 100%;" emptyText="若为一级集采，则此项非必填" />
+									<input id="wayReason" name="wayReason" class="nui-textarea" required="true" style="width: 100%; height: 120px" emptyText="若为一级集采，则此项非必填" />
 								</td>
 							</tr>
 							<tr>
@@ -107,7 +107,7 @@ body {
 							<tr>
 								<td align="right" style="width: 120px;">立项范围：</td>
 								<td colspan="7">
-									<input style="width: 100%; height: 40px;" name="proAppRange" class="nui-textarea" required="true" />
+									<input style="width: 100%; height: 120px;" name="proAppRange" class="nui-textarea" required="true" />
 								</td>
 							</tr>
 							<tr>
@@ -128,11 +128,11 @@ body {
 							<tr>
 								<td align="right" colspan="1" style="width: 120px">选择上述供应商原因：</td>
 								<td colspan="3">
-									<input id="supplierReason" name="supplierReason" class="nui-textarea" required="ture" style="width: 100%;" />
+									<input id="supplierReason" name="supplierReason" class="nui-textarea" required="ture" style="width: 100%; height: 120px" />
 								</td>
 								<td align="right" style="width: 100px">相关情况说明：</td>
 								<td colspan="4">
-									<input name="remark" class="nui-textarea" required="ture" style="width: 100%;" />
+									<input name="remark" class="nui-textarea" required="ture" style="width: 100%; height: 120px" />
 								</td>
 							</tr>
 						</table>

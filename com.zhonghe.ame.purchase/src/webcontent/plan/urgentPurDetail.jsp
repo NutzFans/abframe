@@ -49,7 +49,7 @@
             	
             		<td class="form_label" align="right">申请原因：</td>
 	                 <td  colspan="7">    
-                        <input style="width:100%;height: 40px;" name="applyReason" id="applyReason" class="nui-textarea" id="applyReason"  required="true"/>
+                        <input style="width:100%;height: 120px;" name="applyReason" id="applyReason" class="nui-textarea" id="applyReason"  required="true"/>
                     </td>
             	</tr>
             </table>

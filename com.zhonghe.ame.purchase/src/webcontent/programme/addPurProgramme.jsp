@@ -69,7 +69,7 @@
 							<tr>
 								<td class="form_label" align="right" style="width:140px;">采购文件主要内容简述：</td>
 								<td colspan="5">
-									<input style="width:100%;height: 40px;" name="remark" id="remark"
+									<input style="width:100%;height: 120px;" name="remark" id="remark"
 										class="nui-textarea" required="true" />
 								</td>
 							</tr>

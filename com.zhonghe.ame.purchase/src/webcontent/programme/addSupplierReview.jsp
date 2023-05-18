@@ -44,38 +44,38 @@
 							<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">履约评价：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="performance" id="performance" class="nui-textarea" required="true" />
+			                        <input style="width:100%;height: 120px;" name="performance" id="performance" class="nui-textarea" required="true" />
 			                    </td>
 			              	</tr>
 			              	<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">技术评价：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="technology" id="technology" class="nui-textarea" required="true"/>
+			                        <input style="width:100%;height: 120px;" name="technology" id="technology" class="nui-textarea" required="true"/>
 			                    </td>
 			              	</tr>
 			              	<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">商务评价：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="businessaffairs" id="businessaffairs" class="nui-textarea"  required="true" />
+			                        <input style="width:100%;height: 120px;" name="businessaffairs" id="businessaffairs" class="nui-textarea"  required="true" />
 			                    </td>
 			                    
 			              	</tr>
 			              	<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">资质评价：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="qualifications" id="qualifications" class="nui-textarea"  required="true" />
+			                        <input style="width:100%;height: 120px;" name="qualifications" id="qualifications" class="nui-textarea"  required="true" />
 			                    </td>
 			              	</tr>
 			              	<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">质保能力：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="warranty" id="warranty" class="nui-textarea" required="true"/>
+			                        <input style="width:100%;height: 120px;" name="warranty" id="warranty" class="nui-textarea" required="true"/>
 			                    </td>
 			              	</tr>
 			              	<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">产品和服务质量：</td>
 			                    <td colspan="7">    
-			                        <input style="width:100%;height: 40px;" name="projectService" id="projectService" class="nui-textarea" required="true" />
+			                        <input style="width:100%;height: 120px;" name="projectService" id="projectService" class="nui-textarea" required="true" />
 			                    </td>
 			              	</tr>	
 						</table>

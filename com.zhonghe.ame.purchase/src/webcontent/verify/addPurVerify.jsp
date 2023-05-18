@@ -61,7 +61,7 @@
 							<tr>
 			              		<td class="form_label"  align="right" style="width:140px;">备注：</td>
 			                    <td colspan="3">    
-			                        <input style="width:100%;height: 70px;" name="remark" id="remark"  class="nui-textarea"/>
+			                        <input style="width:100%;height: 120px;" name="remark" id="remark"  class="nui-textarea"/>
 			                    </td>
 			              	</tr>
 						</table>
