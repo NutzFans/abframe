@@ -72,8 +72,7 @@ table,table tr td {
 						<tr>
 							<td class="form_label" align="right">申请人：</td>
 							<td>
-								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px" />
-								<input id="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" />
 							</td>
 							<td align="right" style="width: 160px">合同实施部门：</td>
 							<td>
@@ -137,7 +136,7 @@ table,table tr td {
 							<td>
 								<input id="invoiceSum" name="invoiceSum" id="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" />
 							</td>
-							<td align="right" style="width: 160px">开票金额账面收入（元）：</td>
+							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
 								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
 							</td>
@@ -233,7 +232,7 @@ table,table tr td {
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="8">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 							</td>
 						</tr>
 					</table>
@@ -289,18 +288,10 @@ table,table tr td {
 				contentType : 'text/json',
 				success : function(o) {
 					var data = o.proApp[0];
-					var createUsername;
-					nui.get("createUsername").setValue(data.empname);
-
-					if (data.empname != null) {
-						createUsername = data.empname
-					} else {
-						createUsername = "";
-					}
 					form.setData(data);
 					nui.get("contractNo").setText(data.contractNo);
 					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
-					document.getElementById("pipi").innerHTML = "【" + createUsername + "发起的" + data.contractName + "开票申请】";
+					document.getElementById("pipi").innerHTML = "【" + data.createUsername + "发起的" + data.contractName + "开票申请】";
 					form.setEnabled(false);
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({

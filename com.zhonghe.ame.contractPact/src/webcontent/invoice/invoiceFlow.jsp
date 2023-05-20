@@ -163,7 +163,7 @@
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="8">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 							</td>
 						</tr>
 					</table>
@@ -215,7 +215,6 @@
 				success : function(o) {
 					workItemInfo = o.workitemInfo;
 					form.setData(o.data)
-					id = o.data.id;
 					beforeBookIncome = o.data.bookIncome;
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);
@@ -223,17 +222,6 @@
 					if(workItemInfo.workItemName == '财务开票1'){
 						nui.get('bookIncome').enable();
 					}
-					nui.ajax({
-						url : "com.zhonghe.ame.invoice.invoice.queryInvoiceById.biz.ext",
-						type : "post",
-						data : nui.encode({
-							'id' : o.data.id
-						}),
-						contentType : 'text/json',
-						success : function(o) {
-							nui.get("createUsername").setValue(o.data.empname);
-						}
-					});
 					//查询并加载附件
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({

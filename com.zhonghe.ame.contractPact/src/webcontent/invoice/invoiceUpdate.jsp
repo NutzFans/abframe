@@ -27,19 +27,21 @@
 				<form id="form1" method="post">
 					<input name="files" id="fileids" class="nui-hidden" />
 					<input class="nui-hidden" name="id" />
+					<input class="nui-hidden" name="historyInvoiceSum" id="historyInvoiceSum" />
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;">
 							<tr>
 								<td class="form_label" align="right">申请人</td>
 								<td>
 									<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px" />
-									<input id="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+									<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">合同实施部门：</td>
 								<td>
 									<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 										showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
 										checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
+									<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" />
 								</td>
 								<td align="right" style="width: 160px">申请日期：</td>
 								<td>
@@ -97,9 +99,9 @@
 							<tr>
 								<td align="right" style="width: 160px">开票金额（元）：</td>
 								<td>
-									<input id="invoiceSum" name="invoiceSum" id="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" />
+									<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" />
 								</td>
-								<td align="right" style="width: 160px">开票金额账面收入（元）：</td>
+								<td align="right" style="width: 160px">账面收入（元）：</td>
 								<td>
 									<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true"/>
 								</td>
@@ -188,7 +190,7 @@
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
 								<td colspan="8">
-									<input name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="false" />
+									<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 								</td>
 							</tr>
 						</table>
@@ -222,13 +224,6 @@
 		 var form = new nui.Form("form1");
 		 var grid2 = nui.get("datagrid2");
 		 var id = "";
-		 
-		 init();
-		 
-		 function init(){
-		  	nui.get("createUserid").setValue("<%=userno%>");
-		  	nui.get("createUsername").setValue("<%=username%>");
-		}
 		
 		function onOk() {
 			//定义变量接受form表单数据
@@ -318,21 +313,14 @@
 		}
 		
 		function setEditData(data) {
-			nui.get("contractNo").setText(data.contractNo);
-			if (null != data.createUserid) {
-				nui.get("createUserid").setValue(data.createUserid);
-			}
-			if (null != data.empname) {
-				nui.get("createUsername").setValue(data.empname);
-			}
-			if (null != data.createTime) {
-				nui.get("createTime").setValue(data.createTime);
-			}
-			if (null != data.id) {
-				id = data.id;
-			}
 			var form = new nui.Form("#form1");
 			form.setData(data);
+			nui.get("contractNo").setText(data.contractNo);
+			nui.get("createUserid").setValue(data.createUserid);
+			nui.get("createUsername").setValue(data.createUsername);
+			nui.get("createTime").setValue(data.createTime);
+			nui.get("historyInvoiceSum").setValue(data.invoiceSum);
+			id = data.id;
 			setAttribute();
 			invoiceType();
 			var grid_0 = nui.get("grid_0");

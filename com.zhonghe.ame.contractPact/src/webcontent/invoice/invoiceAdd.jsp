@@ -30,7 +30,7 @@
 								<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
 									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" //>
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -40,7 +40,7 @@
 						<tr>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
-								<input id="contractNo" name="contractNo" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" emptyText="如无对应关联合同编号，请输入 / 字符"/>
+								<input id="contractNo" name="contractNo" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" allowInput="false" emptyText="必填项，数据来源于收费合同"/>
 							</td>
 							<td align="right" style="width: 160px">合同名称：</td>
 							<td colspan="6">
@@ -165,7 +165,7 @@
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="8">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 50px" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 							</td>
 						</tr>
 					</table>
@@ -205,8 +205,10 @@
 			} else {
 				nui.get("account").setRequired(false);
 				nui.get("account").disable();
+				nui.get("account").setValue("");
 				nui.get("unitAddress").setRequired(false);
 				nui.get("unitAddress").disable();
+				nui.get("unitAddress").setValue("");
 			}
 		}
 		
@@ -240,6 +242,16 @@
 			type = e;
 			if (type == 0) {
 				title = "暂存";
+				var contractNo =  nui.get("contractNo").getValue();
+				var contractName = nui.get("contractName").getValue();
+				if(isStrEmpty(contractNo)){
+					showTips("请填写合同编号并保证其正确性！", "danger");
+					return;
+				}
+				if(isStrEmpty(contractName)){
+					showTips("请填写合同名称并保证其正确性！", "danger");
+					return;
+				}
 			} else if (type == 1) {
 				title = "提交";
 				form.validate();
@@ -328,16 +340,15 @@
 			var btnEdit = this;
 			mini.open({
 				url : "/default/contractPact/invoice/invoiceContracList.jsp",
-				title : "收费合同信息",
-				width : '90%',
-				height : '90%',
+				title : "选择合同 - 收费合同信息",
+				width : '1200',
+				height : '610',
 				ondestroy : function(action) {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
 						if (data) {
-							console.log(data);
 							btnEdit.setValue(data.contractNo);
 							btnEdit.setText(data.contractNo);
 							nui.get("contractName").setValue(data.contractName);
@@ -393,7 +404,16 @@
 				s = p.replace(/(零.)*零$/, "").replace(/^$/, "零") + unit[0][i] + s;
 			}
 			return s.replace(/(零.)*零元/, "元").replace(/(零.)+/g, "零").replace(/^整$/, "零元整");
-		}				
+		}
+		
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
+		}		
+						
 	</script>
 </body>
 </html>

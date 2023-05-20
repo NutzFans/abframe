@@ -125,7 +125,7 @@
 							</tr>
 							<tr>
 								<td align="right" style="width:160px">备注：</td>
-									<td colspan="8"><input id="invoiceRemark" name="invoiceRemark"  class="nui-textarea" style="width:100%;height: 50px" required="true" enabled="false"/></td>
+									<td colspan="8"><input id="invoiceRemark" name="invoiceRemark"  class="nui-textarea" style="width:100%;height: 235px" required="true" enabled="false"/></td>
 							</tr>
 						</table>
 					</div>

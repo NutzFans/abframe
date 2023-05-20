@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap>
+
+	<resultMap class="commonj.sdo.DataObject" id="InvoiceDataObject">
+		<result column="contract_no" javaType="String" property="contractNo"/>
+		<result column="invoice_sum" javaType="String" property="invoiceSum"/>
+    </resultMap>
+
+    <select id="queryInvoiceById" parameterClass="java.util.HashMap"   resultMap="InvoiceDataObject">
+    	SELECT contract_no, invoice_sum FROM zh_invoice WHERE id = #invoiceId#
+    </select>
+    
+	<resultMap class="commonj.sdo.DataObject" id="ChargeDataObject">
+		<result column="contract_balance" javaType="String" property="contractBalance"/>
+    </resultMap>
+    
+    <select id="queryChargeByContractNo" parameterClass="java.util.HashMap"   resultMap="ChargeDataObject">
+    	SELECT contract_balance FROM zh_charge_contract WHERE contract_no = #contractNo#
+    </select>        
+
+	<update id="updateChargeContract"  parameterClass="java.util.HashMap">
+		UPDATE zh_charge_contract SET contract_balance = #contractBalance# WHERE contract_no = #contractNo#
+	</update>
+
+</sqlMap>
