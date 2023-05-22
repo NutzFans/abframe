@@ -18,6 +18,7 @@
 			<legend>原 - 付费合同信息</legend>
 			<form>
 				<input id="historyFinalSum" name="historyFinalSum" class="nui-hidden" />
+				<input id="historyContractBalance" name="historyContractBalance" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -201,6 +202,7 @@
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyContractSum").setValue(data.contractSum);			
 					nui.get("historyFinalSum").setValue(data.finalSum);
+					nui.get("historyContractBalance").setValue(data.contractBalance);
 					nui.get("historySigningDate").setValue(data.signingDate);
 					nui.get("historySignatoryname").setValue(data.signatoryname);
 					nui.get("historyPayer").setValue(data.payer);
@@ -228,10 +230,13 @@
 		function SaveData() {
 			var data = form.getData();
 			var historyFinalSum = nui.get("historyFinalSum").getValue() * 1;
+			var historyContractBalance = nui.get("historyContractBalance").getValue() * 1;
 			var actContractSum = nui.get("actContractSum").getValue() * 1;
 			var contractSum = nui.get("contractSum").getValue() * 1;
-			finalSum = (historyFinalSum-actContractSum+contractSum).toFixed(2);
+			var finalSum = (historyFinalSum-actContractSum+contractSum).toFixed(2);
+			var contractBalance = (historyContractBalance-actContractSum+contractSum).toFixed(2);
 			data.finalSum = finalSum;
+			data.contractBalance = contractBalance;
 			var json = nui.encode({
 				'data' : data
 			});

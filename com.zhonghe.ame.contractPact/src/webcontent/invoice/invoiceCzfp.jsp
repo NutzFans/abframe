@@ -280,7 +280,7 @@ body {
 			var invoiceSum = nui.get("invoiceSum").getValue();
 			var newInvoiceSum = nui.get("newInvoiceSum").getValue();
 			var sum = eval(invoiceSum) + eval(newInvoiceSum);
-			console.log(sum);
+			sum = sum.toFixed(2);
 			if (sum != historyInvoiceSum) {
 				showTips("产值分配后的开票金额之和，应等于待产值分配时的开票金额！", "danger");
 				return;

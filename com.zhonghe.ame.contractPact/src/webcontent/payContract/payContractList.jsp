@@ -155,6 +155,8 @@
 						<a class="nui-button" id="ffhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
+						<a class="nui-button" id="ffhtlist_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
+						<a class="nui-button" id="ffhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="ffhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 					</td>
@@ -226,8 +228,8 @@
 		function init() {
 			// 按钮权限
 			if(userId !='sysadmin'){
-				// 维护按钮 - ffhtlist_wh，导入按钮 - ffhtlist_import
-				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import");
+				// 维护按钮 - ffhtlist_wh，导入按钮 - ffhtlist_import，作废按钮 - ffhtlist_zf，变更经办人按钮 - ffhtlist_bgjbr
+				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import,ffhtlist_zf,ffhtlist_bgjbr");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -485,6 +487,72 @@
 				}
 			}
 		}
+		
+		function zf_edit(){
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行作废", "danger");
+				return;
+			}else{
+				var row = row[0];
+				if (row.appStatus == '2') {
+					if (!confirm("是否作废？")) {
+						return;
+					} else {
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.payContract.payContract.zfPayContractById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("作废成功");
+										grid.reload();
+									} else if (o.result == 2) {
+										showTips("该合同存在付款数据无法作废！", "danger");
+									}else{
+										showTips("作废失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行作废", "danger");
+						}
+					}
+				} else {
+					showTips("只能作废审批状态为【审批通过】的数据", "danger");
+				}
+			}			
+		}
+		
+		function bgjbr_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行经办人变更", "danger");
+				return;
+			}else{
+				var row = row[0];
+				if (row.appStatus == '2') {
+					nui.open({
+						url: "/default/contractPact/payContract/selectTransactor.jsp?id=" + row.id,
+						title : "付费合同 - 变更经办人",
+						width : 500,
+						height : 350,
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+						}
+					});
+				} else {
+					showTips("只能对审批状态为【审批通过】的数据进行经办人变更", "danger");
+				}
+			}
+		}				
 
 		function add() {
 			nui.open({

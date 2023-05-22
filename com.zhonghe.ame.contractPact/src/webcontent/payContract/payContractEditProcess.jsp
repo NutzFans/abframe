@@ -129,7 +129,7 @@
 							</td>
 							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
-								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" emptyText="数字格式年份" required="false" enabled="false" />
+								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" emptyText="数字格式年份，格式：YYYY" required="false" enabled="false" />
 							</td>
 						</tr>
 						<tr>
