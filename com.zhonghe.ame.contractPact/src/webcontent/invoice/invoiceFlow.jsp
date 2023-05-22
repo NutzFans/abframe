@@ -215,6 +215,7 @@
 				success : function(o) {
 					workItemInfo = o.workitemInfo;
 					form.setData(o.data)
+					id = o.data.id;
 					beforeBookIncome = o.data.bookIncome;
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);

@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-    <title>合同维护</title>
+    <title>年度采购计划</title>
     <style type="text/css">
     	html, body{font-size:12px;padding:0;margin:0;border:0;height:100%;overflow:hidden;width:100%;}
     </style>
