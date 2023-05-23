@@ -296,6 +296,8 @@
 			var contractSum = nui.get("contractSum").getValue();
 			var budgetSum = nui.get("budgetSum").getValue();
 			var scalingSum = nui.get("scalingSum").getValue();
+			var custId = nui.get("custId").getValue();
+			var checkResult = "";
 			//定义变量接受form表单数据
 			if (type == 1) {
 				var grid2 = nui.get("datagrid2");
@@ -303,6 +305,18 @@
 				title = "提交";
 				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
+					return;
+				}
+				ajaxCommon({
+					"async": false,
+					"url" : "com.zhonghe.ame.payContract.payContract.checkCustAndContractSum.biz.ext",
+					"data" : nui.encode({'contractSum': contractSum, 'custId': custId}),
+					"success" : function(data) {
+						checkResult = data.result;
+					}
+				});
+				if(checkResult == "2"){
+					alert("当前选择的供货商为四类供货商，根据要求其合同金额不能大于10万");
 					return;
 				}
 				if (nui.get("contractNature").getValue() == 1) {

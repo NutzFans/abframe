@@ -43,4 +43,26 @@ public class PayContractUtil {
 		}
 	}
 	
+	@Bizlet("四类供货商需要判断合同金额 - 合同金额不能大于10万")
+	public String checkCustAndContractSum(String contractSum, String custId){
+		try {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			String querySql = "SELECT * FROM PUR_SUPPLIER WHERE CUSTID=? AND CUSTTYPE='3'";
+			Entity entity = dbSession.queryOne(querySql, custId);
+			if(ObjectUtil.isNotNull(entity)){
+				if(NumberUtil.isLessOrEqual(new BigDecimal(contractSum), new BigDecimal(100000))){
+					return "1";
+				}else{
+					return "2";
+				}
+			}else{
+				return "1";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "2";
+		}
+		
+	}
+	
 }
