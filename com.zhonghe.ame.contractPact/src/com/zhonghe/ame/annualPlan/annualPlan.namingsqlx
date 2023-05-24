@@ -15,6 +15,18 @@
     	SELECT create_time, invoice_sum, book_income, invoice_tax, receivable_sum, balance_sum, receivable_data FROM zh_invoice WHERE app_status='2' AND contract_no = #contractNo#
     </select>
     
+    <resultMap class="commonj.sdo.DataObject" id="PayPlanInfo">
+        <result column="end_time" javaType="String" property="endTime"/>
+        <result column="invoice_type" javaType="String" property="invoiceType"/>
+        <result column="pay_type" javaType="String" property="payType"/>
+        <result column="apply_pay_contract_sum" javaType="String" property="applyPayContractSum"/>
+        <result column="paid_contract_sum" javaType="String" property="paidContractSum"/>
+    </resultMap>
+
+    <select id="queryPayMentByNo" parameterClass="java.util.HashMap"  resultMap="PayPlanInfo">
+    	SELECT end_time, invoice_type, pay_type, apply_pay_contract_sum, paid_contract_sum FROM zh_payment WHERE app_status='2' AND contract_id = #contractNo#
+    </select>    
+    
     <resultMap class="commonj.sdo.DataObject" id="roleInfo">
         <result column="ROLEID" javaType="String" property="ROLEID"/>
     </resultMap>

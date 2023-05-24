@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryInvoiceByNo.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryPayMentByNo" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -15,7 +15,7 @@
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
-      <process:return id="0" language="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice[]" name="invoiceInfos" type="query" valueType="DataObject">invoiceInfos</process:return>
+      <process:return id="0" language="com.zhonghe.ame.payment.payMent.ZhPayment[]" name="payMentInfos" type="query" valueType="DataObject">payMentInfos</process:return>
       <process:return id="1" language="Int" name="total" type="query" valueType="Primitive">total</process:return>
     </process:returns>
   </nodes>
@@ -39,19 +39,19 @@
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice</process:from>
+      <process:from type="literal" pattern="reference">com.zhonghe.ame.payment.payMent.ZhPayment</process:from>
       <process:to type="query">criteria/_entity</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">contractNo</process:from>
-      <process:to type="query">criteria/_expr[1]/contractNo</process:to>
+      <process:to type="query">criteria/_expr[1]/contractId</process:to>
     </process:copy>
     <process:copy>
       <process:from type="literal" pattern="reference">2</process:from>
       <process:to type="query">criteria/_expr[2]/appStatus</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="literal" pattern="reference">createTime</process:from>
+      <process:from type="literal" pattern="reference">endTime</process:from>
       <process:to type="query">criteria/_orderby[1]/_property</process:to>
     </process:copy>
     <process:copy>
@@ -87,7 +87,7 @@
       <process:inputVariable id="2" name="pagecond" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">page</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>
-      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">invoiceInfos</process:outputVariable>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">payMentInfos</process:outputVariable>
     </process:outputVariables>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
@@ -125,7 +125,7 @@
     <process:input description="" isArray="false" modelType="com.eos.foundation.PageCond" name="page"/>
   </process:inputs>
   <process:outputs>
-    <process:output description="" isArray="true" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice" name="invoiceInfos"/>
+    <process:output description="" isArray="true" modelType="com.zhonghe.ame.payment.payMent.ZhPayment" name="payMentInfos"/>
     <process:output description="" isArray="false" name="total" primitiveType="Int"/>
   </process:outputs>
   <process:extAttribute1>public</process:extAttribute1>
