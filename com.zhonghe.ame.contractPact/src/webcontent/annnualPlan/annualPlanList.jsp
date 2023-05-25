@@ -232,7 +232,68 @@ html,body {
 				'contractNo' : row.contractNo
 			};
 			payMentGrid.load(data);
-		}				
+		}
+		
+		function exportExcel() {
+			if (!confirm("是否确认导出？")) {
+				return;
+			}
+			var form = new nui.Form("#form1");
+			var data = form.getData(); //获取表单JS对象数据
+			var json = nui.encode(data);
+			nui.ajax({
+				url : "com.zhonghe.ame.annualPlan.annualPlan.exportAnnualPayPlanExcel.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					var fileName = "付款计划";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
+						curDateTime = curDateTime + "" + month;
+					} else {
+						curDateTime = curDateTime + "0" + month;
+					}
+					if (day > 9) {
+						curDateTime = curDateTime + day;
+					} else {
+						curDateTime = curDateTime + "0" + day;
+					}
+					if (hours > 9) {
+						curDateTime = curDateTime + hours;
+					} else {
+						curDateTime = curDateTime + "0" + hours;
+					}
+					if (minutes > 9) {
+						curDateTime = curDateTime + minutes;
+					} else {
+						curDateTime = curDateTime + "0" + minutes;
+					}
+					if (seconds > 9) {
+						curDateTime = curDateTime + seconds;
+					} else {
+						curDateTime = curDateTime + "0" + seconds;
+					}
+					fileName = fileName + "_" + curDateTime + ".xls";
+					var frm = document.getElementById("exprotExcelFlow");
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
+				},
+				error : function() {
+					showTips("导出数据异常，请联系管理员！", "danger");
+				}
+			});
+		}						
 
 		function ZH_INVOICE_NAME_TYPE(e) {
 			return nui.getDictText("ZH_INVOICE_NAME_TYPE", e.value);

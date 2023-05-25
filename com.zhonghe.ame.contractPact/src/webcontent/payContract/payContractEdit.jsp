@@ -10,14 +10,19 @@
 %>
 <html>
 <head>
-	<title>付费合同签订维护 </title>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<script src="<%= request.getContextPath() %>/common/nui/nui.js" type="text/javascript"></script>
-	<style type="text/css">
-	    body{
-	        margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
-	    } 
-    </style>
+<title>付费合同签订维护</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
+<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+</style>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px;">
@@ -88,8 +93,8 @@
 								<nobr>签约方:</nobr>
 							</td>
 							<td>
-								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 300px;" />
+								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersIsqualified.biz.ext"
+									filterType="like" textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 300px;" />
 							</td>
 							<td align="right" style="width: 100px">合同签约主体:</td>
 							<td>
@@ -156,13 +161,13 @@
 							</td>
 							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
-								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" required="false"/>
+								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" required="false" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">执行状态:</td>
 							<td>
-								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" required="true"  />
+								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 120px">合同余额(元):</td>
 							<td>
@@ -268,38 +273,54 @@
 		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
 		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
-	
+
 	<script type="text/javascript">
 		nui.parse();
-
-		<%
-			UserObject user = (UserObject) session.getAttribute("userObject");
+	<%UserObject user = (UserObject) session.getAttribute("userObject");
 			String username = user.getUserName();
 			String userno = user.getUserId();
 			String userOrgName = user.getUserOrgName();
 			String userOrgId = user.getUserOrgId();
 			Map<String, Object> a = user.getAttributes();
 			String empid = (String) a.get("empid");
-			DataObject[] roles = (DataObject[]) a.get("roles");
-		%>
-		
+			DataObject[] roles = (DataObject[]) a.get("roles");%>
 		var form = new nui.Form("form1");
 		var grid2 = nui.get("datagrid2");
 		var id = "";
-		
+
 		function onOk() {
 			//定义变量接受form表单数据
 			var form = new nui.Form("#form1");
+			var payPlans = grid2.getData();
 			form.validate();
 			if (form.isValid() == false) {
 				showTips("请检查表单的完整性!", "danger");
+				return;
+			}
+			if (payPlans.length > 0) {
+				var payPlansStr = JSON.stringify(payPlans);
+				var payPlansJson = JSON.parse(payPlansStr);
+				for (var i = 0; i < payPlansJson.length; i++) {
+					if (isNotNum(payPlansJson[i].years)) {
+						showTips("请填写未来年度付款计划中的 ‘年份’ 字段（格式为数字）", "danger");
+						return;
+					}
+					if (isNotNum(payPlansJson[i].jan) || isNotNum(payPlansJson[i].feb) || isNotNum(payPlansJson[i].mar) || isNotNum(payPlansJson[i].apr)
+							|| isNotNum(payPlansJson[i].may) || isNotNum(payPlansJson[i].jun) || isNotNum(payPlansJson[i].jul) || isNotNum(payPlansJson[i].aug)
+							|| isNotNum(payPlansJson[i].sep) || isNotNum(payPlansJson[i].oct) || isNotNum(payPlansJson[i].nov) || isNotNum(payPlansJson[i].dec)) {
+						mini.alert("付款计划中各月份付款值必须为数字且不允许为空（月份无收款请填充数字0）");
+						return;
+					}
+				}
+			} else {
+				showTips("请填写未来年度付款计划!", "danger");
 				return;
 			}
 			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
 		}
-		
+
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
@@ -310,7 +331,7 @@
 			var finalSum = nui.get("finalSum").getValue() * 1;
 			var actContractSum = nui.get("actContractSum").getValue() * 1;
 			var contractSum = nui.get("contractSum").getValue() * 1;
-			finalSum = (finalSum-actContractSum+contractSum).toFixed(2);
+			finalSum = (finalSum - actContractSum + contractSum).toFixed(2);
 			data.finalSum = finalSum;
 			var json = nui.encode({
 				'data' : data,
@@ -340,7 +361,7 @@
 				});
 			}
 		}
-		
+
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			if (nui.get("contractNature").getValue() == 1) {
@@ -439,7 +460,7 @@
 				});
 			}
 		}
-		
+
 		function setEditData(data) {
 			var form = new nui.Form("form1");
 			form.setData(data)
@@ -467,11 +488,11 @@
 			});
 			grid_0.sortBy("fileTime", "desc");
 		}
-		
+
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
-		
+
 		//标准方法接口定义
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
@@ -479,7 +500,7 @@
 			else
 				window.close();
 		}
-		
+
 		function queryPlan(str) {
 			nui.ajax({
 				url : "com.zhonghe.ame.chargeContract.chargeContract.queryPlan.biz.ext",
@@ -493,24 +514,24 @@
 				}
 			})
 		}
-		
+
 		function addRow() {
 			var newRow = {
 				name : "New Row"
 			};
-			var jan = 0;
-			var feb = 0;
-			var mar = 0;
-			var apr = 0;
-			var may = 0;
-			var jun = 0;
-			var jul = 0;
-			var aug = 0;
-			var sep = 0;
-			var oct = 0;
-			var nov = 0;
-			var dec = 0;
-			var sum = 0;
+			var jan = "0";
+			var feb = "0";
+			var mar = "0";
+			var apr = "0";
+			var may = "0";
+			var jun = "0";
+			var jul = "0";
+			var aug = "0";
+			var sep = "0";
+			var oct = "0";
+			var nov = "0";
+			var dec = "0";
+			var sum = "0";
 			newRow = {
 				jan : jan,
 				feb : feb,
@@ -529,14 +550,14 @@
 			var l = grid2.getData().length;
 			grid2.addRow(newRow, l + 1);
 		}
-		
+
 		function removeRow() {
 			var rows = grid2.getSelecteds();
 			if (rows.length > 0) {
 				grid2.removeRows(rows, true);
 			}
 		}
-		
+
 		function onvaluechanged() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
@@ -549,33 +570,33 @@
 			}
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
-		
+
 		grid2.on("cellendedit", function(e) {
 			var row = e.row;
-			var jan = row.jan * 1;
-			var feb = row.feb * 1;
-			var mar = row.mar * 1;
-			var apr = row.apr * 1;
-			var may = row.may * 1;
-			var jun = row.jun * 1;
-			var jul = row.jul * 1;
-			var aug = row.aug * 1;
-			var sep = row.sep * 1;
-			var oct = row.oct * 1;
-			var nov = row.nov * 1;
-			var dec = row.dec * 1;
+			var jan = Number(row.jan);
+			var feb = Number(row.feb);
+			var mar = Number(row.mar);
+			var apr = Number(row.apr);
+			var may = Number(row.may);
+			var jun = Number(row.jun);
+			var jul = Number(row.jul);
+			var aug = Number(row.aug);
+			var sep = Number(row.sep);
+			var oct = Number(row.oct);
+			var nov = Number(row.nov);
+			var dec = Number(row.dec);
 			var sum = (jan + feb + mar + apr + may + jun + jul + aug + sep + oct + nov + dec).toFixed(2);
 			grid2.updateRow(row, {
 				sum : sum
 			});
 		});
-		
+
 		grid2.on("cellbeginedit", function(e) {
 			if (e.field == "sum") {
 				e.cancel = "true";
 			}
 		});
-		
+
 		function onvaluechanged1() {
 			var purchasePlan = nui.get("purchasePlan").getValue();
 			if (purchasePlan == null || purchasePlan == "") {
@@ -584,7 +605,6 @@
 				nui.get("scalingSum").setValue();
 			}
 		}
-		
 
 		// 提示框
 		function showTips(content, state) {
@@ -607,11 +627,11 @@
 				});
 			}
 		}
-		
+
 		function changeOrgForm(e) {
 			nui.get("implementOrgname").setValue(e.source.text);
-		}		
-		
+		}
+
 		function contractNatureChanged() {
 			if (nui.get("contractNature").getValue() == 1) {
 				$("#purchasePlanLable").html("采购立项编号:");
@@ -656,7 +676,22 @@
 				/* nui.get("scalingSum").setRequired(false); */
 				nui.get("scalingSum").setValue("");
 			}
+		}
+		
+		function isNotNum(data) {
+			if (data == "") {
+				return true;
+			}
+			var num = Number(data);
+			var numStr = num + "";
+			console.log(numStr)
+			if (numStr == "NaN") {
+				return true;
+			} else {
+				return false;
+			}
 		}		
+		
 	</script>
 </body>
 </html>

@@ -335,8 +335,15 @@
 					var payPlansStr = JSON.stringify(payPlans);
 					var payPlansJson = JSON.parse(payPlansStr);
 					for (var i = 0; i < payPlansJson.length; i++) {
-						if (payPlansJson[i].years == undefined) {
-							showTips("请填写未来年度付款计划中的 '年份' 字段!", "danger");
+						if (isNotNum(payPlansJson[i].years)) {
+							showTips("请填写未来年度付款计划中的 ‘年份’ 字段（格式为数字）", "danger");
+							return;
+						}
+						if (isNotNum(payPlansJson[i].jan) || isNotNum(payPlansJson[i].feb) || isNotNum(payPlansJson[i].mar) || isNotNum(payPlansJson[i].apr)
+								|| isNotNum(payPlansJson[i].may) || isNotNum(payPlansJson[i].jun) || isNotNum(payPlansJson[i].jul)
+								|| isNotNum(payPlansJson[i].aug) || isNotNum(payPlansJson[i].sep) || isNotNum(payPlansJson[i].oct)
+								|| isNotNum(payPlansJson[i].nov) || isNotNum(payPlansJson[i].dec)) {
+							mini.alert("付款计划中各月份付款值必须为数字且不允许为空（月份无收款请填充数字0）");
 							return;
 						}
 					}
@@ -603,19 +610,19 @@
 			var newRow = {
 				name : "New Row"
 			};
-			var jan = 0;
-			var feb = 0;
-			var mar = 0;
-			var apr = 0;
-			var may = 0;
-			var jun = 0;
-			var jul = 0;
-			var aug = 0;
-			var sep = 0;
-			var oct = 0;
-			var nov = 0;
-			var dec = 0;
-			var sum = 0;
+			var jan = "0";
+			var feb = "0";
+			var mar = "0";
+			var apr = "0";
+			var may = "0";
+			var jun = "0";
+			var jul = "0";
+			var aug = "0";
+			var sep = "0";
+			var oct = "0";
+			var nov = "0";
+			var dec = "0";
+			var sum = "0";
 			newRow = {
 				jan : jan,
 				feb : feb,
@@ -657,18 +664,18 @@
 		
 		grid2.on("cellendedit", function(e) {
 			var row = e.row;
-			var jan = row.jan * 1;
-			var feb = row.feb * 1;
-			var mar = row.mar * 1;
-			var apr = row.apr * 1;
-			var may = row.may * 1;
-			var jun = row.jun * 1;
-			var jul = row.jul * 1;
-			var aug = row.aug * 1;
-			var sep = row.sep * 1;
-			var oct = row.oct * 1;
-			var nov = row.nov * 1;
-			var dec = row.dec * 1;
+			var jan = Number(row.jan);
+			var feb = Number(row.feb);
+			var mar = Number(row.mar);
+			var apr = Number(row.apr);
+			var may = Number(row.may);
+			var jun = Number(row.jun);
+			var jul = Number(row.jul);
+			var aug = Number(row.aug);
+			var sep = Number(row.sep);
+			var oct = Number(row.oct);
+			var nov = Number(row.nov);
+			var dec = Number(row.dec);
 			var sum = (jan + feb + mar + apr + may + jun + jul + aug + sep + oct + nov + dec).toFixed(2);
 			grid2.updateRow(row, {
 				sum : sum
@@ -740,7 +747,30 @@
 				nui.get("scalingSum").setRequired(false);
 				nui.get("scalingSum").setValue("");
 			}
-		}		
+		}
+		
+		function isNotNum(data) {
+			if (data == "") {
+				return true;
+			}
+			var num = Number(data);
+			var numStr = num + "";
+			console.log(numStr)
+			if (numStr == "NaN") {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
+		}			
+				
 	</script>
 </body>
 </html>
