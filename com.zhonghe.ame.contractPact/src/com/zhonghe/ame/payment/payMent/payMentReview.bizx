@@ -176,16 +176,6 @@
       <sourceNode>assign2</sourceNode>
       <targetNode>invokePojo2</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link30" name="link30" displayName="连接线" type="transition">
-      <sourceNode>assign2</sourceNode>
-      <targetNode>subprocess6</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NE">
-          <process:leftOperand type="query">cpData/files</process:leftOperand>
-          <process:rightOperand type="literal">null</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
     <targetConnections>link7</targetConnections>
     <targetConnections>link27</targetConnections>
     <location x="342" y="215"/>
@@ -269,7 +259,6 @@
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link28</targetConnections>
-    <targetConnections>link31</targetConnections>
     <location x="456" y="210"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo2label</nodeLabel>
@@ -322,6 +311,7 @@
     <sourceConnections xsi:type="process:tLink" id="link32" name="link32" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService1</sourceNode>
       <targetNode>transactioncommit0</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link4" name="link4" displayName="连接线" type="transition">
       <sourceNode>invokeService1</sourceNode>
@@ -643,34 +633,10 @@
     <figSize height="17" width="110"/>
     <node>invokeService4</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess6" name="保存附件" displayName="saveContractFiles" collapsed="false" type="subprocess">
-    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>subprocess6</sourceNode>
-      <targetNode>invokePojo2</targetNode>
-    </sourceConnections>
-    <targetConnections>link30</targetConnections>
-    <location x="405" y="143"/>
-    <size height="27" width="27"/>
-    <nodeLabel>subprocess6label</nodeLabel>
-    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">com.zhonghe.ame.contractPact.common.saveContractFiles</process:partner>
-      <process:inputVariables>
-        <process:inputVariable id="0" name="str" type="query" value="String" valueType="Primitive" pattern="reference">cpData/files</process:inputVariable>
-        <process:inputVariable id="1" name="groupId" type="literal" value="String" valueType="Primitive" pattern="reference">PAY_MENT</process:inputVariable>
-        <process:inputVariable id="2" name="relationId" type="query" value="String" valueType="Primitive" pattern="reference">cpData/id</process:inputVariable>
-      </process:inputVariables>
-      <process:outputVariables/>
-    </process:flow>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="subprocess6label" name="label" nodeType="label">
-    <location x="394" y="178"/>
-    <figSize height="17" width="49"/>
-    <node>subprocess6</node>
-  </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
-      <targetNode>invokePojo3</targetNode>
+      <targetNode>invokePojo6</targetNode>
     </sourceConnections>
     <targetConnections>link4</targetConnections>
     <location x="858" y="505"/>
@@ -695,7 +661,7 @@
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>transactioncommit0</targetNode>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
+    <targetConnections>link18</targetConnections>
     <location x="1039" y="396"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo3label</nodeLabel>
@@ -713,6 +679,29 @@
     <location x="1022" y="432"/>
     <figSize height="17" width="56"/>
     <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo6" name="运算逻辑" displayName="更新付费合同中的合同余额" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo6</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="971" y="481"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo6label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.payment.PayMentUtil.updatePayContract</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="payMentId" type="query" value="int" valueType="Java" pattern="reference">cpData/id</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo6label" name="label" nodeType="label">
+    <location x="958" y="517"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo6</node>
   </nodes>
   <topRuler>
     <guides position="1563" horizontal="true"/>

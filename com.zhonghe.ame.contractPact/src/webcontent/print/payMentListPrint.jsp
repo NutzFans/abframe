@@ -72,12 +72,11 @@ table,table tr td {
 						<tr>
 							<td class="form_label" align="right">申请人：</td>
 							<td>
-								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 230px" />
-								<input id="createUsername" class="nui-textbox" enabled="false" style="width: 230px" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 230px" />
 							</td>
 							<td align="right" style="width: 140px">申请部门：</td>
 							<td>
-								<input id="orgname" name="orgname" enabled="false" class="nui-textbox" style="width: 230px" />
+								<input id="implementOrgname" name="implementOrgname" enabled="false" class="nui-textbox" style="width: 230px" />
 							</td>
 						</tr>
 						<tr>
@@ -137,7 +136,7 @@ table,table tr td {
 							</td>
 							<td align="right" style="width: 140px">收款单位：</td>
 							<td>
-								<input id="signatoryname" name="signatoryname" enabled="false" class="nui-textbox" style="width: 230px" />
+								<input id="signatoryName" name="signatoryName" enabled="false" class="nui-textbox" style="width: 230px" />
 							</td>
 						</tr>
 						<tr>
@@ -153,7 +152,7 @@ table,table tr td {
 						<tr>
 							<td align="right">支付依据及情况说明：</td>
 							<td colspan="8">
-								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 150px" enabled="false" />
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 235px" enabled="false" />
 							</td>
 						</tr>
 					</table>
@@ -209,16 +208,8 @@ table,table tr td {
 				contentType : 'text/json',
 				success : function(o) {
 					var data = o.data[0];
-					var createUsername;
 					form.setData(data)
-					nui.get("contractSum").setValue(data.contractSum);
-					nui.get("createUsername").setValue(data.empname);
-					if (data.empname != null) {
-						createUsername = data.empname
-					} else {
-						createUsername = "";
-					}
-					document.getElementById("pipi").innerHTML = "【" + createUsername + "发起的" + data.contractName + "付款申请】";
+					document.getElementById("pipi").innerHTML = "【" + data.createUsername + "发起的" + data.contractName + "付款申请】";
 					form.setEnabled(false);
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({

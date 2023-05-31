@@ -144,4 +144,26 @@
 				and years = #years#
 		</isNotEmpty>
     </select>
+    
+	<resultMap class="commonj.sdo.DataObject" id="PayMentDataObject">
+		<result column="contract_id" javaType="String" property="contractId"/>
+		<result column="apply_pay_contract_sum" javaType="String" property="applyPayContractSum"/>
+    </resultMap>
+
+    <select id="queryPayMentById" parameterClass="java.util.HashMap"   resultMap="PayMentDataObject">
+    	SELECT contract_id, apply_pay_contract_sum FROM zh_payment WHERE id = #payMentId#
+    </select>
+    
+	<resultMap class="commonj.sdo.DataObject" id="PayDataObject">
+		<result column="contract_balance" javaType="String" property="contractBalance"/>
+    </resultMap>
+    
+    <select id="queryPayByContractNo" parameterClass="java.util.HashMap"   resultMap="PayDataObject">
+    	SELECT contract_balance FROM zh_pay_contract WHERE contract_no = #contractNo#
+    </select>
+    
+	<update id="updatePayContract"  parameterClass="java.util.HashMap">
+		UPDATE zh_pay_contract SET contract_balance = #contractBalance# WHERE contract_no = #contractNo#
+	</update>            
+    
 </sqlMap>

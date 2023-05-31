@@ -17,7 +17,7 @@ html,body {
 }
 </style>
 <head>
-<title>收费合同管理</title>
+<title>开票管理</title>
 </head>
 <body>
 	<div style="width: auto; height: 99%; padding: 5px;">
@@ -154,7 +154,7 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[1000]" showPager="true" dataField="data" showSummaryRow="true" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.invoice.invoice.queryinvoiceAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
+				url="com.zhonghe.ame.payment.payMent.payMentAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
 				<div property="columns">
 					<div type="checkcolumn">○</div>
 					<div field="invoiceNameType" width="80" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">发票抬头</div>

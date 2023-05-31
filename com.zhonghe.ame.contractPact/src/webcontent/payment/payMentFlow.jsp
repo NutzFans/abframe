@@ -5,9 +5,14 @@
 <head>
 <title>付款流程审批</title>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -15,14 +20,17 @@
 		<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 97%;">
 			<legend>付款流程审批信息</legend>
 			<form id="form1" method="post">
+				<input class="nui-hidden" name="id" />
+				<input class="nui-hidden" name="processid" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td class="form_label" align="right">申请人</td>
+							<td class="form_label" align="right">经办人：</td>
 							<td>
-								<input id="empname" name="empname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
-							<td align="right" style="width: 160px">申请部门：</td>
+							<td align="right" style="width: 160px">合同承办部门：</td>
 							<td>
 								<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
@@ -31,7 +39,7 @@
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
-								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" readonly="readonly" />
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -93,7 +101,7 @@
 							<td align="right">收款单位：</td>
 							<td colspan="8">
 								<input name="signatory" id="signatory" class="nui-hidden" style="width: 300px" />
-								<input id="signatoryname" name="signatoryname" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+								<input id="signatoryName" name="signatoryName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -111,7 +119,7 @@
 						<tr>
 							<td align="right">支付依据及情况说明：</td>
 							<td colspan="8">
-								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 150px" required="true" enabled="false" />
+								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" enabled="false" />
 							</td>
 						</tr>
 					</table>
@@ -119,7 +127,7 @@
 			</form>
 			<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
 				<legend>相关附件</legend>
-				<jsp:include page="/ame_common/inputFile.jsp" />
+				<jsp:include page="/ame_common/detailFile.jsp" />
 			</fieldset>
 			<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 		</fieldset>
@@ -133,9 +141,7 @@
 
 	<script type="text/javascript">
 		nui.parse();
-		<%
-			long workitemid = (Long) request.getAttribute("workItemID");
-		%>
+		<%long workitemid = (Long) request.getAttribute("workItemID");%>
 		var form = new nui.Form("form1");
     		var projectid = <%=request.getParameter("projectid")%>;
     		var workItemID = <%=request.getParameter("workItemID")%>;
@@ -155,10 +161,9 @@
 				contentType : 'text/json',
 				success : function(o) {
 					form.setData(o.data);
+					nui.get("contractId").setValue(o.data.contractNo);
+					nui.get("contractId").setText(o.data.contractNo);
 					nui.get("backTo").setData(o.data.backList);
-					nui.get("createdOrgid").setText(o.data.orgname);
-					nui.get("contractId").setText(o.data.contractId);
-					nui.get("paidContractSum").setValue(o.data.paidContractSum);
 					//查询并加载附件
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
@@ -186,7 +191,6 @@
 		
 		function submit() {
 			var auditstatus = nui.get("auditstatus").getValue();
-			console.log(auditstatus);
 			if (auditstatus == "2") { //终止流程
 				titleText = "终止";
 			} else if (auditstatus == "0") { //退回流程
@@ -198,10 +202,6 @@
 			} else if (auditstatus == "1") { //提交流程
 				titleText = "提交";
 			}
-			form2.submit();
-		}
-		
-		function SaveData() {
 			saveData();
 		}
 		
@@ -212,11 +212,10 @@
 					var data = form.getData();
 					var misOpinion = opioionform.getData().misOpinion;//审核意见
 					nui.get("creatReimbProcess").setEnabled(false);
-					data.files = nui.get("fileids").getValue();
 					var json = {
 						"cpData" : data,
 						"misOpinion" : misOpinion,
-						"workItemID": <%=workitemid %>,
+						"workItemID": <%=workitemid%>,
 						"countersignUsers" : countersignUsers
 					};
 					ajaxCommon({
@@ -243,7 +242,7 @@
 		function selectOmEmployee() {
 			var btnEdit = this;
 			nui.open({
-				url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
+				url: "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
 				title : "立项单位经办人",
 				width : 430,
 				height : 400,
@@ -275,8 +274,7 @@
 					}
 				}
 			});
-		}		
-		
+		}
 	</script>
 
 </body>

@@ -404,8 +404,10 @@ body {
 			var purchasMode = nui.get("purchasMode").getValue();
 			if(purchasMode=="零星采购"){
 				nui.get("supplierScope").setValue("2");
+				nui.get("supplierScope").setReadOnly(true);
 			}else{
 				nui.get("supplierScope").setValue(null);
+				nui.get("supplierScope").setReadOnly(false);
 			}
 		}
 

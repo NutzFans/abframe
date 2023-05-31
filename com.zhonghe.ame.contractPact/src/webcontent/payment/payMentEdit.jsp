@@ -5,9 +5,14 @@
 <head>
 <title>发起付款流程</title>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -16,15 +21,15 @@
 			<legend>发起付款流程信息</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
-				<input name="implementOrg" id="implementOrg" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="processid" />
+				<input id="payId" name="payId" class="nui-hidden" />
 				<div style="padding: 1px;">
 					<table style="table-layout: fixed;">
 						<tr>
 							<td class="form_label" align="right">申请人</td>
 							<td>
-								<input name="createUserid" id="createUserid" class="nui-hidden"/>
+								<input name="createUserid" id="createUserid" class="nui-hidden" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请部门：</td>
@@ -36,13 +41,13 @@
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
-								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" readonly="readonly" />
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
-								<input id="contractId" name="contractId" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" enabled="true" />
+								<input id="contractId" name="contractId" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" enabled="true" allowInput="false" />
 							</td>
 							<td align="right" style="width: 160px">合同名称：</td>
 							<td colspan="6">
@@ -97,8 +102,8 @@
 						<tr>
 							<td align="right">收款单位：</td>
 							<td colspan="8">
-								<input name="signatory" id="signatory" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 100%;" />
+								<input name="signatory" id="signatory" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext"
+									filterType="like" textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
@@ -139,24 +144,46 @@
 
 	<script type="text/javascript">
 		nui.parse();
-		<%
-			long workItemID = (Long) request.getAttribute("workItemID");
-		%>
+	<%long workItemID = (Long) request.getAttribute("workItemID");%>
 		var form = new nui.Form("form1");
 		var type;
-		
+
 		init();
-		
+
 		function onOk(e) {
 			//定义变量接受form表单数据
 			var form = new nui.Form("#form1");
 			type = e;
+			var checkPayPaid = "";
 			if (type == 1) {
 				form.validate();
 				if (form.isValid() == false) {
 					showTips("请检查必填项");
 					return;
 				}
+				ajaxCommon({
+					"async" : false,
+					"url" : "com.zhonghe.ame.payment.payMent.checkPayPaid.biz.ext",
+					"data" : nui.encode({
+						"payId" : nui.get("payId").getValue(),
+						"applyPayContractSum" : nui.get("applyPayContractSum").getValue()
+					}),
+					"success" : function(data) {
+						checkPayPaid = data.result;
+					}
+				});
+				if (checkPayPaid == "2") {
+					alert("当前付款金额已【超过】关联付费合同付款计划里对应本季度应付款总额！");
+					return;
+				}
+				if (checkPayPaid == "3") {
+					alert("关联的付费合同中未设置付款计划，无法提交付款流程！");
+					return;
+				}
+				if (checkPayPaid == "4") {
+					alert("检查本次支付金额合法性异常，请联系管理员！");
+					return;
+				}			
 			}
 			var filePaths = document.getElementsByName("uploadfile").length;
 			for (var j = 0; j < filePaths; j++) {
@@ -173,7 +200,7 @@
 			document.getElementById("fileCatalog").value = "payMentinfo";
 			form2.submit();
 		}
-		
+
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
@@ -229,10 +256,10 @@
 				});
 			}
 		}
-		
+
 		function init() {
-			var data={workItemID:<%=workItemID %>};
-			var json=nui.encode(data);
+			var data = {workItemID :<%=workItemID%>};
+			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.payment.payMent.getPayMentProcess.biz.ext",
 				data : json,
@@ -242,6 +269,7 @@
 				success : function(o) {
 					form.setData(o.payment);
 					nui.get("contractId").setText(o.payment.contractId);
+					nui.get("contractId").setValue(o.payment.contractId);
 					//附件查询
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
@@ -273,18 +301,7 @@
 				}
 			});
 		}
-		
-		function onCancel(e) {
-			CloseWindow("cancel");
-		}
-		
-		function CloseWindow(action) {
-			if (window.CloseOwnerWindow)
-				return window.CloseOwnerWindow(action);
-			else
-				window.close();
-		}
-		
+
 		function selectOmEmployee() {
 			var btnEdit = this;
 			nui.open({
@@ -306,14 +323,14 @@
 				}
 			});
 		}
-		
+
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			mini.open({
 				url : "/default/contractPact/payment/payMentContracList.jsp",
-				title : "付款合同信息",
-				width : '90%',
-				height : '90%',
+				title : "选择合同 - 付费合同信息",
+				width : '1200',
+				height : '610',
 				ondestroy : function(action) {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
@@ -323,12 +340,13 @@
 							btnEdit.setValue(data.contractNo);
 							btnEdit.setText(data.contractNo);
 							nui.get("contractName").setValue(data.contractName);
-							nui.get("contractSum").setValue(data.contractSum);
+							nui.get("contractSum").setValue(data.finalSum);
 							nui.get("signatory").setValue(data.signatory);
 							nui.get("contractType").setValue(data.contractType);
 							nui.get("contractNature").setValue(data.contractNature);
 							nui.get("payer").setValue(data.payer);
-							queryPaid(data.contractNo);
+							nui.get("payId").setValue(data.id);
+							setPaidContractSum(data.finalSum, data.contractBalance);
 							btnEdit.doValueChanged();
 						}
 					}
@@ -336,31 +354,16 @@
 				}
 			});
 		}
-		
-		function queryPaid(str) {
-			nui.ajax({
-				url : "com.zhonghe.ame.payment.payMent.queryPaid.biz.ext",
-				type : "post",
-				contentType : 'text/json',
-				data : {
-					"contractNo" : str
-				},
-				success : function(text) {
-					nui.get("paidContractSum").setValue(text.paidSum);
-				}
-			})
-		}
-		
-		function onCancel(e) {
-			CloseWindow("cancel");
-		}
-		
-		//标准方法接口定义
-		function CloseWindow(action) {
-			if (window.CloseOwnerWindow)
-				return window.CloseOwnerWindow(action);
-			else
-				window.close();
+
+		function setPaidContractSum(finalSum, contractBalance) {
+			abs = function(val) {
+				var str = (val).toFixed(2) + '';
+				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+				var dot = str.substring(str.length, str.indexOf("."))
+				var ret = intSum + dot;
+				return ret;
+			}
+			nui.get("paidContractSum").setValue(abs(finalSum - contractBalance));
 		}
 	</script>
 </body>
