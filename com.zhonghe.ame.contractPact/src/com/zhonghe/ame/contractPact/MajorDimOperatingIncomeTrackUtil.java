@@ -3,6 +3,7 @@ package com.zhonghe.ame.contractPact;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,26 +130,30 @@ public class MajorDimOperatingIncomeTrackUtil {
 
 			List<String> customSort = Arrays.asList("咨询", "监理", "设备监理", "工程检测");
 
-			List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, (t1, t2) -> {
-				int t1Index = customSort.indexOf(t1.getString("majorName"));
-				t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
-				int t2Index = customSort.indexOf(t2.getString("majorName"));
-				t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
-				return t1Index - t2Index;
+			List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
+
+				@Override
+				public int compare(DataObject t1, DataObject t2) {
+					int t1Index = customSort.indexOf(t1.getString("majorName"));
+					t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
+					int t2Index = customSort.indexOf(t2.getString("majorName"));
+					t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
+					return t1Index - t2Index;
+				}
 			});
 
 			DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.MajorOperatingTrackAnalyzeEntity");
 			trackData.setString("majorId", "hj");
 			trackData.setString("majorName", "合计");
 
-			newTrackDatas.forEach(dataObject -> {
+			for (DataObject dataObject : newTrackDatas) {
 				trackData.setBigDecimal("targetValue", NumberUtil.add(trackData.getBigDecimal("targetValue"), dataObject.getBigDecimal("targetValue")));
 				trackData.setBigDecimal("thresholdValue", NumberUtil.add(trackData.getBigDecimal("thresholdValue"), dataObject.getBigDecimal("thresholdValue")));
 				trackData.setBigDecimal("cumulativeCompleted", NumberUtil.add(trackData.getBigDecimal("cumulativeCompleted"), dataObject.getBigDecimal("cumulativeCompleted")));
 				trackData.setBigDecimal("totalYear", NumberUtil.add(trackData.getBigDecimal("totalYear"), dataObject.getBigDecimal("totalYear")));
 				trackData.setBigDecimal("toBeSigned", NumberUtil.add(trackData.getBigDecimal("toBeSigned"), dataObject.getBigDecimal("toBeSigned")));
 				trackData.setBigDecimal("followUpCcompleted", NumberUtil.add(trackData.getBigDecimal("followUpCcompleted"), dataObject.getBigDecimal("followUpCcompleted")));
-			});
+			}
 
 			newTrackDatas.add(trackData);
 
@@ -157,6 +162,7 @@ public class MajorDimOperatingIncomeTrackUtil {
 		}
 
 		return ArrayUtil.toArray(trackDatas, DataObject.class);
+
 	}
 
 }

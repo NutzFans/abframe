@@ -23,6 +23,8 @@ html,body {
 	<div id="tabs" class="nui-tabs" activeIndex="0" style="width: auto; height: 99%; padding: 5px;" onactivechanged="tabActiveChanged">
 		<div title="【单位】维度跟踪">
 			<div id="orgDimForm">
+				<input class="nui-hidden" name="authType" id="authType" />
+				<input class="nui-hidden" name="secOrgId" id="secOrgId" />
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 					<table>
 						<tr>
@@ -72,7 +74,7 @@ html,body {
 			</div>
 		</div>
 
-		<div title="【专业类别】维度跟踪">
+		<div name="majorDimTab" title="【专业类别】维度跟踪" visible="false">
 			<div id="majorDimForm">
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 					<table>
@@ -123,7 +125,7 @@ html,body {
 			</div>
 		</div>
 
-		<div title="【集团内/外】维度跟踪">
+		<div name="groupDimTab" title="【集团内/外】维度跟踪" visible="false">
 			<div id="groupDimForm">
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 					<table>
@@ -194,8 +196,41 @@ html,body {
 					// 新增按钮（单位维度） - operatingIncomeTrack_add，编辑按钮（单位维度） - operatingIncomeTrack_edit
 					getOpeatorButtonAuth("operatingIncomeTrack_add,operatingIncomeTrack_edit");
 				}
-				nui.get("orgDimYear").setValue(now.getFullYear());
-				orgDimSearch();
+				var json = nui.encode({
+					'loginUserId' : userId,
+					'loginUserOrgId' : userOrgId,
+					'authCode' : 'operatingIncomeTrack'
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.contractPact.statisticalReport.queryOperatingIncomeTrackAuth.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "2") {
+							// 查看指定组织数据
+							nui.get("authType").setValue("2");
+							nui.get("secOrgId").setValue(o.secOrgId);
+						} else if (o.result == "3") {
+							// 不展现任何组织数据
+							nui.get("authType").setValue("3");
+						} else {
+							// 查看所有组织数据
+							nui.get("authType").setValue("1");
+							var tabs = mini.get("tabs");
+							var majorDimTab = tabs.getTab("majorDimTab");
+							var groupDimTab = tabs.getTab("groupDimTab");
+							tabs.updateTab(majorDimTab, {
+								visible : true
+							});
+							tabs.updateTab(groupDimTab, {
+								visible : true
+							});
+						}
+						nui.get("orgDimYear").setValue(now.getFullYear());
+						orgDimSearch();
+					}
+				});
 			} else if (e.tab.title == "【专业类别】维度跟踪") {
 				if (userId != 'sysadmin') {
 					// 新增按钮（专业维度） - operatingIncomeTrack_major_add，编辑按钮（专业维度） - operatingIncomeTrack_major_edit
@@ -489,7 +524,7 @@ html,body {
 				}
 			});
 		}
-		
+
 		function groupDimExportExcel() {
 			if (!confirm("是否确认导出？")) {
 				return;
@@ -549,7 +584,7 @@ html,body {
 					showTips("导出数据异常，请联系管理员！", "danger");
 				}
 			});
-		}		
+		}
 
 		function setBackGroundColor(e) {
 			var record = e.record;

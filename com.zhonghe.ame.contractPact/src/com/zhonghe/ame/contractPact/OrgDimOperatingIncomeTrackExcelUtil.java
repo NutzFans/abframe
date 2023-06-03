@@ -3,9 +3,11 @@ package com.zhonghe.ame.contractPact;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,7 @@ import commonj.sdo.DataObject;
 public class OrgDimOperatingIncomeTrackExcelUtil {
 
 	@Bizlet("营业收入跟踪分析 - 单位维度")
-	public DataObject[] trackAnalyze(String orgDimYear, String orgDimGroup) throws Exception {
+	public DataObject[] trackAnalyze(String orgDimYear, String orgDimGroup, String authType, String secOrgId) throws Exception {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 
@@ -79,15 +81,50 @@ public class OrgDimOperatingIncomeTrackExcelUtil {
 		if (secOrgs != null && secOrgs.size() > 0) {
 			Map<String, Entity> invoiceYearsMap = this.invoiceBySecOrg(invoiceYears, dbSession);
 
-			Map<String, Entity> annualYearsMap = annualYears.stream().collect(Collectors.toMap(entity1 -> entity1.getStr("secondary_org"), Function.identity(), (key1, key2) -> key2));
+			Map<String, Entity> annualYearsMap = annualYears.stream().collect(Collectors.toMap(new Function<Entity, String>() {
 
-			Map<String, Entity> annualYearBySignedsMap = annualYearBySigneds.stream().collect(
-					Collectors.toMap(entity1 -> entity1.getStr("secondary_org"), Function.identity(), (key1, key2) -> key2));
+				@Override
+				public String apply(Entity t) {
+					return t.getStr("secondary_org");
+				}
+			}, Function.identity(), new BinaryOperator<Entity>() {
+
+				@Override
+				public Entity apply(Entity t, Entity u) {
+					return u;
+				}
+			}));
+
+			Map<String, Entity> annualYearBySignedsMap = annualYearBySigneds.stream().collect(Collectors.toMap(new Function<Entity, String>() {
+
+				@Override
+				public String apply(Entity t) {
+					return t.getStr("secondary_org");
+				}
+			}, Function.identity(), new BinaryOperator<Entity>() {
+
+				@Override
+				public Entity apply(Entity t, Entity u) {
+					return u;
+				}
+			}));
 
 			trackDatas = this.analyzeMerge(secOrgs, invoiceYearsMap, annualYearsMap, annualYearBySignedsMap, dbSession);
 		}
 
-		return ArrayUtil.toArray(trackDatas, DataObject.class);
+		if (StrUtil.equals(authType, "1")) {
+			return ArrayUtil.toArray(trackDatas, DataObject.class);
+		}
+		if (StrUtil.equals(authType, "2")) {
+			for (DataObject dataObject : trackDatas) {
+				if (StrUtil.equals(dataObject.getString("secOrgId"), secOrgId)) {
+					List<DataObject> searchTrackDatas = new ArrayList<DataObject>();
+					searchTrackDatas.add(dataObject);
+					return ArrayUtil.toArray(searchTrackDatas, DataObject.class);
+				}
+			}
+		}
+		return ArrayUtil.toArray(new ArrayList<DataObject>(), DataObject.class);
 	}
 
 	// 根据提供的组织获取对应二级组织
@@ -120,7 +157,7 @@ public class OrgDimOperatingIncomeTrackExcelUtil {
 	// 对提供的开票数据进行包装（每个组织累计真实收入汇总）
 	private Map<String, Entity> invoiceBySecOrg(List<Entity> invoiceYears, Session dbSession) {
 		Map<String, Entity> invoiceMap = new HashMap<String, Entity>();
-		invoiceYears.forEach(entity -> {
+		for (Entity entity : invoiceYears) {
 			String secOrgId = this.getSecOrg(entity.getStr("implement_org"), dbSession);
 			if (StrUtil.isNotBlank(secOrgId)) {
 				if (invoiceMap.containsKey(secOrgId)) {
@@ -138,14 +175,14 @@ public class OrgDimOperatingIncomeTrackExcelUtil {
 					invoiceMap.put(secOrgId, data);
 				}
 			}
-		});
+		}
 		return invoiceMap;
 	}
 
 	private List<DataObject> analyzeMerge(List<Entity> secOrgs, Map<String, Entity> invoiceYearsMap, Map<String, Entity> annualYearsMap, Map<String, Entity> annualYearBySignedsMap,
 			Session dbSession) {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
-		secOrgs.forEach(secOrg -> {
+		for (Entity secOrg : secOrgs) {
 			try {
 				Entity orgEntity = dbSession.queryOne("SELECT DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID='ZH_OPERATION_INCOME_ORG' AND DICTID=?", secOrg.getStr("sec_org"));
 				DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.OperatingTrackAnalyzeEntity");
@@ -176,30 +213,34 @@ public class OrgDimOperatingIncomeTrackExcelUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		});
+		}
 
 		List<String> customSort = Arrays.asList("16", "17", "18", "20", "21", "13", "102199", "8", "19", "24", "25", "26", "27", "111", "193");
 
-		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, (t1, t2) -> {
-			int t1Index = customSort.indexOf(t1.getString("secOrgId"));
-			t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
-			int t2Index = customSort.indexOf(t2.getString("secOrgId"));
-			t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
-			return t1Index - t2Index;
+		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
+
+			@Override
+			public int compare(DataObject t1, DataObject t2) {
+				int t1Index = customSort.indexOf(t1.getString("secOrgId"));
+				t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
+				int t2Index = customSort.indexOf(t2.getString("secOrgId"));
+				t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
+				return t1Index - t2Index;
+			}
 		});
 
 		DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.OperatingTrackAnalyzeEntity");
 		trackData.setString("secOrgId", "1");
 		trackData.setString("secOrgName", "合计");
 
-		newTrackDatas.forEach(dataObject -> {
+		for (DataObject dataObject : newTrackDatas) {
 			trackData.setBigDecimal("targetValue", NumberUtil.add(trackData.getBigDecimal("targetValue"), dataObject.getBigDecimal("targetValue")));
 			trackData.setBigDecimal("thresholdValue", NumberUtil.add(trackData.getBigDecimal("thresholdValue"), dataObject.getBigDecimal("thresholdValue")));
 			trackData.setBigDecimal("cumulativeCompleted", NumberUtil.add(trackData.getBigDecimal("cumulativeCompleted"), dataObject.getBigDecimal("cumulativeCompleted")));
 			trackData.setBigDecimal("totalYear", NumberUtil.add(trackData.getBigDecimal("totalYear"), dataObject.getBigDecimal("totalYear")));
 			trackData.setBigDecimal("toBeSigned", NumberUtil.add(trackData.getBigDecimal("toBeSigned"), dataObject.getBigDecimal("toBeSigned")));
 			trackData.setBigDecimal("followUpCcompleted", NumberUtil.add(trackData.getBigDecimal("followUpCcompleted"), dataObject.getBigDecimal("followUpCcompleted")));
-		});
+		}
 
 		newTrackDatas.add(trackData);
 

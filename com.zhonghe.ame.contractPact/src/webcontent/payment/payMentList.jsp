@@ -187,7 +187,7 @@ html,body {
 
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
-				"code" : "kjfplist",
+				"code" : "fklblist",
 				"map" : {
 					"property" : "status",
 					"op" : "=",

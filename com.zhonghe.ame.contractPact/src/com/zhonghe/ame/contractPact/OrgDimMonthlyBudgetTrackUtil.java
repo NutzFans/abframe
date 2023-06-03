@@ -22,7 +22,7 @@ import commonj.sdo.DataObject;
 public class OrgDimMonthlyBudgetTrackUtil {
 
 	@Bizlet("月度经营统计 - 单位维度")
-	public DataObject[] trackAnalyze(String orgDimYearMonth, String orgDimGroup) throws Exception {
+	public DataObject[] trackAnalyze(String orgDimYearMonth, String orgDimGroup, String authType, String secOrgId) throws Exception {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String orgDimYear = StrUtil.subBefore(orgDimYearMonth, '-', false);
@@ -184,7 +184,20 @@ public class OrgDimMonthlyBudgetTrackUtil {
 
 		trackDatas.add(trackData);
 
-		return ArrayUtil.toArray(trackDatas, DataObject.class);
+		if (StrUtil.equals(authType, "1")) {
+			return ArrayUtil.toArray(trackDatas, DataObject.class);
+		}
+		if (StrUtil.equals(authType, "2")) {
+			for (DataObject dataObject : trackDatas) {
+				if (StrUtil.equals(dataObject.getString("secOrgId"), secOrgId)) {
+					List<DataObject> searchTrackDatas = new ArrayList<DataObject>();
+					searchTrackDatas.add(dataObject);
+					return ArrayUtil.toArray(searchTrackDatas, DataObject.class);
+				}
+			}
+		}
+		
+		return ArrayUtil.toArray(new ArrayList<DataObject>(), DataObject.class);
 	}
 
 	// 根据提供的组织获取对应二级组织

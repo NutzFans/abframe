@@ -22,6 +22,8 @@ html,body {
 <body>
 	<div style="width: auto; height: 99%; padding: 5px;">
 		<div id="form1">
+			<input class="nui-hidden" name="authType" id="authType" />
+			<input class="nui-hidden" name="secOrgId" id="secOrgId" />
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
@@ -158,8 +160,32 @@ html,body {
 		init();
 
 		function init() {
-			nui.get("years").setValue(now.getFullYear());
-			search();
+			var json = nui.encode({
+				'loginUserId' : userId,
+				'loginUserOrgId' : userOrgId,
+				'authCode' : 'incomeBudgetTrack'
+			});
+			nui.ajax({
+				url : "com.zhonghe.ame.contractPact.statisticalReport.queryIncomeBudgetTrackAuth.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(o) {
+					if (o.result == "2") {
+						// 查看指定组织数据
+						nui.get("authType").setValue("2");
+						nui.get("secOrgId").setValue(o.secOrgId);
+					} else if (o.result == "3") {
+						// 不展现任何组织数据
+						nui.get("authType").setValue("3");
+					} else {
+						// 查看所有组织数据
+						nui.get("authType").setValue("1");
+					}
+					nui.get("years").setValue(now.getFullYear());
+					search();
+				}
+			});
 		}
 
 		function search() {
@@ -232,14 +258,13 @@ html,body {
 				}
 			});
 		}
-		
-		function setBackGroundColor(e){
+
+		function setBackGroundColor(e) {
 			var record = e.record;
-			if(record.secOrgName=="合计"){
+			if (record.secOrgName == "合计") {
 				e.rowStyle = "background-color: #e3f9e9";
 			}
 		}
-		
 	</script>
 
 </body>

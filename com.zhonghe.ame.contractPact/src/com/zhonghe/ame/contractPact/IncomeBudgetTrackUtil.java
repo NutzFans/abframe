@@ -3,11 +3,14 @@ package com.zhonghe.ame.contractPact;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
@@ -27,7 +30,7 @@ import commonj.sdo.DataObject;
 public class IncomeBudgetTrackUtil {
 
 	@Bizlet("收入预算执行跟踪分析")
-	public DataObject[] trackAnalyze(String years) throws Exception {
+	public DataObject[] trackAnalyze(String years, String authType, String secOrgId) throws Exception {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 
@@ -39,32 +42,75 @@ public class IncomeBudgetTrackUtil {
 			// 查询开票数据获取真实的收入数据
 			String invoiceYearSql = "SELECT implement_org, book_income, create_time FROM zh_invoice WHERE YEAR(create_time)=? AND app_status='2'";
 			List<Entity> invoiceYears = dbSession.query(invoiceYearSql, years);
+			trackDatas = CompletableFuture.supplyAsync(new Supplier<Map<String, Entity>>() {
 
-			trackDatas = CompletableFuture
-					.supplyAsync(() -> this.annualYearBySecOrg(secOrgs, years, dbSession))
-					.thenCombine(CompletableFuture.supplyAsync(() -> this.invoiceBySecOrg(invoiceYears, dbSession)),
-							new BiFunction<Map<String, Entity>, Map<String, Entity>, List<DataObject>>() {
+				@Override
+				public Map<String, Entity> get() {
+					return IncomeBudgetTrackUtil.annualYearBySecOrg(secOrgs, years, dbSession);
+				}
+			}).thenCombine(CompletableFuture.supplyAsync(new Supplier<Map<String, Entity>>() {
 
-								@Override
-								public List<DataObject> apply(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
-									return IncomeBudgetTrackUtil.analyzeMerge(annualMap, invoiceMap);
-								}
+				@Override
+				public Map<String, Entity> get() {
+					return IncomeBudgetTrackUtil.invoiceBySecOrg(invoiceYears, dbSession);
+				}
+			}), new BiFunction<Map<String, Entity>, Map<String, Entity>, List<DataObject>>() {
 
-							}).join();
+				@Override
+				public List<DataObject> apply(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
+					return IncomeBudgetTrackUtil.analyzeMerge(annualMap, invoiceMap);
+				}
+
+			}).join();
 		}
 
-		return ArrayUtil.toArray(trackDatas, DataObject.class);
+		if (StrUtil.equals(authType, "1")) {
+			return ArrayUtil.toArray(trackDatas, DataObject.class);
+		}
+		if (StrUtil.equals(authType, "2")) {
+			for (DataObject dataObject : trackDatas) {
+				if (StrUtil.equals(dataObject.getString("secOrgId"), secOrgId)) {
+					List<DataObject> searchTrackDatas = new ArrayList<DataObject>();
+					searchTrackDatas.add(dataObject);
+					return ArrayUtil.toArray(searchTrackDatas, DataObject.class);
+				}
+			}
+		}
+		return ArrayUtil.toArray(new ArrayList<DataObject>(), DataObject.class);
+	}
+
+	// 根据组织分组获取各自汇总数据（月份）
+	private static Map<String, Entity> annualYearBySecOrg(List<Entity> secOrg, String years, Session dbSession) {
+		Map<String, Entity> annualMap = new HashMap<String, Entity>();
+		for (Entity entity : secOrg) {
+			String secOrgId = entity.getStr("secondary_org");
+			Entity annualYear = IncomeBudgetTrackUtil.getAnnualYearBySecOrg(secOrgId, years, dbSession);
+			annualYear.set("secOrgName", entity.getStr("secondary_orgname"));
+			annualMap.put(secOrgId, annualYear);
+		}
+		return annualMap;
+	}
+
+	// 根据组织和年份获取年度预算收入各月份汇总数据
+	private static Entity getAnnualYearBySecOrg(String secOrgId, String years, Session dbSession) {
+		try {
+			String querySql = "SELECT SUM( CAST ( jan AS NUMERIC ( 18, 2) ) ) AS jar, SUM ( CAST ( feb AS NUMERIC ( 18, 2 ) ) ) AS feb, SUM ( CAST ( mar AS NUMERIC ( 18, 2 ) ) ) AS mar, SUM ( CAST ( apr AS NUMERIC ( 18, 2 ) ) ) AS apr, SUM ( CAST ( may AS NUMERIC ( 18, 2 ) ) ) AS may, SUM ( CAST ( jun AS NUMERIC ( 18, 2 ) ) ) AS jun, SUM ( CAST ( jul AS NUMERIC ( 18, 2 ) ) ) AS jul, SUM ( CAST ( aug AS NUMERIC ( 18, 2 ) ) ) AS aug, SUM ( CAST ( sep AS NUMERIC ( 18, 2 ) ) ) AS sep, SUM ( CAST ( oct AS NUMERIC ( 18, 2 ) ) ) AS oct, SUM ( CAST ( nov AS NUMERIC ( 18, 2 ) ) ) AS nov, SUM ( CAST ( DEC AS NUMERIC ( 18, 2 ) ) ) AS DEC FROM annual_plan_year WHERE secondary_org = ? AND years = ?";
+			return dbSession.queryOne(querySql, secOrgId, years);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	// 对提供的开票数据进行包装（每个组织各月份真实收入汇总）
-	private Map<String, Entity> invoiceBySecOrg(List<Entity> invoiceYears, Session dbSession) {
+	private static Map<String, Entity> invoiceBySecOrg(List<Entity> invoiceYears, Session dbSession) {
 		Map<String, Entity> invoiceMap = new HashMap<String, Entity>();
-		invoiceYears.forEach(entity -> {
-			String secOrgId = this.getSecOrg(entity.getStr("implement_org"), dbSession);
+		for (Entity entity : invoiceYears) {
+			String secOrgId = IncomeBudgetTrackUtil.getSecOrg(entity.getStr("implement_org"), dbSession);
 			if (StrUtil.isNotBlank(secOrgId)) {
 				if (invoiceMap.containsKey(secOrgId)) {
 					Entity data = invoiceMap.get(secOrgId);
-					String fieldName = this.getMonth(entity.getStr("create_time"));
+					String fieldName = IncomeBudgetTrackUtil.getMonth(entity.getStr("create_time"));
 					String income = data.getStr(fieldName);
 					if (StrUtil.isNotBlank(income)) {
 						data.set(fieldName, NumberUtil.add(income, entity.getStr("book_income")));
@@ -74,17 +120,17 @@ public class IncomeBudgetTrackUtil {
 					invoiceMap.put(secOrgId, data);
 				} else {
 					Entity data = new Entity();
-					String fieldName = this.getMonth(entity.getStr("create_time"));
+					String fieldName = IncomeBudgetTrackUtil.getMonth(entity.getStr("create_time"));
 					data.set(fieldName, entity.getBigDecimal("book_income"));
 					invoiceMap.put(secOrgId, data);
 				}
 			}
-		});
+		}
 		return invoiceMap;
 	}
 
 	// 根据提供的组织获取对应二级组织
-	private String getSecOrg(String orgId, Session dbSession) {
+	private static String getSecOrg(String orgId, Session dbSession) {
 		try {
 			String secOrgSql = "SELECT ORGSEQ FROM OM_ORGANIZATION WHERE ORGID=?";
 			Entity entity = dbSession.queryOne(secOrgSql, orgId);
@@ -111,7 +157,7 @@ public class IncomeBudgetTrackUtil {
 	}
 
 	// 根据时间获取月份（字符串标识）
-	private String getMonth(String createTime) {
+	private static String getMonth(String createTime) {
 		switch (DateUtil.parse(createTime).monthBaseOne()) {
 		case 1: {
 			return "jar";
@@ -155,228 +201,310 @@ public class IncomeBudgetTrackUtil {
 		}
 	}
 
-	// 根据组织分组获取各自汇总数据（月份）
-	private Map<String, Entity> annualYearBySecOrg(List<Entity> secOrg, String years, Session dbSession) {
-		Map<String, Entity> annualMap = new HashMap<String, Entity>();
-		secOrg.forEach(entity -> {
-			String secOrgId = entity.getStr("secondary_org");
-			Entity annualYear = this.getAnnualYearBySecOrg(secOrgId, years, dbSession);
-			annualYear.set("secOrgName", entity.getStr("secondary_orgname"));
-			annualMap.put(secOrgId, annualYear);
-		});
-		return annualMap;
-	}
-
-	// 根据组织和年份获取年度预算收入各月份汇总数据
-	private Entity getAnnualYearBySecOrg(String secOrgId, String years, Session dbSession) {
-		try {
-			String querySql = "SELECT SUM( CAST ( jan AS NUMERIC ( 18, 2) ) ) AS jar, SUM ( CAST ( feb AS NUMERIC ( 18, 2 ) ) ) AS feb, SUM ( CAST ( mar AS NUMERIC ( 18, 2 ) ) ) AS mar, SUM ( CAST ( apr AS NUMERIC ( 18, 2 ) ) ) AS apr, SUM ( CAST ( may AS NUMERIC ( 18, 2 ) ) ) AS may, SUM ( CAST ( jun AS NUMERIC ( 18, 2 ) ) ) AS jun, SUM ( CAST ( jul AS NUMERIC ( 18, 2 ) ) ) AS jul, SUM ( CAST ( aug AS NUMERIC ( 18, 2 ) ) ) AS aug, SUM ( CAST ( sep AS NUMERIC ( 18, 2 ) ) ) AS sep, SUM ( CAST ( oct AS NUMERIC ( 18, 2 ) ) ) AS oct, SUM ( CAST ( nov AS NUMERIC ( 18, 2 ) ) ) AS nov, SUM ( CAST ( DEC AS NUMERIC ( 18, 2 ) ) ) AS DEC FROM annual_plan_year WHERE secondary_org = ? AND years = ?";
-			return dbSession.queryOne(querySql, secOrgId, years);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static List<DataObject> analyzeMerge(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
+	private static List<DataObject> analyzeMerge(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 
-		annualMap.forEach((secOrgId, entity) -> {
+		for (String secOrgId : annualMap.keySet()) {
 
+			Entity entity = annualMap.get(secOrgId);
 			Entity invoice = invoiceMap.get(secOrgId);
 
 			// 1月份累计预算收入
-			CompletableFuture<BigDecimal> jarAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(entity.getBigDecimal("jar"), 1.06, 2);
+			CompletableFuture<BigDecimal> jarAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(entity.getBigDecimal("jar"), 1.06, 2);
+				}
 			});
 
 			// 1月份累计实际收入
-			CompletableFuture<BigDecimal> jarAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return invoice.get("jar", new BigDecimal(0));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> jarAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return invoice.get("jar", new BigDecimal(0));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 2月份累计预算
-			CompletableFuture<BigDecimal> febAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb")), 1.06, 2);
+			CompletableFuture<BigDecimal> febAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb")), 1.06, 2);
+				}
 			});
 
 			// 2月份累计实际收入
-			CompletableFuture<BigDecimal> febAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> febAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 3月份累计预算
-			CompletableFuture<BigDecimal> marAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar")), 1.06, 2);
+			CompletableFuture<BigDecimal> marAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar")), 1.06, 2);
+				}
 			});
 
 			// 3月份累计实际收入
-			CompletableFuture<BigDecimal> marAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> marAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 4月份累计预算
-			CompletableFuture<BigDecimal> aprAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr")), 1.06, 2);
+			CompletableFuture<BigDecimal> aprAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr")), 1.06, 2);
+				}
 			});
 
 			// 4月份累计实际收入
-			CompletableFuture<BigDecimal> aprAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> aprAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 5月份累计预算
-			CompletableFuture<BigDecimal> mayAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may")), 1.06, 2);
+			CompletableFuture<BigDecimal> mayAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may")), 1.06, 2);
+				}
 			});
 
 			// 5月份累计实际收入
-			CompletableFuture<BigDecimal> mayAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> mayAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 6月份累计预算
-			CompletableFuture<BigDecimal> junAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(
-						NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"), entity.getStr("jun")),
-						1.06, 2);
+			CompletableFuture<BigDecimal> junAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun")), 1.06, 2);
+				}
 			});
 
 			// 6月份累计实际收入
-			CompletableFuture<BigDecimal> junAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> junAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 7月份累计预算
-			CompletableFuture<BigDecimal> julAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
-						entity.getStr("jun"), entity.getStr("jul")), 1.06, 2);
+			CompletableFuture<BigDecimal> julAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun"), entity.getStr("jul")), 1.06, 2);
+				}
 			});
 
 			// 7月份累计实际收入
-			CompletableFuture<BigDecimal> julAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
-							invoice.get("jul", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> julAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
+								invoice.get("jul", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 8月份累计预算
-			CompletableFuture<BigDecimal> augAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
-						entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug")), 1.06, 2);
+			CompletableFuture<BigDecimal> augAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug")), 1.06, 2);
+				}
 			});
 
 			// 8月份累计实际收入
-			CompletableFuture<BigDecimal> augAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
-							invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> augAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
+								invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 9月份累计预算
-			CompletableFuture<BigDecimal> sepAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
-						entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep")), 1.06, 2);
-			});
+			CompletableFuture<BigDecimal> sepAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
 
-			// 9月份累计实际收入
-			CompletableFuture<BigDecimal> sepAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
-							invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep")), 1.06, 2);
 				}
 			});
 
+			// 9月份累计实际收入
+			CompletableFuture<BigDecimal> sepAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
+								invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
+				}
+
+			});
+
 			// 10月份累计预算
-			CompletableFuture<BigDecimal> octAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
-						entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep"), entity.getStr("oct")), 1.06, 2);
+			CompletableFuture<BigDecimal> octAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep"), entity.getStr("oct")), 1.06, 2);
+				}
 			});
 
 			// 10月份累计实际收入
-			CompletableFuture<BigDecimal> octAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
-							invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)),
-							invoice.get("oct", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> octAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
+								invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)),
+								invoice.get("oct", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 11月份累计预算
-			CompletableFuture<BigDecimal> novAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
-						entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep"), entity.getStr("oct"), entity.getStr("nov")), 1.06, 2);
+			CompletableFuture<BigDecimal> novAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep"), entity.getStr("oct"),
+									entity.getStr("nov")), 1.06, 2);
+				}
 			});
 
 			// 11月份累计实际收入
-			CompletableFuture<BigDecimal> novAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
-							invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)),
-							invoice.get("oct", new BigDecimal(0)), invoice.get("nov", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> novAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
+								invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)),
+								invoice.get("oct", new BigDecimal(0)), invoice.get("nov", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
 			// 12月份累计预算
-			CompletableFuture<BigDecimal> decAccBudget = CompletableFuture.supplyAsync(() -> {
-				return NumberUtil.div(NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
-						entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep"), entity.getStr("oct"), entity.getStr("nov"),
-						entity.getStr("dec")), 1.06, 2);
+			CompletableFuture<BigDecimal> decAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					return NumberUtil.div(
+							NumberUtil.add(entity.getStr("jar"), entity.getStr("feb"), entity.getStr("mar"), entity.getStr("apr"), entity.getStr("may"),
+									entity.getStr("jun"), entity.getStr("jul"), entity.getStr("aug"), entity.getStr("sep"), entity.getStr("oct"),
+									entity.getStr("nov"), entity.getStr("dec")), 1.06, 2);
+				}
 			});
 
 			// 12月份累计实际收入
-			CompletableFuture<BigDecimal> decAccActual = CompletableFuture.supplyAsync(() -> {
-				if (invoice != null) {
-					return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
-							invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
-							invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)),
-							invoice.get("oct", new BigDecimal(0)), invoice.get("nov", new BigDecimal(0)), invoice.get("dec", new BigDecimal(0)));
-				} else {
-					return new BigDecimal(0);
+			CompletableFuture<BigDecimal> decAccActual = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
+
+				@Override
+				public BigDecimal get() {
+					if (invoice != null) {
+						return NumberUtil.add(invoice.get("jar", new BigDecimal(0)), invoice.get("feb", new BigDecimal(0)), invoice.get("mar", new BigDecimal(0)),
+								invoice.get("apr", new BigDecimal(0)), invoice.get("may", new BigDecimal(0)), invoice.get("jun", new BigDecimal(0)),
+								invoice.get("jul", new BigDecimal(0)), invoice.get("aug", new BigDecimal(0)), invoice.get("sep", new BigDecimal(0)),
+								invoice.get("oct", new BigDecimal(0)), invoice.get("nov", new BigDecimal(0)), invoice.get("dec", new BigDecimal(0)));
+					} else {
+						return new BigDecimal(0);
+					}
 				}
 			});
 
@@ -679,24 +807,29 @@ public class IncomeBudgetTrackUtil {
 			trackData.setString("secOrgId", secOrgId);
 			trackData.setString("secOrgName", entity.getStr("secOrgName"));
 			trackDatas.add(trackData);
-		});
+
+		}
 
 		List<String> customSort = Arrays.asList("核资源咨询中心", "核动力咨询中心", "系统工程咨询中心", "产业发展研究中心", "核化工咨询中心", "安全质量部（质量信息支持中心）", "工业安全支持中心", "企业发展部（采购管理支持中心）", "设备监理与检测中心", "河北分公司", "天津分公司",
 				"福建分公司", "四川分公司", "西北分公司", "海南分公司");
 
-		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, (t1, t2) -> {
-			int t1Index = customSort.indexOf(t1.getString("secOrgName"));
-			t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
-			int t2Index = customSort.indexOf(t2.getString("secOrgName"));
-			t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
-			return t1Index - t2Index;
+		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
+
+			@Override
+			public int compare(DataObject t1, DataObject t2) {
+				int t1Index = customSort.indexOf(t1.getString("secOrgName"));
+				t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
+				int t2Index = customSort.indexOf(t2.getString("secOrgName"));
+				t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
+				return t1Index - t2Index;
+			}
 		});
 
 		DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.TrackAnalyzeEntity");
 		trackData.setString("secOrgId", "1");
 		trackData.setString("secOrgName", "合计");
 
-		newTrackDatas.forEach(dataObject -> {
+		for (DataObject dataObject : newTrackDatas) {
 			trackData.setBigDecimal("jarAccBudget", NumberUtil.add(trackData.getBigDecimal("jarAccBudget"), dataObject.getBigDecimal("jarAccBudget")));
 			trackData.setBigDecimal("jarAccActual", NumberUtil.add(trackData.getBigDecimal("jarAccActual"), dataObject.getBigDecimal("jarAccActual")));
 			trackData.setBigDecimal("febAccBudget", NumberUtil.add(trackData.getBigDecimal("febAccBudget"), dataObject.getBigDecimal("febAccBudget")));
@@ -721,7 +854,7 @@ public class IncomeBudgetTrackUtil {
 			trackData.setBigDecimal("novAccActual", NumberUtil.add(trackData.getBigDecimal("novAccActual"), dataObject.getBigDecimal("novAccActual")));
 			trackData.setBigDecimal("decAccBudget", NumberUtil.add(trackData.getBigDecimal("decAccBudget"), dataObject.getBigDecimal("decAccBudget")));
 			trackData.setBigDecimal("decAccActual", NumberUtil.add(trackData.getBigDecimal("decAccActual"), dataObject.getBigDecimal("decAccActual")));
-		});
+		}
 
 		trackData.setString("jarCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("jarAccActual"), trackData.getBigDecimal("jarAccBudget"), 2)));
 		trackData.setString("febCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("febAccActual"), trackData.getBigDecimal("febAccBudget"), 2)));
@@ -739,6 +872,7 @@ public class IncomeBudgetTrackUtil {
 		newTrackDatas.add(trackData);
 
 		return newTrackDatas;
+
 	}
 
 }
