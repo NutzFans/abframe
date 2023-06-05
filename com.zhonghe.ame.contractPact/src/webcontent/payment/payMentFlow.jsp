@@ -269,7 +269,7 @@ body {
 							}
 							users = users + "】";
 							titleText = "增加审批人员" + users + "并提交";
-							form2.submit();
+							saveData();
 						}
 					}
 				}
