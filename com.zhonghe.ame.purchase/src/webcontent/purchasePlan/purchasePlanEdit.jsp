@@ -164,16 +164,15 @@
 	        	if(o.data.type==3){
 	        		grid.hideColumns([4,6,13])
 	        	}
-				 		//设置审核意见基本信息
-						nui.get("processinstid").setValue(o.workitem.processInstID);
+		//设置审核意见基本信息
+		nui.get("processinstid").setValue(o.workitem.processInstID);
            	nui.get("processinstname").setValue(o.workitem.processInstName);
            	nui.get("activitydefid").setValue(o.workitem.activityDefID);
            	nui.get("workitemname").setValue(o.workitem.workItemName);
-						nui.get("workitemid").setValue(<%=workItemID %>);
+		nui.get("workitemid").setValue(<%=workItemID %>);
            	nui.get("isshow").setValue("1");
            	nui.get("auditstatus").setValue(3);
            	document.getElementById("salesEdit").style.display="none";
-           	document.getElementById("auditop").style.display="none";
            	nui.get("auditopinion").setValue("");
 				
 						var grid_0 = nui.get("grid_0");

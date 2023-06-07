@@ -94,11 +94,11 @@ html,body {
 						<input name="criteria._expr[10].year" class="nui-textbox" property="filter" width="100%" onvaluechanged="search" />
 					</div>
 					<div field="budgetAmount" width="100" align="center" headerAlign="center">
-						计划金额
+						计划金额（万元）
 						<input name="criteria._expr[8].budgetAmount" class="nui-textbox" property="filter" width="100%" onvaluechanged="search" />
 					</div>
 					<div field="newBudgetAmount" width="100" align="center" headerAlign="center">
-						变更后计划金额
+						变更后计划金额（万元）
 						<input name="criteria._expr[9].newBudgetAmount" class="nui-textbox" property="filter" width="100%" onvaluechanged="search" />
 					</div>
 					<div field="createdUsername" width="80" align="center" headerAlign="center">

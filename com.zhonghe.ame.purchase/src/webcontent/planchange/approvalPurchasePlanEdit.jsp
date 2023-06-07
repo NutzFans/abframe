@@ -214,7 +214,6 @@
                	nui.get("isshow").setValue("1");
                	nui.get("auditstatus").setValue(3);
                	document.getElementById("salesEdit").style.display="none";
-               	document.getElementById("auditop").style.display="none";
                	nui.get("auditopinion").setValue("");
 				
 				var grid_0 = nui.get("grid_0");
