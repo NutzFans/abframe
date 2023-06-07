@@ -60,6 +60,7 @@ html,body {
 							<a class="nui-button" id="cgjh_add" iconCls="icon-add" onclick="getDate()">新增</a>
 							<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="addChange()">补充计划</a>
 							<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="openEdit(2)">变更</a>
+							<a class="nui-button" id="cgjh_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 							<a class="nui-button" id="cgjh_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 							<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 						</td>
@@ -107,11 +108,11 @@ html,body {
 					<div field="updatedTime" width="80" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">更新时间</div>
 					<div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer">
 						状态
-						<input name="criteria._expr[12].status" class="nui-dictcombobox" property="filter" dictTypeId="ZH_FLOW_TYPE" shownullItem="true" width="100%" onvaluechanged="search" />	
+						<input name="criteria._expr[12].status" class="nui-dictcombobox" property="filter" dictTypeId="ZH_FLOW_TYPE" shownullItem="true" width="100%" onvaluechanged="search" />
 					</div>
 					<div field="changeState" width="80" align="center" headerAlign="center" renderer="onYn">
 						是否变更
-						<input name="criteria._expr[13].changeState" class="nui-dictcombobox" property="filter" dictTypeId="ZH_YN" shownullItem="true" width="100%" onvaluechanged="search" />	
+						<input name="criteria._expr[13].changeState" class="nui-dictcombobox" property="filter" dictTypeId="ZH_YN" shownullItem="true" width="100%" onvaluechanged="search" />
 					</div>
 				</div>
 			</div>
@@ -133,7 +134,7 @@ html,body {
 		var planOpenDict;
     	function init(){
     		//按钮权限的控制
-	    	getOpeatorButtonAuth("cgjh_add","cgjh_exportExcel");
+	    	getOpeatorButtonAuth("cgjh_exportExcel,cgjh_zf");
     		//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"cgjh","map":{"property":"status","op":"=","value":"running"}};
     		nui.ajax({
@@ -418,6 +419,47 @@ html,body {
 				}
 			});
 			return dict;
+		}
+
+		function zf_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行作废", "danger");
+				return;
+			} else {
+				var row = row[0];
+				if (row.status == '2') {
+					if (!confirm("是否作废？")) {
+						return;
+					} else {
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.purchase.purchaseItems.zfPurchasePlanById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("作废成功");
+										grid.reload();
+									} else if (o.result == 2) {
+										showTips("有采购立项关联了该计划无法作废！", "danger");
+									} else {
+										showTips("作废失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行作废", "danger");
+						}
+					}
+				} else {
+					showTips("只能作废审批状态为【审批通过】的数据", "danger");
+				}
+			}
 		}
 	</script>
 </body>
