@@ -4,103 +4,124 @@
 <html>
 <head>
 <title>采购计划</title>
-	<style type="text/css">
-		html, body{
-	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
-	    }    
-    </style>
+<style type="text/css">
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+</style>
 </head>
-<body >
-<div id="form1" style="width:100%;height: 100%">
-		  <div class="nui-toolbar" style="border-bottom:0;padding:0px;">
-			  <table align="center" border="0" width="100%" class="form_table">
-		        <tr>
-		          <td >
-				    <input class="nui-hidden" name="criteria._expr[0]._op" value="like"/>
-				    <input class="nui-hidden" name="criteria._expr[3]._op" value="="/>
-				    <input class="nui-hidden" name="criteria._expr[4]._op" value="="/>
-		          </td>
-		           <td colspan="1">
-            		<input class="nui-hidden" name="criteria._expr[2]._property" value="needOrgId"/>
-			        <input class="nui-hidden" name="criteria._expr[2]._op" value="in" id="tempCond1"/>
-			        <input class="nui-hidden" name="criteria._expr[2]._ref" value="" id="tempCond2"/>
-			        <input class="nui-hidden" name="criteria._ref[0]._id" value="1"/>
-			        <input class="nui-hidden" name="criteria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization"/>
-			        <input class="nui-hidden" name="criteria._ref[0]._select._field[0]" value="orgid"/>
-			        <input class="nui-hidden" name="criteria._ref[0]._expr[0]._property" value="orgseq"/>
-			        <input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="like"/>
-			        <input class="nui-hidden" name="criteria._ref[0]._expr[0]._likeRule" value="end"/>
-			        <input class="nui-hidden" name="criteria._expr[5]._property" value="needOrgId"/>
-			        <input class="nui-hidden" name="criteria._expr[5]._op" value="in"/>
-			        <input class="nui-hidden" name="criteria._expr[5]._value" id="orgids2"/>
-		          </td>	
-		         	<td>
-				      	<input name="criteria._expr[6]._value" class="nui-hidden" id="createdBy"/>
-						    <input class="nui-hidden" name="criteria._expr[6]._property" value="createdBy"/>
-						    <input class="nui-hidden" name="criteria._expr[6]._op" value="="/>
-						    <input name="criteria._expr[7].ischange" class="nui-hidden"  value="1"/>
-						    <input class="nui-hidden" name="criteria._expr[7]._op" value="="/>
-		          </td>		          
-		      </tr>
-			  <tr>
-		        </tr>
-		      </table>
+<body>
+	<div id="form1" style="width: 100%; height: 100%">
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+			<table align="center" border="0" width="100%" class="form_table">
+				<tr>
+					<td>
+						<input class="nui-hidden" name="criteria._expr[0]._op" value="like" />
+						<input class="nui-hidden" name="criteria._expr[3]._op" value="=" />
+						<input class="nui-hidden" name="criteria._expr[4]._op" value="=" />
+						<input class="nui-hidden" name="criteria._expr[11]._op" value="like" />
+					</td>
+					<td colspan="1">
+						<input class="nui-hidden" name="criteria._expr[2]._property" value="needOrgId" />
+						<input class="nui-hidden" name="criteria._expr[2]._op" value="in" id="tempCond1" />
+						<input class="nui-hidden" name="criteria._expr[2]._ref" value="" id="tempCond2" />
+						<input class="nui-hidden" name="criteria._ref[0]._id" value="1" />
+						<input class="nui-hidden" name="criteria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+						<input class="nui-hidden" name="criteria._ref[0]._select._field[0]" value="orgid" />
+						<input class="nui-hidden" name="criteria._ref[0]._expr[0]._property" value="orgseq" />
+						<input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="like" />
+						<input class="nui-hidden" name="criteria._ref[0]._expr[0]._likeRule" value="end" />
+						<input class="nui-hidden" name="criteria._expr[5]._property" value="needOrgId" />
+						<input class="nui-hidden" name="criteria._expr[5]._op" value="in" />
+						<input class="nui-hidden" name="criteria._expr[5]._value" id="orgids2" />
+					</td>
+					<td>
+						<input name="criteria._expr[6]._value" class="nui-hidden" id="createdBy" />
+						<input class="nui-hidden" name="criteria._expr[6]._property" value="createdBy" />
+						<input class="nui-hidden" name="criteria._expr[6]._op" value="=" />
+						<input name="criteria._expr[7].ischange" class="nui-hidden" value="1" />
+						<input class="nui-hidden" name="criteria._expr[7]._op" value="=" />
+					</td>
+				</tr>
+				<tr>
+				</tr>
+			</table>
+		</div>
+		<div class="nui-fit">
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 40%;">
+							<a class="nui-button" id="cgjh_add" iconCls="icon-add" onclick="getDate()">新增</a>
+							<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="addChange()">补充计划</a>
+							<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="openEdit(2)">变更</a>
+							<a class="nui-button" id="cgjh_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
+							<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
+						</td>
+						<td colspan="9" align="right">
+							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
+							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+						</td>
+					</tr>
+				</table>
 			</div>
-	<div class="nui-fit">
-		<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
-	        <table style="width:100%;">
-	        	<tr>
-	                <td style="width:40%;">
-	                	<a class="nui-button"  id="cgjh_add" iconCls="icon-add" onclick="getDate()">新增</a>
-	                	<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="addChange()">补充计划</a>
-	                	<a class="nui-button" id="checkviewedit" iconCls="icon-edit" onclick="openEdit(2)">变更</a>
-			           <!-- <a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">删除</a> -->
-			            <a class="nui-button" id="cgjh_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
-			            <a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
-			        </td>
-			        <td colspan="9" align="right">
-			            <a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
-			            <a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-			        </td>
-	            </tr>
-	        </table>           
-	    </div>
-	    <div id="datagrid1"  sizeList="[10,20,50,100]" showPager="true" dataField="data"  pageSize="20" showFilterRow="true" allowAlternating="true"
-	    	class="nui-datagrid" style="width:100%;height:95%;" url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanList.biz.ext" 
-	    	multiSelect="false" allowSortColumn=true>
-	        <div property="columns"> 
-	            <div name="temp123" type="checkcolumn"></div>    
-	            <div type="indexcolumn" align="center" headerAlign="center">序号</div>
-	        	<div field="name" width="160" align="left" headerAlign="center" renderer="lookInfo">采购计划名称
-	        		<input name="criteria._expr[0].name"  property="filter" class="nui-textbox" style="width:100%;" onvaluechanged="search"/>
-	        	</div>
-	            <div field="needOrgName" width="100" align="center" headerAlign="center" >采购单位
-	            	<input id="orgid2"  name="criteria._ref[0]._expr[0]._value" style="width:100%;" class="nui-combobox" property="filter"
-						textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" onvaluechanged="search"/>
-	            </div>
-	            <div field="type" width="80" align="center"  headerAlign="center" renderer="dictIshavebak">采购类型
-	            	 <input name="criteria._expr[4].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE"  shownullItem="true" width="100%" onvaluechanged="search"/>
-	            </div>
-	            <div field="year" width="80" align="center" headerAlign="center" >计划年度</div>
-	            <div field="budgetAmount" width="100" align="center"  headerAlign="center">计划金额
-	            	 <input name="criteria._expr[8].budgetAmount" class="nui-textbox"property="filter"   width="100%" onvaluechanged="search" />
-	            </div>
-	            <div field="newBudgetAmount" width="100" align="center"  headerAlign="center">变更后计划金额
-	            	 <input name="criteria._expr[9].newBudgetAmount" class="nui-textbox" property="filter"   width="100%" onvaluechanged="search"/>
-	            </div>
-	            <div field="createdUsername" width="80" align="center" headerAlign="center">创建人</div>
-	            <div field="updatedTime" width="80" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true" >更新时间</div>
-	            <div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer" >状态</div>
-	            <div field="changeState" width="80" align="center" headerAlign="center"  renderer="onYn" >是否变更</div>
-	        </div>
-	    </div>
+			<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" pageSize="20" showFilterRow="true" allowAlternating="true" class="nui-datagrid" style="width: 100%; height: 95%;"
+				url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanList.biz.ext" multiSelect="false" allowSortColumn=true>
+				<div property="columns">
+					<div name="temp123" type="checkcolumn"></div>
+					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
+					<div field="name" width="160" align="left" headerAlign="center" renderer="lookInfo">
+						采购计划名称
+						<input name="criteria._expr[0].name" property="filter" class="nui-textbox" style="width: 100%;" onvaluechanged="search" />
+					</div>
+					<div field="needOrgName" width="100" align="center" headerAlign="center">
+						采购单位
+						<input id="orgid2" name="criteria._ref[0]._expr[0]._value" style="width: 100%;" class="nui-combobox" property="filter" textField="orgname" valueField="orgseq" dataField="orgs"
+							showNullItem="true" allowInput="true" onvaluechanged="search" />
+					</div>
+					<div field="type" width="80" align="center" headerAlign="center" renderer="dictIshavebak">
+						采购类型
+						<input name="criteria._expr[4].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE" shownullItem="true" width="100%" onvaluechanged="search" />
+					</div>
+					<div field="year" width="80" align="center" headerAlign="center">
+						计划年度
+						<input name="criteria._expr[10].year" class="nui-textbox" property="filter" width="100%" onvaluechanged="search" />
+					</div>
+					<div field="budgetAmount" width="100" align="center" headerAlign="center">
+						计划金额
+						<input name="criteria._expr[8].budgetAmount" class="nui-textbox" property="filter" width="100%" onvaluechanged="search" />
+					</div>
+					<div field="newBudgetAmount" width="100" align="center" headerAlign="center">
+						变更后计划金额
+						<input name="criteria._expr[9].newBudgetAmount" class="nui-textbox" property="filter" width="100%" onvaluechanged="search" />
+					</div>
+					<div field="createdUsername" width="80" align="center" headerAlign="center">
+						创建人
+						<input name="criteria._expr[11].createdUsername" property="filter" class="nui-textbox" style="width: 100%;" onvaluechanged="search" />
+					</div>
+					<div field="updatedTime" width="80" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">更新时间</div>
+					<div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer">
+						状态
+						<input name="criteria._expr[12].status" class="nui-dictcombobox" property="filter" dictTypeId="ZH_FLOW_TYPE" shownullItem="true" width="100%" onvaluechanged="search" />	
+					</div>
+					<div field="changeState" width="80" align="center" headerAlign="center" renderer="onYn">
+						是否变更
+						<input name="criteria._expr[13].changeState" class="nui-dictcombobox" property="filter" dictTypeId="ZH_YN" shownullItem="true" width="100%" onvaluechanged="search" />	
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
-<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
-	<input type="hidden" name="_eosFlowAction" value="action0" filter="false"/>
-	<input type="hidden" name="downloadFile" filter="false"/>
-	<input type="hidden" name="fileName" filter="false"/>
-</form> 
+	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>
 	<script type="text/javascript">
     	nui.parse();
 		var form = new nui.Form("#form1");
@@ -379,27 +400,25 @@
 			if (row) {
 				executeUrl = "<%= request.getContextPath() %>/purchase/print/purPlanListPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
-			}else {
+			} else {
 				showTips("请选中一条记录");
 			}
 		}
-		
-		
-		function getDict(json){
+
+		function getDict(json) {
 			var dict;
 			nui.ajax({
-				url:"com.zhonghe.ame.purchase.purchaseItems.purPlanRegularOpen.biz.ext",
-				data:json,
-				type:'POST',
-				async: false,
-				contentType:'text/json',
-				success:function(text){
-					dict=text.dictEntry[0].filter1;
+				url : "com.zhonghe.ame.purchase.purchaseItems.purPlanRegularOpen.biz.ext",
+				data : json,
+				type : 'POST',
+				async : false,
+				contentType : 'text/json',
+				success : function(text) {
+					dict = text.dictEntry[0].filter1;
 				}
 			});
 			return dict;
 		}
-		
-</script>
+	</script>
 </body>
 </html>

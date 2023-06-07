@@ -276,8 +276,41 @@ html,body {
 
 		function orgDimReset() {
 			orgDimForm.reset();
-			nui.get("orgDimYearMonth").setValue(now);
-			orgDimSearch();
+			var json = nui.encode({
+				'loginUserId' : userId,
+				'loginUserOrgId' : userOrgId,
+				'authCode' : 'monthlyBudgetTrack'
+			});
+			nui.ajax({
+				url : "com.zhonghe.ame.contractPact.statisticalReport.queryMonthlyBudgetTrackAuth.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(o) {
+					if (o.result == "2") {
+						// 查看指定组织数据
+						nui.get("authType").setValue("2");
+						nui.get("secOrgId").setValue(o.secOrgId);
+					} else if (o.result == "3") {
+						// 不展现任何组织数据
+						nui.get("authType").setValue("3");
+					} else {
+						// 查看所有组织数据
+						nui.get("authType").setValue("1");
+						var tabs = mini.get("tabs");
+						var majorDimTab = tabs.getTab("majorDimTab");
+						var groupDimTab = tabs.getTab("groupDimTab");
+						tabs.updateTab(majorDimTab, {
+							visible : true
+						});
+						tabs.updateTab(groupDimTab, {
+							visible : true
+						});
+					}
+					nui.get("orgDimYearMonth").setValue(now);
+					orgDimSearch();
+				}
+			});
 		}
 
 		function majorDimSearch() {
