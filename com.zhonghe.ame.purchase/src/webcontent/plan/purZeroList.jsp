@@ -81,11 +81,9 @@
 			<tr>
 				<td style="width:20%;">
 					<a class="nui-button" id="checkview" iconCls="icon-add" onclick="add()">新增</a>
+					<a class="nui-button" id="lxcg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
+					 <a class="nui-button" id="lxcg_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
-           <a class="nui-button" id="lxcg_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
-					
-					<!-- <a class="nui-button" id="checkview1" iconCls="icon-remove"
-				onclick="deleteInfo()">删除</a> -->
 				</td>
 			</tr>
 		</table>
@@ -120,7 +118,7 @@
 			init();
 			function init() {
 				//按钮权限的控制
-				getOpeatorButtonAuth("checkview"); //操作按钮权限初始化
+				getOpeatorButtonAuth("lxcg_exportExcel,lxcg_zf"); //操作按钮权限初始化
 				//code:对应功能编码，map：对于机构的查询条件
 				var json = { "code": "lxcg", "map": { "property": "status", "op": "=", "value": "running" } };
 				nui.ajax({
@@ -272,7 +270,46 @@
 			exportExcel({"data":data,"url": "com.zhonghe.ame.purchase.purzero.exportPurZero.biz.ext","fileName":"零星采购明细"});
 		}
 		
-		
+		function zf_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行作废", "danger");
+				return;
+			} else {
+				var row = row[0];
+				if (row.status == '2') {
+					if (!confirm("是否作废？")) {
+						return;
+					} else {
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.purchase.purchaseItems.zfPurZeroById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("作废成功");
+										grid.reload();
+									} else if (o.result == 2) {
+										showTips("有付费合同关联了该零星采购无法作废！", "danger");
+									} else {
+										showTips("作废失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行作废", "danger");
+						}
+					}
+				} else {
+					showTips("只能作废审批状态为【审批通过】的数据", "danger");
+				}
+			}
+		}
 		
 	</script>
 </body>
