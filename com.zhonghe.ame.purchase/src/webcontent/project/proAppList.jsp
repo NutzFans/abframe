@@ -63,7 +63,7 @@ html,body {
 			<tr>
 				<td style="width: 20%;">
 					<a class="nui-button" id="cglx_add1" iconCls="icon-add" onclick="add()">新增</a>
-					<!-- <a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">作废</a> -->
+					<a class="nui-button" id="cglx_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 					<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 				</td>
@@ -105,7 +105,7 @@ html,body {
 		
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("cglx_add", "cglx_change", "cglx_exportExcel");
+			getOpeatorButtonAuth("cglx_exportExcel,cglx_zf");
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "cglx",
@@ -318,6 +318,48 @@ html,body {
 				showTips("请选中一条记录");
 			}
 		}
+		
+		function zf_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行作废", "danger");
+				return;
+			} else {
+				var row = row[0];
+				if (row.status == '2') {
+					if (!confirm("是否作废？")) {
+						return;
+					} else {
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.purchase.purchaseItems.zfProAppById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("作废成功");
+										grid.reload();
+									} else if (o.result == 2) {
+										showTips("有采购文件或评审结果关联了该立项无法作废！", "danger");
+									} else {
+										showTips("作废失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行作废", "danger");
+						}
+					}
+				} else {
+					showTips("只能作废审批状态为【审批通过】的数据", "danger");
+				}
+			}
+		}		
+		
 	</script>
 
 </body>
