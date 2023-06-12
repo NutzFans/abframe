@@ -43,7 +43,6 @@ html,body {
 					<td class="form_label" align="right">状态</td>
 					<td>
 						<input name="criteria._expr[4].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" shownullItem="true" style="width: 150px;" />
-
 						<input class="nui-hidden" name="criteria._expr[5]._op" value="in" />
 						<input class="nui-hidden" name="criteria._expr[5].createdOrgid" id="orgids2" />
 						<input class="nui-hidden" name="criteria._expr[6].createdBy" id="createdBy" />

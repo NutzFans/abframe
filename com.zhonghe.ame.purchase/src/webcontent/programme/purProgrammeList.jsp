@@ -50,6 +50,10 @@ html,body {
 						<input name="critria._expr[2].proAppCode" class="nui-textbox" style="width: 65%;" />
 						<input class="nui-hidden" name="critria._expr[2]._op" value="like" />
 					</td>
+					<td class="form_label" align="right">状态</td>
+					<td colspan="1">
+						<input name="critria._expr[8].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" shownullItem="true" style="width: 150px;" />
+					</td>
 					<td colspan="9" align="center">
 						<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 						<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
