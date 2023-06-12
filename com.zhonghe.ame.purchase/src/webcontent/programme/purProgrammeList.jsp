@@ -1,24 +1,28 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@include file="/purchase/common/common.jsp" %>
+<%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-	<title>采购方案列表</title>
-	<style type="text/css">
-		body {
-			margin: 0;
-			padding: 0;
-			border: 0;
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-		}
-	</style>
+<title>采购方案列表</title>
+<style type="text/css">
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
+</style>
 </head>
 <body>
 	<div id="form1">
 		<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.contractPact.frameAgreement.ZhAgreementEntity" />
-		<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 			<table align="center" border="0" width="100%" class="form_table">
 				<tr>
 					<td>
@@ -26,8 +30,7 @@
 						<input class="nui-hidden" name="critria._expr[5]._op" value="in" id="tempCond1" />
 						<input class="nui-hidden" name="critria._expr[5]._ref" value="" id="tempCond2" />
 						<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
-						<input class="nui-hidden" name="critria._ref[0]._entity"
-							value="org.gocom.abframe.dataset.organization.OmOrganization" />
+						<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
 						<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
 						<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
 						<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
@@ -39,12 +42,12 @@
 					</td>
 					<td class="form_label" align="right">文件名称:</td>
 					<td colspan="1">
-						<input name="critria._expr[1].programmeName" class="nui-textbox" style="width:65%;" />
+						<input name="critria._expr[1].programmeName" class="nui-textbox" style="width: 65%;" />
 						<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
 					</td>
 					<td class="form_label" align="right">立项编号:</td>
 					<td colspan="1">
-						<input name="critria._expr[2].proAppCode" class="nui-textbox" style="width:65%;" />
+						<input name="critria._expr[2].proAppCode" class="nui-textbox" style="width: 65%;" />
 						<input class="nui-hidden" name="critria._expr[2]._op" value="like" />
 					</td>
 					<td colspan="9" align="center">
@@ -55,61 +58,65 @@
 			</table>
 		</div>
 	</div>
-	<div class="nui-toolbar" style="border-bottom:0;padding:0px;">
-		<table style="width:100%;">
+	
+	<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+		<table style="width: 100%;">
 			<tr>
-				<td style="width:20%;">
+				<td style="width: 20%;">
 					<a class="nui-button" id="checkview" iconCls="icon-add" onclick="add()">新增</a>
-					<a class="nui-button" id="checkview1" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+					<a class="nui-button" id="cgfa_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 					<a class="nui-button" id="checkview2" iconCls="icon-print" onclick="print()">打印</a>
 				</td>
 			</tr>
 		</table>
 	</div>
+	
 	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="purProgrammes" class="nui-datagrid" style="width:100%;height:100%;"
-			url="com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgramme.biz.ext" multiSelect="false"
-			allowSortColumn=true>
+		<div id="datagrid1" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="purProgrammes" class="nui-datagrid" style="width: 100%; height: 100%;"
+			url="com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgramme.biz.ext" multiSelect="false" allowSortColumn=true>
 			<div property="columns">
 				<div type="checkcolumn"></div>
 				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 				<div field="programmeName" width="180" align="left" headerAlign="center" renderer="lookInfo">采购项目名称</div>
-<!-- 				<div field="code" width="80" align="center" headerAlign="center" allowSort="true">采购方案编号</div> -->
 				<div field="proAppCode" width="200" align="center" headerAlign="center">采购立项编号</div>
-				<div field="createdTime" align="center"  headerAlign="center" allowSort="true">申请日期</div>
+				<div field="createdTime" align="center" headerAlign="center" allowSort="true">申请日期</div>
 				<div field="status" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
 			</div>
 		</div>
 	</div>
+	
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
+		
 		init();
+		
 		function init() {
 			//按钮权限的控制
-			//getOpeatorButtonAuth("checkview"); //操作按钮权限初始化
+			getOpeatorButtonAuth("cgfa_zf"); //操作按钮权限初始化
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = { "code": "cgfa", "map": { "property": "status", "op": "=", "value": "running" } };
-			nui.ajax({	
-					url: "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
-			    type: 'POST',
-	        data: json,
-	        success: function (data) {
-	        	if (data.orgs) {
-							if (data.orgs.length == 0) {
-								//当没有有权的机构时将申请人设置为登陆人
-								nui.get("createdBy").setValue(userId);
-							}
-							nui.get("orgids2").setValue(data.orgids);
-							}else {
-								//当没有有权的机构时将申请人设置为登陆人
-								nui.get("createdBy").setValue(userId);
-							}
-							search();
-        	}
-		    }); 
+			nui.ajax({
+				url: "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
+				type: 'POST',
+				data: json,
+				success: function(data) {
+					if (data.orgs) {
+						if (data.orgs.length == 0) {
+							//当没有有权的机构时将申请人设置为登陆人
+							nui.get("createdBy").setValue(userId);
+						}
+						nui.get("orgids2").setValue(data.orgids);
+					} else {
+						//当没有有权的机构时将申请人设置为登陆人
+						nui.get("createdBy").setValue(userId);
+					}
+					search();
+				}
+			});
 		}
+
 		function onActionRenderer(e) {
 			var record = e.record;
 			var processId = record.processid;
@@ -227,6 +234,46 @@
 				showTips("请选中一条记录");
 			}
 		}
+		
+		function zf_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行作废", "danger");
+				return;
+			} else {
+				var row = row[0];
+				if (row.status == '2') {
+					if (!confirm("是否作废？")) {
+						return;
+					} else {
+						if (row) {
+							var json = nui.encode({
+								'data' : row
+							});
+							nui.ajax({
+								url : "com.zhonghe.ame.purchase.purchaseItems.zfPurProgrammeById.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
+									if (o.result == 1) {
+										showTips("作废成功");
+										grid.reload();
+									} else {
+										showTips("作废失败，请联系信息技术部人员！", "danger");
+									}
+								}
+							});
+						} else {
+							showTips("只能选中一条项目记录进行作废", "danger");
+						}
+					}
+				} else {
+					showTips("只能作废审批状态为【审批通过】的数据", "danger");
+				}
+			}
+		}		
+		
 	</script>
 </body>
 </html>

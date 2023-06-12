@@ -4,10 +4,21 @@
 <html>
 <head>
 	<title>零星采购</title>
-	<style type="text/css">
-		body {margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;}
-	</style>
-	</head>
+<style type="text/css">
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
+</style>
+</head>
 	<body>
 		<div id="form1">
 			<div class="nui-toolbar" style="border-bottom:0px;padding:0px;">
@@ -89,9 +100,9 @@
 		</table>
 	</div>
 	<div class="nui-fit">
-		<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true"
+		<div id="datagrid1" frozenStartColumn="0" sizeList="[25,50,100]" showPager="true"
 			dataField="purZeroList" class="nui-datagrid" style="width:100%;height:100%;"
-			pageSize="20" url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext"
+			pageSize="25" url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext"
 			multiSelect="false">
 			<div property="columns">
 				<div name="temp123" type="checkcolumn"></div>

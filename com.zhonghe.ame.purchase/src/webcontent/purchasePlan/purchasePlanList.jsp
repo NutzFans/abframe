@@ -13,6 +13,10 @@ html,body {
 	height: 100%;
 	overflow: hidden;
 }
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
 </style>
 </head>
 <body>
@@ -71,7 +75,7 @@ html,body {
 					</tr>
 				</table>
 			</div>
-			<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" pageSize="20" showFilterRow="true" allowAlternating="true" class="nui-datagrid" style="width: 100%; height: 95%;"
+			<div id="datagrid1" sizeList="[25,50,100]" showPager="true" dataField="data" pageSize="25" showFilterRow="true" allowAlternating="true" class="nui-datagrid" style="width: 100%; height: 95%;"
 				url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanList.biz.ext" multiSelect="false" allowSortColumn=true>
 				<div property="columns">
 					<div name="temp123" type="checkcolumn"></div>

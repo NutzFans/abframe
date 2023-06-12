@@ -13,6 +13,10 @@ html,body {
 	height: 100%;
 	overflow: hidden;
 }
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
 </style>
 </head>
 <body>
@@ -67,7 +71,7 @@ html,body {
 	</div>
 
 	<div class="nui-fit">
-		<div id="datagrid1" pageSize="20" sizeList="[10,20,50,100]" showPager="true" dataField="purUrgentList" class="nui-datagrid" style="width: 100%; height: 100%;"
+		<div id="datagrid1" pageSize="25" sizeList="[25,50,100]" showPager="true" dataField="purUrgentList" class="nui-datagrid" style="width: 100%; height: 100%;"
 			url="com.zhonghe.ame.purchase.purchaseItems.queryPurUrgentList.biz.ext" multiSelect="false" allowSortColumn=true onshowrowdetail="onShowRowDetail">
 			<div property="columns">
 				<div name="temp123" type="checkcolumn"></div>

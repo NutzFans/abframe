@@ -72,19 +72,17 @@ html,body {
 	</div>
 
 	<div class="nui-fit">
-		<div id="datagrid1" frozenStartColumn="0" sizeList="[10,20,50,100]" showPager="true" dataField="proApp" class="nui-datagrid" style="width: 100%; height: 100%;"
+		<div id="datagrid1" frozenStartColumn="0" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="proApp" class="nui-datagrid" style="width: 100%; height: 100%;"
 			url="com.zhonghe.ame.purchase.purchaseProApp.queryProApp.biz.ext" multiSelect="false" allowSortColumn="true">
 			<div property="columns">
 				<div name="temp123" type="checkcolumn"></div>
 				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-				<!-- <div type="expandcolumn" width="20"></div> -->
 				<div field="proAppName" width="190" align="left" headerAlign="center">立项名称</div>
 				<div field="proAppCode" width="140" align="left" headerAlign="center" renderer="lookInfo">立项编号</div>
 				<div field="proAppOrgName" width="150" align="left" headerAlign="center">立项单位</div>
 				<div field="projectId" width="150" align="left" headerAlign="center">所属项目名称</div>
 				<div field="proAppApplyPrice" width="100" align="center" headerAlign="center">立项申请金额(万元)</div>
 				<div field="createdTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">申请日期</div>
-				<!--<div field="proAppImplTime"  dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" >拟实施日期</div> -->
 				<div field="status" width="60" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
 			</div>
 		</div>
