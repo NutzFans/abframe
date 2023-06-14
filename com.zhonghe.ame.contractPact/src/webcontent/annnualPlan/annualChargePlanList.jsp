@@ -139,7 +139,7 @@ html,body {
 					<div field="payee" width="100" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
 					<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">合同金额（元）</div>
 					<div field="sum" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收款金额（元）</div>
-					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收入金额（元）</div>
+					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" sortField="sum">计划收入金额（元）</div>
 					<div field="jan" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">1月</div>
 					<div field="feb" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">2月</div>
 					<div field="mar" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">3月</div>

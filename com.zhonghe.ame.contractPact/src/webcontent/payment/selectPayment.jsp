@@ -25,11 +25,11 @@
 						<tr>
 							<td class="form_label" align="right">申请人</td>
 							<td>
-								<input id="empname" name="empname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请部门：</td>
 							<td>
-								<input id="orgname" name="orgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+								<input id="implementOrgname" name="implementOrgname" enabled="false" class="nui-textbox" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -94,8 +94,7 @@
 						<tr>
 							<td align="right">收款单位：</td>
 							<td colspan="8">
-								<input name="signatory" id="signatory" class="nui-hidden" style="width: 200px" />
-								<input id="signatoryname" name="signatoryname" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+								<input id="signatoryName" name="signatoryName" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
 						</tr>
 						<tr>
