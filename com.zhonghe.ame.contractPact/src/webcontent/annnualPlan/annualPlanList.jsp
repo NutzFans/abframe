@@ -147,7 +147,7 @@ html,body {
 
 	<div id="payMentInfo" style="display: none;">
 		<div id="payMentGrid" sizeList="[5]" dataField="payMentInfos" pageSize="5" class="nui-datagrid" url="com.zhonghe.ame.annualPlan.annualPlan.queryPayMentByNo.biz.ext"
-			style="width: 710px; height: 203px;">
+			style="width: 710px; height: 203px; margin-left: 540px">
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
 				<div field="endTime" dateFormat="yyyy-MM-dd" align="center" headerAlign="center">付款日期</div>
