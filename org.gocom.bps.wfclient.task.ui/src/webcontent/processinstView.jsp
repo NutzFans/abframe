@@ -12,6 +12,9 @@
 		body{
 			background-color:#f7f7f7
 		}
+		.mini-grid-cell-nowrap {
+			white-space: pre-wrap;
+		}
 	</style>
 </head>
 <body style="height:96%;width: 97%;">
@@ -27,14 +30,14 @@
 			    allowAlternating="true" multiSelect="true" showPager="false" allowCellWrap="true">
 			    <div property="columns" height=auto>
 			    
-			    	<div type="indexcolumn" headerAlign="center" width="30" >编号</div>
-			        <div field="operatorname" width="50" headerAlign="center" align="center">处理人</div>
+			    	<div type="indexcolumn" headerAlign="center" width="20" >编号</div>
+			        <div field="operatorname" width="30" headerAlign="center" align="center">处理人</div>
 			        <div field="workitemname" width="80" align="center" headerAlign="center">处理环节</div>
-			        <div field="starttime" width="100" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">任务启动时间</div>
-			        <div field="endtime" width="100" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">任务处理时间</div>
-			        <div field="jiequtime" width="60" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">处理时长</div>
-			        <div field="auditstatus" renderer="onCheckRenderer" width="60" align="center" headerAlign="center">处理结果</div>
-			        <div field="auditopinion" width="150" headerAlign="center"  align="left">审批意见</div>
+			        <div field="starttime" width="60" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">任务启动时间</div>
+			        <div field="endtime" width="60" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">任务处理时间</div>
+			        <div field="jiequtime" width="40" headerAlign="center" align="center" dateFormat="yyyy-MM-dd HH:mm:ss">处理时长</div>
+			        <div field="auditstatus" renderer="onCheckRenderer" width="30" align="center" headerAlign="center">处理结果</div>
+			        <div field="auditopinion" width="200" headerAlign="center"  align="left">审批意见</div>
 			    </div>
 			</div>
 	    </fieldset>
