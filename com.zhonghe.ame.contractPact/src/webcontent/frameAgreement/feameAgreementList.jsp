@@ -2,165 +2,182 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@include file="/purchase/common/common.jsp"%>
 <html>
-<head>
 <style type="text/css">
-	html,body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
-	.mini-grid-cell-nowrap{
-		white-space: nowrap;
-	}
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
 </style>
-<title>框架协议</title>
+<head>
+<title>框架协议管理</title>
 </head>
 <body>
-	<div id="form1">
-		<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.contractPact.frameAgreement.ZhAgreementEntity" />
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-			<table align="center" border="0" width="100%" class="form_table">
+	<div style="width: auto; height: 99%; padding: 5px;">
+		<div id="form1">
+			<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.contractPact.frameAgreement.ZhAgreementEntity" />
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+				<table>
+					<tr>
+						<td style="width: 60px; text-align: right;">申请人:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createUsername" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[1]._op" value="like" id="createUsernameOp" />
+							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
+						</td>
+						<td style="width: 90px; text-align: right;">协议实施部门:</td>
+						<td style="width: 155px">
+							<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 150px" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true"
+								allowInput="true" valueFromSelect="true" />
+							<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
+							<input class="nui-hidden" name="critria._expr[3]._op" value="in" id="tempCond1" />
+							<input class="nui-hidden" name="critria._expr[3]._ref" value="1" id="tempCond2" />
+							<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
+							<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
+							<input class="nui-hidden" name="critria._expr[4]._property" value="orgid" />
+							<input class="nui-hidden" name="critria._expr[4]._op" value="in" />
+							<input class="nui-hidden" name="critria._expr[4]._value" id="orgids2" />
+						</td>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[14].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 150px;" showNullItem="true" nullItemText="全部" />
+						</td>
+						<td style="width: 90px; text-align: right;">协议起始日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[10]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[10]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[10]._property" value="startTime" />
+							<input class="nui-datepicker" name="critria._expr[10]._min" style="width: 110px" />
+							<span>至</span>
+							<input class="nui-datepicker" name="critria._expr[10]._max" style="width: 110px" />
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 60px; text-align: right;">协议编号:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[12]._value" class="nui-textbox" style="width: 150px;" />
+							<input class="nui-hidden" name="critria._expr[12]._property" value="contractNo" />
+							<input class="nui-hidden" name="critria._expr[12]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">协议名称:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[6]._value" class="nui-textbox" style="width: 150px;" />
+							<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
+							<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">签约方:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[20]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname" valueField="custname"
+								dataField="custs" valueFromSelect="true" allowInput="true" style="width: 150px" />
+							<input class="nui-hidden" name="critria._expr[20]._property" value="signatoryname" />
+							<input class="nui-hidden" name="critria._expr[20]._op" value="like" />
+						</td>
+						<td style="width: 90px; text-align: right;">协议结束日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[11]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[11]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[11]._property" value="endTime" />
+							<input class="nui-datepicker" name="critria._expr[11]._min" style="width: 110px" />
+							<span>至</span>
+							<input class="nui-datepicker" name="critria._expr[11]._max" style="width: 110px" />
+						</td>
+						<td style="width: 90px; text-align: right;">协议签订日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[21]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[21]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[21]._property" value="signingDate" />
+							<input class="nui-datepicker" name="critria._expr[21]._min" style="width: 110px" />
+							<span>至</span>
+							<input class="nui-datepicker" name="critria._expr[21]._max" style="width: 110px" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 1px;">
+			<table style="width: 100%; text-align: center;">
 				<tr>
-					<td class="form_label" align="right">申请人:</td>
-					<td colspan="1">
-						<input name="critria._expr[1]._value" class="nui-textbox" style="width: 100%;" id="createname" />
-						<input class="nui-hidden" name="critria._expr[1]._property" value="empname" />
-						<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
-						<input name="critria._expr[2]._value" class="nui-hidden" id="createUserid" />
-						<input class="nui-hidden" name="critria._expr[2]._property" value="createUserid" />
-					</td>
-					<td class="form_label" align="right">协议实施部门:</td>
-					<td colspan="1">
-						<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 100%;" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" />
-						<input class="nui-hidden" name="critria._expr[3]._property" value="implementOrg" />
-						<input class="nui-hidden" name="critria._expr[3]._op" value="in" id="tempCond1" />
-						<input class="nui-hidden" name="critria._expr[3]._ref" value="1" id="tempCond2" />
-						<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
-						<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
-						<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
-						<input class="nui-hidden" name="critria._expr[4]._property" value="orgid" />
-						<input class="nui-hidden" name="critria._expr[4]._op" value="in" />
-						<input class="nui-hidden" name="critria._expr[4]._value" id="orgids2" />
-					</td>
-					<td class="form_label" align="right" style="width: 100px">申请日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[5]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[5]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[5]._property" value="createTime" />
-						<input class="nui-datepicker" name="critria._expr[5]._min" style="width: 25%;" />
-						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[5]._max" style="width: 25%;" />
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label" align="right" style="width: 100px">协议名称:</td>
-					<td colspan="1">
-						<input name="critria._expr[6]._value" class="nui-textbox" style="width: 100%;" />
-						<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
-						<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">签订日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[13]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[13]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[13]._property" value="signingDate" />
-						<input class="nui-datepicker" name="critria._expr[13]._min" style="width: 100%;" />
-					</td>
-					<td class="form_label" align="right" style="width: 100px">协议起始日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[10]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[10]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[10]._property" value="startTime" />
-						<input class="nui-datepicker" name="critria._expr[10]._min" style="width: 25%;" />
-						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[10]._max" style="width: 25%;" />
-					</td>
-				</tr>
-				<tr>
-					
-					<td class="form_label" align="right">协议编号:</td>
-					<td colspan="1">
-						<input name="critria._expr[12]._value" class="nui-textbox" style="width: 100%;" />
-						<input class="nui-hidden" name="critria._expr[12]._property" value="contractNo" />
-						<input class="nui-hidden" name="critria._expr[12]._op" value="like" />
-					</td>
-					
-					<td class="form_label" align="right">审批状态:</td>
-					<td colspan="1">
-						<input name="critria._expr[14].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" style="width: 100%;" showNullItem="true" nullItemText="全部" />
-					</td>
-					<td class="form_label" align="right">协议结束日期:</td>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[11]._op" value="between" />
-						<input class="nui-hidden" name="critria._expr[11]._pattern" value="yyyy-MM-dd" />
-						<input class="nui-hidden" name="critria._expr[11]._property" value="endTime" />
-						<input class="nui-datepicker" name="critria._expr[11]._min" style="width: 25%;" />
-						<span style="border-spacing: 0px; padding-left: 0.2em; padding-right: 0.2em;">至</span>
-						<input class="nui-datepicker" name="critria._expr[11]._max" style="width: 25%;" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="9" align="center">
+					<td>
 						<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 						<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
 					</td>
 				</tr>
 			</table>
 		</div>
-	</div>
 
-	<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-		<table style="width: 100%;">
-			<tr>
-				<td style="width: 20%;">
-					<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
-					<a class="nui-button" id="dit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
-					<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
-					<a class="nui-button" id="kjxylist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
-					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
-					<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
-				</td>
-			</tr>
-		</table>
-	</div>
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="dit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="kjxylist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
+						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
+						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+					</td>
+				</tr>
+			</table>
+		</div>
 
-	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" pageSize="20" class="nui-datagrid" style="width: 100%; height: 100%;"
-			url="com.zhonghe.ame.contractPact.frameAgreement.frameAgreementAll.biz.ext"  allowSortColumn=true ondrawcell="setBackGroundColor">
-			<div property="columns">
-				<div type="checkcolumn">○</div>
-				<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
-				<div field="empname" width="60" align="center" headerAlign="center" allowSort="true">申请人</div>
-				<div field="contractName" width="150" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">协议名称</div>
-				<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true" renderer="lookInfo1">签约方</div>
-				<div field="orgname" width="240" align="center" headerAlign="center" allowSort="true">协议实施部门</div>
-				<div field="createTime" width="100" align="center" headerAlign="center" allowSort="true">申请日期</div>
-				<div field="projectLocal" align="center" headerAlign="center" allowSort="true">签署地点</div>
-				<div field="projectSize" width="100" align="center" headerAlign="center" allowSort="true">协议内容</div>
-				<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
-				<div field="startTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议起始日期</div>
-				<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议结束日期</div>
-				<div field="contractNo" width="100" headerAlign="center" allowSort="true">协议编号</div>
-				<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center">签订日期</div>
+		<div class="nui-fit">
+			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" pageSize="20" class="nui-datagrid" style="width: 100%; height: 100%;"
+				url="com.zhonghe.ame.contractPact.frameAgreement.frameAgreementAll.biz.ext" allowSortColumn=true ondrawcell="setBackGroundColor">
+				<div property="columns">
+					<div type="checkcolumn">○</div>
+					<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
+					<div field="empname" width="60" align="center" headerAlign="center" allowSort="true">申请人</div>
+					<div field="contractName" width="150" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">协议名称</div>
+					<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true" renderer="lookInfo1">签约方</div>
+					<div field="orgname" width="240" align="center" headerAlign="center" allowSort="true">协议实施部门</div>
+					<div field="createTime" width="100" align="center" headerAlign="center" allowSort="true">申请日期</div>
+					<div field="projectLocal" align="center" headerAlign="center" allowSort="true">签署地点</div>
+					<div field="projectSize" width="100" align="center" headerAlign="center" allowSort="true">协议内容</div>
+					<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
+					<div field="startTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议起始日期</div>
+					<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议结束日期</div>
+					<div field="contractNo" width="100" headerAlign="center" allowSort="true">协议编号</div>
+					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center">签订日期</div>
+				</div>
 			</div>
 		</div>
 	</div>
+
 	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
-		<input type="hidden" name="_eosFlowAction" value="action0" filter="false"/>
-		<input type="hidden" name="downloadFile" filter="false"/>
-		<input type="hidden" name="fileName" filter="false"/>
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
 	</form>
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var type = <%=request.getParameter("type")%>;
+		var type =
+	<%=request.getParameter("type")%>
+		;
 		var reve_grid = nui.get("reve_grid");
-		var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
-		
+		var json = nui.encode({
+			"iden" : "1",
+			"expseq" : null,
+			"feeseq" : null,
+			"parentfeetypeid" : null
+		});
+
 		init();
-		
+
 		function init() {
 			// 按钮权限
 			if (userId != 'sysadmin') {
@@ -238,7 +255,7 @@
 		function doView1() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/feameAgreementInfoSignatoryname.jsp?signatoryname=" + row.signatoryname;
+				executeUrl = "<%=request.getContextPath()%>/contractPact/print/feameAgreementInfoSignatoryname.jsp?signatoryname=" + row.signatoryname;
 				window.open(executeUrl);
 			} else {
 				showTips("请选中一条记录", "danger");
@@ -248,36 +265,35 @@
 		function printBtn() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/feameAgreementInfoPrint.jsp?id=" + row.id;
+				executeUrl = "<%=request.getContextPath()%>/contractPact/print/feameAgreementInfoPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
 				showTips("请选中一条记录", "danger");
 			}
 		}
-		
+
 		function dictGetType(e) {
 			return nui.getDictText('EXP_EXPTYPE', e.value);
 		}
-		
+
 		function dictGetStatus(e) {
 			return nui.getDictText('EXP_CHECKFLAG', e.value);
 		}
-		
+
 		function search() {
 			var form = new nui.Form("#form1");
 			var data = form.getData(); //获取表单JS对象数据
 			grid.sortBy("createTime", "desc");
 			grid.load(data); //datagrid加载数据
 		}
-		
+
 		function reset() {
 			var form = new nui.Form("#form1");
 			form.reset();
 			grid.load();
 			search()
 		}
-		
-		
+
 		function setBackGroundColor(e) {
 			var record = e.record;
 			if (record.appStatus == "0") {
@@ -286,11 +302,11 @@
 				e.rowStyle = "background-color: #FF99CC";
 			}
 		}
-		
+
 		function onOk() {
 			search();
 		}
-		
+
 		function wh_edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
@@ -314,13 +330,13 @@
 						}
 						search();
 					}
-				})			
-			
-			}else{
+				})
+
+			} else {
 				showTips("只能维护审批状态为【审批通过】的数据", "danger");
 			}
 		}
-		
+
 		// 暂存编辑
 		function zc_edit() {
 			var row = grid.getSelecteds();
@@ -337,9 +353,9 @@
 					url : "com.zhonghe.ame.contractPact.frameAgreement.getWorkItemByProcessInstID.biz.ext",
 					data : json,
 					success : function(result) {
-						if(JSON.stringify(result) !== '{}'){
+						if (JSON.stringify(result) !== '{}') {
 							nui.open({
-								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID="+ result.workItemID,
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID=" + result.workItemID,
 								width : '100%',
 								height : '100%',
 								ondestroy : function(action) {
@@ -350,17 +366,17 @@
 						}
 					}
 				});
-			}else{
+			} else {
 				showTips("只能编辑审批状态为【草稿】的数据", "danger");
 			}
 		}
-		
+
 		function deleteInfo() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条项目记录进行删除", "danger");
 				return;
-			}else{
+			} else {
 				var row = row[0];
 				if (row.appStatus == '4') {
 					if (!confirm("是否删除？")) {
@@ -387,24 +403,24 @@
 						} else {
 							showTips("只能选中一条项目记录进行删除", "danger");
 						}
-					}				
-				}else{
+					}
+				} else {
 					showTips("只能删除审批状态为【作废】的数据", "danger");
-				}				
+				}
 			}
 		}
-		
+
 		function onKeyEnter() {
 			search();
 		}
-		
+
 		function onActionRenderer(e) {
 			var record = e.record;
 			var processId = record.processid;
 			var s = "<a  href='javascript:void(0)' onclick='feeView();' >" + nui.getDictText('ZH_FLOW_TYPE', e.value) + "</a>";
 			return s;
 		}
-		
+
 		function feeView() {
 			var selectRow = grid.getSelected();
 			var processId = selectRow.processid;
@@ -428,7 +444,7 @@
 				}
 			});
 		}
-		
+
 		function sure(e) {
 			var row = grid.getSelecteds();
 			if (row.length == 1) {
@@ -463,7 +479,7 @@
 				nui.alert("请选中一条记录", "提示");
 			}
 		}
-		
+
 		function add() {
 			nui.open({
 				url : "/default/contractPact/frameAgreement/feameAgreementAdd.jsp",
@@ -478,11 +494,11 @@
 				}
 			})
 		}
-		
+
 		function zhFlowType(e) {
 			return nui.getDictText("ZH_FLOW_TYPE", e.value);
 		}
-		
+
 		function isStr(str, val) {
 			if (str.indexOf(val) != -1) {
 				return true
@@ -490,7 +506,7 @@
 				return false
 			}
 		}
-		
+
 		//导出
 		function exportExcel() {
 			if (!confirm("是否确认导出？")) {
@@ -505,46 +521,46 @@
 				cache : false,
 				contentType : 'text/json',
 				success : function(o) {
-			     		var filePath = o.downloadFile;
-			        	var fileName = "框架协议管理明细";
-			        	var myDate = new Date();
-			        	var year = myDate.getFullYear();
-			        	var month = myDate.getMonth()+1;
-			        	var day = myDate.getDate();
-			        	var hours = myDate.getHours();
-			        	var minutes = myDate.getMinutes();
-			        	var seconds = myDate.getSeconds();
-			        	var curDateTime = year;
-		        		if(month>9){
+					var filePath = o.downloadFile;
+					var fileName = "框架协议管理明细";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
 						curDateTime = curDateTime + "" + month;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + month;
 					}
-		        		if(day>9){
+					if (day > 9) {
 						curDateTime = curDateTime + day;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + day;
 					}
-					if(hours>9){
+					if (hours > 9) {
 						curDateTime = curDateTime + hours;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + hours;
 					}
-					if(minutes>9){
+					if (minutes > 9) {
 						curDateTime = curDateTime + minutes;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + minutes;
 					}
-					if(seconds>9){
+					if (seconds > 9) {
 						curDateTime = curDateTime + seconds;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + seconds;
 					}
 					fileName = fileName + "_" + curDateTime + ".xls";
 					var frm = document.getElementById("exprotExcelFlow");
-	        			frm.elements["downloadFile"].value = filePath;
-	        			frm.elements["fileName"].value = fileName;
-			    		frm.submit();
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
 				},
 				error : function() {
 					showTips("导出数据异常，请联系管理员！", "danger");
@@ -552,5 +568,6 @@
 			});
 		}
 	</script>
+
 </body>
 </html>
