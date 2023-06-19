@@ -350,7 +350,7 @@
 							nui.get("major").setValue(data.major);
 							nui.get("projectType").setValue(data.projectType);
 							nui.get("headquarterGroup").setValue(data.headquarterGroup);
-							nui.get("payerName").setValue(data.signatoryname);
+							nui.get("payerName").setValue(data.signatoryName);
 							nui.get("invoiceNameType").setValue(data.payee);
 							nui.get("invoiceSumCapital").setValue(data.contractSum);
 							btnEdit.doValueChanged();

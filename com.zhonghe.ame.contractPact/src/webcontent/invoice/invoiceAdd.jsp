@@ -348,6 +348,7 @@
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
+						console.log(data);
 						if (data) {
 							btnEdit.setValue(data.contractNo);
 							btnEdit.setText(data.contractNo);
@@ -355,7 +356,7 @@
 							nui.get("major").setValue(data.major);
 							nui.get("projectType").setValue(data.projectType);
 							nui.get("headquarterGroup").setValue(data.headquarterGroup);
-							nui.get("payerName").setValue(data.signatoryname);
+							nui.get("payerName").setValue(data.signatoryName);
 							nui.get("invoiceNameType").setValue(data.payee);
 							nui.get("invoiceSumCapital").setValue(data.contractSum);
 							btnEdit.doValueChanged();

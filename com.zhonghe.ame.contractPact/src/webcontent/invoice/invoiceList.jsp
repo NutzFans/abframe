@@ -50,8 +50,8 @@ html,body {
 							<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
 						</td>
 						<td style="width: 60px; text-align: right;">合同编号:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[10]._value" class="nui-textbox" style="width: 150px" />
+						<td style="width: 205px">
+							<input name="critria._expr[10]._value" class="nui-textbox" style="width: 200px" />
 							<input class="nui-hidden" name="critria._expr[10]._property" value="contractNo" />
 							<input class="nui-hidden" name="critria._expr[10]._op" value="like" />
 						</td>
@@ -85,8 +85,8 @@ html,body {
 							<input name="critria._expr[23].invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
 						<td style="width: 60px; text-align: right;">用途:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[24].invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						<td style="width: 205px">
+							<input name="critria._expr[24].invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" showNullItem="true" nullItemText="全部" style="width: 200px" />
 						</td>
 						<td style="width: 60px; text-align: right;">付款单位:</td>
 						<td style="width: 155px">
@@ -117,6 +117,14 @@ html,body {
 						<td style="width: 60px; text-align: right;">工程类别:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[39].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">开票金额:</td>
+						<td style="width: 205px">
+							<input class="nui-hidden" name="critria._expr[40]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[40]._property" value="invoiceSum" />
+							<input class="nui-textbox" name="critria._expr[40]._min" style="width: 90px" />
+							<span>至</span>
+							<input class="nui-textbox" name="critria._expr[40]._max" style="width: 90px" />
 						</td>
 					</tr>
 				</table>
