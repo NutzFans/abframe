@@ -146,6 +146,10 @@ table,table tr td {
 							<td>
 								<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
 							</td>
+							<td align="right" style="width: 160px">收款进度：</td>
+							<td>
+								<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px" required="true" enabled="false"/>
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">开票金额大写：</td>

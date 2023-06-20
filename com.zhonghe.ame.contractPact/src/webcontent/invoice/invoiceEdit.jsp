@@ -78,8 +78,12 @@
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">用途：</td>
-							<td colspan="3">
-								<input name="invoiceUsed" id="invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" style="width: 100%" required="true"/>
+							<td>
+								<input name="invoiceUsed" id="invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" style="width: 300px" required="true"/>
+							</td>
+							<td align="right" style="width: 160px">本次收款进度：</td>
+							<td>
+								<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px" required="true"/>
 							</td>
 							<td align="right" style="width: 160px">合同金额（元）：</td>
 							<td>

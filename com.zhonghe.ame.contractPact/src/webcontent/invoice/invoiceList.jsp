@@ -184,7 +184,7 @@ html,body {
 					<div field="headquarterGroup" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内/外</div>
 					<div field="invoiceUsed" align="center" headerAlign="center" allowSort="true" renderer="INVOICE_USED">用途</div>
 					<div field="invoiceType" align="center" headerAlign="center" allowSort="true" renderer="MIS_MA_INVOICETYPE">发票类型</div>
-					<div field="verification" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">核查（元）</div>
+					<div field="payType" align="center" headerAlign="center" allowSort="true" renderer="PAY_TYPE">本次收款进度</div>
 				</div>
 			</div>
 		</div>
@@ -609,6 +609,10 @@ html,body {
 
 		function MIS_MA_INVOICETYPE(e) {
 			return nui.getDictText("MIS_MA_INVOICETYPE", e.value);
+		}
+		
+		function PAY_TYPE(e) {
+			return nui.getDictText("payType", e.value);
 		}
 
 		//导出

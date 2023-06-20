@@ -4,7 +4,7 @@
 <html>
 
 <head>
-<title>采购方案</title>
+<title>评审结果</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <style type="text/css">
 body {
