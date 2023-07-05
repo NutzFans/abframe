@@ -71,11 +71,11 @@
 						<tr>
 							<td align="right" style="width:80px;">证件类型:</td>
 	                		<td style="width:140px;" align="left">    
-	                    		<input name="emp.cardtype" id="cardtype" class="nui-dictcombobox" shownullItem="true" dictTypeId="ABF_CARDTYPE" required="true" width="100%"/>
+	                    		<input name="emp.cardtype" id="cardtype" class="nui-dictcombobox" shownullItem="true" dictTypeId="ABF_CARDTYPE" required="false" width="100%"/>
 	                		</td>
 							<td align="right" style="width:80px;">证件号码:</td>
 	                		<td style="width:140px;" align="left">    
-	                    		<input name="emp.cardno" id="cardno" class="nui-textbox" width="100%" onblur="changeCard()" required="true"/>
+	                    		<input name="emp.cardno" id="cardno" required="true" class="nui-textbox" width="100%" onblur="changeCard()"/>
 	                		</td>
 	                		<td align="right" style="width:80px;">社会工作时间:</td>
 	                		<td style="width:100px;" align="left">    
@@ -251,7 +251,7 @@
 	                		</td>
 	                		<td align="right" style="width:80px;">人员性质:</td>
 	                		<td style="width:140px;" align="left">    
-	                    		<input name="emp.nature" id="nature" class="nui-dictcombobox" required="true" shownullItem="true" dictTypeId="AME_EMPTYPE2" width="100%"  />
+	                    		<input name="emp.nature" id="nature" class="nui-dictcombobox" shownullItem="true" dictTypeId="AME_EMPTYPE2" width="100%"  />
 	                		</td>
 						</tr>
 						<tr>
@@ -267,11 +267,10 @@
 						<tr>
 	                		<td align="right" style="width:80px;">职位分类:</td>
 	            			<td style="width:140px;" align="left">    
-	                			<input name="emp.positionname" id="positionname" onvaluechanged="setPositionName"class="nui-dictcombobox" shownullItem="true" allowInput="true" dictTypeId="AME_POSITION_MEMO" width="100%"  required="true"/>
+	                			<input name="emp.positionname" id="positionname" onvaluechanged="setPositionName"class="nui-dictcombobox" shownullItem="true" allowInput="true" dictTypeId="AME_POSITION_MEMO" width="100%"  />
 	            			</td>
 	            			<td align="right" style="width:80px;">职位名称:</td>
 	            			<td style="width:140px;" align="left">    
-	                			<input name="emp.positioncall" id="positioncall" class="nui-textbox"  required="true" width="100%"  />
 	            			</td>
 						    <td align="right" style="width:80px;">职位级别:</td>
 	                		<td style="width:140px;" align="left">    
@@ -281,11 +280,11 @@
 						<tr>
 							<td align="right" style="width:80px;">人员成本属性:</td>
 	                		<td style="width:140px;" align="left">    
-	                    		<input name="emp.degree" id="degree" class="nui-dictcombobox" required="true" shownullItem="true" dictTypeId="AME_EMPTYPE2" width="100%" onvaluechanged="personType2()" />
+	                    		<input name="emp.degree" id="degree" class="nui-dictcombobox"  shownullItem="true" dictTypeId="AME_EMPTYPE2" width="100%" onvaluechanged="personType2()" />
 	                		</td>
 							<td align="right" style="width:80px;">直接上级:</td>
 	                		<td style="width:140px;" align="left">
-	                			<input name="emp.major" id="major"  width="100%" onbuttonclick="selectEmp" class="nui-buttonedit" allowInput="false" emptyText="请选择人员"  required="true"/>    
+	                			<input name="emp.major" id="major"  width="100%" onbuttonclick="selectEmp" class="nui-buttonedit" allowInput="false" emptyText="请选择人员"  />    
 	                		</td>
 						    <td align="right" style="width:80px;">导师:</td>
 	                		<td style="width:140px;" align="left">
@@ -295,7 +294,7 @@
 						<tr>
 	            			<td align="right" style="width:80px;">所属公司:</td>
 	            			<td style="width:140px;" align="left">    
-	                			<input name="emp.company" id="company" class="nui-dictcombobox" dictTypeId="company" width="100%" required="true"/>
+	                			<input name="emp.company" id="company" class="nui-dictcombobox" dictTypeId="company" width="100%"  />
 	            			</td>
 	            			<td align="right" style="width:80px;">办公地址:</td>
 	            			<td style="width:140px;" align="left">    
@@ -303,7 +302,7 @@
 	            			</td>
 						    <td align="right" style="width:80px;">PCF:</td>
 	                		<td style="width:100px;" align="left">    
-	                    		<input name="emp.isjoinpcf" id="isjoinpcf" class="nui-dictcombobox" shownullItem="true" dictTypeId="MIS_YN" width="100%" required="true"/>
+	                    		<input name="emp.isjoinpcf" id="isjoinpcf" class="nui-dictcombobox" shownullItem="true" dictTypeId="MIS_YN" width="100%" />
 	                		</td>
 						</tr>
 						<tr>
@@ -323,7 +322,7 @@
 						<tr>
 							<td align="right" style="width:80px;">员工是否自备电脑:</td>
 	                		<td style="width:100px;" align="left">  
-	                			<input name="emp.istakepc" id="istakepc" class="nui-dictcombobox" required="true" shownullItem="true" dictTypeId="MIS_YN" width="100%"/>
+	                			<input name="emp.istakepc" id="istakepc" class="nui-dictcombobox"  shownullItem="true" dictTypeId="MIS_YN" width="100%"/>
 	                		</td>
 	                		<td align="right" style="width:80px;">自备电脑开始日期:</td>
 	                		<td style="width:100px;" align="left">    
@@ -379,7 +378,7 @@
 						<tr>
 							<td align="right" style="width:80px;">工作地:</td>
 	            			<td style="width:140px;" align="left">    
-	                			<input name="emp.workplace" id="workplace" class="nui-dictcombobox" shownullItem="true" allowInput="true" dictTypeId="AREA4CLRY" width="100%"  required="true"/>
+	                			<input name="emp.workplace" id="workplace" class="nui-dictcombobox" shownullItem="true" allowInput="true" dictTypeId="AREA4CLRY" width="100%" />
 	            			</td>
 							<td align="right" style="width:80px;">工作描述:</td>
 	                		<td align="left" colspan="3">    
@@ -1175,10 +1174,10 @@
 			nui.alert("证件类型不能为空！");
 			return;
 		}
-		if(cardno==""||cardno==null){
+		/* if(cardno==""||cardno==null){
 			nui.alert("证件号码不能为空！");
 			return;
-		}
+		} */
 		if(mobileno==""||mobileno==null){
 			nui.alert("手机号不能为空！");
 			return;
@@ -1191,10 +1190,10 @@
 			nui.alert("用户登录名不能为空！");
 			return;
 		}
-		if(company==""||company==null){
+		/* if(company==""||company==null){
 			nui.alert("所属公司不能为空！");
 			return;
-		}
+		} */
 		
 		var a =[];
 		var data = form.getData();
@@ -1261,10 +1260,10 @@
 			}
 			form.validate();
 			if(form.isValid()){
-				if(degree == "" || degree == null){
+				/* if(degree == "" || degree == null){
 					nui.alert("人员类型不能为空！");
 					return;
-				}
+				} */
 				judge1();
 				if(tiaoshu==1){
 					nui.alert("员工工号重复，请确认后再进行保存！");

@@ -122,7 +122,7 @@
 				<tr>
 					<td align="right" style="width:100px">是否本部：</td>
 					<td>
-						<input class="nui-dictcombobox" id="judge" dictTypeId="ZH_JUDGE" name="oOrg.judge"   style="width:250px"/>
+						<input class="nui-dictcombobox" id="judge" dictTypeId="ZH_JUDGE" name="oOrg.judge"   style="width:250px" required="true"/>
 					</td>
 					<td align="right" style="width:100px">是否职能部门：</td>
 					<td>

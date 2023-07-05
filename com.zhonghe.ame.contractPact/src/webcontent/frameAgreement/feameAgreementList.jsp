@@ -28,7 +28,7 @@ html,body {
 					<tr>
 						<td style="width: 60px; text-align: right;">申请人:</td>
 						<td style="width: 155px">
-							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createUsername" style="width: 150px" />
+							<input name="critria._expr[1].empname" class="nui-textbox" id="createUsername" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[1]._op" value="like" id="createUsernameOp" />
 							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
 						</td>

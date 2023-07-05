@@ -181,6 +181,7 @@
 					<div field="noTaxSum" width="150" headerAlign="center" dataType="currency" allowSort="true" align="center">合同不含税金额（元）</div>
 					<div field="payTax" width="120" headerAlign="center" dataType="currency" allowSort="true" align="center">税额（元）</div>
 					<div field="contractBalance" width="120" headerAlign="center" dataType="currency" allowSort="true" summaryType="sum" align="center">合同余额（元）</div>
+					<div field="finishTime" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">完成日期</div>
 					<div field="executeStatus" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS" align="center">执行状态</div>
 					<div field="signatoryname" width="190" headerAlign="center" allowSort="true" align="center">签约方</div>
 					<div field="custnature" width="190" headerAlign="center" allowSort="true" align="center" renderer="MIS_CUSTNATURE">企业类型</div>

@@ -163,7 +163,7 @@
 	function search(){
 		var form = new nui.Form("#form1");
 		var data = form.getData();
-		var year = data.date.getFullYear();
+		var year = data.date;
 		var startDate = year + '-01-01';
 		var endDate = year + '-12-31';
 		var json = {empstatus:data.empstatus,status:data.status,startdate:startDate,enddate:endDate};
@@ -1076,7 +1076,7 @@
         }else{	
 		nui.loading("更新中...");
 		nui.ajax({
-			url : "com.primeton.ame.schindler.org.impl.queryOrg.queryUpdateOrg.biz.ext",
+			url : "com.primeton.ame.schindler.org.impl.queryOrg.syncUpdateOrg.biz.ext",
 			type : 'POST',
 			cache : false,
 			contentType : 'text/json',

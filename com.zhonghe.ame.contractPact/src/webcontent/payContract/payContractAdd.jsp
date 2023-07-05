@@ -109,7 +109,10 @@
 							<td>
 								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
 							</td>
-
+							<td align="right" style="width: 100px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 100%" required="true" emptyText="合同执行完成日期（预估）" />
+							</td>
 							<td align="right" style="width: 100px">是否为采购合同:</td>
 							<td>
 								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" onvaluechanged="contractNatureChanged" />
