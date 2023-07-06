@@ -106,12 +106,7 @@ html,body {
 			getOpeatorButtonAuth("cglx_exportExcel,cglx_zf");
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
-				"code" : "cglx",
-				"map" : {
-					"property" : "status",
-					"op" : "=",
-					"value" : "running"
-				}
+				"code" : "cglx"
 			};
 			nui.ajax({
 				url : "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",

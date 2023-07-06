@@ -131,7 +131,7 @@ html,body {
 				//按钮权限的控制
 				getOpeatorButtonAuth("lxcg_exportExcel,lxcg_zf"); //操作按钮权限初始化
 				//code:对应功能编码，map：对于机构的查询条件
-				var json = { "code": "lxcg", "map": { "property": "status", "op": "=", "value": "running" } };
+				var json = { "code": "lxcg"};
 				nui.ajax({
 					"url": "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
 					"data": json,

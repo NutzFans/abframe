@@ -235,12 +235,7 @@
 
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
-				"code" : "ffhtlist",
-				"map" : {
-					"property" : "status",
-					"op" : "=",
-					"value" : "running"
-				}
+				"code" : "ffhtlist"
 			};
 			ajaxCommon({
 				url : "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",

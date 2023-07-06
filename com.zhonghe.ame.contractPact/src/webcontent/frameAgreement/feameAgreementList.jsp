@@ -165,9 +165,7 @@ html,body {
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var type =
-	<%=request.getParameter("type")%>
-		;
+		var type =<%=request.getParameter("type")%>;
 		var reve_grid = nui.get("reve_grid");
 		var json = nui.encode({
 			"iden" : "1",
@@ -186,12 +184,7 @@ html,body {
 			}
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
-				"code" : "kjxylist",
-				"map" : {
-					"property" : "status",
-					"op" : "=",
-					"value" : "running"
-				}
+				"code" : "kjxylist"
 			};
 			nui.ajax({
 				url : "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",

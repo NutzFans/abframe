@@ -140,7 +140,7 @@ html,body {
     		//按钮权限的控制
 	    	getOpeatorButtonAuth("cgjh_exportExcel,cgjh_zf");
     		//code:对应功能编码，map：对于机构的查询条件
-			var json = {"code":"cgjh","map":{"property":"status","op":"=","value":"running"}};
+			var json = {"code":"cgjh"};
     		nui.ajax({
 				url:"com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
 				data:json,
