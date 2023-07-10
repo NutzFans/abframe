@@ -148,10 +148,11 @@
 	<resultMap class="commonj.sdo.DataObject" id="PayMentDataObject">
 		<result column="contract_id" javaType="String" property="contractId"/>
 		<result column="apply_pay_contract_sum" javaType="String" property="applyPayContractSum"/>
+		<result column="pay_type" javaType="String" property="payType"/>
     </resultMap>
 
     <select id="queryPayMentById" parameterClass="java.util.HashMap"   resultMap="PayMentDataObject">
-    	SELECT contract_id, apply_pay_contract_sum FROM zh_payment WHERE id = #payMentId#
+    	SELECT contract_id, apply_pay_contract_sum, pay_type FROM zh_payment WHERE id = #payMentId#
     </select>
     
 	<resultMap class="commonj.sdo.DataObject" id="PayDataObject">
@@ -165,5 +166,9 @@
 	<update id="updatePayContract"  parameterClass="java.util.HashMap">
 		UPDATE zh_pay_contract SET contract_balance = #contractBalance# WHERE contract_no = #contractNo#
 	</update>            
+    
+	<update id="updateExecuteStatusAndFinishTime"  parameterClass="java.util.HashMap">
+		UPDATE zh_pay_contract SET finish_time = #finishTime#, execute_status = #executeStatus# WHERE contract_no = #contractNo#
+	</update>         
     
 </sqlMap>

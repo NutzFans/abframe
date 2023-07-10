@@ -106,9 +106,9 @@ body {
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">签约方：</td>
-							<td colspan="5">
+							<td colspan="3">
 								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
-									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 855px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext"
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext"
 										valueField="custid" textField="custname" allowInput="false" />
 									<span class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
@@ -118,6 +118,10 @@ body {
 										</span>
 									</span>
 								</span>
+							</td>
+							<td align="right" style="width: 130px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px" required="true" emptyText="合同执行完成日期（预估）" />
 							</td>
 						</tr>
 						<tr>

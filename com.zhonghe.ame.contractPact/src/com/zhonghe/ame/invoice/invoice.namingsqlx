@@ -4,10 +4,11 @@
 	<resultMap class="commonj.sdo.DataObject" id="InvoiceDataObject">
 		<result column="contract_no" javaType="String" property="contractNo"/>
 		<result column="invoice_sum" javaType="String" property="invoiceSum"/>
+		<result column="pay_type" javaType="String" property="payType"/>
     </resultMap>
 
     <select id="queryInvoiceById" parameterClass="java.util.HashMap"   resultMap="InvoiceDataObject">
-    	SELECT contract_no, invoice_sum FROM zh_invoice WHERE id = #invoiceId#
+    	SELECT contract_no, invoice_sum, pay_type FROM zh_invoice WHERE id = #invoiceId#
     </select>
     
 	<resultMap class="commonj.sdo.DataObject" id="ChargeDataObject">
@@ -21,5 +22,9 @@
 	<update id="updateChargeContract"  parameterClass="java.util.HashMap">
 		UPDATE zh_charge_contract SET contract_balance = #contractBalance# WHERE contract_no = #contractNo#
 	</update>
+	
+	<update id="updateExecuteStatusAndFinishTime"  parameterClass="java.util.HashMap">
+		UPDATE zh_charge_contract SET finish_time = #finishTime#, execute_status = #executeStatus# WHERE contract_no = #contractNo#
+	</update>	
 
 </sqlMap>

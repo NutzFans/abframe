@@ -49,14 +49,12 @@ public class SyncUpdateOrg {
 
 		// 工作组信息
 		JSONArray groupJsonArray = this.analyzeWsByType("group");
-
 		// 职位信息
 		JSONArray postJsonArray = this.analyzeWsByType("post");
 		// 机构信息
 		JSONArray orgJsonArray = this.analyzeWsByType("org");
 		// 部门信息
 		JSONArray deptJsonArray = this.analyzeWsByType("dept");
-
 		// 人员信息
 		JSONArray personJsonArray = this.analyzeWsByType("person");
 
@@ -170,6 +168,7 @@ public class SyncUpdateOrg {
 		for (int i = 0; i < personJsonArray.size(); i++) {
 			JSONObject personObj = personJsonArray.getJSONObject(i);
 			String userId = personObj.getStr("loginName");
+			userId = this.addUserIdPrefix(userId);
 			Entity entity = dbSession.queryOne(querySql, userId);
 			if (ObjectUtil.isNotNull(entity)) {
 				entity.set("OPERATORNAME", personObj.getStr("name"));
@@ -188,6 +187,14 @@ public class SyncUpdateOrg {
 				entity.set("PAGESTYLE", personObj.getStr("posts", null));
 				entity.set("FILE_PATH", personObj.getStr("id"));
 				dbSession.update(entity, new Entity("AC_OPERATOR").set("USERID", userId));
+				String accountRoleSql = "SELECT * FROM AC_OPERATORROLE WHERE ROLEID='employee' AND OPERATORID = ?";
+				Entity accountRole = dbSession.queryOne(accountRoleSql, entity.getStr("OPERATORID"));
+				if (ObjectUtil.isNull(accountRole)) {
+					accountRole = new Entity("AC_OPERATORROLE");
+					accountRole.set("OPERATORID", entity.getStr("OPERATORID"));
+					accountRole.set("ROLEID", "employee");
+					dbSession.insert(accountRole);
+				}
 			} else {
 				if (personObj.getBool("isAvailable", false)) {
 					AcOperator impl = new AcOperatorImpl();
@@ -202,6 +209,10 @@ public class SyncUpdateOrg {
 					impl.setPagestyle(personObj.getStr("posts", null));
 					impl.setFilePath(personObj.getStr("id"));
 					DatabaseUtil.insertEntity("default", impl);
+					Entity accountRole = new Entity("AC_OPERATORROLE");
+					accountRole.set("OPERATORID", impl.getOperatorid());
+					accountRole.set("ROLEID", "employee");
+					dbSession.insert(accountRole);
 				}
 			}
 		}
@@ -294,9 +305,12 @@ public class SyncUpdateOrg {
 
 	private void syncEmp(JSONArray personJsonArray, Session dbSession) throws Exception {
 		String querySql = "SELECT * FROM OM_EMPLOYEE WHERE EMPCODE = ?";
+		String notSyncUserSql = "SELECT EMPCODE, EMPNAME FROM AC_OPERATORROLE AS ao, OM_EMPLOYEE AS oe WHERE ao.ROLEID='NOT_OA_USER' AND ao.OPERATORID = oe.OPERATORID";
+		List<Entity> notSyncUserList = dbSession.query(notSyncUserSql);
 		for (int i = 0; i < personJsonArray.size(); i++) {
 			JSONObject personObj = personJsonArray.getJSONObject(i);
 			String empCode = personObj.getStr("loginName");
+			empCode = this.addEmpCodePrefix(empCode);
 			Entity entity = dbSession.queryOne(querySql, empCode);
 			if (ObjectUtil.isNotNull(entity)) {
 				if (personObj.getBool("isAvailable", false).booleanValue()) {
@@ -311,7 +325,7 @@ public class SyncUpdateOrg {
 					}
 					entity.set("EMPNAME", personObj.getStr("name"));
 					String orgCode = this.getEmpOrg(personObj.getStr("parent"), dbSession);
-					if (StrUtil.isNotBlank(orgCode)) {
+					if (StrUtil.isNotBlank(orgCode) && !this.isNotOASyncUser(empCode, notSyncUserList)) {
 						entity.set("ORGID", orgCode);
 					}
 					entity.set("LASTMODYTIME", personObj.getStr("alterTime"));
@@ -540,6 +554,32 @@ public class SyncUpdateOrg {
 			}
 		}
 		return "3";
+	}
+
+	private boolean isNotOASyncUser(String empCode, List<Entity> notSyncUserList) {
+		if (ObjectUtil.isNotNull(notSyncUserList)) {
+			for (Entity notSyncUser : notSyncUserList) {
+				String code = notSyncUser.getStr("EMPCODE");
+				if (StrUtil.equals(empCode, code)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private String addUserIdPrefix(String userId) {
+		if (StrUtil.equals("cs1", userId) || StrUtil.equals("cs2", userId) || StrUtil.equals("cs3", userId)) {
+			return "0" + userId;
+		}
+		return userId;
+	}
+
+	private String addEmpCodePrefix(String empCode) {
+		if (StrUtil.equals("cs1", empCode) || StrUtil.equals("cs2", empCode) || StrUtil.equals("cs3", empCode)) {
+			return "0" + empCode;
+		}
+		return empCode;
 	}
 
 }

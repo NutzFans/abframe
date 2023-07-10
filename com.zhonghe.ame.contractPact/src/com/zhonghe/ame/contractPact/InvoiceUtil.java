@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -30,12 +31,16 @@ public class InvoiceUtil {
 		DataObject invoice = invoices[0];
 		String contractNo = invoice.getString("contractNo");
 		String invoiceSum = invoice.getString("invoiceSum");
+		String payType = invoice.getString("payType");
 		DataObject[] charges = this.queryChargeByContractNo(contractNo);
 		if (charges != null) {
 			DataObject charge = charges[0];
 			String contractBalance = charge.getString("contractBalance");
 			BigDecimal newContractBalance = NumberUtil.sub(contractBalance, invoiceSum);
 			this.updateChargeContract(contractNo, newContractBalance);
+			if (StrUtil.equals("2", payType)) {
+				this.updateExecuteStatusAndFinishTime("2", DateUtil.today(), contractNo);
+			}
 		}
 	}
 
@@ -64,6 +69,14 @@ public class InvoiceUtil {
 		map.put("contractNo", contractNo);
 		map.put("contractBalance", contractBalance);
 		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.invoice.invoice.updateChargeContract", map);
+	}
+
+	private void updateExecuteStatusAndFinishTime(String executeStatus, String finishTime, String contractNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("contractNo", contractNo);
+		map.put("executeStatus", executeStatus);
+		map.put("finishTime", finishTime);
+		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.invoice.invoice.updateExecuteStatusAndFinishTime", map);
 	}
 
 	@Bizlet("更新收费合同模块中合同余额字段 - 维护开票数据时")

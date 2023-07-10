@@ -3,12 +3,14 @@ package com.zhonghe.ame.payment;
 import static com.eos.system.annotation.ParamType.CONSTANT;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
@@ -58,18 +60,22 @@ public class PayMentUtil {
 
 	}
 
-	@Bizlet("更新付费合同中的合同余额")
+	@Bizlet("更新付费合同中的合同余额，如果付款进度为结算款，更新付费合同的执行状态及完成时间")
 	public void updatePayContract(int payMentId) {
 		DataObject[] payMents = this.queryPayMentById(payMentId);
 		DataObject payMent = payMents[0];
 		String contractId = payMent.getString("contractId");
 		String applyPayContractSum = payMent.getString("applyPayContractSum");
+		String payType = payMent.getString("payType");
 		DataObject[] pays = this.queryPayByContractNo(contractId);
 		if (pays != null) {
 			DataObject pay = pays[0];
 			String contractBalance = pay.getString("contractBalance");
 			BigDecimal newContractBalance = NumberUtil.sub(contractBalance, applyPayContractSum);
 			this.updatePayContract(contractId, newContractBalance);
+			if (StrUtil.equals("2", payType)) {
+				this.updateExecuteStatusAndFinishTime("2", DateUtil.today(), contractId);
+			}
 		}
 	}
 
@@ -99,7 +105,15 @@ public class PayMentUtil {
 		map.put("contractBalance", contractBalance);
 		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.payment.payMent.updatePayContract", map);
 	}
-	
+
+	private void updateExecuteStatusAndFinishTime(String executeStatus, String finishTime, String contractNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("contractNo", contractNo);
+		map.put("executeStatus", executeStatus);
+		map.put("finishTime", finishTime);
+		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.payment.payMent.updateExecuteStatusAndFinishTime", map);
+	}
+
 	@Bizlet("更新付费合同模块中合同余额字段 - 维护付款数据时")
 	public void whUpdatePayContract(String contractId, String applyPayContractSum, String historyApplyPayContractSum) {
 		DataObject[] pays = this.queryPayByContractNo(contractId);
@@ -109,8 +123,8 @@ public class PayMentUtil {
 			BigDecimal newContractBalance = NumberUtil.sub(NumberUtil.add(contractBalance, historyApplyPayContractSum), NumberUtil.toBigDecimal(applyPayContractSum));
 			this.updatePayContract(contractId, newContractBalance);
 		}
-	}	
-	
+	}
+
 	@Bizlet("更新付费合同模块中合同余额字段 - 作废付款时")
 	public void zfUpdateChargeContrac(String contractId, String applyPayContractSum) {
 		DataObject[] pays = this.queryPayByContractNo(contractId);
@@ -121,6 +135,5 @@ public class PayMentUtil {
 			this.updatePayContract(contractId, newContractBalance);
 		}
 	}
-	
-	
+
 }

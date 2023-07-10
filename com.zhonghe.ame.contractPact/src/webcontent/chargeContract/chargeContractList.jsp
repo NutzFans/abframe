@@ -195,6 +195,7 @@ html,body {
 					<div field="noTaxSum" width="150" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同不含税金额（元）</div>
 					<div field="payTax" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">税额（元）</div>
 					<div field="contractBalance" width="120" align="center" headerAlign="center" allowSort="true" dataType="currency" summaryType="sum">合同余额（元）</div>
+					<div field="finishTime" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">完成日期</div>
 					<div field="executeStatus" width="80" align="center" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS">执行状态</div>
 					<div field="signatoryName" width="250" align="center" headerAlign="center" allowSort="true">签约方</div>
 					<div field="contractSubject" width="120" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">合同签约主体</div>
