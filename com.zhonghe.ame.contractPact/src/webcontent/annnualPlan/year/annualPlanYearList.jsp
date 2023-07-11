@@ -127,8 +127,8 @@ html,body {
 					<div type="checkcolumn">○</div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" visible="false">id</div>
-					<div field="dataSourceType" headerAlign="center" align="center" renderer="DATA_SOURCE_TYPE" width="75">数据来源</div>
-					<div field="contractStauts" headerAlign="center" align="center" renderer="ZH_CONTRACT_STATUS" width="75">合同状态</div>
+					<div field="dataSourceType" headerAlign="center" align="center" renderer="DATA_SOURCE_TYPE" width="75" allowSort="true">数据来源</div>
+					<div field="contractStauts" headerAlign="center" align="center" renderer="ZH_CONTRACT_STATUS" width="75" allowSort="true">合同状态</div>
 					<div field="years" width="60" align="center" headerAlign="center" allowSort="true">年份</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="secondaryOrgname" width="150" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
@@ -138,7 +138,7 @@ html,body {
 					<div field="payee" width="100" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
 					<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">合同金额（元）</div>
 					<div field="sum" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收款金额（元）</div>
-					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收入金额（元）</div>
+					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" sortField="sum">计划收入金额（元）</div>
 					<div field="jan" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">1月</div>
 					<div field="feb" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">2月</div>
 					<div field="mar" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">3月</div>

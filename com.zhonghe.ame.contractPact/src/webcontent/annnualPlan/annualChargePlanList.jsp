@@ -129,7 +129,7 @@ html,body {
 					<div type="checkcolumn">○</div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" visible="false">id</div>
-					<div field="contractStauts" headerAlign="center" align="center" renderer="ZH_CONTRACT_STATUS" width="75">合同状态</div>
+					<div field="contractStauts" headerAlign="center" align="center" renderer="ZH_CONTRACT_STATUS" width="75" allowSort="true">合同状态</div>
 					<div field="years" width="60" align="center" headerAlign="center" allowSort="true">年份</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="secondaryOrgname" width="150" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
@@ -156,7 +156,7 @@ html,body {
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
 					<div field="riskLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="RISK_LEVEL">风险等级</div>
-					<div field="estimatedDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">预计签署日期</div>
+					<div field="estimatedDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center" allowSort="true">预计签署日期</div>
 				</div>
 			</div>
 		</div>

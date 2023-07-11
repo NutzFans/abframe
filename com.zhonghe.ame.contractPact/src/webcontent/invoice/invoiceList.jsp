@@ -178,7 +178,7 @@ html,body {
 					<div field="invoiceTax" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">税额（元）</div>
 					<div field="receivableSum" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">回款金额（元）</div>
 					<div field="balanceSum" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">余额（元）</div>
-					<div field="receivableData" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center">回款时间</div>
+					<div field="receivableData" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">回款时间</div>
 					<div field="major" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内/外</div>

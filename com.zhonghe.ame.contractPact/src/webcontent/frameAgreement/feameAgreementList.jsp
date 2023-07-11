@@ -146,10 +146,10 @@ html,body {
 					<div field="projectLocal" align="center" headerAlign="center" allowSort="true">签署地点</div>
 					<div field="projectSize" width="100" align="center" headerAlign="center" allowSort="true">协议内容</div>
 					<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
-					<div field="startTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议起始日期</div>
-					<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center">协议结束日期</div>
+					<div field="startTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center" allowSort="true">协议起始日期</div>
+					<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center" allowSort="true">协议结束日期</div>
 					<div field="contractNo" width="100" headerAlign="center" allowSort="true">协议编号</div>
-					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center">签订日期</div>
+					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" allowSort="true">签订日期</div>
 				</div>
 			</div>
 		</div>

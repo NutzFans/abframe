@@ -181,13 +181,13 @@
 					<div field="noTaxSum" width="150" headerAlign="center" dataType="currency" allowSort="true" align="center">合同不含税金额（元）</div>
 					<div field="payTax" width="120" headerAlign="center" dataType="currency" allowSort="true" align="center">税额（元）</div>
 					<div field="contractBalance" width="120" headerAlign="center" dataType="currency" allowSort="true" summaryType="sum" align="center">合同余额（元）</div>
-					<div field="finishTime" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">完成日期</div>
+					<div field="finishTime" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center" allowSort="true">完成日期</div>
 					<div field="executeStatus" headerAlign="center" allowSort="true" renderer="EXECUTE_STATUS" align="center">执行状态</div>
 					<div field="signatoryname" width="190" headerAlign="center" allowSort="true" align="center">签约方</div>
 					<div field="custnature" width="190" headerAlign="center" allowSort="true" align="center" renderer="MIS_CUSTNATURE">企业类型</div>
 					<div field="contractSubject" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType" align="center">合同签约主体</div>
 					<div field="payer" width="150" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType" align="center">付款方</div>
-					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">签订日期</div>
+					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center" allowSort="true">签订日期</div>
 					<div field="contractType" width="120" headerAlign="center" allowSort="true" renderer="zhContractType" align="center">合同类型</div>
 					<div field="contractSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="CONTRACT_SECRET_LEVEL" align="center">合同密级</div>
 					<div field="projectSecretLevel" width="120" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL" align="center">项目密级</div>
