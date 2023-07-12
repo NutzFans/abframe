@@ -164,13 +164,13 @@ html,body {
 				<tr>
 					<td>
 						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
 						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="sfhtlist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
-						<a class="nui-button" id="bcxy" iconCls="icon-add" onclick="alteration()">发起补充协议签订申请</a>
 						<a class="nui-button" id="sfhtlist_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
-						<a class="nui-button" id="sfhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
+						<a class="nui-button" id="sfhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="sfhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 					</td>

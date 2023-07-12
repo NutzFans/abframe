@@ -161,7 +161,7 @@ html,body {
 
 	<div id="invoiceInfo" style="display: none;">
 		<div id="invoiceGrid" sizeList="[5]" dataField="invoiceInfos" pageSize="5" class="nui-datagrid" url="com.zhonghe.ame.annualPlan.annualPlan.queryInvoiceByNo.biz.ext"
-			style="width: 710px; height: 203px;">
+			style="width: 710px; height: 203px; margin-left: 670px"">
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
 				<div field="createTime" dateFormat="yyyy-MM-dd" align="center" headerAlign="center">开票日期</div>
