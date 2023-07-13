@@ -8,6 +8,24 @@
 
     <select id="queryPurSupplierIsqualified" resultMap="purSupplier">
     	SELECT CUSTID,CUSTNAME FROM PUR_SUPPLIER WHERE (CUSTTYPE IN(0,1,2) AND isqualified IN (1,2)) OR CUSTTYPE IN (3,4)
-    </select>    
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="payPlanInfo">
+        <result column="contract_no" javaType="String" property="contractNo"/>
+        <result column="contract_name" javaType="String" property="contractName"/>
+    </resultMap>
+
+    <select id="queryPayPlanByPayId" parameterClass="java.util.HashMap"  resultMap="payPlanInfo">
+    	SELECT contract_no, contract_name FROM annual_payment_plan WHERE pay_id = #payId#
+    </select>
+    
+    <resultMap class="commonj.sdo.DataObject" id="chargePlanInfo">
+        <result column="contract_no" javaType="String" property="contractNo"/>
+        <result column="contract_name" javaType="String" property="contractName"/>
+    </resultMap>
+
+    <select id="queryChargePlanByChargeId" parameterClass="java.util.HashMap"  resultMap="chargePlanInfo">
+    	SELECT contract_no, contract_name FROM annual_payment_plan WHERE charge_id = #chargeId#
+    </select>               
 
 </sqlMap>

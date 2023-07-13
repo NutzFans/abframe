@@ -215,7 +215,7 @@ public class OrgDimOperatingIncomeTrackExcelUtil {
 			}
 		}
 
-		List<String> customSort = Arrays.asList("16", "17", "18", "20", "21", "13", "102199", "8", "19", "24", "25", "26", "27", "111", "193");
+		List<String> customSort = Arrays.asList("16", "17", "18", "20", "21", "13", "102199", "8", "19", "102401", "24", "25", "26", "27", "111", "193");
 
 		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
 

@@ -809,7 +809,7 @@ public class IncomeBudgetTrackExcelUtil {
 
 		}
 
-		List<String> customSort = Arrays.asList("核资源咨询中心", "核动力咨询中心", "系统工程咨询中心", "产业发展研究中心", "核化工咨询中心", "安全质量部（质量信息支持中心）", "工业安全支持中心", "企业发展部（采购管理支持中心）", "设备监理与检测中心", "河北分公司", "天津分公司",
+		List<String> customSort = Arrays.asList("核资源咨询中心", "核动力咨询中心", "系统工程咨询中心", "产业发展研究中心", "核化工咨询中心", "安全质量部（质量信息支持中心）", "工业安全支持中心", "企业发展部（采购管理支持中心）", "设备监理与检测中心", "工程项目管理支持中心", "河北分公司", "天津分公司",
 				"福建分公司", "四川分公司", "西北分公司", "海南分公司");
 
 		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {

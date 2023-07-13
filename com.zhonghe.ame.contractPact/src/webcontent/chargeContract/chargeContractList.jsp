@@ -180,9 +180,10 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8">
+				url="com.zhonghe.ame.chargeContract.chargeContract.queryChargeContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8" onshowrowdetail="onShowRowDetail">
 				<div property="columns">
 					<div type="checkcolumn">○</div>
+					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="implementOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同承办部门</div>
@@ -215,6 +216,29 @@ html,body {
 			</div>
 		</div>
 	</div>
+	
+	<div id="chargePlanInfo" style="display: none;">
+		<div id="chargePlanGrid" sizeList="[5]" dataField="chargePlanInfos" pageSize="5" class="nui-datagrid" url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualPayPlanByChargeId.biz.ext"
+			style="width: 1500px; height: 203px">
+			<div property="columns">
+				<div field="id" headerAlign="center" visible="false">id</div>
+				<div field="years" align="center" headerAlign="center">年份</div>
+				<div field="jan" align="center" headerAlign="center" summaryType="sum" dataType="currency">一月</div>
+				<div field="feb" align="center" headerAlign="center" summaryType="sum" dataType="currency">二月</div>
+				<div field="mar" align="center" headerAlign="center" summaryType="sum" dataType="currency">三月</div>
+				<div field="apr" align="center" headerAlign="center" summaryType="sum" dataType="currency">四月</div>
+				<div field="may" align="center" headerAlign="center" summaryType="sum" dataType="currency">五月</div>
+				<div field="jun" align="center" headerAlign="center" summaryType="sum" dataType="currency">六月</div>
+				<div field="jul" align="center" headerAlign="center" summaryType="sum" dataType="currency">七月</div>
+				<div field="aug" align="center" headerAlign="center" summaryType="sum" dataType="currency">八月</div>
+				<div field="sep" align="center" headerAlign="center" summaryType="sum" dataType="currency">九月</div>
+				<div field="oct" align="center" headerAlign="center" summaryType="sum" dataType="currency">十月</div>
+				<div field="nov" align="center" headerAlign="center" summaryType="sum" dataType="currency">十一月</div>
+				<div field="dec" align="center" headerAlign="center" summaryType="sum" dataType="currency">十二月</div>
+				<div field="sum" align="center" headerAlign="center" summaryType="sum" dataType="currency">总计</div>
+			</div>
+		</div>
+	</div>	
 
 	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
@@ -226,6 +250,8 @@ html,body {
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
+		var chargePlanGrid = nui.get("chargePlanGrid");
+		var chargePlanInfo = document.getElementById("chargePlanInfo");
 		var type = <%=request.getParameter("type")%>;
 		var reve_grid = nui.get("reve_grid");
 		var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
@@ -764,6 +790,28 @@ html,body {
 				}
 			});
 		}
+		
+		function expandColumn(e) {
+			if (e.record.isChargePlan == "0") {
+				return "";
+			} else {
+				return "<div class='mini-grid-cell-inner  mini-grid-cell-nowrap' style=''><a class='mini-grid-ecIcon' href='javascript:#' onclick='return false'></a></div>"
+			}
+		}
+		
+		function onShowRowDetail(e) {
+			var chargePlan = e.sender;
+			var row = e.record;
+			var td = chargePlan.getRowDetailCellEl(row);
+			td.appendChild(chargePlanInfo);
+			chargePlanInfo.style.display = "block";
+			var data = {
+				'chargeId' : row.id
+			};
+			chargePlanGrid.sortBy("years", "desc");
+			chargePlanGrid.load(data);
+		}				
+		
 	</script>
 
 </body>
