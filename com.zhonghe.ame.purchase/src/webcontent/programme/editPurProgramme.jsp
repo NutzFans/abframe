@@ -19,6 +19,7 @@
 					<input name="files" id="fileids" class="nui-hidden" />
 					<input name="files1" id="fileids1" class="nui-hidden" />
 					<input class="nui-hidden" name="id" />
+					<input class="nui-hidden" name="purchasMode" id="purchasMode" />
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;width: 60%">
 							<tr>
@@ -138,6 +139,7 @@
 // 							nui.get("programmeName").setValue(result.programmeName);
 							nui.get("proappId").setValue(result.proappId);
 							nui.get("proappId").setText(result.proAppCode);
+							nui.get("purchasMode").setValue(result.purchasMode);
 // 							nui.get("remark").setValue(result.remark);
 // 							nui.get("code").setValue(result.code);
 							form.setData(result);
@@ -240,6 +242,7 @@
 							nui.get("proAppApplyPrice").setValue(data.proAppApplyPrice);
 							nui.get("putunder").setValue(data.putunder);
 							nui.get("type").setValue(data.type);
+							nui.get("purchasMode").setValue(data.purchasMode);
 							btnEdit.doValueChanged();
 							gridDtl.load({ "pid": data.id })
 						}

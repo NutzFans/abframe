@@ -19,6 +19,7 @@
 					<input name="files" id="fileids" class="nui-hidden" />
 					<input name="files1" id="fileids1" class="nui-hidden" />
 					<input class="nui-hidden" name="id" />
+					<input class="nui-hidden" name="purchasMode" id="purchasMode" />
 					<div style="padding: 1px;">
 						<table style="table-layout: fixed;width: 100%;">
 							<tr>
@@ -210,12 +211,14 @@
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data);    //必须
 						if (data) {
+							console.log(data);
 							btnEdit.setValue(data.id);
 							btnEdit.setText(data.proAppCode);
 							nui.get("proAppName").setValue(data.proAppName);
 							nui.get("proAppApplyPrice").setValue(data.proAppApplyPrice);
 							nui.get("putunder").setValue(data.putunder);
 							nui.get("type").setValue(data.type);
+							nui.get("purchasMode").setValue(data.purchasMode);
 							btnEdit.doValueChanged();
 							gridDtl.load({ "pid": data.id })
 
