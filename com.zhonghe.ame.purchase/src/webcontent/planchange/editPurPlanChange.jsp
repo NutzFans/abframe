@@ -300,11 +300,14 @@
 			
 		function SaveData(){
 			var formData = form.getData();
-			var gridData = grid.getChanges(),data_opioion =opioionform.getData() ;;
-				formData.istype = istype;
-				formData.files = nui.get("fileids").getValue();
+			var gridData = grid.getChanges(),data_opioion =opioionform.getData() ;
+			formData.istype = istype;
+			formData.files = nui.get("fileids").getValue();
 			// 1为公司本部 2为分子公司
 			var judge = getJudge();
+			var newBudgetAmount = nui.get("newBudgetAmount").getValue();
+    			var budgetAmount = nui.get("budgetAmount").getValue();
+    			formData.changeAmount = newBudgetAmount - budgetAmount;
 			var json = nui.encode({"purPlan":formData,"purPlanItem":gridData,"judge":judge,"isExcess":isExcess,"misOpinion": data_opioion.misOpinion});
 			//判断采购类型 如为一级集采二级集采归口部门必填
 			var type = nui.get("type").value;
