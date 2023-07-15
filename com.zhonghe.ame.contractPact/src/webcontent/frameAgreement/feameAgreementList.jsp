@@ -26,13 +26,13 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 60px; text-align: right;">申请人:</td>
+						<td style="width: 60px; text-align: right;">经办人:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[1].empname" class="nui-textbox" id="createUsername" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[1]._op" value="like" id="createUsernameOp" />
 							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
 						</td>
-						<td style="width: 90px; text-align: right;">协议实施部门:</td>
+						<td style="width: 90px; text-align: right;">经办部门:</td>
 						<td style="width: 155px">
 							<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 150px" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true"
 								allowInput="true" valueFromSelect="true" />
@@ -62,6 +62,14 @@ html,body {
 							<span>至</span>
 							<input class="nui-datepicker" name="critria._expr[10]._max" style="width: 110px" />
 						</td>
+						<td style="width: 90px; text-align: right;">协议落实部门:</td>
+						<td style="width: 245px">
+								<input name="critria._expr[22]._value" class="nui-combobox" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" filterType="like" textField="dictname"
+									valueField="dictname" dataField="bidUnits" valueFromSelect="true" allowInput="true" style="width: 241px;" />
+								<input class="nui-hidden" name="critria._expr[22]._property" value="bidUnitsName" />
+								<input class="nui-hidden" name="critria._expr[22]._op" value="like" />
+						</td>
+						
 					</tr>
 					<tr>
 						<td style="width: 60px; text-align: right;">协议编号:</td>
@@ -138,13 +146,13 @@ html,body {
 				<div property="columns">
 					<div type="checkcolumn">○</div>
 					<div type="indexcolumn" width="40" align="center" headerAlign="center">序号</div>
-					<div field="empname" width="60" align="center" headerAlign="center" allowSort="true">申请人</div>
+					<div field="empname" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="contractName" width="150" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">协议名称</div>
 					<div field="signatoryname" width="190" align="center" headerAlign="center" allowSort="true" renderer="lookInfo1">签约方</div>
-					<div field="orgname" width="240" align="center" headerAlign="center" allowSort="true">协议实施部门</div>
+					<div field="orgname" width="240" align="center" headerAlign="center" allowSort="true">经办部门</div>
 					<div field="createTime" width="100" align="center" headerAlign="center" allowSort="true">申请日期</div>
 					<div field="projectLocal" align="center" headerAlign="center" allowSort="true">签署地点</div>
-					<div field="projectSize" width="100" align="center" headerAlign="center" allowSort="true">协议内容</div>
+					<div field="bidUnitsName" width="240" align="center" headerAlign="center" allowSort="true">协议落实部门</div>
 					<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
 					<div field="startTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center" allowSort="true">协议起始日期</div>
 					<div field="endTime" dateFormat="yyyy-MM-dd" width="90" align="center" headerAlign="center" allowSort="true">协议结束日期</div>

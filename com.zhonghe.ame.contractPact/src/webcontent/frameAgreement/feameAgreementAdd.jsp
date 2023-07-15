@@ -5,9 +5,18 @@
 <head>
 <title>框架协议签订申请"</title>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body .mini-textboxlist {
+	border-collapse: collapse;
+}
 </style>
 </head>
 <body>
@@ -19,15 +28,16 @@
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td class="form_label" align="right">申请人：</td>
+							<td class="form_label" align="right">经办人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px" />
 								<input id="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
-							<td align="right" style="width: 120px">协议实施部门：</td>
+							<td align="right" style="width: 120px">经办部门：</td>
 
 							<td style="width: 20%;">
-								<input name="implementOrg" id="implementOrg" class="nui-combobox" valueField="orgid" textField="orgname" style="width: 300px" shownullitem="false" allowinput="true" required="true" enabled="false"/>
+								<input name="implementOrg" id="implementOrg" class="nui-combobox" valueField="orgid" textField="orgname" style="width: 300px" shownullitem="false" allowinput="true" required="true"
+									enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -59,14 +69,14 @@
 							<td>
 								<input name="projectLocal" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
-							<td align="right" style="width: 100px">协议内容：</td>
+							<td align="right" style="width: 100px">协议落实部门：</td>
 							<td>
-								<input name="projectSize" class="nui-textbox" style="width: 300px" required="true" />
+								<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" valueField="dictid"
+									textField="dictname" inputMode="false" style="width: 300px" required="true"/>
 							</td>
-
 						</tr>
 						<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 -->
-						 <tr class="nui-hidden" >
+						<tr class="nui-hidden">
 							<td align="right" style="width: 100px">分公司会签部门领导：</td>
 							<td style="width: 20%;">
 								<input name="fDeptCountersignId" id="userLookup_multiple" width="100%" class="nui-lookup" textField="empname" valueField="empid" popupWidth="auto" popup="#userPanel_lookup_multiple"
@@ -83,9 +93,9 @@
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 94%; height: 120" required="false" />
 							</td>
-						</tr> 
+						</tr>
 					</table>
 				</div>
 			</form>
@@ -106,12 +116,14 @@
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("form1");
-		var type ;//暂存还是发起
+		var type;//暂存还是发起
 		
-		 init();
-		 
-		 getOrgs();
-		 
+		$("input[name='bidUnits']").parent("td").attr("style", "background: #FFFFE6;")
+
+		init();
+
+		getOrgs();
+
 		function init() {
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
@@ -119,7 +131,7 @@
 			nui.get("implementOrg").setText(userOrgName);
 			nui.get("createTime").setValue(new Date());
 		}
-		
+
 		function getOrgs() {
 			var a2 = [];
 			for ( var p in orglist) {
@@ -137,7 +149,7 @@
 				nui.get("contractSum").setValue("");
 			}
 		}
-		
+
 		function onOk(e) {
 			type = e;
 			//定义变量接受form表单数据
@@ -163,10 +175,12 @@
 			document.getElementById("fileCatalog").value = "feameAgreementinfo";
 			form2.submit();
 		}
-		
+
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
+			data.bidUnitsCode = nui.get("bidUnits").getValue();
+			data.bidUnitsName = nui.get("bidUnits").getText();
 			var info = "";
 			data.type = type;
 			if (type == 1) {

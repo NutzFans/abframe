@@ -22,7 +22,10 @@
 	<style type="text/css">
 	    body{
 	        margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
-	    } 
+	    }
+		body .mini-textboxlist {
+			border-collapse: collapse;
+		} 
     </style>
 </head>
 <body>
@@ -40,43 +43,43 @@
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;">
 							<tr>
-							<td class="form_label" align = "right"> 申请人</td>
+							<td class="form_label" align = "right">经办人：</td>
 								<td>
-									<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 200px"/>
-									<input id="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true"/>
+									<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px"/>
+									<input id="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true"/>
 								</td>
-							<td align="right" style="width: 160px">协议实施部门：</td>
-								<td >   <input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
-										<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true"/>
+							<td align="right" style="width: 160px">经办部门：</td>
+								<td >   <input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+										<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true"/>
 								</td>
 							<td align="right" style="width:160px">申请日期：</td>
-								<td><input id="createTime" name="createTime"  class="nui-datepicker" enabled="false" style="width: 200px"/></td>
+								<td><input id="createTime" name="createTime"  class="nui-datepicker" enabled="false" style="width: 300px"/></td>
 							
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">协议名称：</td>
-									<td><input id="contractName" name="contractName" enabled="false" class="nui-textbox" style="width: 200px"/></td>
+									<td><input id="contractName" name="contractName" enabled="false" class="nui-textbox" style="width: 300px"/></td>
 								<td align="right" style="width: 100px">协议金额（元）：</td>
-									<td><input id="contractSum" name="contractSum" enabled="false" class="nui-textbox" style="width: 200px" /></td>
+									<td><input id="contractSum" name="contractSum" enabled="false" class="nui-textbox" style="width: 300px" /></td>
 								<td align="right" style="width: 160px">签约方：</td>
-									<td><input id="signatoryname" name="signatoryname" enabled="false" class="nui-textbox" style="width: 200px"/></td>
-									<!-- <td><input id="signatory" name="signatory" enabled="false" class="nui-textbox" style="width: 200px"/></td> -->
-								
+									<td><input id="signatoryname" name="signatoryname" enabled="false" class="nui-textbox" style="width: 300px"/></td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">协议签约主体：</td>
 								<td > 
-									<input name="contractSubject" id="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" enabled="false" style="width: 200px;" />
+									<input name="contractSubject" id="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" enabled="false" style="width: 300px;" />
 								</td>
 								<td align="right" style="width: 160px">签署地点：</td>
-									<td><input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 200px"/></td>
-								<td align="right" style="width: 160px">协议内容：</td>
-									<td><input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 200px"/></td>
-								
+									<td><input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 300px"/></td>
+								<td align="right" style="width: 100px">协议落实部门：</td>
+								<td>
+									<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" valueField="dictid"
+										textField="dictname" inputMode="false" style="width: 300px" enabled="false"/>
+								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
 							</tr>
 						</table>
 					</div>
@@ -88,21 +91,21 @@
 						<table style="table-layout: fixed;">
 							<tr>
 								<td align="right" style="width: 160px">协议编号：</td>
-									<td><input id="contractNo" name="contractNo"  class="nui-textbox"  style="width: 200px" required="true"/></td>
+									<td><input id="contractNo" name="contractNo"  class="nui-textbox"  style="width: 300px" required="true"/></td>
 								<td align="right" style="width:160px">签订日期：</td>
-										<td><input id="signingDate" name="signingDate"  class="nui-datepicker" style="width: 200px" required="true"/></td>
+										<td><input id="signingDate" name="signingDate"  class="nui-datepicker" style="width: 300px" required="true"/></td>
 								<td align="right" style="width: 100px">协议期限：</td>
-										<td><input id="contractPeriod" name="contractPeriod"  class="nui-textbox" style="width: 200px" required="true"/></td>
+										<td><input id="contractPeriod" name="contractPeriod"  class="nui-textbox" style="width: 300px" required="true"/></td>
 							</tr>
 							<tr>
 								<td align="right" style="width:160px">协议起始日期：</td>
-									<td><input name="startTime"  class="nui-datepicker" style="width: 200px" required="true"></td>
+									<td><input name="startTime"  class="nui-datepicker" style="width: 300px" required="true"></td>
 								<td align="right" style="width:160px">协议结束日期：</td>
-									<td><input name="endTime"  class="nui-datepicker" style="width: 200px" required="true" /></td>
+									<td><input name="endTime"  class="nui-datepicker" style="width: 300px" required="true" /></td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark1"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input name="remark1"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
 							</tr>
 						</table>
 				</div>
@@ -135,6 +138,7 @@
     	var opioionform = new nui.Form("#opioionform");
     	var payContractId = "";
     	isViewDelete=false;
+    	$("input[name='bidUnits']").parent("td").attr("style", "background: #f0f0f0;")
         init();
         function init(){
         	var data = {workitemid:<%=workitemid%>};
@@ -146,6 +150,8 @@
 		        contentType:'text/json',
 		        success: function (o) {
 			            form.setData(o.data);
+			            nui.get('bidUnits').setValue(o.data.bidUnitsCode);
+				    nui.get('bidUnits').setText(o.data.bidUnitsName);      
 			            form3.setData(o.data);
 				        payContractId = o.data.id;
 				        

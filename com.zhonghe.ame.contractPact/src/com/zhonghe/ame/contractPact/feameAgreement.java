@@ -45,7 +45,7 @@ public class feameAgreement{
 	        //1设备监理中心  2其他中心  0其他部门
 	        if(a.equals(b)){
 	        	return "1";
-	        }else if("102199".equals(a)||"16".equals(a)||"17".equals(a)||"18".equals(a)||"20".equals(a)||"21".equals(a)||"22".equals(a)||"23".equals(a)||"171".equals(a)){
+	        }else if("102199".equals(a)||"16".equals(a)||"17".equals(a)||"18".equals(a)||"20".equals(a)||"21".equals(a)||"22".equals(a)||"23".equals(a)||"171".equals(a) || "102401".equals(a)){
 	        	return "2";
 	        }else{
 	        	return "0";

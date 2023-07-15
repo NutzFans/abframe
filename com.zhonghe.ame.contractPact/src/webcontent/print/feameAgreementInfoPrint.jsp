@@ -104,12 +104,12 @@
 								<td align="right" style="width: 160px">签署地点：</td>
 									<td><input name="projectLocal"  class="nui-textbox" style="width: 200px" required="true"/></td>	
 							<tr>
-								<td align="right" style="width: 160px">协议内容：</td>
-								<td colspan="3"><input name="projectSize" style="width: 100%"class="nui-textbox" required="true"/></td>
+								<td align="right" style="width: 160px">协议落实部门：</td>
+								<td colspan="3"><input name="bidUnitsName" style="width: 100%"class="nui-textbox" required="true"/></td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  id="remark" colspan="3" style="height: 68px;background:#F0F0F0;border:1px solid #A5ACB5">
+								<td  id="remark" colspan="3" style="height: 120px;background:#F0F0F0;border:1px solid #A5ACB5">
 									<!-- <input name="remark"  class="nui-textarea" style="width: 100%" required="false"/> -->
 								</td>
 							</tr>
@@ -137,7 +137,7 @@
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark1"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input name="remark1"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
 							</tr>
 					</table>
 				</div>

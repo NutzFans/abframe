@@ -7,7 +7,10 @@
 	<style type="text/css">
 	    body{
 	        margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
-	    } 
+	    }
+		body .mini-textboxlist {
+			border-collapse: collapse;
+		} 
     </style>
 </head>
 <body>
@@ -20,17 +23,17 @@
 					<div style="padding: 1px;">
 						<table style="table-layout: fixed;">
 							<tr>
-							<td class="form_label" align = "right" style="width: 140px"> 申请人</td>
+							<td class="form_label" align = "right" style="width: 140px">经办人：</td>
 								<td style="width: 20%">
 									<input name="createUserid" id="createUserid" class="nui-hidden"/>
 									<input id="empname" name="empname" class="nui-textbox" enabled="false" style="width: 100%" required="true"/>
 								</td>
-								<td align="right" style="width: 140px">合同实施部门：</td>
+								<td align="right" style="width: 140px">经办部门：</td>
 
 								<td >
 							     	<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs" showTreeIcon="true" valueFromSelect="true" style="width:100%;" 
 							     	url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-							     	multiSelect="false" checkRecursive = "false" expandOnLoad="0" showFolderCheckBox="true"/>
+							     	multiSelect="false" checkRecursive = "false" expandOnLoad="0" showFolderCheckBox="true" enabled="false"/>
 								</td>
 							    <td align="right" style="width: 100px">申请日期：</td>
 								    <td style="width:20%"><input id="createTime" name="createTime"  class="nui-datepicker" style="width: 100%" required="true"/></td>
@@ -56,12 +59,15 @@
 								    <td><input id="contractSubject" name="contractSubject"  class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%"  required="true"/></td>
 								<td align="right" style="width: 100px">签署地点：</td>
 									<td><input name="projectLocal"  class="nui-textbox" style="width: 100%" required="true"/></td>	
-								<td align="right" style="width: 100px">协议内容：</td>
-									<td><input name="projectSize"  class="nui-textbox" style="width: 100%" required="true"/></td>							
+							<td align="right" style="width: 100px">协议落实部门：</td>
+							<td>
+								<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" valueField="dictid"
+									textField="dictname" inputMode="false" style="width: 300px" required="true"/>
+							</td>						
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
 							</tr>
 						</table>
 					</div>
@@ -88,6 +94,7 @@
 		var form = new nui.Form("form1");
 		var id = "";
 		var type ;//暂存还是发起
+		$("input[name='bidUnits']").parent("td").attr("style", "background: #FFFFE6;")
     	function onOk(e){
 			//定义变量接受form表单数据
 			type=e;
@@ -219,7 +226,8 @@
 			success:function (o){
 				//付款申请基本信息
 				form.setData(o.agreement);
-				clog(o)
+			        nui.get('bidUnits').setValue(o.agreement.bidUnitsCode);
+				nui.get('bidUnits').setText(o.agreement.bidUnitsName);
 			  	//附件查询
 				var grid_0 = nui.get("grid_0");
 	        	grid_0.load({"groupid":"ZH_CONTRACTFEAME","relationid":o.agreement.id});
