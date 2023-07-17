@@ -66,6 +66,12 @@
 							</td>						
 							</tr>
 							<tr>
+								<td align="right" style="width: 100px">协议内容：</td>
+								<td colspan="5">
+									<input id="projectSize" name="projectSize"  class="nui-textarea" style="width: 100%; height: 120px"/>
+								</td>						
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">备注：</td>
 								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
 							</tr>

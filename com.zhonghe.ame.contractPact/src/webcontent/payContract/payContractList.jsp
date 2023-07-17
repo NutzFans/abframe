@@ -159,6 +159,7 @@
 						<a class="nui-button" id="ffhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="ffhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<a class="nui-button" id="ffhtlist_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -256,7 +257,7 @@
 			// 按钮权限
 			if(userId !='sysadmin'){
 				// 维护按钮 - ffhtlist_wh，导入按钮 - ffhtlist_import，作废按钮 - ffhtlist_zf，变更经办人按钮 - ffhtlist_bgjbr
-				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import,ffhtlist_zf,ffhtlist_bgjbr");
+				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import,ffhtlist_zf,ffhtlist_bgjbr,ffhtlist_help");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -920,6 +921,11 @@
 			payPlanGrid.sortBy("years", "desc");
 			payPlanGrid.load(data);
 		}				
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/contractPact/payContract/payContractFlowDesgin.jsp";
+			window.open(executeUrl);
+		}		
 		
 	</script>	
 </body>

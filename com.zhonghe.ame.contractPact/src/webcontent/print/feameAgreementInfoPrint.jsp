@@ -108,10 +108,12 @@
 								<td colspan="3"><input name="bidUnitsName" style="width: 100%"class="nui-textbox" required="true"/></td>
 							</tr>
 							<tr>
+								<td align="right" style="width: 160px">协议内容：</td>
+								<td colspan="5"><input name="projectSize"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  id="remark" colspan="3" style="height: 120px;background:#F0F0F0;border:1px solid #A5ACB5">
-									<!-- <input name="remark"  class="nui-textarea" style="width: 100%" required="false"/> -->
-								</td>
+								<td colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
 							</tr>
 						</table>
 					</div>
@@ -197,7 +199,6 @@
 	            	var createUsername ;
 	            	console.log(data)
 	            	form.setData(data)
-					$("#remark").html(data.remark);
 		            nui.get("createUsername").setValue(data.empname);
 	            	
 					if(data.empname!=null){

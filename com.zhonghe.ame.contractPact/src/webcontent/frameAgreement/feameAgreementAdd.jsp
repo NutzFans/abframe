@@ -75,6 +75,12 @@ body .mini-textboxlist {
 									textField="dictname" inputMode="false" style="width: 300px" required="true"/>
 							</td>
 						</tr>
+						<tr>
+							<td align="right" style="width: 100px">协议内容：</td>
+							<td colspan="5">
+								<input id="projectSize" name="projectSize"  class="nui-textarea" style="width: 94%; height: 120"/>
+							</td>						
+						</tr>
 						<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 -->
 						<tr class="nui-hidden">
 							<td align="right" style="width: 100px">分公司会签部门领导：</td>

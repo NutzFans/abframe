@@ -54,6 +54,39 @@
 		<!-- 部门领导复核 -->
 		<div id="div14" style="position: absolute; left: 1318px; top: 765px; width: 75px; height: 50px; cursor: pointer;"></div>
 
+		<!-- 企业发展部经办人审批 -->
+		<div id="div15" style="position: absolute; left: 746px; top: 911px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 部门领导复核 -->
+		<div id="div16" style="position: absolute; left: 1030px; top: 913px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 企业发展部主任审批 -->
+		<div id="div17" style="position: absolute; left: 605px; top: 1053px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 企业发展部副主任审批 -->
+		<div id="div18" style="position: absolute; left: 863px; top: 1053px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 承办部门分管领导审批 -->
+		<div id="div19" style="position: absolute; left: 746px; top: 1347px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 总法律顾问审批 -->
+		<div id="div20" style="position: absolute; left: 483px; top: 1438px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 总法律顾问审批 -->
+		<div id="div21" style="position: absolute; left: 752px; top: 1509px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 总经理审批 -->
+		<div id="div22" style="position: absolute; left: 487px; top: 1547px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 总经理审批 -->
+		<div id="div23" style="position: absolute; left: 750px; top: 1610px; width: 75px; height: 50px; cursor: pointer;"></div>		
+		
+		<!-- 法定代表人审批 -->
+		<div id="div24" style="position: absolute; left: 752px; top: 1743px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 合同盖章 -->
+		<div id="div25" style="position: absolute; left: 753px; top: 1918px; width: 75px; height: 50px; cursor: pointer;"></div>					
+
 	</div>
 
 	<script src="/default/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -66,7 +99,7 @@
 			$('#div1').click(function() {
 				layer.open({
 					title : '承办部门项监部负责人 - 调整审批人',
-					content : '通过【机构人员管理】模块修改组织的【机构主管人员】字段',
+					content : '通过【机构人员管理】模块修改发起人部门的【机构主管人员】字段',
 					btn : []
 				});
 			});
@@ -75,7 +108,7 @@
 			$('#div2').click(function() {
 				layer.open({
 					title : '项监部负责人审批 - 调整审批人',
-					content : '通过【机构人员管理】模块修改组织的【机构主管人员】字段',
+					content : '通过【机构人员管理】模块修改发起人部门的【机构主管人员】字段',
 					btn : []
 				});
 			});
@@ -84,7 +117,7 @@
 			$('#div3').click(function() {
 				layer.open({
 					title : '分公司财务部审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSCWBSP】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSCWBSP】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -111,7 +144,7 @@
 			$('#div6').click(function() {
 				layer.open({
 					title : '分公司经营管理部门经办人审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSJYJHB-FF】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSJYJHB-FF】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -120,7 +153,7 @@
 			$('#div7').click(function() {
 				layer.open({
 					title : '财务审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_ZNBMCWSP】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_ZNBMCWSP】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -129,7 +162,7 @@
 			$('#div8').click(function() {
 				layer.open({
 					title : '部门领导审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_SBZXBMLDSP】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_SBZXBMLDSP】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -138,7 +171,7 @@
 			$('#div9').click(function() {
 				layer.open({
 					title : '分公司经营管理部门主任审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSJYJHBLD】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSJYJHBLD】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -147,7 +180,7 @@
 			$('#div10').click(function() {
 				layer.open({
 					title : '法务审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_FWSP】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FWSP】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -156,7 +189,7 @@
 			$('#div11').click(function() {
 				layer.open({
 					title : '分公司负责人审批 - 调整审批人',
-					content : '通过【机构人员管理】模块修改组织的【机构主管人员】字段',
+					content : '通过【机构人员管理】模块修改发起人所属公司的【机构主管人员】字段',
 					btn : []
 				});
 			});
@@ -165,7 +198,7 @@
 			$('#div12').click(function() {
 				layer.open({
 					title : '分公司负责人复核 - 调整审批人',
-					content : '通过【机构人员管理】模块修改组织的【机构主管人员】字段',
+					content : '通过【机构人员管理】模块修改发起人所属公司的【机构主管人员】字段',
 					btn : []
 				});
 			});
@@ -178,15 +211,114 @@
 					btn : []
 				});
 			});
-			
+
 			// 部门领导复核
 			$('#div14').click(function() {
 				layer.open({
 					title : '部门领导复核 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_SBZXBMLDSP】的字典项数据',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_SBZXBMLDSP】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
-			});			
+			});
+
+			// 企业发展部经办人审批
+			$('#div15').click(function() {
+				layer.open({
+					title : '企业发展部经办人审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_BRANCHAGENT】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});
+
+			// 部门领导复核
+			$('#div16').click(function() {
+				layer.open({
+					title : '部门领导复核 - 调整审批人',
+					content : '通过【机构人员管理】模块修改发起人部门的【机构主管人员】字段',
+					btn : []
+				});
+			});
+
+			// 企业发展部主任审批
+			$('#div17').click(function() {
+				layer.open({
+					title : '企业发展部主任审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage14】的角色数据',
+					btn : []
+				});
+			});
+
+			// 企业发展部副主任审批
+			$('#div18').click(function() {
+				layer.open({
+					title : '企业发展部副主任审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage5】的角色数据',
+					btn : []
+				});
+			});
+
+			// 承办部门分管领导审批
+			$('#div19').click(function() {
+				layer.open({
+					title : '承办部门分管领导审批 - 调整审批人',
+					content : '通过【机构人员管理】模块修改发起人部门的【分管领导】字段',
+					btn : []
+				});
+			});
+
+			// 总法律顾问审批
+			$('#div20').click(function() {
+				layer.open({
+					title : '总法律顾问审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage11】的角色数据',
+					btn : []
+				});
+			});
+
+			// 总法律顾问审批
+			$('#div21').click(function() {
+				layer.open({
+					title : '总法律顾问审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage11】的角色数据',
+					btn : []
+				});
+			});
+
+			// 总经理审批
+			$('#div22').click(function() {
+				layer.open({
+					title : '总经理审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage9】的角色数据',
+					btn : []
+				});
+			});
+
+			// 总经理审批
+			$('#div23').click(function() {
+				layer.open({
+					title : '总经理审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage9】的角色数据',
+					btn : []
+				});
+			});
+			
+			// 法定代表人审批
+			$('#div24').click(function() {
+				layer.open({
+					title : '法定代表人审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage10】的角色数据',
+					btn : []
+				});
+			});
+			
+			// 合同盖章
+			$('#div25').click(function() {
+				layer.open({
+					title : '合同盖章 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_HTGZSPR】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});						
 
 		});
 	</script>

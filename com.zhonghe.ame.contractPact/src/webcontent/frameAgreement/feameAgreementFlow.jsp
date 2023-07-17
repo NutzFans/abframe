@@ -61,6 +61,12 @@
 										textField="dictname" inputMode="false" style="width: 300px" enabled="false"/>
 								</td>
 							</tr>
+							<tr>
+								<td align="right" style="width: 100px">协议内容：</td>
+								<td colspan="5">
+									<input id="projectSize" name="projectSize"  class="nui-textarea" style="width: 100%; height: 120px" required="false" enabled="false"/>
+								</td>						
+							</tr>
 							<!-- 20230404 此两个字段在审批过程中不显示  -->
 							<tr class="nui-hidden" >
 								<td align="right" style="width:140px">合同起始日期：</td>

@@ -22,7 +22,10 @@
 	<style type="text/css">
 	    body{
 	        margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;	
-	    } 
+	    }
+		body .mini-textboxlist {
+			border-collapse: collapse;
+		} 
     </style>
 </head>
 <body>
@@ -77,23 +80,23 @@
 							<tr>
 								<td align="right" style="width: 100px">协议签约主体：</td>
 								<td><input id="contractSubject" name="contractSubject"  class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px"  required="true"/></td>
-<!-- 									<td ><input -->
-<!-- 									name="contractSubject" id="contractSubject" -->
-<!-- 									class="nui-combobox" required="true" -->
-<!-- 									url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext" -->
-<!-- 									filterType="like" textField="orgname" valueField="orgname" -->
-<!-- 									dataField="allorgs" valueFromSelect="true" allowInput="true" -->
-<!-- 									style="width: 300px;" required="true" /></td> -->
 								<td align="right" style="width: 100px">签署地点：</td>
 									<td><input id="projectLocal" name="projectLocal"  class="nui-textbox" style="width: 300px" required="true"/></td>
-								<td align="right" style="width: 100px">协议内容：</td>
-									<td><input id="projectSize" name="projectSize"  class="nui-textbox" style="width: 300px" required="true"/></td>
-								
+								<td align="right" style="width: 100px">协议落实部门：</td>
+								<td>
+									<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" valueField="dictid"
+										textField="dictname" inputMode="false" style="width: 300px" required="true"/>
+								</td>
 							</tr>
-							
+							<tr>
+								<td align="right" style="width: 100px">协议内容：</td>
+								<td colspan="5">
+									<input id="projectSize" name="projectSize"  class="nui-textarea" style="width: 94%; height: 120"/>
+								</td>						
+							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input id="remark" name="remark"  class="nui-textarea" style="width: 100%" required="false"/></td>
+								<td  colspan="5"><input id="remark" name="remark"  class="nui-textarea" style="width: 94%; height: 120" required="false"/></td>
 							</tr>
 						</table>
 					</div>
@@ -159,6 +162,7 @@
 		var form = new nui.Form("form1");
 		var id = "";
         init();
+        $("input[name='bidUnits']").parent("td").attr("style", "background: #FFFFE6;")
         function init(){
         	
 		  	nui.get("createUserid").setValue("<%=userno %>");
@@ -184,11 +188,12 @@
 			form2.submit();
 	    }
     	function SaveData(){
-				var form = new nui.Form("#form1");
+			var form = new nui.Form("#form1");
     			var data = form.getData();
     			data.id = id;
-//     			opinion(data);
-				data.files = nui.get("fileids").getValue();
+   			data.bidUnitsCode = nui.get("bidUnits").getValue();
+			data.bidUnitsName = nui.get("bidUnits").getText();
+			data.files = nui.get("fileids").getValue();
     			var json = nui.encode({'cpData':data});
 				if(!confirm("是否保存？")){
         				return;
@@ -257,7 +262,6 @@
 		}
 		
 		function setEditData(data){
-			console.log("09999",data);
 			if(null != data.createUserid){
 				nui.get("createUserid").setValue(data.createUserid);
 			}
@@ -313,6 +317,9 @@
 			if(null != data.remark1){
 				nui.get("remark1").setValue(data.remark1);
 			}
+			nui.get('bidUnits').setValue(data.bidUnitsCode);
+			nui.get('bidUnits').setText(data.bidUnitsName);			
+			
 			var form = new nui.Form("#form1");
 			var grid_0 = nui.get("grid_0");
         	grid_0.load({"groupid":"ZH_CONTRACTFEAME","relationid":data.id});

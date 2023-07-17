@@ -78,8 +78,14 @@
 								</td>
 							</tr>
 							<tr>
+								<td align="right" style="width: 100px">协议内容：</td>
+								<td colspan="5">
+									<input id="projectSize" name="projectSize"  class="nui-textarea" style="width: 100%; height: 120px" required="false" enabled="false"/>
+								</td>						
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td  colspan="5"><input name="remark"  class="nui-textarea" style="width: 100%; height: 120px" required="false"/></td>
+								<td  colspan="5"><input id="remark" name="remark"  class="nui-textarea" style="width: 100%; height: 120px" enabled="false"required="false"/></td>
 							</tr>
 						</table>
 					</div>
@@ -232,8 +238,9 @@
             	var form3 = new nui.Form("form3");
             	var data = form3.getData();
             	data.id=nui.get("id").getValue();
+            	data.remark=nui.get("remark").getValue();
             	data.files = nui.get("fileids").getValue();
-				var misOpinion = opioionform.getData().misOpinion;//审核意见
+		var misOpinion = opioionform.getData().misOpinion;//审核意见
             	nui.get("creatReimbProcess").setEnabled(false);
             	var json = {'cpData':data,misOpinion:misOpinion,workItemID: <%=workitemid %>};
             	saveData(json); 
