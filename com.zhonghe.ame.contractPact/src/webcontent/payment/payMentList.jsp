@@ -131,6 +131,7 @@ html,body {
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 						<a class="nui-button" id="fklblist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<a class="nui-button" id="fklblist_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -182,7 +183,7 @@ html,body {
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - fklblist_wh，变更经办人按钮 - fklblist_bgjbr，作废按钮 - fklblist_zf
-				getOpeatorButtonAuth("fklblist_wh,fklblist_bgjbr,fklblist_zf");
+				getOpeatorButtonAuth("fklblist_wh,fklblist_bgjbr,fklblist_zf,fklblist_help");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -320,7 +321,7 @@ html,body {
 				url : "/default/contractPact/payment/payMentAdd.jsp",
 				width : '100%',
 				height : '100%',
-				title : "付费管理",
+				title : "付款管理",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 				},
@@ -578,6 +579,12 @@ html,body {
 		function ZH_CONTRACT_TYPE(e) {
 			return nui.getDictText("ZH_CONTRACT_TYPE", e.value);
 		}
+	
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/contractPact/payment/paymentFlowDesgin.jsp";
+			window.open(executeUrl);
+		}		
+		
 	</script>
 
 </body>
