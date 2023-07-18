@@ -155,6 +155,7 @@ html,body {
 						<a class="nui-button" id="kjfplist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 						<a class="nui-button" id="kjfplist_czfp" iconCls="icon-edit" onclick="czfp_edit()">产值分配</a>
+						<a class="nui-button" id="kjfplist_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -211,7 +212,7 @@ html,body {
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - kjfplist_wh，变更经办人按钮 - kjfplist_bgjbr，作废按钮 - kjfplist_zf，产值分配按钮 - kjfplist_czfp
-				getOpeatorButtonAuth("kjfplist_wh,kjfplist_zf,kjfplist_bgjbr,kjfplist_czfp");
+				getOpeatorButtonAuth("kjfplist_wh,kjfplist_zf,kjfplist_bgjbr,kjfplist_czfp,kjfplist_help");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -671,6 +672,12 @@ html,body {
 				}
 			});
 		}
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/contractPact/invoice/invoiceFlowDesgin.jsp";
+			window.open(executeUrl);
+		}		
+		
 	</script>
 
 </body>
