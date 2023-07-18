@@ -173,6 +173,7 @@ html,body {
 						<a class="nui-button" id="sfhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
 						<a class="nui-button" id="sfhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<a class="nui-button" id="sfhtlist_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -263,7 +264,7 @@ html,body {
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - sfhtlist_wh，导入按钮 - sfhtlist_import，变更经办人按钮 - sfhtlist_bgjbr，作废按钮 - sfhtlist_zf
-				getOpeatorButtonAuth("sfhtlist_wh,sfhtlist_import,sfhtlist_bgjbr,sfhtlist_zf");
+				getOpeatorButtonAuth("sfhtlist_wh,sfhtlist_import,sfhtlist_bgjbr,sfhtlist_zf,sfhtlist_help");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -811,6 +812,11 @@ html,body {
 			chargePlanGrid.sortBy("years", "desc");
 			chargePlanGrid.load(data);
 		}				
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/contractPact/chargeContract/chargeContractFlowDesgin.jsp";
+			window.open(executeUrl);
+		}		
 		
 	</script>
 
