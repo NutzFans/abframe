@@ -76,7 +76,7 @@ html,body {
 				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 				<div field="verifyCode" width="200" headerAlign="center" renderer="lookInfo" align="left">验收单编号</div>
 				<div field="contractNo" width="200" align="left" headerAlign="center">合同编号</div>
-				<div field="totalPrice" align="right" headerAlign="center">货品总价(万元)</div>
+				<div field="totalPrice" align="right" headerAlign="center" renderer="totalPriceRenderer">货品总价(万元)</div>
 				<div field="orgname" width="200" align="left" headerAlign="center">验收部门</div>
 				<div field="empname" width="80" align="left" headerAlign="center">验收人</div>
 				<div field="createTime" align="left" headerAlign="center" allowSort="true">申请日期</div>
@@ -159,6 +159,15 @@ html,body {
 				nui.alert("查询信息有误");
 			} else {
 				return "<a href='javascript:void(0)' onclick='doView(" + id + ");' title='点击查看'>" + e.value + "</a>";
+			}
+		}
+		
+		function totalPriceRenderer(e){
+			var data = e.row;
+			if(data.totalPrice != null && data.totalPrice != ""){
+				return data.totalPrice;
+			}else{
+				return data.totalAmount;
 			}
 		}
 		
