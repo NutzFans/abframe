@@ -135,6 +135,7 @@ html,body {
 						<a class="nui-button" id="kjxylist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<a class="nui-button" id="kjxylist_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -188,7 +189,7 @@ html,body {
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - kjxylist_wh
-				getOpeatorButtonAuth("kjxylist_wh");
+				getOpeatorButtonAuth("kjxylist_wh,kjxylist_help");
 			}
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
@@ -568,6 +569,12 @@ html,body {
 				}
 			});
 		}
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/contractPact/frameAgreement/feameAgreementFlowDesgin.jsp";
+			window.open(executeUrl);
+		}		
+		
 	</script>
 
 </body>
