@@ -183,7 +183,7 @@
                         	}
                         	users = users+"】";
                         	titleText ="增加审批人员"+ users +"并提交";
-		                    		saveData();
+		                    		submit();
 	                       }
 	                    }
 	
