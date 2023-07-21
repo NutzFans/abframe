@@ -37,6 +37,12 @@ body {
 	-webkit-print-color-adjust: exact;
 }
 
+div {
+	white-space: normal;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
 table tr {
 	height: 28px;
 }
