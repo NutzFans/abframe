@@ -138,7 +138,7 @@ html,body {
 		var planOpenDict;
     	function init(){
     		//按钮权限的控制
-	    	getOpeatorButtonAuth("cgjh_exportExcel,cgjh_zf");
+	    	getOpeatorButtonAuth("cgjh_exportExcel,cgjh_zf,cgjh_add");
     		//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"cgjh"};
     		nui.ajax({

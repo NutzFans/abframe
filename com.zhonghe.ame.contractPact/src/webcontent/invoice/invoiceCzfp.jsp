@@ -276,11 +276,14 @@ body {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
+			debugger
 			var historyInvoiceSum = nui.get("historyInvoiceSum").getValue();
 			var invoiceSum = nui.get("invoiceSum").getValue();
 			var newInvoiceSum = nui.get("newInvoiceSum").getValue();
 			var sum = eval(invoiceSum) + eval(newInvoiceSum);
+			historyInvoiceSum =  eval(historyInvoiceSum);
 			sum = sum.toFixed(2);
+			historyInvoiceSum =  historyInvoiceSum.toFixed(2);
 			if (sum != historyInvoiceSum) {
 				showTips("产值分配后的开票金额之和，应等于待产值分配时的开票金额！", "danger");
 				return;

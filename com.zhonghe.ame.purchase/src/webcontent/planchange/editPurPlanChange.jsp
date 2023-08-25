@@ -208,7 +208,6 @@
 			}    
 	  
 	    nui.get("year").setData(yeariterm);
-	    nui.get("needOrgId").setValue(getOrgseq2());//设置第二级组织机构代码
 	   	function unitValue(e){
 		   	return nui.getDictText("ZH_UNIT",e.value);
 			}	   		
