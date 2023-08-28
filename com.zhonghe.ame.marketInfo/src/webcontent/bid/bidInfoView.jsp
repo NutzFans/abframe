@@ -146,7 +146,7 @@ body .mini-textboxlist {
 							<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnits.biz.ext" valueField="dictid"
 								textField="dictname" inputMode="false" style="width: 710px" enabled="false" />
 						</td>
-						<td align="right" style="width: 140px">报价/合同价/万元/%：</td>
+						<td align="right" style="width: 140px">合同价(万元/%)：</td>
 						<td>
 							<input name="contractPrice" id="" contractPrice"" class="nui-textbox" style="width: 165px" enabled="false" />
 						</td>
@@ -185,7 +185,7 @@ body .mini-textboxlist {
 		<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" multiSelect="true" allowSortColumn="false" showPager="false">
 			<div property="columns">
 				<div field="competId" displayField="competName" headerAlign="center">竞争对手单位全称</div>
-				<div field="competContractPrice" headerAlign="center">报价/合同价/万元/%</div>
+				<div field="competContractPrice" headerAlign="center">合同价(万元/%)</div>
 			</div>
 		</div>
 	</fieldset>

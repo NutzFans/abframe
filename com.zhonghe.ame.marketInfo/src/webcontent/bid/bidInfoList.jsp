@@ -174,7 +174,7 @@
 						<div field="contractType" headerAlign="center" align="center" renderer="ZH_BID_CONTRACT_TYPE">合同类型</div>
 						<div field="procurementType" headerAlign="center" align="center" renderer="ZH_BID_PROCUREMENT_TYPE">采购方式</div>
 						<div field="bidUnitsCode" displayField="bidUnitsName" headerAlign="center" align="center" width="300px">参与单位全称</div>
-						<div field="contractPrice" headerAlign="center" align="center" width="150px">报价/合同价/万元/%</div>
+						<div field="contractPrice" headerAlign="center" align="center" width="150px">合同价(万元/%)</div>
 						<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 						<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
@@ -343,7 +343,7 @@
 						<div field="contractType" headerAlign="center" align="center" renderer="ZH_BID_CONTRACT_TYPE">合同类型</div>
 						<div field="procurementType" headerAlign="center" align="center" renderer="ZH_BID_PROCUREMENT_TYPE">采购方式</div>
 						<div field="bidUnitsCode" displayField="bidUnitsName" headerAlign="center" align="center" width="300px">参与单位全称</div>
-						<div field="contractPrice" headerAlign="center" align="center" width="150px">报价/合同价/万元/%</div>
+						<div field="contractPrice" headerAlign="center" align="center" width="150px">合同价(万元/%)</div>
 						<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 						<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
@@ -364,7 +364,7 @@
 				<div field="bidId" headerAlign="center" visible="false">bidId</div>
 				<div field="competId" headerAlign="center" visible="false">competId</div>
 				<div field="competName" headerAlign="center" width="300px">竞争对手单位全称</div>
-				<div field="competContractPrice" headerAlign="center" align="center" width="150px">报价/合同价/万元/%</div>
+				<div field="competContractPrice" headerAlign="center" align="center" width="150px">合同价(万元/%)</div>
 			</div>	
 		</div>
 	</div>
