@@ -178,8 +178,9 @@
 						<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 						<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
-						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd">定标时间</div>
+						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
+						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 					</div>
 				</div>
 			</div>
@@ -346,8 +347,9 @@
 						<div field="contractModel" headerAlign="center" align="center" renderer="CONTRACT_MODEL">价格模式</div>
 						<div field="bidConvert" headerAlign="center" align="center">折合万/人月</div>
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
-						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd">定标时间</div>
+						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
+						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 					</div>
 				</div>
 			</div>			
