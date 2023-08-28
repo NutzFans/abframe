@@ -103,7 +103,7 @@
 		<div id="div30" style="position: absolute; left: 898px; top: 1193px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 总法律顾问审批 -->
-		<div id="div31" style="position: absolute; left: 896px; top: 1343px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div31" style="position: absolute; left: 840px; top: 1282px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 财务审批 -->
 		<div id="div32" style="position: absolute; left: 1300px; top: 1283px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -131,6 +131,9 @@
 
 		<!-- 中心部门领导复核 -->
 		<div id="div39" style="position: absolute; left: 1304px; top: 1645px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 总会计师审批 -->
+		<div id="div40" style="position: absolute; left: 960px; top: 1282px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
@@ -487,6 +490,15 @@
 				layer.open({
 					title : '中心部门领导复核 - 调整审批人',
 					content : '通过【机构人员管理】模块修改发起人所属中心的【机构主管人员】字段',
+					btn : []
+				});
+			});
+
+			// 总会计师审批
+			$('#div40').click(function() {
+				layer.open({
+					title : '总会计师审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage15】的角色数据',
 					btn : []
 				});
 			});

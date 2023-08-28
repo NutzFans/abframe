@@ -70,10 +70,10 @@
 		<div id="div19" style="position: absolute; left: 746px; top: 1347px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 总法律顾问审批 -->
-		<div id="div20" style="position: absolute; left: 483px; top: 1438px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div20" style="position: absolute; left: 438px; top: 1401px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 总法律顾问审批 -->
-		<div id="div21" style="position: absolute; left: 752px; top: 1509px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div21" style="position: absolute; left: 713px; top: 1465px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 总经理审批 -->
 		<div id="div22" style="position: absolute; left: 487px; top: 1547px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -85,7 +85,14 @@
 		<div id="div24" style="position: absolute; left: 752px; top: 1743px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 合同盖章 -->
-		<div id="div25" style="position: absolute; left: 753px; top: 1918px; width: 75px; height: 50px; cursor: pointer;"></div>					
+		<div id="div25" style="position: absolute; left: 753px; top: 1918px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 总会计师审批 -->
+		<div id="div26" style="position: absolute; left: 522px; top: 1402px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 总会计师审批 -->
+		<div id="div27" style="position: absolute; left: 795px; top: 1465px; width: 75px; height: 50px; cursor: pointer;"></div>		
+							
 
 	</div>
 
@@ -318,7 +325,25 @@
 					content : '通过【业务字典管理】模块修改类型代码为【ZH_HTGZSPR】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
-			});						
+			});
+			
+			// 总会计师审批
+			$('#div26').click(function() {
+				layer.open({
+					title : '总会计师审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage15】的角色数据',
+					btn : []
+				});
+			});
+
+			// 总会计师审批
+			$('#div27').click(function() {
+				layer.open({
+					title : '总会计师审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage15】的角色数据',
+					btn : []
+				});
+			});									
 
 		});
 	</script>
