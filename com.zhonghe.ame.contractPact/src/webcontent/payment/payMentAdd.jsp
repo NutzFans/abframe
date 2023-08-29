@@ -226,6 +226,7 @@ body {
 					"url" : "com.zhonghe.ame.payment.payMent.checkPayPaid.biz.ext",
 					"data" : nui.encode({
 						"payId" : nui.get("payId").getValue(),
+						"contractNo": nui.get("contractId").getValue(),
 						"applyPayContractSum" : nui.get("applyPayContractSum").getValue()
 					}),
 					"success" : function(data) {
@@ -233,7 +234,7 @@ body {
 					}
 				});
 				if (checkPayPaid == "2") {
-					alert("当前付款金额已【超过】关联付费合同付款计划里对应本季度应付款总额！");
+					alert("本年累计已付金额+当前付款金额已【超过】关联付费合同付款计划里本年累计到本季度应付款总额！");
 					return;
 				}
 				if (checkPayPaid == "3") {
