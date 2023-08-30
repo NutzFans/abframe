@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,6 +28,8 @@ public class MajorDimMonthlyBudgetTrackUtil {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String majorDimYear = StrUtil.subBefore(majorDimYearMonth, '-', false);
 		String majorDimMonth = StrUtil.subAfter(majorDimYearMonth, '-', false);
+		String startDate = StrUtil.format("{}-{}-{}", majorDimYear, "01", "01");
+		String endDate = DateUtil.endOfMonth(DateUtil.parse(majorDimYearMonth, "yyyy-MM")).toString("yyyy-MM-dd");
 
 		String queryMajorSql = "SELECT DICTID, DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = ? ORDER BY SORTNO ASC";
 		List<Entity> majors = dbSession.query(queryMajorSql, "ZH_OPERATION_INCOME_MAJOR");
@@ -37,15 +40,15 @@ public class MajorDimMonthlyBudgetTrackUtil {
 
 		if (StrUtil.isNotBlank(majorDimGroup)) {
 			if (majorDimGroup.equals("0")) {
-				invoiceYearSql = "SELECT zi.major, zi.create_time, zi.receivable_data, zcc.signing_date, zi.invoice_sum, zi.book_income, zi.receivable_sum FROM zh_invoice AS zi LEFT JOIN zh_charge_contract AS zcc ON zi.contract_no = zcc.contract_no WHERE YEAR( zi.create_time) = ? AND zi.app_status= '2' AND zi.headquarter_group IN ( '0', '3', '4' )";
-				invoiceYears = dbSession.query(invoiceYearSql, majorDimYear);
+				invoiceYearSql = "SELECT zi.major, zi.create_time, zi.receivable_data, zcc.signing_date, zi.invoice_sum, zi.book_income, zi.receivable_sum FROM zh_invoice AS zi LEFT JOIN zh_charge_contract AS zcc ON zi.contract_no = zcc.contract_no WHERE zi.create_time >= ? AND zi.create_time <= ? AND zi.app_status= '2' AND zi.headquarter_group IN ( '0', '3', '4' )";
+				invoiceYears = dbSession.query(invoiceYearSql, startDate, endDate);
 			} else {
-				invoiceYearSql = "SELECT zi.major, zi.create_time, zi.receivable_data, zcc.signing_date, zi.invoice_sum, zi.book_income, zi.receivable_sum FROM zh_invoice AS zi LEFT JOIN zh_charge_contract AS zcc ON zi.contract_no = zcc.contract_no WHERE YEAR( zi.create_time) = ? AND zi.app_status= '2' AND zi.headquarter_group='1'";
-				invoiceYears = dbSession.query(invoiceYearSql, majorDimYear);
+				invoiceYearSql = "SELECT zi.major, zi.create_time, zi.receivable_data, zcc.signing_date, zi.invoice_sum, zi.book_income, zi.receivable_sum FROM zh_invoice AS zi LEFT JOIN zh_charge_contract AS zcc ON zi.contract_no = zcc.contract_no WHERE zi.create_time >= ? AND zi.create_time <= ? AND zi.app_status= '2' AND zi.headquarter_group='1'";
+				invoiceYears = dbSession.query(invoiceYearSql, startDate, endDate);
 			}
 		} else {
-			invoiceYearSql = "SELECT zi.major, zi.create_time, zi.receivable_data, zcc.signing_date, zi.invoice_sum, zi.book_income, zi.receivable_sum FROM zh_invoice AS zi LEFT JOIN zh_charge_contract AS zcc ON zi.contract_no = zcc.contract_no WHERE YEAR( zi.create_time) = ? AND zi.app_status= '2'";
-			invoiceYears = dbSession.query(invoiceYearSql, majorDimYear);
+			invoiceYearSql = "SELECT zi.major, zi.create_time, zi.receivable_data, zcc.signing_date, zi.invoice_sum, zi.book_income, zi.receivable_sum FROM zh_invoice AS zi LEFT JOIN zh_charge_contract AS zcc ON zi.contract_no = zcc.contract_no WHERE zi.create_time >= ? AND zi.create_time <= ? AND zi.app_status= '2'";
+			invoiceYears = dbSession.query(invoiceYearSql, startDate, endDate);
 		}
 
 		Map<String, Entity> invoiceYearsMap = this.invoiceByMajor(invoiceYears, dbSession, majorDimYear, majorDimMonth);
@@ -72,13 +75,13 @@ public class MajorDimMonthlyBudgetTrackUtil {
 					trackData.setBigDecimal("monthNewContractSum", NumberUtil.div(monthNewContractSumEntity.getBigDecimal("contract_sums"), 10000, 2));
 
 					// 本年累计新签合同数量
-					String yearContractCountSql = "SELECT COUNT( *) AS year_contract_count FROM zh_charge_contract WHERE YEAR ( signing_date ) = ? AND major = ? AND app_status = '2' AND headquarter_group IN ( '0', '3', '4' )";
-					Entity yearContractCountEntity = dbSession.queryOne(yearContractCountSql, majorDimYear, major.getStr("DICTID"));
+					String yearContractCountSql = "SELECT COUNT( *) AS year_contract_count FROM zh_charge_contract WHERE signing_date >= ? AND signing_date <= ? AND major = ? AND app_status = '2' AND headquarter_group IN ( '0', '3', '4' )";
+					Entity yearContractCountEntity = dbSession.queryOne(yearContractCountSql, startDate, endDate, major.getStr("DICTID"));
 					trackData.setInt("yearContractCount", yearContractCountEntity.getInt("year_contract_count"));
 
 					// 本年累计新签合同额
-					String yearNewContractSumSql = "SELECT SUM( CAST ( contract_sum AS NUMERIC ( 18, 2) ) ) AS contract_sums FROM zh_charge_contract WHERE YEAR ( signing_date ) = ? AND major = ? AND app_status = '2' AND headquarter_group IN ( '0', '3', '4' )";
-					Entity yearNewContractSumEntity = dbSession.queryOne(yearNewContractSumSql, majorDimYear, major.getStr("DICTID"));
+					String yearNewContractSumSql = "SELECT SUM( CAST ( contract_sum AS NUMERIC ( 18, 2) ) ) AS contract_sums FROM zh_charge_contract WHERE signing_date >= ? AND signing_date <= ? AND major = ? AND app_status = '2' AND headquarter_group IN ( '0', '3', '4' )";
+					Entity yearNewContractSumEntity = dbSession.queryOne(yearNewContractSumSql, startDate, endDate, major.getStr("DICTID"));
 					trackData.setBigDecimal("yearNewContractSum", NumberUtil.div(yearNewContractSumEntity.getBigDecimal("contract_sums"), 10000, 2));
 
 				} else {
@@ -98,13 +101,13 @@ public class MajorDimMonthlyBudgetTrackUtil {
 					trackData.setBigDecimal("monthNewContractSum", NumberUtil.div(monthNewContractSumEntity.getBigDecimal("contract_sums"), 10000, 2));
 
 					// 本年累计新签合同数量
-					String yearContractCountSql = "SELECT COUNT( *) AS year_contract_count FROM zh_charge_contract WHERE YEAR ( signing_date ) = ? AND major = ? AND app_status = '2' AND headquarter_group='1'";
-					Entity yearContractCountEntity = dbSession.queryOne(yearContractCountSql, majorDimYear, major.getStr("DICTID"));
+					String yearContractCountSql = "SELECT COUNT( *) AS year_contract_count FROM zh_charge_contract WHERE signing_date >= ? AND signing_date <= ? AND major = ? AND app_status = '2' AND headquarter_group='1'";
+					Entity yearContractCountEntity = dbSession.queryOne(yearContractCountSql, startDate, endDate, major.getStr("DICTID"));
 					trackData.setInt("yearContractCount", yearContractCountEntity.getInt("year_contract_count"));
 
 					// 本年累计新签合同额
-					String yearNewContractSumSql = "SELECT SUM( CAST ( contract_sum AS NUMERIC ( 18, 2) ) ) AS contract_sums FROM zh_charge_contract WHERE YEAR ( signing_date ) = ? AND major = ? AND app_status = '2' AND headquarter_group='1'";
-					Entity yearNewContractSumEntity = dbSession.queryOne(yearNewContractSumSql, majorDimYear, major.getStr("DICTID"));
+					String yearNewContractSumSql = "SELECT SUM( CAST ( contract_sum AS NUMERIC ( 18, 2) ) ) AS contract_sums FROM zh_charge_contract WHERE signing_date >= ? AND signing_date <= ? AND major = ? AND app_status = '2' AND headquarter_group='1'";
+					Entity yearNewContractSumEntity = dbSession.queryOne(yearNewContractSumSql, startDate, endDate, major.getStr("DICTID"));
 					trackData.setBigDecimal("yearNewContractSum", NumberUtil.div(yearNewContractSumEntity.getBigDecimal("contract_sums"), 10000, 2));
 
 				}
@@ -126,13 +129,13 @@ public class MajorDimMonthlyBudgetTrackUtil {
 				trackData.setBigDecimal("monthNewContractSum", NumberUtil.div(monthNewContractSumEntity.getBigDecimal("contract_sums"), 10000, 2));
 
 				// 本年累计新签合同数量
-				String yearContractCountSql = "SELECT COUNT( *) AS year_contract_count FROM zh_charge_contract WHERE YEAR ( signing_date ) = ? AND major = ? AND app_status = '2'";
-				Entity yearContractCountEntity = dbSession.queryOne(yearContractCountSql, majorDimYear, major.getStr("DICTID"));
+				String yearContractCountSql = "SELECT COUNT( *) AS year_contract_count FROM zh_charge_contract WHERE signing_date >= ? AND signing_date <= ? AND major = ? AND app_status = '2'";
+				Entity yearContractCountEntity = dbSession.queryOne(yearContractCountSql, startDate, endDate, major.getStr("DICTID"));
 				trackData.setInt("yearContractCount", yearContractCountEntity.getInt("year_contract_count"));
 
 				// 本年累计新签合同额
-				String yearNewContractSumSql = "SELECT SUM( CAST ( contract_sum AS NUMERIC ( 18, 2) ) ) AS contract_sums FROM zh_charge_contract WHERE YEAR ( signing_date ) = ? AND major = ? AND app_status = '2'";
-				Entity yearNewContractSumEntity = dbSession.queryOne(yearNewContractSumSql, majorDimYear, major.getStr("DICTID"));
+				String yearNewContractSumSql = "SELECT SUM( CAST ( contract_sum AS NUMERIC ( 18, 2) ) ) AS contract_sums FROM zh_charge_contract WHERE signing_date >= ? AND signing_date <= ? AND major = ? AND app_status = '2'";
+				Entity yearNewContractSumEntity = dbSession.queryOne(yearNewContractSumSql, startDate, endDate, major.getStr("DICTID"));
 				trackData.setBigDecimal("yearNewContractSum", NumberUtil.div(yearNewContractSumEntity.getBigDecimal("contract_sums"), 10000, 2));
 			}
 
