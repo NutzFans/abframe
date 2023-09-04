@@ -1,6 +1,7 @@
 package com.zhonghe.ame.contractPact;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -9,6 +10,7 @@ import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
 import com.eos.common.connection.DataSourceHelper;
+import com.eos.foundation.database.DatabaseExt;
 import com.eos.system.annotation.Bizlet;
 
 @Bizlet("收费合同模块工具类")
@@ -41,6 +43,15 @@ public class ChargeContractUtil {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Bizlet("补充协议完成后 - 变更合同金额和余额")
+	public void updateFinContractSumAndContractBalance(String finContractSum, String contractBalance, String relateCont) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("finContractSum", finContractSum);
+		map.put("contractBalance", contractBalance);
+		map.put("relateCont", relateCont);
+		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.contractPact.chargeContract.updateFinContractSumAndContractBalance", map);
 	}
 
 }
