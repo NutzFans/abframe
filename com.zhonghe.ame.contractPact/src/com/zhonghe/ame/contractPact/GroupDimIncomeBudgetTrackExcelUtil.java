@@ -2,7 +2,6 @@ package com.zhonghe.ame.contractPact;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
@@ -25,76 +25,127 @@ import com.eos.system.annotation.Bizlet;
 
 import commonj.sdo.DataObject;
 
-@Bizlet("收入预算执行跟踪导出")
-public class IncomeBudgetTrackExcelUtil {
+@Bizlet("收入预算执行跟踪 - 集团内外")
+public class GroupDimIncomeBudgetTrackExcelUtil {
 
-	@Bizlet("收入预算执行跟踪分析")
-	public DataObject[] trackAnalyze(String years, String authType, String secOrgId) throws Exception {
+	@Bizlet("收入预算执行跟踪 - 集团内外")
+	public DataObject[] trackAnalyze(String groupDimYear) throws Exception {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 
-		// 根据年度收入预算分组得到要进行统计的二级单位（中心及分公司）
-		String annualPlanYearSecOrgSql = "SELECT secondary_org, secondary_orgname FROM annual_plan_year WHERE years=? GROUP BY secondary_org, secondary_orgname";
-		List<Entity> secOrgs = dbSession.query(annualPlanYearSecOrgSql, years);
+		String queryGroupSql = "SELECT DICTID, DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = ? ORDER BY SORTNO ASC";
+		List<Entity> groups = dbSession.query(queryGroupSql, "ZH_OPERATION_INCOME_GROUP");
 
-		if (secOrgs != null && secOrgs.size() > 0) {
-			// 查询开票数据获取真实的收入数据
-			String invoiceYearSql = "SELECT implement_org, book_income, create_time FROM zh_invoice WHERE YEAR(create_time)=? AND app_status='2'";
-			List<Entity> invoiceYears = dbSession.query(invoiceYearSql, years);
-			trackDatas = CompletableFuture.supplyAsync(new Supplier<Map<String, Entity>>() {
+		// 根据年份获取开票数据
+		String invoiceYearSql = "SELECT headquarter_group, book_income, create_time FROM zh_invoice WHERE YEAR(create_time)=? AND app_status='2'";
+		List<Entity> invoiceYears = dbSession.query(invoiceYearSql, groupDimYear);
 
-				@Override
-				public Map<String, Entity> get() {
-					return IncomeBudgetTrackExcelUtil.annualYearBySecOrg(secOrgs, years, dbSession);
-				}
-			}).thenCombine(CompletableFuture.supplyAsync(new Supplier<Map<String, Entity>>() {
+		trackDatas = CompletableFuture.supplyAsync(new Supplier<Map<String, Entity>>() {
 
-				@Override
-				public Map<String, Entity> get() {
-					return IncomeBudgetTrackExcelUtil.invoiceBySecOrg(invoiceYears, dbSession);
-				}
-			}), new BiFunction<Map<String, Entity>, Map<String, Entity>, List<DataObject>>() {
-
-				@Override
-				public List<DataObject> apply(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
-					return IncomeBudgetTrackExcelUtil.analyzeMerge(annualMap, invoiceMap);
-				}
-
-			}).join();
-		}
-
-		if (StrUtil.equals(authType, "1")) {
-			return ArrayUtil.toArray(trackDatas, DataObject.class);
-		}
-		if (StrUtil.equals(authType, "2")) {
-			for (DataObject dataObject : trackDatas) {
-				if (StrUtil.equals(dataObject.getString("secOrgId"), secOrgId)) {
-					List<DataObject> searchTrackDatas = new ArrayList<DataObject>();
-					searchTrackDatas.add(dataObject);
-					return ArrayUtil.toArray(searchTrackDatas, DataObject.class);
-				}
+			@Override
+			public Map<String, Entity> get() {
+				return GroupDimIncomeBudgetTrackExcelUtil.annualYearByGroup(groups, groupDimYear, dbSession);
 			}
+		}).thenCombine(CompletableFuture.supplyAsync(new Supplier<Map<String, Entity>>() {
+
+			@Override
+			public Map<String, Entity> get() {
+				return GroupDimIncomeBudgetTrackExcelUtil.invoiceByGroup(invoiceYears, dbSession);
+			}
+		}), new BiFunction<Map<String, Entity>, Map<String, Entity>, List<DataObject>>() {
+
+			@Override
+			public List<DataObject> apply(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
+				return GroupDimIncomeBudgetTrackExcelUtil.analyzeMerge(annualMap, invoiceMap);
+			}
+
+		}).join();
+
+		List<String> customSort = groups.stream().map(entity -> entity.getStr("DICTNAME")).collect(Collectors.toList());
+
+		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
+
+			@Override
+			public int compare(DataObject t1, DataObject t2) {
+				int t1Index = customSort.indexOf(t1.getString("groupName"));
+				t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
+				int t2Index = customSort.indexOf(t2.getString("groupName"));
+				t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
+				return t1Index - t2Index;
+			}
+		});
+
+		DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.GroupDimTrackAnalyzeEntity");
+		trackData.setString("groupId", "hj");
+		trackData.setString("groupName", "合计");
+
+		for (DataObject dataObject : newTrackDatas) {
+			trackData.setBigDecimal("jarAccBudget", NumberUtil.add(trackData.getBigDecimal("jarAccBudget"), dataObject.getBigDecimal("jarAccBudget")));
+			trackData.setBigDecimal("jarAccActual", NumberUtil.add(trackData.getBigDecimal("jarAccActual"), dataObject.getBigDecimal("jarAccActual")));
+			trackData.setBigDecimal("febAccBudget", NumberUtil.add(trackData.getBigDecimal("febAccBudget"), dataObject.getBigDecimal("febAccBudget")));
+			trackData.setBigDecimal("febAccActual", NumberUtil.add(trackData.getBigDecimal("febAccActual"), dataObject.getBigDecimal("febAccActual")));
+			trackData.setBigDecimal("marAccBudget", NumberUtil.add(trackData.getBigDecimal("marAccBudget"), dataObject.getBigDecimal("marAccBudget")));
+			trackData.setBigDecimal("marAccActual", NumberUtil.add(trackData.getBigDecimal("marAccActual"), dataObject.getBigDecimal("marAccActual")));
+			trackData.setBigDecimal("aprAccBudget", NumberUtil.add(trackData.getBigDecimal("aprAccBudget"), dataObject.getBigDecimal("aprAccBudget")));
+			trackData.setBigDecimal("aprAccActual", NumberUtil.add(trackData.getBigDecimal("aprAccActual"), dataObject.getBigDecimal("aprAccActual")));
+			trackData.setBigDecimal("mayAccBudget", NumberUtil.add(trackData.getBigDecimal("mayAccBudget"), dataObject.getBigDecimal("mayAccBudget")));
+			trackData.setBigDecimal("mayAccActual", NumberUtil.add(trackData.getBigDecimal("mayAccActual"), dataObject.getBigDecimal("mayAccActual")));
+			trackData.setBigDecimal("junAccBudget", NumberUtil.add(trackData.getBigDecimal("junAccBudget"), dataObject.getBigDecimal("junAccBudget")));
+			trackData.setBigDecimal("junAccActual", NumberUtil.add(trackData.getBigDecimal("junAccActual"), dataObject.getBigDecimal("junAccActual")));
+			trackData.setBigDecimal("julAccBudget", NumberUtil.add(trackData.getBigDecimal("julAccBudget"), dataObject.getBigDecimal("julAccBudget")));
+			trackData.setBigDecimal("julAccActual", NumberUtil.add(trackData.getBigDecimal("julAccActual"), dataObject.getBigDecimal("julAccActual")));
+			trackData.setBigDecimal("augAccBudget", NumberUtil.add(trackData.getBigDecimal("augAccBudget"), dataObject.getBigDecimal("augAccBudget")));
+			trackData.setBigDecimal("augAccActual", NumberUtil.add(trackData.getBigDecimal("augAccActual"), dataObject.getBigDecimal("augAccActual")));
+			trackData.setBigDecimal("sepAccBudget", NumberUtil.add(trackData.getBigDecimal("sepAccBudget"), dataObject.getBigDecimal("sepAccBudget")));
+			trackData.setBigDecimal("sepAccActual", NumberUtil.add(trackData.getBigDecimal("sepAccActual"), dataObject.getBigDecimal("sepAccActual")));
+			trackData.setBigDecimal("octAccBudget", NumberUtil.add(trackData.getBigDecimal("octAccBudget"), dataObject.getBigDecimal("octAccBudget")));
+			trackData.setBigDecimal("octAccActual", NumberUtil.add(trackData.getBigDecimal("octAccActual"), dataObject.getBigDecimal("octAccActual")));
+			trackData.setBigDecimal("novAccBudget", NumberUtil.add(trackData.getBigDecimal("novAccBudget"), dataObject.getBigDecimal("novAccBudget")));
+			trackData.setBigDecimal("novAccActual", NumberUtil.add(trackData.getBigDecimal("novAccActual"), dataObject.getBigDecimal("novAccActual")));
+			trackData.setBigDecimal("decAccBudget", NumberUtil.add(trackData.getBigDecimal("decAccBudget"), dataObject.getBigDecimal("decAccBudget")));
+			trackData.setBigDecimal("decAccActual", NumberUtil.add(trackData.getBigDecimal("decAccActual"), dataObject.getBigDecimal("decAccActual")));
 		}
-		return ArrayUtil.toArray(new ArrayList<DataObject>(), DataObject.class);
+
+		trackData.setString("jarCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("jarAccActual"), trackData.getBigDecimal("jarAccBudget"), 2)));
+		trackData.setString("febCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("febAccActual"), trackData.getBigDecimal("febAccBudget"), 2)));
+		trackData.setString("marCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("marAccActual"), trackData.getBigDecimal("marAccBudget"), 2)));
+		trackData.setString("aprCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("aprAccActual"), trackData.getBigDecimal("aprAccBudget"), 2)));
+		trackData.setString("mayCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("mayAccActual"), trackData.getBigDecimal("mayAccBudget"), 2)));
+		trackData.setString("junCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("junAccActual"), trackData.getBigDecimal("junAccBudget"), 2)));
+		trackData.setString("julCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("julAccActual"), trackData.getBigDecimal("julAccBudget"), 2)));
+		trackData.setString("augCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("augAccActual"), trackData.getBigDecimal("augAccBudget"), 2)));
+		trackData.setString("sepCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("sepAccActual"), trackData.getBigDecimal("sepAccBudget"), 2)));
+		trackData.setString("octCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("octAccActual"), trackData.getBigDecimal("octAccBudget"), 2)));
+		trackData.setString("novCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("novAccActual"), trackData.getBigDecimal("novAccBudget"), 2)));
+		trackData.setString("decCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("decAccActual"), trackData.getBigDecimal("decAccBudget"), 2)));
+
+		newTrackDatas.add(trackData);
+
+		return ArrayUtil.toArray(newTrackDatas, DataObject.class);
 	}
 
-	// 根据组织分组获取各自汇总数据（月份）
-	private static Map<String, Entity> annualYearBySecOrg(List<Entity> secOrg, String years, Session dbSession) {
+	// 根据集团内外分组获取各自汇总数据（月份）
+	private static Map<String, Entity> annualYearByGroup(List<Entity> groups, String groupDimYear, Session dbSession) {
 		Map<String, Entity> annualMap = new HashMap<String, Entity>();
-		for (Entity entity : secOrg) {
-			String secOrgId = entity.getStr("secondary_org");
-			Entity annualYear = IncomeBudgetTrackExcelUtil.getAnnualYearBySecOrg(secOrgId, years, dbSession);
-			annualYear.set("secOrgName", entity.getStr("secondary_orgname"));
-			annualMap.put(secOrgId, annualYear);
+		for (Entity entity : groups) {
+			String groupId = entity.getStr("DICTID");
+			Entity annualYear = GroupDimIncomeBudgetTrackExcelUtil.getAnnualYearByGroup(groupId, groupDimYear, dbSession);
+			annualYear.set("groupName", entity.getStr("DICTNAME"));
+			annualMap.put(groupId, annualYear);
 		}
 		return annualMap;
 	}
 
-	// 根据组织和年份获取年度预算收入各月份汇总数据
-	private static Entity getAnnualYearBySecOrg(String secOrgId, String years, Session dbSession) {
+	// 根据专业类型和年份获取年度预算收入各月份汇总数据
+	private static Entity getAnnualYearByGroup(String groupId, String groupDimYear, Session dbSession) {
 		try {
-			String querySql = "SELECT SUM( CAST ( jan AS NUMERIC ( 18, 2) ) ) AS jar, SUM ( CAST ( feb AS NUMERIC ( 18, 2 ) ) ) AS feb, SUM ( CAST ( mar AS NUMERIC ( 18, 2 ) ) ) AS mar, SUM ( CAST ( apr AS NUMERIC ( 18, 2 ) ) ) AS apr, SUM ( CAST ( may AS NUMERIC ( 18, 2 ) ) ) AS may, SUM ( CAST ( jun AS NUMERIC ( 18, 2 ) ) ) AS jun, SUM ( CAST ( jul AS NUMERIC ( 18, 2 ) ) ) AS jul, SUM ( CAST ( aug AS NUMERIC ( 18, 2 ) ) ) AS aug, SUM ( CAST ( sep AS NUMERIC ( 18, 2 ) ) ) AS sep, SUM ( CAST ( oct AS NUMERIC ( 18, 2 ) ) ) AS oct, SUM ( CAST ( nov AS NUMERIC ( 18, 2 ) ) ) AS nov, SUM ( CAST ( DEC AS NUMERIC ( 18, 2 ) ) ) AS DEC FROM annual_plan_year WHERE secondary_org = ? AND years = ?";
-			return dbSession.queryOne(querySql, secOrgId, years);
+			String querySql = "";
+			if (groupId.equals("0")) {
+				querySql = "SELECT SUM( CAST ( jan AS NUMERIC ( 18, 2) ) ) AS jar, SUM ( CAST ( feb AS NUMERIC ( 18, 2 ) ) ) AS feb, SUM ( CAST ( mar AS NUMERIC ( 18, 2 ) ) ) AS mar, SUM ( CAST ( apr AS NUMERIC ( 18, 2 ) ) ) AS apr, SUM ( CAST ( may AS NUMERIC ( 18, 2 ) ) ) AS may, SUM ( CAST ( jun AS NUMERIC ( 18, 2 ) ) ) AS jun, SUM ( CAST ( jul AS NUMERIC ( 18, 2 ) ) ) AS jul, SUM ( CAST ( aug AS NUMERIC ( 18, 2 ) ) ) AS aug, SUM ( CAST ( sep AS NUMERIC ( 18, 2 ) ) ) AS sep, SUM ( CAST ( oct AS NUMERIC ( 18, 2 ) ) ) AS oct, SUM ( CAST ( nov AS NUMERIC ( 18, 2 ) ) ) AS nov, SUM ( CAST ( DEC AS NUMERIC ( 18, 2 ) ) ) AS DEC FROM annual_plan_year WHERE years = ? AND headquarter_group IN ( '0', '3', '4' )";
+			} else {
+				querySql = "SELECT SUM( CAST ( jan AS NUMERIC ( 18, 2) ) ) AS jar, SUM ( CAST ( feb AS NUMERIC ( 18, 2 ) ) ) AS feb, SUM ( CAST ( mar AS NUMERIC ( 18, 2 ) ) ) AS mar, SUM ( CAST ( apr AS NUMERIC ( 18, 2 ) ) ) AS apr, SUM ( CAST ( may AS NUMERIC ( 18, 2 ) ) ) AS may, SUM ( CAST ( jun AS NUMERIC ( 18, 2 ) ) ) AS jun, SUM ( CAST ( jul AS NUMERIC ( 18, 2 ) ) ) AS jul, SUM ( CAST ( aug AS NUMERIC ( 18, 2 ) ) ) AS aug, SUM ( CAST ( sep AS NUMERIC ( 18, 2 ) ) ) AS sep, SUM ( CAST ( oct AS NUMERIC ( 18, 2 ) ) ) AS oct, SUM ( CAST ( nov AS NUMERIC ( 18, 2 ) ) ) AS nov, SUM ( CAST ( DEC AS NUMERIC ( 18, 2 ) ) ) AS DEC FROM annual_plan_year WHERE years = ? AND headquarter_group = '1'";
+			}
+			return dbSession.queryOne(querySql, groupDimYear);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -102,57 +153,47 @@ public class IncomeBudgetTrackExcelUtil {
 	}
 
 	// 对提供的开票数据进行包装（每个组织各月份真实收入汇总）
-	private static Map<String, Entity> invoiceBySecOrg(List<Entity> invoiceYears, Session dbSession) {
+	private static Map<String, Entity> invoiceByGroup(List<Entity> invoiceYears, Session dbSession) {
 		Map<String, Entity> invoiceMap = new HashMap<String, Entity>();
 		for (Entity entity : invoiceYears) {
-			String secOrgId = IncomeBudgetTrackExcelUtil.getSecOrg(entity.getStr("implement_org"), dbSession);
-			if (StrUtil.isNotBlank(secOrgId)) {
-				if (invoiceMap.containsKey(secOrgId)) {
-					Entity data = invoiceMap.get(secOrgId);
-					String fieldName = IncomeBudgetTrackExcelUtil.getMonth(entity.getStr("create_time"));
+			String groupId = entity.getStr("headquarter_group");
+			if (groupId.equals("1")) {
+				if (invoiceMap.containsKey(groupId)) {
+					Entity data = invoiceMap.get(groupId);
+					String fieldName = GroupDimIncomeBudgetTrackExcelUtil.getMonth(entity.getStr("create_time"));
 					String income = data.getStr(fieldName);
 					if (StrUtil.isNotBlank(income)) {
 						data.set(fieldName, NumberUtil.add(income, entity.getStr("book_income")));
 					} else {
 						data.set(fieldName, entity.getBigDecimal("book_income"));
 					}
-					invoiceMap.put(secOrgId, data);
+					invoiceMap.put(groupId, data);
 				} else {
 					Entity data = new Entity();
-					String fieldName = IncomeBudgetTrackExcelUtil.getMonth(entity.getStr("create_time"));
+					String fieldName = GroupDimIncomeBudgetTrackExcelUtil.getMonth(entity.getStr("create_time"));
 					data.set(fieldName, entity.getBigDecimal("book_income"));
-					invoiceMap.put(secOrgId, data);
+					invoiceMap.put(groupId, data);
+				}
+			} else {
+				if (invoiceMap.containsKey("0")) {
+					Entity data = invoiceMap.get("0");
+					String fieldName = GroupDimIncomeBudgetTrackExcelUtil.getMonth(entity.getStr("create_time"));
+					String income = data.getStr(fieldName);
+					if (StrUtil.isNotBlank(income)) {
+						data.set(fieldName, NumberUtil.add(income, entity.getStr("book_income")));
+					} else {
+						data.set(fieldName, entity.getBigDecimal("book_income"));
+					}
+					invoiceMap.put("0", data);
+				} else {
+					Entity data = new Entity();
+					String fieldName = GroupDimIncomeBudgetTrackExcelUtil.getMonth(entity.getStr("create_time"));
+					data.set(fieldName, entity.getBigDecimal("book_income"));
+					invoiceMap.put("0", data);
 				}
 			}
 		}
 		return invoiceMap;
-	}
-
-	// 根据提供的组织获取对应二级组织
-	private static String getSecOrg(String orgId, Session dbSession) {
-		try {
-			String secOrgSql = "SELECT ORGSEQ FROM OM_ORGANIZATION WHERE ORGID=?";
-			Entity entity = dbSession.queryOne(secOrgSql, orgId);
-			if (entity != null) {
-				String orgseq = entity.getStr("ORGSEQ");
-				String[] splitToArray = StrUtil.splitToArray(orgseq, ".");
-				if (splitToArray.length >= 3) {
-					String secOrg = splitToArray[2];
-					if (StrUtil.isNotBlank(secOrg)) {
-						return secOrg;
-					} else {
-						return null;
-					}
-				} else {
-					return null;
-				}
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	// 根据时间获取月份（字符串标识）
@@ -203,10 +244,10 @@ public class IncomeBudgetTrackExcelUtil {
 	private static List<DataObject> analyzeMerge(Map<String, Entity> annualMap, Map<String, Entity> invoiceMap) {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 
-		for (String secOrgId : annualMap.keySet()) {
+		for (String groupId : annualMap.keySet()) {
 
-			Entity entity = annualMap.get(secOrgId);
-			Entity invoice = invoiceMap.get(secOrgId);
+			Entity entity = annualMap.get(groupId);
+			Entity invoice = invoiceMap.get(groupId);
 
 			// 1月份累计预算收入
 			CompletableFuture<BigDecimal> jarAccBudget = CompletableFuture.supplyAsync(new Supplier<BigDecimal>() {
@@ -803,75 +844,12 @@ public class IncomeBudgetTrackExcelUtil {
 
 			}).join();
 
-			trackData.setString("secOrgId", secOrgId);
-			trackData.setString("secOrgName", entity.getStr("secOrgName"));
+			trackData.setString("groupId", groupId);
+			trackData.setString("groupName", entity.getStr("groupName"));
 			trackDatas.add(trackData);
 
 		}
-
-		List<String> customSort = Arrays.asList("核资源咨询中心", "核动力咨询中心", "系统工程咨询中心", "产业发展研究中心", "核化工咨询中心", "安全质量部（质量信息支持中心）", "工业安全支持中心", "企业发展部（采购管理支持中心）", "设备监理与检测中心", "工程项目管理支持中心", "河北分公司", "天津分公司",
-				"福建分公司", "四川分公司", "西北分公司", "海南分公司");
-
-		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
-
-			@Override
-			public int compare(DataObject t1, DataObject t2) {
-				int t1Index = customSort.indexOf(t1.getString("secOrgName"));
-				t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
-				int t2Index = customSort.indexOf(t2.getString("secOrgName"));
-				t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
-				return t1Index - t2Index;
-			}
-		});
-
-		DataObject trackData = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.TrackAnalyzeEntity");
-		trackData.setString("secOrgId", "1");
-		trackData.setString("secOrgName", "合计");
-
-		for (DataObject dataObject : newTrackDatas) {
-			trackData.setBigDecimal("jarAccBudget", NumberUtil.add(trackData.getBigDecimal("jarAccBudget"), dataObject.getBigDecimal("jarAccBudget")));
-			trackData.setBigDecimal("jarAccActual", NumberUtil.add(trackData.getBigDecimal("jarAccActual"), dataObject.getBigDecimal("jarAccActual")));
-			trackData.setBigDecimal("febAccBudget", NumberUtil.add(trackData.getBigDecimal("febAccBudget"), dataObject.getBigDecimal("febAccBudget")));
-			trackData.setBigDecimal("febAccActual", NumberUtil.add(trackData.getBigDecimal("febAccActual"), dataObject.getBigDecimal("febAccActual")));
-			trackData.setBigDecimal("marAccBudget", NumberUtil.add(trackData.getBigDecimal("marAccBudget"), dataObject.getBigDecimal("marAccBudget")));
-			trackData.setBigDecimal("marAccActual", NumberUtil.add(trackData.getBigDecimal("marAccActual"), dataObject.getBigDecimal("marAccActual")));
-			trackData.setBigDecimal("aprAccBudget", NumberUtil.add(trackData.getBigDecimal("aprAccBudget"), dataObject.getBigDecimal("aprAccBudget")));
-			trackData.setBigDecimal("aprAccActual", NumberUtil.add(trackData.getBigDecimal("aprAccActual"), dataObject.getBigDecimal("aprAccActual")));
-			trackData.setBigDecimal("mayAccBudget", NumberUtil.add(trackData.getBigDecimal("mayAccBudget"), dataObject.getBigDecimal("mayAccBudget")));
-			trackData.setBigDecimal("mayAccActual", NumberUtil.add(trackData.getBigDecimal("mayAccActual"), dataObject.getBigDecimal("mayAccActual")));
-			trackData.setBigDecimal("junAccBudget", NumberUtil.add(trackData.getBigDecimal("junAccBudget"), dataObject.getBigDecimal("junAccBudget")));
-			trackData.setBigDecimal("junAccActual", NumberUtil.add(trackData.getBigDecimal("junAccActual"), dataObject.getBigDecimal("junAccActual")));
-			trackData.setBigDecimal("julAccBudget", NumberUtil.add(trackData.getBigDecimal("julAccBudget"), dataObject.getBigDecimal("julAccBudget")));
-			trackData.setBigDecimal("julAccActual", NumberUtil.add(trackData.getBigDecimal("julAccActual"), dataObject.getBigDecimal("julAccActual")));
-			trackData.setBigDecimal("augAccBudget", NumberUtil.add(trackData.getBigDecimal("augAccBudget"), dataObject.getBigDecimal("augAccBudget")));
-			trackData.setBigDecimal("augAccActual", NumberUtil.add(trackData.getBigDecimal("augAccActual"), dataObject.getBigDecimal("augAccActual")));
-			trackData.setBigDecimal("sepAccBudget", NumberUtil.add(trackData.getBigDecimal("sepAccBudget"), dataObject.getBigDecimal("sepAccBudget")));
-			trackData.setBigDecimal("sepAccActual", NumberUtil.add(trackData.getBigDecimal("sepAccActual"), dataObject.getBigDecimal("sepAccActual")));
-			trackData.setBigDecimal("octAccBudget", NumberUtil.add(trackData.getBigDecimal("octAccBudget"), dataObject.getBigDecimal("octAccBudget")));
-			trackData.setBigDecimal("octAccActual", NumberUtil.add(trackData.getBigDecimal("octAccActual"), dataObject.getBigDecimal("octAccActual")));
-			trackData.setBigDecimal("novAccBudget", NumberUtil.add(trackData.getBigDecimal("novAccBudget"), dataObject.getBigDecimal("novAccBudget")));
-			trackData.setBigDecimal("novAccActual", NumberUtil.add(trackData.getBigDecimal("novAccActual"), dataObject.getBigDecimal("novAccActual")));
-			trackData.setBigDecimal("decAccBudget", NumberUtil.add(trackData.getBigDecimal("decAccBudget"), dataObject.getBigDecimal("decAccBudget")));
-			trackData.setBigDecimal("decAccActual", NumberUtil.add(trackData.getBigDecimal("decAccActual"), dataObject.getBigDecimal("decAccActual")));
-		}
-
-		trackData.setString("jarCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("jarAccActual"), trackData.getBigDecimal("jarAccBudget"), 2)));
-		trackData.setString("febCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("febAccActual"), trackData.getBigDecimal("febAccBudget"), 2)));
-		trackData.setString("marCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("marAccActual"), trackData.getBigDecimal("marAccBudget"), 2)));
-		trackData.setString("aprCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("aprAccActual"), trackData.getBigDecimal("aprAccBudget"), 2)));
-		trackData.setString("mayCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("mayAccActual"), trackData.getBigDecimal("mayAccBudget"), 2)));
-		trackData.setString("junCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("junAccActual"), trackData.getBigDecimal("junAccBudget"), 2)));
-		trackData.setString("julCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("julAccActual"), trackData.getBigDecimal("julAccBudget"), 2)));
-		trackData.setString("augCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("augAccActual"), trackData.getBigDecimal("augAccBudget"), 2)));
-		trackData.setString("sepCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("sepAccActual"), trackData.getBigDecimal("sepAccBudget"), 2)));
-		trackData.setString("octCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("octAccActual"), trackData.getBigDecimal("octAccBudget"), 2)));
-		trackData.setString("novCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("novAccActual"), trackData.getBigDecimal("novAccBudget"), 2)));
-		trackData.setString("decCompletionRate", NumberUtil.decimalFormat("#.##%", NumberUtil.div(trackData.getBigDecimal("decAccActual"), trackData.getBigDecimal("decAccBudget"), 2)));
-
-		newTrackDatas.add(trackData);
-
-		return newTrackDatas;
-
+		return trackDatas;
 	}
 
 }

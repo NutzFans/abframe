@@ -33,6 +33,9 @@ public class OrgDimOperatingIncomeTrackUtil {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 
+		String queryOrgSql = "SELECT DICTID, DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = ? ORDER BY SORTNO ASC";
+		List<Entity> dictSecOrgs = dbSession.query(queryOrgSql, "ZH_OPERATION_INCOME_ORG");
+
 		// 根据年份获取已配置阀值的组织（集团内外）
 		String secOrgSql = "";
 		List<Entity> secOrgs = new ArrayList<Entity>();
@@ -109,7 +112,7 @@ public class OrgDimOperatingIncomeTrackUtil {
 				}
 			}));
 
-			trackDatas = this.analyzeMerge(secOrgs, invoiceYearsMap, annualYearsMap, annualYearBySignedsMap, dbSession);
+			trackDatas = this.analyzeMerge(secOrgs, invoiceYearsMap, annualYearsMap, annualYearBySignedsMap, dbSession, dictSecOrgs);
 		}
 
 		if (StrUtil.equals(authType, "1")) {
@@ -180,7 +183,7 @@ public class OrgDimOperatingIncomeTrackUtil {
 	}
 
 	private List<DataObject> analyzeMerge(List<Entity> secOrgs, Map<String, Entity> invoiceYearsMap, Map<String, Entity> annualYearsMap, Map<String, Entity> annualYearBySignedsMap,
-			Session dbSession) {
+			Session dbSession, List<Entity> dictSecOrgs) {
 		List<DataObject> trackDatas = new ArrayList<DataObject>();
 		for (Entity secOrg : secOrgs) {
 			try {
@@ -215,15 +218,15 @@ public class OrgDimOperatingIncomeTrackUtil {
 			}
 		}
 
-		List<String> customSort = Arrays.asList("16", "17", "18", "20", "21", "13", "102199", "8", "19", "102401", "24", "25", "26", "27", "111", "193");
+		List<String> customSort = dictSecOrgs.stream().map(entity -> entity.getStr("DICTNAME")).collect(Collectors.toList());
 
 		List<DataObject> newTrackDatas = ListUtil.sort(trackDatas, new Comparator<DataObject>() {
 
 			@Override
 			public int compare(DataObject t1, DataObject t2) {
-				int t1Index = customSort.indexOf(t1.getString("secOrgId"));
+				int t1Index = customSort.indexOf(t1.getString("secOrgName"));
 				t1Index = t1Index == -1 ? Integer.MAX_VALUE : t1Index;
-				int t2Index = customSort.indexOf(t2.getString("secOrgId"));
+				int t2Index = customSort.indexOf(t2.getString("secOrgName"));
 				t2Index = t2Index == -1 ? Integer.MAX_VALUE : t2Index;
 				return t1Index - t2Index;
 			}
