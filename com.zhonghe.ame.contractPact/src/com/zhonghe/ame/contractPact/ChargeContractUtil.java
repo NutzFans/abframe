@@ -54,4 +54,17 @@ public class ChargeContractUtil {
 		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.contractPact.chargeContract.updateFinContractSumAndContractBalance", map);
 	}
 
+	@Bizlet("通过修改最终合同金额和合同余额调整累计已入账")
+	public String updateFinSumAndContractBalance(String id, String finalSum, String contractBalance) throws Exception {
+		try {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			String updateSql = "UPDATE zh_charge_contract SET fin_contract_sum=?, contract_balance=? WHERE id=?";
+			dbSession.execute(updateSql, finalSum, contractBalance, id);
+			return "1";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "2";
+		}
+	}
+	
 }

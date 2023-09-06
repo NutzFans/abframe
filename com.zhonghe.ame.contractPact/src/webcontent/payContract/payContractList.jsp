@@ -157,6 +157,7 @@
 						<a class="nui-button" id="ffhtlist_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 						<a class="nui-button" id="ffhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
+						<a class="nui-button" id="ffhtlist_ljyzf" iconCls="icon-edit" onclick="ljyzf_edit()">累计已支付</a>
 						<a class="nui-button" id="ffhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 						<a class="nui-button" id="ffhtlist_help" iconCls="icon-help" onclick="help()">帮助</a>
@@ -256,8 +257,8 @@
 		function init() {
 			// 按钮权限
 			if(userId !='sysadmin'){
-				// 维护按钮 - ffhtlist_wh，导入按钮 - ffhtlist_import，作废按钮 - ffhtlist_zf，变更经办人按钮 - ffhtlist_bgjbr
-				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import,ffhtlist_zf,ffhtlist_bgjbr,ffhtlist_help");
+				// 维护按钮 - ffhtlist_wh，导入按钮 - ffhtlist_import，作废按钮 - ffhtlist_zf，变更经办人按钮 - ffhtlist_bgjbr，累计已支付按钮 - ffhtlist_ljyzf
+				getOpeatorButtonAuth("ffhtlist_wh,ffhtlist_import,ffhtlist_zf,ffhtlist_bgjbr,ffhtlist_help,ffhtlist_ljyzf");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件
@@ -575,7 +576,7 @@
 					showTips("只能对审批状态为【审批通过】的数据进行经办人变更", "danger");
 				}
 			}
-		}				
+		}						
 
 		function add() {
 			nui.open({
@@ -679,6 +680,36 @@
 				}
 			} else {
 				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
+			}
+		}
+		
+		function ljyzf_edit(){
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行累计已支付调整", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.appStatus == "2") {
+				if(data.issupagreement != "y"){
+					nui.open({
+						url : "/default/contractPact/payContract/payContractLjyzf.jsp",
+						width : '305',
+						height : '200',
+						title : "付费合同 - 累计已支付调整",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							search();
+						}
+					})				
+				}else{
+					showTips("请选择该补充协议对应主合同进行累计已支付调整", "danger");
+				}
+			} else {
+				showTips("只能对审批状态为【审批通过】的项目进行累计已支付调整", "danger");
 			}
 		}
 

@@ -13,7 +13,7 @@ import com.eos.system.annotation.Bizlet;
 
 @Bizlet("付费合同模块工具类")
 public class PayContractUtil {
-	
+
 	@Bizlet("作废时更新金额数据 - 补充协议作废对主合同相关金额的变更")
 	public boolean updateZfInfo(int id) {
 		try {
@@ -42,27 +42,40 @@ public class PayContractUtil {
 			return false;
 		}
 	}
-	
+
 	@Bizlet("四类供货商需要判断合同金额 - 合同金额不能大于10万")
-	public String checkCustAndContractSum(String contractSum, String custId){
+	public String checkCustAndContractSum(String contractSum, String custId) {
 		try {
 			Session dbSession = new Session(DataSourceHelper.getDataSource());
 			String querySql = "SELECT * FROM PUR_SUPPLIER WHERE CUSTID=? AND CUSTTYPE='3'";
 			Entity entity = dbSession.queryOne(querySql, custId);
-			if(ObjectUtil.isNotNull(entity)){
-				if(NumberUtil.isLessOrEqual(new BigDecimal(contractSum), new BigDecimal(100000))){
+			if (ObjectUtil.isNotNull(entity)) {
+				if (NumberUtil.isLessOrEqual(new BigDecimal(contractSum), new BigDecimal(100000))) {
 					return "1";
-				}else{
+				} else {
 					return "2";
 				}
-			}else{
+			} else {
 				return "1";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "2";
 		}
-		
+
 	}
-	
+
+	@Bizlet("通过修改最终合同金额和合同余额调整累计已支付")
+	public String updateFinalSumAndContractBalance(String id, String finalSum, String contractBalance) {
+		try {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			String updateSql = "UPDATE zh_pay_contract SET final_sum=?, contract_balance=? WHERE id=?";
+			dbSession.execute(updateSql, finalSum, contractBalance, id);
+			return "1";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "2";
+		}
+	}
+
 }

@@ -159,6 +159,10 @@
 							<td>
 								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 200px" required="true" enabled="true" />
 							</td>
+							<td align="right" style="width: 130px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px"/>
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">备注：</td>

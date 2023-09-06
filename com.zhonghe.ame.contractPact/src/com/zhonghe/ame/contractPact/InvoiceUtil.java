@@ -130,14 +130,14 @@ public class InvoiceUtil {
 			newDataObject.set("invoiceSum", newInvoice.getString("newInvoiceSum"));
 			newDataObject.set("bookIncome", newInvoice.getString("newBookIncome"));
 			newDataObject.set("invoiceTax", newInvoice.getString("newInvoiceTax"));
-			if (StrUtil.isNotBlank(newInvoice.getString("receivableSum"))) {
-				newDataObject.set("receivableSum", newInvoice.getString("receivableSum"));
+			if (StrUtil.isNotBlank(newInvoice.getString("newReceivableSum"))) {
+				newDataObject.set("receivableSum", newInvoice.getString("newReceivableSum"));
 			}
-			if (StrUtil.isNotBlank(newInvoice.getString("balanceSum"))) {
-				newDataObject.set("balanceSum", newInvoice.getString("balanceSum"));
+			if (StrUtil.isNotBlank(newInvoice.getString("newBalanceSum"))) {
+				newDataObject.set("balanceSum", newInvoice.getString("newBalanceSum"));
 			}
-			if (StrUtil.isNotBlank(newInvoice.getString("verification"))) {
-				newDataObject.set("verification", newInvoice.getString("verification"));
+			if (StrUtil.isNotBlank(newInvoice.getString("newVerification"))) {
+				newDataObject.set("verification", newInvoice.getString("newVerification"));
 			}
 
 			txManager.begin();

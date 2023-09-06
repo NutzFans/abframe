@@ -171,6 +171,7 @@ html,body {
 						<a class="nui-button" id="sfhtlist_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 						<a class="nui-button" id="sfhtlist_bgjbr" iconCls="icon-edit" onclick="bgjbr_edit()">变更经办人</a>
+						<a class="nui-button" id="sfhtlist_ljyrz" iconCls="icon-edit" onclick="ljyrz_edit()">累计已入账</a>
 						<a class="nui-button" id="sfhtlist_import" iconCls="icon-upload" onclick="improt()">导入</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 						<a class="nui-button" id="sfhtlist_help" iconCls="icon-help" onclick="help()">帮助</a>
@@ -531,7 +532,37 @@ html,body {
 				}
 			}
 		}
-
+		
+		function ljyrz_edit(){
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条项目记录进行累计已入账调整", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.appStatus == "2") {
+				if(data.issupagreement != "y"){
+					nui.open({
+						url : "/default/contractPact/chargeContract/chargeContractLjyrz.jsp",
+						width : '305',
+						height : '200',
+						title : "收费合同 - 累计已入账调整",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							search();
+						}
+					})				
+				}else{
+					showTips("请选择该补充协议对应主合同进行累计已入账调整", "danger");
+				}
+			} else {
+				showTips("只能对审批状态为【审批通过】的项目进行累计已入账调整", "danger");
+			}
+		}		
+		
 		function deleteInfo() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {

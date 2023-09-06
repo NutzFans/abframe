@@ -465,7 +465,7 @@
 
 		function onButtonEdit(e) {
 			var btnEdit = this;
-			if (nui.get("contractNature").getValue() == 1) {
+			if (nui.get("contractNature").getValue() == 1 || nui.get("contractNature").getValue() == 4) {
 				mini.open({
 					url : "/default/contractPact/payContract/procurementPlanList.jsp",
 					title : "采购立项列表",
@@ -710,6 +710,22 @@
 				nui.get("procurementType").setValue("");
 				nui.get("planYear").setRequired(false);
 				nui.get("planYear").disable();
+				nui.get("planYear").setValue("");
+				nui.get("budgetSum").setRequired(true);
+				nui.get("budgetSum").setValue("");
+				nui.get("scalingSum").setRequired(false);
+				nui.get("scalingSum").setValue("");
+			} else if (nui.get("contractNature").getValue() == 4) {
+				$("#purchasePlanLable").html("采购立项编号:");
+				nui.get("purchasePlan").setRequired(true);
+				nui.get("purchasePlan").enable();
+				nui.get("purchasePlan").setValue("");
+				nui.get("purchasePlan").setText("");
+				nui.get("proAppId").setValue("");
+				nui.get("procurementType").setRequired(true);
+				nui.get("procurementType").setValue("");
+				nui.get("planYear").setRequired(true);
+				nui.get("planYear").enable();
 				nui.get("planYear").setValue("");
 				nui.get("budgetSum").setRequired(true);
 				nui.get("budgetSum").setValue("");

@@ -236,8 +236,8 @@
         function onExportExcel(){
 				var data = form.getData();
 				exportExcel({
-					url: "com.primeton.eos.ame_pur.PurOtherSettlePay.exportPurSupplier.biz.ext",
-					fileName:"供应商记录",
+					url: "com.zhonghe.ame.purchase.purSupplier.exportPurSupplier.biz.ext",
+					fileName:"供应商信息",
 					data:data
 				})
         }
