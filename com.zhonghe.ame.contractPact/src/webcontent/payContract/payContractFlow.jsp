@@ -76,23 +76,30 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">
-								<nobr>签约方:</nobr>
-							</td>
-							<td>
-								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 300px;" enabled="false" />
+							<td align="right" style="width: 130px">签约方：</td>
+							<td colspan="3">
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+										valueField="custid" textField="custname" allowInput="false" enabled="false" />
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
 							</td>
 							<td align="right" style="width: 100px">合同签约主体:</td>
 							<td>
 								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" enabled="false" style="width: 100%" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">付款方:</td>
 							<td>
 								<input id="payer" name="payer" class="nui-dictcombobox" enabled="false" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 100px">合同文本密级:</td>
 							<td>
 								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%" required="true" enabled="false" />
@@ -102,12 +109,12 @@
 							<td>
 								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 100%" required="true" enabled="false" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">是否为SM协作配套:</td>
 							<td>
 								<input id="issm" name="issm" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 100%" required="true" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 100px">合同价款形式:</td>
 							<td>
 								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" enabled="false" />
@@ -116,12 +123,12 @@
 							<td>
 								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 100%" required="true" emptyText="合同执行完成日期（预估）" enabled="false" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">是否为采购合同:</td>
 							<td>
 								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 100px" id="purchasePlanLable">采购立项编号:</td>
 							<td>
 								<input name="purchasePlan" id="purchasePlan" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
@@ -130,12 +137,12 @@
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="false" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 120px">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
@@ -243,6 +250,8 @@
 		isViewDelete=false;
 		var grid2 = nui.get("datagrid2");
 		
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
+		
 		 init();
 		
 		function init() {
@@ -255,6 +264,8 @@
 				contentType : 'text/json',
 				success : function(o) {
 					form.setData(o.data);
+					nui.get("custInfo").setValue(o.data.signatory);
+					nui.get("custInfo").setText(o.data.signatoryname);
 					queryPlan(o.data.id);
 					if (nui.get("contractNature").getValue() == 3) {
 						$("#purchasePlanLable").html("零星采购编号:");

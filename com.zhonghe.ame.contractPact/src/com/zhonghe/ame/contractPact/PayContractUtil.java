@@ -1,6 +1,7 @@
 package com.zhonghe.ame.contractPact;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -46,17 +47,22 @@ public class PayContractUtil {
 	@Bizlet("四类供货商需要判断合同金额 - 合同金额不能大于10万")
 	public String checkCustAndContractSum(String contractSum, String custId) {
 		try {
+			boolean flag = true;
 			Session dbSession = new Session(DataSourceHelper.getDataSource());
 			String querySql = "SELECT * FROM PUR_SUPPLIER WHERE CUSTID=? AND CUSTTYPE='3'";
-			Entity entity = dbSession.queryOne(querySql, custId);
-			if (ObjectUtil.isNotNull(entity)) {
-				if (NumberUtil.isLessOrEqual(new BigDecimal(contractSum), new BigDecimal(100000))) {
-					return "1";
-				} else {
-					return "2";
+			List<String> custs = StrUtil.split(custId, ",");
+			for (String cust : custs) {
+				Entity entity = dbSession.queryOne(querySql, cust);
+				if (ObjectUtil.isNotNull(entity)) {
+					if (NumberUtil.isLessOrEqual(new BigDecimal(100000), new BigDecimal(contractSum))) {
+						flag = false;
+					}
 				}
-			} else {
+			}
+			if (flag) {
 				return "1";
+			} else {
+				return "2";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

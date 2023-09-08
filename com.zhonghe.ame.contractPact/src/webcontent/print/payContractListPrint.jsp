@@ -78,38 +78,38 @@ table,table tr td {
 						<tr>
 							<td class="form_label" align="right">经办人：</td>
 							<td>
-								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 160px">合同承办部门：</td>
 							<td>
-								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
-								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 100%" />
+								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
-								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 200px" />
+								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
 							<td align="right" style="width: 160px">合同类型：</td>
 							<td>
-								<input id="contractType" name="contractType" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 200px" required="true" />
+								<input id="contractType" name="contractType" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE"style="width: 100%" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">标的规模：</td>
 							<td>
-								<input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 200px" />
+								<input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
 							<td align="right" style="width: 160px">实施地点：</td>
 							<td>
-								<input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 200px" />
+								<input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">合同金额(元)：</td>
 							<td>
-								<input id="contractSum" name="contractSum" enabled="false" class="nui-textbox" style="width: 200px" required="true" />
+								<input id="contractSum" name="contractSum" enabled="false" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 120px">合同不含税金额(元):</td>
 							<td>
@@ -121,15 +121,27 @@ table,table tr td {
 							<td>
 								<input name="payTax" id="payTax" class="nui-textbox" vtype="float" style="width: 100%" enabled="false" />
 							</td>
-							<td align="right" style="width: 160px">签约方：</td>
-							<td>
-								<input id="signatoryname" name="signatoryname" enabled="false" class="nui-textbox" style="width: 200px" />
-							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">签约方：</td>
+							<td colspan="3">
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 585px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+										valueField="custid" textField="custname" allowInput="false" enabled="false" />
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">合同签约主体：</td>
 							<td>
-								<input id="contractSubject" name="contractSubject" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" />
+								<input id="contractSubject" name="contractSubject" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 100px">合同文本密级:</td>
 							<td>
@@ -160,7 +172,7 @@ table,table tr td {
 						<tr>
 							<td align="right" style="width: 160px" id="purchasePlanLable">采购立项编号：</td>
 							<td>
-								<input id="purchasePlan" name="purchasePlan" enabled="false" class="nui-textbox" style="width: 200px" required="true" />
+								<input id="purchasePlan" name="purchasePlan" enabled="false" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
@@ -225,6 +237,7 @@ table,table tr td {
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid5 = nui.get("datagrid5");
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
 		setData();
 		var id;
 		
@@ -254,6 +267,8 @@ table,table tr td {
 					var data = o.data[0];
 					var createUsername;
 					form.setData(data);
+					nui.get("custInfo").setValue(data.signatory);
+					nui.get("custInfo").setText(data.signatoryname);
 					nui.get("contractSum").setValue(data.contractSum);
 					$("#remark").html(data.remark);
 					nui.get("createUsername").setValue(data.createUsername);

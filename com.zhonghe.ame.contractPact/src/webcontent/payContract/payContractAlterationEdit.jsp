@@ -22,6 +22,12 @@
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
+							<td align="right" style="width: 130px">合同名称：</td>
+							<td colspan="5">
+								<input id="historyContractName" enabled="false" class="nui-textbox" style="width: 100%" />
+							</td>						
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 200px" />
@@ -36,31 +42,37 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 130px">签约方：</td>
+							<td colspan="3">
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="historyCustInfo" id="historyCustInfo" class="nui-textboxlist" style="width: 515px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+										valueField="custid" textField="custname" allowInput="false" enabled="false" />
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
+							</td>
+							<td align="right" style="width: 130px">付款方：</td>
+							<td>
+								<input id="historyPayer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" enabled="false" />
+							</td>						
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同编号：</td>
 							<td>
 								<input id="historyContractNo" enabled="false" class="nui-textbox" style="width: 200px" />
-							</td>
-							<td align="right" style="width: 130px">合同名称：</td>
-							<td>
-								<input id="historyContractName" enabled="false" class="nui-textbox" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 130px">合同金额(元)：</td>
 							<td>
 								<input id="historyContractSum" class="nui-textbox" style="width: 200px" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">签订日期：</td>
 							<td>
 								<input id="historySigningDate" class="nui-textbox" style="width: 200px" enabled="false" />
-							</td>
-							<td align="right" style="width: 130px">签约方：</td>
-							<td>
-								<input id="historySignatoryname" class="nui-textbox" style="width: 200px" enabled="false" />
-							</td>
-							<td align="right" style="width: 130px">付款方：</td>
-							<td>
-								<input id="historyPayer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -84,6 +96,12 @@
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
+							<td align="right" style="width: 130px">补充协议名称：</td>
+							<td colspan="5">
+								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" />
+							</td>						
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden"/>
@@ -102,19 +120,24 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 130px">补充协议名称：</td>
-							<td>
-								<input id="contractName" name="contractName" class="nui-textbox" style="width: 200px" required="true" />
-							</td>
 							<td align="right" style="width: 130px">签约方：</td>
-							<td>
-								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-									textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 200px" />
+							<td colspan="3">
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+										valueField="custid" textField="custname" allowInput="false" />
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
 							</td>
 							<td align="right" style="width: 130px">付款方：</td>
 							<td>
 								<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" />
-							</td>
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">变更金额(元)：</td>
@@ -145,6 +168,12 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 100px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px"/>
+							</td>						
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">补充协议说明：</td>
 							<td colspan="6">
 								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" />
@@ -173,10 +202,15 @@
 	
 	<script type="text/javascript">
 		nui.parse();
-		var form = new nui.Form("#form1");		
+		var form = new nui.Form("#form1");
+		
+		$("input[name='historyCustInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFE6;")		
 		
 		function setEditData(data) {
 			form.setData(data);
+			nui.get("custInfo").setValue(data.signatory);
+			nui.get("custInfo").setText(data.signatoryname);
 			queryHistory(data.relateCont);
 			var inputFileExpandGrid = nui.get("inputFileExpandGrid");
 				inputFileExpandGrid.load({
@@ -204,7 +238,8 @@
 					nui.get("historyFinalSum").setValue(data.finalSum);
 					nui.get("historyContractBalance").setValue(data.contractBalance);
 					nui.get("historySigningDate").setValue(data.signingDate);
-					nui.get("historySignatoryname").setValue(data.signatoryname);
+					nui.get("historyCustInfo").setValue(data.signatory);
+					nui.get("historyCustInfo").setText(data.signatoryname);
 					nui.get("historyPayer").setValue(data.payer);
 					nui.get("historyRemark").setValue(data.remark);
 					var grid_0 = nui.get("grid_0");
@@ -229,6 +264,8 @@
 		
 		function SaveData() {
 			var data = form.getData();
+			data.signatory = nui.get("custInfo").getValue();
+			data.signatoryName = nui.get("custInfo").getText();
 			var historyFinalSum = nui.get("historyFinalSum").getValue() * 1;
 			var historyContractBalance = nui.get("historyContractBalance").getValue() * 1;
 			var actContractSum = nui.get("actContractSum").getValue() * 1;
@@ -290,6 +327,34 @@
 			}
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
+		
+		function selectCustInfo() {
+			mini.open({
+				url : "/default/contractPact/payContract/selectPurSupplierInfo.jsp",
+				title : "选择签约方",
+				width : '500',
+				height : '530',
+				ondestroy : function(action) {
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var data = iframe.contentWindow.GetData();
+						data = mini.clone(data); //必须
+						var custid = nui.get("custInfo").getValue();
+						var custname = nui.get("custInfo").getText();
+						if (custid != "" && custname != "") {
+							custid = custid + "," + data.custid;
+							custname = custname + "," + data.custname;
+						} else {
+							custid = data.custid;
+							custname = data.custname;
+						}
+						nui.get("custInfo").setValue("" + custid + "");
+						nui.get("custInfo").setText("" + custname + "");
+					}
+				}
+			});
+		}		
+		
 	</script>	
 	
 </body>

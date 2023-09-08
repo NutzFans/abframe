@@ -179,6 +179,12 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 130px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px"/>
+							</td>						
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">补充协议说明：</td>
 							<td colspan="5">
 								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" />

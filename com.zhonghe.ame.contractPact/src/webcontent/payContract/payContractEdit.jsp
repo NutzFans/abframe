@@ -89,23 +89,30 @@ body {
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">
-								<nobr>签约方:</nobr>
-							</td>
-							<td>
-								<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersIsqualified.biz.ext"
-									filterType="like" textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 300px;" />
+							<td align="right" style="width: 130px">签约方：</td>
+							<td colspan="3">
+								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+										valueField="custid" textField="custname" allowInput="false" />
+									<span class="mini-buttonedit-buttons">
+										<span class="mini-buttonedit-close"></span>
+										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+											<span class="mini-buttonedit-icon"></span>
+										</span>
+									</span>
+								</span>
 							</td>
 							<td align="right" style="width: 100px">合同签约主体:</td>
 							<td>
 								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">付款方:</td>
 							<td>
 								<input id="payer" name="payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 100px">合同文本密级:</td>
 							<td>
 								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%" required="true" />
@@ -115,12 +122,12 @@ body {
 							<td>
 								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 100%" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">是否为SM协作配套:</td>
 							<td>
 								<input id="issm" name="issm" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 100%" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 100px">合同价款形式:</td>
 							<td>
 								<input id="contractPrice" name="contractPrice" class="nui-dictcombobox" dictTypeId="CONTRACT_PRICE" style="width: 100%" required="true" />
@@ -130,12 +137,12 @@ body {
 							<td>
 								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" onvaluechanged="contractNatureChanged" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px" id="purchasePlanLable">采购立项编号:</td>
 							<td>
 								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" allowInput="true" onvaluechanged="onvaluechanged1" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="true" />
@@ -144,12 +151,12 @@ body {
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 120px">定标金额(元):</td>
 							<td>
 								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="true" />
-							</td>
-						</tr>
-						<tr>
+							</td>						
 							<td align="right" style="width: 120px">合同编号：</td>
 							<td>
 								<input id="contractNo" name="contractNo" class="nui-textbox" style="width: 100%" required="true" />
@@ -159,12 +166,12 @@ body {
 								<input id="signingDate" name="signingDate" class="nui-datepicker" style="width: 100%" required="true" />
 							</td>
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" required="false" />
-							</td>
-						</tr>
-						<tr>
+							</td>						
 							<td align="right" style="width: 100px">执行状态:</td>
 							<td>
 								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 100%" required="true" />
@@ -173,10 +180,12 @@ body {
 							<td>
 								<input name="contractBalance" id="contractBalance" class="nui-textbox" vtype="float" style="width: 100%" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">完成日期:</td>
 							<td>
 								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 100%"/>
-							</td>
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 120px">备注:</td>
@@ -291,6 +300,8 @@ body {
 		var form = new nui.Form("form1");
 		var grid2 = nui.get("datagrid2");
 		var id = "";
+		
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFE6;")
 
 		function onOk() {
 			//定义变量接受form表单数据
@@ -328,6 +339,8 @@ body {
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
+			data.signatory = nui.get("custInfo").getValue();
+			data.signatoryName = nui.get("custInfo").getText();
 			var grid2 = nui.get("datagrid2");
 			var payPlans = grid2.getData();
 			data.id = nui.get("payId").getValue();
@@ -468,6 +481,8 @@ body {
 		function setEditData(data) {
 			var form = new nui.Form("form1");
 			form.setData(data)
+			nui.get("custInfo").setValue(data.signatory);
+			nui.get("custInfo").setText(data.signatoryname);
 			queryPlan(data.id);
 			nui.get("implementOrg").setText(data.implementOrgname);
 			nui.get("custId").setText(data.signatoryname);
@@ -691,7 +706,34 @@ body {
 			} else {
 				return false;
 			}
-		}		
+		}
+		
+		function selectCustInfo() {
+			mini.open({
+				url : "/default/contractPact/payContract/selectPurSupplierInfo.jsp",
+				title : "选择签约方",
+				width : '500',
+				height : '530',
+				ondestroy : function(action) {
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var data = iframe.contentWindow.GetData();
+						data = mini.clone(data); //必须
+						var custid = nui.get("custInfo").getValue();
+						var custname = nui.get("custInfo").getText();
+						if (custid != "" && custname != "") {
+							custid = custid + "," + data.custid;
+							custname = custname + "," + data.custname;
+						} else {
+							custid = data.custid;
+							custname = data.custname;
+						}
+						nui.get("custInfo").setValue("" + custid + "");
+						nui.get("custInfo").setText("" + custname + "");
+					}
+				}
+			});
+		}				
 		
 	</script>
 </body>

@@ -74,41 +74,53 @@ table,table tr td {
 								<tr>
 									<td align="right" style="width: 130px">经办人：</td>
 									<td>
-										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 200px" />
+										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
 									<td align="right" style="width: 130px">合同承办部门：</td>
 									<td>
-										<input id="historyImplementOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
+										<input id="historyImplementOrgname" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
 								</tr>
 								<tr>
 									<td align="right" style="width: 130px">合同编号：</td>
 									<td>
-										<input id="historyContractNo" enabled="false" class="nui-textbox" style="width: 200px" />
+										<input id="historyContractNo" enabled="false" class="nui-textbox" style="width: 100%" />
 									</td>
 									<td align="right" style="width: 130px">合同金额(元)：</td>
 									<td>
-										<input id="historyContractSum" class="nui-textbox" style="width: 200px" enabled="false" />
+										<input id="historyContractSum" class="nui-textbox" style="width: 100%" enabled="false" />
 									</td>
 								</tr>
 								<tr>
 									<td align="right" style="width: 130px">申请日期：</td>
 									<td>
-										<input id="historyCreateTime" enabled="false" class="nui-textbox" style="width: 200px" />
+										<input id="historyCreateTime" enabled="false" class="nui-textbox" style="width: 100%" />
 									</td>
 									<td align="right" style="width: 130px">签订日期：</td>
 									<td>
-										<input id="historySigningDate" class="nui-textbox" style="width: 200px" enabled="false" />
+										<input id="historySigningDate" class="nui-textbox" style="width: 100%" enabled="false" />
 									</td>
 								</tr>
 								<tr>
 									<td align="right" style="width: 130px">签约方：</td>
-									<td>
-										<input id="historySignatoryname" class="nui-textbox" style="width: 200px" enabled="false" />
-									</td>
+									<td colspan="3">
+										<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+											<input name="historyCustInfo" id="historyCustInfo" class="nui-textboxlist" style="width: 515px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+												valueField="custid" textField="custname" allowInput="false" enabled="false" />
+											<span class="mini-buttonedit-buttons">
+												<span class="mini-buttonedit-close"></span>
+												<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+													onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+													<span class="mini-buttonedit-icon"></span>
+												</span>
+											</span>
+										</span>
+									</td>								
+								</tr>
+								<tr>
 									<td align="right" style="width: 130px">付款方：</td>
 									<td>
-										<input id="historyPayer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" enabled="false" />
+										<input id="historyPayer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" enabled="false" />
 									</td>								
 								</tr>
 								<tr>
@@ -151,11 +163,22 @@ table,table tr td {
 									<td align="right" style="width: 130px">申请日期：</td>
 									<td>
 										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
-									</td>
+									</td>								
+								</tr>
+								<tr>
 									<td align="right" style="width: 130px">签约方：</td>
-									<td>
-										<input name="signatory" id="custId" class="nui-combobox" required="true" valueField="custid" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-											textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 200px" enabled="false" />
+									<td colspan="3">
+										<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
+											<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="purSuppliers" url="com.zhonghe.ame.payContract.payContract.queryPurSuppliersByNameInfo.biz.ext"
+												valueField="custid" textField="custname" allowInput="false" enabled="false"/>
+											<span class="mini-buttonedit-buttons">
+												<span class="mini-buttonedit-close"></span>
+												<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
+													onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+													<span class="mini-buttonedit-icon"></span>
+												</span>
+											</span>
+										</span>
 									</td>								
 								</tr>
 								<tr>
@@ -246,6 +269,9 @@ table,table tr td {
 		var grid5 = nui.get("datagrid5");
 		var id =<%=request.getParameter("id")%>;
 		
+		$("input[name='historyCustInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
+		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
+		
 		setData();
 		
 		function setData(){
@@ -258,6 +284,8 @@ table,table tr td {
 				success : function(o) {
 					var data = o.data[0];
 					form.setData(data);
+					nui.get("custInfo").setValue(data.signatory);
+					nui.get("custInfo").setText(data.signatoryname);
 					queryHistory(data.relateCont);
 					nui.get("contractNo").setValue(data.contractNo);
 					nui.get("signingDate").setValue(data.signingDate);
@@ -292,7 +320,8 @@ table,table tr td {
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyContractSum").setValue(data.contractSum);
 					nui.get("historySigningDate").setValue(data.signingDate);
-					nui.get("historySignatoryname").setValue(data.signatoryname);
+					nui.get("historyCustInfo").setValue(data.signatory);
+					nui.get("historyCustInfo").setText(data.signatoryname);
 					nui.get("historyPayer").setValue(data.payer);
 					nui.get("historyRemark").setValue(data.remark);
 					var grid_0 = nui.get("grid_0");
