@@ -414,7 +414,7 @@
 			var num = Math.abs(price);
 			var s = "";
 			for(var i = 0; i < fraction.length; i++){
-				s += (digit[Math.floor(num * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./,"");
+				s += (digit[Math.floor(num * (10 * Math.pow(10, i))) % 10] + fraction[i]).replace(/零./,"");
 			}
 			s = s || "整";
 			num = Math.floor(num);

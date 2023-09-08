@@ -390,13 +390,14 @@
 		}
 		
 		function functiondigitUppercase(price) {
+			debugger
 			var fraction = ["角", "分"];
 			var digit = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
 			var unit = [["元", "万", "亿"],["", "拾", "佰", "仟"],];
 			var num = Math.abs(price);
 			var s = "";
 			for(var i = 0; i < fraction.length; i++){
-				s += (digit[Math.floor(num * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./,"");
+				s += (digit[Math.floor(num * (10 * Math.pow(10, i))) % 10] + fraction[i]).replace(/零./,"");
 			}
 			s = s || "整";
 			num = Math.floor(num);
