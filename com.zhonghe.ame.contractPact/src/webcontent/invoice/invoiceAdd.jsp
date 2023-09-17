@@ -391,35 +391,34 @@
 		
 		function functiondigitUppercase(price) {
 			debugger
-			var fraction = ["角", "分"];
-			var digit = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
-			var unit = [["元", "万", "亿"],["", "拾", "佰", "仟"],];
-			var num = Math.abs(price);
-			var s = "";
-			for(var i = 0; i < fraction.length; i++){
-				s += (digit[Math.floor(num * (10 * Math.pow(10, i))) % 10] + fraction[i]).replace(/零./,"");
+			if(price.substr(0,1) =="-"){
+				price = price.slice(1);
 			}
-			s = s || "整";
-			num = Math.floor(num);
-			for (var i = 0; i < unit[0].length && num > 0; i += 1) {
-				var p = "";
-				for (var j = 0; j < unit[1].length && num > 0; j += 1) {
-					p = digit[num % 10] + unit[1][j] + p;
-					num = Math.floor(num / 10);
-				}
-				s = p.replace(/(零.)*零$/, "").replace(/^$/, "零") + unit[0][i] + s;
+			price = price * 1.0;
+			if (price === 0) {
+				return "零";
 			}
-			return s.replace(/(零.)*零元/, "元").replace(/(零.)+/g, "零").replace(/^整$/, "零元整");
+			var unit = "仟佰拾亿仟佰拾万仟佰拾元角分", str = "";
+			price += "00";
+			var point = price.indexOf('.');
+			if (point >= 0) {
+				price = price.substring(0, point) + price.substr(point + 1, 2);
+			}
+			unit = unit.substr(unit.length - price.length);
+			for (var i = 0; i < price.length; i++) {
+				str += '零壹贰叁肆伍陆柒捌玖'.charAt(price.charAt(i)) + unit.charAt(i);
+			}
+			var result = str.replace(/零(仟|佰|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|元)/g, "$1").replace(/(亿)万/g, "$1$2").replace(/^元零?|零分/g, "").replace(/元$/g, "元整");
+			return result;
 		}
-		
+
 		function isStrEmpty(obj) {
 			if (typeof obj == "undefined" || obj == null || obj == "") {
 				return true;
 			} else {
 				return false;
 			}
-		}		
-						
+		}
 	</script>
 </body>
 </html>
