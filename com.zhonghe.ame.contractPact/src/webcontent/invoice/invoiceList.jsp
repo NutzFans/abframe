@@ -26,6 +26,10 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
+						<td style="width: 60px; text-align: right;">年份:</td>
+						<td>
+							<input id="invoiceYear" name="critria._expr[41].invoiceYear" class="nui-textbox" style="width: 150px" />
+						</td>
 						<td style="width: 60px; text-align: right;">经办人:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createUsername" style="width: 150px" />
@@ -61,10 +65,6 @@ html,body {
 							<input class="nui-hidden" name="critria._expr[6]._property" value="contractName" />
 							<input class="nui-hidden" name="critria._expr[6]._op" value="like" />
 						</td>
-						<td style="width: 60px; text-align: right;">审批状态:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>
 						<td style="width: 60px; text-align: right;">开票日期:</td>
 						<td style="width: 245px">
 							<input class="nui-hidden" name="critria._expr[21]._op" value="between" />
@@ -76,6 +76,10 @@ html,body {
 						</td>
 					</tr>
 					<tr>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 						<td style="width: 60px; text-align: right;">发票抬头:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[22].invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
@@ -95,10 +99,6 @@ html,body {
 							<input class="nui-hidden" name="critria._expr[25]._property" value="payerName" />
 							<input class="nui-hidden" name="critria._expr[25]._op" value="like" />
 						</td>
-						<td style="width: 70px; text-align: right;">集团内/外:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[26].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>
 						<td style="width: 60px; text-align: right;">回款日期:</td>
 						<td style="width: 245px">
 							<input class="nui-hidden" name="critria._expr[27]._op" value="between" />
@@ -110,6 +110,10 @@ html,body {
 						</td>
 					</tr>
 					<tr>
+						<td style="width: 70px; text-align: right;">集团内/外:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[26].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 						<td style="width: 60px; text-align: right;">专业类别:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[28].major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
@@ -204,11 +208,13 @@ html,body {
 		var type = <%=request.getParameter("type")%>;
 		var reve_grid = nui.get("reve_grid");
 		var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
+		var now = new Date();
 		var authOrg;
 		
 		init();
 		
 		function init() {
+			nui.get("invoiceYear").setValue(now.getFullYear());
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - kjfplist_wh，变更经办人按钮 - kjfplist_bgjbr，作废按钮 - kjfplist_zf，产值分配按钮 - kjfplist_czfp

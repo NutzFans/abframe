@@ -23,6 +23,14 @@
         <result column="typeCode" javaType="string" property="typeCode"/>
     </resultMap>
     
+    <resultMap class="commonj.sdo.DataObject" id="resultMapX">
+        <result column="userid" javaType="string" property="id"/>
+        <result column="empname" javaType="string" property="name"/>
+        <result column="typeCode" javaType="string" property="typeCode"/>
+        <result column="judge" javaType="string" property="judge"/>
+        <result column="orgcode" javaType="string" property="orgcode"/>
+    </resultMap>
+    
      <resultMap class="commonj.sdo.DataObject" id="resultMap3">
         <result column="MANAGERID" javaType="String" property="managerid"/>
     </resultMap>
@@ -954,11 +962,19 @@
 	
 		<!-- 获取二级部门分管-->
 	<select id="getRepLeader" parameterClass="java.lang.Integer" resultMap="resultMap1"><![CDATA[
-		     SELECT c.USERID as userid,c.EMPNAME as empname,'person' as typeCode FROM OM_ORGANIZATION a
+		     SELECT c.USERID as userid,c.EMPNAME as empname,'person' as typeCode, b.JUDGE as judge, b.ORGCODE AS orgcode FROM OM_ORGANIZATION a
 			LEFT JOIN OM_ORGANIZATION b on a.ORGSEQ like b.ORGSEQ+'%' and b.ORGLEVEL = '2'
 			LEFT JOIN OM_EMPLOYEE c on b.repleader = c.userid
 			WHERE a.ORGID = #orgid#
 	]]></select>
+	
+		<!-- 获取二级部门分管-->
+	<select id="getPlanLeader" parameterClass="java.lang.Integer" resultMap="resultMapX"><![CDATA[
+		     SELECT c.USERID as userid,c.EMPNAME as empname,'person' as typeCode, b.JUDGE as judge, b.ORGCODE AS orgcode FROM OM_ORGANIZATION a
+			LEFT JOIN OM_ORGANIZATION b on a.ORGSEQ like b.ORGSEQ+'%' and b.ORGLEVEL = '2'
+			LEFT JOIN OM_EMPLOYEE c on b.repleader = c.userid
+			WHERE a.ORGID = #orgid#
+	]]></select>	
 	
 	<!-- 获取分公司分管审批领导-->
 	<select id="getComRepLeader" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
