@@ -64,8 +64,7 @@ html,body {
 						</td>
 						<td style="width: 90px; text-align: right;">协议落实部门:</td>
 						<td style="width: 245px">
-								<input name="critria._expr[22]._value" class="nui-combobox" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" filterType="like" textField="dictname"
-									valueField="dictname" dataField="bidUnits" valueFromSelect="true" allowInput="true" style="width: 241px;" />
+								<input name="critria._expr[22]._value" class="nui-dictcombobox" dictTypeId="ZH_FEAME_AGREEMENT_ORG" style="width: 241px;" showNullItem="true" nullItemText="全部" valueField="dictName" textField="dictName" />
 								<input class="nui-hidden" name="critria._expr[22]._property" value="bidUnitsName" />
 								<input class="nui-hidden" name="critria._expr[22]._op" value="like" />
 						</td>

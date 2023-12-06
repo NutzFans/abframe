@@ -69,17 +69,18 @@ body .mini-textboxlist {
 							<td>
 								<input name="projectLocal" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">协议落实部门：</td>
-							<td>
-								<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnitsForAgreement.biz.ext" valueField="dictid"
-									textField="dictname" inputMode="false" style="width: 300px" required="true"/>
+							<td colspan="5">
+								<input id="bidUnits" name="bidUnits" class="nui-dictcombobox" dictTypeId="ZH_FEAME_AGREEMENT_ORG" style="width: 94%" required="true" multiSelect="true" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">协议内容：</td>
 							<td colspan="5">
-								<input id="projectSize" name="projectSize"  class="nui-textarea" style="width: 94%; height: 120"/>
-							</td>						
+								<input id="projectSize" name="projectSize" class="nui-textarea" style="width: 94%; height: 120px" />
+							</td>
 						</tr>
 						<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 -->
 						<tr class="nui-hidden">
@@ -99,7 +100,7 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 94%; height: 120" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 94%; height: 120px" required="false" />
 							</td>
 						</tr>
 					</table>
@@ -123,8 +124,6 @@ body .mini-textboxlist {
 		nui.parse();
 		var form = new nui.Form("form1");
 		var type;//暂存还是发起
-		
-		$("input[name='bidUnits']").parent("td").attr("style", "background: #FFFFE6;")
 
 		init();
 
