@@ -167,7 +167,7 @@ html,body {
 						<div field="id" headerAlign="center" visible="false">id</div>
 						<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
 						<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
-						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70" allowSort="true">备案日期</div>
+						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="80" allowSort="true">备案日期</div>
 						<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
 						<div field="bidNxwl" headerAlign="center" align="center" renderer="ZH_BID_NXWL" width="65">内协外联</div>
 						<div field="custId" displayField="custName" headerAlign="center" align="center" width="300">甲方全称</div>
@@ -342,7 +342,7 @@ html,body {
 						<div field="id" headerAlign="center" visible="false">id</div>
 						<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
 						<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
-						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="70" allowSort="true">备案日期</div>
+						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="80" allowSort="true">备案日期</div>
 						<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
 						<div field="bidNxwl" headerAlign="center" align="center" renderer="ZH_BID_NXWL" width="65">内协外联</div>
 						<div field="custId" displayField="custName" headerAlign="center" align="center" width="300">甲方全称</div>
