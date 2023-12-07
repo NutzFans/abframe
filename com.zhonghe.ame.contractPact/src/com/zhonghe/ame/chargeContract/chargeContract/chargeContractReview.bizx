@@ -57,7 +57,7 @@
     <targetConnections>link8</targetConnections>
     <targetConnections>link22</targetConnections>
     <targetConnections>link30</targetConnections>
-    <targetConnections>link42</targetConnections>
+    <targetConnections>link27</targetConnections>
     <location x="1032" y="300"/>
     <size height="28" width="28"/>
     <nodeLabel>transactioncommit0label</nodeLabel>
@@ -81,6 +81,7 @@
     <targetConnections>link25</targetConnections>
     <targetConnections>link29</targetConnections>
     <targetConnections>link43</targetConnections>
+    <targetConnections>link37</targetConnections>
     <location x="786" y="149"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionrollback0label</nodeLabel>
@@ -699,16 +700,16 @@
     <node>invokeService6</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="运算逻辑3" displayName="Update a record" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>invokePojo3</sourceNode>
-      <targetNode>transactioncommit0</targetNode>
-    </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link43" name="link43" displayName="连接线" lineType="note" type="exception">
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link26" name="link26" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>invokePojo4</targetNode>
+    </sourceConnections>
     <targetConnections>link33</targetConnections>
-    <location x="1036" y="432"/>
+    <location x="938" y="441"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo3label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
@@ -722,7 +723,7 @@
     <process:outputVariables/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
-    <location x="1019" y="468"/>
+    <location x="921" y="477"/>
     <figSize height="17" width="56"/>
     <node>invokePojo3</node>
   </nodes>
@@ -756,6 +757,33 @@
     <location x="822" y="477"/>
     <figSize height="17" width="32"/>
     <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="运算逻辑" displayName="根据投标记录更新市场经营中的合同编号信息" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link27" name="link27" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link26</targetConnections>
+    <location x="1035" y="441"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.ChargeContractUtil.updateContractNoByBidInfoNameSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">cpData</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="1022" y="477"/>
+    <figSize height="17" width="49"/>
+    <node>invokePojo4</node>
   </nodes>
   <topRuler>
     <guides position="1563" horizontal="true"/>

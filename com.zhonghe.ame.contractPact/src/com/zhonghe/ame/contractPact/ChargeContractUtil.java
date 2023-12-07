@@ -12,6 +12,7 @@ import cn.hutool.db.Session;
 import com.eos.common.connection.DataSourceHelper;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.system.annotation.Bizlet;
+import commonj.sdo.DataObject;
 
 @Bizlet("收费合同模块工具类")
 public class ChargeContractUtil {
@@ -66,5 +67,36 @@ public class ChargeContractUtil {
 			return "2";
 		}
 	}
-	
+
+	@Bizlet("根据投标记录更新市场经营中的合同编号信息")
+	public void updateContractNoByBidInfo(DataObject dataObject) throws Exception {
+		if (StrUtil.isNotBlank(dataObject.getString("tenderId"))) {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			String updateSql = "UPDATE ZH_BIDINFO SET contract_no = ? WHERE id = ?";
+			dbSession.execute(updateSql, dataObject.getString("contractNo"), dataObject.getString("tenderId"));
+		}
+	}
+
+	@Bizlet("根据投标记录更新市场经营中的合同编号信息")
+	public void updateContractNoByBidInfoNameSql(DataObject dataObject) throws Exception {
+		if (StrUtil.isNotBlank(dataObject.getString("tenderId"))) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("contractNo", dataObject.getString("contractNo"));
+			map.put("tenderId", dataObject.getString("tenderId"));
+			DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.contractPact.chargeContract.updateContractNoByBidInfo", map);
+		}
+	}
+
+	@Bizlet("根据合同编号获取主键")
+	public String getIdByContractNo(String contractNo) throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String querySql = "SELECT id FROM zh_charge_contract WHERE contract_no = ?";
+		Entity entity = dbSession.queryOne(querySql, contractNo);
+		if (entity != null) {
+			return entity.getStr("id");
+		} else {
+			return null;
+		}
+	}
+
 }

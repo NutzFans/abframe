@@ -64,14 +64,22 @@ body .mini-textboxlist {
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">项目名称：</td>
-							<td colspan="5">
+							<td colspan="3">
 								<input name="projectName" id="projectName" class="nui-textbox" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 130px">集团或二级单位：</td>
+							<td>
+								<span data-placement="right" data-tooltip="1、集团内请选择甲方全称对应二级单位。<br>2、集团合同/大合同可以选择集团或甲方全称对应二级单位">
+									<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 250px" emptyText="集团内外:集团内/合同/大合同 时必填" />
+								</span>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">投资额(万元)：</td>
 							<td>
-								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 250px" required="true" emptyText="必填项，无数据请输入 / 字符填充" />
+								<span data-placement="right" data-tooltip="注意：单位为万元">
+									<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 250px" required="true" emptyText="必填项，只允许出现数字或'未知'字眼" />
+								</span>
 							</td>
 							<td align="right" style="width: 130px">标的额：</td>
 							<td>
@@ -211,6 +219,11 @@ body .mini-textboxlist {
 	</div>
 
 	<script type="text/javascript">
+		var tip = new mini.ToolTip();
+		tip.set({
+			target : document,
+			selector : '[data-tooltip], [data-placement]'
+		});
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid2 = nui.get("datagrid2");
@@ -295,6 +308,33 @@ body .mini-textboxlist {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
+			var custId = nui.get("custInfo").getValue();
+			var custName = nui.get("custInfo").getText();
+			if (isBank(custId) || isBank(custName)) {
+				showTips("请填写 '甲方全称' 字段内容 !", "danger");
+				return;
+			}
+			var regexpNum = new RegExp(/^[0-9\.]+$/);
+			var investAmount = nui.get("investAmount").getValue();
+			if (!regexpNum.test(investAmount)) {
+				if (!(investAmount == "未知")) {
+					showTips("请检查 '投资额(万元)' 字段，只允许出现数字或'未知'字眼!", "danger");
+					return;
+				}
+			}
+			var headquarterGroup = nui.get("headquarterGroup").getText();
+			if (!(headquarterGroup == "集团外")) {
+				var twoOrg = nui.get("twoOrg").getValue();
+				if (isBank(twoOrg)) {
+					showTips("'二级单位' 字段必须填写（'集团内外' 字段值为：集团内、集团合同、集团大合同 时）!", "danger");
+					return;
+				} else {
+					if (headquarterGroup == "集团内" && twoOrg == "中国核工业集团有限公司") {
+						showTips("'集团内外' 字段值为 '集团内' 时，'集团或二级单位' 字段不能选择集团!", "danger");
+						return;
+					}
+				}
+			}
 			var compets = grid2.getData();
 			if (compets.length > 0) {
 				var competsStr = JSON.stringify(compets);
@@ -316,6 +356,8 @@ body .mini-textboxlist {
 
 		function SaveData() {
 			var data = form.getData();
+			console.log(data);
+			debugger;
 			data.files = nui.get("fileids").getValue();
 			data.custId = nui.get("custInfo").getValue();
 			data.custName = nui.get("custInfo").getText();
@@ -349,6 +391,22 @@ body .mini-textboxlist {
 			var now = new Date();
 			return (now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " " + now.getHours() + ':'
 					+ ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes())) + ':' + ((now.getSeconds() < 10) ? ("0" + now.getSeconds()) : (now.getSeconds())));
+		}
+
+		function isNotBank(data) {
+			if (data != null && data != "" && data != "null" && data != "undefined" && data) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function isBank(data) {
+			if (data != null && data != "" && data != "null" && data != "undefined" && data) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 	</script>
 

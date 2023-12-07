@@ -3,13 +3,18 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <style type="text/css">
-	html,body {
-		margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
-	}
-	
-	.mini-grid-cell-nowrap{
-		white-space: nowrap;
-	}	
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
 </style>
 <head>
 <title>市场经营信息</title>
@@ -24,7 +29,8 @@
 						<tr>
 							<td style="width: 70px; text-align: right;">数据完善度:</td>
 							<td style="width: 155px">
-								<input id="dataNotFinshBidDataStatus" name="criteria._expr[1].bidDataStatus" class="nui-dictcombobox" dictTypeId="ZH_BID_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px" enabled="false"/>
+								<input id="dataNotFinshBidDataStatus" name="criteria._expr[1].bidDataStatus" class="nui-dictcombobox" dictTypeId="ZH_BID_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px"
+									enabled="false" />
 							</td>
 							<td style="width: 60px; text-align: right;">牵头部门:</td>
 							<td style="width: 155px">
@@ -120,9 +126,13 @@
 							<td style="width: 155px">
 								<input name="criteria._expr[17].contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
 							</td>
+							<td style="width: 100px; text-align: right;">集团或二级单位:</td>
+							<td colspan="2" style="width: 320px">
+								<input name="criteria._expr[30].twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" showNullItem="true" nullItemText="全部" style="width: 315px" />
+							</td>
 							<td style="width: 60px; text-align: right;">中标结果:</td>
-							<td style="width: 155px">
-								<input name="criteria._expr[18].bidResult" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<td style="width: 115px">
+								<input name="criteria._expr[18].bidResult" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" showNullItem="true" nullItemText="全部" style="width: 110px" />
 							</td>
 							<td>
 								<a class="nui-button" id="dataNotFinshSearch" iconCls="icon-search" onclick="dataNotFinshSearch()">查询</a>
@@ -181,11 +191,12 @@
 						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
 						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
+						<div field="twoOrg" headerAlign="center" align="center" width="200">集团或二级单位</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+
 		<div title="市场经营信息 - 已完善">
 			<div id="dataFinshForm">
 				<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.marketInfo.bid.ZhBidinfoEntity" />
@@ -194,7 +205,8 @@
 						<tr>
 							<td style="width: 70px; text-align: right;">数据完善度:</td>
 							<td style="width: 155px">
-								<input id="dataFinshBidDataStatus" name="criteria._expr[1].bidDataStatus" class="nui-dictcombobox" dictTypeId="ZH_BID_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px" enabled="false"/>
+								<input id="dataFinshBidDataStatus" name="criteria._expr[1].bidDataStatus" class="nui-dictcombobox" dictTypeId="ZH_BID_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px"
+									enabled="false" />
 							</td>
 							<td style="width: 60px; text-align: right;">牵头部门:</td>
 							<td style="width: 155px">
@@ -290,9 +302,13 @@
 							<td style="width: 155px">
 								<input name="criteria._expr[17].contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
 							</td>
+							<td style="width: 100px; text-align: right;">集团或二级单位:</td>
+							<td colspan="2" style="width: 320px">
+								<input name="criteria._expr[30].twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" showNullItem="true" nullItemText="全部" style="width: 315px" />
+							</td>
 							<td style="width: 60px; text-align: right;">中标结果:</td>
-							<td style="width: 155px">
-								<input name="criteria._expr[18].bidResult" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<td style="width: 115px">
+								<input name="criteria._expr[18].bidResult" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" showNullItem="true" nullItemText="全部" style="width: 110px" />
 							</td>
 							<td>
 								<a class="nui-button" id="dataFinshSearch" iconCls="icon-search" onclick="dataFinshSearch()">查询</a>
@@ -350,9 +366,11 @@
 						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
 						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
+						<div field="twoOrg" headerAlign="center" align="center" width="200">集团或二级单位</div>
+						<div field="contractNo" headerAlign="center" align="center" width="200" renderer="lookInfo">合同编号</div>
 					</div>
 				</div>
-			</div>			
+			</div>
 		</div>
 	</div>
 
@@ -365,16 +383,16 @@
 				<div field="competId" headerAlign="center" visible="false">competId</div>
 				<div field="competName" headerAlign="center" width="300px">竞争对手单位全称</div>
 				<div field="competContractPrice" headerAlign="center" align="center" width="150px">合同价(万元/%)</div>
-			</div>	
+			</div>
 		</div>
 	</div>
-	
+
 	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
-		<input type="hidden" name="_eosFlowAction" value="action0" filter="false"/>
-		<input type="hidden" name="downloadFile" filter="false"/>
-		<input type="hidden" name="fileName" filter="false"/>
-	</form>		
-	
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>
+
 	<script type="text/javascript">
 		nui.parse();
 		var dataNotFinshForm = new nui.Form("#dataNotFinshForm");
@@ -769,7 +787,7 @@
 				allowResize : false
 			});
 		}
-		
+
 		//导出
 		function dataNotFinshExport() {
 			if (!confirm("是否确认导出？")) {
@@ -784,53 +802,53 @@
 				cache : false,
 				contentType : 'text/json',
 				success : function(o) {
-			     		var filePath = o.downloadFile;
-			        	var fileName = "市场经营";
-			        	var myDate = new Date();
-			        	var year = myDate.getFullYear();
-			        	var month = myDate.getMonth()+1;
-			        	var day = myDate.getDate();
-			        	var hours = myDate.getHours();
-			        	var minutes = myDate.getMinutes();
-			        	var seconds = myDate.getSeconds();
-			        	var curDateTime = year;
-		        		if(month>9){
+					var filePath = o.downloadFile;
+					var fileName = "市场经营";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
 						curDateTime = curDateTime + "" + month;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + month;
 					}
-		        		if(day>9){
+					if (day > 9) {
 						curDateTime = curDateTime + day;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + day;
 					}
-					if(hours>9){
+					if (hours > 9) {
 						curDateTime = curDateTime + hours;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + hours;
 					}
-					if(minutes>9){
+					if (minutes > 9) {
 						curDateTime = curDateTime + minutes;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + minutes;
 					}
-					if(seconds>9){
+					if (seconds > 9) {
 						curDateTime = curDateTime + seconds;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + seconds;
 					}
 					fileName = fileName + "_" + curDateTime + ".xls";
 					var frm = document.getElementById("exprotExcelFlow");
-	        			frm.elements["downloadFile"].value = filePath;
-	        			frm.elements["fileName"].value = fileName;
-			    		frm.submit();
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
 				},
 				error : function() {
 					showTips("导出数据异常，请联系管理员！", "danger");
 				}
 			});
-		}		
-		
+		}
+
 		//导出
 		function dataFinshExport() {
 			if (!confirm("是否确认导出？")) {
@@ -845,54 +863,94 @@
 				cache : false,
 				contentType : 'text/json',
 				success : function(o) {
-			     		var filePath = o.downloadFile;
-			        	var fileName = "市场经营";
-			        	var myDate = new Date();
-			        	var year = myDate.getFullYear();
-			        	var month = myDate.getMonth()+1;
-			        	var day = myDate.getDate();
-			        	var hours = myDate.getHours();
-			        	var minutes = myDate.getMinutes();
-			        	var seconds = myDate.getSeconds();
-			        	var curDateTime = year;
-		        		if(month>9){
+					var filePath = o.downloadFile;
+					var fileName = "市场经营";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
 						curDateTime = curDateTime + "" + month;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + month;
 					}
-		        		if(day>9){
+					if (day > 9) {
 						curDateTime = curDateTime + day;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + day;
 					}
-					if(hours>9){
+					if (hours > 9) {
 						curDateTime = curDateTime + hours;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + hours;
 					}
-					if(minutes>9){
+					if (minutes > 9) {
 						curDateTime = curDateTime + minutes;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + minutes;
 					}
-					if(seconds>9){
+					if (seconds > 9) {
 						curDateTime = curDateTime + seconds;
-					}else{
+					} else {
 						curDateTime = curDateTime + "0" + seconds;
 					}
 					fileName = fileName + "_" + curDateTime + ".xls";
 					var frm = document.getElementById("exprotExcelFlow");
-	        			frm.elements["downloadFile"].value = filePath;
-	        			frm.elements["fileName"].value = fileName;
-			    		frm.submit();
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
 				},
 				error : function() {
 					showTips("导出数据异常，请联系管理员！", "danger");
 				}
 			});
-		}								
+		}
 		
+		function lookInfo(e) {
+			if(isNotBank(e.value)){
+				return "<a href='javascript:void(0)' onclick='doView();' title='点击查看'>" + e.value + "</a>";
+			}else{
+				return;
+			}
+		}
+		
+		function doView() {
+			var row = dataFinshDataGrid.getSelected();
+			if (row) {
+				var json = {
+					"contractNo" : row.contractNo
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.chargeContract.chargeContract.getChargeContractByContractNo.biz.ext",
+					data : json,
+					success : function(result) {
+						var executeUrl = "<%=request.getContextPath()%>/contractPact/print/chargeContractInfoPrint.jsp?id=" + result.id;
+						window.open(executeUrl);
+					}
+				});
+			}
+		}
+
+		function isNotBank(data) {
+			if (data != null && data != "" && data != "null" && data != "undefined" && data) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function isBank(data) {
+			if (data != null && data != "" && data != "null" && data != "undefined" && data) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 	</script>
-	
+
 </body>
 </html>

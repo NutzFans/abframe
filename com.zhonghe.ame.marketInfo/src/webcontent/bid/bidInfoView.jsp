@@ -63,8 +63,12 @@ body .mini-textboxlist {
 					</tr>
 					<tr>
 						<td align="right" style="width: 130px">项目名称：</td>
-						<td colspan="5">
+						<td colspan="3">
 							<input name="projectName" id="projectName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+						</td>
+						<td align="right" style="width: 130px">集团或二级单位：</td>
+						<td>
+							<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 250px" emptyText="集团内外:集团内/合同/大合同 时必填" enabled="false" />
 						</td>
 					</tr>
 					<tr>
@@ -204,6 +208,7 @@ body .mini-textboxlist {
 	$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
 
 	function setViewData(data) {
+		console.log(data);
 		form.setData(data);
 		queryBidCompet(data.id);
 		nui.get('createUser').setValue(data.empname);
