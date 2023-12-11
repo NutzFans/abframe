@@ -143,6 +143,14 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[33].cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 100px; text-align: right;">服务范围:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[34].bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 100px; text-align: right;">集团或二级单位:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[35].twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -209,16 +217,19 @@ html,body {
 					<div field="isfb" width="120" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否计划对外分包</div>
 					<div field="issupagreement" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否协议变更</div>
 					<div field="cachet" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否签订合同</div>
+					<div field="investAmount" width="100" align="center" headerAlign="center" allowSort="true">投资额(万元)</div>
+					<div field="bidService" width="100" align="center" headerAlign="center" allowSort="true" renderer="ZH_BID_SERVICE">服务范围</div>
 					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
 					<div field="contractModel" width="100" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_MODEL">合同价格模式</div>
 					<div field="procurementType" width="150" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE">招标人采购方式</div>
+					<div field="twoOrg" width="250" align="center" headerAlign="center" allowSort="true" renderer="ZH_BID_TWO_ORG">集团或二级单位</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="chargePlanInfo" style="display: none;">
 		<div id="chargePlanGrid" sizeList="[5]" dataField="chargePlanInfos" pageSize="5" class="nui-datagrid" url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualPayPlanByChargeId.biz.ext"
 			style="width: 1500px; height: 203px">
@@ -240,7 +251,7 @@ html,body {
 				<div field="sum" align="center" headerAlign="center" summaryType="sum" dataType="currency">总计</div>
 			</div>
 		</div>
-	</div>	
+	</div>
 
 	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
@@ -717,6 +728,10 @@ html,body {
 		function ZH_PROCUREMENT_TYPE(e) {
 			return nui.getDictText("ZH_PROCUREMENT_TYPE", e.value);
 		}
+		
+		function ZH_BID_SERVICE(e) {
+			return nui.getDictText("ZH_BID_SERVICE", e.value);
+		}
 
 		function improt() {
 			nui.open({
@@ -845,10 +860,9 @@ html,body {
 		}				
 		
 		function help() {
-			executeUrl = "<%= request.getContextPath() %>/contractPact/chargeContract/chargeContractFlowDesgin.jsp";
+			executeUrl = "<%=request.getContextPath()%>/contractPact/chargeContract/chargeContractFlowDesgin.jsp";
 			window.open(executeUrl);
-		}		
-		
+		}
 	</script>
 
 </body>

@@ -5,9 +5,14 @@
 <head>
 <title>收费合同签订申请</title>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -29,7 +34,7 @@
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" />
-								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px"/>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
@@ -47,21 +52,31 @@
 							<td align="right" style="width: 130px">是否签订合同：</td>
 							<td>
 								<input id="cachet" name="cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" enabled="false" required="false" />
-							</td>						
+							</td>
 							<td align="right" style="width: 130px">投标记录：</td>
 							<td>
 								<input id="tenderId" name="tenderId" class="nui-buttonedit" style="width: 200px" required="false" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">投资额(万元)：</td>
+							<td>
+								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 200px" required="true" emptyText="投标记录关联带出" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">服务范围：</td>
+							<td>
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 200px" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 130px">专业类别：</td>
 							<td>
 								<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 200px" required="true" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">工程类别：</td>
 							<td>
 								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 200px" enabled="false" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同价格模式：</td>
 							<td>
 								<input id="contractModel" name="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 200px" required="true" enabled="false" />
@@ -70,12 +85,12 @@
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 200px" required="true" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">集团内外：</td>
 							<td>
 								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 200px" required="true" enabled="false" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同文本密级:</td>
 							<td>
 								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" enabled="false" />
@@ -84,12 +99,12 @@
 							<td>
 								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 200px" required="true" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">是否计划对外分包:</td>
 							<td>
 								<input id="isfb" name="isfb" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" required="true" enabled="false" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同签约主体：</td>
 							<td>
 								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" enabled="false" />
@@ -97,6 +112,10 @@
 							<td align="right" style="width: 130px">收款方：</td>
 							<td>
 								<input id="payee" name="payee" class="nui-dictcombobox" dictTypeId="PAYER" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px" enabled="false" emptyText="合同执行完成日期（预估）" />
 							</td>
 						</tr>
 						<tr>
@@ -113,9 +132,9 @@
 									</span>
 								</span>
 							</td>
-							<td align="right" style="width: 130px">完成日期:</td>
+							<td align="right" style="width: 130px">集团或二级单位：</td>
 							<td>
-								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px" enabled="false"emptyText="合同执行完成日期（预估）" />
+								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 200px" emptyText="投标记录关联带出" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -221,15 +240,13 @@
 		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 0px;">关闭</a>
 	</div>
-	
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("form1");
 		var projectid = <%=request.getParameter("projectid")%>;
 		var workItemID = <%=request.getParameter("workItemID")%>;
-		<%
-			long workitemid = (Long) request.getAttribute("workItemID");
-		%>
+		<%long workitemid = (Long) request.getAttribute("workItemID");%>
 		var opioionform = new nui.Form("#opioionform");
 		var titleText, countersignUsers;
 		isViewDelete = false;
@@ -300,7 +317,7 @@
 		function selectOmEmployee() {
 			var btnEdit = this;
 			nui.open({
-				url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
+				url: "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
 				title : "立项单位经办人",
 				width : 430,
 				height : 400,
@@ -332,7 +349,7 @@
 				}
 			});
 		}
-		
+
 		function submit() {
 			var auditstatus = nui.get("auditstatus").getValue();
 			if (auditstatus == "2") { //终止流程
@@ -347,12 +364,12 @@
 				titleText = "提交";
 			}
 			form2.submit();
-		}	
-		
+		}
+
 		function SaveData() {
 			saveData();
 		}
-		
+
 		function saveData() {
 			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
@@ -362,7 +379,7 @@
 					var json = {
 						'cpData' : data,
 						"misOpinion" : misOpinion,
-						"workItemID" : <%=workitemid%>,
+						"workItemID" :<%=workitemid%>,
 						"countersignUsers" : countersignUsers
 					};
 					ajaxCommon({
@@ -380,11 +397,11 @@
 					})
 				}
 			});
-		}						
+		}
 
 		grid2.on("cellbeginedit", function(e) {
 			e.cancel = "true";
-		})	
+		})
 	</script>
 </body>
 </html>

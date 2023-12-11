@@ -8,13 +8,13 @@
 <head>
 <title>打印页面</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/common/nui/warterMark.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery-barcode.js"></script>
-<% 
-	UserObject user = (UserObject)session.getAttribute("userObject");
+<%
+	UserObject user = (UserObject) session.getAttribute("userObject");
 	String userName = user.getUserName();
 %>
 <style type="text/css">
@@ -59,10 +59,10 @@ table,table tr td {
 			<a class="nui-button" id="checkview" iconCls="icon-print" onclick="printBtn()">打印</a>
 		</div>
 	</div>
-	
+
 	<div title="收费合同打印" style="height: auto">
 		<div id="pipi" class="nui-panel" style="font-size: 13px; width: 840px; height: 30px; margin: 0 auto; text-align: center;" align="left"></div>
-		<div class="" style="width: 788px;margin: 0 auto;font-size: 14px;border:1px solid #999999;">
+		<div class="" style="width: 788px; margin: 0 auto; font-size: 14px; border: 1px solid #999999;">
 			<div class="base_div">收费合同签订申请信息</div>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
@@ -97,12 +97,22 @@ table,table tr td {
 							<td align="right" style="width: 130px">是否签订合同：</td>
 							<td>
 								<input id="cachet" name="cachet" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" enabled="false" required="false" />
-							</td>							
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">投标记录：</td>
 							<td colspan="3">
 								<input id="tenderId" name="tenderId" class="nui-buttonedit" style="width: 100%" required="false" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">投资额(万元)：</td>
+							<td>
+								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">服务范围：</td>
+							<td>
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 200px" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -113,7 +123,7 @@ table,table tr td {
 							<td align="right" style="width: 130px">工程类别：</td>
 							<td>
 								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 200px" enabled="false" required="true" />
-							</td>							
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">合同价格模式：</td>
@@ -123,7 +133,7 @@ table,table tr td {
 							<td align="right" style="width: 130px">招标人采购方式:</td>
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 200px" required="true" enabled="false" />
-							</td>						
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">集团内外：</td>
@@ -133,7 +143,7 @@ table,table tr td {
 							<td align="right" style="width: 130px">合同文本密级:</td>
 							<td>
 								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" enabled="false" />
-							</td>							
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">项目密级:</td>
@@ -153,7 +163,7 @@ table,table tr td {
 							<td align="right" style="width: 130px">收款方：</td>
 							<td>
 								<input id="payee" name="payee" class="nui-dictcombobox" dictTypeId="PAYER" style="width: 200px" required="true" enabled="false" />
-							</td>						
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">签约方：</td>
@@ -168,6 +178,12 @@ table,table tr td {
 										</span>
 									</span>
 								</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">集团或二级单位：</td>
+							<td colspan="3">
+								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 100%" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -230,7 +246,7 @@ table,table tr td {
 			</div>
 		</div>
 	</div>
-	
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
@@ -242,7 +258,7 @@ table,table tr td {
 		setData();
 		
 		function setData() {
-			id = <%= request.getParameter("id") %> ;
+			id = <%=request.getParameter("id")%> ;
 			var json = nui.encode({"id": id});
 			nui.ajax({
 				url : "com.zhonghe.ame.chargeContract.chargeContract.getChargeContractById.biz.ext",
@@ -294,14 +310,13 @@ table,table tr td {
 		}
 		
 		// 设置水印用户
-		setWatermark('<%=userName %>')
+		setWatermark('<%=userName%>')
 		function printBtn() {
 			document.getElementById('checkview').style.display = "none";
 			print();
 			document.getElementById('checkview').style.display = "";
-		}		
-				
+		}
 	</script>
-	
+
 </body>
 </html>

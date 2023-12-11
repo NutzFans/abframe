@@ -57,16 +57,26 @@ body {
 							<td>
 								<input id="tenderId" name="tenderId" class="nui-buttonedit" onbuttonclick="bidInfoSelect" style="width: 200px" required="true" enabled="true" allowInput="false" emptyText="必填项，数据来源于市场经营信息" />
 							</td>
+							<td align="right" style="width: 130px">投资额(万元)：</td>
+							<td>
+								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 200px" required="true" emptyText="投标记录关联带出" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">服务范围：</td>
+							<td>
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 130px">专业类别：</td>
 							<td>
 								<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 200px" required="true" enabled="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">工程类别：</td>
 							<td>
 								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 200px" enabled="true" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同价格模式：</td>
 							<td>
 								<input id="contractModel" name="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 200px" required="true" enabled="true" />
@@ -75,12 +85,12 @@ body {
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 200px" required="true" enabled="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">集团内外：</td>
 							<td>
 								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 200px" required="true" enabled="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同文本密级:</td>
 							<td>
 								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" />
@@ -89,12 +99,12 @@ body {
 							<td>
 								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 200px" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">是否计划对外分包:</td>
 							<td>
 								<input id="isfb" name="isfb" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同签约主体：</td>
 							<td>
 								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" />
@@ -102,6 +112,10 @@ body {
 							<td align="right" style="width: 130px">收款方：</td>
 							<td>
 								<input id="payee" name="payee" class="nui-dictcombobox" dictTypeId="PAYER" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 130px">完成日期:</td>
+							<td>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px" required="true" emptyText="合同执行完成日期（预估）" />
 							</td>
 						</tr>
 						<tr>
@@ -119,9 +133,9 @@ body {
 									</span>
 								</span>
 							</td>
-							<td align="right" style="width: 130px">完成日期:</td>
+							<td align="right" style="width: 130px">集团或二级单位：</td>
 							<td>
-								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px" required="true" emptyText="合同执行完成日期（预估）" />
+								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 200px" emptyText="投标记录关联带出" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -150,7 +164,7 @@ body {
 		</fieldset>
 
 		<fieldset id="field3" style="border: solid 1px #aaa;">
-			<legend>未来年度收款计划</legend>
+			<legend>未来年度收款计划<span style="color: red">（金额单位：元）</span></legend>
 			<div>
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table style="width: 100%;">
@@ -260,6 +274,11 @@ body {
 	</div>
 
 	<script type="text/javascript">
+		var tip = new mini.ToolTip();
+		tip.set({
+			target : document,
+			selector : '[data-tooltip], [data-placement]'
+		});
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid2 = nui.get("datagrid2");
@@ -293,6 +312,8 @@ body {
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
 						if (data) {
+							nui.get("investAmount").setValue(data.investAmount);
+							nui.get("bidService").setValue(data.bidService);
 							nui.get("tenderId").setValue(data.id);
 							nui.get("tenderId").setText(data.projectName);
 							nui.get("major").setValue(data.majorType);
@@ -302,6 +323,7 @@ body {
 							nui.get("headquarterGroup").setValue(data.headquarterGroup);
 							nui.get("custInfo").setValue(data.custId);
 							nui.get("custInfo").setText(data.custName);
+							nui.get("twoOrg").setValue(data.twoOrg);
 						}
 					}
 				}

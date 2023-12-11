@@ -12,11 +12,16 @@
 <head>
 <title>收费合同签订维护</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<script src="<%= request.getContextPath() %>/common/nui/nui.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -40,7 +45,7 @@
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" />
-								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px"/>
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
@@ -63,16 +68,26 @@
 							<td>
 								<input id="tenderId" name="tenderId" class="nui-buttonedit" onbuttonclick="bidInfoSelect" style="width: 200px" required="false" enabled="true" allowInput="false" />
 							</td>
+							<td align="right" style="width: 130px">投资额(万元)：</td>
+							<td>
+								<input name="investAmount" id="investAmount" class="nui-textbox" style="width: 200px" required="true" emptyText="投标记录关联带出" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">服务范围：</td>
+							<td>
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 130px">专业类别：</td>
 							<td>
 								<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 200px" required="true" enabled="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">工程类别：</td>
 							<td>
 								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 200px" enabled="true" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同价格模式：</td>
 							<td>
 								<input id="contractModel" name="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 200px" required="true" enabled="true" />
@@ -81,26 +96,26 @@
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 200px" required="true" enabled="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">集团内外：</td>
 							<td>
 								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 200px" required="true" enabled="true" />
 							</td>
-							<td align="right" style="width: 130px">合同文本密级:</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">合同文本密级：</td>
 							<td>
 								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" />
 							</td>
-							<td align="right" style="width: 130px">项目密级:</td>
+							<td align="right" style="width: 130px">项目密级：</td>
 							<td>
 								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 200px" required="true" />
 							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 130px">是否计划对外分包:</td>
+							<td align="right" style="width: 130px">是否计划对外分包：</td>
 							<td>
 								<input id="isfb" name="isfb" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" style="width: 200px" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">合同签约主体：</td>
 							<td>
 								<input id="contractSubject" name="contractSubject" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 200px" required="true" />
@@ -108,6 +123,10 @@
 							<td align="right" style="width: 130px">收款方：</td>
 							<td>
 								<input id="payee" name="payee" class="nui-dictcombobox" dictTypeId="PAYER" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 130px">集团或二级单位：</td>
+							<td>
+								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 200px" emptyText="投标记录关联带出" />
 							</td>
 						</tr>
 						<tr>
@@ -159,9 +178,9 @@
 							<td>
 								<input id="executeStatus" name="executeStatus" class="nui-dictcombobox" dictTypeId="EXECUTE_STATUS" style="width: 200px" required="true" enabled="true" />
 							</td>
-							<td align="right" style="width: 130px">完成日期:</td>
+							<td align="right" style="width: 130px">完成日期：</td>
 							<td>
-								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px"/>
+								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px" />
 							</td>
 						</tr>
 						<tr>
@@ -174,7 +193,7 @@
 				</div>
 			</form>
 		</fieldset>
-		
+
 		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>未来年度收款计划</legend>
 			<div>
@@ -247,29 +266,29 @@
 						<input property="editor" class="nui-textbox" style="width: 100%;" />
 					</div>
 					<div field="sum" width="120" headerAlign="center" allowSort="true" summaryType="sum">
-						总计
+						总计【】
 						<input property="editor" class="nui-textbox" style="width: 100%;" />
 					</div>
 				</div>
 			</div>
 		</fieldset>
-		
+
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>上传附件</legend>
 			<jsp:include page="/ame_common/inputFile.jsp" />
-		</fieldset>		
+		</fieldset>
 	</div>
-	
+
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
 		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
-	
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("form1");
 		var grid2 = nui.get("datagrid2");
-		
+
 		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFE6;")
 
 		function setEditData(data) {
@@ -286,7 +305,7 @@
 			});
 			grid_0.sortBy("fileTime", "desc");
 		}
-		
+
 		function queryPlan(str) {
 			nui.ajax({
 				url : "com.zhonghe.ame.chargeContract.chargeContract.queryPlan.biz.ext",
@@ -299,19 +318,19 @@
 					grid2.setData(data.data);
 				}
 			})
-		}		
-		
+		}
+
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
-		
+
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
 				return window.CloseOwnerWindow(action);
 			else
 				window.close();
 		}
-		
+
 		// 提示框
 		function showTips(content, state) {
 			//  state  default|success|info|warning|danger
@@ -333,7 +352,7 @@
 				});
 			}
 		}
-		
+
 		function bidInfoSelect() {
 			mini.open({
 				url : "/default/contractPact/chargeContract/selectBidInfo.jsp",
@@ -360,7 +379,7 @@
 				}
 			});
 		}
-		
+
 		function selectCustInfo() {
 			mini.open({
 				url : "/default/marketInfo/bid/selectCustInfo.jsp",
@@ -381,13 +400,13 @@
 							custid = data.custid;
 							custname = data.custname;
 						}
-						nui.get("custInfo").setValue(""+custid+"");
-						nui.get("custInfo").setText(""+custname+"");
+						nui.get("custInfo").setValue("" + custid + "");
+						nui.get("custInfo").setText("" + custname + "");
 					}
 				}
 			});
 		}
-		
+
 		function editContractSum() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = contractSum / 1.06;
@@ -401,7 +420,7 @@
 			nui.get("noTaxSum").setValue(abs(noTaxSum));
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
-		
+
 		function editNoTaxSum() {
 			var contractSum = nui.get("contractSum").getValue();
 			var noTaxSum = nui.get("noTaxSum").getValue();
@@ -414,7 +433,7 @@
 			}
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}
-		
+
 		function addRow() {
 			var newRow = {
 				name : "New Row"
@@ -450,14 +469,14 @@
 			var l = grid2.getData().length;
 			grid2.addRow(newRow, l + 1);
 		}
-		
+
 		function removeRow() {
 			var rows = grid2.getSelecteds();
 			if (rows.length > 0) {
 				grid2.removeRows(rows, true);
 			}
 		}
-		
+
 		grid2.on("cellendedit", function(e) {
 			var row = e.row;
 			var jan = Number(row.jan);
@@ -483,7 +502,7 @@
 				e.cancel = "true";
 			}
 		});
-		
+
 		function onOk() {
 			//定义变量接受form表单数据
 			var form = new nui.Form("#form1");
@@ -570,7 +589,7 @@
 				return false;
 			}
 		}
-	</script>	
-	
+	</script>
+
 </body>
 </html>
