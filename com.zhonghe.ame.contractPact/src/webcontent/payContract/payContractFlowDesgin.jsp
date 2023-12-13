@@ -77,22 +77,27 @@
 
 		<!-- 总经理审批 -->
 		<div id="div22" style="position: absolute; left: 487px; top: 1547px; width: 75px; height: 50px; cursor: pointer;"></div>
-		
+
 		<!-- 总经理审批 -->
-		<div id="div23" style="position: absolute; left: 750px; top: 1610px; width: 75px; height: 50px; cursor: pointer;"></div>		
-		
+		<div id="div23" style="position: absolute; left: 750px; top: 1610px; width: 75px; height: 50px; cursor: pointer;"></div>
+
 		<!-- 法定代表人审批 -->
 		<div id="div24" style="position: absolute; left: 752px; top: 1743px; width: 75px; height: 50px; cursor: pointer;"></div>
-		
+
 		<!-- 合同盖章 -->
 		<div id="div25" style="position: absolute; left: 753px; top: 1918px; width: 75px; height: 50px; cursor: pointer;"></div>
-		
+
 		<!-- 总会计师审批 -->
 		<div id="div26" style="position: absolute; left: 522px; top: 1402px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 总会计师审批 -->
-		<div id="div27" style="position: absolute; left: 795px; top: 1465px; width: 75px; height: 50px; cursor: pointer;"></div>		
-							
+		<div id="div27" style="position: absolute; left: 795px; top: 1465px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 财务主任审批 -->
+		<div id="div28" style="position: absolute; left: 668px; top: 675px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 财务主任审批 -->
+		<div id="div29" style="position: absolute; left: 880px; top: 480px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
@@ -308,7 +313,7 @@
 					btn : []
 				});
 			});
-			
+
 			// 法定代表人审批
 			$('#div24').click(function() {
 				layer.open({
@@ -317,7 +322,7 @@
 					btn : []
 				});
 			});
-			
+
 			// 合同盖章
 			$('#div25').click(function() {
 				layer.open({
@@ -326,7 +331,7 @@
 					btn : []
 				});
 			});
-			
+
 			// 总会计师审批
 			$('#div26').click(function() {
 				layer.open({
@@ -343,7 +348,25 @@
 					content : '通过【角色管理】模块修改角色编号为【manage15】的角色数据',
 					btn : []
 				});
-			});									
+			});
+
+			// 财务主任审批
+			$('#div28').click(function() {
+				layer.open({
+					title : '财务主任审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage16】的角色数据',
+					btn : []
+				});
+			});
+
+			// 财务主任审批
+			$('#div29').click(function() {
+				layer.open({
+					title : '财务主任审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage16】的角色数据',
+					btn : []
+				});
+			});
 
 		});
 	</script>

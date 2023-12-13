@@ -135,6 +135,12 @@
 		<!-- 总会计师审批 -->
 		<div id="div40" style="position: absolute; left: 960px; top: 1282px; width: 75px; height: 50px; cursor: pointer;"></div>
 
+		<!-- 财务主任审批 -->
+		<div id="div41" style="position: absolute; left: 770px; top: 610px; width: 75px; height: 50px; cursor: pointer;"></div>
+
+		<!-- 财务主任审批 -->
+		<div id="div42" style="position: absolute; left: 1043px; top: 748px; width: 75px; height: 50px; cursor: pointer;"></div>
+
 	</div>
 
 	<script src="/default/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -499,6 +505,24 @@
 				layer.open({
 					title : '总会计师审批 - 调整审批人',
 					content : '通过【角色管理】模块修改角色编号为【manage15】的角色数据',
+					btn : []
+				});
+			});
+
+			// 财务主任审批
+			$('#div41').click(function() {
+				layer.open({
+					title : '财务主任审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage16】的角色数据',
+					btn : []
+				});
+			});
+
+			// 财务主任审批
+			$('#div42').click(function() {
+				layer.open({
+					title : '财务主任审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage16】的角色数据',
 					btn : []
 				});
 			});
