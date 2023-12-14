@@ -26,9 +26,13 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
+						<td style="width: 60px; text-align: right;">年份:</td>
+						<td>
+							<input id="payYear" name="critria._expr[41].payYear" class="nui-textbox" style="width: 85px" />
+						</td>
 						<td style="width: 60px; text-align: right;">经办人:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createUsername" style="width: 150px" />
+						<td style="width: 85px">
+							<input name="critria._expr[1].createUsername" class="nui-textbox" id="createUsername" style="width: 85px" />
 							<input class="nui-hidden" name="critria._expr[1]._op" value="like" id="createUsernameOp" />
 							<input name="critria._expr[0].createUserid" class="nui-hidden" id="createUserid" />
 						</td>
@@ -65,8 +69,14 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[12].appStatus" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 60px; text-align: right;">付款方:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[26].payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+					</tr>
+					<tr>
 						<td style="width: 60px; text-align: right;">付款日期:</td>
-						<td style="width: 245px">
+						<td colspan="3">
 							<input class="nui-hidden" name="critria._expr[21]._op" value="between" />
 							<input class="nui-hidden" name="critria._expr[21]._pattern" value="yyyy-MM-dd" />
 							<input class="nui-hidden" name="critria._expr[21]._property" value="endTime" />
@@ -74,8 +84,6 @@ html,body {
 							<span>至</span>
 							<input class="nui-datepicker" name="critria._expr[21]._max" style="width: 110px" />
 						</td>
-					</tr>
-					<tr>
 						<td style="width: 60px; text-align: right;">发票类型:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[22].invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
@@ -92,14 +100,10 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[25].contractType" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
-						<td style="width: 60px; text-align: right;">付款方:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[26].payer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>
 						<td style="width: 60px; text-align: right;">收款单位:</td>
-						<td style="width: 245px">
+						<td style="width: 155px">
 							<input name="critria._expr[27]._value" class="nui-combobox" valueField="custname" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-								textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 240px" />
+								textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[27]._property" value="signatoryName" />
 							<input class="nui-hidden" name="critria._expr[27]._op" value="like" />
 						</td>
@@ -143,7 +147,8 @@ html,body {
 				<div property="columns">
 					<div type="checkcolumn">○</div>
 					<div field="invoiceType" width="80" align="center" headerAlign="center" allowSort="true" renderer="MIS_MA_INVOICETYPE">发票类型</div>
-					<div field="endTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">付款日期</div>
+					<div field="createTime" dateFormat="yyyy-MM-dd" width="100" align="center" headerAlign="center" allowSort="true">申请/付款日期</div>
+					<div field="endTime" dateFormat="yyyy-MM-dd" width="100" align="center" headerAlign="center" allowSort="true">最晚付款日期</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
 					<div field="implementOrgname" width="180" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
 					<div field="contractNo" width="180" align="center" headerAlign="center" allowSort="true">合同编号</div>
@@ -161,25 +166,27 @@ html,body {
 			</div>
 		</div>
 	</div>
-	
+
 	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
 		<input type="hidden" name="downloadFile" filter="false" />
 		<input type="hidden" name="fileName" filter="false" />
-	</form>	
+	</form>
 
-	<script type="text/javascript">
+	<script type="text/javascript">	
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
 		var type = <%=request.getParameter("type")%>;
 		var reve_grid = nui.get("reve_grid");
 		var json=nui.encode({"iden": "1","expseq": null,"feeseq": null,"parentfeetypeid": null});
+		var now = new Date();
 		var authOrg;
 		
 		init();
 		
 		function init() {
+			nui.get("payYear").setValue(now.getFullYear());
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - fklblist_wh，变更经办人按钮 - fklblist_bgjbr，作废按钮 - fklblist_zf
@@ -252,7 +259,7 @@ html,body {
 				}
 			}
 			var data = form.getData();
-			grid.sortBy("endTime", "desc");
+			grid.sortBy("createTime", "desc");
 			grid.load(data);
 		}
 		
@@ -271,7 +278,7 @@ html,body {
 		function printBtn() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/contractPact/print/payMentListPrint.jsp?id=" + row.id;
+				executeUrl = "<%=request.getContextPath()%>/contractPact/print/payMentListPrint.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
 				showTips("请选中一条记录", "danger");
@@ -581,10 +588,9 @@ html,body {
 		}
 	
 		function help() {
-			executeUrl = "<%= request.getContextPath() %>/contractPact/payment/paymentFlowDesgin.jsp";
+			executeUrl = "<%=request.getContextPath()%>/contractPact/payment/paymentFlowDesgin.jsp";
 			window.open(executeUrl);
-		}		
-		
+		}
 	</script>
 
 </body>
