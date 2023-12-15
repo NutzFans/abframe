@@ -87,7 +87,7 @@
 							</td>
 							<td align="right" style="width: 130px">预计签署日期：</td>
 							<td>
-								<input id="estimatedDate" name="estimatedDate" class="nui-datepicker" style="width: 250px" required="true"/>
+								<input id="estimatedDate" name="estimatedDate" class="nui-datepicker" style="width: 250px" required="true" allowInput="false" showTodayButton="false" ondrawdate="onDrawDate"/>
 							</td>							
 						</tr>
 					</table>
@@ -279,6 +279,15 @@
 					}
 				}
 			});
+		}
+		
+		function onDrawDate(e) {
+			var date = e.date;
+			var d = new Date();
+
+			if (date.getTime() < d.getTime()) {
+				e.allowSelect = false;
+			}
 		}
 	</script>
 </body>

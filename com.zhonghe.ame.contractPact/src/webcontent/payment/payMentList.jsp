@@ -142,7 +142,7 @@ html,body {
 		</div>
 
 		<div class="nui-fit">
-			<div id="datagrid1" sizeList="[1000]" showPager="true" dataField="data" showSummaryRow="true" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 100%;"
+			<div id="datagrid1" sizeList="[2000]" showPager="true" dataField="data" showSummaryRow="true" pageSize="2000" class="nui-datagrid" style="width: 100%; height: 100%;"
 				url="com.zhonghe.ame.invoice.invoice.queryinvoiceAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
 				<div property="columns">
 					<div type="checkcolumn">○</div>

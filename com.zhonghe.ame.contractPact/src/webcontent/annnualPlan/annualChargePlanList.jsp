@@ -115,7 +115,7 @@ html,body {
 						<a class="nui-button" id="chargeAnnualPlan_del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="chargeAnnualPlan_sync" iconCls="icon-goto" onclick="syncInfo()">同步</a>
 						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
-						<span style="color: red; vertical-align: inherit">说明：新增、编辑、删除只适用于待签、非合同，已签请通过收费合同管理模块进行维护</span>
+						<span style="color: red; vertical-align: inherit">说明：新增、编辑、删除只适用于待签、非合同、产值分配，已签请通过收费合同管理模块进行维护</span>
 					</td>
 				</tr>
 			</table>
