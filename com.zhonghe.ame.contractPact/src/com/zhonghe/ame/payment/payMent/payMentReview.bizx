@@ -120,9 +120,9 @@
       <targetNode>assign2</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link25" name="link25" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link39" name="link39" displayName="连接线" type="transition">
       <sourceNode>invokePojo1</sourceNode>
-      <targetNode>invokeService4</targetNode>
+      <targetNode>loopstart0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="NOTNULLANDEMPTY">
           <process:leftOperand type="query">countersignUsers</process:leftOperand>
@@ -177,7 +177,7 @@
       <targetNode>invokePojo2</targetNode>
     </sourceConnections>
     <targetConnections>link7</targetConnections>
-    <targetConnections>link27</targetConnections>
+    <targetConnections>link41</targetConnections>
     <location x="342" y="215"/>
     <size height="28" width="28"/>
     <nodeLabel>assign2label</nodeLabel>
@@ -610,29 +610,6 @@
     <figSize height="17" width="56"/>
     <node>invokePojo4</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokeService4" name="addWorkItem4SDO" displayName="WorkItemManagerService.addWorkItem4SDO" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link27" name="link27" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>invokeService4</sourceNode>
-      <targetNode>assign2</targetNode>
-    </sourceConnections>
-    <targetConnections>link25</targetConnections>
-    <location x="300" y="97"/>
-    <size height="22" width="28"/>
-    <nodeLabel>invokeService4label</nodeLabel>
-    <process:service synchronization="true" transactionType="join">
-      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.addWorkItem4SDO</process:partner>
-    </process:service>
-    <process:inputVariables>
-      <process:inputVariable id="0" name="activityInstID" type="query" value="long" valueType="Java" pattern="reference">wfWorkItem/activityInstID</process:inputVariable>
-      <process:inputVariable id="1" name="participant" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">countersignUsers</process:inputVariable>
-    </process:inputVariables>
-    <process:outputVariables/>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="invokeService4label" name="label" nodeType="label">
-    <location x="259" y="127"/>
-    <figSize height="17" width="110"/>
-    <node>invokeService4</node>
-  </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
@@ -703,6 +680,88 @@
     <figSize height="17" width="49"/>
     <node>invokePojo6</node>
   </nodes>
+  <nodes xsi:type="process:tLoopStart" description="" id="loopstart0" name="循环" displayName="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link45" name="link45" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <location x="81" y="365"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
+    <process:iterate iterable="countersignUsers" iterableElement="countersignUser"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <location x="81" y="397"/>
+    <figSize height="17" width="25"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" displayName="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link41" name="link41" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link47</targetConnections>
+    <location x="345" y="365"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <location x="333" y="397"/>
+    <figSize height="17" width="49"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <location x="81" y="345"/>
+    <size height="80" width="289"/>
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>assign1</chidren>
+    <chidren>invokeService4</chidren>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link46" name="link46" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokeService4</targetNode>
+    </sourceConnections>
+    <targetConnections>link45</targetConnections>
+    <location x="169" y="363"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">countersignUser</process:from>
+      <process:to type="query">tempUsers[1]</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="171" y="399"/>
+    <figSize height="17" width="25"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService4" name="addWorkItem4SDO" displayName="WorkItemManagerService.addWorkItem4SDO" grouped="true" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link47" name="link47" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService4</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <targetConnections>link46</targetConnections>
+    <location x="253" y="366"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService4label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.WorkItemManagerComponent/WorkItemManagerService.addWorkItem4SDO</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="activityInstID" type="query" value="long" valueType="Java" pattern="reference">wfWorkItem/activityInstID</process:inputVariable>
+      <process:inputVariable id="1" name="participant" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">tempUsers</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService4label" name="label" nodeType="label">
+    <location x="212" y="396"/>
+    <figSize height="17" width="110"/>
+    <node>invokeService4</node>
+  </nodes>
   <topRuler>
     <guides position="1563" horizontal="true"/>
   </topRuler>
@@ -716,6 +775,8 @@
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFWorkItem" name="data"/>
     <process:variable description="" historyStateLocation="client" isArray="true" name="acts" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="temp" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="countersignUser"/>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="tempUsers"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" name="workItemID" primitiveType="String"/>
