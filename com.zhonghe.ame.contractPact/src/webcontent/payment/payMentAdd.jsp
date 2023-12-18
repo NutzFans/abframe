@@ -262,6 +262,7 @@ body {
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
+			data.signatoryName = nui.get("signatory").getText();
 			var info = "";
 			data.type = type;
 			if (type == 1) {
