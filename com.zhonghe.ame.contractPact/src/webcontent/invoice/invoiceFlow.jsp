@@ -182,6 +182,7 @@
 	</div>
 
 	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
+		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
 		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 20px;">关闭</a>
 		<a class="nui-button" id="kjfplist_sp_print" iconCls="icon-print" onclick="printBtn()" style="width: 80px;">打印</a>
@@ -199,6 +200,7 @@
 		var id;
 		var workItemInfo;
 		var beforeBookIncome;
+		var titleText, countersignUsers;
 		
 		init();
 		
@@ -290,7 +292,8 @@
 					nui.get("creatReimbProcess").setEnabled(false);
 					var json = {
 						misOpinion : misOpinion,
-						workItemID : <%=workitemid%>
+						workItemID : <%=workitemid%>,
+						"countersignUsers" : countersignUsers
 					};
 					saveData(json);
 				}
@@ -349,6 +352,47 @@
 			var result = str.replace(/零(仟|佰|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|元)/g, "$1").replace(/(亿)万/g, "$1$2").replace(/^元零?|零分/g, "").replace(/元$/g, "元整");
 			return result;
 		}
+		
+		function countersign() {
+			selectOmEmployee();
+		}
+		
+		function selectOmEmployee() {
+			var btnEdit = this;
+			nui.open({
+				url: "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
+				title : "立项单位经办人",
+				width : 430,
+				height : 400,
+				ondestroy : function(action) {
+					var user, users = "【";
+					countersignUsers = [];
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var data = iframe.contentWindow.GetData();
+						data = nui.clone(data); //必须
+						if (data) {
+							for (var i = 0; i < data.length; i++) {
+								user = {};
+								user.id = data[i].userid
+								user.name = data[i].empname
+								user.typeCode = "person"
+								countersignUsers.push(user);
+								if (i == 0) {
+									users = users + data[i].empname;
+								} else {
+									users = users + "," + data[i].empname;
+								}
+							}
+							users = users + "】";
+							titleText = "增加审批人员" + users + "并提交";
+							submitProcess(titleText);
+						}
+					}
+				}
+			});
+		}				
+		
 	</script>
 </body>
 </html>
