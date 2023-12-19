@@ -485,7 +485,6 @@ body {
 			nui.get("custInfo").setText(data.signatoryname);
 			queryPlan(data.id);
 			nui.get("implementOrg").setText(data.implementOrgname);
-			nui.get("custId").setText(data.signatoryname);
 			nui.get("purchasePlan").setText(data.purchasePlan);
 			if (nui.get("contractNature").getValue() == 3) {
 				$("#purchasePlanLable").html("零星采购编号:");
