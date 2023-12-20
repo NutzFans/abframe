@@ -83,6 +83,10 @@ html,body {
 							<span>至</span>
 							<input class="nui-datepicker" name="criteria._expr[22]._max" style="width: 110px" />
 						</td>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 205px">
+							<input name="criteria._expr[23].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 200px" />
+						</td>
 						<td colspan="2">
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
@@ -396,3 +400,4 @@ html,body {
 		}
 	</script>
 </body>
+</html>
