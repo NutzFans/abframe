@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>评审结果报告</title>
+<title>评审结果</title>
 <style type="text/css">
 body {
 	margin: 0;
@@ -20,77 +20,96 @@ body {
 </style>
 </head>
 <body>
-	<div id="form1">
-		<input class="nui-hidden" name="critria._entity" value="com.zhonghe.ame.contractPact.frameAgreement.ZhAgreementEntity" />
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-			<table align="center" border="0" width="100%" class="form_table">
+	<div style="width: auto; height: 99%; padding: 5px;">
+		<div id="form1">
+			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+				<table>
+					<tr>
+						<td style="width: 90px; text-align: right;">评审结果名称:</td>
+						<td style="width: 245px">
+							<input name="critria._expr[1].reportName" class="nui-textbox" style="width: 240px;" />
+							<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
+						</td>
+						<td style="width: 60px; text-align: right;">申请单位:</td>
+						<td style="width: 245px">
+							<input id="orgid2" name="critria._ref[0]._expr[0]._value" style="width: 240px" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true"
+								allowInput="true" />
+							<input class="nui-hidden" name="critria._expr[5]._property" value="createdOrgid" />
+							<input class="nui-hidden" name="critria._expr[5]._op" value="in" id="tempCond1" />
+							<input class="nui-hidden" name="critria._expr[5]._ref" value="" id="tempCond2" />
+							<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
+							<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
+							<input class="nui-hidden" name="critria._or[1]._expr[2]._property" value="createdOrgid" />
+							<input class="nui-hidden" name="critria._or[1]._expr[2]._op" value="in" />
+							<input class="nui-hidden" name="critria._or[1]._expr[2]._value" id="orgids2" />
+							<input class="nui-hidden" name="critria._expr[6].createdBy" id="createdBy" />
+							<input class="nui-hidden" name="critria._expr[6]._op" value="=" />
+							<input class="nui-hidden" name="critria._or[1]._expr[1].createdBy" id="createdBy1" />
+							<input class="nui-hidden" name="critria._or[1]._expr[1]._op" value="=" />
+						</td>
+						<td style="width: 90px; text-align: right;">评审结果编号:</td>
+						<td style="width: 205px">
+							<input name="critria._expr[0].code" class="nui-textbox" style="width: 200px" />
+							<input class="nui-hidden" name="critria._expr[0]._op" value="like" />
+						</td>
+						<td style="width: 90px; text-align: right;">采购立项编号:</td>
+						<td style="width: 205px">
+							<input name="critria._expr[10].proAppCode" class="nui-textbox" style="width: 200px" />
+							<input class="nui-hidden" name="critria._expr[10]._op" value="like" />
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 60px; text-align: right;">申请日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[22]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[22]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[22]._property" value="createdTime" />
+							<input class="nui-datepicker" name="critria._expr[22]._min" style="width: 110px" />
+							<span>至</span>
+							<input class="nui-datepicker" name="critria._expr[22]._max" style="width: 110px" />
+						</td>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 245px">
+							<input name="critria._expr[23].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 240px" />
+						</td>
+						<td colspan="2">
+							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
+							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+			<table style="width: 100%;">
 				<tr>
-					<td colspan="1">
-						<input class="nui-hidden" name="critria._expr[5]._property" value="orgId" />
-						<input class="nui-hidden" name="critria._expr[5]._op" value="in" id="tempCond1" />
-						<input class="nui-hidden" name="critria._expr[5]._ref" value="" id="tempCond2" />
-						<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
-						<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
-						<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
-						<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
-						<input class="nui-hidden" name="critria._expr[3]._property" value="orgId" />
-						<input class="nui-hidden" name="critria._expr[3]._op" value="in" />
-						<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
-
-						<input class="nui-hidden" name="critria._expr[2].createdBy" id="createdBy" />
-					</td>
-
-					<td class="form_label" align="right">评审结果编号:</td>
-					<td colspan="1">
-						<input name="critria._expr[0].code" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[0]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">采购立项编号:</td>
-					<td colspan="1">
-						<input name="critria._expr[1].proAppCode" class="nui-textbox" style="width: 65%;" />
-						<input class="nui-hidden" name="critria._expr[1]._op" value="like" />
-					</td>
-					<td class="form_label" align="right">状态</td>
-					<td colspan="1">
-						<input name="critria._expr[8].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" shownullItem="true" style="width: 150px;" />
-					</td>
-					<td colspan="9" align="center">
-						<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
-
-						<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-
+					<td>
+						<a class="nui-button" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="psbg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
+						<a class="nui-button" iconCls="icon-print" onclick="print()">打印</a>
 					</td>
 				</tr>
 			</table>
 		</div>
-	</div>
 
-	<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
-		<table style="width: 100%;">
-			<tr>
-				<td style="width: 20%;">
-					<a class="nui-button" id="checkview" iconCls="icon-add" onclick="add()">新增</a>
-					<a class="nui-button" id="psbg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
-					<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="nui-fit">
-		<div id="datagrid1" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="reviewReport" multiSelect="false" class="nui-datagrid" style="width: 100%; height: 100%;"
-			url="com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext">
-
-			<div property="columns">
-				<div type="checkcolumn"></div>
-				<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-				<div field="code" width="80" align="center" headerAlign="center">评审结果编号</div>
-				<div field="reportName" width="200" align="center" headerAlign="center" renderer="lookInfo">评审结果名称</div>
-				<div field="proAppCode" width="80" align="center" headerAlign="center">采购立项编号</div>
-				<div field="status" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
-				<div field="createdTime" align="center" headerAlign="center" allowSort="true">申请日期</div>
+		<div class="nui-fit">
+			<div id="datagrid1" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="reviewReport" multiSelect="false" class="nui-datagrid" style="width: 100%; height: 100%;"
+				url="com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext">
+				<div property="columns">
+					<div type="checkcolumn"></div>
+					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
+					<div field="code" width="80" align="center" headerAlign="center">评审结果编号</div>
+					<div field="reportName" width="200" align="center" headerAlign="center" renderer="lookInfo">评审结果名称</div>
+					<div field="proAppCode" width="80" align="center" headerAlign="center">采购立项编号</div>
+					<div field="createdOrgname" width="100" align="center" headerAlign="center">申请单位</div>
+					<div field="status" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
+					<div field="createdTime" align="center" headerAlign="center" allowSort="true">申请日期</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -99,24 +118,31 @@ body {
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		
+
 		init();
-		
+
 		function init() {
 			//按钮权限的控制
 			getOpeatorButtonAuth("psbg_zf"); //操作按钮权限初始化
 			//code:对应功能编码，map：对于机构的查询条件
-			var json = { "code": "psbg"};
-			ajaxCommon({
-				"url": "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
-				"data": json,
-				"success": function(data) {
+			var json = {
+				"code" : "psbg"
+			};
+			nui.ajax({
+				"url" : "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
+				"data" : json,
+				type : 'POST',
+				"success" : function(data) {
 					if (data.orgs) {
 						if (data.orgs.length == 0) {
 							//当没有有权的机构时将申请人设置为登陆人
 							nui.get("createdBy").setValue(userId);
+							nui.get("createdBy1").setValue(userId);
 						}
+						//根据情况选择一种
+						nui.get("orgid2").setData(data.orgs);
 						nui.get("orgids2").setValue(data.orgids);
+						nui.get("createdBy1").setValue(userId);
 					} else {
 						//当没有有权的机构时将申请人设置为登陆人
 						nui.get("createdBy").setValue(userId);
@@ -126,10 +152,30 @@ body {
 			});
 		}
 		
+		function search() {
+			if (nui.get("orgid2").getValue() == "") {
+				nui.get("tempCond1").setValue("=");
+				nui.get("tempCond2").setValue("");
+			} else {
+				nui.get("tempCond1").setValue("in");
+				nui.get("tempCond2").setValue("1");
+			}
+			var form = new nui.Form("#form1");
+			var data = form.getData(); //获取表单JS对象数据
+			grid.sortBy('createdTime', 'desc');
+			grid.load(data); //datagrid加载数据
+		}
+
+		function reset() {
+			var form = new nui.Form("#form1");
+			form.reset();
+			init();
+		}
+		
 		function print() {
 			var row = grid.getSelected();
 			if (row) {
-				executeUrl = "<%= request.getContextPath() %>/purchase/programme/reviewReportDetail.jsp?id=" + row.id;
+				executeUrl = "<%=request.getContextPath()%>/purchase/programme/reviewReportDetail.jsp?id=" + row.id;
 				window.open(executeUrl);
 			} else {
 				showTips("请选中一条记录");
@@ -162,7 +208,7 @@ body {
 				},
 				ondestroy: function(action) {}
 			});
-		}					
+		}
 		
 		function getStatus(e) {
 			if (e.value == 1) {
@@ -180,52 +226,40 @@ body {
 		}
 		
 		function doView(id) {
-			var executeUrl = "<%= request.getContextPath() %>/purchase/programme/reviewReportDetail.jsp?id=" + id;
+			var executeUrl = "<%=request.getContextPath()%>/purchase/programme/reviewReportDetail.jsp?id=" + id;
 			window.open(executeUrl);
 		}
-		
-		function search() {
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			grid.sortBy('createdTime', 'desc');
-			grid.load(data); //datagrid加载数据
-		}
-		function reset() {
-			var form = new nui.Form("#form1");
-			form.reset();
-			search()
-		}
-		
+
 		function onOk() {
 			search();
 		}
-				
+
 		function edit() {
 			debugger;
 			var row = grid.getSelecteds();
 			var data = row[0];
 			if (data) {
 				nui.open({
-					url: "/default/contractPact/chargeContract/chargeContractEdit.jsp",
-					width: "100%",
-					height: "100%",
-					title: "编辑",
-					onload: function() {
+					url : "/default/contractPact/chargeContract/chargeContractEdit.jsp",
+					width : "100%",
+					height : "100%",
+					title : "编辑",
+					onload : function() {
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setEditData(data);
 					},
-					ondestroy: function(action) {
+					ondestroy : function(action) {
 						if (action == "ok") {
 							grid.reload();
 						}
 					}
 				})
-		
+
 			} else {
 				nui.alert("请选中一条记录", "提示");
 			}
 		}
-		
+
 		function deleteInfo() {
 			var row = grid.getSelecteds();
 			if (row.length > 0) {
@@ -238,13 +272,15 @@ body {
 						var row = row[0];
 						console.log(row);
 						if (row) {
-							var json = nui.encode({ id: row.id });
+							var json = nui.encode({
+								id : row.id
+							});
 							nui.ajax({
-								url: "com.zhonghe.ame.purchase.purchaseReviewReport.delReviewReport.biz.ext",
-								type: 'POST',
-								data: json,
-								contentType: 'text/json',
-								success: function(o) {
+								url : "com.zhonghe.ame.purchase.purchaseReviewReport.delReviewReport.biz.ext",
+								type : 'POST',
+								data : json,
+								contentType : 'text/json',
+								success : function(o) {
 									if (o.result == 1) {
 										nui.alert("删除成功", "系统提示", function() {
 											grid.reload();
@@ -252,7 +288,6 @@ body {
 									} else {
 										nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
 										});
-		
 									}
 								}
 							});
@@ -317,9 +352,7 @@ body {
 					showTips("只能作废审批状态为【审批通过】的数据", "danger");
 				}
 			}
-		}								
-		
+		}
 	</script>
-
 </body>
 </html>
