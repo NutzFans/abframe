@@ -65,29 +65,29 @@ body {
 						<tr>
 							<td align="right" style="width: 130px">服务范围：</td>
 							<td>
-								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 200px" required="true" />
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 200px" required="true" enabled="false" emptyText="投标记录关联带出" />
 							</td>
 							<td align="right" style="width: 130px">专业类别：</td>
 							<td>
-								<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 200px" required="true" enabled="true" />
+								<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 200px" required="true" enabled="false" emptyText="投标记录关联带出" />
 							</td>
 							<td align="right" style="width: 130px">工程类别：</td>
 							<td>
-								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 200px" enabled="true" required="true" />
+								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 200px" enabled="false" required="true" emptyText="投标记录关联带出" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">合同价格模式：</td>
 							<td>
-								<input id="contractModel" name="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 200px" required="true" enabled="true" />
+								<input id="contractModel" name="contractModel" class="nui-dictcombobox" dictTypeId="CONTRACT_MODEL" style="width: 200px" required="true" enabled="false" emptyText="投标记录关联带出" />
 							</td>
 							<td align="right" style="width: 130px">招标人采购方式:</td>
 							<td>
-								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 200px" required="true" enabled="true" />
+								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_PROCUREMENT_TYPE" style="width: 200px" required="true" enabled="false" emptyText="投标记录关联带出" />
 							</td>
 							<td align="right" style="width: 130px">集团内外：</td>
 							<td>
-								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 200px" required="true" enabled="true" />
+								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 200px" required="true" enabled="false" emptyText="投标记录关联带出" />
 							</td>
 						</tr>
 						<tr>
@@ -123,11 +123,11 @@ body {
 							<td colspan="3">
 								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
 									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext"
-										valueField="custid" textField="custname" allowInput="false" />
+										valueField="custid" textField="custname" allowInput="false" required="true" enabled="false" emptyText="投标记录关联带出" />
 									<span class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
-										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
-											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+										<!-- onclick="selectCustInfo()" -->
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
 											<span class="mini-buttonedit-icon"></span>
 										</span>
 									</span>
@@ -164,7 +164,10 @@ body {
 		</fieldset>
 
 		<fieldset id="field3" style="border: solid 1px #aaa;">
-			<legend>未来年度收款计划<span style="color: red">（金额单位：元）</span></legend>
+			<legend>
+				未来年度收款计划
+				<span style="color: red">（金额单位：元）</span>
+			</legend>
 			<div>
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table style="width: 100%;">
