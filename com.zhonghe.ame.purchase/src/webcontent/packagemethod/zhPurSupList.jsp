@@ -57,6 +57,7 @@
 			</div>			
 			<div field="custtype" width="110" align="center" headerAlign="center" renderer="dictcusttype">供应商类型
 				<input name="criteria._expr[4].custtype" class="nui-dictcombobox" multiSelect="true"  dictTypeId="AME_SUPTYPE" property="filter" showNullItem="true" width="100%" onvaluechanged="search""/>
+				<input  property="editor" class="nui-dictcombobox" dictTypeId="AME_SUPTYPE" showNullItem="true" />
 			</div>
 			<div field="isqualified" width="110" align="center" headerAlign="center" renderer="dictstatus" >是否合格
 				<input name="criteria._expr[3].isqualified" property="filter" multiSelect="true" class="nui-dictcombobox" dictTypeId="MIS_YN" width="100%" showNullItem="true" onvaluechanged="search""/>
