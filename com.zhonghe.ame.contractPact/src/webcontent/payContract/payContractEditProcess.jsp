@@ -143,7 +143,7 @@
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" emptyText="数字格式年份，格式：YYYY" required="false" enabled="false" />
 							</td>						
-							<td align="right" style="width: 120px">立项金额(元):</td>
+							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
 							</td>
@@ -547,6 +547,9 @@
 				contentType : "text/json",
 				success : function(o) {
 					//付款申请基本信息
+					if(o.payContract.budgetSum==0){
+						o.payContract.budgetSum = "";
+					}
 					form.setData(o.payContract);
 					nui.get("custInfo").setValue(o.payContract.signatory);
 					nui.get("custInfo").setText(o.payContract.signatoryname);
@@ -554,10 +557,12 @@
 					nui.get("purchasePlan").setText(o.payContract.purchasePlan);
 					if (nui.get("contractNature").getValue() == 3) {
 						$("#purchasePlanLable").html("零星采购编号:");
+						$("#budgetSumLable").html("零采金额(元):");
 						nui.get("purchasePlan").setRequired(true);
 						nui.get("purchasePlan").enable();
 					}else if(nui.get("contractNature").getValue() == 1){
 						$("#purchasePlanLable").html("采购立项编号:");
+						$("#budgetSumLable").html("立项金额(元):");
 						nui.get("purchasePlan").setRequired(true);
 						nui.get("purchasePlan").enable();
 						nui.get("planYear").setRequired(true);
@@ -716,6 +721,7 @@
 		function contractNatureChanged() {
 			if (nui.get("contractNature").getValue() == 1) {
 				$("#purchasePlanLable").html("采购立项编号:");
+				$("#budgetSumLable").html("立项金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");
@@ -732,6 +738,7 @@
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 2) {
 				$("#purchasePlanLable").html("采购立项编号:");
+				$("#budgetSumLable").html("立项金额(元):");
 				nui.get("purchasePlan").setRequired(false);
 				nui.get("purchasePlan").disable();
 				nui.get("purchasePlan").setValue("");
@@ -748,6 +755,7 @@
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 3) {
 				$("#purchasePlanLable").html("零星采购编号:");
+				$("#budgetSumLable").html("零采金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");
@@ -764,6 +772,7 @@
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 4) {
 				$("#purchasePlanLable").html("采购立项编号:");
+				$("#budgetSumLable").html("立项金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");

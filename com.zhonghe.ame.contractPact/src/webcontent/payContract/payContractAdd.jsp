@@ -140,7 +140,7 @@
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" emptyText="数字格式年份，格式：YYYY" required="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 120px">立项金额(元):</td>
+							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
 							</td>
@@ -681,6 +681,7 @@
 		function contractNatureChanged() {
 			if (nui.get("contractNature").getValue() == 1) {
 				$("#purchasePlanLable").html("采购立项编号:");
+				$("#budgetSumLable").html("立项金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");
@@ -697,6 +698,7 @@
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 2) {
 				$("#purchasePlanLable").html("采购立项编号:");
+				$("#budgetSumLable").html("立项金额(元):");
 				nui.get("purchasePlan").setRequired(false);
 				nui.get("purchasePlan").disable();
 				nui.get("purchasePlan").setValue("");
@@ -713,6 +715,7 @@
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 3) {
 				$("#purchasePlanLable").html("零星采购编号:");
+				$("#budgetSumLable").html("零采金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");
@@ -723,12 +726,13 @@
 				nui.get("planYear").setRequired(false);
 				nui.get("planYear").disable();
 				nui.get("planYear").setValue("");
-				nui.get("budgetSum").setRequired(true);
+				nui.get("budgetSum").setRequired(false);
 				nui.get("budgetSum").setValue("");
 				nui.get("scalingSum").setRequired(false);
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 4) {
 				$("#purchasePlanLable").html("采购立项编号:");
+				$("#budgetSumLable").html("立项金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");

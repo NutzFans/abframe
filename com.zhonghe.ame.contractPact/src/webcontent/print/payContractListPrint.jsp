@@ -8,13 +8,13 @@
 <head>
 <title>打印页面</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/common/nui/warterMark.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery-barcode.js"></script>
-<% 
-	UserObject user = (UserObject)session.getAttribute("userObject");
+<%
+	UserObject user = (UserObject) session.getAttribute("userObject");
 	String userName = user.getUserName();
 %>
 <style type="text/css">
@@ -62,7 +62,7 @@ table,table tr td {
 
 	<div title="付费合同打印" style="height: auto;">
 		<div id="pipi" class="nui-panel" style="font-size: 13px; width: 840px; height: 30px; margin: 0 auto; text-align: center;" align="left"></div>
-		<div class="" style="width: 788px;margin: 0 auto;font-size: 14px;border:1px solid #999999;">
+		<div class="" style="width: 788px; margin: 0 auto; font-size: 14px; border: 1px solid #999999;">
 			<div class="base_div">付费合同基本信息</div>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
@@ -93,7 +93,7 @@ table,table tr td {
 							</td>
 							<td align="right" style="width: 160px">合同类型：</td>
 							<td>
-								<input id="contractType" name="contractType" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE"style="width: 100%" required="true" />
+								<input id="contractType" name="contractType" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 100%" required="true" />
 							</td>
 						</tr>
 						<tr>
@@ -130,13 +130,12 @@ table,table tr td {
 										valueField="custid" textField="custname" allowInput="false" enabled="false" />
 									<span class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
-										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
-											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
 											<span class="mini-buttonedit-icon"></span>
 										</span>
 									</span>
 								</span>
-							</td>						
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">合同签约主体：</td>
@@ -180,7 +179,7 @@ table,table tr td {
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 120px">立项金额(元):</td>
+							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
 							</td>
@@ -266,7 +265,11 @@ table,table tr td {
 				success : function(o) {
 					var data = o.data[0];
 					var createUsername;
+					if(data.budgetSum==0){
+						data.budgetSum = "";
+					}
 					form.setData(data);
+					console.log(data);
 					nui.get("custInfo").setValue(data.signatory);
 					nui.get("custInfo").setText(data.signatoryname);
 					nui.get("contractSum").setValue(data.contractSum);
@@ -274,6 +277,7 @@ table,table tr td {
 					nui.get("createUsername").setValue(data.createUsername);
 					if (nui.get("contractNature").getValue() == 3) {
 						$("#purchasePlanLable").html("零星采购编号:");
+						$("#budgetSumLable").html("零采金额(元):");
 					}
 					if (data.createUsername != null) {
 						createUsername = data.createUsername
@@ -386,20 +390,19 @@ table,table tr td {
 		}
 		
 		// 设置水印用户
-		// setWatermark('<%=request.getParameter("userName") %>')
-		setWatermark('<%=userName %>')
+		// setWatermark('<%=request.getParameter("userName")%>')
+		setWatermark('<%=userName%>')
 		function printview() {
 			document.getElementById('checkview').style.display = "none";
 			print();
 			document.getElementById('checkview').style.display = "";
 		}
-		
+
 		function printBtn() {
 			document.getElementById('checkview').style.display = "none";
 			print();
 			document.getElementById('checkview').style.display = "";
-		}	
-		
+		}
 	</script>
 </body>
 </html>

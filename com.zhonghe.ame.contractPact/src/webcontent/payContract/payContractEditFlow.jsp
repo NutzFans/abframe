@@ -148,7 +148,7 @@ body {
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 120px">立项金额(元):</td>
+							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
 							</td>
@@ -289,6 +289,9 @@ body {
 				data : json,
 				contentType : 'text/json',
 				success : function(o) {
+					if(o.data.budgetSum==0){
+						o.data.budgetSum = "";
+					}
 					form.setData(o.data);
 					nui.get("custInfo").setValue(o.data.signatory);
 					nui.get("custInfo").setText(o.data.signatoryname);
@@ -297,6 +300,7 @@ body {
 					nui.get("backTo").setData(o.data.backList);
 					if (nui.get("contractNature").getValue() == 3) {
 						$("#purchasePlanLable").html("零星采购编号:");
+						$("#budgetSumLable").html("零采金额(元):");
 					}
 					//查询并加载附件
 					var grid_0 = nui.get("grid_0");
