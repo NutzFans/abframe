@@ -214,7 +214,7 @@ body {
 			nui.get("bookIncome").setValue(abs(bookIncome));
 			nui.get("invoiceTax").setValue(abs(invoiceSum - abs(bookIncome)));
 		}
-
+		
 		function newEditContractSum() {
 			var rate = 6;
 			var invoiceSum = nui.get("newInvoiceSum").getValue();
@@ -276,7 +276,7 @@ body {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
-			debugger
+			debugger;
 			var historyInvoiceSum = nui.get("historyInvoiceSum").getValue();
 			var invoiceSum = nui.get("invoiceSum").getValue();
 			var newInvoiceSum = nui.get("newInvoiceSum").getValue();
@@ -288,6 +288,97 @@ body {
 				showTips("产值分配后的开票金额之和，应等于待产值分配时的开票金额！", "danger");
 				return;
 			}
+			var historyBookIncome = nui.get("historyBookIncome").getValue();
+			var bookIncome = nui.get("bookIncome").getValue();
+			var newBookIncome = nui.get("newBookIncome").getValue();
+			var bookIncomeSum = eval(bookIncome) + eval(newBookIncome);
+			historyBookIncome =  eval(historyBookIncome);
+			bookIncomeSum = bookIncomeSum.toFixed(2);
+			historyBookIncome =  historyBookIncome.toFixed(2);
+			if (bookIncomeSum != historyBookIncome) {
+				showTips("产值分配后的账面收入之和，应等于待产值分配时的账面收入！", "danger");
+				return;
+			}
+			var historyInvoiceTax = nui.get("historyInvoiceTax").getValue();
+			var invoiceTax = nui.get("invoiceTax").getValue();
+			var newInvoiceTax = nui.get("newInvoiceTax").getValue();
+			var invoiceTaxSum = eval(invoiceTax) + eval(newInvoiceTax);
+			historyInvoiceTax =  eval(historyInvoiceTax);
+			invoiceTaxSum = invoiceTaxSum.toFixed(2);
+			historyInvoiceTax =  historyInvoiceTax.toFixed(2);
+			if (invoiceTaxSum != historyInvoiceTax) {
+				showTips("产值分配后的税额之和，应等于待产值分配时的税额！", "danger");
+				return;
+			}
+			if(nui.get("historyReceivableSum").getValue() == ""){
+				var historyReceivableSum = 0;
+			}else{
+				var historyReceivableSum = nui.get("historyReceivableSum").getValue();
+			}
+			if(nui.get("receivableSum").getValue() == ""){
+				var receivableSum = 0;
+			}else{
+				var receivableSum = nui.get("receivableSum").getValue();
+			}
+			if(nui.get("newReceivableSum").getValue() == ""){
+				var newReceivableSum = 0;
+			}else{
+				var newReceivableSum = nui.get("newReceivableSum").getValue();
+			}
+			var receivableSumSum = eval(receivableSum) + eval(newReceivableSum);	
+			historyReceivableSum =  eval(historyReceivableSum);
+			receivableSumSum = receivableSumSum.toFixed(2);
+			historyReceivableSum =  historyReceivableSum.toFixed(2);
+			if (receivableSumSum != historyReceivableSum) {
+				showTips("产值分配后的回款金额之和，应等于待产值分配时的回款金额！", "danger");
+				return;
+			}
+			if(nui.get("historyBalanceSum").getValue() == ""){
+				var historyBalanceSum = 0;
+			}else{
+				var historyBalanceSum = nui.get("historyBalanceSum").getValue();
+			}								
+			if(nui.get("balanceSum").getValue() == ""){
+				var balanceSum = 0;
+			}else{
+				var balanceSum = nui.get("balanceSum").getValue();
+			}
+			if(nui.get("newBalanceSum").getValue() == ""){
+				var newBalanceSum = 0;
+			}else{
+				var newBalanceSum = nui.get("newBalanceSum").getValue();
+			}
+			var balanceSumSum = eval(balanceSum) + eval(newBalanceSum);	
+			historyBalanceSum =  eval(historyBalanceSum);
+			balanceSumSum = balanceSumSum.toFixed(2);
+			historyBalanceSum =  historyBalanceSum.toFixed(2);
+			if (balanceSumSum != historyBalanceSum) {
+				showTips("产值分配后的余额之和，应等于待产值分配时的余额！", "danger");
+				return;
+			}
+			if(nui.get("historyVerification").getValue() == ""){
+				var historyVerification = 0;
+			}else{
+				var historyVerification = nui.get("historyVerification").getValue();
+			}								
+			if(nui.get("verification").getValue() == ""){
+				var verification = 0;
+			}else{
+				var verification = nui.get("verification").getValue();
+			}
+			if(nui.get("newVerification").getValue() == ""){
+				var newVerification = 0;
+			}else{
+				var newVerification = nui.get("newVerification").getValue();
+			}
+			var verificationSum = eval(verification) + eval(newVerification);	
+			historyVerification =  eval(historyVerification);
+			verificationSum = verificationSum.toFixed(2);
+			historyVerification =  historyVerification.toFixed(2);
+			if (verificationSum != historyVerification) {
+				showTips("产值分配后的核查之和，应等于待产值分配时的核查！", "danger");
+				return;
+			}												
 			var invoiceData = form1.getData();
 			var newInvoiceData = form2.getData();
 			var json = nui.encode({
