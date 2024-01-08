@@ -63,7 +63,7 @@
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var id = <%=request.getParameter("id")%>;
+		var id =<%=request.getParameter("id")%>;
 
 		search();
 
@@ -80,24 +80,29 @@
 
 		function onOk() {
 			var row = grid.getSelected();
-			var json = nui.encode({
-				'id' : id,
-				'data' : row
-			});
-			nui.ajax({
-				url : "com.zhonghe.ame.chargeContract.chargeContract.updateChargeContractTransactor.biz.ext",
-				type : 'POST',
-				data : json,
-				contentType : 'text/json',
-				success : function(o) {
-					if (o.result == 1) {
-						showTips("变更经办人成功");
-						CloseWindow("ok");
-					} else {
-						showTips("变更经办人失败，请联系信息技术部人员！", "danger");
+			if (row == undefined || row == "undefined") {
+				showTips("请选中需要变更的经办人！", "danger");
+				return;
+			} else {
+				var json = nui.encode({
+					'id' : id,
+					'data' : row
+				});
+				nui.ajax({
+					url : "com.zhonghe.ame.chargeContract.chargeContract.updateChargeContractTransactor.biz.ext",
+					type : 'POST',
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == 1) {
+							showTips("变更经办人成功");
+							CloseWindow("ok");
+						} else {
+							showTips("变更经办人失败，请联系信息技术部人员！", "danger");
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 
 		function onRowDblClick(e) {
