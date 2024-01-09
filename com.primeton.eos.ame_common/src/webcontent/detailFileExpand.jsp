@@ -84,7 +84,7 @@
     
     // 新增一个方法 将预览文件直接用新新窗口打开
     function openFile() {
-    	var grid = nui.get("grid_0");
+    	var grid = nui.get("detailFileExpandGrid");
     	var selectRow = grid.getSelected();
     	var filePath = selectRow.filePath;
     	var fileType = selectRow.fileType;

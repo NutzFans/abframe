@@ -325,7 +325,7 @@
 				titleText = "退回";
 				submitProcess("退回");
 			} else if (auditstatus == "1") { //提交流程
-				document.getElementById("fileCatalog1").value = "chargeContractInfo";
+				document.getElementById("fileCatalog1").value = "chargeContractinfo";
 				titleText = "提交";
 				submitProcess("提交");
 			}
@@ -334,7 +334,7 @@
 		function submitProcess(title) {
 			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
-					document.getElementById("fileCatalog1").value = "chargeContractInfo";
+					document.getElementById("fileCatalog1").value = "chargeContractinfo";
 					form4.submit();
 				}
 			});

@@ -356,7 +356,7 @@ body {
 				titleText = "退回";
 				submitProcess("退回");
 			} else if (auditstatus == "1") { //提交流程
-				document.getElementById("fileCatalog1").value = "payContractInfo";
+				document.getElementById("fileCatalog1").value = "payContractinfo";
 				titleText = "提交";
 				submitProcess("提交");
 			}
