@@ -72,10 +72,10 @@
 	        var groupId = record.groupId;
 	        var s;
 	        if(isViewDelete){
-	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="openFile()" href="javascript:void(0)" >预览</a>'
+	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="openFileExpandGrid()" href="javascript:void(0)" >预览</a>'
                     + " <a href='javascript:void(0)' type='"+groupId+"' uid='"+uid+"' onclick='deleteFile(this)'>删除</a>";
 	        }else{
-	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="openFile()" href="javascript:void(0)" >预览</a>';
+	        	s = ' <a class="Edit_Button" uid="'+uid+'" grid="detailFileExpandGrid" onclick="openFileExpandGrid()" href="javascript:void(0)" >预览</a>';
             
 	        }
 	        return s;
@@ -83,7 +83,7 @@
     }
     
     // 新增一个方法 将预览文件直接用新新窗口打开
-    function openFile() {
+    function openFileExpandGrid() {
     	var grid = nui.get("detailFileExpandGrid");
     	var selectRow = grid.getSelected();
     	var filePath = selectRow.filePath;
