@@ -123,13 +123,26 @@
 						<td style="width: 60px; text-align: right;">是否采购:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[29].contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>		
+						</td>
+						<td style="width: 90px; text-align: right;">审批完成日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[32]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[32]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[32]._property" value="updateTime" />
+							<input class="nui-datepicker" name="critria._expr[32]._min" style="width: 110px" />
+							<span >至</span>
+							<input class="nui-datepicker" name="critria._expr[32]._max" style="width: 110px" />
+						</td>					
+					</tr>
+					<tr>
 						<td style="width: 60px; text-align: right;">采购方式:</td>
-						<td style="width: 400px">
+						<td style="width: 155px">
 							<input name="critria._expr[30].procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" showNullItem="true" nullItemText="全部" style="width: 150px" />
-							<span style="width: 60px; text-align: right; vertical-align: inherit; margin-left: 10px">企业类型:</span>
+						</td>
+						<td style="width: 60px; text-align: right;">企业类型:</td>
+						<td style="width: 155px">
 							<input name="critria._expr[31].custnature" class="nui-dictcombobox" dictTypeId="MIS_CUSTNATURE" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>			
+						</td>						
 					</tr>
 				</table>
 			</div>
@@ -206,6 +219,7 @@
 					<div field="cgNature" width="100" headerAlign="center" allowSort="true" renderer="ZH_NATURE" align="center">合同/订单性质</div>
 					<div field="cgSupplierScope" width="100" headerAlign="center" allowSort="true" renderer="ZH_SUPPLIER_SCOPE" align="center">供货商来源</div>
 					<div field="isDzcg" width="100" headerAlign="center" allowSort="true" renderer="ZH_YN" align="center">是否电子采购</div>
+					<div field="updateTime" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center" allowSort="true">审批完成日期</div>
 					<div field="relateCont" headerAlign="center" allowSort="true" visible="false">relateCont</div>
 				</div>
 			</div>
