@@ -70,7 +70,7 @@ body .mini-textboxlist {
 						<td align="right" style="width: 130px">集团或二级单位：</td>
 						<td>
 							<span data-placement="right" data-tooltip="1、集团内请选择甲方全称对应二级单位。<br>2、集团合同/大合同可以选择集团或甲方全称对应二级单位">
-								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 250px" emptyText="集团内外:集团内/合同/大合同 时必填" />
+								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 250px" emptyText="集团内外:集团内/合同/大合同 时必填" showNullItem="true" />
 							</span>
 						</td>
 					</tr>
