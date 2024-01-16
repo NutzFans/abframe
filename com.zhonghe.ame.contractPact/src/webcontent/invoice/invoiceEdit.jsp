@@ -45,7 +45,7 @@
 							</td>
 							<td align="right" style="width: 160px">合同名称：</td>
 							<td colspan="6">
-								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true"/>
+								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
@@ -55,11 +55,11 @@
 							</td>
 							<td align="right" style="width: 160px">工程类别：</td>
 							<td>
-								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true"/>
+								<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true" enabled="false"/>
 							</td>
 							<td align="right" style="width: 160px">集团内外：</td>
 							<td>
-								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true"/>
+								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
@@ -87,7 +87,7 @@
 							</td>
 							<td align="right" style="width: 160px">合同金额（元）：</td>
 							<td>
-								<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" required="true" style="width: 300px"/>
+								<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" required="true" style="width: 300px" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
