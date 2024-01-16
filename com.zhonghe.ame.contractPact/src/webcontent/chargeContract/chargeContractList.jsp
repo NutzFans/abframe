@@ -129,6 +129,15 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[30].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 90px; text-align: right;">审批完成日期:</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="critria._expr[40]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[40]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="critria._expr[40]._property" value="updatedTime" />
+							<input class="nui-datepicker" name="critria._expr[40]._min" style="width: 110px" />
+							<span >至</span>
+							<input class="nui-datepicker" name="critria._expr[40]._max" style="width: 110px" />
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 70px; text-align: right;">集团内/外:</td>
@@ -225,6 +234,7 @@ html,body {
 					<div field="contractModel" width="100" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_MODEL">合同价格模式</div>
 					<div field="procurementType" width="150" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROCUREMENT_TYPE">招标人采购方式</div>
 					<div field="twoOrg" width="250" align="center" headerAlign="center" allowSort="true" renderer="ZH_BID_TWO_ORG">集团或二级单位</div>
+					<div field="updatedTime" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center" allowSort="true">审批完成日期</div>
 				</div>
 			</div>
 		</div>
