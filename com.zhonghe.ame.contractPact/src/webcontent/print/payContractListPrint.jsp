@@ -192,13 +192,6 @@ table,table tr td {
 							<td align="right" style="width: 160px">备注：</td>
 							<td id="remark" colspan="5" style="height: 235px; background: #F0F0F0; border: 1px solid #A5ACB5"></td>
 						</tr>
-						<tr id="purchaseInfo" style="display: none;">
-							<td colspan="6" style="padding-left: 168px">
-								<a href='javascript:void(0)' onclick='doProAppPrintView();' title='点击查看'>采购立项详情</a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href='javascript:void(0)' onclick='doPurProgrammeDetailView();' title='点击查看'>采购文件详情</a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href='javascript:void(0)' onclick='doReviewReportDetailView();' title='点击查看'>评审结果详情</a>
-							</td>
-						</tr>
 					</table>
 				</div>
 				<div class="link-top"></div>
@@ -311,11 +304,6 @@ table,table tr td {
 					grid5.load({
 						processInstID : processInstID
 					});
-					if(data.contractNature=='1' || data.contractNature=='4'){
-						if(isNotBank(data.purchasePlan)){
-							$('#purchaseInfo').toggle();
-						}
-					}
 				}
 			});
 		}
@@ -415,83 +403,6 @@ table,table tr td {
 			print();
 			document.getElementById('checkview').style.display = "";
 		}
-		
-		function isNotBank(param){
-			if (param != null && param != "" && param != "null" && param != "undefined" && param) {
-				return true;
-			}else{
-				return false;
-			}
-		}
-		
-		function doProAppPrintView(){
-			var json = nui.encode({"code" : nui.get('purchasePlan').getValue()});
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseProApp.queryProAppByCode.biz.ext",
-				type : 'POST',
-				data : json,
-				contentType : 'text/json',
-				success : function(res) {
-					var id  = res.data.id;
-					if(isNotBank(id)){
-						var executeUrl = "<%=request.getContextPath()%>/purchase/print/proAppPrint.jsp?id=" + id;
-						window.open(executeUrl);						
-					}else{
-						showTips("未关联到相关采购立项信息！", "danger");
-					}
-
-				}				
-			});
-		}
-		
-		function doPurProgrammeDetailView(){
-			var json = nui.encode({"appCode" : nui.get('purchasePlan').getValue()});
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgrammeAppCode.biz.ext",
-				type : 'POST',
-				data : json,
-				contentType : 'text/json',
-				success : function(res) {
-					var id  = res.data.id;
-					if(isNotBank(id)){
-						var executeUrl = "<%=request.getContextPath()%>/purchase/print/purProgramPrint.jsp?id=" + id;
-						window.open(executeUrl);						
-					}else{
-						showTips("未关联到相关采购文件信息！", "danger");
-					}
-				}				
-			});
-		}
-		
-		function doReviewReportDetailView(){
-			var json = nui.encode({"appCode" : nui.get('purchasePlan').getValue()});
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReportByAppCode.biz.ext",
-				type : 'POST',
-				data : json,
-				contentType : 'text/json',
-				success : function(res) {
-					var id  = res.data.id;
-					if(isNotBank(id)){
-						var executeUrl = "<%=request.getContextPath()%>/purchase/programme/reviewReportDetail.jsp?id=" + id;
-						window.open(executeUrl);
-					}else{
-						showTips("未关联到相关评审结果信息！", "danger");
-					}
-				}				
-			});			
-		}
-		
-		function showTips(content, state) {
-			//  state  default|success|info|warning|danger
-			if(state) {
-				nui.showTips({content: content, state: state, x: "center", y: "center",timeout: 3500.});
-			}
-			else {
-				nui.showTips({content: content, state: "success", x: "center", y: "center",timeout: 3500.});
-			}
-		}		
-
 	</script>
 </body>
 </html>
