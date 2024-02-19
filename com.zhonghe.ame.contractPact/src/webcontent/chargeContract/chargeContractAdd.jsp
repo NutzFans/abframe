@@ -123,11 +123,10 @@ body {
 							<td colspan="3">
 								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
 									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 515px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext"
-										valueField="custid" textField="custname" allowInput="false" required="true" enabled="false" emptyText="投标记录关联带出" />
+										valueField="custid" textField="custname" allowInput="false" required="true" emptyText="投标记录关联带出" />
 									<span class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
-										<!-- onclick="selectCustInfo()" -->
-										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
 											<span class="mini-buttonedit-icon"></span>
 										</span>
 									</span>
@@ -135,7 +134,7 @@ body {
 							</td>
 							<td align="right" style="width: 130px">集团或二级单位：</td>
 							<td>
-								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 200px" emptyText="投标记录关联带出" enabled="false" />
+								<input name="twoOrg" id="twoOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_TWO_ORG" style="width: 200px" emptyText="投标记录关联带出" />
 							</td>
 						</tr>
 						<tr>
