@@ -156,6 +156,11 @@
 			"success": function(o) {
 				//付款申请基本信息
 				form.setData(o.data)
+				if(o.data.type == 1 || o.data.type==2){
+					nui.get("putunder").set({required: true});
+				}else{
+					nui.get("putunder").set({required: false});
+				}
        			grid.setData(o.datas)
        			grid.showColumns([4,6,13])
        			if(o.data.type!=2){

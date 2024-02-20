@@ -55,7 +55,7 @@
            	<tr>
            		<td class="form_label" align="right" style="width:120px;">物项归口部门：</td>
 	            <td colspan="3">
-	                <input id="putunder" name="putunder" class="nui-dictcombobox" required="true" dictTypeId="ZH_PUTUNDER"  multiSelect="true"  onvaluechanged="putunderChanged"  style="width:100%;" />
+	                <input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER"  multiSelect="true"  onvaluechanged="putunderChanged"  style="width:100%;" />
 	            </td>
 	            
 	             <td class="form_label" align="right" style="width:120px;">变更后总金额(万元)：</td>
@@ -370,7 +370,7 @@
 		}else if(purType ==3){
 				nui.get("addbtn").enable();
 	   			nui.get("delbtn").enable();
-				var rowS = {name: "New Row"} 
+				var rowS = {name: "New Row","budgetAmount":0,"number":0} 
 				grid.addRow(rowS);
 		}else{
 			showTips("请先选择采购类型及归口部门")
@@ -415,6 +415,12 @@
      */
     function changeexptype(){
     	purType = nui.get("type").getValue();
+    	if(purType==1 || purType==2){
+    		nui.get("putunder").set({required: true});
+    	}else{
+    		nui.get("putunder").set({required: false});
+    		nui.get("putunder").setValue("");
+    	}
     	//切换采购类型提示。
     	var detailRows = grid.getData();
     	

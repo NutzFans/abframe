@@ -129,7 +129,7 @@
 	                <div header="调整前" headerAlign="center">
 		                <div property="columns">
 		                	<div field="unit"  width="40" align="center" headerAlign="center" renderer="unitValue">单位</div> 
-			                <div  field="number" width="50"  align="center" headerAlign="center"  vtype="required" headerStyle="color:red">数量</div>
+			                <div  field="number" width="50"  align="center" headerAlign="center" vtype="required" headerStyle="color:red">数量</div>
 			                <div field="budgetAmount"  width="80" align="center" headerAlign="center" headerStyle="color:red" vtype="required">预算金额(万元)</div>
 		                </div>
 		            </div>

@@ -352,6 +352,12 @@
      */
     function changeexptype(){
     	purType = nui.get("type").getValue();
+    	if(purType==1 || purType==2){
+    		nui.get("putunder").set({required: true});
+    	}else{
+    		nui.get("putunder").set({required: false});
+    		nui.get("putunder").setValue("");
+    	}
     	//切换采购类型提示。
     	var detailRows = grid.getData();
     	
