@@ -108,7 +108,7 @@
 		<!-- 财务审批 -->
 		<div id="div32" style="position: absolute; left: 1300px; top: 1283px; width: 75px; height: 50px; cursor: pointer;"></div>
 
-		<!-- 总经理审批 -->
+		<!-- 总经理/分管领导审批 -->
 		<div id="div33" style="position: absolute; left: 902px; top: 1444px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 法务人员审批 -->
@@ -437,11 +437,11 @@
 				});
 			});
 
-			// 总经理审批
+			// 总经理/分管领导审批
 			$('#div33').click(function() {
 				layer.open({
-					title : '总经理审批 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【manage9】的角色数据',
+					title : '总经理/分管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSZJLFG】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
