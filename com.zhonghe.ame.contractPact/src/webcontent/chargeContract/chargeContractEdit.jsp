@@ -365,6 +365,8 @@ body {
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
 						if (data) {
+							nui.get("investAmount").setValue(data.investAmount);
+							nui.get("bidService").setValue(data.bidService);
 							nui.get("tenderId").setValue(data.id);
 							nui.get("tenderId").setText(data.projectName);
 							nui.get("major").setValue(data.majorType);
@@ -374,6 +376,7 @@ body {
 							nui.get("headquarterGroup").setValue(data.headquarterGroup);
 							nui.get("custInfo").setValue(data.custId);
 							nui.get("custInfo").setText(data.custName);
+							nui.get("twoOrg").setValue(data.twoOrg);
 						}
 					}
 				}

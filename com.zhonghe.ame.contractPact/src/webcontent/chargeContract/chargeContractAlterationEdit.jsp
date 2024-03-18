@@ -19,6 +19,7 @@
 			<form>
 				<input id="historyFinContractSum" name="historyFinContractSum" class="nui-hidden" />
 				<input id="historyContractBalance" name="historyContractBalance" class="nui-hidden" />
+				<input id="historyTwoOrg" name="historyTwoOrg" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -254,6 +255,7 @@
 					nui.get("historyContractSubject").setValue(data.contractSubject);
 					nui.get("historyPayee").setValue(data.payee);
 					nui.get("historyRemark").setValue(data.remark);
+					nui.get("historyTwoOrg").setValue(data.twoOrg);
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "CHARGE_CONTRACT",
@@ -340,6 +342,7 @@
 			data.contractBalance = contractBalance;
 			data.signatory = nui.get("custInfo").getValue();
 			data.signatoryName = nui.get("custInfo").getText();
+			data.twoOrg = nui.get("historyTwoOrg").getValue();
 			var json = nui.encode({
 				'data' : data
 			});
