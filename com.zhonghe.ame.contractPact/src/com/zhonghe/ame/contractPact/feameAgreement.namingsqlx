@@ -974,7 +974,15 @@
 			LEFT JOIN OM_ORGANIZATION b on a.ORGSEQ like b.ORGSEQ+'%' and b.ORGLEVEL = '2'
 			LEFT JOIN OM_EMPLOYEE c on b.repleader = c.userid
 			WHERE a.ORGID = #orgid#
-	]]></select>	
+	]]></select>
+	
+	<!-- 获取二级部门分管-->
+	<select id="getPlanLeaders" parameterClass="java.util.HashMap" resultMap="resultMapX"><![CDATA[
+		     SELECT DISTINCT c.USERID as userid,c.EMPNAME as empname,'person' as typeCode, b.JUDGE as judge, b.ORGCODE AS orgcode FROM OM_ORGANIZATION a
+			LEFT JOIN OM_ORGANIZATION b on a.ORGSEQ like b.ORGSEQ+'%' and b.ORGLEVEL = '2'
+			LEFT JOIN OM_EMPLOYEE c on b.repleader = c.userid
+			WHERE a.ORGID in ($orgids$)
+	]]></select>		
 	
 	<!-- 获取分公司分管审批领导-->
 	<select id="getComRepLeader" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[

@@ -266,7 +266,7 @@ body {
 						<input property="editor" class="nui-textbox" style="width: 100%;" />
 					</div>
 					<div field="sum" width="120" headerAlign="center" allowSort="true" summaryType="sum">
-						总计【】
+						总计
 						<input property="editor" class="nui-textbox" style="width: 100%;" />
 					</div>
 				</div>
