@@ -186,11 +186,15 @@
 		                cache: false,
 		                contentType: 'text/json',
 		                success: function (text) {
-		                	grid.reload();
-		                },
-		                error: function () {
-		                   nui.alert("删除失败");
-	                    }
+		                	var result = text.data;
+		                	if(result == "2"){
+		                		nui.alert("存在付费合同关联了该供货商，无法删除");
+		                	}else if(result == "3"){
+		                		nui.alert("删除供货商异常，请联系管理员");
+		                	}else{
+		                		grid.reload();
+		                	}
+		                }
 	                });                
                  }              	
                })

@@ -186,7 +186,6 @@
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
-		var opioionform = new nui.Form("#opioionform");
 		var workItemID = <%=request.getParameter("workItemID")%>;
 		var type;
 		
@@ -311,7 +310,6 @@
 			var data = form.getData();
 			data.signatory = nui.get("custInfo").getValue();
 			data.signatoryName = nui.get("custInfo").getText();
-			var data_opioion = opioionform.getData();
 			var info = "";
 			data.type = type;
 			if (type == 1) {
@@ -322,6 +320,7 @@
 				info = "是否中止流程？"
 				nui.get("auditstatus").setValue(2);
 			}
+			var data_opioion = opioionform.getData();
 			data.files = nui.get("fileids").getValue();
 			var json = nui.encode({
 				"cpData" : data,
