@@ -18,6 +18,8 @@
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>原 - 付费合同信息</legend>
 			<form>
+				<input id="historyContractNature" class="nui-hidden"/>
+				<input id="historyPurchasePlan" class="nui-hidden"/>
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -156,6 +158,13 @@
 								<input id="remark" name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="true" enabled="false" />
 							</td>
 						</tr>
+						<tr id="purchaseInfo" style="display: none;">
+							<td colspan="4" style="padding-left: 138px">
+								<a href='javascript:void(0)' onclick='doProAppPrintView();' title='点击查看'>采购立项详情</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href='javascript:void(0)' onclick='doPurProgrammeDetailView();' title='点击查看'>采购文件详情</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href='javascript:void(0)' onclick='doReviewReportDetailView();' title='点击查看'>评审结果详情</a>
+							</td>
+						</tr>
 					</table>
 				</div>
 			</form>
@@ -238,6 +247,8 @@
 				data : json,
 				success : function(result) {
 					var data = result.data;
+					nui.get("historyContractNature").setValue(data.contractNature);
+					nui.get("historyPurchasePlan").setValue(data.purchasePlan);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
 					nui.get("historyImplementOrgname").setValue(data.implementOrgname);
 					nui.get("historyCreateTime").setValue(data.createTime);
@@ -255,6 +266,11 @@
 						"relationid" : data.id
 					});
 					grid_0.sortBy("fileTime", "desc");
+					if(data.contractNature=='1' || data.contractNature=='4'){
+						if(isNotBank(data.purchasePlan)){
+							$('#purchaseInfo').toggle();
+						}
+					}
 				}
 			})
 		}
@@ -360,6 +376,73 @@
 			else
 				window.close();
 		}
+		
+		function isNotBank(param){
+			if (param != null && param != "" && param != "null" && param != "undefined" && param) {
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function doProAppPrintView(){
+			var json = nui.encode({"code" : nui.get('historyPurchasePlan').getValue()});
+			nui.ajax({
+				url : "com.zhonghe.ame.purchase.purchaseProApp.queryProAppByCode.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(res) {
+					var id  = res.data.id;
+					if(isNotBank(id)){
+						var executeUrl = "<%=request.getContextPath()%>/purchase/print/proAppPrint.jsp?id=" + id;
+						window.open(executeUrl);						
+					}else{
+						showTips("未关联到相关采购立项信息！", "danger");
+					}
+
+				}				
+			});
+		}
+		
+		function doPurProgrammeDetailView(){
+			var json = nui.encode({"appCode" : nui.get('historyPurchasePlan').getValue()});
+			nui.ajax({
+				url : "com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgrammeAppCode.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(res) {
+					var id  = res.data.id;
+					if(isNotBank(id)){
+						var executeUrl = "<%=request.getContextPath()%>/purchase/print/purProgramPrint.jsp?id=" + id;
+						window.open(executeUrl);						
+					}else{
+						showTips("未关联到相关采购文件信息！", "danger");
+					}
+				}				
+			});
+		}
+		
+		function doReviewReportDetailView(){
+			var json = nui.encode({"appCode" : nui.get('historyPurchasePlan').getValue()});
+			nui.ajax({
+				url : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReportByAppCode.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(res) {
+					var id  = res.data.id;
+					if(isNotBank(id)){
+						var executeUrl = "<%=request.getContextPath()%>/purchase/programme/reviewReportDetail.jsp?id=" + id;
+						window.open(executeUrl);
+					}else{
+						showTips("未关联到相关评审结果信息！", "danger");
+					}
+				}				
+			});			
+		}						
+				
 	</script>		
 </body>
 </html>
