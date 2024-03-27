@@ -130,6 +130,10 @@ html,body {
 							<span>至</span>
 							<input class="nui-textbox" name="critria._expr[40]._max" style="width: 90px" />
 						</td>
+						<td style="width: 60px; text-align: right;">产值分配:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[45].allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -190,6 +194,7 @@ html,body {
 					<div field="invoiceUsed" align="center" headerAlign="center" allowSort="true" renderer="INVOICE_USED">用途</div>
 					<div field="invoiceType" align="center" headerAlign="center" allowSort="true" renderer="MIS_MA_INVOICETYPE">发票类型</div>
 					<div field="payType" align="center" headerAlign="center" allowSort="true" renderer="PAY_TYPE">本次收款进度</div>
+					<div field="allotFlag" align="center" headerAlign="center" allowSort="true" renderer="ZH_YN">是否有产值分配</div>
 				</div>
 			</div>
 		</div>
@@ -616,6 +621,10 @@ html,body {
 		function PAY_TYPE(e) {
 			return nui.getDictText("payType", e.value);
 		}
+		
+		function ZH_YN(e) {
+			return nui.getDictText("ZH_YN", e.value);
+		}		
 
 		//导出
 		function exportExcel() {

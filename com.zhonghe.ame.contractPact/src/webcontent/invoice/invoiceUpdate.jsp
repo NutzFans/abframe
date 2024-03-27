@@ -54,7 +54,7 @@
 									<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true"/>
 								</td>
 								<td align="right" style="width: 160px">合同名称：</td>
-								<td colspan="6">
+								<td colspan="3">
 									<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true"/>
 								</td>
 							</tr>
@@ -116,31 +116,35 @@
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">名称：</td>
-								<td colspan="8">
+								<td colspan="3">
 									<input name="payerName" id="payerName" class="nui-textbox" style="width: 100%" required="true" />
+								</td>
+								<td align="right" style="width: 160px">是否有产值分配：</td>
+								<td>
+									<input name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true"/>
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">纳税人识别号：</td>
-								<td colspan="8">
+								<td colspan="5">
 									<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">地址、电话：</td>
-								<td colspan="8">
+								<td colspan="5">
 									<input name="unitAddress" id="unitAddress" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">开户行及账号：</td>
-								<td colspan="8">
+								<td colspan="5">
 									<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">发票备注：</td>
-								<td colspan="8">
+								<td colspan="5">
 									<input name="invoiceRemark" id="invoiceRemark" class="nui-textbox" style="width: 100%" required="false" />
 								</td>
 							</tr>
@@ -150,7 +154,7 @@
 									<input id="postFlag" name="postFlag" class="nui-dictcombobox" onvaluechanged="setAttribute" dictTypeId="ZH_POST" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">发票领取人：</td>
-								<td colspan="6">
+								<td colspan="3">
 									<input name="invoiceUser" id="invoiceUser" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
@@ -167,7 +171,7 @@
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">邮寄地址：</td>
-								<td colspan="8">
+								<td colspan="5">
 									<input name="mailAddress" id="mailAddress" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
@@ -187,7 +191,7 @@
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">备注：</td>
-								<td colspan="8">
+								<td colspan="5">
 									<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 								</td>
 							</tr>
