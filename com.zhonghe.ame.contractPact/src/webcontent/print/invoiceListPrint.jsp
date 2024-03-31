@@ -88,7 +88,7 @@ table,table tr td {
 							</td>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
-								<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="true" />
+								<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -108,23 +108,23 @@ table,table tr td {
 							</td>
 							<td align="right" style="width: 160px">发票抬头类别：</td>
 							<td>
-								<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true" enabled="true" />
+								<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">发票类型：</td>
 							<td>
-								<input name="invoiceType" id="invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 300px" required="true" onvaluechanged="invoiceType" />
+								<input name="invoiceType" id="invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 300px" required="true" onvaluechanged="invoiceType" enabled="false"/>
 							</td>
 							<td align="right" style="width: 160px">税率（%）：</td>
 							<td>
-								<input name="invoiceRate" id="invoiceRate" class="nui-textbox" style="width: 300px" required="true" onvaluechanged="editContractSum" value="6" />
+								<input name="invoiceRate" id="invoiceRate" class="nui-textbox" style="width: 300px" required="true" onvaluechanged="editContractSum" value="6" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">用途：</td>
 							<td>
-								<input name="invoiceUsed" id="invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" style="width: 100%" required="true" />
+								<input name="invoiceUsed" id="invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" style="width: 100%" required="true" enabled="false"/>
 							</td>
 							<td align="right" style="width: 180px">合同金额（元）：</td>
 							<td>
@@ -134,7 +134,7 @@ table,table tr td {
 						<tr>
 							<td align="right" style="width: 160px">开票金额（元）：</td>
 							<td>
-								<input id="invoiceSum" name="invoiceSum" id="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" />
+								<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" enabled="false"/>
 							</td>
 							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
@@ -160,25 +160,25 @@ table,table tr td {
 						<tr>
 							<td align="right" style="width: 160px">名称：</td>
 							<td colspan="8">
-								<input name="payerName" id="payerName" class="nui-textbox" style="width: 100%" required="true" />
+								<input name="payerName" id="payerName" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">纳税人识别号：</td>
 							<td colspan="8">
-								<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" />
+								<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">地址、电话：</td>
 							<td colspan="8">
-								<input name="unitAddress" id="unitAddress" class="nui-textbox" style="width: 100%" required="true" />
+								<input name="unitAddress" id="unitAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">开户行及账号：</td>
 							<td colspan="8">
-								<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" />
+								<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>

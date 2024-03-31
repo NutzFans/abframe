@@ -134,6 +134,10 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[45].allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 100px; text-align: right;">是否红冲/作废:</td>
+						<td style="width: 155px">
+							<input name="critria._expr[46].redInkEntryFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -155,6 +159,7 @@ html,body {
 				<tr>
 					<td>
 						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="add_red_ink" iconCls="icon-add" onclick="add_red_ink()">发起红冲/作废</a>
 						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="kjfplist_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
@@ -195,6 +200,8 @@ html,body {
 					<div field="invoiceType" align="center" headerAlign="center" allowSort="true" renderer="MIS_MA_INVOICETYPE">发票类型</div>
 					<div field="payType" align="center" headerAlign="center" allowSort="true" renderer="PAY_TYPE">本次收款进度</div>
 					<div field="allotFlag" align="center" headerAlign="center" allowSort="true" renderer="ZH_YN">是否有产值分配</div>
+					<div field="redInkEntryFlag" align="center" headerAlign="center" allowSort="true" renderer="ZH_YN">是否红冲/作废</div>
+					<div field=redInkType width="180" align="center" headerAlign="center" allowSort="true" renderer="ZH_RED_INK_TYPE">红冲/作废类型</div>
 				</div>
 			</div>
 		</div>
@@ -338,23 +345,25 @@ html,body {
 
 		function doView() {
 			var selectRow = grid.getSelected();
-			var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + selectRow.id;
-			var myWindow = window.open(url);
-			myWindow.onload = function() {
-				myWindow.document.title = "发票信息查看";
-				myWindow.setViewData(selectRow);
-			};
+			if(selectRow.redInkEntryFlag=="1"){
+				var url = "<%=request.getContextPath()%>/contractPact/print/invoiceRedInkListPrint.jsp?id=" + selectRow.id;
+				window.open(url);				
+			}else{
+				var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + selectRow.id;
+				window.open(url);			
+			}
 		}
 
 		function printBtn() {
 			var selectRow = grid.getSelected();
 			if (selectRow) {
-				var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + selectRow.id;
-				var myWindow = window.open(url);
-				myWindow.onload = function() {
-					myWindow.document.title = "打印页面";
-					myWindow.setViewData(selectRow);
-				};
+				if(selectRow.redInkEntryFlag=="1"){
+					var url = "<%=request.getContextPath()%>/contractPact/print/invoiceRedInkListPrint.jsp?id=" + selectRow.id;
+					window.open(url);				
+				}else{
+					var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + selectRow.id;
+					window.open(url);			
+				}
 			} else {
 				showTips("请选中一条记录", "danger");
 			}
@@ -368,22 +377,42 @@ html,body {
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				nui.open({
-					url : "/default/contractPact/invoice/invoiceUpdate.jsp",
-					width : '100%',
-					height : '100%',
-					title : "开票信息维护",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						if (action == "ok") {
-							grid.reload();
+				if (data.redInkEntryFlag == "1"){
+					nui.open({
+						url : "/default/contractPact/invoice/invoiceRedInkUpdate.jsp",
+						width : '100%',
+						height : '100%',
+						title : "开票信息维护 - 红冲/作废",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+							search();
 						}
-						search();
-					}
-				})
+					})
+				}else{
+					nui.open({
+						url : "/default/contractPact/invoice/invoiceUpdate.jsp",
+						width : '100%',
+						height : '100%',
+						title : "开票信息维护",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								grid.reload();
+							}
+							search();
+						}
+					})							
+				}
+
 			} else {
 				showTips("只能维护审批状态为【审批通过】的数据", "danger");
 			}
@@ -624,6 +653,10 @@ html,body {
 		
 		function ZH_YN(e) {
 			return nui.getDictText("ZH_YN", e.value);
+		}
+		
+		function ZH_RED_INK_TYPE(e){
+			return nui.getDictText("ZH_RED_INK_TYPE", e.value);
 		}		
 
 		//导出
@@ -691,6 +724,36 @@ html,body {
 		function help() {
 			executeUrl = "<%= request.getContextPath() %>/contractPact/invoice/invoiceFlowDesgin.jsp";
 			window.open(executeUrl);
+		}
+		
+		function add_red_ink(){
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条记录发起红冲/作废", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.appStatus == "2") {
+				if(data.redInkEntryFlag=="1"){
+					showTips("不能对红冲/作废的开票，再次发起红冲/作废请求", "danger");
+				}else{
+					nui.open({
+						url : "/default/contractPact/invoice/invoiceRedInkAdd.jsp",
+						width : '100%',
+						height : '100%',
+						title : "开票申请 - 红冲/作废",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							search();
+						}
+					})
+				}
+			}else{
+				showTips("只能对审批状态为【审批通过】的开票发起红冲/作废", "danger");
+			}
 		}		
 		
 	</script>

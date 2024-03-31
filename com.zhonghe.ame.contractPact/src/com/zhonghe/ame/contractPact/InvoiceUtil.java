@@ -44,6 +44,33 @@ public class InvoiceUtil {
 		}
 	}
 
+	@Bizlet("更新关联原开票数据的余额和收费合同模块中合同余额字段")
+	public void updateSoureAndChargeContract(int invoiceId) {
+		DataObject[] invoices = this.queryInvoiceById(invoiceId);
+		DataObject invoice = invoices[0];
+		String contractNo = invoice.getString("contractNo");
+		String invoiceSum = invoice.getString("invoiceSum");
+		String payType = invoice.getString("payType");
+		int sourceInvoiceId = invoice.getInt("relateCont");
+		DataObject[] sourceInvoices = this.queryInvoiceById(sourceInvoiceId);
+		if (sourceInvoices != null) {
+			DataObject sourceInvoice = sourceInvoices[0];
+			String soureceBalanceSum = sourceInvoice.getString("balanceSum");
+			BigDecimal newSoureceBalanceSum = NumberUtil.add(soureceBalanceSum, invoiceSum);
+			this.updateInvoiceBalanceSum(sourceInvoiceId, newSoureceBalanceSum);
+		}
+		DataObject[] charges = this.queryChargeByContractNo(contractNo);
+		if (charges != null) {
+			DataObject charge = charges[0];
+			String contractBalance = charge.getString("contractBalance");
+			BigDecimal newContractBalance = NumberUtil.sub(contractBalance, invoiceSum);
+			this.updateChargeContract(contractNo, newContractBalance);
+			if (StrUtil.equals("2", payType)) {
+				this.updateExecuteStatusAndFinishTime("2", DateUtil.today(), contractNo);
+			}
+		}
+	}
+
 	private DataObject[] queryInvoiceById(int invoiceId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("invoiceId", invoiceId);
@@ -69,6 +96,13 @@ public class InvoiceUtil {
 		map.put("contractNo", contractNo);
 		map.put("contractBalance", contractBalance);
 		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.invoice.invoice.updateChargeContract", map);
+	}
+
+	private void updateInvoiceBalanceSum(int id, BigDecimal balanceSum) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("balanceSum", balanceSum);
+		DatabaseExt.executeNamedSql("default", "com.zhonghe.ame.invoice.invoice.updateInvoiceBalanceSum", map);
 	}
 
 	private void updateExecuteStatusAndFinishTime(String executeStatus, String finishTime, String contractNo) {

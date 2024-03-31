@@ -41,7 +41,7 @@
 								<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">合同名称：</td>
-							<td colspan="6">
+							<td colspan="3">
 								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>

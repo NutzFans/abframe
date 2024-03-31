@@ -17,6 +17,7 @@
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
+				<input class="nui-hidden" name="redInkEntryFlag" value="0" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
