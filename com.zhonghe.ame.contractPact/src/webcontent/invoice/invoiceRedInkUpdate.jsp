@@ -244,6 +244,20 @@ body {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 160px">回款金额（元）：</td>
+							<td>
+								<input id="receivableSum" name="receivableSum" class="nui-textbox" vtype="float" style="width: 300px"/>
+							</td>
+							<td align="right" style="width: 160px">余额（元）：</td>
+							<td>
+								<input id="balanceSum" name="balanceSum" class="nui-textbox" style="width: 300px" />
+							</td>
+							<td align="right" style="width: 160px">回款时间：</td>
+							<td>
+								<input id="receivableData" name="receivableData" enabled="true" class="nui-datepicker" style="width: 300px" />
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">红冲/作废原因：</td>
 							<td colspan="5">
 								<input name="remark" class="nui-textarea" style="width: 100%; height: 200px" required="true" />
@@ -410,7 +424,7 @@ body {
 			document.getElementById("fileCatalog").value = "invoiceinfo";
 			inputFileExpandForm.submit();
 		}
-		
+
 		function SaveData() {
 			var data = form.getData();
 			var json = nui.encode({
@@ -439,8 +453,7 @@ body {
 					}
 				});
 			}
-		}		
-		
+		}
 	</script>
 
 </body>
