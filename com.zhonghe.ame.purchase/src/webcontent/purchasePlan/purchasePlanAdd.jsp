@@ -251,15 +251,20 @@
 			}
 		  	document.getElementById("fileCatalog").value="PurchasePlan";
 		  	var filePaths = document.getElementsByName("uploadfile").length;
-		     for(var j=0;j<filePaths;j++){
-		      var a=document.getElementsByName("remarkList")[j].value;
-		      if(a==null||a==""){
-		       showTips("新增附件不可以为空");
-		       nui.get("saveReimb").enable();
-					 nui.get("creatReimbProcess").enable();	
-		       return;
-		      }
-		     }
+		  	if (filePaths == 0) {
+		  		showTips("请上传相关附件", "danger");
+		  		return;
+		  	}else{
+			     for(var j=0;j<filePaths;j++){
+			      	var a=document.getElementsByName("remarkList")[j].value;
+			      	if(a==null||a==""){
+			       		showTips("请上传相关附件", "danger");
+			       		nui.get("saveReimb").enable();
+						nui.get("creatReimbProcess").enable();	
+			       		return;
+			      	}
+			     }		  		
+		  	}
 		    nui.confirm("确定"+title+"单据","系统提示",
 	        function(action){
             if(action=="ok"){
