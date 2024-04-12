@@ -83,6 +83,7 @@
 							<div field="createUserid" visible="false">填报人主键</div>
 							<div field="empname" visible="false">填报人名称</div>
 							<div field="visitDate" dateFormat="yyyy-MM-dd" align="center" headerAlign="center" width="30" allowSort="true" renderer="lookInfo">接洽时间</div>
+							<div field="custname">客户名称</div>
 							<div field="visitAddress" headerAlign="center">接洽地点</div>
 							<div field="visitResult" headerAlign="center">主要议题及成果</div>
 							<div field="visitMeetingPerson" headerAlign="center">主要参会人员</div>
@@ -108,7 +109,8 @@
 			currentSelRow = null;
 			grid.sortBy("createDate", "desc");
 			grid.load();
-			visitGrid.clearRows();
+			visitGrid.sortBy("visitDate", "desc");
+			visitGrid.load();
 		}
 		
 		function search() {
