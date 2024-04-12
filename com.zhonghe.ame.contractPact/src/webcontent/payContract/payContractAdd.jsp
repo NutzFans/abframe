@@ -407,20 +407,23 @@
 					return;
 				}
 			}
-			nui.get("saveReimb").disable();
-			nui.get("creatReimbProcess").disable();
 			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			var filePaths = document.getElementsByName("uploadfile").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList")[j].value;
-				if (a == null || a == "") {
-					showTips("新增附件不可以为空", "danger");
-					nui.get("saveReimb").enable();
-					nui.get("creatReimbProcess").enable();
-					return;
+			if (filePaths == 0) {
+				showTips("请上传相关附件", "danger");
+				return;
+			}else{
+				for (var j = 0; j < filePaths; j++) {
+					var a = document.getElementsByName("remarkList")[j].value;
+					if (a == null || a == "") {
+						showTips("请上传相关附件", "danger");
+						return;
+					}
 				}
 			}
+			nui.get("saveReimb").disable();
+			nui.get("creatReimbProcess").disable();
 			form2.submit();
 		}
 

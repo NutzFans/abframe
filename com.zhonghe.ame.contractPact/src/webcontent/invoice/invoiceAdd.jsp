@@ -269,18 +269,23 @@
 					return;
 				}
 			}
+			var data = form.getData();
+			document.getElementById("fileCatalog").value = "invoiceinfo";
 			var filePaths = document.getElementsByName("uploadfile").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList")[j].value;
-				if (a == null || a == "") {
-					showTips("新增附件不可以为空", "danger");
-					return;
+			if (filePaths == 0) {
+				showTips("请上传相关附件", "danger");
+				return;
+			}else{
+				for (var j = 0; j < filePaths; j++) {
+					var a = document.getElementsByName("remarkList")[j].value;
+					if (a == null || a == "") {
+						showTips("请上传相关附件", "danger");
+						return;
+					}
 				}
 			}
 			nui.get("saveFeame").disable();
 			nui.get("creatFeame").disable();
-			var data = form.getData();
-			document.getElementById("fileCatalog").value = "invoiceinfo";
 			form2.submit();
 		}
 		

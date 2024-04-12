@@ -246,16 +246,21 @@ body {
 					return;
 				}
 			}
-			var filePaths = document.getElementsByName("uploadfile").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList")[j].value;
-				if (a == null || a == "") {
-					showTips("新增附件不可以为空", "danger");
-					return;
-				}
-			}
 			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payMentinfo";
+			var filePaths = document.getElementsByName("uploadfile").length;
+			if (filePaths == 0) {
+				showTips("请上传相关附件", "danger");
+				return;
+			}else{
+				for (var j = 0; j < filePaths; j++) {
+					var a = document.getElementsByName("remarkList")[j].value;
+					if (a == null || a == "") {
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}
+			}
 			form2.submit();
 		}
 

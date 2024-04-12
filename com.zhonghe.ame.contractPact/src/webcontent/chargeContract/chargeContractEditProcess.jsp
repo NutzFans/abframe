@@ -518,7 +518,7 @@ body {
 			for (var j = 0; j < filePaths; j++) {
 				var a = document.getElementsByName("remarkList")[j].value;
 				if (a == null || a == "") {
-					showTips("新增附件不可以为空", "danger");
+					showTips("请上传相关附件", "danger");
 					return;
 				}
 			}
