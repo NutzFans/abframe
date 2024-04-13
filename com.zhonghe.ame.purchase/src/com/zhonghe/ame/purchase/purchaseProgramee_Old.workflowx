@@ -2,8 +2,8 @@
 <workflowProcess productVersion="6.1" schemaVersion="6.0">
   <processHeader>
     <processBasicInfo>
-      <processId>com.zhonghe.ame.purchase.purchaseReviceReport</processId>
-      <processName>采购评审报告审批流程</processName>
+      <processId>com.zhonghe.ame.purchase.purchaseProgramee_Old</processId>
+      <processName>采购文件审批流程</processName>
       <priority>60</priority>
       <author>huangqj</author>
       <department>Primeton</department>
@@ -11,13 +11,13 @@
     </processBasicInfo>
     <dataFields>
       <dataField>
-        <name>wfp</name>
+        <name>type</name>
         <dataType>
-          <typeClass>sdo</typeClass>
-          <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
+          <typeClass>primitive</typeClass>
+          <typeValue>String</typeValue>
         </dataType>
         <initialValue></initialValue>
-        <description></description>
+        <description>采购类型3为自行采购</description>
         <isArray>false</isArray>
       </dataField>
       <dataField>
@@ -41,6 +41,16 @@
         <isArray>false</isArray>
       </dataField>
       <dataField>
+        <name>deptType</name>
+        <dataType>
+          <typeClass>primitive</typeClass>
+          <typeValue>String</typeValue>
+        </dataType>
+        <initialValue></initialValue>
+        <description>部门类型0总部，1分公司</description>
+        <isArray>false</isArray>
+      </dataField>
+      <dataField>
         <name>gkbm</name>
         <dataType>
           <typeClass>sdo</typeClass>
@@ -51,23 +61,13 @@
         <isArray>true</isArray>
       </dataField>
       <dataField>
-        <name>deptType</name>
+        <name>wfp</name>
         <dataType>
-          <typeClass>primitive</typeClass>
-          <typeValue>String</typeValue>
+          <typeClass>sdo</typeClass>
+          <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
         </dataType>
         <initialValue></initialValue>
-        <description>部门类型</description>
-        <isArray>false</isArray>
-      </dataField>
-      <dataField>
-        <name>type</name>
-        <dataType>
-          <typeClass>primitive</typeClass>
-          <typeValue>String</typeValue>
-        </dataType>
-        <initialValue></initialValue>
-        <description>采购类型3为自行采购</description>
+        <description></description>
         <isArray>false</isArray>
       </dataField>
       <dataField>
@@ -81,6 +81,16 @@
         <isArray>false</isArray>
       </dataField>
       <dataField>
+        <name>FGLD</name>
+        <dataType>
+          <typeClass>sdo</typeClass>
+          <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
+        </dataType>
+        <initialValue></initialValue>
+        <description>分公司领导</description>
+        <isArray>false</isArray>
+      </dataField>
+      <dataField>
         <name>purchasMode</name>
         <dataType>
           <typeClass>primitive</typeClass>
@@ -90,36 +100,6 @@
         <description>采购方式</description>
         <isArray>false</isArray>
       </dataField>
-      <dataField>
-        <name>qfbRoleCode</name>
-        <dataType>
-          <typeClass>primitive</typeClass>
-          <typeValue>String</typeValue>
-        </dataType>
-        <initialValue></initialValue>
-        <description>企发部领导角色</description>
-        <isArray>false</isArray>
-      </dataField>
-      <dataField>
-        <name>proAppOrgId</name>
-        <dataType>
-          <typeClass>primitive</typeClass>
-          <typeValue>String</typeValue>
-        </dataType>
-        <initialValue></initialValue>
-        <description>需求部门</description>
-        <isArray>false</isArray>
-      </dataField>
-      <dataField>
-        <name>wfps</name>
-        <dataType>
-          <typeClass>sdo</typeClass>
-          <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
-        </dataType>
-        <initialValue></initialValue>
-        <description></description>
-        <isArray>true</isArray>
-      </dataField>
     </dataFields>
     <triggerEvents>
       <triggerEvent>
@@ -128,7 +108,7 @@
           <suppressJoinFailure>suppress</suppressJoinFailure>
           <application>
             <actionType>logic-flow</actionType>
-            <applicationUri>com.zhonghe.ame.purchase.purchaseItems.updatePurReviceRep</applicationUri>
+            <applicationUri>com.zhonghe.ame.purchase.purchaseItems.updatePurProgramee</applicationUri>
             <transactionType>join</transactionType>
             <exceptionStrategy>rollback</exceptionStrategy>
             <invokePattern>synchronous</invokePattern>
@@ -150,7 +130,7 @@
                 <name>out</name>
                 <dataType>
                   <typeClass>sdo</typeClass>
-                  <typeValue>com.zhonghe.ame.purchase.purchase.ZhPurchaseReviewreport</typeValue>
+                  <typeValue>com.zhonghe.ame.purchase.purchase.ZhPurchaseProgramme</typeValue>
                 </dataType>
                 <isArray>false</isArray>
                 <fillBack>false</fillBack>
@@ -184,19 +164,46 @@
     <parameters/>
     <splitTransaction>false</splitTransaction>
     <longProcess>true</longProcess>
-    <bizEntityInfo>
-      <bizEntityName></bizEntityName>
-      <relevantKey></relevantKey>
-    </bizEntityInfo>
+    <bizEntityInfo/>
     <calendarInfo>
       <resourceType>business-calendar</resourceType>
       <resourceID>default</resourceID>
       <resourceName>默认日历</resourceName>
       <parameters/>
     </calendarInfo>
-    <extendNodes><extendNode><key>IsForWardBiz</key><value>false</value><desc/></extendNode><extendNode><key>openLog</key><value>false</value><desc/></extendNode></extendNodes>
+    <extendNodes><extendNode><key>IsForWardBiz</key><value>false</value><desc></desc></extendNode><extendNode><key>openLog</key><value>false</value><desc></desc></extendNode></extendNodes>
   </processHeader>
   <transitions>
+    <transition>
+      <from>manualActivity4</from>
+      <to>manualActivity2</to>
+      <isDefault>true</isDefault>
+      <priority>60</priority>
+      <displayName></displayName>
+      <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <compType>EQ</compType>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
+      <bendPoints/>
+    </transition>
+    <transition>
+      <from>manualActivity4</from>
+      <to>routeActivity1</to>
+      <isDefault>false</isDefault>
+      <priority>60</priority>
+      <displayName>自行采购</displayName>
+      <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <leftValue>type</leftValue>
+        <compType>equal</compType>
+        <rightValue>3</rightValue>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
+      <bendPoints/>
+    </transition>
     <transition>
       <from>startActivity</from>
       <to>manualActivity11</to>
@@ -208,34 +215,37 @@
     </transition>
     <transition>
       <from>manualActivity3</from>
-      <to>manualActivity</to>
+      <to>manualActivity4</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
-      <displayName></displayName>
+      <displayName>分公司</displayName>
       <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <compType>EQ</compType>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
+      <bendPoints/>
+    </transition>
+    <transition>
+      <from>manualActivity3</from>
+      <to>routeActivity</to>
+      <isDefault>false</isDefault>
+      <priority>60</priority>
+      <displayName>总部</displayName>
+      <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <leftValue>deptType</leftValue>
+        <compType>equal</compType>
+        <rightValue>1</rightValue>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
       <bendPoints/>
     </transition>
     <transition>
       <from>manualActivity11</from>
-      <to>routeActivity</to>
-      <isDefault>true</isDefault>
-      <priority>60</priority>
-      <displayName></displayName>
-      <type>simpleCondition</type>
-      <bendPoints/>
-    </transition>
-    <transition>
-      <from>manualActivity</from>
-      <to>manualActivity2</to>
-      <isDefault>true</isDefault>
-      <priority>60</priority>
-      <displayName></displayName>
-      <type>simpleCondition</type>
-      <bendPoints/>
-    </transition>
-    <transition>
-      <from>manualActivity2</from>
-      <to>manualActivity31</to>
+      <to>manualActivity3</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -252,8 +262,17 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity1</from>
-      <to>manualActivity0</to>
+      <from>manualActivity41</from>
+      <to>finishActivity</to>
+      <isDefault>true</isDefault>
+      <priority>60</priority>
+      <displayName></displayName>
+      <type>simpleCondition</type>
+      <bendPoints/>
+    </transition>
+    <transition>
+      <from>manualActivity2</from>
+      <to>manualActivity31</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -262,7 +281,7 @@
     </transition>
     <transition>
       <from>routeActivity</from>
-      <to>manualActivity3</to>
+      <to>manualActivity2</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -271,7 +290,7 @@
     </transition>
     <transition>
       <from>routeActivity</from>
-      <to>manualActivity1</to>
+      <to>routeActivity1</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
       <displayName>自行采购</displayName>
@@ -287,7 +306,7 @@
     </transition>
     <transition>
       <from>routeActivity1</from>
-      <to>manualActivity0</to>
+      <to>manualActivity41</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName>非招标</displayName>
@@ -301,7 +320,7 @@
     </transition>
     <transition>
       <from>routeActivity1</from>
-      <to>manualActivity311</to>
+      <to>manualActivity411</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
       <displayName>招标</displayName>
@@ -309,32 +328,14 @@
       <simpleCondition>
         <leftValueType>variable</leftValueType>
         <leftValue>purchasMode</leftValue>
-        <compType>equal</compType>
+        <compType>EQ</compType>
         <rightValue>公开招标</rightValue>
         <rightValueType>constant</rightValueType>
       </simpleCondition>
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity0</from>
-      <to>finishActivity</to>
-      <isDefault>true</isDefault>
-      <priority>60</priority>
-      <displayName></displayName>
-      <type>simpleCondition</type>
-      <bendPoints/>
-    </transition>
-    <transition>
-      <from>manualActivity311</from>
-      <to>manualActivity01</to>
-      <isDefault>true</isDefault>
-      <priority>60</priority>
-      <displayName></displayName>
-      <type>simpleCondition</type>
-      <bendPoints/>
-    </transition>
-    <transition>
-      <from>manualActivity01</from>
+      <from>manualActivity411</from>
       <to>finishActivity</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
@@ -345,39 +346,8 @@
   </transitions>
   <activities>
     <activity>
-      <activityId>startActivity</activityId>
-      <activityName>开始</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>start</activityType>
-      <splitTransaction>false</splitTransaction>
-      <implementation>
-        <startActivity>
-          <formFields/>
-        </startActivity>
-      </implementation>
-      <isStartActivity>true</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>32</height>
-        <width>32</width>
-        <x>69</x>
-        <y>11</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>manualActivity3</activityId>
-      <activityName>集采中心负责人审核</activityName>
+      <activityId>manualActivity4</activityId>
+      <activityName>分公司主要负责人审核</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -405,7 +375,259 @@
           <allowAgent>true</allowAgent>
           <customURL>
             <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/approvalReviewReport.jsp</urlInfo>
+            <urlInfo>/purchase/programme/purProgrammeApproval.jsp</urlInfo>
+            <urlType>webpage</urlType>
+          </customURL>
+          <resetUrl>
+            <isSpecifyURL>false</isSpecifyURL>
+            <urlType>presentation-logic</urlType>
+          </resetUrl>
+          <participants>
+            <participantType>relevantdata</participantType>
+            <specialActivityID></specialActivityID>
+            <specialPath>wfp</specialPath>
+          </participants>
+          <formFields/>
+          <timeLimit>
+            <isTimeLimitSet>false</isTimeLimitSet>
+            <calendarSet>
+              <initType>appoint</initType>
+              <calendarInfo>
+                <resourceType>business-calendar</resourceType>
+                <resourceID>default</resourceID>
+                <resourceName>默认日历</resourceName>
+                <parameters/>
+              </calendarInfo>
+            </calendarSet>
+          </timeLimit>
+          <multiWorkItem>
+            <isMulWIValid>false</isMulWIValid>
+            <workitemNumStrategy>participant-number</workitemNumStrategy>
+            <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
+            <isAutoCancel>false</isAutoCancel>
+            <sequentialExecute>false</sequentialExecute>
+          </multiWorkItem>
+          <triggerEvents>
+            <triggerEvent>
+              <applicationInfo>
+                <actionType>logic-flow</actionType>
+                <suppressJoinFailure>suppress</suppressJoinFailure>
+                <application>
+                  <actionType>logic-flow</actionType>
+                  <applicationUri>com.zhonghe.ame.contractPact.frameAgreement.queryOrgByManagerId</applicationUri>
+                  <transactionType>join</transactionType>
+                  <exceptionStrategy>rollback</exceptionStrategy>
+                  <invokePattern>synchronous</invokePattern>
+                  <parameters>
+                    <parameter>
+                      <name>orgId</name>
+                      <dataType>
+                        <typeClass>primitive</typeClass>
+                        <typeValue>Int</typeValue>
+                      </dataType>
+                      <isArray>false</isArray>
+                      <fillBack>false</fillBack>
+                      <description></description>
+                      <mode>parameter</mode>
+                      <value>needOrgId</value>
+                      <valueType>variable</valueType>
+                    </parameter>
+                    <parameter>
+                      <name>out</name>
+                      <dataType>
+                        <typeClass>sdo</typeClass>
+                        <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
+                      </dataType>
+                      <isArray>false</isArray>
+                      <fillBack>true</fillBack>
+                      <description></description>
+                      <mode>result</mode>
+                      <value>wfp</value>
+                      <valueType>variable</valueType>
+                    </parameter>
+                  </parameters>
+                </application>
+                <assignments/>
+              </applicationInfo>
+              <eventType>before-start-act</eventType>
+              <description></description>
+            </triggerEvent>
+          </triggerEvents>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
+          <freeFlowRule>
+            <isFreeActivity>true</isFreeActivity>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
+            <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
+          </freeFlowRule>
+          <resetParticipant>originalParticipant</resetParticipant>
+          <notification>
+            <isSendNotification>false</isSendNotification>
+            <actionURL>
+              <isSpecifyURL>false</isSpecifyURL>
+              <urlType>presentation-logic</urlType>
+            </actionURL>
+            <participants>
+              <participantType>process-starter</participantType>
+              <specialActivityID></specialActivityID>
+              <specialPath></specialPath>
+            </participants>
+            <isExpandParticipant>false</isExpandParticipant>
+            <timeLimit>
+              <isTimeLimitSet>false</isTimeLimitSet>
+              <calendarSet>
+                <initType>appoint</initType>
+                <calendarInfo>
+                  <resourceType>business-calendar</resourceType>
+                  <resourceID>default</resourceID>
+                  <resourceName>默认日历</resourceName>
+                  <parameters/>
+                </calendarInfo>
+              </calendarSet>
+            </timeLimit>
+            <notificationImplType>workItem</notificationImplType>
+          </notification>
+        </manualActivity>
+      </implementation>
+      <extendNodes></extendNodes>
+      <isStartActivity>false</isStartActivity>
+      <nodeGraphInfo>
+        <color>16777215</color>
+        <height>45</height>
+        <width>64</width>
+        <x>362</x>
+        <y>296</y>
+        <lookAndFeel>classic</lookAndFeel>
+        <fontName>System</fontName>
+        <fontSize>12</fontSize>
+        <fontWidth>550</fontWidth>
+        <foreColor>0</foreColor>
+        <isItalic>0</isItalic>
+        <isUnderline>0</isUnderline>
+        <textHeight>60</textHeight>
+      </nodeGraphInfo>
+    </activity>
+    <activity>
+      <activityId>finishActivity</activityId>
+      <activityName>结束</activityName>
+      <description></description>
+      <splitType>XOR</splitType>
+      <joinType>XOR</joinType>
+      <priority>60</priority>
+      <activityType>finish</activityType>
+      <splitTransaction>false</splitTransaction>
+      <activateRule>
+        <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
+      </activateRule>
+      <extendNodes></extendNodes>
+      <isStartActivity>false</isStartActivity>
+      <nodeGraphInfo>
+        <color>16777215</color>
+        <height>32</height>
+        <width>32</width>
+        <x>1155</x>
+        <y>454</y>
+        <lookAndFeel>classic</lookAndFeel>
+        <fontName>System</fontName>
+        <fontSize>12</fontSize>
+        <fontWidth>550</fontWidth>
+        <foreColor>0</foreColor>
+        <isItalic>0</isItalic>
+        <isUnderline>0</isUnderline>
+        <textHeight>60</textHeight>
+      </nodeGraphInfo>
+    </activity>
+    <activity>
+      <activityId>startActivity</activityId>
+      <activityName>开始</activityName>
+      <description></description>
+      <splitType>XOR</splitType>
+      <joinType>XOR</joinType>
+      <priority>60</priority>
+      <activityType>start</activityType>
+      <splitTransaction>false</splitTransaction>
+      <implementation>
+        <startActivity>
+          <formFields/>
+        </startActivity>
+      </implementation>
+      <extendNodes></extendNodes>
+      <isStartActivity>true</isStartActivity>
+      <nodeGraphInfo>
+        <color>16777215</color>
+        <height>32</height>
+        <width>32</width>
+        <x>92</x>
+        <y>220</y>
+        <lookAndFeel>classic</lookAndFeel>
+        <fontName>System</fontName>
+        <fontSize>12</fontSize>
+        <fontWidth>550</fontWidth>
+        <foreColor>0</foreColor>
+        <isItalic>0</isItalic>
+        <isUnderline>0</isUnderline>
+        <textHeight>60</textHeight>
+      </nodeGraphInfo>
+    </activity>
+    <activity>
+      <activityId>manualActivity3</activityId>
+      <activityName>采购承办单位负责人审核</activityName>
+      <description></description>
+      <splitType>XOR</splitType>
+      <joinType>XOR</joinType>
+      <priority>60</priority>
+      <activityType>manual</activityType>
+      <splitTransaction>false</splitTransaction>
+      <activateRule>
+        <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
+      </activateRule>
+      <implementation>
+        <manualActivity>
+          <allowAgent>true</allowAgent>
+          <customURL>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/purchase/programme/purProgrammeApproval.jsp</urlInfo>
             <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
@@ -540,8 +762,8 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>52</x>
-        <y>448</y>
+        <x>76</x>
+        <y>461</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -554,7 +776,7 @@
     </activity>
     <activity>
       <activityId>manualActivity11</activityId>
-      <activityName>采购评审经办人发起</activityName>
+      <activityName>采购承办单位经办人发起</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -582,7 +804,7 @@
           <allowAgent>true</allowAgent>
           <customURL>
             <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/editReviewReport.jsp</urlInfo>
+            <urlInfo>/purchase/programme/editPurProgramme.jsp</urlInfo>
             <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
@@ -672,8 +894,8 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>52</x>
-        <y>119</y>
+        <x>76</x>
+        <y>339</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -685,50 +907,8 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>finishActivity</activityId>
-      <activityName>结束</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>finish</activityType>
-      <splitTransaction>false</splitTransaction>
-      <activateRule>
-        <activateRuleType>directRunning</activateRuleType>
-        <applicationInfo>
-          <actionType>service-component</actionType>
-          <suppressJoinFailure>suppress</suppressJoinFailure>
-          <application>
-            <actionType>service-component</actionType>
-            <applicationUri></applicationUri>
-            <transactionType>join</transactionType>
-            <exceptionStrategy>rollback</exceptionStrategy>
-            <invokePattern>synchronous</invokePattern>
-            <parameters/>
-          </application>
-          <assignments/>
-        </applicationInfo>
-      </activateRule>
-      <isStartActivity>false</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>32</height>
-        <width>32</width>
-        <x>1095</x>
-        <y>280</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>manualActivity</activityId>
-      <activityName>采购需求单位主要负责人确认</activityName>
+      <activityId>manualActivity31</activityId>
+      <activityName>公司物项归口部门负责人审核</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -756,7 +936,7 @@
           <allowAgent>true</allowAgent>
           <customURL>
             <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/approvalReviewReport.jsp</urlInfo>
+            <urlInfo>/purchase/programme/purProgrammeApproval.jsp</urlInfo>
             <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
@@ -766,7 +946,7 @@
           <participants>
             <participantType>relevantdata</participantType>
             <specialActivityID></specialActivityID>
-            <specialPath>wfps</specialPath>
+            <specialPath>gkbm</specialPath>
           </participants>
           <formFields/>
           <timeLimit>
@@ -812,7 +992,7 @@
                       <fillBack>false</fillBack>
                       <description></description>
                       <mode>parameter</mode>
-                      <value>proAppOrgId</value>
+                      <value>headOrgid</value>
                       <valueType>variable</valueType>
                     </parameter>
                     <parameter>
@@ -825,7 +1005,7 @@
                       <fillBack>true</fillBack>
                       <description></description>
                       <mode>result</mode>
-                      <value>wfps</value>
+                      <value>gkbm</value>
                       <valueType>variable</valueType>
                     </parameter>
                   </parameters>
@@ -852,7 +1032,7 @@
             </applicationInfo>
           </rollBack>
           <freeFlowRule>
-            <isFreeActivity>false</isFreeActivity>
+            <isFreeActivity>true</isFreeActivity>
             <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
@@ -891,8 +1071,185 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>255</x>
-        <y>448</y>
+        <x>556</x>
+        <y>461</y>
+        <lookAndFeel>classic</lookAndFeel>
+        <fontName>System</fontName>
+        <fontSize>12</fontSize>
+        <fontWidth>550</fontWidth>
+        <foreColor>0</foreColor>
+        <isItalic>0</isItalic>
+        <isUnderline>0</isUnderline>
+        <textHeight>60</textHeight>
+      </nodeGraphInfo>
+    </activity>
+    <activity>
+      <activityId>manualActivity41</activityId>
+      <activityName>公司企业发展部(采购管理支持中心) - 备案</activityName>
+      <description></description>
+      <splitType>XOR</splitType>
+      <joinType>XOR</joinType>
+      <priority>60</priority>
+      <activityType>manual</activityType>
+      <splitTransaction>false</splitTransaction>
+      <activateRule>
+        <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
+      </activateRule>
+      <implementation>
+        <manualActivity>
+          <allowAgent>true</allowAgent>
+          <customURL>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/purchase/programme/purProgrammeApproval.jsp</urlInfo>
+            <urlType>webpage</urlType>
+          </customURL>
+          <resetUrl>
+            <isSpecifyURL>false</isSpecifyURL>
+            <urlType>presentation-logic</urlType>
+          </resetUrl>
+          <participants>
+            <participantType>relevantdata</participantType>
+            <specialActivityID></specialActivityID>
+            <specialPath>wfp</specialPath>
+          </participants>
+          <formFields/>
+          <timeLimit>
+            <isTimeLimitSet>false</isTimeLimitSet>
+            <calendarSet>
+              <initType>appoint</initType>
+              <calendarInfo>
+                <resourceType>business-calendar</resourceType>
+                <resourceID>default</resourceID>
+                <resourceName>默认日历</resourceName>
+                <parameters/>
+              </calendarInfo>
+            </calendarSet>
+          </timeLimit>
+          <multiWorkItem>
+            <isMulWIValid>false</isMulWIValid>
+            <workitemNumStrategy>participant-number</workitemNumStrategy>
+            <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
+            <isAutoCancel>false</isAutoCancel>
+            <sequentialExecute>false</sequentialExecute>
+          </multiWorkItem>
+          <triggerEvents>
+            <triggerEvent>
+              <applicationInfo>
+                <actionType>logic-flow</actionType>
+                <suppressJoinFailure>suppress</suppressJoinFailure>
+                <application>
+                  <actionType>logic-flow</actionType>
+                  <applicationUri>com.zhonghe.ame.contractPact.frameAgreement.queryAppPerson</applicationUri>
+                  <transactionType>join</transactionType>
+                  <exceptionStrategy>rollback</exceptionStrategy>
+                  <invokePattern>synchronous</invokePattern>
+                  <parameters>
+                    <parameter>
+                      <name>roleid</name>
+                      <dataType>
+                        <typeClass>primitive</typeClass>
+                        <typeValue>String</typeValue>
+                      </dataType>
+                      <isArray>false</isArray>
+                      <fillBack>false</fillBack>
+                      <description></description>
+                      <mode>parameter</mode>
+                      <value>purchaseFz</value>
+                      <valueType>constant</valueType>
+                    </parameter>
+                    <parameter>
+                      <name>out</name>
+                      <dataType>
+                        <typeClass>sdo</typeClass>
+                        <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
+                      </dataType>
+                      <isArray>false</isArray>
+                      <fillBack>true</fillBack>
+                      <description></description>
+                      <mode>result</mode>
+                      <value>wfp</value>
+                      <valueType>variable</valueType>
+                    </parameter>
+                  </parameters>
+                </application>
+                <assignments/>
+              </applicationInfo>
+              <eventType>before-start-act</eventType>
+              <description></description>
+            </triggerEvent>
+          </triggerEvents>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
+          <freeFlowRule>
+            <isFreeActivity>true</isFreeActivity>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
+            <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
+          </freeFlowRule>
+          <resetParticipant>originalParticipant</resetParticipant>
+          <notification>
+            <isSendNotification>false</isSendNotification>
+            <actionURL>
+              <isSpecifyURL>false</isSpecifyURL>
+              <urlType>presentation-logic</urlType>
+            </actionURL>
+            <participants>
+              <participantType>process-starter</participantType>
+              <specialActivityID></specialActivityID>
+              <specialPath></specialPath>
+            </participants>
+            <isExpandParticipant>false</isExpandParticipant>
+            <timeLimit>
+              <isTimeLimitSet>false</isTimeLimitSet>
+              <calendarSet>
+                <initType>appoint</initType>
+                <calendarInfo>
+                  <resourceType>business-calendar</resourceType>
+                  <resourceID>default</resourceID>
+                  <resourceName>默认日历</resourceName>
+                  <parameters/>
+                </calendarInfo>
+              </calendarSet>
+            </timeLimit>
+            <notificationImplType>workItem</notificationImplType>
+          </notification>
+        </manualActivity>
+      </implementation>
+      <extendNodes></extendNodes>
+      <isStartActivity>false</isStartActivity>
+      <nodeGraphInfo>
+        <color>16777215</color>
+        <height>45</height>
+        <width>64</width>
+        <x>960</x>
+        <y>321</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -933,7 +1290,7 @@
           <allowAgent>true</allowAgent>
           <customURL>
             <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/approvalReviewReport.jsp</urlInfo>
+            <urlInfo>/purchase/programme/purProgrammeApproval.jsp</urlInfo>
             <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
@@ -1081,362 +1438,8 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>450</x>
-        <y>448</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>manualActivity31</activityId>
-      <activityName>公司物项归口部门负责人审核</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>manual</activityType>
-      <splitTransaction>false</splitTransaction>
-      <activateRule>
-        <activateRuleType>directRunning</activateRuleType>
-        <applicationInfo>
-          <actionType>service-component</actionType>
-          <suppressJoinFailure>suppress</suppressJoinFailure>
-          <application>
-            <actionType>service-component</actionType>
-            <applicationUri></applicationUri>
-            <transactionType>join</transactionType>
-            <exceptionStrategy>rollback</exceptionStrategy>
-            <invokePattern>synchronous</invokePattern>
-            <parameters/>
-          </application>
-          <assignments/>
-        </applicationInfo>
-      </activateRule>
-      <implementation>
-        <manualActivity>
-          <allowAgent>true</allowAgent>
-          <customURL>
-            <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/approvalReviewReport.jsp</urlInfo>
-            <urlType>webpage</urlType>
-          </customURL>
-          <resetUrl>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
-          </resetUrl>
-          <participants>
-            <participantType>relevantdata</participantType>
-            <specialActivityID></specialActivityID>
-            <specialPath>gkbm</specialPath>
-          </participants>
-          <formFields/>
-          <timeLimit>
-            <isTimeLimitSet>false</isTimeLimitSet>
-            <calendarSet>
-              <initType>appoint</initType>
-              <calendarInfo>
-                <resourceType>business-calendar</resourceType>
-                <resourceID>default</resourceID>
-                <resourceName>默认日历</resourceName>
-                <parameters/>
-              </calendarInfo>
-            </calendarSet>
-          </timeLimit>
-          <multiWorkItem>
-            <isMulWIValid>true</isMulWIValid>
-            <workitemNumStrategy>participant-number</workitemNumStrategy>
-            <finishRule>all</finishRule>
-            <finishRequiredPercent>0</finishRequiredPercent>
-            <finishRquiredNum>0</finishRquiredNum>
-            <isAutoCancel>false</isAutoCancel>
-            <sequentialExecute>false</sequentialExecute>
-          </multiWorkItem>
-          <triggerEvents>
-            <triggerEvent>
-              <applicationInfo>
-                <actionType>logic-flow</actionType>
-                <suppressJoinFailure>suppress</suppressJoinFailure>
-                <application>
-                  <actionType>logic-flow</actionType>
-                  <applicationUri>com.zhonghe.ame.purchase.purchaseItems.queryOrgMangers</applicationUri>
-                  <transactionType>join</transactionType>
-                  <exceptionStrategy>rollback</exceptionStrategy>
-                  <invokePattern>synchronous</invokePattern>
-                  <parameters>
-                    <parameter>
-                      <name>orgid</name>
-                      <dataType>
-                        <typeClass>primitive</typeClass>
-                        <typeValue>String</typeValue>
-                      </dataType>
-                      <isArray>false</isArray>
-                      <fillBack>false</fillBack>
-                      <description></description>
-                      <mode>parameter</mode>
-                      <value>headOrgid</value>
-                      <valueType>variable</valueType>
-                    </parameter>
-                    <parameter>
-                      <name>out</name>
-                      <dataType>
-                        <typeClass>sdo</typeClass>
-                        <typeValue>com.eos.workflow.data.WFParticipant[]</typeValue>
-                      </dataType>
-                      <isArray>true</isArray>
-                      <fillBack>true</fillBack>
-                      <description></description>
-                      <mode>result</mode>
-                      <value>gkbm</value>
-                      <valueType>variable</valueType>
-                    </parameter>
-                  </parameters>
-                </application>
-                <assignments/>
-              </applicationInfo>
-              <eventType>before-start-act</eventType>
-              <description></description>
-            </triggerEvent>
-          </triggerEvents>
-          <rollBack>
-            <applicationInfo>
-              <actionType>service-component</actionType>
-              <suppressJoinFailure>suppress</suppressJoinFailure>
-              <application>
-                <actionType>service-component</actionType>
-                <applicationUri></applicationUri>
-                <transactionType>join</transactionType>
-                <exceptionStrategy>rollback</exceptionStrategy>
-                <invokePattern>synchronous</invokePattern>
-                <parameters/>
-              </application>
-              <assignments/>
-            </applicationInfo>
-          </rollBack>
-          <freeFlowRule>
-            <isFreeActivity>true</isFreeActivity>
-            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
-            <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
-          </freeFlowRule>
-          <resetParticipant>originalParticipant</resetParticipant>
-          <notification>
-            <isSendNotification>false</isSendNotification>
-            <actionURL>
-              <isSpecifyURL>false</isSpecifyURL>
-              <urlType>presentation-logic</urlType>
-            </actionURL>
-            <participants>
-              <participantType>process-starter</participantType>
-              <specialActivityID></specialActivityID>
-              <specialPath></specialPath>
-            </participants>
-            <isExpandParticipant>false</isExpandParticipant>
-            <timeLimit>
-              <isTimeLimitSet>false</isTimeLimitSet>
-              <calendarSet>
-                <initType>appoint</initType>
-                <calendarInfo>
-                  <resourceType>business-calendar</resourceType>
-                  <resourceID>default</resourceID>
-                  <resourceName>默认日历</resourceName>
-                  <parameters/>
-                </calendarInfo>
-              </calendarSet>
-            </timeLimit>
-            <notificationImplType>workItem</notificationImplType>
-          </notification>
-        </manualActivity>
-      </implementation>
-      <extendNodes></extendNodes>
-      <isStartActivity>false</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>45</height>
-        <width>64</width>
-        <x>660</x>
-        <y>448</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>manualActivity1</activityId>
-      <activityName>采购需求单位主要负责人审核</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>manual</activityType>
-      <splitTransaction>false</splitTransaction>
-      <activateRule>
-        <activateRuleType>directRunning</activateRuleType>
-        <applicationInfo>
-          <actionType>service-component</actionType>
-          <suppressJoinFailure>suppress</suppressJoinFailure>
-          <application>
-            <actionType>service-component</actionType>
-            <applicationUri></applicationUri>
-            <transactionType>join</transactionType>
-            <exceptionStrategy>rollback</exceptionStrategy>
-            <invokePattern>synchronous</invokePattern>
-            <parameters/>
-          </application>
-          <assignments/>
-        </applicationInfo>
-      </activateRule>
-      <implementation>
-        <manualActivity>
-          <allowAgent>true</allowAgent>
-          <customURL>
-            <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/approvalReviewReport.jsp</urlInfo>
-            <urlType>webpage</urlType>
-          </customURL>
-          <resetUrl>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
-          </resetUrl>
-          <participants>
-            <participantType>relevantdata</participantType>
-            <specialActivityID></specialActivityID>
-            <specialPath>wfps</specialPath>
-          </participants>
-          <formFields/>
-          <timeLimit>
-            <isTimeLimitSet>false</isTimeLimitSet>
-            <calendarSet>
-              <initType>appoint</initType>
-              <calendarInfo>
-                <resourceType>business-calendar</resourceType>
-                <resourceID>default</resourceID>
-                <resourceName>默认日历</resourceName>
-                <parameters/>
-              </calendarInfo>
-            </calendarSet>
-          </timeLimit>
-          <multiWorkItem>
-            <isMulWIValid>true</isMulWIValid>
-            <workitemNumStrategy>participant-number</workitemNumStrategy>
-            <finishRule>all</finishRule>
-            <finishRequiredPercent>0</finishRequiredPercent>
-            <finishRquiredNum>0</finishRquiredNum>
-            <isAutoCancel>false</isAutoCancel>
-            <sequentialExecute>false</sequentialExecute>
-          </multiWorkItem>
-          <triggerEvents>
-            <triggerEvent>
-              <applicationInfo>
-                <actionType>logic-flow</actionType>
-                <suppressJoinFailure>suppress</suppressJoinFailure>
-                <application>
-                  <actionType>logic-flow</actionType>
-                  <applicationUri>com.zhonghe.ame.purchase.purchaseItems.queryOrgMangers</applicationUri>
-                  <transactionType>join</transactionType>
-                  <exceptionStrategy>rollback</exceptionStrategy>
-                  <invokePattern>synchronous</invokePattern>
-                  <parameters>
-                    <parameter>
-                      <name>orgid</name>
-                      <dataType>
-                        <typeClass>primitive</typeClass>
-                        <typeValue>String</typeValue>
-                      </dataType>
-                      <isArray>false</isArray>
-                      <fillBack>false</fillBack>
-                      <description></description>
-                      <mode>parameter</mode>
-                      <value>proAppOrgId</value>
-                      <valueType>variable</valueType>
-                    </parameter>
-                    <parameter>
-                      <name>out</name>
-                      <dataType>
-                        <typeClass>sdo</typeClass>
-                        <typeValue>com.eos.workflow.data.WFParticipant[]</typeValue>
-                      </dataType>
-                      <isArray>true</isArray>
-                      <fillBack>true</fillBack>
-                      <description></description>
-                      <mode>result</mode>
-                      <value>wfps</value>
-                      <valueType>variable</valueType>
-                    </parameter>
-                  </parameters>
-                </application>
-                <assignments/>
-              </applicationInfo>
-              <eventType>before-start-act</eventType>
-              <description></description>
-            </triggerEvent>
-          </triggerEvents>
-          <rollBack>
-            <applicationInfo>
-              <actionType>service-component</actionType>
-              <suppressJoinFailure>suppress</suppressJoinFailure>
-              <application>
-                <actionType>service-component</actionType>
-                <applicationUri></applicationUri>
-                <transactionType>join</transactionType>
-                <exceptionStrategy>rollback</exceptionStrategy>
-                <invokePattern>synchronous</invokePattern>
-                <parameters/>
-              </application>
-              <assignments/>
-            </applicationInfo>
-          </rollBack>
-          <freeFlowRule>
-            <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
-            <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
-          </freeFlowRule>
-          <resetParticipant>originalParticipant</resetParticipant>
-          <notification>
-            <isSendNotification>false</isSendNotification>
-            <actionURL>
-              <isSpecifyURL>false</isSpecifyURL>
-              <urlType>presentation-logic</urlType>
-            </actionURL>
-            <participants>
-              <participantType>process-starter</participantType>
-              <specialActivityID></specialActivityID>
-              <specialPath></specialPath>
-            </participants>
-            <isExpandParticipant>false</isExpandParticipant>
-            <timeLimit>
-              <isTimeLimitSet>false</isTimeLimitSet>
-              <calendarSet>
-                <initType>appoint</initType>
-                <calendarInfo>
-                  <resourceType>business-calendar</resourceType>
-                  <resourceID>default</resourceID>
-                  <resourceName>默认日历</resourceName>
-                  <parameters/>
-                </calendarInfo>
-              </calendarSet>
-            </timeLimit>
-            <notificationImplType>workItem</notificationImplType>
-          </notification>
-        </manualActivity>
-      </implementation>
-      <extendNodes></extendNodes>
-      <isStartActivity>false</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>45</height>
-        <width>64</width>
-        <x>255</x>
-        <y>273</y>
+        <x>362</x>
+        <y>461</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -1449,7 +1452,7 @@
     </activity>
     <activity>
       <activityId>routeActivity</activityId>
-      <activityName>路由活动</activityName>
+      <activityName>采购类型</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -1461,8 +1464,8 @@
         <color>16777215</color>
         <height>32</height>
         <width>32</width>
-        <x>68</x>
-        <y>280</y>
+        <x>379</x>
+        <y>615</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -1487,8 +1490,8 @@
         <color>16777215</color>
         <height>32</height>
         <width>32</width>
-        <x>676</x>
-        <y>280</y>
+        <x>778</x>
+        <y>468</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -1500,8 +1503,8 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity0</activityId>
-      <activityName>发起人完善定标信息</activityName>
+      <activityId>manualActivity411</activityId>
+      <activityName>公司企业发展部(采购管理支持中心) - 审批</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -1529,7 +1532,7 @@
           <allowAgent>true</allowAgent>
           <customURL>
             <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/editApprovalReviewReport.jsp</urlInfo>
+            <urlInfo>/purchase/programme/purProgrammeApproval.jsp</urlInfo>
             <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
@@ -1537,9 +1540,9 @@
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>relevantdata</participantType>
             <specialActivityID></specialActivityID>
-            <specialPath></specialPath>
+            <specialPath>wfp</specialPath>
           </participants>
           <formFields/>
           <timeLimit>
@@ -1563,138 +1566,6 @@
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
-          <triggerEvents/>
-          <rollBack>
-            <applicationInfo>
-              <actionType>service-component</actionType>
-              <suppressJoinFailure>suppress</suppressJoinFailure>
-              <application>
-                <actionType>service-component</actionType>
-                <applicationUri></applicationUri>
-                <transactionType>join</transactionType>
-                <exceptionStrategy>rollback</exceptionStrategy>
-                <invokePattern>synchronous</invokePattern>
-                <parameters/>
-              </application>
-              <assignments/>
-            </applicationInfo>
-          </rollBack>
-          <freeFlowRule>
-            <isFreeActivity>true</isFreeActivity>
-            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
-            <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
-          </freeFlowRule>
-          <resetParticipant>originalParticipant</resetParticipant>
-          <notification>
-            <isSendNotification>false</isSendNotification>
-            <actionURL>
-              <isSpecifyURL>false</isSpecifyURL>
-              <urlType>presentation-logic</urlType>
-            </actionURL>
-            <participants>
-              <participantType>process-starter</participantType>
-              <specialActivityID></specialActivityID>
-              <specialPath></specialPath>
-            </participants>
-            <isExpandParticipant>false</isExpandParticipant>
-            <timeLimit>
-              <isTimeLimitSet>false</isTimeLimitSet>
-              <calendarSet>
-                <initType>appoint</initType>
-                <calendarInfo>
-                  <resourceType>business-calendar</resourceType>
-                  <resourceID>default</resourceID>
-                  <resourceName>默认日历</resourceName>
-                  <parameters/>
-                </calendarInfo>
-              </calendarSet>
-            </timeLimit>
-            <notificationImplType>workItem</notificationImplType>
-          </notification>
-        </manualActivity>
-      </implementation>
-      <extendNodes></extendNodes>
-      <isStartActivity>false</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>45</height>
-        <width>64</width>
-        <x>855</x>
-        <y>157</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>manualActivity311</activityId>
-      <activityName>公司物项归口部门分管领导审批</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>manual</activityType>
-      <splitTransaction>false</splitTransaction>
-      <activateRule>
-        <activateRuleType>directRunning</activateRuleType>
-        <applicationInfo>
-          <actionType>service-component</actionType>
-          <suppressJoinFailure>suppress</suppressJoinFailure>
-          <application>
-            <actionType>service-component</actionType>
-            <applicationUri></applicationUri>
-            <transactionType>join</transactionType>
-            <exceptionStrategy>rollback</exceptionStrategy>
-            <invokePattern>synchronous</invokePattern>
-            <parameters/>
-          </application>
-          <assignments/>
-        </applicationInfo>
-      </activateRule>
-      <implementation>
-        <manualActivity>
-          <allowAgent>true</allowAgent>
-          <customURL>
-            <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/approvalReviewReport.jsp</urlInfo>
-            <urlType>webpage</urlType>
-          </customURL>
-          <resetUrl>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
-          </resetUrl>
-          <participants>
-            <participantType>relevantdata</participantType>
-            <specialActivityID></specialActivityID>
-            <specialPath>gkbm</specialPath>
-          </participants>
-          <formFields/>
-          <timeLimit>
-            <isTimeLimitSet>false</isTimeLimitSet>
-            <calendarSet>
-              <initType>appoint</initType>
-              <calendarInfo>
-                <resourceType>business-calendar</resourceType>
-                <resourceID>default</resourceID>
-                <resourceName>默认日历</resourceName>
-                <parameters/>
-              </calendarInfo>
-            </calendarSet>
-          </timeLimit>
-          <multiWorkItem>
-            <isMulWIValid>true</isMulWIValid>
-            <workitemNumStrategy>participant-number</workitemNumStrategy>
-            <finishRule>all</finishRule>
-            <finishRequiredPercent>0</finishRequiredPercent>
-            <finishRquiredNum>0</finishRquiredNum>
-            <isAutoCancel>false</isAutoCancel>
-            <sequentialExecute>false</sequentialExecute>
-          </multiWorkItem>
           <triggerEvents>
             <triggerEvent>
               <applicationInfo>
@@ -1702,13 +1573,13 @@
                 <suppressJoinFailure>suppress</suppressJoinFailure>
                 <application>
                   <actionType>logic-flow</actionType>
-                  <applicationUri>com.zhonghe.ame.contractPact.common.getPlanLeaders</applicationUri>
+                  <applicationUri>com.zhonghe.ame.contractPact.frameAgreement.queryAppPerson</applicationUri>
                   <transactionType>join</transactionType>
                   <exceptionStrategy>rollback</exceptionStrategy>
                   <invokePattern>synchronous</invokePattern>
                   <parameters>
                     <parameter>
-                      <name>orgId</name>
+                      <name>roleid</name>
                       <dataType>
                         <typeClass>primitive</typeClass>
                         <typeValue>String</typeValue>
@@ -1717,20 +1588,20 @@
                       <fillBack>false</fillBack>
                       <description></description>
                       <mode>parameter</mode>
-                      <value>headOrgid</value>
-                      <valueType>variable</valueType>
+                      <value>purchaseFz</value>
+                      <valueType>constant</valueType>
                     </parameter>
                     <parameter>
                       <name>out</name>
                       <dataType>
                         <typeClass>sdo</typeClass>
-                        <typeValue>com.eos.workflow.data.WFParticipant[]</typeValue>
+                        <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
                       </dataType>
-                      <isArray>true</isArray>
+                      <isArray>false</isArray>
                       <fillBack>true</fillBack>
                       <description></description>
                       <mode>result</mode>
-                      <value>gkbm</value>
+                      <value>wfp</value>
                       <valueType>variable</valueType>
                     </parameter>
                   </parameters>
@@ -1796,140 +1667,8 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>855</x>
-        <y>448</y>
-        <lookAndFeel>classic</lookAndFeel>
-        <fontName>System</fontName>
-        <fontSize>12</fontSize>
-        <fontWidth>550</fontWidth>
-        <foreColor>0</foreColor>
-        <isItalic>0</isItalic>
-        <isUnderline>0</isUnderline>
-        <textHeight>60</textHeight>
-      </nodeGraphInfo>
-    </activity>
-    <activity>
-      <activityId>manualActivity01</activityId>
-      <activityName>总办会定标后发起人完善定标信息</activityName>
-      <description></description>
-      <splitType>XOR</splitType>
-      <joinType>XOR</joinType>
-      <priority>60</priority>
-      <activityType>manual</activityType>
-      <splitTransaction>false</splitTransaction>
-      <activateRule>
-        <activateRuleType>directRunning</activateRuleType>
-        <applicationInfo>
-          <actionType>service-component</actionType>
-          <suppressJoinFailure>suppress</suppressJoinFailure>
-          <application>
-            <actionType>service-component</actionType>
-            <applicationUri></applicationUri>
-            <transactionType>join</transactionType>
-            <exceptionStrategy>rollback</exceptionStrategy>
-            <invokePattern>synchronous</invokePattern>
-            <parameters/>
-          </application>
-          <assignments/>
-        </applicationInfo>
-      </activateRule>
-      <implementation>
-        <manualActivity>
-          <allowAgent>true</allowAgent>
-          <customURL>
-            <isSpecifyURL>true</isSpecifyURL>
-            <urlInfo>/purchase/programme/editApprovalReviewReport.jsp</urlInfo>
-            <urlType>webpage</urlType>
-          </customURL>
-          <resetUrl>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
-          </resetUrl>
-          <participants>
-            <participantType>process-starter</participantType>
-            <specialActivityID></specialActivityID>
-            <specialPath></specialPath>
-          </participants>
-          <formFields/>
-          <timeLimit>
-            <isTimeLimitSet>false</isTimeLimitSet>
-            <calendarSet>
-              <initType>appoint</initType>
-              <calendarInfo>
-                <resourceType>business-calendar</resourceType>
-                <resourceID>default</resourceID>
-                <resourceName>默认日历</resourceName>
-                <parameters/>
-              </calendarInfo>
-            </calendarSet>
-          </timeLimit>
-          <multiWorkItem>
-            <isMulWIValid>false</isMulWIValid>
-            <workitemNumStrategy>participant-number</workitemNumStrategy>
-            <finishRule>all</finishRule>
-            <finishRequiredPercent>0</finishRequiredPercent>
-            <finishRquiredNum>0</finishRquiredNum>
-            <isAutoCancel>false</isAutoCancel>
-            <sequentialExecute>false</sequentialExecute>
-          </multiWorkItem>
-          <triggerEvents/>
-          <rollBack>
-            <applicationInfo>
-              <actionType>service-component</actionType>
-              <suppressJoinFailure>suppress</suppressJoinFailure>
-              <application>
-                <actionType>service-component</actionType>
-                <applicationUri></applicationUri>
-                <transactionType>join</transactionType>
-                <exceptionStrategy>rollback</exceptionStrategy>
-                <invokePattern>synchronous</invokePattern>
-                <parameters/>
-              </application>
-              <assignments/>
-            </applicationInfo>
-          </rollBack>
-          <freeFlowRule>
-            <isFreeActivity>true</isFreeActivity>
-            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
-            <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
-          </freeFlowRule>
-          <resetParticipant>originalParticipant</resetParticipant>
-          <notification>
-            <isSendNotification>false</isSendNotification>
-            <actionURL>
-              <isSpecifyURL>false</isSpecifyURL>
-              <urlType>presentation-logic</urlType>
-            </actionURL>
-            <participants>
-              <participantType>process-starter</participantType>
-              <specialActivityID></specialActivityID>
-              <specialPath></specialPath>
-            </participants>
-            <isExpandParticipant>false</isExpandParticipant>
-            <timeLimit>
-              <isTimeLimitSet>false</isTimeLimitSet>
-              <calendarSet>
-                <initType>appoint</initType>
-                <calendarInfo>
-                  <resourceType>business-calendar</resourceType>
-                  <resourceID>default</resourceID>
-                  <resourceName>默认日历</resourceName>
-                  <parameters/>
-                </calendarInfo>
-              </calendarSet>
-            </timeLimit>
-            <notificationImplType>workItem</notificationImplType>
-          </notification>
-        </manualActivity>
-      </implementation>
-      <extendNodes></extendNodes>
-      <isStartActivity>false</isStartActivity>
-      <nodeGraphInfo>
-        <color>16777215</color>
-        <height>45</height>
-        <width>64</width>
-        <x>1080</x>
-        <y>448</y>
+        <x>960</x>
+        <y>544</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -1941,6 +1680,23 @@
       </nodeGraphInfo>
     </activity>
   </activities>
-  <notes/>
+  <notes>
+    <note>
+      <content>采购文件流程</content>
+      <title>Primeton	22-11-17 上午10:45</title>
+      <location>
+        <x>720</x>
+        <y>90</y>
+      </location>
+      <size>
+        <width>211</width>
+        <height>100</height>
+      </size>
+      <id>node</id>
+      <name>注释</name>
+      <sourceConnections/>
+      <targetConnections/>
+    </note>
+  </notes>
   <resource/>
 </workflowProcess>
