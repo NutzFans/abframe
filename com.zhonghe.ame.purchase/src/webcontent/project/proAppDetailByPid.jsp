@@ -52,9 +52,10 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 110px">申请单位：</td>
-							<td colspan="3">
-								<input name="proAppOrgName" id="proAppOrgName" class="nui-textbox" style="width: 450px;" />
+							<td align="right" style="width: 110px">采购需求单位：</td>
+							<td colspan="3" style="background: #f0f0f0">
+								<input name="orgUnits" id="orgUnits" class="nui-textboxlist" dataField="orgUnits" url="com.zhonghe.ame.purchase.common.queryOrgByName.biz.ext" valueField="orgcode" textField="orgname"
+										inputMode="false" style="width: 450px" enabled="false" />
 							</td>
 							<td align="right" style="width: 110px">涉密协作配套：</td>
 							<td>
@@ -214,7 +215,10 @@
 			        success: function (o) {
 						 var result=o.proApp;
 						 form.setData(result);
-						 
+						nui.get('orgUnits').setValue(result.proAppOrgId);
+						nui.get('orgUnits').setText(result.proAppOrgName);
+						nui.get('supplierSel').setValue(result.supplierId);
+						nui.get('supplierSel').setText(result.supplierName);						 
 						 // 计划详细信息
 						 gridDtl.load({
 							"pid" : result.id

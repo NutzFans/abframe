@@ -5,18 +5,18 @@
 <head>
 <title>采购计划立项编辑</title>
 <style type="text/css">
-	body {
-		margin: 0;
-		padding: 0;
-		border: 0;
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 
-	body .mini-textboxlist {
-		border-collapse: collapse;
-	}
+body .mini-textboxlist {
+	border-collapse: collapse;
+}
 </style>
 </head>
 <body>
@@ -35,19 +35,23 @@
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 100px">立项名称：</td>
-							<td colspan="3">
+							<td colspan="7">
 								<input name="proAppName" class="nui-textbox" style="width: 100%" required="true" />
 								<input name="planId" id="planId" class="nui-hidden" style="width: 100%" required="true" />
 								<input name="putunder" id="putunder" class="nui-hidden" style="width: 100%" required="true" />
 							</td>
-							<td align="right" style="width: 100px">立项编号：</td>
-							<td colspan="1">
-								<input name="proAppCode" class="nui-textbox" style="width: 100%" readonly="readonly" emptyText="系统自动生成" />
+						</tr>
+						<tr>
+							<td align="right" style="width: 120px">采购需求单位：</td>
+							<td colspan="5">
+								<span data-placement="right" data-tooltip="通过添加的明细自动带出">
+									<input name="orgUnits" id="orgUnits" class="nui-textboxlist" dataField="orgUnits" url="com.zhonghe.ame.purchase.common.queryOrgByName.biz.ext" valueField="orgcode" textField="orgname"
+										inputMode="false" style="width: 910px" enabled="false" />
+								</span>
 							</td>
-							<td colspan="1" align="right" style="width: 120px">立项申请单位：</td>
-							<td colspan="3">
-								<input name="proAppOrgId" id="proAppOrgId" class="nui-hidden" style="width: 100%" />
-								<input name="proAppOrgName" class="nui-textbox" style="width: 100%" readonly="readonly" />
+							<td align="right">立项编号：</td>
+							<td>
+								<input name="proAppCode" class="nui-textbox" style="width: 100%" readonly="readonly" emptyText="系统自动生成" />
 							</td>
 						</tr>
 						<tr>
@@ -67,7 +71,7 @@
 						<tr>
 							<td align="right">集采类型：</td>
 							<td>
-								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" required="true" visible="true" style="width: 100%;" onvaluechanged="isType" />
+								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" required="true" visible="true" style="width: 100%;" onvaluechanged="isType" enabled="false"/>
 							</td>
 							<td align="right">费用来源：</td>
 							<td>
@@ -144,28 +148,36 @@
 
 		<fieldset style="border: solid 1px #aaa; padding: 1px;">
 			<legend>明细</legend>
-			<div class="fieldset-body" style="width: 100%; height: auto; margin: 0px auto">
-				<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a>
-				<a class="nui-button" id="delbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a>
-				<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext" dataField="datas"
-					showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ">
-					<div property="columns">
-						<div type="checkcolumn"></div>
-						<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
-						<div field="planName" width="110" align="left" headerAlign="center">计划名称</div>
-						<div field="planCode" width="110" align="left" headerAlign="center">计划编号</div>
-						<div field="materialName" width="110" align="center" headerAlign="center" vtype="required">采购物项名称</div>
-						<div field="budgetAmount" width="110" align="center" headerAlign="center" vtype="required">预算金额(万元)</div>
-						<div field="amount" width="110" align="center" headerAlign="center" vtype="required">
-							<span style="color: red">立项金额(万元)</span>
-							<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" name="amount" visible="true" width="100%" />
-						</div>
-						<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
-						<div field="needOrgName" width="60" align="center" headerAlign="center">采购单位</div>
-						<div field="contractamount" width="100" align="center" headerAlign="center" vtype="true" visible="false">
-							拟签合同金额(元)
-							<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" id="contractamount" name="contractamount" />
-						</div>
+			<div>
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table style="width: 100%;">
+						<tr>
+							<td style="width: 100%;">
+								<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a>
+								<a class="nui-button" id="delbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext" dataField="datas"
+				showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ">
+				<div property="columns">
+					<div type="checkcolumn"></div>
+					<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
+					<div field="planName" width="110" align="left" headerAlign="center">计划名称</div>
+					<div field="planCode" width="110" align="left" headerAlign="center">计划编号</div>
+					<div field="materialName" width="110" align="center" headerAlign="center" vtype="required">采购物项名称</div>
+					<div field="budgetAmount" width="110" align="center" headerAlign="center" vtype="required">预算金额(万元)</div>
+					<div field="amount" width="110" align="center" headerAlign="center" vtype="required">
+						<span style="color: red">立项金额(万元)</span>
+						<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" name="amount" visible="true" width="100%" />
+					</div>
+					<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
+					<div field="needOrgName" width="60" align="center" headerAlign="center">采购单位</div>
+					<div field="contractamount" width="100" align="center" headerAlign="center" vtype="true" visible="false">
+						拟签合同金额(元)
+						<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" id="contractamount" name="contractamount" />
 					</div>
 				</div>
 			</div>
@@ -175,8 +187,8 @@
 			<legend>估算表、采购方案和支撑材料(可上传多个附件)</legend>
 			<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
 		</fieldset>
-		
-		<jsp:include page="/ame_common/misOpinion.jsp"/>	
+
+		<jsp:include page="/ame_common/misOpinion.jsp" />
 	</div>
 
 	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
@@ -185,10 +197,10 @@
 		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">中止</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
-	
-	<script type="text/javascript">
-		 <% long workItemID=(Long)request.getAttribute("workItemID");%>
 
+	<script type="text/javascript">
+		
+	<%long workItemID = (Long) request.getAttribute("workItemID");%>
 		nui.parse();
 		var type, istype;
 		var form = new nui.Form("#form1");
@@ -199,21 +211,33 @@
 		if (processid == null) {
 			processid =<%=request.getParameter("processInstID")%>;
 		}
-		
+
+		var orgIdSet = new Set();
+		var orgNameSet = new Set();
+
+		$("#orgUnits > tbody > tr > td").attr("style", "background: #FFFFE6");
 		$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFE6");
-		
+
 		init();
-		
+
 		function init() {
-			var json = nui.encode({"id":id,"workitemid":<%=workItemID %>});
+			var json = nui.encode({
+				"id" : id,
+				"workitemid" :<%=workItemID%>
+			});
 			ajaxCommon({
 				url : "com.zhonghe.ame.purchase.purchaseProApp.queryProApp.biz.ext",
 				data : json,
 				success : function(o) {
 					var result = o.proApp[0]
+					if(result.type == "3"){
+						nui.get('type').setEnabled(false);
+					}
 					form.setData(result);
 					nui.get('supplierSel').setValue(result.supplierId);
 					nui.get('supplierSel').setText(result.supplierName);
+					nui.get('orgUnits').setValue(result.proAppOrgId);
+					nui.get('orgUnits').setText(result.proAppOrgName);
 					gridDtl.load({
 						"pid" : result.id
 					})
@@ -222,7 +246,7 @@
 					nui.get("processinstname").setValue(o.workitem.processInstName);
 					nui.get("activitydefid").setValue(o.workitem.activityDefID);
 					nui.get("workitemname").setValue(o.workitem.workItemName);
-					nui.get("workitemid").setValue(<%=workItemID %>);
+					nui.get("workitemid").setValue(<%=workItemID%>);
 					nui.get("isshow").setValue("1");
 					nui.get("auditstatus").setValue("4");
 					document.getElementById("salesEdit").style.display = "none";
@@ -247,19 +271,24 @@
 				}
 			});
 		}
-		
 
 		function addTicket() {
 			var type = nui.get("type").getValue()
 			var putunder = nui.get("putunder").getValue()
 			var num = gridDtl.getData().length;
-			if (type == 2 && num > 0) {
-				showTips("二级集采只能增加一个计划", "danger")
-			}
 			if (!type) {
 				showTips("请先选择集采类型", "danger")
 				return;
 			} else {
+				var rows = gridDtl.getData();
+				if (rows.length > 0) {
+					for (var i = 0; i < rows.length; i++) {
+						var orgId = String(rows[i].needOrgId);
+						var orgName = rows[i].needOrgName;
+						orgIdSet.add(orgId);
+						orgNameSet.add(orgName);
+					}
+				}
 				var btnEdit = this;
 				nui.open({
 					url : "/default/purchase/common/selectPurchasePlan.jsp?type=" + type + "&putunder=" + putunder,
@@ -284,11 +313,17 @@
 									data[i].planCode = data[i].code
 									data[i].planName = data[i].name
 									data[i].budgetAmount = data[i].newBudgetAmount
+									var orgId = String(data[i].needOrgId);
+									var orgName = data[i].needOrgName;
+									orgIdSet.add(orgId);
+									orgNameSet.add(orgName);
 								}
 								gridDtl.addRows(data, index);
 								if (gridDtl.getData().length > 0) {
 									nui.get("type").setReadOnly(true)
 								}
+								nui.get('orgUnits').setValue(Array.from(orgIdSet).join(','));
+								nui.get('orgUnits').setText(Array.from(orgNameSet).join(','));
 								putunderChanged();
 							}
 						}
@@ -296,7 +331,7 @@
 				});
 			}
 		}
-		
+
 		function onOk(e) {
 			istype = e;
 			if (istype == 1) {
@@ -349,6 +384,8 @@
 			data.putunder = this.setPutunder(proAppDtlPutunder);
 			data.supplierId = nui.get("supplierSel").getValue();
 			data.supplierName = nui.get("supplierSel").getText();
+			data.proAppOrgId = nui.get('orgUnits').getValue();
+			data.proAppOrgName = nui.get('orgUnits').getText();
 			data.files = nui.get("fileids").getValue();
 			data.files1 = nui.get("fileids1").getValue();
 			var data_opioion = opioionform.getData();
@@ -370,17 +407,20 @@
 				}
 			});
 		}
-		
+
 		function setPutunder(proAppDtl) {
 			var putunders = [];
-			for (var i = 0; i < proAppDtl.length; i++) {
-				if (!putunders.includes(proAppDtl[i].putunder.toString())) {
-					putunders.push(proAppDtl[i].putunder.toString())
+			var type = nui.get("type").getValue();
+			if (type != "3") {
+				for (var i = 0; i < proAppDtl.length; i++) {
+					if (!putunders.includes(proAppDtl[i].putunder.toString())) {
+						putunders.push(proAppDtl[i].putunder.toString())
+					}
 				}
 			}
 			return putunders.toString();
 		}
-		
+
 		function removeTicket() {
 			var rows = gridDtl.getSelecteds();
 			if (rows.length > 0) {
@@ -390,11 +430,29 @@
 					nui.get("planId").setValue("");
 					nui.get("putunder").setValue("");
 				}
+				var rows = gridDtl.getData();
+				if (rows.length == 0) {
+					orgIdSet = new Set();
+					orgNameSet = new Set();
+					nui.get('orgUnits').setValue(null);
+					nui.get('orgUnits').setText(null);
+				} else {
+					orgIdSet = new Set();
+					orgNameSet = new Set();
+					for (var i = 0; i < rows.length; i++) {
+						var orgId = String(rows[i].needOrgId);
+						var orgName = rows[i].needOrgName;
+						orgIdSet.add(orgId);
+						orgNameSet.add(orgName);
+					}
+					nui.get('orgUnits').setValue(Array.from(orgIdSet).join(','));
+					nui.get('orgUnits').setText(Array.from(orgNameSet).join(','));
+				}
 				onSumamount();
 			} else {
 				showTips("请至少选中一条记录！");
 			}
-		}		
+		}
 
 		function getHTZQ(e) {
 			var row = e.row;
@@ -460,17 +518,17 @@
 				nui.get("classified").setValue("");
 			}
 		}
-		
-		function purchasModeChange(){
+
+		function purchasModeChange() {
 			var purchasMode = nui.get("purchasMode").getValue();
-			if(purchasMode=="零星采购"){
+			if (purchasMode == "零星采购") {
 				nui.get("supplierScope").setValue("2");
 				nui.get("supplierScope").setReadOnly(true);
-			}else{
+			} else {
 				nui.get("supplierScope").setValue(null);
 				nui.get("supplierScope").setReadOnly(false);
 			}
-		}		
+		}
 
 		function isType() {
 			var type = nui.get("type").getValue();
@@ -510,6 +568,7 @@
 		}
 
 		function putunderChanged() {
+			var type = nui.get("type").getValue();
 			var putunder = nui.get("putunder").getValue()
 			var rowsData = gridDtl.data;
 
@@ -518,7 +577,7 @@
 			} else {
 				putunders = [];
 			}
-			if (rowsData.length > 0) {
+			if (rowsData.length > 0 && type != "3") {
 				for (var i = 0; i < rowsData.length; i++) {
 					if (!putunders.includes(rowsData[i].putunder.toString())) {
 						putunders.push(rowsData[i].putunder.toString())

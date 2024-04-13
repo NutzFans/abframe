@@ -31,22 +31,18 @@ html,body {
 							<input class="nui-hidden" name="criteria._expr[1]._property" value="proAppName" />
 							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
 						</td>
-						<td style="width: 90px; text-align: right;">立项单位:</td>
+						<td style="width: 90px; text-align: right;">采购需求单位:</td>
 						<td style="width: 245px">
-							<input id="orgid2" name="criteria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
-								style="width: 240px" valueFromSelect="true" />
-							<input class="nui-hidden" name="criteria._expr[10]._property" value="proAppOrgId" id="implementOrgProp" />
-							<input class="nui-hidden" name="criteria._expr[10]._op" value="in" id="implementOrgOp" />
-							<input class="nui-hidden" name="criteria._expr[10]._ref" value="1" id="implementOrgRef" />
+							<input id="orgseq" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" style="width: 240px" valueFromSelect="true" />
+							<input class="nui-hidden" name="criteria._expr[10]._property" value="id" id="IdByOrgProp" />
+							<input class="nui-hidden" name="criteria._expr[10]._op" value="in" id="IdByOrgOp" />
+							<input class="nui-hidden" name="criteria._expr[10]._ref" value="1" id="IdByOrgRef" />
 							<input class="nui-hidden" name="criteria._ref[0]._id" value="1" />
-							<input class="nui-hidden" name="criteria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
-							<input class="nui-hidden" name="criteria._ref[0]._select._field[0]" value="orgid" />
-							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._property" value="orgseq" />
-							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="like" />
-							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._likeRule" value="end" />
-							<input class="nui-hidden" name="criteria._expr[11]._property" value="proAppOrgId" id="implementOrgProp2" />
-							<input class="nui-hidden" name="criteria._expr[11]._op" value="in" id="implementOrgOp2" />
-							<input class="nui-hidden" name="criteria._expr[11]._value" id="orgids2" />
+							<input class="nui-hidden" name="criteria._ref[0]._entity" value="com.zhonghe.ame.purchase.purchase.queryProAppIds" />
+							<input class="nui-hidden" name="criteria._ref[0]._select._field[0]" value="ids" />
+							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._property" value="newOrgId" />
+							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="in" />
+							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._value" id="orgids" />
 						</td>
 						<td style="width: 60px; text-align: right;">立项编号:</td>
 						<td style="width: 205px">
@@ -100,7 +96,8 @@ html,body {
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<a class="nui-button" id="cglx_add1" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="cglx_add" iconCls="icon-add" onclick="add()">新增(集采中心)</a>
+						<a class="nui-button" id="cglx_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a>
 						<a class="nui-button" id="cglx_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
@@ -115,13 +112,15 @@ html,body {
 				<div property="columns">
 					<div name="temp123" type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-					<div field="proAppName" width="190" align="left" headerAlign="center">立项名称</div>
-					<div field="proAppCode" width="140" align="left" headerAlign="center" renderer="lookInfo">立项编号</div>
-					<div field="proAppOrgName" width="150" align="left" headerAlign="center">立项单位</div>
-					<div field="projectId" width="150" align="left" headerAlign="center">所属项目名称</div>
-					<div field="proAppApplyPrice" width="100" align="center" headerAlign="center">立项申请金额(万元)</div>
-					<div field="createdTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">申请日期</div>
-					<div field="status" width="60" align="center" renderer="onActionRenderer" headerAlign="center">状态</div>
+					<div field="createdUsername" width="50" headerAlign="center" align="center">经办人</div>
+					<div field="proAppOrgName" width="150" align="center" headerAlign="center">采购需求单位</div>
+					<div field="createdTime" width="60" dateFormat="yyyy-MM-dd" align="center" headerAlign="center" allowSort="true">申请日期</div>
+					<div field="proAppCode" width="110" align="center" headerAlign="center" renderer="lookInfo">立项编号</div>
+					<div field="proAppName" width="200" align="center" headerAlign="center">立项名称</div>
+					<div field="status" width="60" align="center" renderer="onActionRenderer" headerAlign="center">审批状态</div>
+					<div field="proAppApplyPrice" width="80" align="center" headerAlign="center">立项申请金额(万元)</div>
+					<div field="type" width="60" align="center" headerAlign="center" renderer="ZH_PURCHASE">集采类型</div>
+					<div field="projectId" align="center" headerAlign="center">所属项目名称</div>
 				</div>
 			</div>
 		</div>
@@ -143,7 +142,7 @@ html,body {
 
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("cglx_exportExcel,cglx_zf");
+			getOpeatorButtonAuth("cglx_add,cglx_exportExcel,cglx_zf");
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "cglx"
@@ -158,16 +157,13 @@ html,body {
 						nui.get("createdBy").setValue(userId);
 						authOrg = false;						
 					}else{
-						nui.get("createdBy").setName("criteria._or[0]._and[0]._expr[0].createdBy");
+						nui.get("createdBy").setName("criteria._or[0]._expr[0].createdBy");
 						nui.get("createdBy").setValue(userId);
-						nui.get("implementOrgProp").setName("criteria._or[0]._and[1]._expr[2]._property");
-						nui.get("implementOrgOp").setName("criteria._or[0]._and[1]._expr[2]._op");
-						nui.get("implementOrgRef").setName("criteria._or[0]._and[1]._expr[2]._ref");
-						nui.get("orgid2").setData(text.orgs);
-						nui.get("implementOrgProp2").setName("criteria._or[0]._and[1]._expr[3]._property");
-						nui.get("implementOrgOp2").setName("criteria._or[0]._and[1]._expr[3]._op");
-						nui.get("orgids2").setName("criteria._or[0]._and[1]._expr[3]._value");
-						nui.get("orgids2").setValue(text.orgids);
+						nui.get("orgseq").setData(text.orgs);
+						nui.get("IdByOrgProp").setName("criteria._or[0]._expr[1]._property");
+						nui.get("IdByOrgOp").setName("criteria._or[0]._expr[1]._op");
+						nui.get("IdByOrgRef").setName("criteria._or[0]._expr[1]._ref");
+						nui.get("orgids").setValue(text.orgids);
 						authOrg = true;
 					}
 					search();
@@ -260,15 +256,23 @@ html,body {
 
 		function search() {
 			if(authOrg){
-				if(nui.get("orgid2").getValue() != ""){
-					nui.get("createdBy").setName("criteria._expr[6].createdBy");
-					nui.get("createdBy").setValue("");
-					nui.get("implementOrgProp").setName("criteria._expr[10]._property");
-					nui.get("implementOrgOp").setName("criteria._expr[10]._op");
-					nui.get("implementOrgRef").setName("criteria._expr[10]._ref");
-					nui.get("implementOrgProp2").setName("criteria._expr[11]._property");
-					nui.get("implementOrgOp2").setName("criteria._expr[11]._op");
-					nui.get("orgids2").setName("criteria._expr[11]._value");	
+				if(nui.get("orgseq").getValue() != ""){
+					var json = nui.encode({orgseq : nui.get("orgseq").getValue()});
+					nui.ajax({
+						url : "com.zhonghe.ame.purchase.common.getOrgByOrgseq.biz.ext",
+						data : json,
+						async: false,
+						type : 'POST',
+						contentType : 'text/json',
+						success : function(data) {
+							nui.get("createdBy").setName("criteria._expr[6].createdBy");
+							nui.get("createdBy").setValue("");
+							nui.get("IdByOrgProp").setName("criteria._expr[10]._property");
+							nui.get("IdByOrgOp").setName("criteria._expr[10]._op");
+							nui.get("IdByOrgRef").setName("criteria._expr[10]._ref");
+							nui.get("orgids").setValue(data.orgids);
+						}
+					});	
 				}
 			}
 			var data = form.getData();
@@ -285,7 +289,6 @@ html,body {
 			if (!confirm("确定删除吗？")) {
 				return;
 			} else {
-
 				var row = grid.getSelecteds();
 				if (row.length > 1) {
 					nui.alert("只能选中一条项目记录进行删除");
@@ -314,7 +317,6 @@ html,body {
 							}
 						});
 						row.id;
-
 					} else {
 						nui.alert("请选中一条记录", "提示");
 					}
@@ -328,15 +330,34 @@ html,body {
 				url : "/default/purchase/project/addProApp.jsp",
 				width : '100%',
 				height : '100%',
-				title : "采购立项申请",
+				title : "采购立项申请 - 集采中心",
 				onload : function() {
 					var iframe = this.getIFrameEl();
+					data = {"addType": "add"};
+					iframe.contentWindow.initData(data);
 				},
 				ondestroy : function(action) {
 					search();
 				}
 			})
 		}
+		
+		function add_zxcg() {
+			nui.open({
+				url : "/default/purchase/project/addProApp.jsp",
+				width : '100%',
+				height : '100%',
+				title : "采购立项申请 - 自行采购",
+				onload : function() {
+					var iframe = this.getIFrameEl();
+					data = {"addType": "add_zxcg"};
+					iframe.contentWindow.initData(data);
+				},
+				ondestroy : function(action) {
+					search();
+				}
+			})
+		}		
 		
 		function onExportExcel() {
 			var form = new nui.Form("#form1");
@@ -397,6 +418,10 @@ html,body {
 					showTips("只能作废审批状态为【审批通过】的数据", "danger");
 				}
 			}
+		}
+
+		function ZH_PURCHASE(e) {
+			return nui.getDictText("ZH_PURCHASE", e.value);
 		}
 	</script>
 </body>

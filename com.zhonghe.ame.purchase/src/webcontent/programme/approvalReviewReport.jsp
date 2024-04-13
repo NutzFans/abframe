@@ -15,95 +15,87 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+body .mini-textboxlist {
+	border-collapse: collapse;
+}
 </style>
 </head>
 <body>
 	<%long workitemid = (Long)request.getAttribute("workItemID");%>
 	<div class="nui-fit">
-		<div class="mini-panel" title="" style="width: 100%;">
-			<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 99%;">
-				<legend>评审结果信息</legend>
-				<form id="form1" method="post">
-					<input name="files" id="fileids" class="nui-hidden" />
-					<input name="files1" id="fileids1" class="nui-hidden" />
-					<input class="nui-hidden" name="id" />
-					<input class="nui-hidden" name="proappId" />
-					<input class="nui-hidden" name="processid" />
-					<div style="padding: 5px;">
-						<table style="table-layout: fixed;">
-							<tr>
-								<td width="100" align="right">评审结果名称：</td>
-								<td colspan="3">
-									<input name="reportName" id="reportName" class="nui-textbox" style="width: 100%" />
-								</td>
-								<td align="right" style="width: 80px">申请单位：</td>
-								<td colspan="3">
-									<input name="createdOrgname" class="nui-textbox" style="width: 100%" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 100px">立项编号：</td>
-								<td colspan="3">
-									<input name="proappCode" id="proappCode" class="nui-textbox" style="width: 100%" />
-								</td>
-								<td align="right" style="width: 100px">立项名称：</td>
-								<td colspan="3">
-									<input name="proAppName" id="proAppName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 80px">申请人：</td>
-								<td colspan="1">
-									<input name="createdByName" class="nui-textbox" style="width: 100%" />
-								</td>
-								<td align="right" style="width: 100px">采购方式：</td>
-								<td colspan="1">
-									<input id="purchasMode" name="purchasMode" class="nui-textbox" readonly="readonly" style="width: 100%;" />
-								</td>
-								<td class="form_label" align="right" style="width: 120px;">归口部门：</td>
-								<td colspan="3">
-									<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" readonly="readonly" style="width: 100%;" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right">集采类型：</td>
-								<td>
-									<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" style="width: 100%;" readonly="readonly" />
-								</td>
-								<td align="right" style="width: 100px">立项金额：</td>
-								<td colspan="1">
-									<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" style="width: 100%;" readonly="readonly" />
-								</td>
-							</tr>
-							<tr>
-								<td class="form_label" align="right" style="width: 140px;">评审结果说明：</td>
-								<td colspan="5">
-									<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" />
-								</td>
-							</tr>
-						</table>
-					</div>
-				</form>
-			</fieldset>
-			<fieldset style="height: 80%; border: solid 1px #aaa; padding: 1px; width: 99%">
-				<legend>采购计划明细</legend>
-				<div class="fieldset-body" style="width: 100%; height: 100%; margin: 0px auto">
-					<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" dataField="datas" showPager="false" multiSelect="true"
-						url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext">
-						<div property="columns">
-							<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
-							<div field="planName" width="110" align="center" headerAlign="center">计划名称</div>
-							<div field="code" width="100" align="center" headerAlign="center">计划编号</div>
-							<div field="materialName" width="110" align="center" headerAlign="center">采购物项名称</div>
-							<div field="budgetAmount" width="100" align="center" headerAlign="center">预算金额(万元)</div>
-							<div field="amount" width="100" align="center" headerAlign="center">立项金额(万元)</div>
-							<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
-							<div field="needOrgName" width="80" align="left" headerAlign="center">采购单位</div>
-						</div>
+		<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 99%;">
+			<legend>评审结果信息</legend>
+			<form id="form1" method="post">
+				<input name="files" id="fileids" class="nui-hidden" />
+				<input name="files1" id="fileids1" class="nui-hidden" />
+				<input class="nui-hidden" name="id" />
+				<input class="nui-hidden" name="proappId" />
+				<input class="nui-hidden" name="processid" />
+				<div style="padding: 1px;">
+					<table style="table-layout: fixed; width: 100%;">
+						<tr>
+							<td align="right" style="width: 135px">立项编号：</td>
+							<td>
+								<input name="proappId" id="proappId" onbuttonclick="onButtonEdit" allowInput="false" class="nui-buttonedit" style="width: 100%" readonly="readonly" />
+							</td>
+							<td align="right" style="width: 120px">采购需求单位：</td>
+							<td>
+								<input name="orgUnits" id="orgUnits" class="nui-textboxlist" dataField="orgUnits" url="com.zhonghe.ame.purchase.common.queryOrgByName.biz.ext" valueField="orgcode" textField="orgname"
+									inputMode="false" style="width: 705px" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">立项名称：</td>
+							<td>
+								<input name="proAppName" id="proAppName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
+							</td>
+							<td align="right" style="width: 100px;">评审结果名称：</td>
+							<td>
+								<input name="type" id="type" class="nui-hidden" />
+								<span data-placement="left" data-tooltip="默认使用立项名称,可自行修改">
+									<input name="reportName" id="reportName" class="nui-textbox" style="width: 100%" readonly="readonly" />
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">立项金额：</td>
+							<td>
+								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" style="width: 100%;" readonly="readonly" />
+							</td>
+							<td class="form_label" align="right" style="width: 120px;">归口部门：</td>
+							<td>
+								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" readonly="readonly" style="width: 100%;" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 135px;">评审结果说明：</td>
+							<td colspan="3">
+								<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" readonly="readonly" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</fieldset>
+		<fieldset style="border: solid 1px #aaa; padding: 1px; width: 99%">
+			<legend>采购计划明细</legend>
+			<div class="fieldset-body" style="width: 100%; margin: 0px auto">
+				<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" dataField="datas" showPager="false" multiSelect="true"
+					url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext">
+					<div property="columns">
+						<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
+						<div field="planName" width="110" align="center" headerAlign="center">计划名称</div>
+						<div field="code" width="100" align="center" headerAlign="center">计划编号</div>
+						<div field="materialName" width="110" align="center" headerAlign="center">采购物项名称</div>
+						<div field="budgetAmount" width="100" align="center" headerAlign="center">预算金额(万元)</div>
+						<div field="amount" width="100" align="center" headerAlign="center">立项金额(万元)</div>
+						<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
+						<div field="needOrgName" width="80" align="left" headerAlign="center">采购单位</div>
 					</div>
 				</div>
-			</fieldset>
-		</div>
+			</div>
+		</fieldset>
 		<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
 			<legend>评审结果附件</legend>
 			<div style="visibility: hidden; display: none;">
@@ -126,68 +118,62 @@ body {
 	<script type="text/javascript">
     		nui.parse();
     		var id = <%=request.getParameter("id")%>;
- 		var form = new nui.Form("#form1");
+ 			var form = new nui.Form("#form1");
     		var countersignUsers,titleText;
+    		
     		init();
+    		
     		var gridDtl = nui.get("grid_detail");
+    		
     		function init(){
        			var data = {workitemid:<%=workitemid%>};
-			var json = nui.encode(data);
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext",
-				data : json,
-				type : 'POST',
-				cache : false,
-				contentType : 'text/json',
-				success : function(o) {
-					var result = o.reviewReport[0];
-					form.setData(result);
-					nui.get("proappCode").setValue(result.proAppCode);
-					gridDtl.load({
-						"pid" : result.proappId
-					})
-					nui.get("backTo").setData(result.backList);
-
-					var grid_0 = nui.get("grid_0");
-					grid_0.load({
-						"groupid" : "purReviewReport",
-						"relationid" : result.id
-					});
-					grid_0.sortBy("fileTime", "desc");
-
-					var grid = nui.get("datagrid1");
-					grid.load({
-						processInstID : result.processid
-					});
-					grid.sortBy("time", "desc");
-					//初始化处理意见
-					initMisOpinion({
-						auditstatus : "1"
-					});
-					labelModel();
-
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert(jqXHR.responseText);
-				}
-			});
-		}
-
-		function labelModel() {
-			var fields = form.getFields();
-			for (var i = 0, l = fields.length; i < l; i++) {
-				var c = fields[i];
-				if (c.setReadOnly)
-					c.setReadOnly(true); //只读
-				if (c.setIsValid)
-					c.setIsValid(true); //去除错误提示
-			}
+				var json = nui.encode(data);
+				nui.ajax({
+					url : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext",
+					data : json,
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(o) {
+						var result = o.reviewReport[0];
+						form.setData(result);
+						nui.get('orgUnits').setValue(result.proAppOrgId);
+						nui.get('orgUnits').setText(result.proAppOrgName);
+						nui.get("proappId").setValue(result.proappId);
+						nui.get("proappId").setText(result.proAppCode);
+						gridDtl.load({
+							"pid" : result.proappId
+						})
+						nui.get("backTo").setData(result.backList);
+	
+						var grid_0 = nui.get("grid_0");
+						grid_0.load({
+							"groupid" : "purReviewReport",
+							"relationid" : result.id
+						});
+						grid_0.sortBy("fileTime", "desc");
+	
+						var grid = nui.get("datagrid1");
+						grid.load({
+							processInstID : result.processid
+						});
+						grid.sortBy("time", "desc");
+						//初始化处理意见
+						initMisOpinion({
+							auditstatus : "1"
+						});
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(jqXHR.responseText);
+					}
+				});
 		}
 
 		//添加加签
 		function countersign() {
 			selectOmEmployee2();
 		}
+		
 		function selectOmEmployee2() {
 			var btnEdit = this;
 			nui.open({
