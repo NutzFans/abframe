@@ -49,7 +49,7 @@
 </div>
 	<div class="nui-fit">
 	<div id="datagrid1" sizeList="[10,20,50,100]" showPager="true" dataField="data" 
-	sortMode="client"  pageSize="10" multiSelect="true" allowSortColumn=true
+	sortMode="client"  pageSize="10" multiSelect="false" allowSortColumn=true
 	class="nui-datagrid" style="width:100%;height:100%;" url="com.zhonghe.ame.purchase.purchaseplan.selsetPlanItems.biz.ext" >
 		 <div property="columns">
 	       	<div type="indexcolumn" align="center" headerAlign="center">序号</div>
@@ -126,17 +126,7 @@
 		
     function onOk() {
         var row = grid.getSelecteds();
-        if(type==2&&row.length>1){
-        	showTips("二级集采一个立项只能对应一个计划","danger");
-        	return;
-        }
         for(var i = 0;i<row.length; i++ ){
-//         	if(i>0){
-//         		if(row[i].putunder!=row[i-1].putunder){
-//         			showTips("请重新归口部门相同的计划","danger")
-//         		 	return
-//         		}
-//         	}
         	if(row[i].sumamount<=0){
         		showTips("存在可立项金额为0的计划，请重新选择","danger")
         		 return

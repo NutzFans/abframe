@@ -168,7 +168,7 @@
 			$('#div10').click(function() {
 				layer.open({
 					title : '本部企业发展部领导审批 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【manage14】的角色数据',
+					content : '通过【角色管理】模块修改角色编号为【manage5】的角色数据',
 					btn : []
 				});
 			});
@@ -240,7 +240,7 @@
 			$('#div18').click(function() {
 				layer.open({
 					title : '企业发展部领导审批 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【manage14】的角色数据',
+					content : '通过【角色管理】模块修改角色编号为【manage5】的角色数据',
 					btn : []
 				});
 			});
