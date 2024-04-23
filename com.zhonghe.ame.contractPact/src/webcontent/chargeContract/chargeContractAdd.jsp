@@ -383,6 +383,11 @@ body {
 							return;
 						}
 					}
+					var years = [...new Set(chargePlansJson.map(item => item.years))];
+					if (years.length !== chargePlansJson.length) {
+						showTips("未来年度收款计划年份重复，一个年份一行数据", "danger");
+						return;
+					}
 				} else {
 					showTips("请填写未来年度收款计划!", "danger");
 					return;
