@@ -77,7 +77,7 @@
 				if(tgt!=null){
 					cookie = new Cookie("cas-login","CASTGC="+URLEncoder.encode(tgt, "UTF-8"));
 					cookie.setSecure(false);
-					cookie.setDomain("172.17.133.198:8080");
+					cookie.setDomain("10.224.193.51:8080");
 					cookie.setPath("/");         
 					cookie.setVersion(0);
 				}

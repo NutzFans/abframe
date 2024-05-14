@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
+import com.eos.foundation.eoscommon.BusinessDictUtil;
 import com.eos.system.annotation.Bizlet;
 import com.ibm.icu.math.BigDecimal;
 import com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.SysSynchroGetOrgBaseInfoContext;
@@ -59,9 +60,12 @@ import commonj.sdo.DataObject;
 import commonj.sdo.helper.DataFactory;
 
 public class QuerySysSynchroGetOrg {
-	private final static String url = "https://172.17.133.134/sys/webservice/sysSynchroGetOrgWebService?wsdl";
-	private final static String oauser = "jingying";
-	private final static String oapassword = "92edb6981700ba6521a99f5bdeaec38e";
+	private final static String oauser = BusinessDictUtil.getDictName("AME_SYSCONF", "OAUSER");
+
+	private final static String oapassword = BusinessDictUtil.getDictName("AME_SYSCONF", "OAPASSWORD");
+	
+	private final static String url = BusinessDictUtil.getDictName("AME_SYSCONF", "OASYNCURL");
+	
 	private static String s ="";
 	
 	/**

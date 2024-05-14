@@ -23,6 +23,7 @@ import cn.hutool.json.JSONUtil;
 import com.eos.common.connection.DataSourceHelper;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
+import com.eos.foundation.eoscommon.BusinessDictUtil;
 import com.eos.system.annotation.Bizlet;
 import com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.SysSynchroGetOrgInfoContext;
 import com.primeton.ame.schindler.org.AcOperator;
@@ -37,15 +38,18 @@ import com.primeton.ame.schindler.org.impl.OmOrganizationImpl;
 @Bizlet("同步OA更新组织机构信息")
 public class SyncUpdateOrg {
 
-	private final static String url = "https://172.17.133.134/sys/webservice/sysSynchroGetOrgWebService?wsdl";
+	private final static String oauser = BusinessDictUtil.getDictName("AME_SYSCONF", "OAUSER");
 
-	private final static String oauser = "jingying";
-
-	private final static String oapassword = "92edb6981700ba6521a99f5bdeaec38e";
+	private final static String oapassword = BusinessDictUtil.getDictName("AME_SYSCONF", "OAPASSWORD");
+	
+	private final static String url = BusinessDictUtil.getDictName("AME_SYSCONF", "OASYNCURL");
 
 	@Bizlet("同步OA更新组织机构信息")
 	public void syncUpdateOrg() throws Exception {
 		Console.log("（≡・ x ・≡）开始执行同步OA操作（≡・ x ・≡）");
+		Console.log(url);
+		Console.log(oauser);
+		Console.log(oapassword);
 
 		// 工作组信息
 		JSONArray groupJsonArray = this.analyzeWsByType("group");
@@ -92,7 +96,7 @@ public class SyncUpdateOrg {
 		context.setReturnOrgType("[{\"type\":\"" + type + "\"}]");
 		context.setCount(100000);
 		context.setBeginTimeStamp("");
-		String soapStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://webservice.notify.sys.kmss.landray.com/\">\n"
+		String soapStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://out.webservice.organization.sys.kmss.landray.com/\">\n"
 				+ "  <soapenv:Header>\n" + "   <tns:RequestSOAPHeader xmlns:tns=\"http://sys.webservice.client\">\n" + " <tns:user>"
 				+ oauser
 				+ "</tns:user>\n"

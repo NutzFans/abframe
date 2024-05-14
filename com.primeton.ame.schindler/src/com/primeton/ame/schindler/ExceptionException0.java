@@ -10,7 +10,7 @@ package com.primeton.ame.schindler;
 
 public class ExceptionException0 extends java.lang.Exception{
     
-    private com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.Exception7 faultMessage;
+    private com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.Exception114 faultMessage;
     
     public ExceptionException0() {
         super("ExceptionException0");
@@ -24,11 +24,11 @@ public class ExceptionException0 extends java.lang.Exception{
       super(s, ex);
     }
     
-    public void setFaultMessage(com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.Exception7 msg){
+    public void setFaultMessage(com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.Exception114 msg){
        faultMessage = msg;
     }
     
-    public com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.Exception7 getFaultMessage(){
+    public com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.Exception114 getFaultMessage(){
        return faultMessage;
     }
 }
