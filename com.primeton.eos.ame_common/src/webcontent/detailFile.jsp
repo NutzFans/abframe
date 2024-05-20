@@ -55,6 +55,12 @@
 	var amepath ="<%=amepath %>";
 	var app = "<%= request.getContextPath() %>";  
 	var isViewDelete = false;//判断是否要展示删除按钮
+	var downloadZip = false;
+	downloadZip = <%= request.getParameter("downloadZip") %>;
+	if(downloadZip == true){
+		$('#innerHtml').html("相关附件&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='downloadZipFile();'>打包下载</a>");
+	}
+	
     //附件下载
     function getdetail(e){
     	return "<a href='javascript:void(0)' onclick='checkDetail();' title='点击查看'>" + e.value + "</a>";

@@ -165,7 +165,9 @@ table,table tr td {
 				</div>
 			</form>
 			<div title="相关附件">
-				<jsp:include page="/ame_common/detailFile.jsp" />
+				<jsp:include page="/ame_common/detailFile.jsp">
+					<jsp:param name="downloadZip" value="true"/>
+				</jsp:include>
 			</div>
 			<div class="nui-panel" id="d3" title="审批意见列表" style="width: 100%; height: auto;">
 				<div id="datagrid4" class="nui-datagrid" style="width: 100%; height: auto;" dataField="misOpinions" url="com.zhonghe.ame.purchase.common.queryPlanApproval.biz.ext" idField="id" allowResize="true"
@@ -183,6 +185,12 @@ table,table tr td {
 			</div>
 		</div>
 	</div>
+	
+	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 	
 	<script type="text/javascript">
 		nui.parse();
@@ -332,6 +340,36 @@ table,table tr td {
 			print();
 			document.getElementById('checkview').style.display = "";
 		};
+		
+		function downloadZipFile() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = id;
+			var fileCatalog = 'payMentinfo';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "付款管理_" + nui.get('contractName').getValue() + "_附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}		
+		
 	</script>
 </body>
 </html>

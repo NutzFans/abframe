@@ -118,9 +118,13 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[28].major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
-						<td style="width: 60px; text-align: right;">工程类别:</td>
+						<td style="width: 60px; text-align: right;">服务范围:</td>
 						<td style="width: 155px">
-							<input name="critria._expr[39].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="critria._expr[50].bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">工程类别:</td>
+						<td style="width: 205px">
+							<input name="critria._expr[39].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 200px" />
 						</td>
 						<td style="width: 60px; text-align: right;">开票金额:</td>
 						<td style="width: 205px">
@@ -134,10 +138,12 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[45].allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+					</tr>
+					<tr>
 						<td style="width: 100px; text-align: right;">是否红冲/作废:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[46].redInkEntryFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>
+						</td>					
 					</tr>
 				</table>
 			</div>
@@ -194,6 +200,7 @@ html,body {
 					<div field="balanceSum" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">余额（元）</div>
 					<div field="receivableData" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">回款时间</div>
 					<div field="major" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
+					<div field="bidService" align="center" headerAlign="center" allowSort="true" renderer="ZH_BID_SERVICE">服务范围</div>
 					<div field="projectType" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内/外</div>
 					<div field="invoiceUsed" align="center" headerAlign="center" allowSort="true" renderer="INVOICE_USED">用途</div>
@@ -629,6 +636,10 @@ html,body {
 
 		function ZH_MAJOR_TYPE(e) {
 			return nui.getDictText("ZH_MAJOR_TYPE", e.value);
+		}
+		
+		function ZH_BID_SERVICE(e){
+			return nui.getDictText("ZH_BID_SERVICE", e.value);
 		}
 
 		function ZH_PROJECT_TYPE(e) {

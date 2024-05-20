@@ -62,20 +62,21 @@ table,table tr td {
 				<fieldset id="field1" style="border: solid 1px #aaa;">
 					<legend>原 - 开票信息信息</legend>
 					<form>
+						<input name="historyId" id="historyId" class="nui-hidden" />
 						<div>
-							<table style="table-layout: fixed;">
+							<table style="width: 100%">
 								<tr>
-									<td align="right" style="width: 140px">合同名称：</td>
+									<td align="right" style="width: 90px">合同名称：</td>
 									<td colspan="3">
 										<input id="historyContractName" enabled="false" class="nui-textbox" style="width: 100%" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right">申请人：</td>
+									<td align="right" style="width: 90px">申请人：</td>
 									<td>
-										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 300px" />
+										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
-									<td align="right" style="width: 160px">合同实施部门：</td>
+									<td align="right" style="width: 90px">合同实施部门：</td>
 									<td>
 										<input id="historyImplementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs" showTreeIcon="true"
 											valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false" checkRecursive="false"
@@ -83,159 +84,133 @@ table,table tr td {
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">申请日期：</td>
+									<td align="right" style="width: 90px">申请日期：</td>
 									<td>
-										<input id="historyCreateTime" enabled="false" class="nui-datepicker" style="width: 300px" required="true" />
+										<input id="historyCreateTime" enabled="false" class="nui-datepicker" style="width: 100%" required="true" />
 									</td>
-									<td align="right" style="width: 160px">合同编号：</td>
+									<td align="right" style="width: 90px">合同编号：</td>
 									<td>
-										<input id="historyContractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 100px">专业类别：</td>
-									<td>
-										<input id="historyMajor" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 300px" required="true" enabled="false" />
-									</td>
-									<td align="right" style="width: 160px">工程类别：</td>
-									<td>
-										<input id="historyProjectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true" enabled="false" />
+										<input id="historyContractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">集团内外：</td>
+									<td align="right" style="width: 90px">专业类别：</td>
 									<td>
-										<input id="historyHeadquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true" enabled="false" />
+										<input id="historyMajor" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 100%" required="true" enabled="false" />
 									</td>
-									<td align="right" style="width: 160px">发票抬头类别：</td>
+									<td align="right" style="width: 90px">服务范围：</td>
 									<td>
-										<input id="historyInvoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">发票类型：</td>
-									<td>
-										<input id="historyInvoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 300px" required="true" onvaluechanged="invoiceType" enabled="false" />
-									</td>
-									<td align="right" style="width: 160px">税率（%）：</td>
-									<td>
-										<input id="historyInvoiceRate" class="nui-textbox" style="width: 300px" required="true" onvaluechanged="editContractSum" value="6" enabled="false" />
+										<input id="historyBidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 100%" required="true" enabled="false"/>
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">用途：</td>
+									<td align="right" style="width: 90px">工程类别：</td>
+									<td>
+										<input id="historyProjectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 100%" required="true" enabled="false" />
+									</td>
+									<td align="right" style="width: 90px">集团内外：</td>
+									<td>
+										<input id="historyHeadquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 100%" required="true" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">发票抬头类别：</td>
+									<td colspan="3">
+										<input id="historyInvoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" required="true" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">发票类型：</td>
+									<td>
+										<input id="historyInvoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 100%" required="true" onvaluechanged="invoiceType" enabled="false" />
+									</td>
+									<td align="right" style="width: 90px">税率(%)：</td>
+									<td>
+										<input id="historyInvoiceRate" class="nui-textbox" style="width: 100%" required="true" onvaluechanged="editContractSum" value="6" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">用途：</td>
 									<td>
 										<input id="historyInvoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" style="width: 100%" required="true" enabled="false" />
 									</td>
-									<td align="right" style="width: 180px">合同金额（元）：</td>
+									<td align="right" style="width: 90px">合同金额(元)：</td>
 									<td>
-										<input id="historyInvoiceSumCapital" class="nui-textbox" vtype="float" style="width: 300px" required="true" enabled="false" />
+										<input id="historyInvoiceSumCapital" class="nui-textbox" vtype="float" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">开票金额（元）：</td>
+									<td align="right" style="width: 90px">开票金额(元)：</td>
 									<td>
-										<input id="historyInvoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" enabled="false" />
+										<input id="historyInvoiceSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="editContractSum" enabled="false" />
 									</td>
-									<td align="right" style="width: 160px">账面收入（元）：</td>
+									<td align="right" style="width: 90px">账面收入(元)：</td>
 									<td>
-										<input id="historyBookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">税额：</td>
-									<td>
-										<input id="historyInvoiceTax" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-									</td>
-									<td align="right" style="width: 160px">收款进度：</td>
-									<td>
-										<input id="historyPayType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px" required="true" enabled="false" />
+										<input id="historyBookIncome" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">开票金额大写：</td>
+									<td align="right" style="width: 90px">税额：</td>
+									<td>
+										<input id="historyInvoiceTax" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+									</td>
+									<td align="right" style="width: 90px">收款进度：</td>
+									<td>
+										<input id="historyPayType" class="nui-dictcombobox" dictTypeId="payType" style="width: 100%" required="true" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">开票金额大写：</td>
 									<td colspan="3">
 										<input id="historyInvoiceSumChinese" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">名称：</td>
+									<td align="right" style="width: 90px">名称：</td>
 									<td colspan="3">
 										<input id="historyPayerName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">纳税人识别号：</td>
+									<td align="right" style="width: 90px">纳税人识别号：</td>
 									<td colspan="3">
 										<input id="historyTaxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">地址、电话：</td>
+									<td align="right" style="width: 90px">发票备注：</td>
 									<td colspan="3">
-										<input id="historyUnitAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">开户行及账号：</td>
-									<td colspan="3">
-										<input id="historyAccount" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">发票备注：</td>
-									<td colspan="8">
 										<input id="historyInvoiceRemark" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">开票是否邮寄：</td>
-									<td>
-										<input id="historyPostFlag" class="nui-dictcombobox" onvaluechanged="setAttribute" dictTypeId="ZH_POST" style="width: 300px" required="true" enabled="false" />
-									</td>
-									<td align="right" style="width: 160px">发票领取人：</td>
-									<td>
-										<input id="historyInvoiceUser" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">邮寄姓名：</td>
-									<td>
-										<input id="historyMailName" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-									</td>
-									<td align="right" style="width: 160px">邮寄电话：</td>
-									<td>
-										<input id="historyMailPhone" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">邮寄地址：</td>
+									<td align="right" style="width: 120px">数电发票接收人邮箱：</td>
 									<td colspan="3">
-										<input id="historyMailAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+										<input id="historyInvoiceUserMail" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">回款金额（元）：</td>
+									<td align="right" style="width: 90px">回款金额(元)：</td>
 									<td>
-										<input id="historyReceivableSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="receivableSum" enabled="false" />
+										<input id="historyReceivableSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="receivableSum" enabled="false" />
 									</td>
-									<td align="right" style="width: 160px">余额（元）：</td>
+									<td align="right" style="width: 90px">余额(元)：</td>
 									<td>
-										<input id="historyBalanceSum" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 160px">回款时间：</td>
-									<td>
-										<input id="historyReceivableData" enabled="false" class="nui-datepicker" style="width: 300px" required="true" />
-									</td>
-									<td align="right" style="width: 160px">核查（元）：</td>
-									<td>
-										<input id="historyVerification" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+										<input id="historyBalanceSum" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">备注：</td>
+									<td align="right" style="width: 90px">回款时间：</td>
+									<td>
+										<input id="historyReceivableData" enabled="false" class="nui-datepicker" style="width: 100%" required="true" />
+									</td>
+									<td align="right" style="width: 90px">核查(元)：</td>
+									<td>
+										<input id="historyVerification" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">备注：</td>
 									<td colspan="3">
 										<input id="historyRemark" class="nui-textarea" style="width: 100%; height: 235px" required="false" enabled="false" />
 									</td>
@@ -249,13 +224,13 @@ table,table tr td {
 					<legend>红冲/作废 - 开票信息</legend>
 					<form id="form1">
 						<div>
-							<table style="table-layout: fixed;">
+							<table style="width: 100%">
 								<tr>
-									<td align="right">申请人</td>
+									<td align="right" style="width: 90px">申请人：</td>
 									<td>
-										<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+										<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 									</td>
-									<td align="right" style="width: 160px">申请单位：</td>
+									<td align="right" style="width: 90px">申请单位：</td>
 									<td>
 										<input id="implementOrg" name="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs" showTreeIcon="true"
 											valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false" checkRecursive="false"
@@ -263,49 +238,55 @@ table,table tr td {
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">申请日期：</td>
+									<td align="right" style="width: 90px">申请日期：</td>
 									<td>
-										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" enabled="false" required="true" />
+										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" enabled="false" required="true" />
 									</td>
-									<td align="right" style="width: 160px">合同编号：</td>
+									<td align="right" style="width: 90px">合同编号：</td>
 									<td>
-										<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="false" />
+										<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">合同名称：</td>
+									<td align="right" style="width: 90px">合同名称：</td>
 									<td colspan="3">
 										<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 100px">申请红冲/作废：</td>
+									<td align="right" style="width: 90px">申请红冲/作废：</td>
 									<td>
-										<input id="redInkType" name="redInkType" class="nui-dictcombobox" dictTypeId="ZH_RED_INK_TYPE" style="width: 300px" required="true" enabled="false" />
+										<input id="redInkType" name="redInkType" class="nui-dictcombobox" dictTypeId="ZH_RED_INK_TYPE" style="width: 100%" required="true" enabled="false" />
 									</td>
-									<td align="right" style="width: 160px">红冲/作废金额（元）：</td>
+									<td align="right" style="width: 110px">红冲/作废金额(元)：</td>
 									<td>
-										<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" enabled="false" />
+										<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="editContractSum" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">红冲/作废金额大写：</td>
+									<td align="right" style="width: 120px">红冲/作废金额大写：</td>
 									<td colspan="3">
 										<input id="invoiceSumChinese" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">账面收入（元）：</td>
+									<td align="right" style="width: 90px">账面收入(元)：</td>
 									<td>
-										<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+										<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
-									<td align="right" style="width: 160px">税额：</td>
+									<td align="right" style="width: 90px">税额：</td>
 									<td>
-										<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+										<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
-									<td align="right" style="width: 160px">红冲/作废原因：</td>
+									<td align="right" style="width: 120px">数电发票接收人邮箱：</td>
+									<td colspan="3">
+										<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">红冲/作废原因：</td>
 									<td colspan="3">
 										<input name="remark" class="nui-textarea" style="width: 100%; height: 200px" required="true" enabled="false" />
 									</td>
@@ -317,12 +298,16 @@ table,table tr td {
 
 				<fieldset id="field4" style="border: solid 1px #aaa;">
 					<legend>原 - 开票信息附件</legend>
-					<jsp:include page="/ame_common/detailFile.jsp" />
+					<jsp:include page="/ame_common/detailFile.jsp">
+						<jsp:param name="downloadZip" value="true"/>
+					</jsp:include>
 				</fieldset>
 
 				<fieldset id="field5" style="border: solid 1px #aaa;">
 					<legend>红冲/作废 - 相关附件</legend>
-					<jsp:include page="/ame_common/detailFileExpand.jsp" />
+					<jsp:include page="/ame_common/detailFileExpand.jsp">
+						<jsp:param name="downloadZipExpand" value="true"/>
+					</jsp:include>
 				</fieldset>
 
 				<fieldset id="field6" style="border: solid 1px #aaa;">
@@ -345,6 +330,12 @@ table,table tr td {
 			</div>
 		</div>
 	</div>
+	
+	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		nui.parse();
@@ -396,12 +387,14 @@ table,table tr td {
 				data : json,
 				success : function(result) {
 					var data = result.proApp[0];
+					nui.get("historyId").setValue(data.id);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
 					nui.get("historyImplementOrg").setValue(data.implementOrg);
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setText(data.contractNo);
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyMajor").setValue(data.major);
+					nui.get("historyBidService").setValue(data.bidService);
 					nui.get("historyProjectType").setValue(data.projectType);
 					nui.get("historyHeadquarterGroup").setValue(data.headquarterGroup);
 					nui.get("historyInvoiceNameType").setValue(data.invoiceNameType);
@@ -415,15 +408,9 @@ table,table tr td {
 					nui.get("historyInvoiceTax").setValue(data.invoiceTax);
 					nui.get("historyPayerName").setValue(data.payerName);
 					nui.get("historyTaxpayerNumber").setValue(data.taxpayerNumber);
-					nui.get("historyUnitAddress").setValue(data.unitAddress);
-					nui.get("historyAccount").setValue(data.account);
 					nui.get("historyInvoiceRemark").setValue(data.invoiceRemark);
-					nui.get("historyPostFlag").setValue(data.postFlag);
-					nui.get("historyInvoiceUser").setValue(data.invoiceUser);
-					nui.get("historyMailName").setValue(data.mailName);
-					nui.get("historyMailPhone").setValue(data.mailPhone);
-					nui.get("historyMailAddress").setValue(data.mailAddress);
 					nui.get("historyRemark").setValue(data.remark);
+					nui.get("historyInvoiceUserMail").setValue(data.invoiceUserMail);
 					nui.get("historyInvoiceSumChinese").setValue(functiondigitUppercase(nui.get("historyInvoiceSum").getValue()));
 
 					var grid_0 = nui.get("grid_0");
@@ -486,7 +473,65 @@ table,table tr td {
 		}
 		
 		// 设置水印用户
-		setWatermark('<%=userName %>')				
+		setWatermark('<%=userName %>')
+		
+		function downloadZipFile() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = nui.get('historyId').getValue();
+			var fileCatalog = 'invoiceinfo';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "开票管理_" + nui.get('contractName').getValue() + "_(原)附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}
+		
+		function downloadZipFileExpand() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = id;
+			var fileCatalog = 'invoiceinfo';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "开票管理_" + nui.get('contractName').getValue() + "_(红冲_作废)附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}								
 		
 	</script>
 

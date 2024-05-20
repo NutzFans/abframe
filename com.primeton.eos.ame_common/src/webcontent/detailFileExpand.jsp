@@ -28,7 +28,7 @@
 		        <div class="nui-toolbar" style="border-bottom:0;padding:0px;">
 		            <table style="width:100%;">
 		            	<tr>
-		                    <td style="width:20%;" id="innerHtml">
+		                    <td style="width:20%;" id="innerHtmlExpand">
 		                    	相关附件
 		                    </td>
 		                </tr>
@@ -55,6 +55,11 @@
 	var amepath ="<%=amepath %>";
 	var app = "<%= request.getContextPath() %>";  
 	var isViewDelete = false;//判断是否要展示删除按钮
+	var downloadZipExpand = false;
+	downloadZipExpand = <%= request.getParameter("downloadZipExpand") %>;
+	if(downloadZipExpand == true){
+		$('#innerHtmlExpand').html("相关附件&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='downloadZipFileExpand();'>打包下载</a>");
+	}
     //附件下载
     function getdetailFileExpandGrid(e){
     	return "<a href='javascript:void(0)' onclick='checkDetailFileExpandGrid();' title='点击查看'>" + e.value + "</a>";

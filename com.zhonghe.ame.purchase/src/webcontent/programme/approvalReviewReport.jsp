@@ -206,7 +206,7 @@ body .mini-textboxlist {
                         }
                         users = users+"】";
                         titleText ="增加审批人员"+ users +"并提交";
-                        form2.submit();
+                        submitProcess(titleText);
                     }
                 }
             }
@@ -272,7 +272,10 @@ body .mini-textboxlist {
 				}
 			});
 		}
-		function SaveData1() {
+		
+		// 提交 
+		function SaveData() {
+			saveData();
 		}
 
 		function onButtonEdit(e) {

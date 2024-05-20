@@ -18,7 +18,7 @@
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td class="form_label" align="right">申请人</td>
+							<td class="form_label" align="right">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
@@ -57,6 +57,12 @@
 							<td align="right" style="width: 160px">集团内外：</td>
 							<td>
 								<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">服务范围：</td>
+							<td>
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 300px" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
@@ -123,6 +129,8 @@
 								<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
+						<!--
 						<tr>
 							<td align="right" style="width: 160px">地址、电话：</td>
 							<td colspan="5">
@@ -135,12 +143,21 @@
 								<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						-->
 						<tr>
 							<td align="right" style="width: 160px">发票备注：</td>
 							<td colspan="5">
 								<input name="invoiceRemark" id="invoiceRemark" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
 						</tr>
+						<tr>
+							<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
+							<td colspan="5">
+								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
+							</td>
+						</tr>
+						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
+						<!--
 						<tr>
 							<td align="right" style="width: 160px">开票是否邮寄：</td>
 							<td>
@@ -168,10 +185,11 @@
 								<input name="mailAddress" id="mailAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						-->
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false"/>
 							</td>
 						</tr>
 					</table>
@@ -230,7 +248,7 @@
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);
 					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
-					if(workItemInfo.workItemName == '财务开票1'){
+					if(workItemInfo.workItemName == '财务开票'){
 						nui.get('bookIncome').enable();
 					}
 					//查询并加载附件
@@ -335,7 +353,6 @@
 		}
 		
 		function functiondigitUppercase(price) {
-			debugger
 			if(price.substr(0,1) =="-"){
 				price = price.slice(1);
 			}

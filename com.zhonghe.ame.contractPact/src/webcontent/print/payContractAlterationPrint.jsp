@@ -63,6 +63,7 @@ table,table tr td {
 				<fieldset id="field1" style="border: solid 1px #aaa;">
 					<legend>原 - 付费合同信息</legend>
 					<form>
+						<input name="historyId" id="historyId" class="nui-hidden" />
 						<input id="historyContractNature" class="nui-hidden"/>
 						<input id="historyPurchasePlan" class="nui-hidden"/>
 						<div>
@@ -243,12 +244,16 @@ table,table tr td {
 				
 				<fieldset id="field4" style="border: solid 1px #aaa;">
 					<legend>原 - 付费合同附件</legend>
-					<jsp:include page="/ame_common/detailFile.jsp" />
+					<jsp:include page="/ame_common/detailFile.jsp">
+						<jsp:param name="downloadZip" value="true"/>
+					</jsp:include>
 				</fieldset>
 				
 				<fieldset id="field5" style="border: solid 1px #aaa;">
 					<legend>补充协议 - 相关附件</legend>
-					<jsp:include page="/ame_common/detailFileExpand.jsp" />
+					<jsp:include page="/ame_common/detailFileExpand.jsp">
+						<jsp:param name="downloadZipExpand" value="true"/>
+					</jsp:include>
 				</fieldset>
 
 				<fieldset id="field6" style="border: solid 1px #aaa;">
@@ -271,6 +276,12 @@ table,table tr td {
 			</div>
 		</div>
 	</div>
+	
+	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 	
 	<script type="text/javascript">
 		nui.parse();
@@ -322,6 +333,7 @@ table,table tr td {
 				data : json,
 				success : function(result) {
 					var data = result.data;
+					nui.get("historyId").setValue(data.id);
 					nui.get("historyContractNature").setValue(data.contractNature);
 					nui.get("historyPurchasePlan").setValue(data.purchasePlan);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
@@ -451,7 +463,65 @@ table,table tr td {
 			else {
 				nui.showTips({content: content, state: "success", x: "center", y: "center",timeout: 3500.});
 			}
-		}				
+		}
+		
+		function downloadZipFile() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = nui.get('historyId').getValue();
+			var fileCatalog = 'payContractinfo';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "付费合同_" + nui.get('contractName').getValue() + "_(原)附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}
+		
+		function downloadZipFileExpand() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = id;
+			var fileCatalog = 'payContractinfo';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "付费合同_" + nui.get('contractName').getValue() + "_(补充协议)附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}								
 		
 	</script>
 	

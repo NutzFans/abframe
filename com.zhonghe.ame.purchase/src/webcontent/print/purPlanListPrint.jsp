@@ -140,7 +140,9 @@
 	  </fieldset>
 	   </form>
 	  <fieldset class="layui-elem-field layui-field-title" id="fieldsetFileGrid"  style="margin-top: 20px;">
-    	<blockquote class="layui-elem-quote">附件信息</blockquote>
+    	<blockquote class="layui-elem-quote">
+    		附件信息&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='downloadZipFile();' style='color: #1b3fba'>打包下载</a>
+    	</blockquote>
     	<table class="layui-hide" id="fileGrid"></table>
  	  </fieldset>
 	  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -152,6 +154,13 @@
     	<table class="layui-hide" id="approvalGrid"></table>
  	  </fieldset>
 </div>
+
+	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>
+
 <script src="<%= request.getContextPath() %>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
 <script>
@@ -350,6 +359,37 @@
      function onCheckRenderer(e) {
 			return nui.getDictText('MIS_AUDITSTATUS',e);
 		}
+		
+		function downloadZipFile() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = id;
+			var fileCatalog = 'PurchasePlan';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "采购计划_" + document.getElementById("name").innerHTML + "_附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}		
+		
+		
 </script>
 </body>
 </html>

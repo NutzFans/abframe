@@ -10,7 +10,7 @@
 %>
 <html>
 <head>
-<title>开票信息维护</title>
+<title>开票管理-流程中业务信息</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
@@ -78,6 +78,12 @@ body {
 								</td>
 							</tr>
 							<tr>
+								<td align="right" style="width: 160px">服务范围：</td>
+								<td>
+									<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 300px" required="true" enabled="false"/>
+								</td>
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">发票抬头类别：</td>
 								<td>
 									<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true" enabled="false" />
@@ -127,6 +133,8 @@ body {
 									<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 								</td>
 							</tr>
+							<!-- 2024-05 根据客户要求屏蔽相关字段 -->
+							<!--
 							<tr>
 								<td align="right" style="width: 160px">地址、电话：</td>
 								<td colspan="8">
@@ -139,12 +147,21 @@ body {
 									<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 								</td>
 							</tr>
+							-->
 							<tr>
 								<td align="right" style="width: 160px">发票备注：</td>
 								<td colspan="8">
 									<input name="invoiceRemark" id="invoiceRemark" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 								</td>
 							</tr>
+							<tr>
+								<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
+								<td colspan="8">
+									<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
+								</td>
+							</tr>
+							<!-- 2024-05 根据客户要求屏蔽相关字段 -->
+							<!--
 							<tr>
 								<td align="right" style="width: 160px">开票是否邮寄：</td>
 								<td>
@@ -164,7 +181,6 @@ body {
 								<td>
 									<input name="mailPhone" id="mailPhone" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
 								</td>
-
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">邮寄地址：</td>
@@ -172,6 +188,7 @@ body {
 									<input name="mailAddress" id="mailAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 								</td>
 							</tr>
+							-->
 							<tr>
 								<td align="right" style="width: 160px">回款金额（元）：</td>
 								<td>

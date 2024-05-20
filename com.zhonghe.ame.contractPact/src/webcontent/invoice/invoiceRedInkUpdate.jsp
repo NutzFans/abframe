@@ -23,7 +23,7 @@ body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right">申请人</td>
+							<td align="right">申请人：</td>
 							<td>
 								<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
@@ -60,6 +60,12 @@ body {
 							<td align="right" style="width: 160px">集团内外：</td>
 							<td>
 								<input id="historyHeadquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">服务范围：</td>
+							<td>
+								<input id="historyBidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 300px" required="true" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
@@ -126,6 +132,8 @@ body {
 								<input id="historyTaxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
+						<!--
 						<tr>
 							<td align="right" style="width: 160px">地址、电话：</td>
 							<td colspan="5">
@@ -138,12 +146,21 @@ body {
 								<input id="historyAccount" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						-->
 						<tr>
 							<td align="right" style="width: 160px">发票备注：</td>
 							<td colspan="5">
 								<input id="historyInvoiceRemark" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
 						</tr>
+						<tr>
+							<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
+							<td colspan="5">
+								<input id="historyInvoiceUserMail" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
+							</td>
+						</tr>
+						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
+						<!--
 						<tr>
 							<td align="right" style="width: 160px">开票是否邮寄：</td>
 							<td>
@@ -171,6 +188,7 @@ body {
 								<input id="historyMailAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						-->
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
@@ -258,6 +276,12 @@ body {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
+							<td colspan="5">
+								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" />
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">红冲/作废原因：</td>
 							<td colspan="5">
 								<input name="remark" class="nui-textarea" style="width: 100%; height: 200px" required="true" />
@@ -338,6 +362,7 @@ body {
 					nui.get("historyContractNo").setText(data.contractNo);
 					nui.get("historyContractName").setValue(data.contractName);
 					nui.get("historyMajor").setValue(data.major);
+					nui.get("historyBidService").setValue(data.bidService);
 					nui.get("historyProjectType").setValue(data.projectType);
 					nui.get("historyHeadquarterGroup").setValue(data.headquarterGroup);
 					nui.get("historyInvoiceNameType").setValue(data.invoiceNameType);
@@ -352,15 +377,9 @@ body {
 					nui.get("historyAllotFlag").setValue(data.allotFlag);
 					nui.get("historyPayerName").setValue(data.payerName);
 					nui.get("historyTaxpayerNumber").setValue(data.taxpayerNumber);
-					nui.get("historyUnitAddress").setValue(data.unitAddress);
-					nui.get("historyAccount").setValue(data.account);
 					nui.get("historyInvoiceRemark").setValue(data.invoiceRemark);
-					nui.get("historyPostFlag").setValue(data.postFlag);
-					nui.get("historyInvoiceUser").setValue(data.invoiceUser);
-					nui.get("historyMailName").setValue(data.mailName);
-					nui.get("historyMailPhone").setValue(data.mailPhone);
-					nui.get("historyMailAddress").setValue(data.mailAddress);
 					nui.get("historyRemark").setValue(data.remark);
+					nui.get("historyInvoiceUserMail").setValue(data.invoiceUserMail);
 					nui.get("historyInvoiceSumChinese").setValue(functiondigitUppercase(nui.get("historyInvoiceSum").getValue()));
 
 					var grid_0 = nui.get("grid_0");
