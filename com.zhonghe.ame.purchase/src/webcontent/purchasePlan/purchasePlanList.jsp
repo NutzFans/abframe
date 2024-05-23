@@ -67,6 +67,8 @@ html,body {
 							<a class="nui-button" id="cgjh_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 							<a class="nui-button" id="cgjh_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 							<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
+							<a class="nui-button" id="cgjh_help" iconCls="icon-help" onclick="help()">帮助</a>
+							<a class="nui-button" id="cgjh_help_bcbg" iconCls="icon-help" onclick="help_bcbg()">帮助(补充/变更)</a>
 						</td>
 						<td colspan="9" align="right">
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
@@ -138,7 +140,7 @@ html,body {
 		var planOpenDict;
     	function init(){
     		//按钮权限的控制
-	    	getOpeatorButtonAuth("cgjh_exportExcel,cgjh_zf,cgjh_add");
+	    	getOpeatorButtonAuth("cgjh_exportExcel,cgjh_zf,cgjh_add,cgjh_help,cgjh_help_bcbg");
     		//code:对应功能编码，map：对于机构的查询条件
 			var json = {"code":"cgjh"};
     		nui.ajax({
@@ -465,6 +467,17 @@ html,body {
 				}
 			}
 		}
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/purchase/purchasePlan/purchasePlanDesgin.jsp";
+			window.open(executeUrl);
+		}
+		
+		function help_bcbg(){
+			executeUrl = "<%= request.getContextPath() %>/purchase/purchasePlan/purchasePlanBcbgDesgin.jsp";
+			window.open(executeUrl);
+		}		
+		
 	</script>
 </body>
 </html>

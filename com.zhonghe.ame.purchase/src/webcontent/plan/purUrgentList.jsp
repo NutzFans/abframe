@@ -85,6 +85,7 @@ html,body {
 						<a class="nui-button" iconCls="icon-add" onclick="add()">新增</a>
 						<a class="nui-button" id="jjcg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" iconCls="icon-print" onclick="print()">打印</a>
+						<a class="nui-button" id="jjcg_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -115,7 +116,7 @@ html,body {
 
 			function init() {
 				//按钮权限的控制
-				getOpeatorButtonAuth("jjcg_zf"); //操作按钮权限初始化
+				getOpeatorButtonAuth("jjcg_zf,jjcg_help"); //操作按钮权限初始化
 				//code:对应功能编码，map：对于机构的查询条件
 				var json = {
 					"code" : "jjcg"
@@ -398,6 +399,12 @@ html,body {
 					}
 				}
 			}
+			
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/purchase/plan/purUrgentDesgin.jsp";
+			window.open(executeUrl);
+		}			
+			
 		</script>
 	</div>
 </body>

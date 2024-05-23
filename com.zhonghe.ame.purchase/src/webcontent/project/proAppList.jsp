@@ -101,6 +101,7 @@ html,body {
 						<a class="nui-button" id="cglx_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
+						<a class="nui-button" id="cglx_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -142,7 +143,7 @@ html,body {
 
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("cglx_add,cglx_exportExcel,cglx_zf");
+			getOpeatorButtonAuth("cglx_add,cglx_exportExcel,cglx_zf,cglx_help");
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "cglx"
@@ -423,6 +424,12 @@ html,body {
 		function ZH_PURCHASE(e) {
 			return nui.getDictText("ZH_PURCHASE", e.value);
 		}
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/purchase/project/proAppDesgin.jsp";
+			window.open(executeUrl);
+		}		
+		
 	</script>
 </body>
 </html>

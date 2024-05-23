@@ -81,6 +81,7 @@ html,body {
 						<a class="nui-button" id="cgfa_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a>
 						<a class="nui-button" id="cgfa_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" iconCls="icon-print" onclick="print()">打印</a>
+						<a class="nui-button" id="cgfa_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
 			</table>
@@ -114,7 +115,7 @@ html,body {
 
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("cgfa_add,cgfa_zf"); //操作按钮权限初始化
+			getOpeatorButtonAuth("cgfa_add,cgfa_zf,cgfa_help"); //操作按钮权限初始化
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "cgfa"
@@ -347,6 +348,12 @@ html,body {
 		function ZH_PURCHASE(e) {
 			return nui.getDictText("ZH_PURCHASE", e.value);
 		}
+		
+		function help() {
+			executeUrl = "<%= request.getContextPath() %>/purchase/programme/purProgrammeDesgin.jsp";
+			window.open(executeUrl);
+		}		
+		
 	</script>
 </body>
 </html>
