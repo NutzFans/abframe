@@ -98,9 +98,14 @@ body .mini-textboxlist {
 				</div>
 			</div>
 		</fieldset>
-		<fieldset id="field3" style="border: solid 1px #aaa; padding: 3px; width: 99%">
-			<legend>附件（请上传技术规格书、采购文件）</legend>
-			<jsp:include page="/ame_common/inputFile.jsp" />
+		<fieldset id="field3" style="border: solid 1px #aaa;">
+			<legend>采购立项 - 附件</legend>
+			<jsp:include page="/ame_common/detailFile.jsp" />
+		</fieldset>
+
+		<fieldset id="field4" style="border: solid 1px #aaa;">
+			<legend>采购文件 - 附件</legend>
+			<jsp:include page="/ame_common/inputFileExpand.jsp" />
 		</fieldset>
 		<fieldset style="border: solid 1px #aaa; padding: 3px; width: 99%">
 			<legend>审批信息</legend>
@@ -153,6 +158,14 @@ body .mini-textboxlist {
 					} else {
 						nui.get("addType").setValue("add");
 					}
+					
+					var grid_0 = nui.get("grid_0");
+					grid_0.load({
+						"groupid" : "proAppCost",
+						"relationid" : result.proappId
+					});
+					grid_0.sortBy("fileTime", "desc");					
+					
 					gridDtl.load({
 						"pid" : result.proappId
 					})
@@ -167,14 +180,12 @@ body .mini-textboxlist {
 					nui.get("auditstatus").setValue("4");
 					document.getElementById("salesEdit").style.display = "none";
 					nui.get("auditopinion").setValue("");
-
-					var grid_0 = nui.get("grid_0");
-					grid_0.load({
+					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
+					inputFileExpandGrid.load({
 						"groupid" : "purProgramme",
 						"relationid" : result.id
 					});
-					grid_0.sortBy("fileTime", "desc");
-
+					inputFileExpandGrid.sortBy("fileTime", "desc");
 					var grid = nui.get("datagrid1");
 					grid.load({
 						processInstID : result.processid
@@ -209,7 +220,7 @@ body .mini-textboxlist {
 			//定义变量接受form表单数据
 			var data = form.getData();
 			document.getElementById("fileCatalog").value = "purProgramme";
-			form2.submit();
+			inputFileExpandForm.submit();
 		}
 
 		function SaveData() {

@@ -96,14 +96,14 @@ body .mini-textboxlist {
 				</div>
 			</div>
 		</fieldset>
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
-			<legend>评审结果附件</legend>
-			<div style="visibility: hidden; display: none;">
-				<jsp:include page="/ame_common/detailFile.jsp" />
-			</div>
-			<jsp:include page="/ame_common/inputFile.jsp" />
+		<fieldset id="field3" style="border: solid 1px #aaa;">
+			<legend>采购立项 - 附件</legend>
+			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
-
+		<fieldset id="field4" style="border: solid 1px #aaa;">
+			<legend>评审结果 - 附件</legend>
+			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+		</fieldset>
 		<fieldset style="border: solid 1px #aaa; padding: 3px;">
 			<legend>审批信息</legend>
 			<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
@@ -148,10 +148,17 @@ body .mini-textboxlist {
 	
 						var grid_0 = nui.get("grid_0");
 						grid_0.load({
+							"groupid" : "proAppCost",
+							"relationid" : result.proappId
+						});
+						grid_0.sortBy("fileTime", "desc");
+						
+						var inputFileExpandGrid = nui.get("inputFileExpandGrid");
+						inputFileExpandGrid.load({
 							"groupid" : "purReviewReport",
 							"relationid" : result.id
 						});
-						grid_0.sortBy("fileTime", "desc");
+						inputFileExpandGrid.sortBy("fileTime", "desc");						
 	
 						var grid = nui.get("datagrid1");
 						grid.load({
@@ -236,8 +243,7 @@ body .mini-textboxlist {
                 if (action == "ok") {
                     var data = form.getData();
                     var misOpinion = opioionform.getData().misOpinion;//审核意见
-                    var json = {'param':data,'misOpinion':misOpinion,'workItemID': <%=workitemid %>
-		,
+                    var json = {'param':data,'misOpinion':misOpinion,'workItemID': <%=workitemid %>,
 						"countersignUsers" : countersignUsers
 					};
 					mini.mask({

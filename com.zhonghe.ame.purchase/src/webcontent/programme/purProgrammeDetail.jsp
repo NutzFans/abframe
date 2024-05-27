@@ -43,6 +43,9 @@
 <body>
 	<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
 	<div style="margin: 0 auto; width: 900px; height: auto;">
+		<div align="right">
+			<button type="button" id="checkview" class="layui-btn" onclick="preview()">打印</button>
+		</div>
 		<form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
 			<h3 id="name" align="center"></h3>
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -128,9 +131,17 @@
 				</div>
 			</fieldset>
 		</form>
+		<fieldset class="layui-elem-field layui-field-title" id="proAppFieldsetFileGrid" style="margin-top: 20px;">
+			<blockquote class="layui-elem-quote">
+				采购立项 - 附件&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href='javascript:void(0)' onclick='proAppDownloadZipFile();' style='color: #1b3fba'>打包下载</a>
+			</blockquote>
+			<table class="layui-hide" id="proAppFileGrid"></table>
+		</fieldset>
 		<fieldset class="layui-elem-field layui-field-title" id="fieldsetFileGrid" style="margin-top: 20px;">
 			<blockquote class="layui-elem-quote">
-				附件信息&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='downloadZipFile();' style='color: #1b3fba'>打包下载</a>
+				采购文件 - 附件&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href='javascript:void(0)' onclick='downloadZipFile();' style='color: #1b3fba'>打包下载</a>
 			</blockquote>
 			<table class="layui-hide" id="fileGrid"></table>
 		</fieldset>
@@ -138,28 +149,33 @@
 			<blockquote class="layui-elem-quote">计划明细(单位万元)</blockquote>
 			<table class="layui-hide" id="grid"></table>
 		</fieldset>
+		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+			<blockquote class="layui-elem-quote">审批记录</blockquote>
+			<table class="layui-hide" id="approvalGrid"></table>
+		</fieldset>
 	</div>
-	
+
 	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
 		<input type="hidden" name="downloadFile" filter="false" />
 		<input type="hidden" name="fileName" filter="false" />
-	</form>	
-	
+	</form>
+
 	<script src="<%=request.getContextPath()%>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 	<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
 	<script>
- 		layui.use([ 'jquery', 'layer', 'form', 'table'], function() {
- 			var $ = layui.jquery;
+		var proappId;
+		layui.use([ 'jquery', 'layer', 'form', 'table' ], function() {
+			var $ = layui.jquery;
 			var layer = layui.layer;
 			var form = layui.form;
 			var table = layui.table;
- 			var processInstID;
- 			id = <%=request.getParameter("id")%>;
- 			
+			var processInstID;
+			id =<%=request.getParameter("id")%>;
+
 			form.render();
 			getData();
-			
+
 			function getData() {
 				$.ajax({
 					url : "com.zhonghe.ame.purchase.purchaseProgramme.queryPurProgramme.biz.ext",
@@ -173,9 +189,10 @@
 						formData.createdTime = layui.util.toDateString(formData.createdTime, 'yyyy-MM-dd')
 						//设置字典值
 						formData.putunder = nui.getDictText('ZH_PUTUNDER', formData.putunder)
-						formData.type = nui.getDictText('ZH_PURCHASE',formData.type)
+						formData.type = nui.getDictText('ZH_PURCHASE', formData.type)
 						form.val("dataFrm", formData);
 						processInstID = formData.processid;
+						proappId = formData.proappId
 						document.getElementById("name").innerHTML = formData.programmeName;
 						//textarea 自适应高度
 
@@ -243,6 +260,90 @@
 								};
 							}
 						});
+
+						table.render({
+							elem : '#approvalGrid',
+							url : 'com.zhonghe.ame.purchase.common.queryApproval.biz.ext',
+							where : {
+								"processInstID" : processInstID,
+								"sortField" : "time",
+								"sortOrder" : "desc"
+							} //如果无需传递额外参数，可不加该参数
+							,
+							request : {
+								pageName : 'page.begin', //页码的参数名称，默认：page
+								limitName : 'page.count' //每页数据量的参数名，默认：limit
+							},
+							method : 'post', //如果无需自定义HTTP类型，可不加该参数
+							cols : [ [ {
+								field : 'time',
+								width : 180,
+								title : '处理时间',
+								templet : "<div>{{layui.util.toDateString(d.time, 'yyyy-MM-dd HH:mm:ss')}}</div>"
+							}, {
+								field : 'workitemname',
+								title : '节点名称'
+							}, {
+								field : 'operatorname',
+								width : 90,
+								title : '操作人'
+							}, {
+								field : 'auditstatus',
+								width : 90,
+								title : '处理结果',
+								templet : "<div>{{onCheckRenderer(d.auditstatus)}}</div>"
+							}, {
+								field : 'auditopinion',
+								title : '审批意见'
+							} ] ],
+							parseData : function(res) { //res 即为原始返回的数据
+								return {
+									"code" : "0", //解析接口状态
+									"data" : res.misOpinions
+								//解析数据列表
+								};
+							}
+						});
+
+						var proAppFileGridInt = table.render({
+							elem : '#proAppFileGrid',
+							url : 'com.primeton.eos.ame_common.file.getFiles.biz.ext',
+							where : {
+								"groupid" : "proAppCost",
+								"relationid" : formData.proappId,
+								"sortField" : "fileTime",
+								"sortOrder" : "desc"
+							}//如果无需传递额外参数，可不加该参数
+							,
+							method : 'post' //如果无需自定义HTTP类型，可不加该参数
+							,
+							cols : [ [ {
+								field : 'fileName',
+								width : "80%",
+								title : '附件名称',
+								templet : "<div>{{getdetail(d)}}</div>"
+							}, {
+								field : 'fileSize',
+								width : "20%",
+								title : '文件大小',
+								templet : "<div>{{getFileSize(d.fileSize)}}</div>"
+							} ] ],
+							parseData : function(res) { //res 即为原始返回的数据
+								return {
+									"code" : "0", //解析接口状态
+									"data" : res.files
+								//解析数据列表
+								};
+							},
+							done : function(res, curr, count) {
+								var data = res.data
+								if (data.length == 0) {
+									var audio_enable = document.getElementById('proAppFieldsetFileGrid'); //通过表格ID获取元素
+									audio_enable.style.display = 'none';
+								}
+							}
+						});
+
 					}
 				});
 			}
@@ -310,8 +411,12 @@
 			}
 			return value + unit;
 		}
-
+		
 		setWatermark('<%=userName%>')
+
+		function onCheckRenderer(e) {
+			return nui.getDictText('MIS_AUDITSTATUS', e);
+		}
 
 		//打印按钮
 		function preview() {
@@ -319,13 +424,42 @@
 			print();
 			document.getElementById('checkview').style.display = "";
 		};
-		
+
 		function downloadZipFile() {
 			if (!confirm("是否确认打包下载？")) {
 				return;
 			}
 			var relationId = id;
 			var fileCatalog = 'purProgramme';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "采购文件_" + document.getElementById("name").innerHTML + "_附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}
+		
+		function proAppDownloadZipFile() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = proappId;
+			var fileCatalog = 'proAppCost';
 			var json = nui.encode({
 				'relationId' : relationId,
 				'fileCatalog' : fileCatalog

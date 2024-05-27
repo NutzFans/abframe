@@ -93,9 +93,14 @@ body .mini-textboxlist {
 				</div>
 			</div>
 		</fieldset>
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 1px; width: 99%">
-			<legend>附件（请上传技术规格书、采购文件）</legend>
-			<jsp:include page="/ame_common/addFiles.jsp" />
+		<fieldset id="field3" style="border: solid 1px #aaa;">
+			<legend>采购立项 - 附件</legend>
+			<jsp:include page="/ame_common/detailFile.jsp" />
+		</fieldset>
+
+		<fieldset id="field4" style="border: solid 1px #aaa;">
+			<legend>采购文件 - 附件</legend>
+			<jsp:include page="/ame_common/inputFileExpand.jsp" />
 		</fieldset>
 	</div>
 	<div class="nui-toolbar" style="text-align: center; padding-top: 8px; padding-bottom: 8px;">
@@ -135,40 +140,9 @@ body .mini-textboxlist {
 					showTips("请检查表单完整性", "danger");
 					return;
 				}
-				//定义变量接受form表单数据
-				var data = form.getData();
-				document.getElementById("fileCatalog").value = "purProgramme";
-				var filePaths = document.getElementsByName("uploadfile").length;
-				if (filePaths == 0) {
-					showTips("附件不可以为空", "danger");
-					return;
-				} else {
-					for (var j = 0; j < filePaths; j++) {
-						var a = document.getElementsByName("remarkList")[j].value;
-						if (a == null || a == "") {
-							showTips("附件不可以为空", "danger");
-							return;
-						}
-					}
-				}
-				//文件大小不能超过100MB
-				var sum = 0;
-				for (var j = 0; j < filePaths; j++) {
-					var size = document.getElementsByName("uploadfile")[j].files[0].size;
-					if (size == null || size == "") {
-						var name = size = document.getElementsByName("uploadfile")[j].files[0].name
-						showTips(name + "采购方案附件大小不可以为空", "danger");
-						return;
-					} else {
-						sum += size;
-					}
-				}
-				if (sum > 104857600) {
-					showTips("上次文件大小不能超过100MB", "danger");
-					return;
-				}
 			}
-			form2.submit();
+			document.getElementById("fileCatalog").value = "purProgramme";
+			inputFileExpandForm.submit();
 		}
 
 		function SaveData() {
@@ -237,7 +211,12 @@ body .mini-textboxlist {
 							gridDtl.load({
 								"pid" : data.id
 							})
-
+							var grid_0 = nui.get("grid_0");
+							grid_0.load({
+								"groupid" : "proAppCost",
+								"relationid" : data.id
+							});
+							grid_0.sortBy("fileTime", "desc");
 						}
 					}
 

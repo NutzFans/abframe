@@ -207,6 +207,12 @@ table,table tr td {
 								<input id="verification" name="verification" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
+						<tr>
+							<td align="right" style="width: 90px">备注：</td>
+							<td colspan="3">
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
+							</td>
+						</tr>
 					</table>
 				</div>
 			</form>
