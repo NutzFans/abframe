@@ -59,6 +59,10 @@
 				<input name="criteria._expr[4].custtype" class="nui-dictcombobox" multiSelect="true"  dictTypeId="AME_SUPTYPE" property="filter" showNullItem="true" width="100%" onvaluechanged="search""/>
 				<input  property="editor" class="nui-dictcombobox" dictTypeId="AME_SUPTYPE" showNullItem="true" />
 			</div>
+			<div field="custnature" width="110" align="center" headerAlign="center" renderer="dictcustnature">企业类型
+				<input name="criteria._expr[20].custnature" class="nui-dictcombobox" multiSelect="true"  dictTypeId="MIS_CUSTNATURE" property="filter" showNullItem="true" width="100%" onvaluechanged="search""/>
+				<input  property="editor" class="nui-dictcombobox" dictTypeId="MIS_CUSTNATURE" showNullItem="true" />
+			</div>
 			<div field="isqualified" width="110" align="center" headerAlign="center" renderer="dictstatus" >是否合格
 				<input name="criteria._expr[3].isqualified" property="filter" multiSelect="true" class="nui-dictcombobox" dictTypeId="MIS_YN" width="100%" showNullItem="true" onvaluechanged="search""/>
 				<input  property="editor" class="nui-dictcombobox" dictTypeId="MIS_YN" showNullItem="true" />
@@ -132,6 +136,9 @@
 		}
 		function dictcusttype(e) {
 			return nui.getDictText('AME_SUPTYPE',e.value);//设置业务字典值
+		}
+		function dictcustnature(e) {
+			return nui.getDictText('MIS_CUSTNATURE',e.value);//设置业务字典值
 		}
 		function onAppraise(e) {
 			return nui.getDictText('ZH_APPRAISE',e.value);//设置业务字典值

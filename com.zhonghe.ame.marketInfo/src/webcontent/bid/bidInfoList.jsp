@@ -50,11 +50,11 @@ html,body {
 							<td style="width: 60px; text-align: right;">备案日期:</td>
 							<td colspan="2" style="width: 245px">
 								<input class="nui-hidden" name="criteria._expr[3]._op" value="between" />
-								<input class="nui-hidden" name="criteria._expr[3]._pattern" value="yyyy-MM" />
+								<input class="nui-hidden" name="criteria._expr[3]._pattern" value="yyyy-MM-dd" />
 								<input class="nui-hidden" name="criteria._expr[3]._property" value="recordDate" />
-								<input class="mini-monthpicker" name="criteria._expr[3]._min" style="width: 110px" />
+								<input class="mini-datepicker" name="criteria._expr[3]._min" style="width: 110px" />
 								<span>至</span>
-								<input class="mini-monthpicker" name="criteria._expr[3]._max" style="width: 110px" />
+								<input class="mini-datepicker" name="criteria._expr[3]._max" style="width: 110px" />
 							</td>
 						</tr>
 						<tr>
@@ -167,7 +167,8 @@ html,body {
 						<div field="id" headerAlign="center" visible="false">id</div>
 						<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
 						<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
-						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="80" allowSort="true">备案日期</div>
+						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" width="80" allowSort="true">备案日期</div>
+						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 						<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
 						<div field="bidNxwl" headerAlign="center" align="center" renderer="ZH_BID_NXWL" width="65">内协外联</div>
 						<div field="custId" displayField="custName" headerAlign="center" align="center" width="300">甲方全称</div>
@@ -190,7 +191,6 @@ html,body {
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
 						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
-						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 						<div field="twoOrg" headerAlign="center" align="center" width="200">集团或二级单位</div>
 					</div>
 				</div>
@@ -226,11 +226,11 @@ html,body {
 							<td style="width: 60px; text-align: right;">备案日期:</td>
 							<td colspan="2" style="width: 245px">
 								<input class="nui-hidden" name="criteria._expr[3]._op" value="between" />
-								<input class="nui-hidden" name="criteria._expr[3]._pattern" value="yyyy-MM" />
+								<input class="nui-hidden" name="criteria._expr[3]._pattern" value="yyyy-MM-dd" />
 								<input class="nui-hidden" name="criteria._expr[3]._property" value="recordDate" />
-								<input class="mini-monthpicker" name="criteria._expr[3]._min" style="width: 110px" />
+								<input class="mini-datepicker" name="criteria._expr[3]._min" style="width: 110px" />
 								<span>至</span>
-								<input class="mini-monthpicker" name="criteria._expr[3]._max" style="width: 110px" />
+								<input class="mini-datepicker" name="criteria._expr[3]._max" style="width: 110px" />
 							</td>
 						</tr>
 						<tr>
@@ -342,7 +342,8 @@ html,body {
 						<div field="id" headerAlign="center" visible="false">id</div>
 						<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
 						<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
-						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM" width="80" allowSort="true">备案日期</div>
+						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" width="80" allowSort="true">备案日期</div>
+						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 						<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
 						<div field="bidNxwl" headerAlign="center" align="center" renderer="ZH_BID_NXWL" width="65">内协外联</div>
 						<div field="custId" displayField="custName" headerAlign="center" align="center" width="300">甲方全称</div>
@@ -365,7 +366,6 @@ html,body {
 						<div field="remark" headerAlign="center" align="center" width="300">备注</div>
 						<div field="bidDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">定标时间</div>
 						<div field="bidResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
-						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 						<div field="twoOrg" headerAlign="center" align="center" width="200">集团或二级单位</div>
 						<div field="contractNo" headerAlign="center" align="center" width="200" renderer="lookInfo">合同编号</div>
 					</div>
@@ -375,7 +375,7 @@ html,body {
 	</div>
 
 	<div id="bidCompetInfo" style="display: none;">
-		<div id="bidCompetGrid" sizeList="[5]" dataField="bidCompets" pageSize="5" class="nui-datagrid" style="width: 455px; height: 203px; margin-left: 1088px"
+		<div id="bidCompetGrid" sizeList="[5]" dataField="bidCompets" pageSize="5" class="nui-datagrid" style="width: 605px; height: 203px; margin-left: 1088px"
 			url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCompetByBid.biz.ext" allowAlternating="true">
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
@@ -383,6 +383,7 @@ html,body {
 				<div field="competId" headerAlign="center" visible="false">competId</div>
 				<div field="competName" headerAlign="center" width="300px">竞争对手单位全称</div>
 				<div field="competContractPrice" headerAlign="center" align="center" width="150px">合同价(万元/%)</div>
+				<div field="competResult" headerAlign="center" align="center" width="150px" renderer="ZH_BID_RESULT">中标结果</div>
 			</div>
 		</div>
 	</div>
@@ -433,7 +434,7 @@ html,body {
 
 		function dataNotFinshSearch() {
 			var data = dataNotFinshForm.getData();
-			dataNotFinshDataGrid.sortBy("recordDate", "desc");
+			dataNotFinshDataGrid.sortBy("updateDate", "desc");
 			dataNotFinshDataGrid.load(data);
 		}
 
@@ -444,7 +445,7 @@ html,body {
 
 		function dataFinshSearch() {
 			var data = dataFinshForm.getData();
-			dataFinshDataGrid.sortBy("recordDate", "desc");
+			dataFinshDataGrid.sortBy("updateDate", "desc");
 			dataFinshDataGrid.load(data);
 		}
 
@@ -950,6 +951,11 @@ html,body {
 				return true;
 			}
 		}
+		
+		function ZH_BID_RESULT(e){
+	   		return nui.getDictText("ZH_BID_RESULT",e.value);
+		}		
+		
 	</script>
 
 </body>

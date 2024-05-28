@@ -34,7 +34,7 @@ public class WrapBidProject {
 					dataObject.setInt("competId", dataObjects[i].getInt("competId"));
 					dataObject.setString("competName", dataObjects[i].getString("competName"));
 					dataObject.setString("competContractPrice", dataObjects[i].getString("competContractPrice"));
-					dataObject.setString("bidResult", "");
+					dataObject.setString("bidResult", dataObjects[i].getString("competResult"));
 					dataObject.setString("remark", "");
 					warpDatas.add(dataObject);
 				} else {
@@ -55,7 +55,7 @@ public class WrapBidProject {
 					dataObjectTwo.setInt("competId", dataObjects[i].getInt("competId"));
 					dataObjectTwo.setString("competName", dataObjects[i].getString("competName"));
 					dataObjectTwo.setString("competContractPrice", dataObjects[i].getString("competContractPrice"));
-					dataObjectTwo.setString("bidResult", "");
+					dataObjectTwo.setString("bidResult", dataObjects[i].getString("competResult"));
 					dataObjectTwo.setString("remark", "");
 					warpDatas.add(dataObjectTwo);
 				}
@@ -77,7 +77,7 @@ public class WrapBidProject {
 				dataObjectTwo.setInt("competId", dataObjects[i].getInt("competId"));
 				dataObjectTwo.setString("competName", dataObjects[i].getString("competName"));
 				dataObjectTwo.setString("competContractPrice", dataObjects[i].getString("competContractPrice"));
-				dataObjectTwo.setString("bidResult", "");
+				dataObjectTwo.setString("bidResult", dataObjects[i].getString("competResult"));
 				dataObjectTwo.setString("remark", "");
 				warpDatas.add(dataObjectTwo);
 			}

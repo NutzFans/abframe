@@ -34,7 +34,7 @@ body .mini-textboxlist {
 						</td>
 						<td align="right" style="width: 130px">备案日期：</td>
 						<td>
-							<input name="recordDate" id="recordDate" class="mini-monthpicker" required="true" style="width: 250px" />
+							<input name="recordDate" id="recordDate" class="mini-datepicker" required="true" style="width: 250px" />
 						</td>
 						<td align="right" style="width: 130px">填报人：</td>
 						<td>
@@ -202,6 +202,10 @@ body .mini-textboxlist {
 				<div field="competContractPrice" headerAlign="center">
 					合同价(万元/%)
 					<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
+				</div>
+				<div field="competResult" headerAlign="center" renderer="ZH_BID_RESULT">
+					中标结果
+					<input property="editor" class="nui-dictcombobox" dictTypeId="ZH_BID_RESULT" style="width: 100%;" required="true" />
 				</div>
 			</div>
 		</div>
@@ -408,8 +412,8 @@ body .mini-textboxlist {
 
 	function getTimeStamp() {
 		var now = new Date();
-		return (now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " " + now.getHours() + ':' + ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes()))
-				+ ':' + ((now.getSeconds() < 10) ? ("0" + now.getSeconds()) : (now.getSeconds())));
+		return (now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate()) + " " + now.getHours() + ':' + ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes())) + ':' + ((now
+				.getSeconds() < 10) ? ("0" + now.getSeconds()) : (now.getSeconds())));
 	}
 
 	function isNotBank(data) {
@@ -426,6 +430,10 @@ body .mini-textboxlist {
 		} else {
 			return true;
 		}
+	}
+
+	function ZH_BID_RESULT(e) {
+		return nui.getDictText("ZH_BID_RESULT", e.value);
 	}
 </script>
 

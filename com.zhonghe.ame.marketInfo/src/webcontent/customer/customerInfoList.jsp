@@ -3,12 +3,18 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <style type="text/css">
-	html,body {
-		margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
-	}
-	.mini-grid-cell-nowrap{
-		white-space: nowrap;
-	}
+html,body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.mini-grid-cell-nowrap {
+	white-space: nowrap;
+}
 </style>
 <head>
 <title>交流拜访信息</title>
@@ -61,12 +67,56 @@
 			<div size="75%">
 				<div class="nui-toolbar" style="border-left: 0px; border-right: 0px; border-top: 0px; padding: 5px;">交流拜访记录</div>
 				<div class="nui-toolbar" style="border-left: 0px; border-right: 0px; border-top: 0px; padding: 5px;">
+					<div id="formVis">
+						<table>
+							<td style="width: 60px; text-align: right;">客户名称:</td>
+							<td style="width: 205px">
+								<input name="criteria._expr[0]._value" class="nui-combobox" valueField="custid" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.queryCustInfoLike.biz.ext" filterType="like"
+									textField="custname" dataField="custinfos" valueFromSelect="true" allowInput="true" style="width: 200px" />
+								<input class="nui-hidden" name="criteria._expr[0]._property" value="custinfoId" />
+								<input class="nui-hidden" name="criteria._expr[0]._op" />
+							</td>
+							<td style="width: 60px; text-align: right;">接洽日期:</td>
+							<td colspan="2" style="width: 245px">
+								<input class="nui-hidden" name="criteria._expr[1]._op" value="between" />
+								<input class="nui-hidden" name="criteria._expr[1]._pattern" value="yyyy-MM-dd" />
+								<input class="nui-hidden" name="criteria._expr[1]._property" value="visitDate" />
+								<input class="mini-datepicker" name="criteria._expr[1]._min" style="width: 110px" />
+								<span>至</span>
+								<input class="mini-datepicker" name="criteria._expr[1]._max" style="width: 110px" />
+							</td>
+							<td style="width: 60px; text-align: right;">填报部门:</td>
+							<td style="width: 155px">
+								<input id="orgid2" name="criteria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
+									style="width: 150px" valueFromSelect="true" />
+								<input class="nui-hidden" name="criteria._expr[2]._property" value="orgid" />
+								<input class="nui-hidden" name="criteria._expr[2]._op" value="in" />
+								<input class="nui-hidden" name="criteria._expr[2]._ref" value="1" />
+								<input class="nui-hidden" name="criteria._ref[0]._id" value="1" />
+								<input class="nui-hidden" name="criteria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+								<input class="nui-hidden" name="criteria._ref[0]._select._field[0]" value="orgid" />
+								<input class="nui-hidden" name="criteria._ref[0]._expr[0]._property" value="orgseq" />
+								<input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="like" />
+								<input class="nui-hidden" name="criteria._ref[0]._expr[0]._likeRule" value="end" />
+								<input class="nui-hidden" name="criteria._expr[3]._property" value="orgid" />
+								<input class="nui-hidden" name="criteria._expr[3]._op" value="in" />
+								<input class="nui-hidden" name="criteria._expr[3]._value" id="orgids2" />
+							</td>
+							<td>
+								<a class="nui-button" id="searchVis" iconCls="icon-search" onclick="searchVis()">查询</a>
+								<a class="nui-button" id="resetVis" iconCls="icon-reload" onclick="resetVis()">重置</a>
+							</td>
+						</table>
+					</div>
+				</div>
+				<div class="nui-toolbar" style="border-left: 0px; border-right: 0px; border-top: 0px; padding: 5px;">
 					<table>
 						<tr>
 							<td>
 								<a class="nui-button" id="addVisit" iconCls="icon-add" onclick="addVisit()">新增</a>
 								<a class="nui-button" id="editVisit" iconCls="icon-edit" onclick="editVisit()">编辑</a>
 								<a class="nui-button" id="delVisit" iconCls="icon-remove" onclick="deleteVisit()">删除</a>
+								<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
 							</td>
 						</tr>
 					</table>
@@ -95,24 +145,45 @@
 			</div>
 		</div>
 	</div>
+	
+	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
+		var formVis = new nui.Form("#formVis");
 		var grid = nui.get("datagrid1");
 		var visitGrid = nui.get("visitgrid1");
 		var currentSelRow = null;
-		
+
 		init();
-		
-		function init(){
+
+		function init() {
+			//code:对应功能编码，map：对于机构的查询条件
+			var json = {
+				"code" : "khxxgl"
+			};
+			nui.ajax({
+				url : "com.primeton.eos.ame_auth.ame_auth.getownorg1.biz.ext",
+				data : json,
+				type : 'POST',
+				contentType : 'text/json',
+				success : function(text) {
+					nui.get("orgid2").setData(text.orgs);
+					nui.get("orgids2").setValue(text.orgids);
+				}
+			});
 			currentSelRow = null;
 			grid.sortBy("createDate", "desc");
 			grid.load();
 			visitGrid.sortBy("visitDate", "desc");
 			visitGrid.load();
 		}
-		
+
 		function search() {
 			currentSelRow = null;
 			var data = form.getData();
@@ -120,12 +191,25 @@
 			grid.load(data);
 			visitGrid.clearRows();
 		}
-		
+
 		function reset() {
 			form.reset();
+			formVis.reset();
 			init();
 		}
-		
+
+		function searchVis() {
+			var data = nui.decode(formVis.getData(), true);
+			visitGrid.sortBy("visitDate", "desc");
+			visitGrid.load(data);
+		}
+
+		function resetVis() {
+			form.reset();
+			formVis.reset();
+			init();
+		}
+
 		function add() {
 			nui.open({
 				url : "/default/marketInfo/customer/addCustomerInfo.jsp",
@@ -140,7 +224,6 @@
 				}
 			})
 		}
-		
 
 		function edit() {
 			var row = grid.getSelecteds();
@@ -453,6 +536,71 @@
 				});
 			}
 		}
+		
+		//导出
+		function exportExcel() {
+			if (!confirm("是否确认导出？")) {
+				return;
+			}
+			var formVis = new nui.Form("#formVis");
+			var data = formVis.getData();
+			data.sortField = "visitDate";
+			data.sortOrder = "desc";
+			var json = nui.encode(data);
+			nui.ajax({
+				url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.commpetior.exportCustVisitExcel.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					var fileName = "拜访信息";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
+						curDateTime = curDateTime + "" + month;
+					} else {
+						curDateTime = curDateTime + "0" + month;
+					}
+					if (day > 9) {
+						curDateTime = curDateTime + day;
+					} else {
+						curDateTime = curDateTime + "0" + day;
+					}
+					if (hours > 9) {
+						curDateTime = curDateTime + hours;
+					} else {
+						curDateTime = curDateTime + "0" + hours;
+					}
+					if (minutes > 9) {
+						curDateTime = curDateTime + minutes;
+					} else {
+						curDateTime = curDateTime + "0" + minutes;
+					}
+					if (seconds > 9) {
+						curDateTime = curDateTime + seconds;
+					} else {
+						curDateTime = curDateTime + "0" + seconds;
+					}
+					fileName = fileName + "_" + curDateTime + ".xls";
+					var frm = document.getElementById("exprotExcelFlow");
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
+				},
+				error : function() {
+					showTips("导出数据异常，请联系管理员！", "danger");
+				}
+			});
+		}		
+		
 	</script>
 </body>
 </html>

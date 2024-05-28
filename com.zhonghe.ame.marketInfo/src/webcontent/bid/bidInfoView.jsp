@@ -34,7 +34,7 @@ body .mini-textboxlist {
 						</td>
 						<td align="right" style="width: 130px">备案日期：</td>
 						<td>
-							<input name="recordDate" id="recordDate" class="nui-monthpicker" required="true" style="width: 250px" enabled="false" />
+							<input name="recordDate" id="recordDate" class="mini-datepicker" required="true" style="width: 250px" enabled="false" />
 						</td>
 						<td align="right" style="width: 130px">填报人：</td>
 						<td>
@@ -189,7 +189,8 @@ body .mini-textboxlist {
 		<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" multiSelect="true" allowSortColumn="false" showPager="false">
 			<div property="columns">
 				<div field="competId" displayField="competName" headerAlign="center">竞争对手单位全称</div>
-				<div field="competContractPrice" headerAlign="center">合同价(万元/%)</div>
+				<div field="competContractPrice" headerAlign="center" align="center">合同价(万元/%)</div>
+				<div field="competResult" headerAlign="center" align="center" renderer="ZH_BID_RESULT">中标结果</div>
 			</div>
 		</div>
 	</fieldset>
@@ -236,6 +237,10 @@ body .mini-textboxlist {
 				grid2.setData(result.data);
 			}
 		})
+	}
+
+	function ZH_BID_RESULT(e) {
+		return nui.getDictText("ZH_BID_RESULT", e.value);
 	}
 </script>
 
