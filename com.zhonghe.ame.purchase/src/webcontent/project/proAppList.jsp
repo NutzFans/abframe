@@ -25,15 +25,16 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 60px; text-align: right;">立项名称:</td>
-						<td style="width: 245px">
-							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 240px" />
-							<input class="nui-hidden" name="criteria._expr[1]._property" value="proAppName" />
-							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
+						<td style="width: 60px; text-align: right;">经办人:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[50].createdUsername" class="nui-textbox" id="createUsername" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[50]._op" value="like" id="createUsernameOp" />
+							<input class="nui-hidden" name="criteria._expr[6].createdBy" id="createdBy" />
+							<input class="nui-hidden" name="criteria._expr[6]._op" value="=" />
 						</td>
 						<td style="width: 90px; text-align: right;">采购需求单位:</td>
-						<td style="width: 245px">
-							<input id="orgseq" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" style="width: 240px" valueFromSelect="true" />
+						<td style="width: 155px">
+							<input id="orgseq" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" style="width: 150px" valueFromSelect="true" />
 							<input class="nui-hidden" name="criteria._expr[10]._property" value="id" id="IdByOrgProp" />
 							<input class="nui-hidden" name="criteria._expr[10]._op" value="in" id="IdByOrgOp" />
 							<input class="nui-hidden" name="criteria._expr[10]._ref" value="1" id="IdByOrgRef" />
@@ -44,24 +45,26 @@ html,body {
 							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="in" />
 							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._value" id="orgids" />
 						</td>
+						<td style="width: 60px; text-align: right;">立项名称:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[1]._property" value="proAppName" />
+							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
+						</td>
 						<td style="width: 60px; text-align: right;">立项编号:</td>
-						<td style="width: 205px">
-							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 200px" />
+						<td style="width: 155px">
+							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="proAppCode" />
 							<input class="nui-hidden" name="criteria._expr[2]._op" value="like" />
-						</td>
+						</td>						
 						<td style="width: 90px; text-align: right;">采购计划编号:</td>
-						<td style="width: 205px">
-							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 200px" />
+						<td style="width: 155px">
+							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="criteria._expr[3]._property" value="purchaseNumber" />
 							<input class="nui-hidden" name="criteria._expr[3]._op" value="like" />
 							<input class="nui-hidden" id="ischange" name="criteria._expr[4].ischange" value="1" />
 							<input class="nui-hidden" name="criteria._expr[4]._op" value="=" />
-							<input class="nui-hidden" name="criteria._expr[6].createdBy" id="createdBy" />
-							<input class="nui-hidden" name="criteria._expr[6]._op" value="=" />
-						</td>
-					</tr>
-					<tr>
+						</td>							
 						<td style="width: 90px; text-align: right;">立项申请金额:</td>
 						<td style="width: 245px">
 							<input class="nui-hidden" name="criteria._expr[21]._op" value="between" />
@@ -69,6 +72,24 @@ html,body {
 							<input class="nui-textbox" name="criteria._expr[21]._min" style="width: 110px" emptyText="万元" />
 							<span>至</span>
 							<input class="nui-textbox" name="criteria._expr[21]._max" style="width: 110px" emptyText="万元" />
+						</td>														
+					</tr>
+					<tr>
+						<td style="width: 60px; text-align: right;">集采类型:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[51].type" class="nui-dictcombobox" dictTypeId="ZH_PURCHASE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">采购方式:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[52].purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">物项类别:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[53].proAppObjType" class="nui-dictcombobox" dictTypeId="MIS_APPOBJTYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+						</td>
+						<td style="width: 60px; text-align: right;">审批状态:</td>
+						<td style="width: 155px">
+							<input name="criteria._expr[23].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
 						<td style="width: 60px; text-align: right;">申请日期:</td>
 						<td style="width: 245px">
@@ -79,14 +100,10 @@ html,body {
 							<span>至</span>
 							<input class="nui-datepicker" name="criteria._expr[22]._max" style="width: 110px" />
 						</td>
-						<td style="width: 60px; text-align: right;">审批状态:</td>
-						<td style="width: 205px">
-							<input name="criteria._expr[23].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 200px" />
-						</td>
 						<td colspan="2">
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-						</td>
+						</td>											
 					</tr>
 				</table>
 			</div>
@@ -121,6 +138,8 @@ html,body {
 					<div field="status" width="60" align="center" renderer="onActionRenderer" headerAlign="center">审批状态</div>
 					<div field="proAppApplyPrice" width="80" align="center" headerAlign="center">立项申请金额(万元)</div>
 					<div field="type" width="60" align="center" headerAlign="center" renderer="ZH_PURCHASE">集采类型</div>
+					<div field="purchasMode" width="60" align="center" headerAlign="center" renderer="ZH_CGFS">采购方式</div>
+					<div field="proAppObjType" width="60" align="center" headerAlign="center" renderer="MIS_APPOBJTYPE">物项类别</div>
 					<div field="projectId" align="center" headerAlign="center">所属项目名称</div>
 				</div>
 			</div>
@@ -156,9 +175,13 @@ html,body {
 				success : function(text) {
 					if(text.errcode == "没有有权的机构"){
 						nui.get("createdBy").setValue(userId);
+						nui.get("createUsername").setValue(userName);
+						nui.get("createUsername").setReadOnly(true);
 						authOrg = false;						
 					}else{
-						nui.get("createdBy").setName("criteria._or[0]._expr[0].createdBy");
+						nui.get("createUsername").setName("criteria._or[0]._and[0]._expr[1].createdUsername");
+						nui.get("createUsernameOp").setName("criteria._or[0]._and[0]._expr[1]._op");
+						nui.get("createdBy").setName("criteria._or[0]._and[0]._expr[0].createdBy");
 						nui.get("createdBy").setValue(userId);
 						nui.get("orgseq").setData(text.orgs);
 						nui.get("IdByOrgProp").setName("criteria._or[0]._expr[1]._property");
@@ -167,7 +190,7 @@ html,body {
 						nui.get("orgids").setValue(text.orgids);
 						authOrg = true;
 					}
-					search();
+					search();  
 				}
 			});
 		}
@@ -257,23 +280,46 @@ html,body {
 
 		function search() {
 			if(authOrg){
-				if(nui.get("orgseq").getValue() != ""){
-					var json = nui.encode({orgseq : nui.get("orgseq").getValue()});
-					nui.ajax({
-						url : "com.zhonghe.ame.purchase.common.getOrgByOrgseq.biz.ext",
-						data : json,
-						async: false,
-						type : 'POST',
-						contentType : 'text/json',
-						success : function(data) {
-							nui.get("createdBy").setName("criteria._expr[6].createdBy");
-							nui.get("createdBy").setValue("");
-							nui.get("IdByOrgProp").setName("criteria._expr[10]._property");
-							nui.get("IdByOrgOp").setName("criteria._expr[10]._op");
-							nui.get("IdByOrgRef").setName("criteria._expr[10]._ref");
-							nui.get("orgids").setValue(data.orgids);
-						}
-					});	
+				if(nui.get("createUsername").getValue() != "" || nui.get("orgseq").getValue() != ""){
+					if(nui.get("createUsername").getValue() == userName){
+						var json = nui.encode({orgseq : nui.get("orgseq").getValue()});
+						nui.ajax({
+							url : "com.zhonghe.ame.purchase.common.getOrgByOrgseq.biz.ext",
+							data : json,
+							async: false,
+							type : 'POST',
+							contentType : 'text/json',
+							success : function(data) {
+								nui.get("createUsername").setName("criteria._expr[50].createdUsername");
+								nui.get("createUsernameOp").setName("criteria._expr[50]._op");
+								nui.get("createdBy").setName("criteria._expr[6].createdBy");
+								nui.get("createdBy").setValue(userId);
+								nui.get("IdByOrgProp").setName("criteria._expr[10]._property");
+								nui.get("IdByOrgOp").setName("criteria._expr[10]._op");
+								nui.get("IdByOrgRef").setName("criteria._expr[10]._ref");
+								nui.get("orgids").setValue(data.orgids);
+							}
+						});
+					}else{
+						var json = nui.encode({orgseq : nui.get("orgseq").getValue()});
+						nui.ajax({
+							url : "com.zhonghe.ame.purchase.common.getOrgByOrgseq.biz.ext",
+							data : json,
+							async: false,
+							type : 'POST',
+							contentType : 'text/json',
+							success : function(data) {
+								nui.get("createUsername").setName("criteria._expr[50].createdUsername");
+								nui.get("createUsernameOp").setName("criteria._expr[50]._op");
+								nui.get("createdBy").setName("criteria._expr[6].createdBy");
+								nui.get("createdBy").setValue("");
+								nui.get("IdByOrgProp").setName("criteria._expr[10]._property");
+								nui.get("IdByOrgOp").setName("criteria._expr[10]._op");
+								nui.get("IdByOrgRef").setName("criteria._expr[10]._ref");
+								nui.get("orgids").setValue(data.orgids);
+							}
+						});						
+					}
 				}
 			}
 			var data = form.getData();
@@ -426,10 +472,17 @@ html,body {
 		}
 		
 		function help() {
-			executeUrl = "<%= request.getContextPath() %>/purchase/project/proAppDesgin.jsp";
+			executeUrl = "<%=request.getContextPath()%>/purchase/project/proAppDesgin.jsp";
 			window.open(executeUrl);
-		}		
-		
+		}
+
+		function ZH_CGFS(e) {
+			return nui.getDictText("ZH_CGFS", e.value);
+		}
+
+		function MIS_APPOBJTYPE(e) {
+			return nui.getDictText("MIS_APPOBJTYPE", e.value);
+		}
 	</script>
 </body>
 </html>
