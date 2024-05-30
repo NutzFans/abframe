@@ -31485,8 +31485,8 @@ FROM
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity14" name="queryProAppDtl" nodeType="table" displayName="Entity" author="qinwen" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
     <location x="1245" y="818"/>
-    <size height="336" width="150"/>
-    <figSize height="20" width="162"/>
+    <size height="354" width="150"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property723" name="id" displayName="id" columnName="id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" queryId="true" dasType="int" showType="Int">
       <viewField dict="false" dictTypeId="" displayName="id" entityField="id" id="id" label="id" name="id" userDefined="true">
         <fieldView showAllAttr="false">
@@ -32422,48 +32422,105 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
+    <columnProperty id="property1158" name="purchaesPlanId" displayName="purchaesPlanId" columnName="purchaes_plan_id" nullAble="true" PK="false" columnType="int" eosDataType="Int" length="10" dasType="int" showType="Int">
+      <viewField dict="false" dictTypeId="" displayName="purchaesPlanId" entityField="purchaesPlanId" id="purchaesPlanId" label="purchaesPlanId" name="purchaesPlanId" userDefined="true">
+        <fieldView showAllAttr="false">
+          <type name="write"/>
+          <attr defaultValue="" name="filter"/>
+          <attr defaultValue="" name="maxLengthString"/>
+          <attr defaultValue="" name="iterateId"/>
+          <attr defaultValue="" name="modelField"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="formatPattern"/>
+          <attr defaultValue="" name="propertyType"/>
+          <attr defaultValue="" name="scope"/>
+          <attr defaultValue="" name="property"/>
+          <attr name="ignore"/>
+          <attr name="value"/>
+          <attr name="maxLength"/>
+        </fieldView>
+        <fieldEdit showAllAttr="false">
+          <type name="text"/>
+          <attr defaultValue="" name="onmousemove"/>
+          <attr defaultValue="" name="modelField"/>
+          <attr defaultValue="" name="onfocus"/>
+          <attr defaultValue="" name="onmouseup"/>
+          <attr defaultValue="" name="title"/>
+          <attr defaultValue="" name="styleClass"/>
+          <attr defaultValue="" name="onmouseover"/>
+          <attr defaultValue="" name="validateAttr"/>
+          <attr name="accesskey"/>
+          <attr defaultValue="" name="readonly"/>
+          <attr defaultValue="" name="onselect"/>
+          <attr defaultValue="" name="scope"/>
+          <attr defaultValue="" name="property"/>
+          <attr defaultValue="" name="disabled"/>
+          <attr defaultValue="" name="id"/>
+          <attr defaultValue="" name="onkeydown"/>
+          <attr defaultValue="" name="value"/>
+          <attr defaultValue="" name="onblur"/>
+          <attr defaultValue="" name="indexed"/>
+          <attr defaultValue="" name="maxlength"/>
+          <attr defaultValue="" name="tabindex"/>
+          <attr defaultValue="" name="onclick"/>
+          <attr defaultValue="" name="onkeyup"/>
+          <attr defaultValue="" name="onchange"/>
+          <attr defaultValue="" name="extAttr"/>
+          <attr defaultValue="" name="onkeypress"/>
+          <attr defaultValue="" name="ondblclick"/>
+          <attr defaultValue="" name="iterateId"/>
+          <attr defaultValue="" name="size"/>
+          <attr defaultValue="" name="onmouseout"/>
+          <attr defaultValue="" name="name"/>
+          <attr defaultValue="" name="style"/>
+          <attr defaultValue="" name="onmousedown"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
     <spEntitySqlView product="default" view="" useSql="true" schema="" needSave="true">
-      <sql>SELECT
-	t.id,
-	t.pid,
-	t.plan_id,
-	t.amount,
-	t.status,
-	t.ischange,
-	t.REVISION,
-	t.remark,
-	t.plan_name,
-	t.plan_code,
-	t.need_org_name,
-	t.need_org_id,
-	t1.material_name,
+      <sql>SELECT&#xD;
+	t.id,&#xD;
+	t.pid,&#xD;
+	t.plan_id,&#xD;
+	t.amount,&#xD;
+	t.status,&#xD;
+	t.ischange,&#xD;
+	t.REVISION,&#xD;
+	t.remark,&#xD;
+	t.plan_name,&#xD;
+	t.plan_code,&#xD;
+	t.need_org_name,&#xD;
+	t.need_org_id,&#xD;
+	t1.material_name,&#xD;
 	t1.code,&#xD;
-	t1.CENTRALIZED_DEPT AS putunder,
-	t1.new_budget_amount AS budget_amount,
-	CONVERT (
-		NUMERIC ( 18, 6 ),
-		(
-			t1.new_budget_amount - CONVERT (
-				NUMERIC ( 18, 6 ),
-				isnull(
-					(
-					SELECT SUM
-						( t2.amount ) 
-					FROM
-						zh_project_approval_details t2
-						LEFT JOIN zh_project_approval p1 ON t2.pid= p1.id 
-					WHERE
-						p1.status!= 4 
-						AND t2.plan_id = t1.id 
-					),
-					0 
-				) 
-			) 
-		) 
-	) AS sumAmount 
-FROM
-	zh_project_approval_details t
-	LEFT JOIN zh_purchase_plan_item t1 ON t.plan_id = t1.id</sql>
+	t1.CENTRALIZED_DEPT AS putunder,&#xD;
+	t1.new_budget_amount AS budget_amount,&#xD;
+	t2.PLAN_ID AS purchaes_plan_id,&#xD;
+	CONVERT (&#xD;
+		NUMERIC ( 18, 6 ),&#xD;
+		(&#xD;
+			t1.new_budget_amount - CONVERT (&#xD;
+				NUMERIC ( 18, 6 ),&#xD;
+				isnull(&#xD;
+					(&#xD;
+					SELECT SUM&#xD;
+						( t2.amount ) &#xD;
+					FROM&#xD;
+						zh_project_approval_details t2&#xD;
+						LEFT JOIN zh_project_approval p1 ON t2.pid= p1.id &#xD;
+					WHERE&#xD;
+						p1.status!= 4 &#xD;
+						AND t2.plan_id = t1.id &#xD;
+					),&#xD;
+					0 &#xD;
+				) &#xD;
+			) &#xD;
+		) &#xD;
+	) AS sumAmount &#xD;
+FROM&#xD;
+	zh_project_approval_details t&#xD;
+	LEFT JOIN zh_purchase_plan_item t1 ON t.plan_id = t1.id&#xD;
+	LEFT JOIN zh_purchase_plan_item t2 ON t.plan_id = t2.id</sql>
     </spEntitySqlView>
     <spEntitySqlView product="DB2 UDB" view="" useSql="true" schema="">
       <sql></sql>

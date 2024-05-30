@@ -90,7 +90,7 @@
 					<div class="layui-col-xs6">
 						<label class="layui-form-label">立项编号</label>
 						<div class="layui-input-block">
-							<input type="text" name="proAppCode" disabled="disabled" class="layui-input">
+							<input id="proAppCode" type="text" name="proAppCode" class="layui-input" style="cursor: pointer; color: #1b3fba" readonly="readonly">
 						</div>
 					</div>
 				</div>
@@ -250,7 +250,8 @@
 								cols : [ [ {
 									field : 'code',
 									width : 175,
-									title : '计划编号'
+									title : '计划编号',
+									templet : "<div>{{getPurchaesPlan(d)}}</div>"
 								}, {
 									field : 'planName',
 									width : 215,
@@ -407,8 +408,22 @@
 						}
 					}
 				});
+				
+				$("#proAppCode").on('click', function(){
+					var executeUrl = "<%=request.getContextPath()%>/purchase/print/proAppPrint.jsp?id=" + proappId;
+					window.open(executeUrl);
+				})				
 	
 			});
+			
+			function getPurchaesPlan(e){
+				return "<a href='javascript:void(0)' style ='color: #1b3fba;'  onclick='showPurchaesPlan(" + e.purchaesPlanId + ");' title='点击查看'>" + e.code + "</a>";
+			}
+			
+			function showPurchaesPlan(e){
+					var executeUrl = "<%=request.getContextPath()%>/purchase/plan/purPlanDetailById.jsp?id=" + e;
+					window.open(executeUrl);
+			}
 	
 			//附件下载
 			function getdetail(e) {

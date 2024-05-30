@@ -351,7 +351,7 @@
 				,cellMinWidth: 90
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
-		      {field:'code',width:185, title: '计划编号'}
+		      {field:'code',width:185, title: '计划编号',templet : "<div>{{getPurchaesPlan(d)}}</div>"}
 		      ,{field:'planName', width:255, title: '计划名称'}
 		      ,{field:'materialName', width:250, title: '采购物项名称 '}
 		      ,{field:'budgetAmount',width:90, title: '预算金额'}
@@ -392,6 +392,16 @@
 		  });
 		
  });
+ 
+ 
+		function getPurchaesPlan(e){
+			return "<a href='javascript:void(0)' style ='color: #1b3fba;'  onclick='showPurchaesPlan(" + e.purchaesPlanId + ");' title='点击查看'>" + e.code + "</a>";
+		}
+		
+		function showPurchaesPlan(e){
+				var executeUrl = "<%=request.getContextPath()%>/purchase/plan/purPlanDetailById.jsp?id=" + e;
+				window.open(executeUrl);
+		} 
    
 		  //附件下载
     function getdetail(e){
