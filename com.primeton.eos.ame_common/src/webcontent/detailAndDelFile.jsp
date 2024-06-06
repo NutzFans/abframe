@@ -79,7 +79,7 @@
 			var fileName = selectRow.fileName;
 			if (fileType == "jpg文件" || fileType == "pdf文件" || fileType == "png文件"){
 				// 传递过程中需要传递一个文件ID ，去查询目标文件存储路径
-		    	executeUrl = "<%= request.getContextPath() %>/ame_common/medioPreview.jsp?fileName=" + fileName +"&filePath=" + filePath;
+		    	executeUrl = "<%= request.getContextPath() %>/ame_common/medioPreview.jsp?filePath=" + filePath;
 				window.open(executeUrl);
 			} else {
 				nui.alert("该文件类型不支持预览。如要查看，请下载。");

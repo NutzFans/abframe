@@ -36,7 +36,12 @@ public class PurPlanItemUtil {
 					BigDecimal amount = entity.getBigDecimal("amount");
 					sumamount = NumberUtil.add(sumamount, amount);
 				}
-				sumamountRate = NumberUtil.decimalFormat("#.##%", NumberUtil.div(sumamount, newBudgetAmount, 2));
+				if(newBudgetAmount.compareTo(BigDecimal.ZERO) == 0){
+					sumamountRate = "100%";
+				}else{
+					sumamountRate = NumberUtil.decimalFormat("#.##%", NumberUtil.div(sumamount, newBudgetAmount, 2));
+				}
+				
 			}
 			dataObjects[i].setBigDecimal("sumamount", sumamount);
 			dataObjects[i].setString("sumamountRate", sumamountRate);
