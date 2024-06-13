@@ -41,7 +41,7 @@ public class SyncUpdateOrg {
 	private final static String oauser = BusinessDictUtil.getDictName("AME_SYSCONF", "OAUSER");
 
 	private final static String oapassword = BusinessDictUtil.getDictName("AME_SYSCONF", "OAPASSWORD");
-	
+
 	private final static String url = BusinessDictUtil.getDictName("AME_SYSCONF", "OASYNCURL");
 
 	@Bizlet("同步OA更新组织机构信息")
@@ -86,6 +86,12 @@ public class SyncUpdateOrg {
 
 		Console.log("（≡・ x ・≡）完成了员工数据的解析同步（≡・ x ・≡）");
 
+		Console.log("（≡・ x ・≡）开始执行数据清理工作（≡・ x ・≡）");
+
+		this.clearData(dbSession);
+
+		Console.log("（≡・ x ・≡）完成了数据清理工作（≡・ x ・≡）");
+
 		Console.log("（≡・ x ・≡）同步OA操作执行完成（≡・ x ・≡）");
 
 	}
@@ -117,7 +123,9 @@ public class SyncUpdateOrg {
 				+ "            <count>"
 				+ context.getCount()
 				+ "</count>\n"
-				+ "         </arg0>\n" + "      </web:getUpdatedElements>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
+				+ "         </arg0>\n"
+				+ "      </web:getUpdatedElements>\n"
+				+ "   </soapenv:Body>\n" + "</soapenv:Envelope>";
 		String result = HttpUtil.post(url, soapStr);
 		SAXReader saxReader = new SAXReader();
 		Document doc = saxReader.read(new ByteArrayInputStream(result.getBytes("UTF-8")));
@@ -181,10 +189,9 @@ public class SyncUpdateOrg {
 				} else {
 					entity.set("STATUS", "stop");
 				}
-				if (StrUtil.equals(userId, "admin") || StrUtil.equals(userId, "cs997") || StrUtil.equals(userId, "0cs1") || StrUtil.equals(userId, "0cs2")
-						|| StrUtil.equals(userId, "zbqt") || StrUtil.equals(userId, "0cs3") || StrUtil.equals(userId, "lyunwei") || StrUtil.equals(userId, "cncc1508")
-						|| StrUtil.equals(userId, "hjcs") || StrUtil.equals(userId, "cs1") || StrUtil.equals(userId, "cs2") || StrUtil.equals(userId, "cs3")
-						|| StrUtil.equals(userId, "C001") || StrUtil.equals(userId, "zhangxj")) {
+				if (StrUtil.equals(userId, "admin") || StrUtil.equals(userId, "cs997") || StrUtil.equals(userId, "0cs1") || StrUtil.equals(userId, "0cs2") || StrUtil.equals(userId, "zbqt")
+						|| StrUtil.equals(userId, "0cs3") || StrUtil.equals(userId, "lyunwei") || StrUtil.equals(userId, "cncc1508") || StrUtil.equals(userId, "hjcs") || StrUtil.equals(userId, "cs1")
+						|| StrUtil.equals(userId, "cs2") || StrUtil.equals(userId, "cs3") || StrUtil.equals(userId, "C001") || StrUtil.equals(userId, "zhangxj")) {
 					entity.set("STATUS", "stop");
 				}
 				entity.set("UNLOCKTIME", personObj.getStr("alterTime"));
@@ -319,10 +326,10 @@ public class SyncUpdateOrg {
 			if (ObjectUtil.isNotNull(entity)) {
 				if (personObj.getBool("isAvailable", false).booleanValue()) {
 					entity.set("TAG", personObj.getStr("id"));
-					if (StrUtil.equals(empCode, "admin") || StrUtil.equals(empCode, "cs997") || StrUtil.equals(empCode, "0cs1") || StrUtil.equals(empCode, "0cs2")
-							|| StrUtil.equals(empCode, "zbqt") || StrUtil.equals(empCode, "0cs3") || StrUtil.equals(empCode, "lyunwei")
-							|| StrUtil.equals(empCode, "cncc1508") || StrUtil.equals(empCode, "hjcs") || StrUtil.equals(empCode, "cs1") || StrUtil.equals(empCode, "cs2")
-							|| StrUtil.equals(empCode, "cs3") || StrUtil.equals(empCode, "C001") || StrUtil.equals(empCode, "zhangxj")) {
+					if (StrUtil.equals(empCode, "admin") || StrUtil.equals(empCode, "cs997") || StrUtil.equals(empCode, "0cs1") || StrUtil.equals(empCode, "0cs2") || StrUtil.equals(empCode, "zbqt")
+							|| StrUtil.equals(empCode, "0cs3") || StrUtil.equals(empCode, "lyunwei") || StrUtil.equals(empCode, "cncc1508") || StrUtil.equals(empCode, "hjcs")
+							|| StrUtil.equals(empCode, "cs1") || StrUtil.equals(empCode, "cs2") || StrUtil.equals(empCode, "cs3") || StrUtil.equals(empCode, "C001")
+							|| StrUtil.equals(empCode, "zhangxj")) {
 						entity.set("EMPSTATUS", "leave");
 					} else {
 						entity.set("EMPSTATUS", "on");
@@ -396,6 +403,50 @@ public class SyncUpdateOrg {
 					impl.setNature("0");
 					impl.setOperattime(DateUtil.date());
 					DatabaseUtil.insertEntity("default", impl);
+				}
+			}
+		}
+	}
+
+	private void clearData(Session dbSession) throws Exception {
+		// 清理组织机构中无效数据
+		String queryOrgSql = "SELECT ORGID FROM OM_ORGANIZATION WHERE ORGSEQ NOT LIKE '.1.%' OR ORGSEQ IS NULL";
+		List<Entity> orgEntityList = dbSession.query(queryOrgSql);
+		if (orgEntityList != null && orgEntityList.size() > 0) {
+			String delOrgSql = "DELETE FROM OM_ORGANIZATION WHERE ORGID = ?";
+			for (Entity entity : orgEntityList) {
+				String orgId = entity.getStr("ORGID");
+				dbSession.execute(delOrgSql, orgId);
+			}
+		}
+		String queryOrgWebUrlSql = "SELECT ORGID FROM OM_ORGANIZATION WHERE WEBURL is NULL";
+		List<Entity> orgWeburlEntityList = dbSession.query(queryOrgWebUrlSql);
+		if (orgWeburlEntityList != null && orgWeburlEntityList.size() > 0) {
+			String updateOrgSql = "UPDATE OM_ORGANIZATION SET STATUS = 'cancel' WHERE ORGID = ?";
+			for (Entity entity : orgWeburlEntityList) {
+				String orgId = entity.getStr("ORGID");
+				dbSession.execute(updateOrgSql, orgId);
+			}
+		}
+		// 清理员工中的无效数据
+		String queryEmpSql = "SELECT EMPID, EMPCODE, ORGID FROM OM_EMPLOYEE WHERE ORGID IS NOT NULL";
+		List<Entity> empEntityList = dbSession.query(queryEmpSql);
+		if (empEntityList != null && empEntityList.size() > 0) {
+			String queryOrgByIdSql = "SELECT * FROM OM_ORGANIZATION WHERE ORGID = ?";
+			String delEmpSql = "DELETE FROM OM_EMPLOYEE WHERE EMPID = ?";
+			String delAcOperatorSql = "DELETE FROM AC_OPERATOR WHERE USERID = ?";
+			String delEmpOrgSql = "DELETE FROM OM_EMPORG WHERE EMPID = ?";
+			String delEmpHisSql = "DELETE FROM OM_EMPORG_HIS WHERE EMPID = ?";
+			for (Entity entity : empEntityList) {
+				String orgId = entity.getStr("ORGID");
+				String empId = entity.getStr("EMPID");
+				String empCode = entity.getStr("EMPCODE");
+				Entity result = dbSession.queryOne(queryOrgByIdSql, orgId);
+				if (result == null) {
+					dbSession.execute(delEmpSql, empId);
+					dbSession.execute(delEmpOrgSql, empId);
+					dbSession.execute(delEmpHisSql, empId);
+					dbSession.execute(delAcOperatorSql, empCode);
 				}
 			}
 		}
@@ -521,7 +572,11 @@ public class SyncUpdateOrg {
 	private BigDecimal getEmpOperatorId(String empCode, Session dbSession) throws Exception {
 		String querySql = "SELECT * FROM AC_OPERATOR WHERE USERID = ?";
 		Entity entity = dbSession.queryOne(querySql, empCode);
-		return entity.getBigDecimal("OPERATORID");
+		if (entity != null) {
+			return entity.getBigDecimal("OPERATORID");
+		} else {
+			return null;
+		}
 	}
 
 	private String getOrgdegree(JSONArray branchOfficeArray, String id, String hierarchyId) {

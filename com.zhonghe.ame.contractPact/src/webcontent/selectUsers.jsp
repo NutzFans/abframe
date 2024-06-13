@@ -13,6 +13,7 @@
 		<div id="form1">
 			<input class="nui-hidden" name="sortField" value="empid" />
 			<input class="nui-hidden" name="sortOrder" value="asc" />
+			<input class="nui-hidden" name="criteria._expr[1].empstatus" value="on" />
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
@@ -22,19 +23,6 @@
 							<input class="nui-hidden" name="criteria._expr[0]._op" value="like" />
 							<input class="nui-hidden" name="criteria._expr[0]._likeRule" value="all" />
 						</td>
-						<!-- <td style="width: 30px; text-align: right;">部门:</td>
-						<td style="width: 105px">
-							<input class="nui-hidden" name="criteria._expr[1]._property" value="orgid" />
-							<input class="nui-hidden" name="criteria._expr[1]._op" value="=" id="jjj" />
-							<input class="nui-hidden" name="criteria._expr[1]._ref" value="" id="kkk" />
-							<input class="nui-hidden" name="criteria._ref[0]._id" value="5" />
-							<input class="nui-hidden" name="criteria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
-							<input class="nui-hidden" name="criteria._ref[0]._select._field[0]" value="orgid" />
-							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._property" value="orgname" />
-							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._op" value="like" />
-							<input class="nui-textbox" name="criteria._ref[0]._expr[0]._value" id="orgname" onvaluechanged="changeusername(e)" style="width: 100px;" />
-							<input class="nui-hidden" name="criteria._ref[0]._expr[0]._likeRule" value="all" />
-						</td> -->
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 						</td>

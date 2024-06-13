@@ -521,7 +521,7 @@
 										"_expr" : [ {
 											"proAppCode" : data.proAppCode,
 											"_op" : "like"
-										} ]
+										},{"status": "2", "_op": "="}]
 									}
 								}
 								ajaxCommon({
