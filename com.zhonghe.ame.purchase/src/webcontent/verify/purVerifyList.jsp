@@ -344,7 +344,7 @@ html,body {
 			nui.open({
 				url: "/default/purchase/verify/addPurVerify.jsp",
 				width: '70%',
-				height: '75%',
+				height: '70%',
 				title: "验收单",
 				onload: function() {
 					var iframe = this.getIFrameEl();

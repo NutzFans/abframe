@@ -107,6 +107,12 @@
 		      <input type="text" name="totalAmount" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
+	    <div class="layui-col-xs6">
+		    <label class="layui-form-label">是否为科研项目</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="keYanProject" disabled="disabled" class="layui-input">
+		    </div>
+	    </div>
 	  </div>
 	  <div class="layui-row">
 	    <div class="layui-col-xs12">
@@ -162,7 +168,7 @@
 				    success: function(data) {
 			    	var formData=data.purZero;
 				    	formData.createdTime = layui.util.toDateString(formData.createdTime,'yyyy-MM-dd')
-				    	
+				    	formData.keYanProject = nui.getDictText('ZH_YN',formData.keYanProject)
 				    	form.val("dataFrm",formData);
 				    	processInstID= formData.processid;
 				    	 document.getElementById("name").innerHTML = formData.purchaseName;

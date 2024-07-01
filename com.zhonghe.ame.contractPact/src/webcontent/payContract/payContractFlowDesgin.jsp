@@ -98,6 +98,9 @@
 
 		<!-- 财务主任审批 -->
 		<div id="div29" style="position: absolute; left: 880px; top: 480px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 集采中心复核 -->
+		<div id="div30" style="position: absolute; left: 903px; top: 2065px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
@@ -367,6 +370,15 @@
 					btn : []
 				});
 			});
+			
+			// 集采中心复核
+			$('#div30').click(function() {
+				layer.open({
+					title : '集采中心复核 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【fufei_jczxfh】的角色数据',
+					btn : []
+				});
+			});			
 
 		});
 	</script>

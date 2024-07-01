@@ -154,14 +154,13 @@
 						<div field="planName" width="110" align="left" headerAlign="center">计划名称</div>
 						<div field="planCode" width="110" align="center" headerAlign="center">计划编号</div>
 						<div field="materialName" width="110" align="center" headerAlign="center" vtype="required">采购物项名称</div>
+						<div field="purchaseFirstName" width="110" align="center" headerAlign="center" vtype="required">物项大类</div>
+						<div field="purchaseTwoName" width="110" align="center" headerAlign="center" vtype="required">物项中类</div>
 						<div field="budgetAmount" width="110" align="center" headerAlign="center" vtype="required">预算金额(万元)</div>
 						<div field="amount" width="110" align="center" headerAlign="center" vtype="required" headerStyle="color:red">立项金额(万元)</div>
 						<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
 						<div field="needOrgName" width="60" align="center" headerAlign="center">采购单位</div>
-						<div field="contractamount" width="100" align="center" headerAlign="center" vtype="true" visible="false">
-							拟签合同金额(元)
-							<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" id="contractamount" name="contractamount" />
-						</div>
+						<div field="putunder" width="100" align="center" headerAlign="center" renderer="zhPutUnder">物项归口部门</div>
 					</div>
 				</div>
 			</div>
@@ -404,7 +403,9 @@
             else window.close();            
         }
        
-        
+        function zhPutUnder(e) {
+			return nui.getDictText('ZH_PUTUNDER', e.value);//设置业务字典值
+		}
 
     </script></body>
 </html>

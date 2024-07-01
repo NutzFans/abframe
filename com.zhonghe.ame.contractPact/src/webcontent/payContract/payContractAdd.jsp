@@ -18,6 +18,7 @@
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input name="proAppId" id="proAppId" class="nui-hidden" />
+				<input name="organizer" id="organizer" class="nui-hidden" value="0">
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -485,6 +486,7 @@
 
 		function onButtonEdit(e) {
 			var btnEdit = this;
+			nui.get("organizer").setValue("0");
 			if (nui.get("contractNature").getValue() == 1 || nui.get("contractNature").getValue() == 4) {
 				mini.open({
 					url : "/default/contractPact/payContract/procurementPlanList.jsp",
@@ -497,6 +499,9 @@
 							var data = iframe.contentWindow.GetData();
 							data = mini.clone(data); //必须
 							if (data) {
+								if(data.type ==="2"){
+									nui.get("organizer").setValue("1");
+								}
 								btnEdit.setValue(data.proAppCode);
 								btnEdit.setText(data.proAppCode);
 								var budgetSum = data.proAppApplyPrice;
@@ -687,6 +692,7 @@
 		});
 
 		function contractNatureChanged() {
+			nui.get("organizer").setValue("0");
 			if (nui.get("contractNature").getValue() == 1) {
 				$("#purchasePlanLable").html("采购立项编号:");
 				$("#budgetSumLable").html("立项金额(元):");

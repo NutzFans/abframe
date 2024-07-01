@@ -63,6 +63,12 @@ body {
 								</td>
 							</tr>
 							<tr>
+								<td align="right" style="width:140px">是否为科研项目：</td>
+								<td colspan="2">
+									<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%;" required="true" />
+								</td>
+							</tr>
+							<tr>
 								<td class="form_label" align="right">申请原因：</td>
 								<td colspan="7">
 									<input style="width: 100%; height: 120px;" name="applyReason" class="nui-textarea" id="remark" required="true" />

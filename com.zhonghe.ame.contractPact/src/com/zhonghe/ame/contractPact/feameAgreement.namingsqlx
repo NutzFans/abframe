@@ -151,6 +151,12 @@
         <result column="contract_sum1" javaType="String" property="contractSum1"/>
     </resultMap>
     
+    <resultMap class="com.eos.workflow.data.WFParticipant" id="resultMap12">
+        <result column="EMPCODE" javaType="string" property="id"/>
+        <result column="EMPNAME" javaType="string" property="name"/>
+        <result column="typeCode" javaType="string" property="typeCode"/>
+    </resultMap>    
+    
     <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
     
      <select id="queryEmployee" parameterClass="java.util.HashMap"  resultMap="resultMap7">
@@ -193,6 +199,23 @@
 					WHERE a.ROLEID = #roleid#)
 					]]>
     </select>
+    
+     <select id="queryEmployeesByRoleId" parameterClass="java.util.HashMap"  resultMap="resultMap12">
+   			<![CDATA[
+   					SELECT
+						e.EMPCODE,
+						e.EMPNAME,
+						'person' as typeCode
+					FROM
+					OM_EMPLOYEE  e
+					WHERE e.OPERATORID IN
+					(SELECT
+					a.OPERATORID
+					FROM
+					AC_OPERATORROLE  a
+					WHERE a.ROLEID = #roleid#)
+					]]>
+    </select>    
     
     
      <select id="queryFilialeEmployee" parameterClass="java.util.HashMap"  resultMap="resultMap7">

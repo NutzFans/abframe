@@ -15,127 +15,128 @@ body {
 }
 </style>
 </head>
-<div class="nui-fit">
-	<div class="mini-panel" title="" style="width: 100%;">
-		<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 98%;">
-			<legend>采购验收单信息</legend>
-			<form id="form1" method="post">
-				<input name="files" id="fileids" class="nui-hidden" />
-				<input class="nui-hidden" name="id" />
-				<div style="padding: 5px;">
-					<table style="table-layout: fixed;">
-						<tr>
-							<td class="form_label" align="right">验收单编号：</td>
-							<td>
-								<input name="verifyCode" id="verifyCode" emptyText="系统自动生成" readonly="readonly" class="nui-textbox" style="width: 100%" />
-							</td>
-							<td align="right" style="width: 120px">验收审核人：</td>
-							<td>
-								<input name="userId" id="examineUserId" emptyText="请选择" class="nui-buttonedit" allowInput="false" onbuttonclick="selectOmEmployee" style="width: 100%" required="true" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">验收部门：</td>
-							<td colspan="3">
-								<input name="orgId" id="proAppOrgId" class="nui-combobox" required="true" url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext" filterType="like" textField="orgname" valueField="orgid"
-									readonly="readonly" dataField="allorgs" valueFromSelect="true" allowInput="true" style="width: 100%" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">类型：</td>
-							<td>
-								<input id="verifyType" name="verifyType" required="true" onvaluechanged="changeVal()" class="mini-radiobuttonlist"
-									data="[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 120px">合同编号：</td>
-							<td>
-								<input name="contractId" id="contractId" onbuttonclick="choseContrat" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%" />
-							</td>
-							<td align="right" style="width: 130px">合同总价(万元)：</td>
-							<td>
-								<input name="totalPrice" id="totalPrice" class="nui-textbox" readonly="readonly" style="width: 100%" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 120px">零星采购编号：</td>
-							<td>
-								<input name="purchaseCode" id="purchaseCode" onbuttonclick="chosePurZero" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%" />
-							</td>
-							<td align="right" style="width: 130px">采购金额(万元)：</td>
-							<td>
-								<input name="totalAmount" id="totalAmount" class="nui-textbox" readonly="readonly" style="width: 100%" />
-							</td>
-						</tr>
-						<tr>
-							<td class="form_label" align="right" style="width: 140px;">备注：</td>
-							<td colspan="3">
-								<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" />
-							</td>
-						</tr>
-					</table>
-				</div>
-			</form>
-		</fieldset>
-		<fieldset style="height: 100%; border: solid 1px #aaa; padding: 3px; width: 98%;">
-			<legend>货物信息</legend>
-			<div class="fieldset-body" style="width: 100%; height: 100%; margin: 0px auto">
-				<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a>
-				<a class="nui-button" id="deltbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a>
-				<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="changeValue">
-					<div property="columns">
-						<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-						<div field="goodsName" width="130" align="center" headerAlign="center" vtype="required">
-							货物名称
-							<input id="goodsName" onbuttonclick="chosePurItem" width="100%" class="nui-buttonedit" name="goodsName" property="editor" />
-						</div>
-						<div field="model" width="130" align="center" headerAlign="center" renderer="dictstatus">
-							型号规格
-							<input id="model" name="model" property="editor" width="100%" class="nui-textbox" />
-						</div>
-						<div field="supId" displayField="custname" width="130" align="center" headerAlign="center">
-							供应商名称
-							<input id="supId" name="supId" property="editor" width="100%" allowInput="false" onbuttonclick="onButtonEdit1" class="nui-buttonedit" />
-						</div>
-						<div field="number" width="130" align="center" headerAlign="center" vtype="required">
-							数量
-							<input id="number" name="number" maxValue="999999999" property="editor" class="nui-spinner" />
-						</div>
-						<div field="singlePrice" width="130" align="center" headerAlign="center" vtype="required">
-							单价(万元)
-							<input id="singlePrice" name="singlePrice" property="editor" width="100%" class="nui-textbox" />
-						</div>
-						<div field="totalPriceDetail" width="130" align="center" headerAlign="center">
-							总价(万元)
-							<input id="totalPriceDetail" name="totalPriceDetail" property="editor" class="nui-textbox" />
-						</div>
-						<div field="qualitySituation" width="130" align="center" headerAlign="center">
-							质量情况
-							<input id="qualitySituation" name="qualitySituation" property="editor" width="100%" class="nui-textbox" />
+<body>
+	<div class="nui-fit">
+		<div class="mini-panel" title="" style="width: 100%;">
+			<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 98%;">
+				<legend>采购验收单信息</legend>
+				<form id="form1" method="post">
+					<input name="files" id="fileids" class="nui-hidden" />
+					<input class="nui-hidden" name="id" />
+					<div style="padding: 5px;">
+						<table style="table-layout: fixed;">
+							<tr>
+								<td class="form_label" align="right">验收单编号：</td>
+								<td>
+									<input name="verifyCode" id="verifyCode" emptyText="系统自动生成" readonly="readonly" class="nui-textbox" style="width: 100%" />
+								</td>
+								<td align="right" style="width: 120px">验收审核人：</td>
+								<td>
+									<input name="userId" id="examineUserId" emptyText="请选择" class="nui-buttonedit" allowInput="false" onbuttonclick="selectOmEmployee" style="width: 100%" required="true" />
+								</td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 160px">验收部门：</td>
+								<td colspan="3">
+									<input name="orgId" id="proAppOrgId" class="nui-combobox" required="true" url="com.primeton.rdmgr.labor.labormgr.getAllOrgs.biz.ext" filterType="like" textField="orgname" valueField="orgid"
+										readonly="readonly" dataField="allorgs" valueFromSelect="true" allowInput="true" style="width: 100%" />
+								</td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 160px">类型：</td>
+								<td>
+									<input id="verifyType" name="verifyType" required="true" onvaluechanged="changeVal()" class="mini-radiobuttonlist"
+										data="[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]" />
+								</td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 120px">合同编号：</td>
+								<td>
+									<input name="contractId" id="contractId" onbuttonclick="choseContrat" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%" />
+								</td>
+								<td align="right" style="width: 130px">合同总价(万元)：</td>
+								<td>
+									<input name="totalPrice" id="totalPrice" class="nui-textbox" readonly="readonly" style="width: 100%" />
+								</td>
+							</tr>
+							<tr>
+								<td align="right" style="width: 120px">零星采购编号：</td>
+								<td>
+									<input name="purchaseCode" id="purchaseCode" onbuttonclick="chosePurZero" class="nui-buttonedit" allowInput="false" required="false" style="width: 100%" />
+								</td>
+								<td align="right" style="width: 130px">采购金额(万元)：</td>
+								<td>
+									<input name="totalAmount" id="totalAmount" class="nui-textbox" readonly="readonly" style="width: 100%" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_label" align="right" style="width: 140px;">备注：</td>
+								<td colspan="3">
+									<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</form>
+			</fieldset>
+			<fieldset style="height: 100%; border: solid 1px #aaa; padding: 3px; width: 98%;">
+				<legend>货物信息</legend>
+				<div class="fieldset-body" style="width: 100%; height: 100%; margin: 0px auto">
+					<a class="nui-button" id="addbtn" iconCls="icon-add" onclick="addTicket()">增加</a>
+					<a class="nui-button" id="deltbtn" iconCls="icon-remove" onclick="removeTicket()">删除</a>
+					<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="changeValue">
+						<div property="columns">
+							<div type="indexcolumn" align="center" headerAlign="center">序号</div>
+							<div field="goodsName" width="130" align="center" headerAlign="center" vtype="required">
+								货物名称
+								<input id="goodsName" onbuttonclick="chosePurItem" width="100%" class="nui-buttonedit" name="goodsName" property="editor" />
+							</div>
+							<div field="model" width="130" align="center" headerAlign="center" renderer="dictstatus">
+								型号规格
+								<input id="model" name="model" property="editor" width="100%" class="nui-textbox" />
+							</div>
+							<div field="supId" displayField="custname" width="130" align="center" headerAlign="center">
+								供应商名称
+								<input id="supId" name="supId" property="editor" width="100%" allowInput="false" onbuttonclick="onButtonEdit1" class="nui-buttonedit" />
+							</div>
+							<div field="number" width="130" align="center" headerAlign="center" vtype="required">
+								数量
+								<input id="number" name="number" maxValue="999999999" property="editor" class="nui-spinner" />
+							</div>
+							<div field="singlePrice" width="130" align="center" headerAlign="center" vtype="required">
+								单价(万元)
+								<input id="singlePrice" name="singlePrice" property="editor" width="100%" class="nui-textbox" />
+							</div>
+							<div field="totalPriceDetail" width="130" align="center" headerAlign="center">
+								总价(万元)
+								<input id="totalPriceDetail" name="totalPriceDetail" property="editor" class="nui-textbox" />
+							</div>
+							<div field="qualitySituation" width="130" align="center" headerAlign="center">
+								质量情况
+								<input id="qualitySituation" name="qualitySituation" property="editor" width="100%" class="nui-textbox" />
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</fieldset>
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
-			<legend>发票（若仅有发票）、合同中约定的结算单或验收报告等</legend>
-			<jsp:include page="/ame_common/addFiles.jsp" />
-		</fieldset>
+			</fieldset>
+			<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
+				<legend>发票（若仅有发票）、合同中约定的结算单或验收报告等</legend>
+				<jsp:include page="/ame_common/addFiles.jsp" />
+			</fieldset>
+		</div>
+		<div style="text-align: center; padding: 10px;" class="nui-toolbar">
+			<a class="nui-button" onclick="onOk(0)" id="saveReimb" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
+			<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-ok">提交</a>
+			<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
+		</div>
 	</div>
-
-	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-ok">提交</a>
-		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
-	</div>
-
+	
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid_traveldetail = nui.get("grid_traveldetail");
 		var type;
-
+		
 		function removeTicket() {
 			var rows = grid_traveldetail.getSelecteds();
 			if (rows.length > 0) {
@@ -145,12 +146,11 @@ body {
 				nui.alert("请至少选中一条记录！");
 			}
 		}
-
+		
 		function choseContrat(e) {
 			var btnEdit = this;
 			mini.open({
 				url : "/default/purchase/programme/quotePayContractList.jsp",
-				title : "",
 				width : '73%',
 				height : '75%',
 				ondestroy : function(action) {
@@ -161,7 +161,6 @@ body {
 						if (data) {
 							btnEdit.setValue(data.id);
 							btnEdit.setText(data.proAppCode);
-							nui.get("contractId").setValue(data.id);
 							nui.get("contractId").setText(data.contractNo);
 							nui.get("totalPrice").setValue(data.contractSum / 10000);
 						}
@@ -173,12 +172,11 @@ body {
 				}
 			});
 		}
-
+		
 		function chosePurZero(e) {
 			var btnEdit = this;
 			mini.open({
 				url : "/default/purchase/programme/chosePurZero.jsp",
-				title : "",
 				width : '73%',
 				height : '75%',
 				ondestroy : function(action) {
@@ -200,7 +198,7 @@ body {
 				}
 			});
 		}
-
+		
 		function chosePurItem(e) {
 			var btnEdit = this;
 			mini.open({
@@ -224,7 +222,7 @@ body {
 				}
 			});
 		}
-
+		
 		function isUser(e) {
 			clog(e)
 		}
@@ -246,7 +244,7 @@ body {
 				}
 			}
 		}
-
+		
 		//计算总金额
 		function totalAmount() {
 			var tempData = grid_traveldetail.data;
@@ -273,7 +271,7 @@ body {
 			}
 
 		}
-
+		
 		function onButtonEdit1(e) {
 			var btnEdit = this;
 			mini.open({
@@ -294,7 +292,7 @@ body {
 				}
 			});
 		}
-
+		
 		function addTicket() {
 			var rowS = {
 				name : "New Row"
@@ -302,7 +300,6 @@ body {
 			grid_traveldetail.addRow(rowS);
 		}
 		
-
 		function selectOmEmployee() {
 			var btnEdit = this;
 			nui.open({
@@ -331,7 +328,7 @@ body {
 				}
 			});
 		}
-
+		
 		function changeVal() {
 			//不管是暂存还是提交 都需要判断选择的类型与填的数据是否是相同的
 			//[{id: 1, text: '管理合同'}, {id: 2, text: '关联零星采购'}, {id: 3, text: '非条约事项验收'}]
@@ -350,7 +347,7 @@ body {
 				nui.get("contractId").setRequired(false);
 			}
 		}
-
+		
 		function onOk(e) {
 			type = e;
 			if (type == 0) {
@@ -393,8 +390,6 @@ body {
 			})
 		}
 		
-		
-
 		function SaveData() {
 			var purVerify = form.getData(), purVerifyDetail = grid_traveldetail.getData();
 			purVerify.type = type;
@@ -423,7 +418,6 @@ body {
 			});
 		}
 		
-
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			mini.open({
@@ -452,7 +446,6 @@ body {
 			});
 		}
 		
-
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
@@ -463,8 +456,9 @@ body {
 				return window.CloseOwnerWindow(action);
 			else
 				window.close();
-		}
-	</script>
-
-</div>
+		}																								
+		
+	</script>	
+	
+</body>
 </html>
