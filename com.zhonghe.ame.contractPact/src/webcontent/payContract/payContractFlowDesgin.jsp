@@ -100,7 +100,7 @@
 		<div id="div29" style="position: absolute; left: 880px; top: 480px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 集采中心复核 -->
-		<div id="div30" style="position: absolute; left: 903px; top: 2065px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div30" style="position: absolute; left: 983px; top: 2063px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
