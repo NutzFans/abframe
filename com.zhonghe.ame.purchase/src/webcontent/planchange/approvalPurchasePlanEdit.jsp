@@ -63,10 +63,6 @@
 		                <td colspan="1">
 		                    <input id="newBudgetAmount" name="newBudgetAmount" class="nui-textbox" required="true"   readOnly="readOnly"  style="width:100%;" />
 		                </td>
-<!-- 		                <td class="form_label" align="right" style="width:120px;color: red;">变更金额(万元)：</td> -->
-<!-- 		                <td colspan="1"> -->
-<!-- 		                    <input id="changeAmount"  class="nui-textbox" readonly="readonly" style="width:100%;" /> -->
-<!-- 		                </td> -->
 		           	</tr>
 		             <tr>
 		          		<td class="form_label" style="width:120px;" align="right">归口部门可采购物项：</td>
@@ -107,9 +103,7 @@
 		    		url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext">
 	           <div property="columns">
 	   				<div  type="checkcolumn"></div>
-	           		<div  field="code" width="110" align="center" headerAlign="center"  visible="false" >计划编号
-<!-- 						<input  name="code"  property="editor"  enabled="true" class="nui-textbox" readOnly="true" > -->
-	                </div>
+	           		<div  field="code" width="110" align="center" headerAlign="center"  visible="false" >计划编号</div>
 	                <div  field="purchaseFirstCode" width="100" align="center" headerAlign="center"  visible="false">物项大类编码
 						<input  name="purchaseFirstCode"  property="editor"  enabled="true" class="nui-textbox" readOnly="true"  />
 	                </div>
@@ -383,7 +377,7 @@
 		}else if(purType ==3){
 				nui.get("addbtn").enable();
 	   			nui.get("delbtn").enable();
-				var rowS = {name: "New Row"} 
+				var rowS = {name: "New Row","budgetAmount":0,"number":0} 
 				grid.addRow(rowS);
 		}else{
 			showTips("请先选择采购类型及归口部门")
