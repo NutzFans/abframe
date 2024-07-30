@@ -231,7 +231,7 @@
 			$('#div18').click(function() {
 				layer.open({
 					title : '合同盖章 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_HTGZSPR】的字典项数据，修改后【刷新缓存】',
+					content : '通过【角色管理】模块修改角色编号为【kjxy_htgz】的角色数据',
 					btn : []
 				});
 			});

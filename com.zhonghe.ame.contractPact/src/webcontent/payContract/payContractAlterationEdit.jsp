@@ -168,6 +168,20 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 100px">合同文本密级:</td>
+							<td>
+								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">项目密级:</td>
+							<td>
+								<input id="projectSecretLevel" name="projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" style="width: 100%" required="true" />
+							</td>
+							<td align="right" style="width: 100px">是否为采购合同:</td>
+							<td>
+								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" onvaluechanged="contractNatureChanged" />
+							</td>													
+						</tr>
+						<tr>
 							<td align="right" style="width: 100px">完成日期:</td>
 							<td>
 								<input id="finishTime" name="finishTime" class="nui-datepicker" style="width: 200px"/>

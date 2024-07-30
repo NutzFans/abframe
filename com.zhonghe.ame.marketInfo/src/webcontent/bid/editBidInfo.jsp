@@ -390,6 +390,14 @@ body .mini-textboxlist {
 		data.bidUnitsName = nui.get("bidUnits").getText();
 		data.recordDate = nui.get("recordDate").getValue() + "-01";
 		data.updateDate = getTimeStamp();
+		var bidResult = nui.get("bidResult").getValue();
+		if(!isBank(bidResult)){
+			var bidDate = nui.get("bidDate").getValue();
+			if(isBank(bidDate)){
+				showTips("请填写 '定标时间' 字段内容 !", "danger");
+				return;					
+			}
+		}
 		var compets = grid2.getData();
 		delete data.criteria;
 		var json = nui.encode({

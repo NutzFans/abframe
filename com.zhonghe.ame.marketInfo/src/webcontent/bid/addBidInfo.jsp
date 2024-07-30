@@ -339,6 +339,14 @@ body .mini-textboxlist {
 					}
 				}
 			}
+			var bidResult = nui.get("bidResult").getValue();
+			if(!isBank(bidResult)){
+				var bidDate = nui.get("bidDate").getValue();
+				if(isBank(bidDate)){
+					showTips("请填写 '定标时间' 字段内容 !", "danger");
+					return;					
+				}
+			}
 			var compets = grid2.getData();
 			if (compets.length > 0) {
 				var competsStr = JSON.stringify(compets);
@@ -360,8 +368,6 @@ body .mini-textboxlist {
 
 		function SaveData() {
 			var data = form.getData();
-			console.log(data);
-			debugger;
 			data.files = nui.get("fileids").getValue();
 			data.custId = nui.get("custInfo").getValue();
 			data.custName = nui.get("custInfo").getText();
