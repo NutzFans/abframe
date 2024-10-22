@@ -11,7 +11,6 @@
 <h:script src="/common/javascripts/message.js" i18n="true" ></h:script>
 <h:css href="/common/skins/skin0/theme/style-component.css"></h:css>
 <h:script src="/common/skins/skin0/scripts/resource.js"></h:script>
-<h:script src="/common/fckeditor/ckeditor.js"></h:script>
 <h:script src="/common/scripts/eos-web.js"></h:script>
 <h:script src="/common/lib/mootools.js"></h:script>
 <h:script src="/common/javascripts/combo_patch.js"></h:script>

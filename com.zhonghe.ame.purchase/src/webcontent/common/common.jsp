@@ -33,6 +33,7 @@
 %>
 <script src="<%=contextPath %>/common/nui/nui.js" type="text/javascript"></script>
 <script src="<%=contextPath %>/purchase/common/math.js" type="text/javascript"></script>
+<script src="<%=contextPath %>/common/nui/crypto-js.min.js" type="text/javascript"></script>
 <script>
 	var userName = '<%=userName %>';
  	var userId = '<%=nowuserid %>';
