@@ -9,7 +9,7 @@
 <%long workitemid = (Long)request.getAttribute("workItemID");%>
 	<div class="nui-fit" >
 			<fieldset id="field1" style="border: solid 1px #aaa;padding: 3px;width: 99%;">
-				<legend>零星采购审批信息</legend>
+				<legend>零星采购（年度采购计划外）计划、立项审批</legend>
 				<form id="form1" method="post">
 					<input name="files" id="fileids" class="nui-hidden" />
 					<input name="id" id="id" class="nui-hidden" />
@@ -58,7 +58,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label" align="right">申请原因：</td>
+								<td class="form_label" align="right">申请原因、市场调研情况或比价情况：</td>
 								<td colspan="7">
 									<input style="width:100%;height: 120px;" name="applyReason"
 										class="nui-textarea" id="remark" required="true" />

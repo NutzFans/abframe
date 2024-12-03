@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/zeroPurchaseFlow.png'); width: 1375px; height: 791px; position: relative;">
+	<div style="background-image: url('/default/common/flow/zeroPurchaseFlow.png'); width: 1321px; height: 767px; position: relative;">
 	
 		<!-- 分公司经营计划部审核、备案统计 -->
 		<div id="div1" style="position: absolute; left: 627px; top: 18px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -34,7 +34,13 @@
 		<div id="div7" style="position: absolute; left: 179px; top: 670px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 科技信息部审批 -->
-		<div id="div8" style="position: absolute; left: 1140px; top: 154px; width: 75px; height: 50px; cursor: pointer;"></div>																													
+		<div id="div8" style="position: absolute; left: 1140px; top: 154px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 集采中心审批实施 -->
+		<div id="div9" style="position: absolute; left: 1140px; top: 300px; width: 75px; height: 50px; cursor: pointer;"></div>		
+		
+		<!-- 公司企业发展部(采购管理支持中心) - 备案 -->
+		<div id="div10" style="position: absolute; left: 1140px; top: 420px; width: 75px; height: 50px; cursor: pointer;"></div>																																
 
 	</div>
 
@@ -114,7 +120,25 @@
 					content : '通过【角色管理】模块修改角色编号为【lxcg_kj_sp】的角色数据',
 					btn : []
 				});
-			});																								
+			});	
+			
+			// 集采中心审批实施
+			$('#div9').click(function() {
+				layer.open({
+					title : '集采中心审批实施 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【fufei_jczxfh】的角色数据',
+					btn : []
+				});
+			});	
+			
+			// 公司企业发展部(采购管理支持中心) - 备案
+			$('#div10').click(function() {
+				layer.open({
+					title : '公司企业发展部(采购管理支持中心) - 备案 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【purchaseFz】的角色数据',
+					btn : []
+				});
+			});																													
 																														
 		});
 	</script>

@@ -116,7 +116,7 @@
 	  </div>
 	  <div class="layui-row">
 	    <div class="layui-col-xs12">
-		    <label class="layui-form-label">申请原因</label>
+		    <label class="layui-form-label" style="height: 70px">申请原因、<br>市场调研情况<br>或比价情况</label>
 		    <div class="layui-input-block">
 		      <textarea autoHeight="true" name ="applyReason" disabled="disabled" class="layui-textarea"></textarea>
 		    </div>
