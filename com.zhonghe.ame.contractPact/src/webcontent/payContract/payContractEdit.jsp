@@ -50,10 +50,11 @@ body {
 							</td>
 							<td align="right" style="width: 120px">合同实施部门:</td>
 							<td>
-								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
+								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname"  class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 120px">申请日期:</td>
 							<td>

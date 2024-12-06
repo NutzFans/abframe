@@ -38,10 +38,11 @@
 								</td>
 								<td align="right" style="width: 160px">合同实施部门：</td>
 								<td>
-									<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
+								<!-- 	<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
 										showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-										checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
-									<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" />
+										checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" /> -->
+									<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+									<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">申请日期：</td>
 								<td>
