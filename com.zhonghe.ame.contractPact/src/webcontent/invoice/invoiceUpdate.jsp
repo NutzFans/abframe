@@ -14,9 +14,14 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -38,9 +43,6 @@
 								</td>
 								<td align="right" style="width: 160px">合同实施部门：</td>
 								<td>
-								<!-- 	<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-										showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-										checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" /> -->
 									<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 									<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 								</td>
@@ -52,25 +54,25 @@
 							<tr>
 								<td align="right" style="width: 160px">合同编号：</td>
 								<td>
-									<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true"/>
+									<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">合同名称：</td>
 								<td colspan="3">
-									<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true"/>
+									<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
 							<tr>
 								<td align="right" style="width: 100px">专业类别：</td>
 								<td>
-									<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 300px" required="true"/>
+									<input id="major" name="major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">工程类别：</td>
 								<td>
-									<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true"/>
+									<input id="projectType" name="projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">集团内外：</td>
 								<td>
-									<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true"/>
+									<input id="headquarterGroup" name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 300px" required="true" />
 								</td>
 							</tr>
 							<tr>
@@ -82,7 +84,7 @@
 							<tr>
 								<td align="right" style="width: 160px">发票抬头类别：</td>
 								<td>
-									<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true"/>
+									<input name="invoiceNameType" id="invoiceNameType" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">发票类型：</td>
 								<td>
@@ -100,11 +102,11 @@
 								</td>
 								<td align="right" style="width: 160px">本次收款进度：</td>
 								<td>
-									<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px"/>
+									<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px" />
 								</td>
 								<td align="right" style="width: 160px">合同金额（元）：</td>
 								<td>
-									<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" style="width: 300px"/>
+									<input id="invoiceSumCapital" name="invoiceSumCapital" class="nui-textbox" vtype="float" style="width: 300px" />
 								</td>
 							</tr>
 							<tr>
@@ -114,11 +116,11 @@
 								</td>
 								<td align="right" style="width: 160px">账面收入（元）：</td>
 								<td>
-									<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true"/>
+									<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">税额：</td>
 								<td>
-									<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true"/>
+									<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" />
 								</td>
 							</tr>
 							<tr>
@@ -128,7 +130,7 @@
 								</td>
 								<td align="right" style="width: 160px">是否有产值分配：</td>
 								<td>
-									<input name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true"/>
+									<input name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true" />
 								</td>
 							</tr>
 							<tr>
@@ -158,12 +160,12 @@
 									<input name="invoiceRemark" id="invoiceRemark" class="nui-textbox" style="width: 100%" required="false" />
 								</td>
 							</tr>
-						<tr>
-							<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
-							<td colspan="5">
-								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" />
-							</td>
-						</tr>
+							<tr>
+								<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
+								<td colspan="5">
+									<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" />
+								</td>
+							</tr>
 							<!-- 2024-05 根据客户要求屏蔽相关字段 -->
 							<!--
 							<tr>
@@ -201,11 +203,11 @@
 								</td>
 								<td align="right" style="width: 160px">余额（元）：</td>
 								<td>
-									<input id="balanceSum" name="balanceSum" class="nui-textbox" style="width: 300px"/>
+									<input id="balanceSum" name="balanceSum" class="nui-textbox" style="width: 300px" />
 								</td>
 								<td align="right" style="width: 160px">回款时间：</td>
 								<td>
-									<input id="receivableData" name="receivableData" enabled="true" class="nui-datepicker" style="width: 300px"/>
+									<input id="receivableData" name="receivableData" enabled="true" class="nui-datepicker" style="width: 300px" />
 								</td>
 							</tr>
 							<tr>
@@ -229,11 +231,11 @@
 		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
-	
+
 	<script type="text/javascript">
-		 nui.parse();
-		 <% 
-		 	UserObject user = (UserObject) session.getAttribute("userObject");
+		nui.parse();
+		<%
+			UserObject user = (UserObject) session.getAttribute("userObject");
 		 	String username = user.getUserName();
 		 	String userno = user.getUserId();
 		 	String userOrgName = user.getUserOrgName();
@@ -242,10 +244,10 @@
 		 	String empid = (String) a.get("empid");
 		 	DataObject[] roles = (DataObject[])a.get("roles");
 		 %>
-		 var form = new nui.Form("form1");
-		 var grid2 = nui.get("datagrid2");
-		 var id = "";
-		
+		var form = new nui.Form("form1");
+		var grid2 = nui.get("datagrid2");
+		var id = "";
+
 		function onOk() {
 			//定义变量接受form表单数据
 			var form = new nui.Form("#form1");
@@ -258,7 +260,7 @@
 			document.getElementById("fileCatalog").value = "invoiceinfo";
 			form2.submit();
 		}
-		
+
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
@@ -290,49 +292,7 @@
 				});
 			}
 		}
-		
-		function invoiceType() {
-			if (nui.get("invoiceType").getValue() == 1) {
-				nui.get("account").enable();
-				nui.get("account").setRequired(true);
-				nui.get("unitAddress").enable();
-				nui.get("unitAddress").setRequired(true);
-			} else {
-				nui.get("account").setRequired(false);
-				nui.get("account").disable();
-				nui.get("account").setValue("");
-				nui.get("unitAddress").setRequired(false);
-				nui.get("unitAddress").disable();
-				nui.get("unitAddress").setValue("");
-			}
-		}
-		
-		function setAttribute() {
-			if (nui.get("postFlag").getValue() == 1) {
-				nui.get("invoiceUser").enable();
-				nui.get("invoiceUser").setRequired(true);
-				nui.get("mailName").setRequired(false);
-				nui.get("mailName").disable();
-				nui.get("mailName").setValue("");
-				nui.get("mailPhone").setRequired(false);
-				nui.get("mailPhone").disable();
-				nui.get("mailPhone").setValue("");
-				nui.get("mailAddress").setRequired(false);
-				nui.get("mailAddress").disable();
-				nui.get("mailAddress").setValue("");
-			} else {
-				nui.get("invoiceUser").setRequired(false);
-				nui.get("invoiceUser").disable();
-				nui.get("invoiceUser").setValue("");
-				nui.get("mailName").enable();
-				nui.get("mailName").setRequired(true);
-				nui.get("mailPhone").enable();
-				nui.get("mailPhone").setRequired(true);
-				nui.get("mailAddress").enable();
-				nui.get("mailAddress").setRequired(true);
-			}
-		}
-		
+
 		function setEditData(data) {
 			var form = new nui.Form("#form1");
 			form.setData(data);
@@ -342,8 +302,6 @@
 			nui.get("createTime").setValue(data.createTime);
 			nui.get("historyInvoiceSum").setValue(data.invoiceSum);
 			id = data.id;
-			setAttribute();
-			invoiceType();
 			var grid_0 = nui.get("grid_0");
 			grid_0.load({
 				"groupid" : "INVOICE",
@@ -351,18 +309,18 @@
 			});
 			grid_0.sortBy("fileTime", "desc");
 		}
-		
+
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
-		
+
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
 				return window.CloseOwnerWindow(action);
 			else
 				window.close();
 		}
-		
+
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			mini.open({
@@ -393,7 +351,7 @@
 				}
 			});
 		}
-		
+
 		function editContractSum() {
 			var rate = nui.get("invoiceRate").getValue();
 			var invoiceSum = nui.get("invoiceSum").getValue();
@@ -410,7 +368,7 @@
 			nui.get("bookIncome").setValue(abs(bookIncome));
 			nui.get("invoiceTax").setValue(abs(invoiceSum - abs(bookIncome)));
 		}
-		
+
 		function receivableSum() {
 			var receivableSum = nui.get("receivableSum").getValue();
 			var invoiceSum = nui.get("invoiceSum").getValue();
@@ -423,7 +381,7 @@
 			}
 			nui.get("balanceSum").setValue(abs(invoiceSum - receivableSum));
 		}
-		
+
 		function finish(appStatus) {
 			if (appStatus == 2) {
 				nui.get("receivableSum").enable();
@@ -444,20 +402,6 @@
 				nui.get("taxpayerNumber").disable();
 				nui.get("invoiceRemark").setRequired(false);
 				nui.get("invoiceRemark").disable();
-				nui.get("account").setRequired(false);
-				nui.get("account").disable();
-				nui.get("unitAddress").setRequired(false);
-				nui.get("unitAddress").disable();
-				nui.get("postFlag").setRequired(false);
-				nui.get("postFlag").disable();
-				nui.get("invoiceUser").setRequired(false);
-				nui.get("invoiceUser").disable();
-				nui.get("mailName").setRequired(false);
-				nui.get("mailName").disable();
-				nui.get("mailPhone").setRequired(false);
-				nui.get("mailPhone").disable();
-				nui.get("mailAddress").setRequired(false);
-				nui.get("mailAddress").disable();
 				nui.get("contractNo").setRequired(false);
 				nui.get("contractNo").disable();
 				var bookIncome = nui.get("bookIncome").getValue();

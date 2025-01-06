@@ -156,10 +156,7 @@ table,table tr td {
 									</td>
 									<td align="right" style="width: 130px">合同承办部门：</td>
 									<td>
-										<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-											showTreeIcon="true" valueFromSelect="true" style="width: 200px;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-											onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-										<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly"/>
+										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px"/>
 									</td>									
 								</tr>
 								<tr>

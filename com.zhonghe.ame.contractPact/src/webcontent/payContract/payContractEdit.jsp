@@ -50,9 +50,6 @@ body {
 							</td>
 							<td align="right" style="width: 120px">合同实施部门:</td>
 							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname"  class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
@@ -290,14 +287,16 @@ body {
 
 	<script type="text/javascript">
 		nui.parse();
-	<%UserObject user = (UserObject) session.getAttribute("userObject");
+		<%
+			UserObject user = (UserObject) session.getAttribute("userObject");
 			String username = user.getUserName();
 			String userno = user.getUserId();
 			String userOrgName = user.getUserOrgName();
 			String userOrgId = user.getUserOrgId();
 			Map<String, Object> a = user.getAttributes();
 			String empid = (String) a.get("empid");
-			DataObject[] roles = (DataObject[]) a.get("roles");%>
+			DataObject[] roles = (DataObject[]) a.get("roles");
+		%>
 		var form = new nui.Form("form1");
 		var grid2 = nui.get("datagrid2");
 		var id = "";
@@ -485,7 +484,6 @@ body {
 			nui.get("custInfo").setValue(data.signatory);
 			nui.get("custInfo").setText(data.signatoryname);
 			queryPlan(data.id);
-			nui.get("implementOrg").setText(data.implementOrgname);
 			nui.get("purchasePlan").setText(data.purchasePlan);
 			if (nui.get("contractNature").getValue() == 3) {
 				$("#purchasePlanLable").html("零星采购编号:");

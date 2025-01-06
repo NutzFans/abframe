@@ -103,9 +103,6 @@
 							</td>
 							<td align="right" style="width: 130px">合同承办部门：</td>
 							<td>
-								<<!-- input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 200px;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname"  class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
@@ -234,10 +231,6 @@
 			nui.get("auditstatus").setValue(3);//1：通过,0：退回，2：终止流程，3:发起
 		}
 		
-		function changeOrgForm(e) {
-			nui.get("implementOrgname").setValue(e.source.text);
-		}
-		
 		function onOk(e) {
 			type = e;
 			if (type == 1) {
@@ -245,23 +238,27 @@
 					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
-				var filePaths = document.getElementsByName("uploadfile").length;
-				if (filePaths == 0) {
-					showTips("请上传补充协议相关附件", "danger");
-					return;
-				} else {
-					for (var j = 0; j < filePaths; j++) {
-						var a = document.getElementsByName("remarkList")[j].value;
-						if (a == null || a == "") {
-							showTips("请上传补充协议相关附件", "danger");
-							return;
-						}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("inputFileExpandGrid").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传补充协议相关附件", "danger");
+						return;
 					}
 				}
 			}
-			document.getElementById("fileCatalog").value = "payContractinfo";
+			if (type == 0) {
+				var contractName = nui.get("contractName").getValue();
+				if (isStrEmpty(contractName)) {
+					showTips("请填写补充协议名称并确保其正确性！", "danger");
+					return;
+				}
+			}
 			nui.get("saveReimb").disable();
 			nui.get("creatReimbProcess").disable();
+			document.getElementById("fileCatalog").value = "payContractinfo";
 			inputFileExpandForm.submit();
 		}
 		
@@ -349,8 +346,15 @@
 					}
 				}
 			});
-		}		
+		}
 		
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
+		}				
 		
 	</script>
 </body>

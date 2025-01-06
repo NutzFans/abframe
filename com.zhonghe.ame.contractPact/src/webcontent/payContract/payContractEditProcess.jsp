@@ -37,13 +37,9 @@
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 120px">合同实施部门:</td>
-							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
-								
+							<td>								
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" style="width: 100%" required="true" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 120px">申请日期:</td>
 							<td>
@@ -371,19 +367,20 @@
 					showTips("请填写未来年度付款计划!", "danger");
 					return;
 				}
-			}
-			var filePaths = document.getElementsByName("uploadfile").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList")[j].value;
-				if (a == null || a == "") {
-					showTips("新增附件不可以为空", "danger");
-					return;
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
 				}
 			}
 			nui.get("saveReimb").disable();
 			nui.get("creatReimbProcess").disable();
 			nui.get("zzReimb").disable();
-			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
 		}
@@ -850,7 +847,7 @@
 					}
 				}
 			});
-		}					
+		}		
 				
 	</script>
 </body>

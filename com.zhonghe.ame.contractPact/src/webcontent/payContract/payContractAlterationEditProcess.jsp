@@ -108,9 +108,6 @@
 							</td>
 							<td align="right" style="width: 130px">合同承办部门：</td>
 							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 200px;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true"/>
 							</td>
@@ -279,10 +276,6 @@
 			nui.get("payTax").setValue(abs(contractSum - noTaxSum));
 		}	
 		
-		function changeOrgForm(e) {
-			nui.get("implementOrgname").setValue(e.source.text);
-		}
-		
 		function onOk(e) {
 			type = e;
 			if (type == 1) {
@@ -291,10 +284,13 @@
 					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
-				var filePaths = document.getElementsByName("uploadfile").length;
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
+				debugger
+				// 已上传的文件数量
+				var gridFileCount = nui.get("inputFileExpandGrid").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
 						showTips("请上传补充协议相关附件", "danger");
 						return;
 					}

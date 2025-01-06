@@ -37,9 +37,6 @@
 							</td>
 							<td align="right" style="width: 120px">合同承办部门:</td>
 							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" /> -->
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" style="width: 100%" required="true" enabled="false"  />
 							</td>

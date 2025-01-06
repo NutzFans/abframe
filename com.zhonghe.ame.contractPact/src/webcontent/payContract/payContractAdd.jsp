@@ -35,10 +35,8 @@
 							</td>
 							<td align="right" style="width: 120px">合同承办部门:</td>
 							<td>
-								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
 							<td align="right" style="width: 120px">申请日期:</td>
 							<td>
@@ -290,18 +288,6 @@
 			nui.get("auditstatus").setValue(3);//1：通过,0：退回，2：终止流程，3:发起
 			document.getElementById("salesEdit").style.display = "none";
 		}
-
-		function getOrgs() {
-			var a2 = [];
-			for ( var p in orglist) {
-				a2[p] = orglist[p];
-			}
-			nui.get("implementOrg").setData(a2);
-		}
-		
-		function changeOrgForm(e) {
-			nui.get("implementOrgname").setValue(e.source.text);
-		}
 						
 		function onOk(e) {
 			type = e;
@@ -405,6 +391,16 @@
 					showTips("请填写未来年度付款计划!", "danger");
 					return;
 				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}				
 			}
 			if (type == 0) {
 				var contractName = nui.get("contractName").getValue();
@@ -413,23 +409,9 @@
 					return;
 				}
 			}
-			var data = form.getData();
-			document.getElementById("fileCatalog").value = "payContractinfo";
-			var filePaths = document.getElementsByName("uploadfile").length;
-			if (filePaths == 0) {
-				showTips("请上传相关附件", "danger");
-				return;
-			}else{
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
-						showTips("请上传相关附件", "danger");
-						return;
-					}
-				}
-			}
 			nui.get("saveReimb").disable();
 			nui.get("creatReimbProcess").disable();
+			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
 		}
 
