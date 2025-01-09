@@ -37,9 +37,8 @@ body .mini-textboxlist {
 							<td align="right" style="width: 140px">经办部门：</td>
 
 							<td>
-								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-									checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 100px">申请日期：</td>
 							<td style="width: 20%">
@@ -109,29 +108,35 @@ body .mini-textboxlist {
 	<script type="text/javascript">
 		nui.parse();
 		//工作项id
-		<%long workItemID = (Long) request.getAttribute("workItemID");%>
-		var form = new nui.Form("form1");
+		<%
+			long workItemID = (Long) request.getAttribute("workItemID");
+		%>
+		var form = new nui.Form("#form1");
 		var id = "";
 		var type;//暂存还是发起
 
 		function onOk(e) {
 			//定义变量接受form表单数据
 			type = e;
-			var form = new nui.Form("#form1");
-			form.validate();
-			if (form.isValid() == false) {
-				showTips("请检查必填项");
-				return;
-			}
-			var filePaths = document.getElementsByName("uploadfile1").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList1")[j].value;
-				if (a == null || a == "") {
-					showTips("新增附件不可以为空");
+			if (type == 1) {
+				if (!form.validate()) {
+					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}				
 			}
-			var data = form.getData();
+			nui.get("saveFeame").disable();
+			nui.get("creatFeame").disable();
+			nui.get("zzFeame").disable();
 			document.getElementById("fileCatalog").value = "feameAgreementinfo";
 			form2.submit();
 		}
@@ -181,7 +186,7 @@ body .mini-textboxlist {
 								closeOk();
 							}
 						} else {
-							showTips("提交失败！");
+							showTips("提交失败！", "danger");
 							nui.get("saveFeame").enable();
 							nui.get("creatFeame").enable();
 							nui.get("zzFeame").enable();
@@ -237,12 +242,10 @@ body .mini-textboxlist {
 		}
 
 		loadData();
-		
+
 		function loadData() {
 			//流程提示信息
-			var data = {
-				workItemID :<%=workItemID%>
-			};
+			var data = {workItemID :<%=workItemID%>};
 			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.contractPact.frameAgreement.getFrameAgreement.biz.ext",

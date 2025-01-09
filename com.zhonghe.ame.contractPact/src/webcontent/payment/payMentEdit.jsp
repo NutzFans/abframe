@@ -34,10 +34,8 @@ body {
 							</td>
 							<td align="right" style="width: 160px">申请部门：</td>
 							<td>
-								<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" //>
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+								<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -144,7 +142,9 @@ body {
 
 	<script type="text/javascript">
 		nui.parse();
-	<%long workItemID = (Long) request.getAttribute("workItemID");%>
+		<%
+			long workItemID = (Long) request.getAttribute("workItemID");
+		%>
 		var form = new nui.Form("form1");
 		var type;
 
@@ -166,6 +166,7 @@ body {
 					"url" : "com.zhonghe.ame.payment.payMent.checkPayPaid.biz.ext",
 					"data" : nui.encode({
 						"payId" : nui.get("payId").getValue(),
+						"contractNo": nui.get("contractId").getValue(),
 						"applyPayContractSum" : nui.get("applyPayContractSum").getValue()
 					}),
 					"success" : function(data) {
@@ -173,7 +174,7 @@ body {
 					}
 				});
 				if (checkPayPaid == "2") {
-					alert("当前付款金额已【超过】关联付费合同付款计划里对应本季度应付款总额！");
+					alert("本年累计已付金额+当前付款金额已【超过】关联付费合同付款计划里本年累计到本季度应付款总额！");
 					return;
 				}
 				if (checkPayPaid == "3") {
@@ -183,20 +184,21 @@ body {
 				if (checkPayPaid == "4") {
 					alert("检查本次支付金额合法性异常，请联系管理员！");
 					return;
-				}			
-			}
-			var filePaths = document.getElementsByName("uploadfile").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList")[j].value;
-				if (a == null || a == "") {
-					showTips("新增附件不可以为空");
-					return;
 				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}							
 			}
 			nui.get("saveFeame").disable();
 			nui.get("creatFeame").disable();
 			nui.get("zzFeame").disable();
-			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payMentinfo";
 			form2.submit();
 		}

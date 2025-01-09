@@ -32,10 +32,8 @@ body {
 							</td>
 							<td align="right" style="width: 160px">合同承办部门：</td>
 							<td>
-								<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+								<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -245,22 +243,20 @@ body {
 					alert("检查本次支付金额合法性异常，请联系管理员！");
 					return;
 				}
-			}
-			var data = form.getData();
-			document.getElementById("fileCatalog").value = "payMentinfo";
-			var filePaths = document.getElementsByName("uploadfile").length;
-			if (filePaths == 0) {
-				showTips("请上传相关附件", "danger");
-				return;
-			}else{
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
 						showTips("请上传相关附件", "danger");
 						return;
 					}
 				}
 			}
+			nui.get("saveFeame").disable();
+			nui.get("creatFeame").disable();
+			document.getElementById("fileCatalog").value = "payMentinfo";
 			form2.submit();
 		}
 

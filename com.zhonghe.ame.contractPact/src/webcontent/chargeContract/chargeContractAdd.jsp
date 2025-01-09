@@ -38,10 +38,8 @@ body {
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
-								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 200px" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-									checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" />
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">申请日期：</td>
 							<td>
@@ -392,29 +390,29 @@ body {
 					showTips("请填写未来年度收款计划!", "danger");
 					return;
 				}
-			}
-			if (type == 0) {
-				var contractName = nui.get("contractName").getValue();
-				if (isStrEmpty(contractName)) {
-					showTips("请填写合同名称并确保其正确性！", "danger");
-					return;
-				}
-			}
-			var data = form.getData();
-			document.getElementById("fileCatalog").value = "chargeContractinfo";
-			var filePaths = document.getElementsByName("uploadfile").length;
-			if (filePaths == 0) {
-				showTips("请上传相关附件", "danger");
-				return;
-			}else{
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
 						showTips("请上传相关附件", "danger");
 						return;
 					}
 				}
 			}
+			if (type == 0) {
+				var contractName = nui.get("contractName").getValue();
+				var cachet = nui.get("cachet").getValue();
+				var contractSecretLevel = nui.get("contractSecretLevel").getValue();
+				if (isStrEmpty(contractName) || isStrEmpty(cachet) || isStrEmpty(contractSecretLevel)) {
+					showTips("请填写合同名称、是否签订合同、合同文本密级并确保其正确性！", "danger");
+					return;
+				}
+			}
+			nui.get("creatReimb").disable();
+			nui.get("creatReimbProcess").disable();
+			document.getElementById("fileCatalog").value = "chargeContractinfo";
 			form2.submit();
 		}
 
@@ -568,7 +566,6 @@ body {
 			}
 			var num = Number(data);
 			var numStr = num + "";
-			console.log(numStr)
 			if (numStr == "NaN") {
 				return true;
 			} else {

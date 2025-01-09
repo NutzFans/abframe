@@ -32,9 +32,7 @@ body {
 							</td>
 							<td align="right" style="width: 160px">申请单位：</td>
 							<td>
-								<input id="historyImplementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs" showTreeIcon="true"
-									valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false" checkRecursive="false"
-									expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
+								<input id=historyImplementOrg class="nui-textbox" enabled="false" style="width: 300px" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -135,21 +133,6 @@ body {
 								<input id="historyTaxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
-						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-						<!--
-						<tr>
-							<td align="right" style="width: 160px">地址、电话：</td>
-							<td colspan="5">
-								<input id="historyUnitAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">开户行及账号：</td>
-							<td colspan="5">
-								<input id="historyAccount" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td align="right" style="width: 160px">发票备注：</td>
 							<td colspan="5">
@@ -162,36 +145,6 @@ body {
 								<input id="historyInvoiceUserMail" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
 						</tr>
-						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-						<!--
-						<tr>
-							<td align="right" style="width: 160px">开票是否邮寄：</td>
-							<td>
-								<input id="historyPostFlag" class="nui-dictcombobox" onvaluechanged="setAttribute" dictTypeId="ZH_POST" style="width: 300px" required="true" enabled="false" />
-							</td>
-							<td align="right" style="width: 160px">发票领取人：</td>
-							<td colspan="3">
-								<input id="historyInvoiceUser" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">邮寄姓名：</td>
-							<td>
-								<input id="historyMailName" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-							</td>
-							<td align="right" style="width: 160px">邮寄电话：</td>
-							<td>
-								<input id="historyMailPhone" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-							</td>
-
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">邮寄地址：</td>
-							<td colspan="5">
-								<input id="historyMailAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
@@ -220,10 +173,8 @@ body {
 							</td>
 							<td align="right" style="width: 160px">申请单位：</td>
 							<td>
-								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-									checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly"/>
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -379,7 +330,7 @@ body {
 				success : function(result) {
 					var data = result.data;
 					nui.get("historyCreateUsername").setValue(data.createUsername);
-					nui.get("historyImplementOrg").setValue(data.implementOrg);
+					nui.get("historyImplementOrg").setValue(data.implementOrgname);
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setText(data.contractNo);
 					nui.get("historyContractName").setValue(data.contractName);
@@ -428,10 +379,12 @@ body {
 					showTips("红冲/作废金额只能为负数!", "danger");
 					return;
 				}
-				var filePaths = document.getElementsByName("uploadfile").length;
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
+				// 已上传的文件数量
+				var gridFileCount = nui.get("inputFileExpandGrid").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
 						showTips("请上传红冲/作废相关附件", "danger");
 						return;
 					}

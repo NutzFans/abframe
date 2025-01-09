@@ -36,8 +36,8 @@ body .mini-textboxlist {
 							<td align="right" style="width: 120px">经办部门：</td>
 
 							<td style="width: 20%;">
-								<input name="implementOrg" id="implementOrg" class="nui-combobox" valueField="orgid" textField="orgname" style="width: 300px" shownullitem="false" allowinput="true" required="true"
-									enabled="false" />
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -48,7 +48,7 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 120px">协议名称：</td>
 							<td>
-								<input name="contractName" class="nui-textbox" style="width: 300px" required="true" />
+								<input id="contractName" name="contractName" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 100px">协议金额（元）：</td>
 							<td>
@@ -82,21 +82,6 @@ body .mini-textboxlist {
 								<input id="projectSize" name="projectSize" class="nui-textarea" style="width: 94%; height: 120px" />
 							</td>
 						</tr>
-						<!-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 -->
-						<tr class="nui-hidden">
-							<td align="right" style="width: 100px">分公司会签部门领导：</td>
-							<td style="width: 20%;">
-								<input name="fDeptCountersignId" id="userLookup_multiple" width="100%" class="nui-lookup" textField="empname" valueField="empid" popupWidth="auto" popup="#userPanel_lookup_multiple"
-									grid="#userDatagrid_lookup_multiple" emptyText="请选择.." multiSelect="true" onvaluechanged="" />
-								<input name="fDeptCountersignName" id="fDeptCountersignName" />
-							</td>
-							<td align="right" style="width: 100px">本部会签部门领导：</td>
-							<td style="width: 20%;">
-								<input name="zDeptCountersignId" id="userLookup_multiple1" width="100%" class="nui-lookup" textField="empname" valueField="empid" popupWidth="auto" popup="#userPanel_lookup_multiple1"
-									grid="#userDatagrid_lookup_multiple1" emptyText="请选择.." multiSelect="true" onvaluechanged="onZUseridsValueChanged" />
-								<input name="zDeptCountersignName" id="zDeptCountersignName" />
-							</td>
-						</tr>
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
@@ -118,70 +103,48 @@ body .mini-textboxlist {
 		<a class="nui-button" onclick="closeCancel" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
 	</div>
 
-	<%-- 20230404 新版本调整后，这两个字段默认赋值，页面不再显示
-	<%@include file="/contractPact/common/userLookup1.jsp"%> --%>
 	<script type="text/javascript">
 		nui.parse();
-		var form = new nui.Form("form1");
+		var form = new nui.Form("#form1");
 		var type;//暂存还是发起
 
 		init();
-
-		getOrgs();
 
 		function init() {
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
 			nui.get("implementOrg").setValue(userOrgId);
-			nui.get("implementOrg").setText(userOrgName);
+			nui.get("implementOrgname").setValue(userOrgName);
 			nui.get("createTime").setValue(new Date());
-		}
-
-		function getOrgs() {
-			var a2 = [];
-			for ( var p in orglist) {
-				a2[p] = orglist[p];
-			}
-			nui.get("implementOrg").setData(a2);
-		}
-
-		//判断是否是数字
-		function isNum() {
-			var value = nui.get("contractSum").value + '';
-			if (!isNaN(value)) {
-			} else {
-				showTips("请输入数字！", "danger");
-				nui.get("contractSum").setValue("");
-			}
 		}
 
 		function onOk(e) {
 			type = e;
-			//定义变量接受form表单数据
-			var form = new nui.Form("#form1");
 			if (type == 1) {
-				form.validate();
-				if (form.isValid() == false) {
-					showTips("请检查必填项！", "danger");
+				if (!form.validate()) {
+					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
-			}
-			var filePaths = document.getElementsByName("uploadfile").length;
-			if (filePaths == 0) {
-				showTips("请上传相关附件", "danger");
-				return;
-			}else{
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
 						showTips("请上传相关附件", "danger");
 						return;
 					}
+				}				
+			}
+			if (type == 0) {
+				var contractName = nui.get("contractName").getValue();
+				if (isStrEmpty(contractName)) {
+					showTips("请填写协议名称并确保其正确性！", "danger");
+					return;
 				}
 			}
 			nui.get("saveFeame").disable();
 			nui.get("creatFeame").disable();
-			var data = form.getData();
 			document.getElementById("fileCatalog").value = "feameAgreementinfo";
 			form2.submit();
 		}
@@ -229,16 +192,25 @@ body .mini-textboxlist {
 				});
 			}
 		}
-
-		/* 20230404 新版本调整后，这两个字段默认赋值，页面不再显示 
-		//值改变的时候
-		function () {
-			nui.get("fDeptCountersignName").setValue(nui.get("userLookup_multiple").getText());
+		
+		//判断是否是数字
+		function isNum() {
+			var value = nui.get("contractSum").value + '';
+			if (!isNaN(value)) {
+			} else {
+				showTips("请输入数字！", "danger");
+				nui.get("contractSum").setValue("");
+			}
 		}
-		//值改变的时候
-		function onZUseridsValueChanged() {
-			nui.get("zDeptCountersignName").setValue(nui.get("userLookup_multiple1").getText());
-		} */
+		
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
+		}				
+		
 	</script>
 </body>
 </html>

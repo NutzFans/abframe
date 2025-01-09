@@ -39,9 +39,6 @@ body {
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 200px" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-									checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
@@ -95,7 +92,7 @@ body {
 						<tr>
 							<td align="right" style="width: 130px">合同文本密级:</td>
 							<td>
-								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" />
+								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 130px">项目密级:</td>
 							<td>
@@ -517,17 +514,21 @@ body {
 					showTips("请填写未来年度收款计划!", "danger");
 					return;
 				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}				
 			}
-			var data = form.getData();
+			nui.get("creatReimb").disable();
+			nui.get("creatReimbProcess").disable();
+			nui.get("zzReimb").disable();
 			document.getElementById("fileCatalog").value = "chargeContractinfo";
-			var filePaths = document.getElementsByName("uploadfile").length;
-			for (var j = 0; j < filePaths; j++) {
-				var a = document.getElementsByName("remarkList")[j].value;
-				if (a == null || a == "") {
-					showTips("请上传相关附件", "danger");
-					return;
-				}
-			}
 			form2.submit();
 		}
 
@@ -595,7 +596,6 @@ body {
 			}
 			var num = Number(data);
 			var numStr = num + "";
-			console.log(numStr)
 			if (numStr == "NaN") {
 				return true;
 			} else {

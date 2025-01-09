@@ -37,10 +37,8 @@ body {
 								</td>
 								<td align="right" style="width: 160px">申请部门：</td>
 								<td>
-									<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-										showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-										onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" //>
-									<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+									<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px;" />
+									<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 								</td>
 								<td align="right" style="width: 160px">申请日期：</td>
 								<td>
@@ -179,7 +177,6 @@ body {
 				alert("检查本次支付金额合法性异常，请联系管理员！");
 				return;
 			}
-			var data = form.getData();
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
 		}

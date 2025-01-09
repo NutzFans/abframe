@@ -159,21 +159,19 @@ body .mini-textboxlist {
 	</div>
 
 	<script type="text/javascript">
-        	nui.parse();
-    		var form = new nui.Form("form1");
-    		var form3 = new nui.Form("form3");
-    		var projectid = <%=request.getParameter("projectid")%>;
-    		var workItemID = <%=request.getParameter("workItemID")%>;
-    		var opioionform = new nui.Form("#opioionform");
-    		var payContractId = "";
-    		isViewDelete=false;
-    		
-        	init();
-        	
+		nui.parse();
+		var form = new nui.Form("#form1");
+		var form3 = new nui.Form("#form3");
+		var projectid =<%=request.getParameter("projectid")%>;
+		var workItemID =<%=request.getParameter("workItemID")%>;
+		var opioionform = new nui.Form("#opioionform");
+		var payContractId = "";
+		isViewDelete = false;
+
+		init();
+
 		function init() {
-			var data = {
-				workitemid :<%=workitemid%>
-			};
+			var data = {workitemid :<%=workitemid%>};
 			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.contractPact.frameAgreement.queryFrameAgreementInfo.biz.ext",
@@ -223,18 +221,14 @@ body .mini-textboxlist {
 		}
 
 		function submit() {
-			form = new nui.Form("#form1");
-			form3 = new nui.Form("#form3");
-			form.validate();
-			form3.validate();
-			if (form.isValid() == false || form3.isValid() == false) {
-				nui.alert("请检查必填项");
+			if (!form3.validate()) {
+				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
 			var tb = document.getElementById("filetable0");
 			var rows = tb.rows;
 			if (rows.length < 2 || rows.length == null) {
-				nui.alert("请至少添加一个附件后再进行提交!");
+				showTips("请上传签字盖章版合同附件", "danger");
 				return;
 			}
 			var auditstatus = nui.get("auditstatus").getValue();
@@ -244,41 +238,39 @@ body .mini-textboxlist {
 				submitProcess("终止");
 			} else if (auditstatus == "0") { //退回流程
 				if (!nui.get("backTo").getValue()) {
-					nui.alert("退回环节不能为空！");
+					showTips("退回环节不能为空！", "danger");
 					return;
 				}
 				titleText = "退回";
 				submitProcess("退回");
 			} else if (auditstatus == "1") { //提交流程
-				document.getElementById("fileCatalog").value = "frameAgreementInfo";
-				form2.submit();
 				titleText = "提交";
 				submitProcess("提交");
 			}
 		}
-		
+
 		// 提交 
 		function submitProcess(title) {
 			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
-					var form3 = new nui.Form("form3");
-					var data = form3.getData();
-					data.id = nui.get("id").getValue();
-					data.remark = nui.get("remark").getValue();
-					data.files = nui.get("fileids").getValue();
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					nui.get("creatReimbProcess").setEnabled(false);
-					var json = {
-						'cpData' : data,
-						misOpinion : misOpinion,
-						workItemID : <%=workitemid%>
-					};
-					saveData(json);
+					document.getElementById("fileCatalog").value = "frameAgreementInfo";
+					form2.submit();
 				}
 			});
 		}
 
-		function saveData(json) {
+		function SaveData() {
+			var form3 = new nui.Form("form3");
+			var data = form3.getData();
+			data.id = nui.get("id").getValue();
+			data.remark = nui.get("remark").getValue();
+			data.files = nui.get("fileids").getValue();
+			var misOpinion = opioionform.getData().misOpinion;//审核意见
+			nui.get("creatReimbProcess").setEnabled(false);
+			var json = {
+				'cpData' : data,
+				misOpinion : misOpinion,
+				workItemID :<%=workitemid%>};
 			mini.mask({
 				el : document.body,
 				cls : 'mini-mask-loading',
@@ -292,13 +284,10 @@ body .mini-textboxlist {
 				success : function(o) {
 					nui.unmask(document.body);
 					if (o.result == "success") {
-						nui.alert(titleText + "成功", "系统提示", function() {
-							CloseWindow("ok");
-						});
+						showTips(titleText + "框架协议成功");
+						CloseWindow("ok");
 					} else {
-						nui.alert("提交失败，请联系信息技术部人员！", "系统提示", function(action) {
-							CloseWindow("ok");
-						});
+						showTips("提交失败，请联系信息技术部人员！", "danger");
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -307,37 +296,10 @@ body .mini-textboxlist {
 			})
 		}
 
-		function saveRow() {
-			var contractNo = nui.get("contractNo").value;
-			var contractPeriod = nui.get("contractPeriod").value;
-			var signingDate = nui.get("signingDate").value;
-			if (contractNo == undefined || contractPeriod == undefined || signingDate == undefined) {
-				nui.alert("请填写基本信息");
-				return;
-			}
-			var form1 = new nui.Form("form1");
-			var json = form1.getData();
-			var payMentObject = {
-				'id' : payContractId,
-				'contractNo' : contractNo,
-				'contractPeriod' : contractPeriod,
-				'signingDate' : signingDate
-			}
-			nui.ajax({
-				url : "com.zhonghe.ame.contractPact.frameAgreement.updateFrameAgreementById.biz.ext",
-				type : "post",
-				data : nui.encode({
-					'data' : payMentObject
-				}),
-				success : function(o) {
-				}
-			});
-		}
-
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
-		
+
 		//标准方法接口定义
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
@@ -345,6 +307,18 @@ body .mini-textboxlist {
 			else
 				window.close();
 		}
+		
+ 		// 提示框
+		function showTips(content, state) {
+			//  state  default|success|info|warning|danger
+			if(state) {
+				nui.showTips({content: content, state: state, x: "center", y: "center",timeout: 3500.});
+			}
+			else {
+				nui.showTips({content: content, state: "success", x: "center", y: "center",timeout: 3500.});
+			}
+		}		
+		
 	</script>
 </body>
 </html>

@@ -28,10 +28,8 @@
 							</td>
 							<td align="right" style="width: 160px">申请单位：</td>
 							<td>
-								<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" //>
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" />
+								<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -75,7 +73,7 @@
 							</td>
 							<td align="right" style="width: 160px">发票类型：</td>
 							<td>
-								<input name="invoiceType" id="invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 300px" required="true" onvaluechanged="invoiceType" />
+								<input name="invoiceType" id="invoiceType" class="nui-dictcombobox" dictTypeId="MIS_MA_INVOICETYPE" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">税率（%）：</td>
 							<td>
@@ -132,21 +130,6 @@
 								<input name="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
 						</tr>
-						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-						<!--
-						<tr>
-							<td align="right" style="width: 160px">地址、电话：</td>
-							<td colspan="5">
-								<input name="unitAddress" id="unitAddress" class="nui-textbox" style="width: 100%" required="true" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">开户行及账号：</td>
-							<td colspan="5">
-								<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td align="right" style="width: 160px">发票备注：</td>
 							<td colspan="5">
@@ -159,35 +142,6 @@
 								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
 						</tr>
-						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-						<!--
-						<tr>
-							<td align="right" style="width: 160px">开票是否邮寄：</td>
-							<td>
-								<input id="postFlag" name="postFlag" class="nui-dictcombobox" onvaluechanged="setAttribute" dictTypeId="ZH_POST" style="width: 300px" required="true" />
-							</td>
-							<td align="right" style="width: 160px">发票领取人：</td>
-							<td colspan="3">
-								<input name="invoiceUser" id="invoiceUser" class="nui-textbox" style="width: 100%" required="true" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">邮寄姓名：</td>
-							<td>
-								<input name="mailName" id="mailName" class="nui-textbox" style="width: 300px" required="true" />
-							</td>
-							<td align="right" style="width: 160px">邮寄电话：</td>
-							<td>
-								<input name="mailPhone" id="mailPhone" class="nui-textbox" style="width: 300px" required="true" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">邮寄地址：</td>
-							<td colspan="5">
-								<input name="mailAddress" id="mailAddress" class="nui-textbox" style="width: 100%" required="true" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
@@ -222,48 +176,6 @@
 			nui.get("implementOrgname").setValue(userOrgName);
 		}
 		
-		function invoiceType() {
-			if (nui.get("invoiceType").getValue() == 1) {
-				nui.get("account").enable();
-				nui.get("account").setRequired(true);
-				nui.get("unitAddress").enable();
-				nui.get("unitAddress").setRequired(true);
-			} else {
-				nui.get("account").setRequired(false);
-				nui.get("account").disable();
-				nui.get("account").setValue("");
-				nui.get("unitAddress").setRequired(false);
-				nui.get("unitAddress").disable();
-				nui.get("unitAddress").setValue("");
-			}
-		}
-		
-		function setAttribute() {
-			if (nui.get("postFlag").getValue() == 1) {
-				nui.get("invoiceUser").enable();
-				nui.get("invoiceUser").setRequired(true);
-				nui.get("mailName").setRequired(false);
-				nui.get("mailName").disable();
-				nui.get("mailName").setValue("");
-				nui.get("mailPhone").setRequired(false);
-				nui.get("mailPhone").disable();
-				nui.get("mailPhone").setValue("");
-				nui.get("mailAddress").setRequired(false);
-				nui.get("mailAddress").disable();
-				nui.get("mailAddress").setValue("");
-			} else {
-				nui.get("invoiceUser").setRequired(false);
-				nui.get("invoiceUser").disable();
-				nui.get("invoiceUser").setValue("");
-				nui.get("mailName").enable();
-				nui.get("mailName").setRequired(true);
-				nui.get("mailPhone").enable();
-				nui.get("mailPhone").setRequired(true);
-				nui.get("mailAddress").enable();
-				nui.get("mailAddress").setRequired(true);
-			}
-		}
-		
 		function onOk(e) {
 			type = e;
 			if (type == 0) {
@@ -285,17 +197,12 @@
 					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
-			}
-			var data = form.getData();
-			document.getElementById("fileCatalog").value = "invoiceinfo";
-			var filePaths = document.getElementsByName("uploadfile").length;
-			if (filePaths == 0) {
-				showTips("请上传相关附件", "danger");
-				return;
-			}else{
-				for (var j = 0; j < filePaths; j++) {
-					var a = document.getElementsByName("remarkList")[j].value;
-					if (a == null || a == "") {
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
 						showTips("请上传相关附件", "danger");
 						return;
 					}
@@ -303,6 +210,7 @@
 			}
 			nui.get("saveFeame").disable();
 			nui.get("creatFeame").disable();
+			document.getElementById("fileCatalog").value = "invoiceinfo";
 			form2.submit();
 		}
 		
@@ -417,7 +325,6 @@
 		}
 		
 		function functiondigitUppercase(price) {
-			debugger
 			if(price.substr(0,1) =="-"){
 				price = price.slice(1);
 			}

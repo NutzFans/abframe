@@ -25,11 +25,8 @@
 							</td>
 							<td align="right" style="width: 160px">合同实施部门：</td>
 							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-									checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" /> -->
-									<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
-									<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true"/>
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true"/>
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -131,21 +128,6 @@
 								<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
-						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-						<!--
-						<tr>
-							<td align="right" style="width: 160px">地址、电话：</td>
-							<td colspan="5">
-								<input name="unitAddress" id="unitAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">开户行及账号：</td>
-							<td colspan="5">
-								<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td align="right" style="width: 160px">发票备注：</td>
 							<td colspan="5">
@@ -158,36 +140,6 @@
 								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
 							</td>
 						</tr>
-						<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-						<!--
-						<tr>
-							<td align="right" style="width: 160px">开票是否邮寄：</td>
-							<td>
-								<input id="postFlag" name="postFlag" class="nui-dictcombobox" onvaluechanged="setAttribute" dictTypeId="ZH_POST" style="width: 300px" required="true" enabled="false" />
-							</td>
-							<td align="right" style="width: 160px">发票领取人：</td>
-							<td colspan="3">
-								<input name="invoiceUser" id="invoiceUser" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">邮寄姓名：</td>
-							<td>
-								<input name="mailName" id="mailName" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-							</td>
-							<td align="right" style="width: 160px">邮寄电话：</td>
-							<td>
-								<input name="mailPhone" id="mailPhone" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
-							</td>
-
-						</tr>
-						<tr>
-							<td align="right" style="width: 160px">邮寄地址：</td>
-							<td colspan="5">
-								<input name="mailAddress" id="mailAddress" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">

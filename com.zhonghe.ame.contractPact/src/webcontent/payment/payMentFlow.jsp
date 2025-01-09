@@ -32,10 +32,8 @@ body {
 							</td>
 							<td align="right" style="width: 160px">合同承办部门：</td>
 							<td>
-								<input name="createdOrgid" id="createdOrgid" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
+								<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -141,14 +139,14 @@ body {
 
 	<script type="text/javascript">
 		nui.parse();
-		<%long workitemid = (Long) request.getAttribute("workItemID");%>
-		var form = new nui.Form("form1");
-    		var projectid = <%=request.getParameter("projectid")%>;
-    		var workItemID = <%=request.getParameter("workItemID")%>;
-    		var opioionform = new nui.Form("#opioionform");
-    		var titleText,countersignUsers
-		isViewDelete=false;
-		
+		<%
+			long workitemid = (Long) request.getAttribute("workItemID");
+		%>
+    	var projectid = <%=request.getParameter("projectid")%>;
+    	var workItemID = <%=request.getParameter("workItemID")%>;
+    	var opioionform = new nui.Form("#opioionform");
+    	var form = new nui.Form("form1");
+    	var titleText,countersignUsers;
 		init();
 		
 		function init() {

@@ -8,10 +8,15 @@
 <head>
 <title>打印页面</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<script src="<%=request.getContextPath()%>/common/nui/warterMark.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery-barcode.js"></script>
+<%
+	UserObject user = (UserObject) session.getAttribute("userObject");
+	String userName = user.getUserName();
+%>
 <style type="text/css">
 .link-top {
 	width: 100%;
@@ -157,10 +162,8 @@ table,table tr td {
 									</td>
 									<td align="right" style="width: 130px">合同承办部门：</td>
 									<td>
-										<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-											showTreeIcon="true" valueFromSelect="true" style="width: 200px;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-											checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" />
-										<input name="implementOrgname" id="implementOrgname" class="nui-hidden" />
+										<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
+										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 									</td>
 								</tr>
 								<tr>
@@ -437,7 +440,9 @@ table,table tr td {
 					}
 				}
 			})
-		}											
+		}
+		
+		setWatermark('<%=userName%>')											
 				
 	</script>
 </body>

@@ -78,9 +78,7 @@ table,table tr td {
 									</td>
 									<td align="right" style="width: 90px">合同实施部门：</td>
 									<td>
-										<input id="historyImplementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs" showTreeIcon="true"
-											valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false" checkRecursive="false"
-											expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
+										<input id=historyImplementOrg class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
 								</tr>
 								<tr>
@@ -232,9 +230,8 @@ table,table tr td {
 									</td>
 									<td align="right" style="width: 90px">申请单位：</td>
 									<td>
-										<input id="implementOrg" name="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs" showTreeIcon="true"
-											valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false" checkRecursive="false"
-											expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
+										<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 100%" />
+										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 									</td>
 								</tr>
 								<tr>
@@ -389,7 +386,7 @@ table,table tr td {
 					var data = result.proApp[0];
 					nui.get("historyId").setValue(data.id);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
-					nui.get("historyImplementOrg").setValue(data.implementOrg);
+					nui.get("historyImplementOrg").setValue(data.implementOrgname);
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setText(data.contractNo);
 					nui.get("historyContractName").setValue(data.contractName);
