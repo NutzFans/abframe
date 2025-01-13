@@ -21,7 +21,7 @@
 		<!-- 分管采购公司领导审批 -->
 		<div id="div3" style="position: absolute; left: 1078px; top: 91px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
-		<!-- 集采中心负责人审核 -->
+		<!-- 集采代理机构负责人审核 -->
 		<div id="div4" style="position: absolute; left: 72px; top: 346px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 采购需求单位主要负责人确认 -->
@@ -77,7 +77,7 @@
 			// 集采中心负责人审核
 			$('#div4').click(function() {
 				layer.open({
-					title : '集采中心负责人审核 - 调整审批人',
+					title : '集采代理机构负责人审核 - 调整审批人',
 					content : '通过修改【集采中心】机构对应的【机构主管人员】字段',
 					btn : []
 				});
@@ -113,8 +113,8 @@
 			// 集采中心分管领导审核
 			$('#div8').click(function() {
 				layer.open({
-					title : '集采中心分管领导审核 - 调整审批人',
-					content : '由于 “集采中心” 归属到 “河北分公司” ，因此需要通过修改业务字典中【ZH_PURCHASE_PLAN_LEADER】字典项进行配置',
+					title : '集采代理机构分管领导审核 - 调整审批人',
+					content : '通过修改【集采中心】机构对应的【分管领导】字段',
 					btn : []
 				});
 			});

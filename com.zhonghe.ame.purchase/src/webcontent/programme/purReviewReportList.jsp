@@ -84,7 +84,7 @@ body {
 				<tr>
 					<td>
 						<a class="nui-button" id="psbg_add" iconCls="icon-add" onclick="add()">新增(集采中心)</a>
-						<a class="nui-button" id="psbg_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a>
+						<!-- <a class="nui-button" id="psbg_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a> -->
 						<a class="nui-button" id="psbg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" iconCls="icon-print" onclick="print()">打印</a>
 						<a class="nui-button" id="psbg_help" iconCls="icon-help" onclick="help()">帮助</a>

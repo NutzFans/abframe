@@ -18,8 +18,8 @@
 		<!-- 公司企业发展部(采购管理支持中心) - 备案 -->
 		<div id="div2" style="position: absolute; left: 891px; top: 178px; width: 75px; height: 50px; cursor: pointer;"></div>
 
-		<!-- 集采中心负责人审核 -->
-		<div id="div3" style="position: absolute; left: 67px; top: 465px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<!-- 集采代理机构负责人审核 -->
+		<div id="div3" style="position: absolute; left: 45px; top: 465px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 采购需求单位主要负责人确认 -->
 		<div id="div4" style="position: absolute; left: 246px; top: 466px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -59,10 +59,10 @@
 				});
 			});
 
-			// 集采中心负责人审核
+			// 集采代理机构负责人审核
 			$('#div3').click(function() {
 				layer.open({
-					title : '集采中心负责人审核 - 调整审批人',
+					title : '集采代理机构负责人 - 调整审批人',
 					content : '通过修改【集采中心】机构对应的【机构主管人员】字段',
 					btn : []
 				});

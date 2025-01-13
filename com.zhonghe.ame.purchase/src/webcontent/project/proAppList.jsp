@@ -114,7 +114,7 @@ html,body {
 				<tr>
 					<td>
 						<a class="nui-button" id="cglx_add" iconCls="icon-add" onclick="add()">新增(集采中心)</a>
-						<a class="nui-button" id="cglx_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a>
+						<!-- <a class="nui-button" id="cglx_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a> -->
 						<a class="nui-button" id="cglx_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
