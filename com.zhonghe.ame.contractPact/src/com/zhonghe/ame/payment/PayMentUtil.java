@@ -3,6 +3,7 @@ package com.zhonghe.ame.payment;
 import static com.eos.system.annotation.ParamType.CONSTANT;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +28,22 @@ import commonj.sdo.DataObject;
 public class PayMentUtil {
 
 	@Bizlet("判断付款金额是否超过季度限额")
-	public String checkPayPaid(String payId, String contractNo, String applyPayContractSum) {
+	public String checkPayPaid(String id, String payId, String contractNo, String applyPayContractSum) {
 		try {
 			Session dbSession = new Session(DataSourceHelper.getDataSource());
 			int year = DateUtil.thisYear();
 			String startDate = StrUtil.format("{}-{}-{}", year, "01", "01");
 			String endDate = DateUtil.today();
-			String queryPaymentSql = "SELECT apply_pay_contract_sum FROM zh_payment WHERE contract_id=? AND (app_status='2' OR app_status='1') AND create_time >=? AND create_time <=?";
+			String queryPaymentSql = "";
+			List<Entity> payMentList = new ArrayList<Entity>();
+			if(StrUtil.isNotBlank(id)){
+				queryPaymentSql = "SELECT apply_pay_contract_sum FROM zh_payment WHERE contract_id=? AND (app_status='2' OR app_status='1') AND create_time >=? AND create_time <=? AND id !=?";
+				payMentList = dbSession.query(queryPaymentSql, contractNo, startDate, endDate, id);
+			}else{
+				queryPaymentSql = "SELECT apply_pay_contract_sum FROM zh_payment WHERE contract_id=? AND (app_status='2' OR app_status='1') AND create_time >=? AND create_time <=?";
+				payMentList = dbSession.query(queryPaymentSql, contractNo, startDate, endDate);
+			}
 			String querySql = "SELECT * FROM annual_payment_plan WHERE pay_id = ? AND years = ?";
-			List<Entity> payMentList = dbSession.query(queryPaymentSql, contractNo, startDate, endDate);
 			Entity entity = dbSession.queryOne(querySql, payId, year);
 			BigDecimal payMentSum = new BigDecimal(0);
 			for (Entity payMent : payMentList) {
@@ -57,8 +65,7 @@ public class PayMentUtil {
 					return NumberUtil.isLessOrEqual(NumberUtil.add(new BigDecimal(applyPayContractSum), payMentSum), NumberUtil.add(oneQuater, twoQuater, threeQuater)) ? "1" : "2";
 				}
 				if (quater == 4) {
-					return NumberUtil.isLessOrEqual(NumberUtil.add(new BigDecimal(applyPayContractSum), payMentSum), NumberUtil.add(oneQuater, twoQuater, threeQuater, fourQuater)) ? "1"
-							: "2";
+					return NumberUtil.isLessOrEqual(NumberUtil.add(new BigDecimal(applyPayContractSum), payMentSum), NumberUtil.add(oneQuater, twoQuater, threeQuater, fourQuater)) ? "1" : "2";
 				}
 				return "4";
 			} else {

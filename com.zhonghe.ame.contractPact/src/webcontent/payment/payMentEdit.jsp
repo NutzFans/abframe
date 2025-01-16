@@ -21,7 +21,7 @@ body {
 			<legend>发起付款流程信息</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
-				<input class="nui-hidden" name="id" />
+				<input id="payMentId" class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="processid" />
 				<input id="payId" name="payId" class="nui-hidden" />
 				<div style="padding: 1px;">
@@ -151,6 +151,7 @@ body {
 		init();
 
 		function onOk(e) {
+			debugger;
 			//定义变量接受form表单数据
 			var form = new nui.Form("#form1");
 			type = e;
@@ -165,6 +166,7 @@ body {
 					"async" : false,
 					"url" : "com.zhonghe.ame.payment.payMent.checkPayPaid.biz.ext",
 					"data" : nui.encode({
+						"id": nui.get("payMentId").getValue(),
 						"payId" : nui.get("payId").getValue(),
 						"contractNo": nui.get("contractId").getValue(),
 						"applyPayContractSum" : nui.get("applyPayContractSum").getValue()
