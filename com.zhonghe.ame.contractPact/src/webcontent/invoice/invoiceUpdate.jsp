@@ -22,6 +22,10 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+.hidden {
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -32,7 +36,7 @@ body {
 				<form id="form1" method="post">
 					<input name="files" id="fileids" class="nui-hidden" />
 					<input class="nui-hidden" name="id" />
-					<input class="nui-hidden" name="historyInvoiceSum" id="historyInvoiceSum" />
+					<input class="nui-hidden" name=historyActualInvoiceSum id="historyActualInvoiceSum" />
 					<div style="padding: 5px;">
 						<table style="table-layout: fixed;">
 							<tr>
@@ -110,6 +114,12 @@ body {
 								</td>
 							</tr>
 							<tr>
+								<td align="right" style="width: 160px">实际开票金额（元）：</td>
+								<td>
+									<input id="actualInvoiceSum" name="actualInvoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" />
+								</td>								
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">开票金额（元）：</td>
 								<td>
 									<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" />
@@ -130,7 +140,7 @@ body {
 								</td>
 								<td align="right" style="width: 160px">是否有产值分配：</td>
 								<td>
-									<input name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true" />
+									<input id="allotFlag" name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true" />
 								</td>
 							</tr>
 							<tr>
@@ -139,21 +149,6 @@ body {
 									<input name="taxpayerNumber" id="taxpayerNumber" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
-							<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-							<!--
-							<tr>
-								<td align="right" style="width: 160px">地址、电话：</td>
-								<td colspan="5">
-									<input name="unitAddress" id="unitAddress" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 160px">开户行及账号：</td>
-								<td colspan="5">
-									<input name="account" id="account" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							-->
 							<tr>
 								<td align="right" style="width: 160px">发票备注：</td>
 								<td colspan="5">
@@ -166,36 +161,6 @@ body {
 									<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" />
 								</td>
 							</tr>
-							<!-- 2024-05 根据客户要求屏蔽相关字段 -->
-							<!--
-							<tr>
-								<td align="right" style="width: 160px">开票是否邮寄：</td>
-								<td>
-									<input id="postFlag" name="postFlag" class="nui-dictcombobox" onvaluechanged="setAttribute" dictTypeId="ZH_POST" style="width: 300px" required="true" />
-								</td>
-								<td align="right" style="width: 160px">发票领取人：</td>
-								<td colspan="3">
-									<input name="invoiceUser" id="invoiceUser" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							<tr>
-								<td align="right" style="width: 160px">邮寄姓名：</td>
-								<td>
-									<input name="mailName" id="mailName" class="nui-textbox" style="width: 300px" required="true" />
-								</td>
-								<td align="right" style="width: 160px">邮寄电话：</td>
-								<td>
-									<input name="mailPhone" id="mailPhone" class="nui-textbox" style="width: 300px" required="true" />
-								</td>
-
-							</tr>
-							<tr>
-								<td align="right" style="width: 160px">邮寄地址：</td>
-								<td colspan="5">
-									<input name="mailAddress" id="mailAddress" class="nui-textbox" style="width: 100%" required="true" />
-								</td>
-							</tr>
-							-->
 							<tr>
 								<td align="right" style="width: 160px">回款金额（元）：</td>
 								<td>
@@ -220,6 +185,29 @@ body {
 					</div>
 				</form>
 			</fieldset>
+			
+			<fieldset id="field3" style="border: solid 1px #aaa;" class="hidden">
+				<legend>
+					产值分配
+					<span style="color: red">（金额单位：元）</span>
+				</legend>
+				<div id="allotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" showPager="false" oncellendedit="onCellEndEdit">
+					<div property="columns">
+						<div field="username" headerAlign="center">申请人</div>
+						<div field="orgname" headerAlign="center">承办部门</div>
+						<div field="invoiceSum" headerAlign="center">
+							开票金额（元）
+							<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
+						</div>
+						<div field="bookIncome" headerAlign="center">
+							账面收入（元）
+							<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
+						</div>
+						<div field="invoiceTax" headerAlign="center">税额（元）</div>
+					</div>
+				</div>
+			</fieldset>			
+			
 			<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
 				<legend>上传附件</legend>
 				<jsp:include page="/ame_common/inputFile.jsp" />
@@ -245,6 +233,7 @@ body {
 		 	DataObject[] roles = (DataObject[])a.get("roles");
 		 %>
 		var form = new nui.Form("form1");
+		var allotDataGrid = nui.get("allotDataGrid");
 		var grid2 = nui.get("datagrid2");
 		var id = "";
 
@@ -264,9 +253,11 @@ body {
 		function SaveData() {
 			var form = new nui.Form("#form1");
 			var data = form.getData();
+			var allotDatas = allotDataGrid.getData();
 			data.id = id;
 			var json = nui.encode({
-				'data' : data
+				'data' : data,
+				'allotDatas' : allotDatas
 			});
 			if (!confirm("是否保存？")) {
 				return;
@@ -300,7 +291,8 @@ body {
 			nui.get("createUserid").setValue(data.createUserid);
 			nui.get("createUsername").setValue(data.createUsername);
 			nui.get("createTime").setValue(data.createTime);
-			nui.get("historyInvoiceSum").setValue(data.invoiceSum);
+			nui.get("historyActualInvoiceSum").setValue(data.actualInvoiceSum);
+			queryAllotDatas(data.id);
 			id = data.id;
 			var grid_0 = nui.get("grid_0");
 			grid_0.load({
@@ -309,6 +301,64 @@ body {
 			});
 			grid_0.sortBy("fileTime", "desc");
 		}
+		
+		function queryAllotDatas(invoiceId) {
+			nui.ajax({
+				url : "com.zhonghe.ame.invoice.invoice.queryAllotDatas.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : {
+					"invoiceId" : invoiceId
+				},
+				success : function(result) {
+					var allotFlag = nui.get("allotFlag").getValue();
+					if (result.data.length > 0 && allotFlag === '1') {
+						$('#field3').removeClass('hidden');
+						nui.parse();
+						allotDataGrid.setData(result.data);
+					}
+				}
+			})
+		}
+		
+		function onCellEndEdit(e) {
+			var record = e.record;
+			var field = e.field;
+			if (field == "invoiceSum") {
+				var rate = nui.get("invoiceRate").getValue();
+				var invoiceSum = record.invoiceSum;
+				var c = rate / 100;
+				var s = 1 + c;
+				var bookIncome = invoiceSum / s;
+				abs = function(val) {
+					var str = (val).toFixed(2) + '';
+					var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+					var dot = str.substring(str.length, str.indexOf("."))
+					var ret = intSum + dot;
+					return ret;
+				}
+				bookIncome = abs(bookIncome);
+				var invoiceTax = abs(invoiceSum - bookIncome);
+				allotDataGrid.updateRow(record, {
+					"bookIncome" : bookIncome,
+					"invoiceTax" : invoiceTax
+				});
+			}else if(field == "bookIncome"){
+				var invoiceSum = record.invoiceSum;
+				var bookIncome = record.bookIncome;
+				abs = function(val) {
+					var str = (val).toFixed(2) + '';
+					var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+					var dot = str.substring(str.length, str.indexOf("."))
+					var ret = intSum + dot;
+					return ret;
+				}
+				var invoiceTax = abs(invoiceSum - bookIncome);
+				allotDataGrid.updateRow(record, {
+					"invoiceTax" : invoiceTax
+				});
+			}
+		}				
 
 		function onCancel(e) {
 			CloseWindow("cancel");

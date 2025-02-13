@@ -77,10 +77,9 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="link27" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo1</sourceNode>
-      <targetNode>invokePojo0</targetNode>
-      <process:transitionCondition/>
+      <targetNode>invokePojo6</targetNode>
     </sourceConnections>
     <targetConnections>link36</targetConnections>
     <location x="855" y="249"/>
@@ -560,7 +559,7 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
-    <targetConnections>link14</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="854" y="332"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -1005,11 +1004,39 @@
       <process:from type="query" pattern="reference">historyCpData/bidService</process:from>
       <process:to type="query">cpData/bidService</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">cpData/invoiceSum</process:from>
+      <process:to type="query">cpData/actualInvoiceSum</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <location x="519" y="285"/>
     <figSize height="16" width="32"/>
     <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo6" name="运算逻辑" displayName="运算逻辑" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo6</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="783" y="332"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo6label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.InvoiceUtil.addSaveAllotDatas</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="allotDatas" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">allotDatas</process:inputVariable>
+      <process:inputVariable id="1" name="invoiceId" type="query" value="int" valueType="Java" pattern="reference">cpData/id</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo6label" name="label" nodeType="label">
+    <location x="770" y="368"/>
+    <figSize height="16" width="49"/>
+    <node>invokePojo6</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
@@ -1039,6 +1066,7 @@
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice" name="cpData"/>
     <process:input description="" isArray="false" name="type" primitiveType="Int"/>
+    <process:input description="" isArray="true" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoiceAllot" name="allotDatas"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="result" primitiveType="String"/>

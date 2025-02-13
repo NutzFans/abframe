@@ -3,17 +3,26 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>开票申请</title>
+<title>开具发票申请</title>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.hidden {
+	display: none;
+}
 </style>
 </head>
 <body>
-	<div class="nui-fit">
-		<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 97%;">
-			<legend>开票申请信息</legend>
+	<div class="nui-fit" style="padding: 5px;">
+		<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>开具发票申请</legend>
 			<form id="form1" method="post">
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
@@ -26,7 +35,7 @@
 							<td align="right" style="width: 160px">合同实施部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true"/>
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
@@ -61,7 +70,7 @@
 						<tr>
 							<td align="right" style="width: 160px">服务范围：</td>
 							<td>
-								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 300px" required="true" enabled="false"/>
+								<input name="bidService" id="bidService" class="nui-dictcombobox" dictTypeId="ZH_BID_SERVICE" style="width: 300px" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -85,7 +94,7 @@
 							</td>
 							<td align="right" style="width: 160px">本次收款进度：</td>
 							<td>
-								<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px" required="true" enabled="false"/>
+								<input id="payType" name="payType" class="nui-dictcombobox" dictTypeId="payType" style="width: 300px" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">合同金额（元）：</td>
 							<td>
@@ -113,8 +122,8 @@
 							</td>
 							<td align="right" style="width: 160px">是否有产值分配：</td>
 							<td>
-								<input name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true" enabled="false"/>
-							</td>							
+								<input id="allotFlag" name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true" enabled="false" />
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">名称：</td>
@@ -137,27 +146,49 @@
 						<tr>
 							<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
 							<td colspan="5">
-								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" enabled="false"/>
+								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 160px">备注：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false"/>
+								<input name="remark" class="nui-textarea" style="width: 100%; height: 235px" required="false" />
 							</td>
 						</tr>
 					</table>
 				</div>
 			</form>
 		</fieldset>
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
-			<legend>相关附件</legend>
+
+		<fieldset id="field3" style="border: solid 1px #aaa;" class="hidden">
+			<legend>
+				产值分配
+				<span style="color: red">（金额单位：元）</span>
+			</legend>
+			<div id="allotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" showPager="false" oncellendedit="onCellEndEdit">
+				<div property="columns">
+					<div type="checkcolumn">○</div>
+					<div field="username" headerAlign="center">申请人</div>
+					<div field="orgname" headerAlign="center">承办部门</div>
+					<div field="invoiceSum" headerAlign="center">开票金额（元）</div>
+					<div field="bookIncome" headerAlign="center">
+						账面收入（元）
+						<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
+					</div>
+					<div field="invoiceTax" headerAlign="center">税额（元）</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset id="field2" style="border: solid 1px #aaa;">
+			<legend>附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
+
 		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 	</div>
 
-	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
+	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
 		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 20px;">关闭</a>
@@ -167,11 +198,10 @@
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("form1");
-		<%
-			long workitemid = (Long)request.getAttribute("workItemID");
-		%> 
+		var allotDataGrid = nui.get("allotDataGrid");
+		<%long workitemid = (Long) request.getAttribute("workItemID");%>
 		var projectid = <%=request.getParameter("projectid")%>;
-		var workItemID = <%=request.getParameter("workItemID")%>;
+		var workItemID =<%=request.getParameter("workItemID")%>;
 		var opioionform = new nui.Form("#opioionform");
 		var id;
 		var workItemInfo;
@@ -180,14 +210,14 @@
 		
 		init();
 		
+
 		function init() {
 			// 按钮权限
-			if(userId !='sysadmin'){
+			if (userId != 'sysadmin') {
 				// 审批页-打印按钮 - kjfplist_sp_print
 				getOpeatorButtonAuth("kjfplist_sp_print");
 			}
-		
-			var data = {workitemid:<%=workitemid%>};
+			var data = {workitemid :<%=workitemid%>};
 			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.invoice.invoice.queryInvoiceInfo.biz.ext",
@@ -202,7 +232,8 @@
 					nui.get("backTo").setData(o.data.backList);
 					nui.get("contractNo").setText(o.data.contractNo);
 					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
-					if(workItemInfo.workItemName == '财务开票'){
+					queryAllotDatas(o.data.id);
+					if (workItemInfo.workItemName == '财务开票' && nui.get("allotFlag").getValue() === '0') {
 						nui.get('bookIncome').enable();
 					}
 					//查询并加载附件
@@ -225,12 +256,30 @@
 					initMisOpinion({
 						auditstatus : "1"
 					});
-
 				}
 			});
 		}
 		
-		function editInvoiceTax(){
+		function queryAllotDatas(invoiceId) {
+			nui.ajax({
+				url : "com.zhonghe.ame.invoice.invoice.queryAllotDatas.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : {
+					"invoiceId" : invoiceId
+				},
+				success : function(result) {
+					var allotFlag = nui.get("allotFlag").getValue();
+					if (result.data.length > 0 && allotFlag === '1') {
+						$('#field3').removeClass('hidden');
+						nui.parse();
+						allotDataGrid.setData(result.data);
+					}
+				}
+			})
+		}
+		
+		function editInvoiceTax() {
 			var invoiceSum = nui.get("invoiceSum").getValue();
 			var bookIncome = nui.get("bookIncome").getValue();
 			abs = function(val) {
@@ -241,69 +290,6 @@
 				return ret;
 			}
 			nui.get("invoiceTax").setValue(abs(invoiceSum - bookIncome));
-		}		
-		
-		function submit() {
-			var auditstatus = nui.get("auditstatus").getValue();
-			if (auditstatus == "2") { //终止流程
-				titleText = "终止";
-				submitProcess("终止");
-			} else if (auditstatus == "0") { //退回流程
-				if (!nui.get("backTo").getValue()) {
-					nui.alert("退回环节不能为空！");
-					return;
-				}
-				titleText = "退回";
-				submitProcess("退回");
-			} else if (auditstatus == "1") { //提交流程
-				titleText = "提交";
-				submitProcess("提交");
-			}
-		}
-		
-		function submitProcess(title) {
-			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
-				if (action == "ok") {
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					nui.get("creatReimbProcess").setEnabled(false);
-					var json = {
-						misOpinion : misOpinion,
-						workItemID : <%=workitemid%>,
-						"countersignUsers" : countersignUsers
-					};
-					saveData(json);
-				}
-			});
-		}
-		
-		function saveData(json) {
-			var bookIncome = nui.get("bookIncome").getValue();
-			var invoiceTax = nui.get("invoiceTax").getValue();
-			if(beforeBookIncome != bookIncome){
-				json.bookIncome = bookIncome;
-				json.invoiceTax = invoiceTax;
-			}
-			ajaxCommon({
-				url : "com.zhonghe.ame.invoice.invoice.invoiceReview.biz.ext",
-				data : json,
-				success : function(o) {
-					if (o.result == "success") {
-						showTips(titleText + "成功", "系统提示")
-						closeOk();
-					} else {
-						showTips("提交失败，请联系信息技术部人员！")
-					}
-				}
-			})
-		}
-		
-		function printBtn() {
-			var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + id;
-			var myWindow = window.open(url);
-			myWindow.onload = function() {
-				myWindow.document.title = "打印页面";
-				myWindow.setViewData(selectRow);
-			};
 		}
 		
 		function functiondigitUppercase(price) {
@@ -366,8 +352,97 @@
 					}
 				}
 			});
-		}				
+		}
 		
+		function onCellEndEdit(e) {
+			var record = e.record;
+			var field = e.field;
+			if (field == "bookIncome") {
+				var invoiceSum = record.invoiceSum;
+				var bookIncome = record.bookIncome;
+				abs = function(val) {
+					var str = (val).toFixed(2) + '';
+					var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+					var dot = str.substring(str.length, str.indexOf("."))
+					var ret = intSum + dot;
+					return ret;
+				}
+				var invoiceTax = abs(invoiceSum - bookIncome);
+				allotDataGrid.updateRow(record, {
+					"invoiceTax" : invoiceTax
+				});
+				var rows = allotDataGrid.getData();
+				var sum = rows.reduce((acc, curr) => acc + Number(curr.bookIncome), 0);
+				nui.get("bookIncome").setValue(sum);
+				editInvoiceTax();
+			}
+		}		
+		
+		function printBtn() {
+			var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + id;
+			var myWindow = window.open(url);
+			myWindow.onload = function() {
+				myWindow.document.title = "打印页面";
+				myWindow.setViewData(selectRow);
+			};
+		}
+		
+		function submit() {
+			var auditstatus = nui.get("auditstatus").getValue();
+			if (auditstatus == "2") { //终止流程
+				titleText = "终止";
+				submitProcess("终止");
+			} else if (auditstatus == "0") { //退回流程
+				if (!nui.get("backTo").getValue()) {
+					nui.alert("退回环节不能为空！");
+					return;
+				}
+				titleText = "退回";
+				submitProcess("退回");
+			} else if (auditstatus == "1") { //提交流程
+				titleText = "提交";
+				submitProcess("提交");
+			}
+		}
+		
+		function submitProcess(title) {
+			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
+				if (action == "ok") {
+					var misOpinion = opioionform.getData().misOpinion;//审核意见
+					nui.get("creatReimbProcess").setEnabled(false);
+					var json = {
+						misOpinion : misOpinion,
+						workItemID : <%=workitemid%>,
+						"countersignUsers" : countersignUsers
+					};
+					saveData(json);
+				}
+			});
+		}
+		
+		function saveData(json) {
+			var bookIncome = nui.get("bookIncome").getValue();
+			var invoiceTax = nui.get("invoiceTax").getValue();
+			var allotDatas = allotDataGrid.getData();
+			json.allotDatas = allotDatas;
+			if(beforeBookIncome != bookIncome){
+				json.bookIncome = bookIncome;
+				json.invoiceTax = invoiceTax;
+			}
+			ajaxCommon({
+				url : "com.zhonghe.ame.invoice.invoice.invoiceReview.biz.ext",
+				data : json,
+				success : function(o) {
+					if (o.result == "success") {
+						showTips(titleText + "成功", "系统提示")
+						closeOk();
+					} else {
+						showTips("提交失败，请联系信息技术部人员！")
+					}
+				}
+			})
+		}														
 	</script>
+
 </body>
 </html>

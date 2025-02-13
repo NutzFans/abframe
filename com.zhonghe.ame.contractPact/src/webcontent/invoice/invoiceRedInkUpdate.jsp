@@ -13,6 +13,10 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+.hidden {
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -95,9 +99,15 @@ body {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 160px">实际开票金额（元）：</td>
+							<td>
+								<input id="sourceActualInvoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" enabled="false" />
+							</td>							
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">开票金额（元）：</td>
 							<td>
-								<input id="historyInvoiceSum" id="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" enabled="false" />
+								<input id="historyInvoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
@@ -152,6 +162,23 @@ body {
 				</div>
 			</form>
 		</fieldset>
+		
+		<fieldset id="historyAllotFieldset" style="border: solid 1px #aaa;" class="hidden">
+			<legend>
+				原 - 产值分配
+				<span style="color: red">（金额单位：元）</span>
+			</legend>
+			<div id="historyAllotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" showPager="false">
+				<div property="columns">
+					<div field="username" headerAlign="center">申请人</div>
+					<div field="orgname" headerAlign="center">承办部门</div>
+					<div field="invoiceSum" headerAlign="center">开票金额（元）</div>
+					<div field="bookIncome" headerAlign="center">账面收入（元）</div>
+					<div field="invoiceTax" headerAlign="center">税额（元）</div>
+				</div>
+			</div>
+		</fieldset>		
+		
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>红冲/作废 - 开票信息</legend>
 			<form id="form1" method="post">
@@ -160,6 +187,7 @@ body {
 				<input class="nui-hidden" name="processid" />
 				<input class="nui-hidden" name="invoiceNameType" />
 				<input name="relateCont" id="relateCont" class="nui-hidden" />
+				<input class="nui-hidden" name=historyActualInvoiceSum id="historyActualInvoiceSum" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -199,17 +227,23 @@ body {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 160px">实际红冲/作废金额（元）：</td>
+							<td>
+								<input id="actualInvoiceSum" name="actualInvoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" emptyText="数字格式、只能为负数" />
+							</td>							
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">红冲/作废金额（元）：</td>
 							<td>
 								<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" emptyText="数字格式、只能为负数" />
 							</td>
 							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
-								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
 							<td align="right" style="width: 160px">税额：</td>
 							<td>
-								<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
+								<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 300px" required="true" />
 							</td>
 						</tr>
 						<tr>
@@ -242,6 +276,29 @@ body {
 				</div>
 			</form>
 		</fieldset>
+		
+		<fieldset id="allotFieldset" style="border: solid 1px #aaa;" class="hidden">
+			<legend>
+				红冲/作废 - 产值分配
+				<span style="color: red">（金额单位：元）数字格式、只能为负数 </span>
+			</legend>
+			<div id="allotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" showPager="false" oncellendedit="onCellEndEdit">
+				<div property="columns">
+					<div field="username" headerAlign="center">申请人</div>
+					<div field="orgname" headerAlign="center">承办部门</div>
+					<div field="invoiceSum" headerAlign="center">
+						红冲/作废金额（元）
+						<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
+					</div>
+					<div field="bookIncome" headerAlign="center">
+						账面收入（元）
+						<input property="editor" class="nui-textbox" style="width: 100%;" required="true" />
+						</div>
+					<div field="invoiceTax" headerAlign="center">税额（元）</div>
+				</div>
+			</div>
+		</fieldset>		
+		
 		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>原 - 开票信息附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
@@ -260,12 +317,16 @@ body {
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
+		var historyAllotDataGrid = nui.get("historyAllotDataGrid");
+		var allotDataGrid = nui.get("allotDataGrid");
 
 		function setEditData(data) {
 			form.setData(data);
 			nui.get("contractNo").setText(data.contractNo);
-			nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
+			nui.get("historyActualInvoiceSum").setValue(data.actualInvoiceSum);
+			nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("actualInvoiceSum").getValue()));
 			queryHistory(data.relateCont);
+			queryAllotDatas(data.id, data.allotFlag);			
 			var inputFileExpandGrid = nui.get("inputFileExpandGrid");
 			inputFileExpandGrid.load({
 				"groupid" : "INVOICE",
@@ -273,6 +334,24 @@ body {
 			});
 			inputFileExpandGrid.sortBy("fileTime", "desc");
 		}
+		
+		function queryAllotDatas(invoiceId, allotFlag) {
+			nui.ajax({
+				url : "com.zhonghe.ame.invoice.invoice.queryAllotDatas.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : {
+					"invoiceId" : invoiceId
+				},
+				success : function(result) {
+					if (result.data.length > 0 && allotFlag === '1') {
+						$('#allotFieldset').removeClass('hidden');
+						nui.parse();
+						allotDataGrid.setData(result.data);
+					}
+				}
+			})
+		}		
 
 		function functiondigitUppercase(price) {
 			if (price.substr(0, 1) == "-") {
@@ -322,6 +401,7 @@ body {
 					nui.get("historyInvoiceUsed").setValue(data.invoiceUsed);
 					nui.get("historyPayType").setValue(data.payType);
 					nui.get("historyInvoiceSumCapital").setValue(data.invoiceSumCapital);
+					nui.get("sourceActualInvoiceSum").setValue(data.actualInvoiceSum);
 					nui.get("historyInvoiceSum").setValue(data.invoiceSum);
 					nui.get("historyBookIncome").setValue(data.bookIncome);
 					nui.get("historyInvoiceTax").setValue(data.invoiceTax);
@@ -331,7 +411,9 @@ body {
 					nui.get("historyInvoiceRemark").setValue(data.invoiceRemark);
 					nui.get("historyRemark").setValue(data.remark);
 					nui.get("historyInvoiceUserMail").setValue(data.invoiceUserMail);
-					nui.get("historyInvoiceSumChinese").setValue(functiondigitUppercase(nui.get("historyInvoiceSum").getValue()));
+					nui.get("historyInvoiceSumChinese").setValue(functiondigitUppercase(nui.get("sourceActualInvoiceSum").getValue()));
+					
+					queryHistoryAllotDatas(data.id);
 
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
@@ -343,6 +425,25 @@ body {
 				}
 			})
 		}
+		
+		function queryHistoryAllotDatas(invoiceId) {
+			nui.ajax({
+				url : "com.zhonghe.ame.invoice.invoice.queryAllotDatas.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : {
+					"invoiceId" : invoiceId
+				},
+				success : function(result) {
+					var allotFlag = nui.get("historyAllotFlag").getValue();
+					if (result.data.length > 0 && allotFlag === '1') {
+						$('#historyAllotFieldset').removeClass('hidden');
+						nui.parse();
+						historyAllotDataGrid.setData(result.data);
+					}
+				}
+			})
+		}		
 
 		function onCancel(e) {
 			CloseWindow("cancel");
@@ -380,6 +481,45 @@ body {
 			nui.get("invoiceTax").setValue(abs(invoiceSum - abs(bookIncome)));
 			nui.get("invoiceSumChinese").setValue(functiondigitUppercase(invoiceSum));
 		}
+		
+		function onCellEndEdit(e) {
+			var record = e.record;
+			var field = e.field;
+			if (field == "invoiceSum") {
+				var rate = nui.get("invoiceRate").getValue();
+				var invoiceSum = record.invoiceSum;
+				var c = rate / 100;
+				var s = 1 + c;
+				var bookIncome = invoiceSum / s;
+				abs = function(val) {
+					var str = (val).toFixed(2) + '';
+					var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+					var dot = str.substring(str.length, str.indexOf("."))
+					var ret = intSum + dot;
+					return ret;
+				}
+				bookIncome = abs(bookIncome);
+				var invoiceTax = abs(invoiceSum - bookIncome);
+				allotDataGrid.updateRow(record, {
+					"bookIncome" : bookIncome,
+					"invoiceTax" : invoiceTax
+				});
+			}else if(field == "bookIncome"){
+				var invoiceSum = record.invoiceSum;
+				var bookIncome = record.bookIncome;
+				abs = function(val) {
+					var str = (val).toFixed(2) + '';
+					var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
+					var dot = str.substring(str.length, str.indexOf("."))
+					var ret = intSum + dot;
+					return ret;
+				}
+				var invoiceTax = abs(invoiceSum - bookIncome);
+				allotDataGrid.updateRow(record, {
+					"invoiceTax" : invoiceTax
+				});
+			}
+		}		
 
 		function onOk() {
 			if (!form.validate()) {
@@ -397,8 +537,10 @@ body {
 
 		function SaveData() {
 			var data = form.getData();
+			var allotDatas = allotDataGrid.getData();
 			var json = nui.encode({
-				'data' : data
+				'data' : data,
+				'allotDatas' : allotDatas
 			});
 			if (!confirm("是否保存？")) {
 				return;

@@ -410,7 +410,7 @@ public class SyncUpdateOrg {
 
 	private void clearData(Session dbSession) throws Exception {
 		// 清理组织机构中无效数据
-		String queryOrgSql = "SELECT ORGID FROM OM_ORGANIZATION WHERE ORGSEQ NOT LIKE '.1.%' OR ORGSEQ IS NULL";
+		String queryOrgSql = "SELECT ORGID FROM OM_ORGANIZATION WHERE ORGSEQ NOT LIKE '.1.%' AND ORGSEQ NOT LIKE '.1111.%' OR ORGSEQ IS NULL";
 		List<Entity> orgEntityList = dbSession.query(queryOrgSql);
 		if (orgEntityList != null && orgEntityList.size() > 0) {
 			String delOrgSql = "DELETE FROM OM_ORGANIZATION WHERE ORGID = ?";
@@ -432,7 +432,7 @@ public class SyncUpdateOrg {
 		String queryEmpSql = "SELECT EMPID, EMPCODE, ORGID FROM OM_EMPLOYEE WHERE ORGID IS NOT NULL";
 		List<Entity> empEntityList = dbSession.query(queryEmpSql);
 		if (empEntityList != null && empEntityList.size() > 0) {
-			String queryOrgByIdSql = "SELECT * FROM OM_ORGANIZATION WHERE ORGID = ?";
+			String queryOrgByIdSql = "SELECT * FROM OM_ORGANIZATION WHERE STATUS = 'running' AND ORGID = ? ";
 			String delEmpSql = "DELETE FROM OM_EMPLOYEE WHERE EMPID = ?";
 			String delAcOperatorSql = "DELETE FROM AC_OPERATOR WHERE USERID = ?";
 			String delEmpOrgSql = "DELETE FROM OM_EMPORG WHERE EMPID = ?";

@@ -119,6 +119,10 @@
       <process:from type="query" pattern="reference">cpData/type</process:from>
       <process:to type="query">cpData/appStatus</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">cpData/invoiceSum</process:from>
+      <process:to type="query">cpData/actualInvoiceSum</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
     <location x="328" y="285"/>
@@ -272,7 +276,7 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
-    <targetConnections>link14</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="435" y="330"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -339,24 +343,13 @@
     <node>assign8</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo5" name="更新" displayName="更新" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="link27" isDefault="true" type="transition">
-      <sourceNode>invokePojo5</sourceNode>
-      <targetNode>invokePojo0</targetNode>
-      <process:transitionCondition/>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" type="transition">
-      <sourceNode>invokePojo5</sourceNode>
-      <targetNode>subprocess5</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query">misOpinion/auditstatus</process:leftOperand>
-          <process:rightOperand type="literal">2</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" lineType="note" type="exception">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" lineType="note" isDefault="false" type="exception">
       <sourceNode>invokePojo5</sourceNode>
       <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>invokePojo1</targetNode>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
     <targetConnections>link37</targetConnections>
@@ -443,9 +436,9 @@
       <sourceNode>subprocess5</sourceNode>
       <targetNode>transactioncommit0</targetNode>
     </sourceConnections>
-    <targetConnections>link9</targetConnections>
     <targetConnections>link59</targetConnections>
     <targetConnections>link25</targetConnections>
+    <targetConnections>link5</targetConnections>
     <location x="609" y="382"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess5label</nodeLabel>
@@ -652,6 +645,40 @@
     <figSize height="16" width="49"/>
     <node>throw0</node>
   </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="运算逻辑" displayName="运算逻辑" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link5" name="link5" displayName="连接线" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>subprocess5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">misOpinion/auditstatus</process:leftOperand>
+          <process:rightOperand type="literal">2</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="505" y="297"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.InvoiceUtil.addSaveAllotDatas</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="allotDatas" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">allotDatas</process:inputVariable>
+      <process:inputVariable id="1" name="invoiceId" type="query" value="int" valueType="Java" pattern="reference">cpData/id</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="492" y="333"/>
+    <figSize height="16" width="49"/>
+    <node>invokePojo1</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="cuiying" createTime="2020-08-17 14:14:05" date="2020-08-17Z" description="新增项目检查计划" name="addCheckPlanBiz" version="7.0.0.0"/>
@@ -677,6 +704,7 @@
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice" name="cpData"/>
     <process:input description="" isArray="false" name="type" primitiveType="Int"/>
     <process:input description="" isArray="false" modelType="com.primeton.eos.ame_common.ame_common.MisOpinion" name="misOpinion"/>
+    <process:input description="" isArray="true" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoiceAllot" name="allotDatas"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="result" primitiveType="String"/>

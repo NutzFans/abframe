@@ -8,7 +8,7 @@
 <head>
 <title>打印页面</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/common/nui/warterMark.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/ame_common/js/JsBarcode.all.js"></script>
@@ -43,6 +43,10 @@ table tr {
 
 table,table tr td {
 	font-size: 12px;
+}
+
+.hidden {
+	display: none;
 }
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -136,6 +140,16 @@ table,table tr td {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 90px">实际开票金额(元)：</td>
+							<td>
+								<input id="actualInvoiceSum" name="actualInvoiceSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" enabled="false"/>
+							</td>
+							<td align="right" style="width: 90px">产值分配：</td>
+							<td>
+								<input id="allotFlag" name="allotFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%" required="true" enabled="false"/>
+							</td>
+						</tr>						
+						<tr>
 							<td align="right" style="width: 90px">开票金额(元)：</td>
 							<td>
 								<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 100%" required="true" onvaluechanged="editContractSum" enabled="false"/>
@@ -214,6 +228,26 @@ table,table tr td {
 					</table>
 				</div>
 			</form>
+			<div id="allotDiv" class="hidden">
+				<div style="width: 100%;">
+					<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 20%;">产值分配</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div id="allotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" showPager="false" allowCellWrap="true">
+					<div property="columns">
+						<div field="username" width="50" headerAlign="center" align="center">申请人</div>
+						<div field="orgname" align="center" headerAlign="center">承办部门</div>
+						<div field="invoiceSum" align="center" headerAlign="center">开票金额（元）</div>
+						<div field="bookIncome" align="center" headerAlign="center">账面收入（元）</div>
+						<div field="invoiceTax" align="center" headerAlign="center">税额（元）</div>
+					</div>
+				</div>
+			</div>
 			<div title="相关附件">
 				<jsp:include page="/ame_common/detailFile.jsp">
 					<jsp:param name="downloadZip" value="true"/>
@@ -246,6 +280,7 @@ table,table tr td {
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid4 = nui.get("datagrid4");
+		var allotDataGrid = nui.get("allotDataGrid");
 		setData();
 		var id;
 
@@ -273,8 +308,9 @@ table,table tr td {
 				success : function(o) {
 					var data = o.proApp[0];
 					form.setData(data);
+					queryAllotDatas(data.id);
 					nui.get("contractNo").setText(data.contractNo);
-					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
+					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("actualInvoiceSum").getValue()));
 					document.getElementById("pipi").innerHTML = "【" + data.createUsername + "发起的" + data.contractName + "开票申请】";
 					form.setEnabled(false);
 					var grid_0 = nui.get("grid_0");
@@ -291,6 +327,25 @@ table,table tr td {
 				}
 			});
 		}
+		
+		function queryAllotDatas(invoiceId) {
+			nui.ajax({
+				url : "com.zhonghe.ame.invoice.invoice.queryAllotDatas.biz.ext",
+				type : "post",
+				contentType : 'text/json',
+				data : {
+					"invoiceId" : invoiceId
+				},
+				success : function(result) {
+					var allotFlag = nui.get("allotFlag").getValue();
+					if (result.data.length > 0 && allotFlag === '1') {
+						$('#allotDiv').removeClass('hidden');
+						nui.parse();
+						allotDataGrid.setData(result.data);
+					}
+				}
+			})
+		}		
 		
 		function setViewData(data) {
 			return;

@@ -63,8 +63,8 @@
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var id =<%=request.getParameter("id")%>;
-
+		var ids;
+		
 		search();
 
 		function search() {
@@ -85,7 +85,7 @@
 				return;
 			} else {
 				var json = nui.encode({
-					'id' : id,
+					'ids' : ids,
 					'data' : row
 				});
 				nui.ajax({
@@ -95,7 +95,6 @@
 					contentType : 'text/json',
 					success : function(o) {
 						if (o.result == 1) {
-							showTips("变更经办人成功");
 							CloseWindow("ok");
 						} else {
 							showTips("变更经办人失败，请联系信息技术部人员！", "danger");
@@ -103,6 +102,10 @@
 					}
 				});
 			}
+		}
+		
+		function initIds(data){
+			ids = data;
 		}
 
 		function onRowDblClick(e) {

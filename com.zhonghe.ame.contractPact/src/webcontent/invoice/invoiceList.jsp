@@ -143,7 +143,7 @@ html,body {
 						<td style="width: 100px; text-align: right;">是否红冲/作废:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[46].redInkEntryFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>					
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -181,10 +181,11 @@ html,body {
 		</div>
 
 		<div class="nui-fit">
-			<div id="datagrid1" sizeList="[2000]" showPager="true" dataField="data" showSummaryRow="true" pageSize="2000" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.payment.payMent.payMentAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
+			<div id="datagrid1" sizeList="[2000]" multiSelect="true" showPager="true" dataField="data" showSummaryRow="true" pageSize="2000" class="nui-datagrid"
+				style="width: 100%; height: 100%;" url="com.zhonghe.ame.payment.payMent.payMentAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true"
+				virtualScroll="true" virtualColumns="true">
 				<div property="columns">
-					<div type="checkcolumn">○</div>
+					<div type="checkcolumn"></div>
 					<div field="invoiceNameType" width="80" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">发票抬头</div>
 					<div field="createTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">开票日期</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
@@ -193,6 +194,7 @@ html,body {
 					<div field="contractName" width="200" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
 					<div field="payerName" width="180" align="center" headerAlign="center" allowSort="true">付款单位</div>
 					<div field="appStatus" align="center" headerAlign="center" allowSort="true" renderer="onActionRenderer">审批状态</div>
+					<div field="actualInvoiceSum" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">实际开票金额（元）</div>
 					<div field="invoiceSum" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">开票金额（元）</div>
 					<div field="bookIncome" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">账面收入（元）</div>
 					<div field="invoiceTax" width="100" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">税额（元）</div>
@@ -362,8 +364,12 @@ html,body {
 		}
 
 		function printBtn() {
-			var selectRow = grid.getSelected();
-			if (selectRow) {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行打印", "danger");
+				return;
+			}else{
+				var selectRow = grid.getSelected();
 				if(selectRow.redInkEntryFlag=="1"){
 					var url = "<%=request.getContextPath()%>/contractPact/print/invoiceRedInkListPrint.jsp?id=" + selectRow.id;
 					window.open(url);				
@@ -371,15 +377,13 @@ html,body {
 					var url = "<%=request.getContextPath()%>/contractPact/print/invoiceListPrint.jsp?id=" + selectRow.id;
 					window.open(url);			
 				}
-			} else {
-				showTips("请选中一条记录", "danger");
 			}
 		}
 
 		function wh_edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行维护", "danger");
+				showTips("只能选中一条数据记录进行维护", "danger");
 				return;
 			}
 			var data = row[0];
@@ -429,7 +433,7 @@ html,body {
 		function zc_edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行编辑", "danger");
+				showTips("只能选中一条数据记录进行编辑", "danger");
 				return;
 			}
 			var data = row[0];
@@ -460,103 +464,100 @@ html,body {
 		}
 
 		function deleteInfo() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行删除", "danger");
-				return;
-			} else {
-				var row = row[0];
-				if (row.appStatus == '4') {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.appStatus === '4');
+				if(status){
 					if (!confirm("是否删除？")) {
 						return;
-					} else {
-						if (row) {
-							var json = nui.encode({
-								'data' : row
-							});
-							nui.ajax({
-								url : "com.zhonghe.ame.invoice.invoice.deleteInvoiceById.biz.ext",
-								type : 'POST',
-								data : json,
-								contentType : 'text/json',
-								success : function(o) {
-									if (o.result == 1) {
-										showTips("删除成功");
-										grid.reload();
-									} else {
-										showTips("删除失败，请联系信息技术部人员！", "danger");
-									}
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
+						var json = nui.encode({
+							'datas' : datas
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.invoice.invoice.deleteInvoiceById.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("删除成功");
+									grid.reload();
+								} else {
+									showTips("删除失败，请联系信息技术部人员！", "danger");
 								}
-							});
-						} else {
-							showTips("只能选中一条项目记录进行删除", "danger");
-						}
+							}
+						});
 					}
-				} else {
+				}else{
 					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
 
 		function zf_edit() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行作废", "danger");
-				return;
-			} else {
-				var row = row[0];
-				if (row.appStatus == '2') {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要作废的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.appStatus === '2');
+				if(status){
 					if (!confirm("是否作废？")) {
 						return;
-					} else {
-						if (row) {
-							var json = nui.encode({
-								'data' : row
-							});
-							nui.ajax({
-								url : "com.zhonghe.ame.invoice.invoice.zfInvoiceById.biz.ext",
-								type : 'POST',
-								data : json,
-								contentType : 'text/json',
-								success : function(o) {
-									if (o.result == 1) {
-										showTips("作废成功");
-										grid.reload();
-									} else {
-										showTips("作废失败，请联系信息技术部人员！", "danger");
-									}
+					}else{
+						var json = nui.encode({
+							'datas' : rows
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.invoice.invoice.zfInvoiceById.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("作废成功");
+									grid.reload();
+								} else {
+									showTips("作废失败，请联系信息技术部人员！", "danger");
 								}
-							});
-						} else {
-							showTips("只能选中一条项目记录进行作废", "danger");
-						}
-					}
-				} else {
+							}
+						});
+					}					
+				}else{
 					showTips("只能作废审批状态为【审批通过】的数据", "danger");
 				}
 			}
 		}
 
 		function bgjbr_edit() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行经办人变更", "danger");
-				return;
-			} else {
-				var row = row[0];
-				if (row.appStatus == '2') {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要变更经办人的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.appStatus === '2');
+				if(status){
+					var ids = rows.map(row => row.id);
 					nui.open({
-						url : "/default/contractPact/invoice/selectTransactor.jsp?id=" + row.id,
+						url : "/default/contractPact/invoice/selectTransactor.jsp",
 						title : "收费合同 - 变更经办人",
 						width : 500,
 						height : 350,
+					    onload: function () {
+					        var iframe = this.getIFrameEl(); 
+					        iframe.contentWindow.initIds(ids); 
+					                        
+					    },						
 						ondestroy : function(action) {
 							if (action == "ok") {
+								showTips("变更经办人成功");
 								grid.reload();
 							}
 						}
-					});
-				} else {
+					});					
+				}else{
 					showTips("只能对审批状态为【审批通过】的数据进行经办人变更", "danger");
 				}
 			}
@@ -637,8 +638,8 @@ html,body {
 		function ZH_MAJOR_TYPE(e) {
 			return nui.getDictText("ZH_MAJOR_TYPE", e.value);
 		}
-		
-		function ZH_BID_SERVICE(e){
+
+		function ZH_BID_SERVICE(e) {
 			return nui.getDictText("ZH_BID_SERVICE", e.value);
 		}
 
@@ -657,83 +658,102 @@ html,body {
 		function MIS_MA_INVOICETYPE(e) {
 			return nui.getDictText("MIS_MA_INVOICETYPE", e.value);
 		}
-		
+
 		function PAY_TYPE(e) {
 			return nui.getDictText("payType", e.value);
 		}
-		
+
 		function ZH_YN(e) {
 			return nui.getDictText("ZH_YN", e.value);
 		}
-		
-		function ZH_RED_INK_TYPE(e){
+
+		function ZH_RED_INK_TYPE(e) {
 			return nui.getDictText("ZH_RED_INK_TYPE", e.value);
-		}		
+		}
 
 		//导出
 		function exportExcel() {
-			if (!confirm("是否确认导出？")) {
-				return;
-			}
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			var json = nui.encode(data);
-			nui.ajax({
-				url : "com.zhonghe.ame.invoice.invoice.exportInvoiceExcel.biz.ext",
-				type : "post",
-				data : json,
-				cache : false,
-				contentType : 'text/json',
-				success : function(o) {
-					var filePath = o.downloadFile;
-					var fileName = "开票信息";
-					var myDate = new Date();
-					var year = myDate.getFullYear();
-					var month = myDate.getMonth() + 1;
-					var day = myDate.getDate();
-					var hours = myDate.getHours();
-					var minutes = myDate.getMinutes();
-					var seconds = myDate.getSeconds();
-					var curDateTime = year;
-					if (month > 9) {
-						curDateTime = curDateTime + "" + month;
-					} else {
-						curDateTime = curDateTime + "0" + month;
-					}
-					if (day > 9) {
-						curDateTime = curDateTime + day;
-					} else {
-						curDateTime = curDateTime + "0" + day;
-					}
-					if (hours > 9) {
-						curDateTime = curDateTime + hours;
-					} else {
-						curDateTime = curDateTime + "0" + hours;
-					}
-					if (minutes > 9) {
-						curDateTime = curDateTime + minutes;
-					} else {
-						curDateTime = curDateTime + "0" + minutes;
-					}
-					if (seconds > 9) {
-						curDateTime = curDateTime + seconds;
-					} else {
-						curDateTime = curDateTime + "0" + seconds;
-					}
-					fileName = fileName + "_" + curDateTime + ".xls";
-					var frm = document.getElementById("exprotExcelFlow");
-					frm.elements["downloadFile"].value = filePath;
-					frm.elements["fileName"].value = fileName;
-					frm.submit();
-				},
-				error : function() {
-					showTips("导出数据异常，请联系管理员！", "danger");
+			var rows = grid.getSelecteds();
+			var json;
+			if(rows.length == 0){
+				if (!confirm("是否确认导出？")) {
+					return;
 				}
-			});
+				var form = new nui.Form("#form1");
+				var data = form.getData(); //获取表单JS对象数据
+				json = nui.encode(data);
+			}else{
+				if (!confirm("确定要导出选中数据(如需导出查询结果数据，请取消选中)？")) {
+					return;
+				}
+				var ids = rows.map(row => row.id).join(',');
+				json = nui.encode({
+						"critria":{
+							"_expr": [{
+								"_property": "id",
+								"_op": "in",
+								"_value": ids
+							}]
+						}
+					}
+				);
+			}
+			nui.ajax({
+					url : "com.zhonghe.ame.invoice.invoice.exportInvoiceExcel.biz.ext",
+					type : "post",
+					data : json,
+					cache : false,
+					contentType : 'text/json',
+					success : function(o) {
+						var filePath = o.downloadFile;
+						var fileName = "开票信息";
+						var myDate = new Date();
+						var year = myDate.getFullYear();
+						var month = myDate.getMonth() + 1;
+						var day = myDate.getDate();
+						var hours = myDate.getHours();
+						var minutes = myDate.getMinutes();
+						var seconds = myDate.getSeconds();
+						var curDateTime = year;
+						if (month > 9) {
+							curDateTime = curDateTime + "" + month;
+						} else {
+							curDateTime = curDateTime + "0" + month;
+						}
+						if (day > 9) {
+							curDateTime = curDateTime + day;
+						} else {
+							curDateTime = curDateTime + "0" + day;
+						}
+						if (hours > 9) {
+							curDateTime = curDateTime + hours;
+						} else {
+							curDateTime = curDateTime + "0" + hours;
+						}
+						if (minutes > 9) {
+							curDateTime = curDateTime + minutes;
+						} else {
+							curDateTime = curDateTime + "0" + minutes;
+						}
+						if (seconds > 9) {
+							curDateTime = curDateTime + seconds;
+						} else {
+							curDateTime = curDateTime + "0" + seconds;
+						}
+						fileName = fileName + "_" + curDateTime + ".xls";
+						var frm = document.getElementById("exprotExcelFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					},
+					error : function() {
+						showTips("导出数据异常，请联系管理员！", "danger");
+					}
+			});					
 		}
-		
+
 		function help() {
-			executeUrl = "<%= request.getContextPath() %>/contractPact/invoice/invoiceFlowDesgin.jsp";
+			executeUrl = "<%=request.getContextPath()%>/contractPact/invoice/invoiceFlowDesgin.jsp";
 			window.open(executeUrl);
 		}
 		
@@ -747,6 +767,10 @@ html,body {
 			if (data.appStatus == "2") {
 				if(data.redInkEntryFlag=="1"){
 					showTips("不能对红冲/作废的开票，再次发起红冲/作废请求", "danger");
+					return;
+				}else if(data.actualInvoiceSum=="0"){
+					showTips("实际开票金额为0的记录不能发起红冲/作废请求", "danger");
+					return;
 				}else{
 					nui.open({
 						url : "/default/contractPact/invoice/invoiceRedInkAdd.jsp",
@@ -764,6 +788,7 @@ html,body {
 				}
 			}else{
 				showTips("只能对审批状态为【审批通过】的开票发起红冲/作废", "danger");
+				return;
 			}
 		}		
 		
