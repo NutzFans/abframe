@@ -56,7 +56,7 @@ html,body {
 							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="proAppCode" />
 							<input class="nui-hidden" name="criteria._expr[2]._op" value="like" />
-						</td>						
+						</td>
 						<td style="width: 90px; text-align: right;">采购计划编号:</td>
 						<td style="width: 155px">
 							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 150px" />
@@ -64,7 +64,7 @@ html,body {
 							<input class="nui-hidden" name="criteria._expr[3]._op" value="like" />
 							<input class="nui-hidden" id="ischange" name="criteria._expr[4].ischange" value="1" />
 							<input class="nui-hidden" name="criteria._expr[4]._op" value="=" />
-						</td>							
+						</td>
 						<td style="width: 90px; text-align: right;">立项申请金额:</td>
 						<td style="width: 245px">
 							<input class="nui-hidden" name="criteria._expr[21]._op" value="between" />
@@ -72,12 +72,12 @@ html,body {
 							<input class="nui-textbox" name="criteria._expr[21]._min" style="width: 110px" emptyText="万元" />
 							<span>至</span>
 							<input class="nui-textbox" name="criteria._expr[21]._max" style="width: 110px" emptyText="万元" />
-						</td>														
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 60px; text-align: right;">集采类型:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[51].type" class="nui-dictcombobox" dictTypeId="ZH_PURCHASE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[51].type" class="nui-dictcombobox" dictTypeId="ZH_PURCHASE_NEW" showNullItem="true" nullItemText="全部" style="width: 150px"/>
 						</td>
 						<td style="width: 60px; text-align: right;">采购方式:</td>
 						<td style="width: 155px">
@@ -103,7 +103,7 @@ html,body {
 						<td colspan="2">
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-						</td>											
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -113,8 +113,7 @@ html,body {
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<a class="nui-button" id="cglx_add" iconCls="icon-add" onclick="add()">新增(集采中心)</a>
-						<!-- <a class="nui-button" id="cglx_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a> -->
+						<a class="nui-button" id="cglx_add" iconCls="icon-add" onclick="add()">新增</a>
 						<a class="nui-button" id="cglx_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
@@ -162,7 +161,7 @@ html,body {
 
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("cglx_add,cglx_exportExcel,cglx_zf,cglx_help");
+			getOpeatorButtonAuth("cglx_exportExcel,cglx_zf,cglx_help");
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "cglx"
@@ -377,28 +376,9 @@ html,body {
 				url : "/default/purchase/project/addProApp.jsp",
 				width : '100%',
 				height : '100%',
-				title : "采购立项申请 - 集采中心",
+				title : "采购立项申请",
 				onload : function() {
 					var iframe = this.getIFrameEl();
-					data = {"addType": "add"};
-					iframe.contentWindow.initData(data);
-				},
-				ondestroy : function(action) {
-					search();
-				}
-			})
-		}
-		
-		function add_zxcg() {
-			nui.open({
-				url : "/default/purchase/project/addProApp.jsp",
-				width : '100%',
-				height : '100%',
-				title : "采购立项申请 - 自行采购",
-				onload : function() {
-					var iframe = this.getIFrameEl();
-					data = {"addType": "add_zxcg"};
-					iframe.contentWindow.initData(data);
 				},
 				ondestroy : function(action) {
 					search();
@@ -483,6 +463,7 @@ html,body {
 		function MIS_APPOBJTYPE(e) {
 			return nui.getDictText("MIS_APPOBJTYPE", e.value);
 		}
+		
 	</script>
 </body>
 </html>

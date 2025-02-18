@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="addProApp.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
-  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="流程相关数据区&#xD;&#xA;采购承办单位id&#xD;&#xA;分公司职能部门&#xD;&#xA;采购物项归口部门一级集采立项审核需要" title="huangqj&#x9;21-4-21 上午10:55">
-    <location x="138" y="613"/>
-    <size height="106" width="290"/>
-  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -343,7 +339,6 @@
       <targetNode>invokeService9</targetNode>
     </sourceConnections>
     <targetConnections>link21</targetConnections>
-    <targetConnections>link24</targetConnections>
     <location x="1043" y="265"/>
     <size height="28" width="28"/>
     <nodeLabel>assign8label</nodeLabel>
@@ -356,7 +351,7 @@
       <process:to type="query">params/putunder</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">proApp/judge</process:from>
+      <process:from type="query" pattern="reference">judge</process:from>
       <process:to type="query">params/judge</process:to>
     </process:copy>
     <process:copy>
@@ -370,10 +365,6 @@
     <process:copy>
       <process:from type="query" pattern="reference">proApp/proAppApplyPrice</process:from>
       <process:to type="query">params/amount</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">proApp/proAppOrgId</process:from>
-      <process:to type="query">params/proAppOrgId</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
@@ -506,29 +497,14 @@
     <node>subprocess1</node>
   </nodes>
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="保存立项明细" displayName="addProDtl" type="subprocess">
-    <sourceConnections xsi:type="process:tLink" description="" id="link21" name="" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>subprocess2</sourceNode>
-      <targetNode>assign8</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NULLOREMPTY">
-          <process:leftOperand type="query">proApp/proAppAgentUserid</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link23" name="link23" displayName="连接线" lineType="note" type="exception">
       <sourceNode>subprocess2</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link22" name="link22" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess2</sourceNode>
-      <targetNode>subprocess4</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NULLOREMPTY">
-          <process:leftOperand type="query">proApp/judge</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
+      <targetNode>invokePojo1</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <targetConnections>link37</targetConnections>
     <location x="1043" y="144"/>
@@ -708,46 +684,30 @@
     <figSize height="16" width="32"/>
     <node>assign5</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess4" name="expentOrg" displayName="expentOrg" collapsed="false" type="subprocess">
-    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="link4" isDefault="true" type="transition">
-      <sourceNode>subprocess4</sourceNode>
-      <targetNode>assign6</targetNode>
-    </sourceConnections>
-    <targetConnections>link22</targetConnections>
-    <location x="1155" y="147"/>
-    <size height="27" width="27"/>
-    <nodeLabel>subprocess4label</nodeLabel>
-    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">com.zhonghe.ame.purchase.common.expentOrg</process:partner>
-      <process:inputVariables/>
-      <process:outputVariables>
-        <process:outputVariable id="0" name="org" type="query" value="com.zhonghe.ame.purchase.purchase.OmOrganization" valueType="DataObject">org</process:outputVariable>
-      </process:outputVariables>
-    </process:flow>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
-    <location x="1139" y="182"/>
-    <figSize height="16" width="58"/>
-    <node>subprocess4</node>
-  </nodes>
-  <nodes xsi:type="process:tAssign" description="" id="assign6" name="赋值5" displayName="赋值" collapsed="false" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>assign6</sourceNode>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="OrgUtils.getOrgJudgeNew" displayName="" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign8</targetNode>
     </sourceConnections>
     <targetConnections>link18</targetConnections>
-    <location x="1155" y="266"/>
-    <size height="28" width="28"/>
-    <nodeLabel>assign6label</nodeLabel>
-    <process:copy>
-      <process:from type="query" pattern="reference">org/judge</process:from>
-      <process:to type="query">proApp/judge</process:to>
-    </process:copy>
+    <location x="1155" y="202"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.purchase.OrgUtils.getOrgJudgeNew</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="orgId" type="query" value="int" valueType="Java" pattern="reference">m:userObject/userOrgId</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">judge</process:outputVariable>
+    </process:outputVariables>
   </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
-    <location x="1153" y="302"/>
-    <figSize height="16" width="32"/>
-    <node>assign6</node>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="1094" y="238"/>
+    <figSize height="16" width="145"/>
+    <node>invokePojo1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
@@ -767,6 +727,7 @@
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="params"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="typeCode" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.OmOrganization" name="org"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="judge" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.ZhProjectApproval" name="proApp"/>
