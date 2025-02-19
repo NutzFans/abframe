@@ -34,7 +34,7 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 100px">立项名称：</td>
 							<td colspan="7">
-								<input name="proAppName" class="nui-textbox" style="width: 100%" required="true" />
+								<input id="proAppName" name="proAppName" class="nui-textbox" style="width: 100%" required="true" />
 								<input name="planId" id="planId" class="nui-hidden" style="width: 100%" required="true" />
 								<input name="putunder" id="putunder" class="nui-hidden" style="width: 100%" required="true" />
 							</td>
@@ -87,7 +87,7 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 120px;">是否招标限价：</td>
 							<td>
-								<input id="tenderLimit" name="tenderLimit" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" style="width: 100%;" onvaluechanged="isLimit()" />
+								<input id="tenderLimit" name="tenderLimit" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" style="width: 100%;" onvaluechanged="isLimit" />
 							</td>
 							<td align="right" style="width: 100px">招标限价金额：</td>
 							<td>
@@ -178,7 +178,7 @@ body .mini-textboxlist {
 				估算表、采购方案和支撑材料(可上传多个附件)
 				<a href="<%=request.getContextPath()%>/purProgramMoneyTable.docx" download="采购立项费用估算表">采购立项费用估算表下载</a>
 			</legend>
-			<jsp:include page="/ame_common/addFiles.jsp" />
+			<jsp:include page="/ame_common/inputFile.jsp" />
 		</fieldset>
 	</div>
 
@@ -235,6 +235,7 @@ body .mini-textboxlist {
 									index = index + 1;
 								}
 								for (var i = 0; i < data.length; i++) {
+									data[i].planId = data[i].id
 									data[i].planCode = data[i].code
 									data[i].planName = data[i].name
 									data[i].purchaseFirstName = data[i].purchaseFirstName
@@ -406,44 +407,50 @@ body .mini-textboxlist {
 			return nui.getDictText('ZH_PUTUNDER', e.value);
 		}
 
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		function onOk(e) {
 			istype = e;
 			if (istype == 0) {
-				info = "暂存";
+				var proAppName = nui.get("proAppName").getValue();
+				if (isStrEmpty(proAppName)) {
+					showTips("请填写立项名称并保证其正确性！", "danger");
+					return;
+				}
 			} else if (istype == 1) {
-				info = "提交";
-				if (!form.validate()) {
-					showTips("请检查表单完整性", "danger");
+				form.validate();
+				if (form.isValid() == false) {
+					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
 				gridDtl.validate();
 				if (gridDtl.isValid() == false) {
 					var error = gridDtl.getCellErrors()[0];
 					gridDtl.beginEditCell(error.record, error.column);
+					showTips("明细数据有错误，请检查!", "danger");
 					return;
 				}
-				var filePaths = document.getElementsByName("uploadfile").length;
-				if (filePaths == 0) {
-					showTips("估算表和支撑材料附件不可以为空", "danger");
-					return;
-				} else {
-					for (var j = 0; j < filePaths; j++) {
-						var a = document.getElementsByName("remarkList")[j].value;
-						if (a == null || a == "") {
-							showTips("估算表和支撑材料附件不可以为空", "danger");
-							nui.get("saveReimbProcess").enable();
-							nui.get("creatReimbProcess").enable();
-							return;
-						}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if (gridFileCount == 0) {
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if (newFileCount == 0) {
+						showTips("请上传相关附件", "danger");
+						return;
 					}
 				}
 			}
+			nui.get("saveReimb").disable();
+			nui.get("creatReimbProcess").disable();
 			document.getElementById("fileCatalog").value = "proAppCost";
-			nui.confirm("确定" + info + "单据", "系统提示", function(action) {
-				if (action == "ok") {
-					form2.submit();
-				}
-			})
+			form2.submit();
 		}
 
 		function setPutunder(proAppDtl) {
@@ -469,10 +476,7 @@ body .mini-textboxlist {
 			data.files = nui.get("fileids").getValue();
 			var json = nui.encode({
 				"proApp" : data,
-				"proAppDtl" : proAppDtl,
-				"misOpinion" : {
-					"auditstatus" : 3
-				}
+				"proAppDtl" : proAppDtl
 			});
 			ajaxCommon({
 				url : "com.zhonghe.ame.purchase.purchaseProApp.addProApp.biz.ext",
@@ -480,10 +484,12 @@ body .mini-textboxlist {
 				contentType : 'text/json',
 				success : function(text) {
 					if (text.result == "1") {
-						showTips(info + "成功")
+						showTips("操作成功");
 						closeOk();
 					} else {
-						showTips(info + "失败,请联系管理员", "danger")
+						showTips("操作失败,请联系管理员", "danger");
+						nui.get("saveReimb").enable();
+						nui.get("creatReimbProcess").enable();
 					}
 				}
 			});

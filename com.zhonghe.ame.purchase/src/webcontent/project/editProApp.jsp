@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>采购计划立项编辑</title>
+<title>采购立项申请</title>
 <style type="text/css">
 body {
 	margin: 0;
@@ -20,7 +20,7 @@ body .mini-textboxlist {
 </style>
 </head>
 <body>
-	<div class="nui-fit" width="99%">
+	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>
 				采购立项
@@ -28,15 +28,14 @@ body .mini-textboxlist {
 			</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
-				<input name="files1" id="fileids1" class="nui-hidden" />
-				<input class="nui-hidden" name="id" />
+				<input id="id" class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="processid" />
-				<div style="padding: 1px; width: 100%">
+				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 100px">立项名称：</td>
 							<td colspan="7">
-								<input name="proAppName" class="nui-textbox" style="width: 100%" required="true" />
+								<input id="proAppName" name="proAppName" class="nui-textbox" style="width: 100%" required="true" />
 								<input name="planId" id="planId" class="nui-hidden" style="width: 100%" required="true" />
 								<input name="putunder" id="putunder" class="nui-hidden" style="width: 100%" required="true" />
 							</td>
@@ -49,53 +48,47 @@ body .mini-textboxlist {
 										inputMode="false" style="width: 910px" enabled="false" />
 								</span>
 							</td>
-							<td align="right">立项编号：</td>
+							<td align="right" style="width: 100px">立项编号：</td>
 							<td>
 								<input name="proAppCode" class="nui-textbox" style="width: 100%" readonly="readonly" emptyText="系统自动生成" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right">是否为涉密协作配套：</td>
-							<td colspan="1">
+							<td align="right" style="width: 130px">是否为涉密协作配套：</td>
+							<td>
 								<input id="isSmpt" name="isSmpt" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" visible="true" style="width: 100%;" />
 							</td>
-							<td align="right">所属项目名称：</td>
-							<td colspan="1">
+							<td align="right" style="width: 120px">所属项目名称：</td>
+							<td>
 								<input name="projectId" class="nui-textbox" required="true" style="width: 100%" />
 							</td>
-							<td align="right" style="width: 100px">立项金额(万元)：</td>
-							<td colspan="1">
-								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" readonly="readonly" style="width: 100%" required="ture" />
+							<td align="right" style="width: 130px">立项金额(万元)：</td>
+							<td>
+								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" readonly="readonly" style="width: 100%" required="ture" emptyText="系统自动计算生成" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right">集采类型：</td>
+							<td align="right" style="width: 100px">集采类型：</td>
 							<td>
-								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE" required="true" visible="true" style="width: 100%;" onvaluechanged="isType" enabled="false"/>
+								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE_NEW" required="true" visible="true" style="width: 100%;" onvaluechanged="isType" />
 							</td>
-							<td align="right">费用来源：</td>
+							<td align="right" style="width: 100px">费用来源：</td>
 							<td>
 								<input name="costFrom" class="nui-dictcombobox" dictTypeId="ZH_COST_FROM" required="true" style="width: 100%;" />
 							</td>
-							<td align="right">物项类别：</td>
+							<td align="right" style="width: 100px">物项类别：</td>
 							<td>
 								<input id="proAppObjType" name="proAppObjType" class="nui-dictcombobox" dictTypeId="MIS_APPOBJTYPE" required="true" style="width: 100%;" />
 							</td>
-							<td align="right">采购方式：</td>
+							<td align="right" style="width: 100px">建议采购方式：</td>
 							<td>
 								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" required="true" style="width: 100%;" onvaluechanged="purchasModeChange" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right">采购方式理由：</td>
-							<td colspan="7">
-								<input id="wayReason" name="wayReason" class="nui-textarea" required="true" style="width: 100%; height: 120px" emptyText="若为一级集采，则此项非必填" />
-							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 120px;">是否招标限价：</td>
 							<td>
-								<input id="tenderLimit" name="tenderLimit" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" style="width: 100%;" onvaluechanged="isLimit()" />
+								<input id="tenderLimit" name="tenderLimit" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" style="width: 100%;" onvaluechanged="isLimit" />
 							</td>
 							<td align="right" style="width: 100px">招标限价金额：</td>
 							<td>
@@ -105,7 +98,7 @@ body .mini-textboxlist {
 							<td>
 								<input id="isDzcg" name="isDzcg" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" style="width: 100%;" />
 							</td>
-							<td align="right" style="width: 100px">电采平台发布公告：</td>
+							<td align="right" style="width: 120px">电采平台发布公告：</td>
 							<td>
 								<input id="isGb" name="isGb" class="nui-dictcombobox" dictTypeId="ZH_YN" required="true" style="width: 100%;" />
 							</td>
@@ -119,7 +112,7 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 100px">供应商选取范围：</td>
 							<td>
-								<input id="supplierScope" name="supplierScope" class="nui-dictcombobox" dictTypeId="ZH_SUPPLIER_SCOPE" onvaluechanged="isSupplierScope" required="true" style="width: 100%;" />
+								<input id="supplierScope" name="supplierScope" class="nui-dictcombobox" dictTypeId="ZH_SUPPLIER_SCOPE" required="true" style="width: 100%;" onvaluechanged="isSupplierScope" />
 							</td>
 							<td align="right" style="width: 100px">供应商信息：</td>
 							<td colspan="3">
@@ -128,11 +121,11 @@ body .mini-textboxlist {
 							</td>
 							<td align="right" style="width: 100px">合同/订单性质：</td>
 							<td>
-								<input id="nature" name="nature" class="nui-dictcombobox" dictTypeId="ZH_NATURE" onvaluechanged="isSupplierScope" required="true" style="width: 100%;" />
+								<input id="nature" name="nature" class="nui-dictcombobox" dictTypeId="ZH_NATURE" required="true" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">选择上述供应商原因：</td>
+							<td align="right" style="width: 120px">选择上述供应商原因：</td>
 							<td colspan="3">
 								<input id="supplierReason" name="supplierReason" class="nui-textarea" required="ture" style="width: 100%; height: 120px" />
 							</td>
@@ -146,7 +139,7 @@ body .mini-textboxlist {
 			</form>
 		</fieldset>
 
-		<fieldset style="border: solid 1px #aaa; padding: 1px;">
+		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>明细</legend>
 			<div>
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
@@ -160,19 +153,19 @@ body .mini-textboxlist {
 					</table>
 				</div>
 			</div>
-			<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext" dataField="datas"
-				showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ">
+			<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" dataField="datas" url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext" allowCellSelect="true" showPager="false"
+				allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ">
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
-					<div field="planName" width="110" align="left" headerAlign="center">计划名称</div>
-					<div field="planCode" width="110" align="left" headerAlign="center">计划编号</div>
+					<div field="planName" width="110" align="center" headerAlign="center">计划名称</div>
+					<div field="planCode" width="110" align="center" headerAlign="center">计划编号(物项明细编号)</div>
 					<div field="materialName" width="110" align="center" headerAlign="center" vtype="required">采购物项名称</div>
 					<div field="purchaseFirstName" width="110" align="center" headerAlign="center" vtype="required">物项大类</div>
 					<div field="purchaseTwoName" width="110" align="center" headerAlign="center" vtype="required">物项中类</div>
 					<div field="budgetAmount" width="110" align="center" headerAlign="center" vtype="required">预算金额(万元)</div>
 					<div field="amount" width="110" align="center" headerAlign="center" vtype="required">
-						<span style="color: red">立项金额(万元)</span>
+						<span style="color: red;">立项金额(万元)</span>
 						<input property="editor" class="nui-spinner" minValue="0" maxValue="999999999" name="amount" visible="true" width="100%" />
 					</div>
 					<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
@@ -182,33 +175,35 @@ body .mini-textboxlist {
 			</div>
 		</fieldset>
 
-		<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
-			<legend>估算表、采购方案和支撑材料(可上传多个附件)</legend>
-			<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
+		<fieldset id="field2" style="border: solid 1px #aaa;">
+			<legend>
+				估算表、采购方案和支撑材料(可上传多个附件)
+				<a href="<%=request.getContextPath()%>/purProgramMoneyTable.docx" download="采购立项费用估算表">采购立项费用估算表下载</a>
+			</legend>
+			<jsp:include page="/ame_common/inputFile.jsp" />
 		</fieldset>
 
 		<jsp:include page="/ame_common/misOpinion.jsp" />
 	</div>
 
-	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
+	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">中止</a>
-		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="closeCancel" iconCls="icon-close" style="width: 80px;">关闭</a>
 	</div>
 
 	<script type="text/javascript">
-		
-	<%long workItemID = (Long) request.getAttribute("workItemID");%>
 		nui.parse();
+		<%long workItemID = (Long) request.getAttribute("workItemID");%>
 		var type, istype;
 		var form = new nui.Form("#form1");
 		var gridDtl = nui.get("grid_detail");
-		var id =<%=request.getParameter("id")%>;
+		var id = <%=request.getParameter("id")%>;
 		isViewDelete = false;
-		var processid =<%=request.getParameter("processid")%>;
+		var processid = <%=request.getParameter("processid")%>;
 		if (processid == null) {
-			processid =<%=request.getParameter("processInstID")%>;
+			processid = <%=request.getParameter("processInstID")%>;
 		}
 
 		var orgIdSet = new Set();
@@ -228,18 +223,12 @@ body .mini-textboxlist {
 				url : "com.zhonghe.ame.purchase.purchaseProApp.queryProApp.biz.ext",
 				data : json,
 				success : function(o) {
-					var result = o.proApp[0]
-					if(result.type == "3"){
-						nui.get('type').setEnabled(false);
-					}
+					var result = o.proApp[0];
 					form.setData(result);
 					nui.get('supplierSel').setValue(result.supplierId);
 					nui.get('supplierSel').setText(result.supplierName);
 					nui.get('orgUnits').setValue(result.proAppOrgId);
 					nui.get('orgUnits').setText(result.proAppOrgName);
-					gridDtl.load({
-						"pid" : result.id
-					})
 					//设置审核意见基本信息
 					nui.get("processinstid").setValue(o.workitem.processInstID);
 					nui.get("processinstname").setValue(o.workitem.processInstName);
@@ -258,7 +247,6 @@ body .mini-textboxlist {
 						});
 						grid1.sortBy("time", "desc");
 					}
-
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "proAppCost",
@@ -267,37 +255,125 @@ body .mini-textboxlist {
 					grid_0.sortBy("fileTime", "desc");
 					isType();
 					isSupplierScope();
+					gridDtl.load({
+						"pid" : result.id
+					});
 				}
 			});
 		}
-
-		function addTicket() {
-			var type = nui.get("type").getValue()
-			var putunder = nui.get("putunder").getValue()
-			var num = gridDtl.getData().length;
-			if (!type) {
-				showTips("请先选择集采类型", "danger")
-				return;
+		
+		function isType() {
+			var type = nui.get("type").getValue();
+			var fields = form.getFields();
+			if (type == "1") {
+				$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFFF");
+				nui.get("supplierSel").setRequired(false);
+				nui.get("purchasMode").setValue("电子商城采购")
+				nui.get("supplierScope").setValue("1")
+				nui.get("isDzcg").setValue("1")
+				nui.get("isGb").setValue("1")
+				nui.get("purchasMode").setReadOnly(true)
+				nui.get("supplierScope").setReadOnly(true)
+				nui.get("isDzcg").setReadOnly(true)
+				nui.get("isGb").setReadOnly(true)
+				nui.get("proAppObjType").setRequired(false);
+				nui.get("nature").setRequired(false);
+				nui.get("isDzcg").setRequired(false);
+				nui.get("isGb").setRequired(false);
+				nui.get("tenderLimit").setRequired(false);
+				nui.get("limit").setRequired(false);
+				nui.get("supplierReason").setRequired(false);
 			} else {
-				var rows = gridDtl.getData();
-				if (rows.length > 0) {
-					for (var i = 0; i < rows.length; i++) {
-						var orgId = String(rows[i].needOrgId);
-						var orgName = rows[i].needOrgName;
-						orgIdSet.add(orgId);
-						orgNameSet.add(orgName);
+				nui.get("purchasMode").setReadOnly(false)
+				nui.get("supplierScope").setReadOnly(false)
+				nui.get("isDzcg").setReadOnly(false)
+				nui.get("isGb").setReadOnly(false)
+				nui.get("proAppObjType").setRequired(true);
+				nui.get("nature").setRequired(true);
+				nui.get("isDzcg").setRequired(true);
+				nui.get("isGb").setRequired(true);
+				nui.get("tenderLimit").setRequired(true);
+			}
+			isLimit();
+		}
+		
+		function isLimit() {
+			if (nui.get("tenderLimit").getValue() == '1') {
+				nui.get("limit").setRequired(true);
+			} else {
+				nui.get("limit").setRequired(false);
+			}
+		}		
+		
+		function isSupplierScope() {
+			var classified = nui.get("supplierScope").getValue();
+			if (classified == "1") {
+				$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFFF");
+				nui.get("supplierSel").setRequired(false);
+				nui.get("supplierReason").setRequired(false);
+			} else if (classified == "2") {
+				$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFE6");
+				nui.get("supplierSel").setRequired(true);
+				nui.get("supplierReason").setRequired(true);
+			}
+		}
+		
+		function purchasModeChange() {
+			var purchasMode = nui.get("purchasMode").getValue();
+			if (purchasMode == "零星采购") {
+				nui.get("supplierScope").setValue("2");
+				nui.get("supplierScope").setReadOnly(true);
+			} else {
+				nui.get("supplierScope").setValue(null);
+				nui.get("supplierScope").setReadOnly(false);
+			}
+		}
+		
+		function getHTZQ(e) {
+			var row = e.row;
+			if (e.value > row.sumamount) {
+				showTips("立项金额大于剩余可立项金额", "danger")
+				gridDtl.updateRow(row, {
+					"amount" : ""
+				})
+				return;
+			}
+			if (e.field == "amount") {
+				var tempData = nui.get(grid_detail).data;
+				var a = tempData.length;
+				var b = 0;
+				for (var i = 0; i < a; i++) {
+					if (tempData[i].amount != undefined) {
+						b = addFloat(b, tempData[i].amount);
+					} else {
+						var x = 0;
+						b += x;
 					}
 				}
-				var btnEdit = this;
+				nui.get("proAppApplyPrice").setValue(b);
+			}
+		}
+		
+		function addTicket() {
+			var type = nui.get("type").getValue();
+			if (!type) {
+				showTips("请先选择集采类型", "danger");
+				return;
+			} else {
 				nui.open({
-					url : "/default/purchase/common/selectPurchasePlan.jsp?type=" + type + "&putunder=" + putunder,
-					title : "采购计划列表",
-					width : '80%',
-					height : '70%',
-					allowResize : false,
+					url : "/default/purchase/common/selectPurchasePlan.jsp",
+					title : "采购立项 - 采购计划选择",
+					width : '1300',
+					height : '610',
+					onload : function() {
+						var iframe = this.getIFrameEl();
+						iframe.contentWindow.initData({
+							"type" : type,
+							"orgId" : userOrgId
+						});
+					},
 					ondestroy : function(action) {
 						if (action == "ok") {
-							var tempData;
 							var iframe = this.getIFrameEl();
 							var data = iframe.contentWindow.GetData();
 							data = nui.clone(data);
@@ -309,8 +385,11 @@ body .mini-textboxlist {
 									index = index + 1;
 								}
 								for (var i = 0; i < data.length; i++) {
+									data[i].planId = data[i].id
 									data[i].planCode = data[i].code
 									data[i].planName = data[i].name
+									data[i].purchaseFirstName = data[i].purchaseFirstName
+									data[i].purchaseTwoName = data[i].purchaseTwoName
 									data[i].budgetAmount = data[i].newBudgetAmount
 									var orgId = String(data[i].needOrgId);
 									var orgName = data[i].needOrgName;
@@ -319,7 +398,7 @@ body .mini-textboxlist {
 								}
 								gridDtl.addRows(data, index);
 								if (gridDtl.getData().length > 0) {
-									nui.get("type").setReadOnly(true)
+									nui.get("type").setReadOnly(true);
 								}
 								nui.get('orgUnits').setValue(Array.from(orgIdSet).join(','));
 								nui.get('orgUnits').setText(Array.from(orgNameSet).join(','));
@@ -330,96 +409,26 @@ body .mini-textboxlist {
 				});
 			}
 		}
-
-		function onOk(e) {
-			istype = e;
-			if (istype == 1) {
-				if (!form.validate()) {
-					showTips("请检查表单完整性", "danger");
-					return;
-				}
-				gridDtl.validate();
-				if (gridDtl.isValid() == false) {
-					var error = gridDtl.getCellErrors()[0];
-					gridDtl.beginEditCell(error.record, error.column);
-					return;
-				}
-				var filePaths1 = document.getElementsByName("uploadfile").length;
-				var grid_1 = nui.get("grid_0").getData();
-				if (filePaths1 == 0 && grid_1.length < 1) {
-					showTips("估算表和支撑材料不可以为空", "danger");
-					return;
-				} else {
-					for (var j = 0; j < filePaths1; j++) {
-						var a = document.getElementsByName("remarkList")[j].value;
-						if (a == null || a == "") {
-							showTips("估算表和支撑材料不可以为空", "danger");
-							nui.get("saveReimbProcess").enable();
-							nui.get("creatReimbProcess").enable();
-							return;
-						}
-					}
-				}
-				info = "是否提交？"
-			} else if (istype == 0) {
-				info = "是否暂时保存？"
-			} else {
-				info = "是否中止流程？"
-				nui.get("auditstatus").setValue(2);
-			}
-			document.getElementById("fileCatalog").value = "proAppCost";
-			nui.confirm("确定" + info, "系统提示", function(action) {
-				if (action == "ok") {
-					fileForm.submit();
-				}
-			})
-		}
-
-		function SaveData1() {
-			var data = form.getData();
-			var proAppDtl = gridDtl.getChanges();
-			var proAppDtlPutunder = gridDtl.getData();
-			data.istype = istype;
-			data.putunder = this.setPutunder(proAppDtlPutunder);
-			data.supplierId = nui.get("supplierSel").getValue();
-			data.supplierName = nui.get("supplierSel").getText();
-			data.proAppOrgId = nui.get('orgUnits').getValue();
-			data.proAppOrgName = nui.get('orgUnits').getText();
-			data.files = nui.get("fileids").getValue();
-			data.files1 = nui.get("fileids1").getValue();
-			var data_opioion = opioionform.getData();
-			var json = nui.encode({
-				'proApp' : data,
-				"misOpinion" : data_opioion.misOpinion,
-				"proAppDtl" : proAppDtl
-			});
-			ajaxCommon({
-				url : "com.zhonghe.ame.purchase.purchaseProApp.editProApp.biz.ext",
-				data : json,
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("提交成功")
-						closeOk();
-					} else {
-						showTips("提交失败")
-					}
-				}
-			});
-		}
-
-		function setPutunder(proAppDtl) {
-			var putunders = [];
+		
+		function putunderChanged() {
 			var type = nui.get("type").getValue();
-			if (type != "3") {
-				for (var i = 0; i < proAppDtl.length; i++) {
-					if (!putunders.includes(proAppDtl[i].putunder.toString())) {
-						putunders.push(proAppDtl[i].putunder.toString())
+			var putunder = nui.get("putunder").getValue();
+			var rowsData = gridDtl.data;
+			if (putunder) {
+				var putunders = putunder.split(",");
+			} else {
+				var putunders = [];
+			}
+			if (rowsData.length > 0) {
+				for (var i = 0; i < rowsData.length; i++) {
+					if (!putunders.includes(rowsData[i].putunder.toString())) {
+						putunders.push(rowsData[i].putunder.toString());
 					}
 				}
+				nui.get("putunder").setValue(putunders.toString());
 			}
-			return putunders.toString();
 		}
-
+		
 		function removeTicket() {
 			var rows = gridDtl.getSelecteds();
 			if (rows.length > 0) {
@@ -447,156 +456,111 @@ body .mini-textboxlist {
 					nui.get('orgUnits').setValue(Array.from(orgIdSet).join(','));
 					nui.get('orgUnits').setText(Array.from(orgNameSet).join(','));
 				}
-				onSumamount();
 			} else {
 				showTips("请至少选中一条记录！");
-			}
-		}
-
-		function getHTZQ(e) {
-			var row = e.row;
-			if (e.value > row.sumamount) {
-				showTips("立项金额大于剩余可立项金额")
-				gridDtl.updateRow(row, {
-					"amount" : ""
-				})
 				return;
 			}
-			if (e.field == "amount") {
-				var tempData = nui.get(grid_detail).data;
-				var a = tempData.length;
-				var b = 0;
-				for (var i = 0; i < a; i++) {
-					if (tempData[i].amount != undefined) {
-						b = addFloat(b, tempData[i].amount);
-					} else {
-						var x = 0;
-						b += x;
-					}
-				}
-				nui.get("proAppApplyPrice").setValue(b)
-			}
+		}								
+		
+		function zhPutUnder(e) {
+			return nui.getDictText('ZH_PUTUNDER', e.value);
 		}
-
-		function onSumamount() {
-			var tempData = nui.get(grid_detail).data;
-			var a = tempData.length;
-			var b = 0;
-			for (var i = 0; i < a; i++) {
-				if (tempData[i].amount != undefined) {
-					b = addFloat(b, tempData[i].amount);
-				} else {
-					var x = 0;
-					b = addFloat(b, x)
-				}
-			}
-			nui.get("proAppApplyPrice").setValue(b)
-		}
-
-		function isSupplier(e) {
-			nui.get("supplierName").setValue(e.selected.custname);
-		}
-
-		function isSupplierScope() {
-			var classified = nui.get("supplierScope").getValue();
-			if (classified == "1") {
-				$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFFF");
-				nui.get("supplierSel").setRequired(false);
-				nui.get("supplierReason").setRequired(false);
-			} else if (classified == "2") {
-				$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFE6");
-				nui.get("supplierSel").setRequired(true);
-				nui.get("supplierReason").setRequired(true);
-			}
-		}
-
-		function isClassified() {
-			var classified = nui.get("classified").getValue();
-			if (classified == "1") {
-				nui.alert("涉密采购请线下进行")
-				nui.get("classified").setValue("");
-			}
-		}
-
-		function purchasModeChange() {
-			var purchasMode = nui.get("purchasMode").getValue();
-			if (purchasMode == "零星采购") {
-				nui.get("supplierScope").setValue("2");
-				nui.get("supplierScope").setReadOnly(true);
+		
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
 			} else {
-				nui.get("supplierScope").setValue(null);
-				nui.get("supplierScope").setReadOnly(false);
-			}
-		}
-
-		function isType() {
-			var type = nui.get("type").getValue();
-			var fields = form.getFields();
-			if (type == "1") {
-				$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFFF");
-				nui.get("supplierSel").setRequired(false);
-				nui.get("purchasMode").setValue("电子商城采购")
-				nui.get("supplierScope").setValue("1")
-				nui.get("isDzcg").setValue("1")
-				nui.get("isGb").setValue("1")
-				nui.get("purchasMode").setReadOnly(true)
-				nui.get("supplierScope").setReadOnly(true)
-				nui.get("isDzcg").setReadOnly(true)
-				nui.get("isGb").setReadOnly(true)
-				nui.get("proAppObjType").setRequired(false);
-				nui.get("nature").setRequired(false);
-				nui.get("wayReason").setRequired(false);
-				nui.get("isDzcg").setRequired(false);
-				nui.get("isGb").setRequired(false);
-				nui.get("tenderLimit").setRequired(false);
-				nui.get("limit").setRequired(false);
-				nui.get("supplierReason").setRequired(false);
-			} else {
-				nui.get("purchasMode").setReadOnly(false)
-				nui.get("supplierScope").setReadOnly(false)
-				nui.get("isDzcg").setReadOnly(false)
-				nui.get("isGb").setReadOnly(false)
-				nui.get("proAppObjType").setRequired(true);
-				nui.get("nature").setRequired(true);
-				nui.get("wayReason").setRequired(true);
-				nui.get("isDzcg").setRequired(true);
-				nui.get("isGb").setRequired(true);
-				nui.get("tenderLimit").setRequired(true);
-			}
-			isLimit();
-		}
-
-		function putunderChanged() {
-			var type = nui.get("type").getValue();
-			var putunder = nui.get("putunder").getValue()
-			var rowsData = gridDtl.data;
-
-			if (putunder) {
-				var putunders = putunder.split(",");
-			} else {
-				putunders = [];
-			}
-			if (rowsData.length > 0 && type != "3") {
-				for (var i = 0; i < rowsData.length; i++) {
-					if (!putunders.includes(rowsData[i].putunder.toString())) {
-						putunders.push(rowsData[i].putunder.toString())
-					}
-				}
-				nui.get("putunder").setValue(putunders.toString());
-			}
-		}
-
-		function isLimit() {
-			if (nui.get("tenderLimit").getValue() == '1') {
-				nui.get("limit").setRequired(true);
-			} else {
-				nui.get("limit").setRequired(false);
+				return false;
 			}
 		}
 		
-		function zhPutUnder(e) {
-			return nui.getDictText('ZH_PUTUNDER', e.value);//设置业务字典值
+		function onOk(e) {
+			istype = e;
+			if (istype == 0) {
+				title = "暂存";
+				var proAppName = nui.get("proAppName").getValue();
+				if (isStrEmpty(proAppName)) {
+					showTips("请填写立项名称并保证其正确性！", "danger");
+					return;
+				}
+			} else if (istype == 1) {
+				title = "提交";
+				form.validate();
+				if (form.isValid() == false) {
+					showTips("请检查表单的完整性!", "danger");
+					return;
+				}
+				gridDtl.validate();
+				if (gridDtl.isValid() == false) {
+					var error = gridDtl.getCellErrors()[0];
+					gridDtl.beginEditCell(error.record, error.column);
+					showTips("明细数据有错误，请检查!", "danger");
+					return;
+				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("grid_0").getData().length;
+				if (gridFileCount == 0) {
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if (newFileCount == 0) {
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}
+			} else if (istype == 2) {
+				nui.get("auditstatus").setValue(2);
+			}
+			nui.get("saveReimb").disable();
+			nui.get("creatReimbProcess").disable();
+			nui.get("zzFeame").disable();
+			document.getElementById("fileCatalog").value = "proAppCost";
+			form2.submit();
+		}
+		
+		function setPutunder(proAppDtl) {
+			var putunders = [];
+			var type = nui.get("type").getValue();
+			for (var i = 0; i < proAppDtl.length; i++) {
+				if (!putunders.includes(proAppDtl[i].putunder.toString())) {
+					putunders.push(proAppDtl[i].putunder.toString())
+				}
+			}
+			return putunders.toString();
 		}		
+		
+		function SaveData() {
+			var data = form.getData();
+			var proAppDtl = gridDtl.getData();
+			data.putunder = this.setPutunder(proAppDtl);
+			data.supplierId = nui.get("supplierSel").getValue();
+			data.supplierName = nui.get("supplierSel").getText();
+			data.proAppOrgId = nui.get('orgUnits').getValue();
+			data.proAppOrgName = nui.get('orgUnits').getText();
+			data.istype = istype;
+			data.files = nui.get("fileids").getValue();
+			var data_opioion = opioionform.getData();
+			var json = nui.encode({
+				"proApp" : data,
+				"proAppDtl" : proAppDtl,
+				"misOpinion" : data_opioion.misOpinion
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseProApp.editProApp.biz.ext",
+				data : json,
+				contentType : 'text/json',
+				success : function(text) {
+					if (text.result == "1") {
+						showTips("操作成功");
+						closeOk();
+					} else {
+						showTips("操作失败,请联系管理员", "danger");
+						nui.get("saveReimb").enable();
+						nui.get("creatReimbProcess").enable();
+						nui.get("zzFeame").enable();
+					}
+				}
+			});
+		}														
 		
 	</script>
 

@@ -77,7 +77,7 @@ html,body {
 					<tr>
 						<td style="width: 60px; text-align: right;">集采类型:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[51].type" class="nui-dictcombobox" dictTypeId="ZH_PURCHASE_NEW" showNullItem="true" nullItemText="全部" style="width: 150px"/>
+							<input name="criteria._expr[51].type" class="nui-dictcombobox" dictTypeId="ZH_PURCHASE_NEW" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
 						<td style="width: 60px; text-align: right;">采购方式:</td>
 						<td style="width: 155px">
@@ -113,10 +113,13 @@ html,body {
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<a class="nui-button" id="cglx_add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="cglx_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="cglx_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
-						<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
+						<a class="nui-button" id="cglx_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="cglx_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
@@ -125,7 +128,7 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="datagrid1" frozenStartColumn="0" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="proApp" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.purchase.purchaseProApp.queryProApp.biz.ext" multiSelect="false" allowSortColumn="true">
+				url="com.zhonghe.ame.purchase.purchaseProApp.queryProApp.biz.ext" multiSelect="true" allowSortColumn="true">
 				<div property="columns">
 					<div name="temp123" type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
@@ -161,7 +164,7 @@ html,body {
 
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("cglx_exportExcel,cglx_zf,cglx_help");
+			getOpeatorButtonAuth("cglx_wh,cglx_exportExcel,cglx_zf,cglx_help");
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "cglx"
@@ -332,17 +335,18 @@ html,body {
 		}
 		
 		function deleteInfo() {
-			if (!confirm("确定删除吗？")) {
-				return;
-			} else {
-				var row = grid.getSelecteds();
-				if (row.length > 1) {
-					nui.alert("只能选中一条项目记录进行删除");
-				} else {
-					var row = row[0];
-					if (row) {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.status === '4');
+				if(status){
+					if (!confirm("是否删除？")) {
+						return;
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
 						var json = nui.encode({
-							id : row.id
+							'datas' : datas
 						});
 						nui.ajax({
 							url : "com.zhonghe.ame.purchase.purchaseProApp.deleteProApp.biz.ext",
@@ -351,22 +355,16 @@ html,body {
 							contentType : 'text/json',
 							success : function(o) {
 								if (o.result == 1) {
-									nui.alert("删除成功", "系统提示", function() {
-
-										grid.reload();
-									});
+									showTips("删除成功");
+									grid.reload();
 								} else {
-									nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
-									});
-
+									showTips("删除失败，请联系信息技术部人员！", "danger");
 								}
 							}
 						});
-						row.id;
-					} else {
-						nui.alert("请选中一条记录", "提示");
 					}
-
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
@@ -405,7 +403,41 @@ html,body {
 				showTips("请选中一条记录");
 			}
 		}
-
+		
+		// 暂存编辑
+		function zc_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行编辑", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.status == '0') {
+				var json = {
+					"processID" : data.processid
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseProApp.getWorkItemByProcessInstID.biz.ext",
+					data : json,
+					success : function(result) {
+						if (JSON.stringify(result) !== '{}') {
+							nui.open({
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID=" + result.workItemID,
+								width : '100%',
+								height : '100%',
+								ondestroy : function(action) {
+									grid.reload();
+									search();
+								}
+							})
+						}
+					}
+				});
+			} else {
+				showTips("只能编辑审批状态为【草稿】的数据", "danger");
+			}
+		}		
+		
 		function zf_edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
@@ -463,7 +495,6 @@ html,body {
 		function MIS_APPOBJTYPE(e) {
 			return nui.getDictText("MIS_APPOBJTYPE", e.value);
 		}
-		
 	</script>
 </body>
 </html>
