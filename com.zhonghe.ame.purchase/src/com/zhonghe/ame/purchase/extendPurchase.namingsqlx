@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap>
+	<resultMap class="com.eos.workflow.data.WFParticipant" id="WFParticipant">
+		<result column="userid" javaType="string" property="id"/>
+        <result column="empname" javaType="string" property="name"/>
+        <result column="typeCode" javaType="string" property="typeCode"/>
+    </resultMap>
+    
+    
+    <select id="findEmpsByDictTypeAndOrg" parameterClass="java.util.HashMap" resultMap="WFParticipant">
+    	<![CDATA[
+    		SELECT USERID, EMPNAME, 'person' as typeCode FROM OM_EMPLOYEE WHERE USERID IN (SELECT DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = #dictTypeId# AND DICTID IN ($orgIds$))
+    	]]>
+    </select>
+</sqlMap>
