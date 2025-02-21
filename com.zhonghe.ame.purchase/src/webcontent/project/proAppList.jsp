@@ -478,6 +478,35 @@ html,body {
 				}
 			}
 		}
+		
+		function wh_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行维护", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.status == "2") {
+				nui.open({
+					url : "/default/purchase/project/updateProApp.jsp",
+					width : '100%',
+					height : '100%',
+					title : "采购立项维护",
+					onload : function() {
+						var iframe = this.getIFrameEl();
+						iframe.contentWindow.setData(data);
+					},
+					ondestroy : function(action) {
+						if (action == "ok") {
+							grid.reload();
+						}
+						search();
+					}
+				});
+			} else {
+				showTips("只能维护审批状态为【审批通过】的数据", "danger");
+			}
+		}		
 
 		function ZH_PURCHASE(e) {
 			return nui.getDictText("ZH_PURCHASE", e.value);

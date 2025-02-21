@@ -34,10 +34,13 @@
 		<div id="div8" style="position: absolute; left: 557px; top: 727px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 分管采购公司领导审批 -->
-		<div id="div9" style="position: absolute; left: 720px; top: 606px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div9" style="position: absolute; left: 793px; top: 662px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 企业发展部备案 -->
-		<div id="div10" style="position: absolute; left: 554px; top: 846px; width: 75px; height: 50px; cursor: pointer;"></div>																
+		<div id="div10" style="position: absolute; left: 554px; top: 846px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 采购需求单位分管领导审核 -->
+		<div id="div11" style="position: absolute; left: 792px; top: 510px; width: 75px; height: 50px; cursor: pointer;"></div>																
 
 	</div>
 
@@ -126,7 +129,16 @@
 					content : '通过【角色管理】模块修改角色编号为【purchaseFz】的角色数据',
 					btn : []
 				});
-			});																					
+			});
+			
+			// 采购需求单位分管领导审核
+			$('#div11').click(function() {
+				layer.open({
+					title : '采购需求单位分管领导审核 - 调整审批人',
+					content : '需求单位为公司本部 - 通过【机构人员管理】模块修改发起人部门的【分管领导】字段；需求单位为分公司、事业部、中核供应链 - 通过【业务字典管理】模块修改类型代码为【ZH_PURCHASE_PLAN_LEADER】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});																								
 																													
 		});
 	</script>
