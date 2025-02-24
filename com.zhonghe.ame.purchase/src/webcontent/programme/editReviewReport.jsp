@@ -26,44 +26,45 @@ body .mini-textboxlist {
 	<%
 		long workitemid = (Long) request.getAttribute("workItemID");
 	%>
-	<div class="nui-fit">
-		<form id="form1" method="post">
-			<fieldset id="field1" style="border: solid 1px #aaa; padding: 3px; width: 99%;">
-				<legend>评审结果信息</legend>
+	<div class="nui-fit" style="padding: 5px;">
+		<fieldset id="field1" style="border: solid 1px #aaa;">
+			<legend>评审结果</legend>
+			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
-				<input name="files1" id="fileids1" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="processid" />
 				<input name="type" id="type" class="nui-hidden" />
 				<input class="nui-hidden" name="purchasMode" id="purchasMode" />
-				<input class="nui-hidden" id="addType" />
-				<div style="padding: 1px;">
-					<table style="table-layout: fixed; width: 100%;">
+				<input class="nui-hidden" name="proAppUserId" id="proAppUserId" />
+				<input class="nui-hidden" name="proAppUserName" id="proAppUserName" />
+				<div style="padding: 5px;">
+					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 135px">立项编号：</td>
+							<td align="right" style="width: 90px">立项编号：</td>
 							<td>
-								<input name="proappId" id="proappId" onbuttonclick="onButtonEdit" allowInput="false" class="nui-buttonedit" style="width: 100%" required="true" />
+								<input name="proappId" id="proappId" onbuttonclick="onButtonEdit" allowInput="false" class="nui-buttonedit" style="width: 350px" required="true" />
 							</td>
-							<td align="right" style="width: 120px">采购需求单位：</td>
+							<td align="right" style="width: 90px">采购需求单位：</td>
 							<td>
 								<input name="orgUnits" id="orgUnits" class="nui-textboxlist" dataField="orgUnits" url="com.zhonghe.ame.purchase.common.queryOrgByName.biz.ext" valueField="orgcode" textField="orgname"
-									inputMode="false" style="width: 705px" enabled="false" />
+									inputMode="false" style="width: 700px" enabled="false" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">立项名称：</td>
+							<td align="right" style="width: 90px">立项名称：</td>
 							<td>
 								<input name="proAppName" id="proAppName" class="nui-textbox" style="width: 100%;" required="true" readonly="readonly" />
 							</td>
-							<td align="right" style="width: 100px;">评审结果名称：</td>
+							<td align="right" style="width: 90px;">评审结果名称：</td>
 							<td>
+								<input name="type" id="type" class="nui-hidden" />
 								<span data-placement="left" data-tooltip="默认使用立项名称,可自行修改">
 									<input name="reportName" id="reportName" class="nui-textbox" style="width: 100%" required="true" />
 								</span>
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">立项金额：</td>
+							<td align="right" style="width: 90px">立项金额：</td>
 							<td>
 								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" style="width: 100%;" required="true" readonly="readonly" />
 							</td>
@@ -73,63 +74,66 @@ body .mini-textboxlist {
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 135px;">评审结果说明：</td>
+							<td align="right" style="width: 90px;">评审结果说明：</td>
 							<td colspan="3">
 								<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" required="true" />
 							</td>
 						</tr>
 					</table>
 				</div>
-			</fieldset>
-		</form>
-		<fieldset style="border: solid 1px #aaa; padding: 1px; width: 99%">
-			<legend>采购计划明细</legend>
-			<div class="fieldset-body" style="width: 100%; margin: 0px auto">
-				<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" dataField="datas" showPager="false" multiSelect="true"
-					url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext">
-					<div property="columns">
-						<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
-						<div field="planName" width="110" align="center" headerAlign="center">计划名称</div>
-						<div field="code" width="100" align="center" headerAlign="center">计划编号</div>
-						<div field="materialName" width="110" align="center" headerAlign="center">采购物项名称</div>
-						<div field="budgetAmount" width="100" align="center" headerAlign="center">预算金额(万元)</div>
-						<div field="amount" width="100" align="center" headerAlign="center">立项金额(万元)</div>
-						<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
-						<div field="needOrgName" width="80" align="left" headerAlign="center">采购单位</div>
-					</div>
+			</form>
+		</fieldset>
+
+		<fieldset style="border: solid 1px #aaa;">
+			<legend>采购立项明细</legend>
+			<div id="grid_detail" class="nui-datagrid" style="width: 100%; height: auto;" dataField="datas" showPager="false" multiSelect="true"
+				url="com.zhonghe.ame.purchase.dao.projectApproval.queryProAppDtl.biz.ext">
+				<div property="columns">
+					<div type="indexcolumn" align="center" headerAlign="center" visible="false"></div>
+					<div field="planName" width="110" align="center" headerAlign="center">计划名称</div>
+					<div field="code" width="100" align="center" headerAlign="center">计划编号</div>
+					<div field="materialName" width="110" align="center" headerAlign="center">采购物项名称</div>
+					<div field="budgetAmount" width="100" align="center" headerAlign="center">预算金额(万元)</div>
+					<div field="amount" width="100" align="center" headerAlign="center">立项金额(万元)</div>
+					<div field="sumamount" width="110" align="center" headerAlign="center" vtype="required">剩余可立项金额(万元)</div>
+					<div field="needOrgName" width="80" align="left" headerAlign="center">采购单位</div>
 				</div>
 			</div>
 		</fieldset>
+
 		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>采购立项 - 附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
 
 		<fieldset id="field4" style="border: solid 1px #aaa;">
-			<legend>采购文件 - 附件</legend>
+			<legend>评审结果 - 附件</legend>
 			<jsp:include page="/ame_common/inputFileExpand.jsp" />
 		</fieldset>
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 3px;">
+
+		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>审批信息</legend>
 			<jsp:include page="/ame_common/misOpinion.jsp" />
 		</fieldset>
 	</div>
-	<div style="text-align: center; padding: 10px;" class="nui-toolbar">
+
+	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">中止</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
-		var id =<%=request.getParameter("id")%>;
-		init();
 		var gridDtl = nui.get("grid_detail");
+		var id = <%=request.getParameter("id")%>;
+
+		init();
+
 		function init() {
-			var json = nui.encode({
-				"workitemid" :<%=workitemid%>
-			});
+			var json = nui.encode({"workitemid" :<%=workitemid%>});
 			nui.ajax({
 				url : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext",
 				data : json,
@@ -139,37 +143,29 @@ body .mini-textboxlist {
 				success : function(o) {
 					var result = o.reviewReport[0];
 					form.setData(result);
+					queryProAppByCode(result.proAppCode);
 					nui.get('orgUnits').setValue(result.proAppOrgId);
 					nui.get('orgUnits').setText(result.proAppOrgName);
 					nui.get("proappId").setValue(result.proappId);
 					nui.get("proappId").setText(result.proAppCode);
 					nui.get("purchasMode").setValue(result.purchasMode);
-					if (result.type == "3") {
-						nui.get("addType").setValue("add_zxcg");
-						nui.get("putunder").set({
-							required : false
-						});
-					} else {
-						nui.get("addType").setValue("add");
-					}
-					
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "proAppCost",
 						"relationid" : result.proappId
 					});
-					grid_0.sortBy("fileTime", "desc");						
-					
+					grid_0.sortBy("fileTime", "desc");
+
 					gridDtl.load({
 						"pid" : result.proappId
 					})
-					
+
 					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
 					inputFileExpandGrid.load({
 						"groupid" : "purReviewReport",
 						"relationid" : result.id
 					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");					
+					inputFileExpandGrid.sortBy("fileTime", "desc");
 
 					var grid = nui.get("datagrid1");
 					grid.load({
@@ -186,9 +182,25 @@ body .mini-textboxlist {
 					nui.get("auditstatus").setValue("4");
 					document.getElementById("salesEdit").style.display = "none";
 					nui.get("auditopinion").setValue("");
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert(jqXHR.responseText);
+				}
+			});
+		}
+		
+
+		function queryProAppByCode(code) {
+			var json = nui.encode({
+				"code" : code
+			});
+			nui.ajax({
+				url : "com.zhonghe.ame.purchase.purchaseProApp.queryProAppByCode.biz.ext",
+				data : json,
+				type : 'POST',
+				cache : false,
+				contentType : 'text/json',
+				success : function(result) {
+					var data = result.data;
+					nui.get("proAppUserId").setValue(data.createdBy);
+					nui.get("proAppUserName").setValue(data.createdUsername);
 				}
 			});
 		}
@@ -208,7 +220,7 @@ body .mini-textboxlist {
 				info = "是否中止流程？"
 				nui.get("auditstatus").setValue(2);
 			}
-			
+
 			document.getElementById("fileCatalog").value = "purReviewReport";
 
 			nui.confirm("确定" + info, "系统提示", function(action) {
@@ -223,7 +235,6 @@ body .mini-textboxlist {
 			data.istype = istype;
 			data.proAppOrgId = nui.get('orgUnits').getValue();
 			data.proAppOrgName = nui.get('orgUnits').getText();
-			data.judge = getJudge();
 			data.files = nui.get("fileids").getValue();
 			var data_opioion = opioionform.getData();
 			var json = nui.encode({
@@ -249,9 +260,8 @@ body .mini-textboxlist {
 
 		function onButtonEdit(e) {
 			var btnEdit = this;
-			var addType = nui.get("addType").getValue();
 			mini.open({
-				url : "/default/purchase/project/procurementProAppList.jsp?addType=" + addType,
+				url : "/default/purchase/project/procurementProAppList.jsp",
 				title : "采购立项列表",
 				width : '80%',
 				height : '80%',
@@ -263,6 +273,8 @@ body .mini-textboxlist {
 						if (data) {
 							btnEdit.setValue(data.id);
 							btnEdit.setText(data.proAppCode);
+							nui.get("proAppUserId").setValue(data.createdBy);
+							nui.get("proAppUserName").setValue(data.createdUsername);
 							nui.get("proAppName").setValue(data.proAppName);
 							nui.get('reportName').setValue(data.proAppName);
 							nui.get('orgUnits').setValue(data.proAppOrgId);
@@ -278,7 +290,6 @@ body .mini-textboxlist {
 
 						}
 					}
-
 				}
 			});
 		}
@@ -286,6 +297,7 @@ body .mini-textboxlist {
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
+
 		//标准方法接口定义
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
@@ -294,5 +306,6 @@ body .mini-textboxlist {
 				window.close();
 		}
 	</script>
+
 </body>
 </html>

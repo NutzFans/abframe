@@ -73,17 +73,12 @@
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var addType = "<%=request.getParameter("addType")%>";
 
 		search();
 
 		function search() {
 			var form = new nui.Form("#form1");
-			if (addType == "add_zxcg") {
-				nui.get("typeOP").setValue("=");
-			} else {
-				nui.get("typeOP").setValue("<>");
-			}
+			nui.get("typeOP").setValue("<>");
 			var data = form.getData(); //获取表单JS对象数据
 			grid.sortBy("createdTime", "desc");
 			grid.load(data); //datagrid加载数据

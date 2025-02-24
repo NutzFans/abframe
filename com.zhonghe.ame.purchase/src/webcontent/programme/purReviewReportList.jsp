@@ -84,7 +84,6 @@ body {
 				<tr>
 					<td>
 						<a class="nui-button" id="psbg_add" iconCls="icon-add" onclick="add()">新增(集采中心)</a>
-						<!-- <a class="nui-button" id="psbg_add_zxcg" iconCls="icon-add" onclick="add_zxcg()">新增(自行采购)</a> -->
 						<a class="nui-button" id="psbg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" iconCls="icon-print" onclick="print()">打印</a>
 						<a class="nui-button" id="psbg_help" iconCls="icon-help" onclick="help()">帮助</a>
@@ -316,28 +315,6 @@ body {
 				width : "100%",
 				height : "100%",
 				title : "评审结果 - 集采中心",
-				onload : function() {
-					var iframe = this.getIFrameEl();
-					data = {"addType": "add"};
-					iframe.contentWindow.initData(data);
-				},
-				ondestroy : function(action) {
-					search();
-				}
-			})
-		}
-		
-		function add_zxcg() {
-			nui.open({
-				url : "/default/purchase/programme/addReviewReport.jsp",
-				width : "100%",
-				height : "100%",
-				title : "评审结果 - 自行采购",
-				onload : function() {
-					var iframe = this.getIFrameEl();
-					data = {"addType": "add_zxcg"};
-					iframe.contentWindow.initData(data);
-				},
 				ondestroy : function(action) {
 					search();
 				}
