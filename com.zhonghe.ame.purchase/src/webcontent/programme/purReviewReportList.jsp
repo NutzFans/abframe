@@ -84,8 +84,12 @@ body {
 				<tr>
 					<td>
 						<a class="nui-button" id="psbg_add" iconCls="icon-add" onclick="add()">新增(集采中心)</a>
+						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
+						<a class="nui-button" id="psbg_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="psbg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" iconCls="icon-print" onclick="print()">打印</a>
+						<a class="nui-button" id="psbg_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="psbg_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
 				</tr>
@@ -93,7 +97,7 @@ body {
 		</div>
 
 		<div class="nui-fit">
-			<div id="datagrid1" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="reviewReport" multiSelect="false" class="nui-datagrid" style="width: 100%; height: 100%;"
+			<div id="datagrid1" sizeList="[25,50,100]" pageSize="25" showPager="true" dataField="reviewReport" multiSelect="true" class="nui-datagrid" style="width: 100%; height: 100%;"
 				url="com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext">
 				<div property="columns">
 					<div type="checkcolumn"></div>
@@ -110,6 +114,12 @@ body {
 			</div>
 		</div>
 	</div>
+	
+	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		nui.parse();
@@ -121,7 +131,7 @@ body {
 
 		function init() {
 			//按钮权限的控制
-			getOpeatorButtonAuth("psbg_add,psbg_zf,psbg_help"); //操作按钮权限初始化
+			getOpeatorButtonAuth("psbg_add,psbg_wh,psbg_zf,psbg_exportExcel,psbg_help"); //操作按钮权限初始化
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
 				"code" : "psbg"
@@ -219,12 +229,6 @@ body {
 			});
 		}
 		
-		function getStatus(e) {
-			if (e.value == 1) {
-				return "审核中"
-			}
-		}
-		
 		function lookInfo(e) {
 			var id = e.row.id;
 			if (id == 0 || id == null) {
@@ -239,73 +243,72 @@ body {
 			window.open(executeUrl);
 		}
 
-		function onOk() {
-			search();
-		}
-
-		function edit() {
-			debugger;
+		// 暂存编辑
+		function zc_edit() {
 			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行编辑", "danger");
+				return;
+			}
 			var data = row[0];
-			if (data) {
-				nui.open({
-					url : "/default/contractPact/chargeContract/chargeContractEdit.jsp",
-					width : "100%",
-					height : "100%",
-					title : "编辑",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						if (action == "ok") {
-							grid.reload();
+			if (data.status == '0') {
+				var json = {
+					"processID" : data.processid
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseProApp.getWorkItemByProcessInstID.biz.ext",
+					data : json,
+					success : function(result) {
+						if (JSON.stringify(result) !== '{}') {
+							nui.open({
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID=" + result.workItemID,
+								width : '100%',
+								height : '100%',
+								ondestroy : function(action) {
+									grid.reload();
+									search();
+								}
+							})
 						}
 					}
-				})
-
+				});
 			} else {
-				nui.alert("请选中一条记录", "提示");
+				showTips("只能编辑审批状态为【草稿】的数据", "danger");
 			}
 		}
 
 		function deleteInfo() {
-			var row = grid.getSelecteds();
-			if (row.length > 0) {
-				if (!confirm("确定删除吗？")) {
-					return;
-				} else {
-					if (row.length > 1) {
-						nui.alert("只能选中一条项目记录进行删除");
-					} else {
-						var row = row[0];
-						console.log(row);
-						if (row) {
-							var json = nui.encode({
-								id : row.id
-							});
-							nui.ajax({
-								url : "com.zhonghe.ame.purchase.purchaseReviewReport.delReviewReport.biz.ext",
-								type : 'POST',
-								data : json,
-								contentType : 'text/json',
-								success : function(o) {
-									if (o.result == 1) {
-										nui.alert("删除成功", "系统提示", function() {
-											grid.reload();
-										});
-									} else {
-										nui.alert("删除失败，请联系信息技术部人员！", "系统提示", function(action) {
-										});
-									}
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.status === '4');
+				if(status){
+					if (!confirm("是否删除？")) {
+						return;
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
+						var json = nui.encode({
+							'datas' : datas
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.purchase.purchaseReviewReport.delReviewReport.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("删除成功");
+									grid.reload();
+								} else {
+									showTips("删除失败，请联系信息技术部人员！", "danger");
 								}
-							});
-							row.id;
-						}
+							}
+						});
 					}
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
-			} else {
-				nui.alert("请选中一条记录", "提示");
 			}
 		}
 
@@ -345,6 +348,8 @@ body {
 									if (o.result == 1) {
 										showTips("作废成功");
 										grid.reload();
+									} else if (o.result == 2) {
+										showTips("有采购文件或评审结果关联了该立项无法作废！", "danger");
 									} else {
 										showTips("作废失败，请联系信息技术部人员！", "danger");
 									}
@@ -359,6 +364,44 @@ body {
 				}
 			}
 		}
+		
+		function wh_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行维护", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.status == "2") {
+				nui.open({
+					url : "/default/purchase/programme/updateApprovalReviewReport.jsp",
+					width : '100%',
+					height : '100%',
+					title : "评审结果维护",
+					onload : function() {
+						var iframe = this.getIFrameEl();
+						iframe.contentWindow.setData(data);
+					},
+					ondestroy : function(action) {
+						if (action == "ok") {
+							grid.reload();
+						}
+						search();
+					}
+				});
+			} else {
+				showTips("只能维护审批状态为【审批通过】的数据", "danger");
+			}
+		}
+		
+		function onExportExcel() {
+			var data = form.getData();
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.purchase.purchaseReviewReport.exportReviewReport.biz.ext",
+				"fileName" : "评审结果表"
+			})
+		}				
 		
 		function ZH_PURCHASE(e) {
 			return nui.getDictText("ZH_PURCHASE", e.value);
