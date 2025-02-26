@@ -13,6 +13,10 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+.hidden {
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -146,6 +150,7 @@ body {
     	var workItemID = <%=request.getParameter("workItemID")%>;
     	var opioionform = new nui.Form("#opioionform");
     	var form = new nui.Form("form1");
+    	var workItemInfo;
     	var titleText,countersignUsers;
 		init();
 		
@@ -158,6 +163,7 @@ body {
 				data : json,
 				contentType : 'text/json',
 				success : function(o) {
+					workItemInfo = o.workitemInfo;
 					form.setData(o.data);
 					nui.get("contractId").setValue(o.data.contractNo);
 					nui.get("contractId").setText(o.data.contractNo);
@@ -182,7 +188,9 @@ body {
 					initMisOpinion({
 						auditstatus : "1"
 					});
-
+					if (workItemInfo.workItemName == '打印上传至共享中心' || workItemInfo.workItemName == '打印上传至ERP系统') {
+						nui.alert("点击提交后<br>需打印保存为pdf文档<br>作为ERP付款流程附件上传");
+					}
 				}
 			});
 		}
