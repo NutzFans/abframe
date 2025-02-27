@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/paymentFlow.png'); width: 1698px; height: 1781px; position: relative;">
+	<div style="background-image: url('/default/common/flow/paymentFlow.png'); width: 1526px; height: 1780px; position: relative;">
 
 		<!-- 承办部门项监部负责人 -->
 		<div id="div1" style="position: absolute; left: 598px; top: 82px; width: 75px; height: 50px; cursor: pointer;"></div>

@@ -144,6 +144,14 @@ html,body {
 						<td style="width: 155px">
 							<input name="critria._expr[46].redInkEntryFlag" class="nui-dictcombobox" dictTypeId="ZH_YN" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
+						<td style="width: 80px; text-align: right;">实际开票金额:</td>
+						<td style="width: 205px">
+							<input class="nui-hidden" name="critria._expr[58]._op" value="between" />
+							<input class="nui-hidden" name="critria._expr[58]._property" value="actualInvoiceSum" />
+							<input class="nui-textbox" name="critria._expr[58]._min" style="width: 90px" />
+							<span>至</span>
+							<input class="nui-textbox" name="critria._expr[58]._max" style="width: 90px" />
+						</td>
 					</tr>
 				</table>
 			</div>

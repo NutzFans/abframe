@@ -32,6 +32,9 @@
 
 		<!-- 企业发展部备案 -->
 		<div id="div7" style="position: absolute; left: 403px; top: 909px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 中核供应链负责人审核 -->
+		<div id="div8" style="position: absolute; left: 612px; top: 349px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
@@ -102,7 +105,16 @@
 					content : '通过【角色管理】模块修改角色编号为【purchaseFz】的角色数据',
 					btn : []
 				});
-			});			
+			});
+			
+			// 中核供应链负责人审核
+			$('#div8').click(function() {
+				layer.open({
+					title : '中核供应链负责人审核 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【zh_gyl_fzr_ps】的角色数据',
+					btn : []
+				});
+			});						
 
 		});
 	</script>
