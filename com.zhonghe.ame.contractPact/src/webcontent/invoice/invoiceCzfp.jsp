@@ -115,11 +115,12 @@ body {
 							<td align="right" style="width: 120px">申请人：</td>
 							<td>
 								<input id="newCreateUserid" name="newCreateUserid" class="nui-buttonedit" onbuttonclick="czfpUserSelect" required="true" enabled="true" allowInput="false" />
+								<input id="newCreateUsername" name="newCreateUsername" class="nui-hidden" />
 							</td>
 							<td align="right" style="width: 120px">承办部门：</td>
 							<td>
 								<input id="newImplementOrg" name="newImplementOrg" class="nui-hidden" />
-								<input id="newImplementOrgname" class="nui-textbox" enabled="false" />
+								<input id="newImplementOrgname" name="newImplementOrgname" class="nui-textbox" enabled="false" />
 							</td>
 							<td align="right" style="width: 120px">开票金额（元）：</td>
 							<td>
@@ -191,6 +192,7 @@ body {
 						data = mini.clone(data); //必须
 						nui.get("newCreateUserid").setValue(data.userid);
 						nui.get("newCreateUserid").setText(data.empname);
+						nui.get("newCreateUsername").setValue(data.empname);
 						nui.get("newImplementOrg").setValue(data.orgid);
 						nui.get("newImplementOrgname").setValue(data.orgname);
 					}

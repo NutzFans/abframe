@@ -2,12 +2,14 @@ package com.zhonghe.ame.contractPact;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Map;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -162,7 +164,12 @@ public class InvoiceUtil {
 			newDataObject.set("id", null);
 			DatabaseExt.getPrimaryKey(newDataObject);
 			newDataObject.set("createUserid", newInvoice.getString("newCreateUserid"));
+			newDataObject.set("createUsername", newInvoice.getString("newCreateUsername"));
 			newDataObject.set("implementOrg", newInvoice.getString("newImplementOrg"));
+			newDataObject.set("implementOrgname", newInvoice.getString("newImplementOrgname"));
+			Map<String, String> secOrgMap = this.getSecOrg(newInvoice.getString("newImplementOrg"));
+			newDataObject.set("secondaryOrg", secOrgMap.get("ORGID"));
+			newDataObject.set("secondaryOrgname", secOrgMap.get("ORGNAME"));
 			newDataObject.set("invoiceSum", newInvoice.getString("newInvoiceSum"));
 			newDataObject.set("bookIncome", newInvoice.getString("newBookIncome"));
 			newDataObject.set("invoiceTax", newInvoice.getString("newInvoiceTax"));
@@ -263,7 +270,12 @@ public class InvoiceUtil {
 						newDataObject.set("invoiceTax", allotDataObject.getString("invoiceTax"));
 						newDataObject.set("balanceSum", allotDataObject.getString("invoiceSum"));
 						newDataObject.set("createUserid", allotDataObject.getString("userid"));
+						newDataObject.set("createUsername", allotDataObject.getString("username"));
 						newDataObject.set("implementOrg", allotDataObject.getString("orgid"));
+						newDataObject.set("implementOrgname", allotDataObject.getString("orgname"));
+						Map<String, String> secOrgMap = this.getSecOrg(allotDataObject.getString("orgid"));
+						newDataObject.set("secondaryOrg", secOrgMap.get("ORGID"));
+						newDataObject.set("secondaryOrgname", secOrgMap.get("ORGNAME"));
 						DatabaseUtil.insertEntity("default", newDataObject);
 						allotDataObject.set("genDataId", newDataObject.getInt("id"));
 						DatabaseUtil.updateEntity("default", allotDataObject);
@@ -323,7 +335,12 @@ public class InvoiceUtil {
 						newDataObject.set("bookIncome", allotDataObject.getString("bookIncome"));
 						newDataObject.set("invoiceTax", allotDataObject.getString("invoiceTax"));
 						newDataObject.set("createUserid", allotDataObject.getString("userid"));
+						newDataObject.set("createUsername", allotDataObject.getString("username"));
 						newDataObject.set("implementOrg", allotDataObject.getString("orgid"));
+						newDataObject.set("implementOrgname", allotDataObject.getString("orgname"));
+						Map<String, String> secOrgMap = this.getSecOrg(allotDataObject.getString("orgid"));
+						newDataObject.set("secondaryOrg", secOrgMap.get("ORGID"));
+						newDataObject.set("secondaryOrgname", secOrgMap.get("ORGNAME"));
 						DatabaseUtil.insertEntity("default", newDataObject);
 						allotDataObject.set("genDataId", newDataObject.getInt("id"));
 						DatabaseUtil.updateEntity("default", allotDataObject);
@@ -377,5 +394,41 @@ public class InvoiceUtil {
 			throw e;
 		}
 	}
+	
+	private HashMap<String, String> getSecOrg(String orgId) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		DataObject org = this.queryOrgById(orgId);
+		if (ObjUtil.isNotNull(org)) {
+			String orgseq = org.getString("ORGSEQ");
+			String[] splitToArray = StrUtil.splitToArray(orgseq, ".");
+			if (splitToArray.length >= 3) {
+				String secOrg = splitToArray[2];
+				if (StrUtil.isNotBlank(secOrg)) {
+					DataObject data = this.queryOrgById(secOrg);
+					if (ObjUtil.isNotNull(data)) {
+						map.put("ORGID", data.getString("ORGID"));
+						map.put("ORGNAME", data.getString("ORGNAME"));
+					}
+				}
+			}
+		}
+		return map;
+	}
+	
+	private DataObject queryOneEntity(String sqlName, HashMap<String, Object> parameter) {
+		Object[] objects = DatabaseExt.queryByNamedSql("default", sqlName, parameter);
+		DataObject[] dataObjects = DataObjectUtil.convertDataObjects(objects, "commonj.sdo.DataObject", true);
+		if (dataObjects != null && dataObjects.length > 0) {
+			return dataObjects[0];
+		}
+		return null;
+	}
 
+	private DataObject queryOrgById(String orgId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("orgId", orgId);
+		DataObject org = queryOneEntity("com.zhonghe.ame.contractPact.chargeContract.queryOrgById", map);
+		return org;
+	}	
+	
 }

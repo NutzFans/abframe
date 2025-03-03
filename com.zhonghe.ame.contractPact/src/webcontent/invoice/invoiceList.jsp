@@ -197,6 +197,7 @@ html,body {
 					<div field="invoiceNameType" width="80" align="center" headerAlign="center" allowSort="true" renderer="zhInvoiceNameType">发票抬头</div>
 					<div field="createTime" dateFormat="yyyy-MM-dd" width="80" align="center" headerAlign="center" allowSort="true">开票日期</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
+					<div field="secondaryOrgname" width="180" align="center" headerAlign="center" allowSort="true">合同承办单位</div>
 					<div field="implementOrgname" width="180" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
 					<div field="contractNo" width="180" align="center" headerAlign="center" allowSort="true">合同编号</div>
 					<div field="contractName" width="200" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
