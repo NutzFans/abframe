@@ -81,7 +81,7 @@ html,body {
 							</div>
 							<div field="type" width="80" align="center" headerAlign="center" renderer="dictIshavebak">
 								采购类型
-								<input name="criteria._expr[4].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE" shownullItem="true" width="100%" onvaluechanged="purPlanSearch" />
+								<input name="criteria._expr[4].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE_NEW" shownullItem="true" width="100%" onvaluechanged="purPlanSearch" />
 							</div>
 							<div field="year" width="80" align="center" headerAlign="center">
 								计划年度
@@ -174,7 +174,7 @@ html,body {
 							</div>
 							<div field="type" width="100" align="center" headerAlign="center" renderer="dictIshavebak">
 								采购类型
-								<input name="criteria._expr[13].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE" shownullItem="true" width="100%" onvaluechanged="purPlanItemSearch" />
+								<input name="criteria._expr[13].type" class="nui-dictcombobox" property="filter" dictTypeId="ZH_PURCHASE_NEW" shownullItem="true" width="100%" onvaluechanged="purPlanItemSearch" />
 							</div>
 							<div field="createdUsername" width="80" align="center" headerAlign="center">
 								经办人

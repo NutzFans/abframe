@@ -115,7 +115,6 @@
 // 	        	nui.hideMessageBox(msgBoxId);
 	        	nui.unmask(document.body);
 	        	if(data.exception) {
-	        		clog(data.exception.message);
 	        		showTips(data.exception.message,"danger");
 	        	}
 	        	else {
