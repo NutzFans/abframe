@@ -32,26 +32,32 @@ body {
 								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 300px" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
+							<td align="right" style="width: 160px">合同实施单位：</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 300px" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+							</td>
 							<td align="right" style="width: 160px">合同实施部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
 								<input id="createTime" name="createTime" enabled="false" class="nui-datepicker" style="width: 300px" required="true" />
 							</td>
-
-						</tr>
-						<tr>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
 								<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 300px" required="true" enabled="false" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">合同名称：</td>
-							<td colspan="3">
+							<td colspan="5">
 								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-							</td>
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">专业类别：</td>
@@ -141,6 +147,12 @@ body {
 							<td align="right" style="width: 160px">发票备注：</td>
 							<td colspan="5">
 								<input name="invoiceRemark" id="invoiceRemark" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 160px">发票格式：</td>
+							<td colspan="5">
+								<input name="invoiceFormat" id="invoiceFormat" class="nui-dictcombobox" dictTypeId="INVOICE_FORMAT" style="width: 100%" required="true" multiSelect="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>

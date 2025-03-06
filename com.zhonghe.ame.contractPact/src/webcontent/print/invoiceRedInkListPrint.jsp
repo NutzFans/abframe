@@ -80,18 +80,24 @@ table,table tr td {
 									<td>
 										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
+									<td align="right" style="width: 90px">合同实施单位：</td>
+									<td>
+										<input id=historySecondaryOrg class="nui-textbox" enabled="false" style="width: 100%" />
+									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 90px">合同实施部门：</td>
 									<td>
 										<input id=historyImplementOrg class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
-								</tr>
-								<tr>
 									<td align="right" style="width: 90px">申请日期：</td>
 									<td>
 										<input id="historyCreateTime" enabled="false" class="nui-datepicker" style="width: 100%" required="true" />
 									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 90px">合同编号：</td>
-									<td>
+									<td colspan="3">
 										<input id="historyContractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
@@ -196,6 +202,12 @@ table,table tr td {
 									</td>
 								</tr>
 								<tr>
+									<td align="right" style="width: 90px">发票格式：</td>
+									<td colspan="3">
+										<input id="historyInvoiceFormat" class="nui-dictcombobox" dictTypeId="INVOICE_FORMAT" style="width: 100%" enabled="false" multiSelect="true" />
+									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 120px">数电发票接收人邮箱：</td>
 									<td colspan="3">
 										<input id="historyInvoiceUserMail" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
@@ -257,19 +269,26 @@ table,table tr td {
 									<td>
 										<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 									</td>
-									<td align="right" style="width: 90px">申请单位：</td>
+									<td align="right" style="width: 160px">申请单位：</td>
+									<td>
+										<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 100%" />
+										<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 90px">申请部门：</td>
 									<td>
 										<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 100%" />
 										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 									</td>
-								</tr>
-								<tr>
 									<td align="right" style="width: 90px">申请日期：</td>
 									<td>
 										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" enabled="false" required="true" />
 									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 90px">合同编号：</td>
-									<td>
+									<td colspan="3">
 										<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 100%" required="true" enabled="false" />
 									</td>
 								</tr>
@@ -309,6 +328,12 @@ table,table tr td {
 									<td align="right" style="width: 90px">税额：</td>
 									<td>
 										<input name="invoiceTax" id="invoiceTax" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 120px">发票格式：</td>
+									<td colspan="3">
+										<input name="invoiceFormat" class="nui-dictcombobox" dictTypeId="INVOICE_FORMAT" style="width: 100%" enabled="false" multiSelect="true" />
 									</td>
 								</tr>
 								<tr>
@@ -457,6 +482,7 @@ table,table tr td {
 					var data = result.proApp[0];
 					nui.get("historyId").setValue(data.id);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
+					nui.get("historySecondaryOrg").setValue(data.secondaryOrgname);
 					nui.get("historyImplementOrg").setValue(data.implementOrgname);
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setText(data.contractNo);
@@ -480,6 +506,7 @@ table,table tr td {
 					nui.get("historyTaxpayerNumber").setValue(data.taxpayerNumber);
 					nui.get("historyInvoiceRemark").setValue(data.invoiceRemark);
 					nui.get("historyRemark").setValue(data.remark);
+					nui.get("historyInvoiceFormat").setValue(data.invoiceFormat);
 					nui.get("historyInvoiceUserMail").setValue(data.invoiceUserMail);
 					nui.get("historyInvoiceSumChinese").setValue(functiondigitUppercase(nui.get("historyActualInvoiceSum").getValue()));
 					

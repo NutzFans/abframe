@@ -78,20 +78,26 @@ table,table tr td {
 							<td>
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" />
 							</td>
+							<td align="right" style="width: 90px">合同实施单位：</td>
+							<td>
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true"/>
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 90px">合同实施部门：</td>
 							<td>
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true"/>
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 90px">申请日期：</td>
 							<td>
 								<input id="createTime" name="createTime" enabled="false" class="nui-datepicker" style="width: 100%" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 90px">合同编号：</td>
-							<td>
+							<td colspan="3">
 								<input id="contractNo" name="contractNo" onbuttonclick="onButtonEdit" class="nui-buttonedit" style="width: 100%" required="true" enabled="false" />
-							</td>
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 90px">专业类别：</td>
@@ -191,6 +197,12 @@ table,table tr td {
 							<td align="right" style="width: 90px">发票备注：</td>
 							<td colspan="3">
 								<input name="invoiceRemark" id="invoiceRemark" class="nui-textbox" style="width: 100%" required="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 90px">发票格式：</td>
+							<td colspan="3">
+								<input name="invoiceFormat" id="invoiceFormat" class="nui-dictcombobox" dictTypeId="INVOICE_FORMAT" style="width: 100%" enabled="false" multiSelect="true" />
 							</td>
 						</tr>
 						<tr>

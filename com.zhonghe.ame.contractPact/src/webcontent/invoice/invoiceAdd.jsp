@@ -37,21 +37,28 @@ body {
 							</td>
 							<td align="right" style="width: 160px">申请单位：</td>
 							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 300px" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+							</td>
+							<td align="right" style="width: 160px">申请部门：</td>
+							<td>
 								<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
 								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" enabled="false" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 160px">合同编号：</td>
 							<td>
 								<input id="contractNo" name="contractNo" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" allowInput="false" emptyText="必填项，数据来源于收费合同" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">合同名称：</td>
-							<td colspan="3">
+							<td colspan="5">
 								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
@@ -146,6 +153,12 @@ body {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 160px">发票格式：</td>
+							<td colspan="5">
+								<input name="invoiceFormat" id="invoiceFormat" class="nui-dictcombobox" dictTypeId="INVOICE_FORMAT" style="width: 100%" required="true" multiSelect="true" />
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">数电发票接收人邮箱：</td>
 							<td colspan="5">
 								<input name="invoiceUserMail" class="nui-textbox" style="width: 100%" required="true" />
@@ -219,11 +232,25 @@ body {
 		init();
 
 		function init() {
+			getSecOrg(userOrgId);
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
 			nui.get("createTime").setValue(new Date());
 			nui.get("createdOrgid").setValue(userOrgId);
 			nui.get("implementOrgname").setValue(userOrgName);
+		}
+		
+		function getSecOrg(userOrgId){
+			var json = nui.encode({'userOrgId' : userOrgId});
+			ajaxCommon({
+				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					nui.get("secondaryOrg").setValue(data.ORGID);
+					nui.get("secondaryOrgname").setValue(data.ORGNAME);
+				}
+			});
 		}
 
 		function onButtonEdit(e) {

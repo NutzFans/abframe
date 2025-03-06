@@ -20,9 +20,6 @@ body {
 </style>
 </head>
 <body>
-	<%
-		long workItemID = (Long) request.getAttribute("workItemID");
-	%>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>原 - 开票信息</legend>
@@ -244,11 +241,11 @@ body {
 						<tr>
 							<td align="right" style="width: 160px">红冲/作废金额（元）：</td>
 							<td>
-								<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" onvaluechanged="editContractSum" emptyText="数字格式、只能为负数" enabled="false" />
+								<input id="invoiceSum" name="invoiceSum" class="nui-textbox" vtype="float" style="width: 300px" required="true" emptyText="数字格式、只能为负数" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">账面收入（元）：</td>
 							<td>
-								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" onvaluechanged="editInvoiceTax" />
+								<input id="bookIncome" name="bookIncome" class="nui-textbox" style="width: 300px" required="true" enabled="false" />
 							</td>
 							<td align="right" style="width: 160px">税额：</td>
 							<td>
@@ -283,7 +280,7 @@ body {
 				红冲/作废 - 产值分配
 				<span style="color: red">（金额单位：元）数字格式、只能为负数 </span>
 			</legend>
-			<div id="allotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" showPager="false" oncellendedit="onCellEndEdit">
+			<div id="allotDataGrid" class="nui-datagrid" style="width: 100%; height: 150px;" allowCellEdit="true" allowCellSelect="true" showPager="false">
 				<div property="columns">
 					<div field="username" headerAlign="center">申请人</div>
 					<div field="orgname" headerAlign="center">承办部门</div>
@@ -303,17 +300,8 @@ body {
 		</fieldset>
 		<fieldset id="field4" style="border: solid 1px #aaa;">
 			<legend>红冲/作废 - 上传附件</legend>
-			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
 		</fieldset>
-
-		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
-	</div>
-
-	<div style="text-align: center; padding: 5px;" class="nui-toolbar">
-		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
-		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 0px;">关闭</a>
-		<a class="nui-button" id="kjfplist_sp_print" iconCls="icon-print" onclick="printBtn()" style="width: 80px;">打印</a>
 	</div>
 
 	<script type="text/javascript">
@@ -321,59 +309,29 @@ body {
 		var form = new nui.Form("#form1");
 		var historyAllotDataGrid = nui.get("historyAllotDataGrid");
 		var allotDataGrid = nui.get("allotDataGrid");
-		var opioionform = new nui.Form("#opioionform");
-		var id;
-		var workItemInfo;
-		var beforeBookIncome;
-		var titleText, countersignUsers;
+		var processid =<%=request.getParameter("processInstID")%>;
 		
 		init();
 		
 		function init() {
-			// 按钮权限
-			if(userId !='sysadmin'){
-				// 审批页-打印按钮 - kjfplist_sp_print
-				getOpeatorButtonAuth("kjfplist_sp_print");
-			}
-			var data = {workitemid :<%=workItemID%>};
+			var data = {"processid" : processid};
 			var json = nui.encode(data);
 			ajaxCommon({
-				url : "com.zhonghe.ame.invoice.invoice.queryInvoiceInfo.biz.ext",
+				url : "com.zhonghe.ame.purchase.purchaseProApp.queryInvoiceByProcessId.biz.ext",
 				data : json,
-				success : function(o) {
-					workItemInfo = o.workitemInfo;
-					form.setData(o.data)
-					queryHistory(o.data.relateCont);
-					queryAllotDatas(o.data.id, o.data.allotFlag);
-					id = o.data.id;
-					beforeBookIncome = o.data.bookIncome;
-					nui.get("backTo").setData(o.data.backList);
-					nui.get("contractNo").setText(o.data.contractNo);
+				success : function(result) {
+					var data = result.proApp[0];
+					form.setData(data)
+					queryHistory(data.relateCont);
+					queryAllotDatas(data.id, data.allotFlag);
+					nui.get("contractNo").setText(data.contractNo);
 					nui.get("invoiceSumChinese").setValue(functiondigitUppercase(nui.get("invoiceSum").getValue()));
-					if(workItemInfo.workItemName == '财务开票' && o.data.allotFlag === '0'){
-						nui.get('bookIncome').enable();
-					}
-					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
-					inputFileExpandGrid.load({
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
 						"groupid" : "INVOICE",
-						"relationid" : o.data.id
+						"relationid" : data.id
 					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");
-					$("#inputFileExpandField").toggle();
-					var misOpinionGrid = nui.get("datagrid1");
-					misOpinionGrid.load({
-						processInstID : o.data.processid
-					});
-					misOpinionGrid.sortBy("time", "desc");
-					setTimeout(function() {
-						//注销掉删除操作
-						$(".Delete_Button").hide();
-					}, 300);
-					//初始化处理意见
-					initMisOpinion({
-						auditstatus : "1"
-					});
-					
+					detailFileExpandGrid.sortBy("fileTime", "desc");
 				}
 			});
 		}
@@ -489,156 +447,6 @@ body {
 			})
 		}		
 		
-		function editInvoiceTax(){
-			var invoiceSum = nui.get("invoiceSum").getValue();
-			var bookIncome = nui.get("bookIncome").getValue();
-			abs = function(val) {
-				var str = (val).toFixed(2) + '';
-				var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
-				var dot = str.substring(str.length, str.indexOf("."))
-				var ret = intSum + dot;
-				return ret;
-			}
-			nui.get("invoiceTax").setValue(abs(invoiceSum - bookIncome));
-		}							
-		
-		function countersign() {
-			selectOmEmployee();
-		}
-		
-		function selectOmEmployee() {
-			var btnEdit = this;
-			nui.open({
-				url: "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
-				title : "立项单位经办人",
-				width : 430,
-				height : 400,
-				ondestroy : function(action) {
-					var user, users = "【";
-					countersignUsers = [];
-					if (action == "ok") {
-						var iframe = this.getIFrameEl();
-						var data = iframe.contentWindow.GetData();
-						data = nui.clone(data); //必须
-						if (data) {
-							for (var i = 0; i < data.length; i++) {
-								user = {};
-								user.id = data[i].userid
-								user.name = data[i].empname
-								user.typeCode = "person"
-								countersignUsers.push(user);
-								if (i == 0) {
-									users = users + data[i].empname;
-								} else {
-									users = users + "," + data[i].empname;
-								}
-							}
-							users = users + "】";
-							titleText = "增加审批人员" + users + "并提交";
-							submitProcess(titleText);
-						}
-					}
-				}
-			});
-		}
-		
-		function onCellEndEdit(e) {
-			var record = e.record;
-			var field = e.field;
-			if (field == "bookIncome") {
-				var invoiceSum = record.invoiceSum;
-				var bookIncome = record.bookIncome;
-				abs = function(val) {
-					var str = (val).toFixed(2) + '';
-					var intSum = str.substring(0, str.indexOf(".")).replace(/\B(?=(?:\d{3})+$)/g, '');
-					var dot = str.substring(str.length, str.indexOf("."))
-					var ret = intSum + dot;
-					return ret;
-				}
-				var invoiceTax = abs(invoiceSum - bookIncome);
-				allotDataGrid.updateRow(record, {
-					"invoiceTax" : invoiceTax
-				});
-				var rows = allotDataGrid.getData();
-				var sum = rows.reduce((acc, curr) => acc + Number(curr.bookIncome), 0);
-				nui.get("bookIncome").setValue(sum);
-				editInvoiceTax();
-			}
-		}		
-		
-		function printBtn() {
-			var url = "<%=request.getContextPath()%>/contractPact/print/invoiceRedInkListPrint.jsp?id=" + id;
-			var myWindow = window.open(url);
-			myWindow.onload = function() {
-				myWindow.document.title = "打印页面";
-				myWindow.setViewData(selectRow);
-			};
-		}
-
-		function submit() {
-			var auditstatus = nui.get("auditstatus").getValue();
-			if (auditstatus == "2") { //终止流程
-				titleText = "终止";
-				submitProcess("终止");
-			} else if (auditstatus == "0") { //退回流程
-				if (!nui.get("backTo").getValue()) {
-					nui.alert("退回环节不能为空！");
-					return;
-				}
-				titleText = "退回";
-				submitProcess("退回");
-			} else if (auditstatus == "1") { //提交流程
-				titleText = "提交";
-				submitProcess("提交");
-			}
-		}
-
-		function submitProcess(title) {
-			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
-				if (action == "ok") {
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					nui.get("creatReimbProcess").setEnabled(false);
-					var json = {
-						misOpinion : misOpinion,
-						workItemID :<%=workItemID%>,
-						"countersignUsers" : countersignUsers
-					};
-					saveData(json);
-				}
-			});
-		}
-
-		function saveData(json) {
-			var bookIncome = nui.get("bookIncome").getValue();
-			var invoiceTax = nui.get("invoiceTax").getValue();
-			if (beforeBookIncome != bookIncome) {
-				json.bookIncome = bookIncome;
-				json.invoiceTax = invoiceTax;
-			}
-			ajaxCommon({
-				url : "com.zhonghe.ame.invoice.invoice.invoiceRedInkReview.biz.ext",
-				data : json,
-				success : function(o) {
-					if (o.result == "success") {
-						showTips(titleText + "成功", "系统提示")
-						closeOk();
-					} else {
-						showTips("提交失败，请联系信息技术部人员！")
-					}
-				}
-			})
-		}
-
-		function onCancel(e) {
-			CloseWindow("cancel");
-		}
-
-		function CloseWindow(action) {
-			if (window.CloseOwnerWindow)
-				return window.CloseOwnerWindow(action);
-			else
-				window.close();
-		}
 	</script>
 
 </body>
