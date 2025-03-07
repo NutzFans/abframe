@@ -71,28 +71,34 @@ table,table tr td {
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 140px">合同名称：</td>
-							<td colspan="7">
+							<td colspan="3">
 								<input id="contractName" name="contractName" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 140px">合同编号：</td>
+							<td colspan="3">
+								<input id="contractId" name="contractId" enabled="false" class="nui-textbox" style="width: 100%" />
+							</td>						
 						</tr>
 						<tr>
 							<td class="form_label" align="right">申请人：</td>
 							<td>
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 230px" />
 							</td>
+							<td align="right" style="width: 140px">申请单位：</td>
+							<td>
+								<input id="secondaryOrgname" name="secondaryOrgname" enabled="false" class="nui-textbox" style="width: 230px" />
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 140px">申请部门：</td>
 							<td>
 								<input id="implementOrgname" name="implementOrgname" enabled="false" class="nui-textbox" style="width: 230px" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">申请日期：</td>
 							<td>
 								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 230px" />
-							</td>
-							<td align="right" style="width: 140px">合同编号：</td>
-							<td>
-								<input id="contractId" name="contractId" enabled="false" class="nui-textbox" style="width: 230px" />
 							</td>
 						</tr>
 						<tr>

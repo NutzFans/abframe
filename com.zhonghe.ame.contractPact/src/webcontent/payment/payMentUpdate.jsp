@@ -35,14 +35,15 @@ body {
 									<input name="createUserid" id="createUserid" class="nui-hidden" />
 									<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
 								</td>
-								<td align="right" style="width: 160px">申请部门：</td>
+								<td align="right" style="width: 160px">合同承办单位：</td>
+								<td>
+									<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 300px;" />
+									<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
+								</td>
+								<td align="right" style="width: 160px">合同承办单位：</td>
 								<td>
 									<input name="createdOrgid" id="createdOrgid" class="nui-hidden" style="width: 300px;" />
 									<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 300px" required="true" />
-								</td>
-								<td align="right" style="width: 160px">申请日期：</td>
-								<td>
-									<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" enabled="false" />
 								</td>
 							</tr>
 							<tr>
@@ -50,10 +51,16 @@ body {
 								<td>
 									<input id="contractId" name="contractId" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 300px" required="true" enabled="true" allowInput="false" />
 								</td>
+								<td align="right" style="width: 160px">申请日期：</td>
+								<td>
+									<input id="createTime" name="createTime" class="nui-datepicker" style="width: 300px" enabled="false" />
+								</td>
+							</tr>
+							<tr>
 								<td align="right" style="width: 160px">合同名称：</td>
 								<td colspan="6">
 									<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
-								</td>
+								</td>							
 							</tr>
 							<tr>
 								<td align="right" style="width: 160px">合同性质：</td>

@@ -22,8 +22,10 @@ body {
 				<span style="color: red">经营管理系统 - 业务处理工具 - 按钮</span>
 			</legend>
 			<a id="kpgl_sjkpjezdlssjtc" class="nui-button" iconCls="icon-node" onclick="kpgl_sjkpjezdlssjtc()">开票管理 - 实际开票金额字段历史数据填充</a>
-			<p>
-				<a id="kpgl_user_org_tc" class="nui-button" iconCls="icon-node" onclick="kpgl_user_org_tc()">开票管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充</a>
+			<p></p>
+			<a id="kpgl_user_org_tc" class="nui-button" iconCls="icon-node" onclick="kpgl_user_org_tc()">开票管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充</a>
+			<p></p>
+			<a id="fkgl_user_org_tc" class="nui-button" iconCls="icon-node" onclick="fkgl_user_org_tc()">付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充</a>
 		</fieldset>
 	</div>
 
@@ -75,6 +77,30 @@ body {
 				});
 			}
 		}
+		
+		// 付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充
+		function fkgl_user_org_tc() {
+			nui.get("fkgl_user_org_tc").disable();
+			if (!confirm("是否执行[付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充]操作？")) {
+				nui.get("fkgl_user_org_tc").enable();
+			} else {
+				nui.ajax({
+					url : "com.primeton.eos.common.zhzxUtils.fkgl_user_org_tc.biz.ext",
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(result) {
+						if (result.data == "1") {
+							nui.alert("付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充 - 执行成功");
+						} else {
+							nui.alert("付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充 - 执行失败");
+						}
+						nui.get("fkgl_user_org_tc").enable();
+					}
+				});
+			}
+		}		
+		
 	</script>
 
 </body>

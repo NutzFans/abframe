@@ -68,7 +68,51 @@ public class ZhzxBizUtils {
 				dbSession.execute(updateSql, createUsername, implementOrgname, secondaryOrg, secondaryOrgname, zhInvoice.getStr("id"));
 			}
 		}
+	}
 
+	@Bizlet("付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充")
+	public void fkgl_user_org_tc() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String querySql = "SELECT * FROM zh_payment";
+		List<Entity> zhPaymentList = dbSession.query(querySql);
+		String updateSql = "UPDATE zh_payment SET create_username = ?, implement_orgname = ?, secondary_org = ?, secondary_orgname = ? WHERE id = ?";
+		if (zhPaymentList != null && zhPaymentList.size() > 0) {
+			String queryEmpSql = "SELECT EMPNAME FROM OM_EMPLOYEE WHERE USERID = ?";
+			String queryOrgSql = "SELECT ORGNAME, ORGSEQ FROM OM_ORGANIZATION WHERE ORGID = ?";
+			for (Entity zhPayment : zhPaymentList) {
+				String userId = zhPayment.getStr("create_userid");
+				String orgId = zhPayment.getStr("CREATED_ORGID");
+				String createUsername = "";
+				String implementOrgname = "";
+				String secondaryOrg = "";
+				String secondaryOrgname = "";
+				if (StrUtil.isNotBlank(userId)) {
+					Entity empEntity = dbSession.queryOne(queryEmpSql, userId);
+					if (empEntity != null) {
+						createUsername = empEntity.getStr("EMPNAME");
+					}
+				}
+				if (StrUtil.isNotBlank(orgId)) {
+					Entity seqEntity = dbSession.queryOne(queryOrgSql, orgId);
+					if (seqEntity != null) {
+						implementOrgname = seqEntity.getStr("ORGNAME");
+						String orgseq = seqEntity.getStr("ORGSEQ");
+						String[] splitToArray = StrUtil.splitToArray(orgseq, ".");
+						if (splitToArray.length >= 3) {
+							String secOrg = splitToArray[2];
+							if (StrUtil.isNotBlank(secOrg)) {
+								secondaryOrg = secOrg;
+								Entity orgEntity = dbSession.queryOne(queryOrgSql, secOrg);
+								if (orgEntity != null) {
+									secondaryOrgname = orgEntity.getStr("ORGNAME");
+								}
+							}
+						}
+					}
+				}
+				dbSession.execute(updateSql, createUsername, implementOrgname, secondaryOrg, secondaryOrgname, zhPayment.getStr("id"));
+			}
+		}
 	}
 
 }

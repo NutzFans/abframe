@@ -143,13 +143,14 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[2000]" showPager="true" dataField="data" showSummaryRow="true" pageSize="2000" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.invoice.invoice.queryinvoiceAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
+				url="com.zhonghe.ame.payment.payMent.queryPayMentAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
 				<div property="columns">
 					<div type="checkcolumn">○</div>
 					<div field="invoiceType" width="80" align="center" headerAlign="center" allowSort="true" renderer="MIS_MA_INVOICETYPE">发票类型</div>
 					<div field="createTime" dateFormat="yyyy-MM-dd" width="100" align="center" headerAlign="center" allowSort="true">申请/付款日期</div>
 					<div field="endTime" dateFormat="yyyy-MM-dd" width="100" align="center" headerAlign="center" allowSort="true">最晚付款日期</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
+					<div field="secondaryOrgname" width="180" align="center" headerAlign="center" allowSort="true">合同承办单位</div>
 					<div field="implementOrgname" width="180" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
 					<div field="contractNo" width="180" align="center" headerAlign="center" allowSort="true">合同编号</div>
 					<div field="contractName" width="200" align="center" headerAlign="center" allowSort="true" renderer="lookInfo">合同名称</div>
