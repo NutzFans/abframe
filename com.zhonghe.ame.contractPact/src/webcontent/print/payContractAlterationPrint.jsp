@@ -84,30 +84,40 @@ table,table tr td {
 									<td>
 										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
+									<td align="right" style="width: 130px">合同承办单位：</td>
+									<td>
+										<input id="historySecondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
+									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 130px">合同承办部门：</td>
 									<td>
 										<input id="historyImplementOrgname" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
-								</tr>
-								<tr>
 									<td align="right" style="width: 130px">合同编号：</td>
 									<td>
 										<input id="historyContractNo" enabled="false" class="nui-textbox" style="width: 100%" />
 									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 130px">合同金额(元)：</td>
 									<td>
 										<input id="historyContractSum" class="nui-textbox" style="width: 100%" enabled="false" />
 									</td>
-								</tr>
-								<tr>
 									<td align="right" style="width: 130px">申请日期：</td>
 									<td>
 										<input id="historyCreateTime" enabled="false" class="nui-textbox" style="width: 100%" />
 									</td>
+								</tr>
+								<tr>
 									<td align="right" style="width: 130px">签订日期：</td>
 									<td>
 										<input id="historySigningDate" class="nui-textbox" style="width: 100%" enabled="false" />
 									</td>
+									<td align="right" style="width: 130px">付款方：</td>
+									<td>
+										<input id="historyPayer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" enabled="false" />
+									</td>								
 								</tr>
 								<tr>
 									<td align="right" style="width: 130px">签约方：</td>
@@ -123,12 +133,6 @@ table,table tr td {
 												</span>
 											</span>
 										</span>
-									</td>								
-								</tr>
-								<tr>
-									<td align="right" style="width: 130px">付款方：</td>
-									<td>
-										<input id="historyPayer" class="nui-dictcombobox" dictTypeId="ZH_INVOICE_NAME_TYPE" style="width: 100%" enabled="false" />
 									</td>								
 								</tr>
 								<tr>
@@ -159,12 +163,16 @@ table,table tr td {
 										<input name="createUserid" id="createUserid" class="nui-hidden"/>
 										<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 									</td>
-									<td align="right" style="width: 130px">合同承办部门：</td>
+									<td align="right" style="width: 120px">合同承办单位:</td>
 									<td>
-										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px"/>
+										<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 									</td>									
 								</tr>
 								<tr>
+									<td align="right" style="width: 130px">合同承办部门：</td>
+									<td>
+										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px"/>
+									</td>
 									<td align="right" style="width: 130px">申请日期：</td>
 									<td>
 										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
@@ -339,6 +347,7 @@ table,table tr td {
 					nui.get("historyContractNature").setValue(data.contractNature);
 					nui.get("historyPurchasePlan").setValue(data.purchasePlan);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
+					nui.get("historySecondaryOrgname").setValue(data.secondaryOrgname);
 					nui.get("historyImplementOrgname").setValue(data.implementOrgname);
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setValue(data.contractNo);

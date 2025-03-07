@@ -23,8 +23,12 @@
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 120px">合同名称:</td>
-							<td colspan="7">
+							<td colspan="3">
 								<input name="contractName" id="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 120px">申请日期:</td>
+							<td>
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -33,16 +37,15 @@
 								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 100%" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
+							<td align="right" style="width: 120px">合同承办单位:</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
+							</td>
 							<td align="right" style="width: 120px">合同承办部门:</td>
 							<td>
-								<input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 100%;" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true"
-									onvaluechanged="changeOrgForm(e)" multiSelect="false" checkRecursive="false" expandOnLoad="0" enabled="false" showFolderCheckBox="true" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-hidden" readonly="readonly" style="width: 100%" />
-							</td>
-							<td align="right" style="width: 120px">申请日期:</td>
-							<td>
-								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" required="true" enabled="false" />
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" style="width: 100%" required="true" enabled="false"  />
 							</td>
 						</tr>
 						<tr>

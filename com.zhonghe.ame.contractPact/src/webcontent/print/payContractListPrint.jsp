@@ -80,43 +80,48 @@ table,table tr td {
 							<td>
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
+							<td align="right" style="width: 120px">合同承办单位:</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 100%" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">合同承办部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 100%" />
 								<input id="implementOrgname" name="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 160px">申请日期：</td>
 							<td>
 								<input id="createTime" name="createTime" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">合同类型：</td>
 							<td>
 								<input id="contractType" name="contractType" enabled="false" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_TYPE" style="width: 100%" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 160px">标的规模：</td>
 							<td>
 								<input id="projectSize" name="projectSize" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 160px">实施地点：</td>
 							<td>
 								<input id="projectLocal" name="projectLocal" enabled="false" class="nui-textbox" style="width: 100%" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 160px">合同金额(元)：</td>
 							<td>
 								<input id="contractSum" name="contractSum" enabled="false" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 120px">合同不含税金额(元):</td>
 							<td>
 								<input name="noTaxSum" id="noTaxSum" class="nui-textbox" vtype="float" style="width: 100%" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 120px">税额(元):</td>
 							<td>
 								<input name="payTax" id="payTax" class="nui-textbox" vtype="float" style="width: 100%" enabled="false" />

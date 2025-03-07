@@ -23,8 +23,12 @@
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 120px">合同名称:</td>
-							<td colspan="7">
+							<td colspan="3">
 								<input name="contractName" id="contractName" class="nui-textbox" style="width: 100%" required="true"/>
+							</td>
+							<td align="right" style="width: 120px">申请日期:</td>
+							<td>
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -33,14 +37,15 @@
 								<input name="createUserid" id="createUserid" class="nui-hidden" style="width: 100%" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
 							</td>
+							<td align="right" style="width: 120px">合同承办单位:</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 300px;" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
+							</td>
 							<td align="right" style="width: 120px">合同承办部门:</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 100%" required="true" />
-							</td>
-							<td align="right" style="width: 120px">申请日期:</td>
-							<td>
-								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 100%" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -279,6 +284,7 @@
 		init();
 		
 		function init() {
+			getSecOrg(userOrgId);
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
 			nui.get("implementOrg").setValue(userOrgId);
@@ -288,6 +294,19 @@
 			nui.get("auditstatus").setValue(3);//1：通过,0：退回，2：终止流程，3:发起
 			document.getElementById("salesEdit").style.display = "none";
 		}
+		
+		function getSecOrg(userOrgId){
+			var json = nui.encode({'userOrgId' : userOrgId});
+			ajaxCommon({
+				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					nui.get("secondaryOrg").setValue(data.ORGID);
+					nui.get("secondaryOrgname").setValue(data.ORGNAME);
+				}
+			});
+		}		
 						
 		function onOk(e) {
 			type = e;

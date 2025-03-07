@@ -187,6 +187,7 @@
 					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
 					<div field="createUsername" width="60" headerAlign="center" allowSort="true" align="center">经办人</div>
+					<div field="secondaryOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同承办单位</div>
 					<div field="implementOrgname" width="190" headerAlign="center" allowSort="true" align="center">合同承办部门</div>
 					<div field="createTime" headerAlign="center" allowSort="true" align="center">申请日期</div>
 					<div field="contractNo" width="180" headerAlign="center" allowSort="true" align="center">合同编号</div>
