@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+ <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@include file="/purchase/common/common.jsp"%>
 <html>
@@ -27,27 +27,29 @@ body {
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 130px">合同名称：</td>
-							<td colspan="5">
+							<td colspan="3">
 								<input name="contractName" class="nui-textbox" style="width: 100%" required="true" enabled="false" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
-							<td align="right" style="width: 130px">合同实施部门：</td>
-							<td>
-								<!-- <input name="implementOrg" id="implementOrg" shownullItem=ture class="nui-treeselect" textField="orgname" valueField="orgid" parentField="omOrganization.orgid" dataField="orgs"
-									showTreeIcon="true" valueFromSelect="true" style="width: 200px" url="com.zhonghe.ame.imptask.keytask.getAllRunOrgsforzdrw.biz.ext" allowInput="true" required="true" multiSelect="false"
-									checkRecursive="false" expandOnLoad="0" showFolderCheckBox="true" enabled="false" /> -->
-								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 300px;" />
-								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
-							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 130px">申请日期：</td>
 							<td>
 								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">合同实施单位：</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 200px;" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+							</td>
+							<td align="right" style="width: 130px">合同实施部门：</td>
+							<td>
+								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
+								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
 						</tr>
 						<tr>

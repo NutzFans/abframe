@@ -79,9 +79,15 @@ table,table tr td {
 								</tr>
 								<tr>
 									<td align="right" style="width: 130px">经办人：</td>
-									<td>
-										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 200px" />
+									<td colspan="3">
+										<input id="historyCreateUsername" class="nui-textbox" enabled="false" style="width: 100%" />
 									</td>
+								</tr>
+								<tr>
+									<td align="right" style="width: 130px">合同承办单位：</td>
+									<td>
+										<input id="historySecondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
+									</td>								
 									<td align="right" style="width: 130px">合同承办部门：</td>
 									<td>
 										<input id="historyImplementOrgname" class="nui-textbox" enabled="false" style="width: 200px" />
@@ -160,16 +166,21 @@ table,table tr td {
 										<input name="createUserid" id="createUserid" class="nui-hidden" />
 										<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 									</td>
+									<td align="right" style="width: 130px">申请日期：</td>
+									<td>
+										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
+									</td>								
+								</tr>
+								<tr>
+									<td align="right" style="width: 130px">合同承办单位：</td>
+									<td>
+										<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 200px;" />
+										<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+									</td>
 									<td align="right" style="width: 130px">合同承办部门：</td>
 									<td>
 										<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
 										<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
-									</td>
-								</tr>
-								<tr>
-									<td align="right" style="width: 130px">申请日期：</td>
-									<td>
-										<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
 									</td>
 								</tr>
 								<tr>
@@ -336,6 +347,7 @@ table,table tr td {
 					var data = result.data;
 					nui.get("historyId").setValue(data.id);
 					nui.get("historyCreateUsername").setValue(data.createUsername);
+					nui.get("historySecondaryOrgname").setValue(data.secondaryOrgname);
 					nui.get("historyImplementOrgname").setValue(data.implementOrgname);
 					nui.get("historyCreateTime").setValue(data.createTime);
 					nui.get("historyContractNo").setValue(data.contractNo);

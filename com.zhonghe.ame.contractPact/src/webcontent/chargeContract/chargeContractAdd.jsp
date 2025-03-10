@@ -26,24 +26,29 @@ body {
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 130px">合同名称：</td>
-							<td colspan="5">
+							<td colspan="3">
 								<input id="contractName" name="contractName" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
-						</tr>
-						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
 							<td>
 								<input name="createUserid" id="createUserid" class="nui-hidden" />
 								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
 							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">申请日期：</td>
+							<td>
+								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 130px">合同实施单位：</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 200px;" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
+							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
 								<input name="implementOrg" id="implementOrg" class="nui-hidden" style="width: 200px;" />
 								<input name="implementOrgname" id="implementOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
-							</td>
-							<td align="right" style="width: 130px">申请日期：</td>
-							<td>
-								<input id="createTime" name="createTime" class="nui-datepicker" style="width: 200px" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -290,6 +295,7 @@ body {
 		init();
 
 		function init() {
+			getSecOrg(userOrgId);
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUsername").setValue(userName);
 			nui.get("implementOrg").setValue(userOrgId);
@@ -299,6 +305,19 @@ body {
 			nui.get("auditstatus").setValue(3);//1：通过,0：退回，2：终止流程，3:发起
 			document.getElementById("salesEdit").style.display = "none";
 		}
+		
+		function getSecOrg(userOrgId){
+			var json = nui.encode({'userOrgId' : userOrgId});
+			ajaxCommon({
+				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					nui.get("secondaryOrg").setValue(data.ORGID);
+					nui.get("secondaryOrgname").setValue(data.ORGNAME);
+				}
+			});
+		}		
 
 		function bidInfoSelect() {
 			mini.open({

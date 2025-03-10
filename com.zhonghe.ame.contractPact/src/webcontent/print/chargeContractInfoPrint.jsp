@@ -77,9 +77,16 @@ table,table tr td {
 						</tr>
 						<tr>
 							<td align="right" style="width: 130px">申请人：</td>
-							<td>
+							<td colspan="3">
 								<input name="createUserid" id="createUserid" class="nui-hidden" />
-								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 200px" />
+								<input id="createUsername" name="createUsername" class="nui-textbox" enabled="false" required="true" style="width: 100%" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 130px">合同实施单位：</td>
+							<td>
+								<input name="secondaryOrg" id="secondaryOrg" class="nui-hidden" style="width: 200px;" />
+								<input name="secondaryOrgname" id="secondaryOrgname" class="nui-textbox" enabled="false" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">合同实施部门：</td>
 							<td>
