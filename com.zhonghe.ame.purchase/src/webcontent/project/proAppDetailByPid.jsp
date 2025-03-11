@@ -81,7 +81,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 110px">采购方式：</td>
+							<td align="right" style="width: 110px">建议采购方式：</td>
 							<td>
 								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 165px" />
 							</td>

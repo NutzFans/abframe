@@ -131,7 +131,7 @@
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">采购方式</label>
+						<label class="layui-form-label">建议采购方式</label>
 						<div class="layui-input-block">
 							<input type="text" name="purchasMode" disabled="disabled" class="layui-input">
 						</div>

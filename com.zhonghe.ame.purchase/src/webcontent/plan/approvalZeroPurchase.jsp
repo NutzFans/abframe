@@ -102,7 +102,7 @@
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 0px;">
 				<jsp:include page="/purchase/common/inputFilePurchase.jsp" />
 			</fieldset>
-		<jsp:include page="/ame_common/misOpinion.jsp"/>
+		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp"/>
 	</fieldset>
 	</div>
 	<div style="text-align:center;padding:10px;border-width:1px 0px 0px 0px;" class="nui-toolbar">     
@@ -116,6 +116,7 @@
 	    var saveURL = "com.primeton.mis.contract.contract.addContract.biz.ext";
 	    var workItemID = <%=request.getParameter("workItemID")%>;
 	    var form = new nui.Form("#form1");
+	    var opioionform = new nui.Form("opioionform");
 	    var grid_traveldetail = nui.get("grid_traveldetail");
 	   	var titleText,countersignUsers;
 	   	init();
