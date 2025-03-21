@@ -181,9 +181,9 @@
 
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[20,50,100,500]" showPager="true" dataField="data" showSummaryRow="true" pageSize="20" align="center" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8" onshowrowdetail="onShowRowDetail">
+				url="com.zhonghe.ame.payContract.payContract.payContractAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="8" onshowrowdetail="onShowRowDetail" multiSelect="true">
 				<div property="columns">
-					<div type="checkcolumn">○</div>
+					<div type="checkcolumn"></div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" allowSort="true" visible="false">id</div>
 					<div field="createUsername" width="60" headerAlign="center" allowSort="true" align="center">经办人</div>
@@ -318,17 +318,19 @@
 		}
 
 		function print() {
-			var row = grid.getSelected();
-			if (row) {
-				if(row.issupagreement == "y"){
-					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractAlterationPrint.jsp?id=" + row.id;
-					window.open(executeUrl);
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行打印", "danger");
+				return;
+			}else{
+				var selectRow = grid.getSelected();
+				if(selectRow.issupagreement=="y"){
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractAlterationPrint.jsp?id=" + selectRow.id;
+					window.open(executeUrl);				
 				}else{
-					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractListPrint.jsp?id=" + row.id;
-					window.open(executeUrl);
+					executeUrl = "<%= request.getContextPath() %>/contractPact/print/payContractListPrint.jsp?id=" + selectRow.id;
+					window.open(executeUrl);			
 				}
-			} else {
-				showTips("请选中一条记录", "danger");
 			}
 		}
 		
@@ -488,45 +490,41 @@
 		}
 
 		function deleteInfo() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行删除", "danger");
-				return;
+			debugger
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
 			} else {
-				var row = row[0];
-				if (row.appStatus == '4') {
+				var status = rows.every(item => item.appStatus == '4');
+				if(status){
 					if (!confirm("是否删除？")) {
 						return;
-					} else {
-						if (row) {
-							var json = nui.encode({
-								'data' : row
-							});
-							nui.ajax({
-								url : "com.zhonghe.ame.payContract.payContract.deletePayContractById.biz.ext",
-								type : 'POST',
-								data : json,
-								contentType : 'text/json',
-								success : function(o) {
-									if (o.result == 1) {
-										showTips("删除成功");
-										grid.reload();
-									} else {
-										showTips("删除失败，请联系信息技术部人员！", "danger");
-									}
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
+						var json = nui.encode({
+							'datas' : datas
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.payContract.payContract.deletePayContractById.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("删除成功");
+									grid.reload();
+								} else {
+									showTips("删除失败，请联系信息技术部人员！", "danger");
 								}
-							});
-	
-						} else {
-							showTips("只能选中一条项目记录进行删除", "danger");
-						}
-					}					
+							}
+						});
+					}
 				}else{
 					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
-		
+
 		function zf_edit(){
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
@@ -567,31 +565,37 @@
 				}
 			}			
 		}
-		
+
 		function bgjbr_edit() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行经办人变更", "danger");
-				return;
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要变更经办人的数据记录", "danger");
 			}else{
-				var row = row[0];
-				if (row.appStatus == '2') {
+				var status = rows.every(item => item.appStatus == '2');
+				if(status){
+					var ids = rows.map(row => row.id);
 					nui.open({
-						url: "/default/contractPact/payContract/selectTransactor.jsp?id=" + row.id,
+						url : "/default/contractPact/payContract/selectTransactor.jsp",
 						title : "付费合同 - 变更经办人",
 						width : 500,
 						height : 350,
+					    onload: function () {
+					        var iframe = this.getIFrameEl(); 
+					        iframe.contentWindow.initIds(ids); 
+					                        
+					    },						
 						ondestroy : function(action) {
 							if (action == "ok") {
+								showTips("变更经办人成功");
 								grid.reload();
 							}
 						}
-					});
-				} else {
+					});					
+				}else{
 					showTips("只能对审批状态为【审批通过】的数据进行经办人变更", "danger");
 				}
 			}
-		}						
+		}
 
 		function add() {
 			nui.open({
@@ -676,7 +680,7 @@
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				if(data.issupagreement != "y"){
+				if (data.issupagreement != "y") {
 					nui.open({
 						url : "/default/contractPact/payContract/payContractAlteration.jsp",
 						width : '100%',
@@ -689,16 +693,16 @@
 						ondestroy : function(action) {
 							search();
 						}
-					})				
-				}else{
+					})
+				} else {
 					showTips("不能对补充协议的合同，再次发起补充协议签订请求", "danger");
 				}
 			} else {
 				showTips("只能对审批状态为【审批通过】的项目发起补充协议签订", "danger");
 			}
 		}
-		
-		function ljyzf_edit(){
+
+		function ljyzf_edit() {
 			var row = grid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条项目记录进行累计已支付调整", "danger");
@@ -706,7 +710,7 @@
 			}
 			var data = row[0];
 			if (data.appStatus == "2") {
-				if(data.issupagreement != "y"){
+				if (data.issupagreement != "y") {
 					nui.open({
 						url : "/default/contractPact/payContract/payContractLjyzf.jsp",
 						width : '305',
@@ -719,8 +723,8 @@
 						ondestroy : function(action) {
 							search();
 						}
-					})				
-				}else{
+					})
+				} else {
 					showTips("请选择该补充协议对应主合同进行累计已支付调整", "danger");
 				}
 			} else {
@@ -887,64 +891,83 @@
 		
 		//导出
 		function exportExcel() {
-			if (!confirm("是否确认导出？")) {
-				return;
-			}
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			var json = nui.encode(data);
-			nui.ajax({
-				url : "com.zhonghe.ame.payContract.payContract.exportPayContractExcel.biz.ext",
-				type : "post",
-				data : json,
-				cache : false,
-				contentType : 'text/json',
-				success : function(o) {
-			     		var filePath = o.downloadFile;
-			        	var fileName = "付费合同";
-			        	var myDate = new Date();
-			        	var year = myDate.getFullYear();
-			        	var month = myDate.getMonth()+1;
-			        	var day = myDate.getDate();
-			        	var hours = myDate.getHours();
-			        	var minutes = myDate.getMinutes();
-			        	var seconds = myDate.getSeconds();
-			        	var curDateTime = year;
-		        		if(month>9){
-						curDateTime = curDateTime + "" + month;
-					}else{
-						curDateTime = curDateTime + "0" + month;
-					}
-		        		if(day>9){
-						curDateTime = curDateTime + day;
-					}else{
-						curDateTime = curDateTime + "0" + day;
-					}
-					if(hours>9){
-						curDateTime = curDateTime + hours;
-					}else{
-						curDateTime = curDateTime + "0" + hours;
-					}
-					if(minutes>9){
-						curDateTime = curDateTime + minutes;
-					}else{
-						curDateTime = curDateTime + "0" + minutes;
-					}
-					if(seconds>9){
-						curDateTime = curDateTime + seconds;
-					}else{
-						curDateTime = curDateTime + "0" + seconds;
-					}
-					fileName = fileName + "_" + curDateTime + ".xls";
-					var frm = document.getElementById("exprotExcelFlow");
-	        			frm.elements["downloadFile"].value = filePath;
-	        			frm.elements["fileName"].value = fileName;
-			    		frm.submit();
-				},
-				error : function() {
-					showTips("导出数据异常，请联系管理员！", "danger");
+			var rows = grid.getSelecteds();
+			var json;
+			if(rows.length == 0){
+				if (!confirm("是否确认导出？")) {
+					return;
 				}
-			});
+				var form = new nui.Form("#form1");
+				var data = form.getData(); //获取表单JS对象数据
+				json = nui.encode(data);
+			}else{
+				if (!confirm("确定要导出选中数据(如需导出查询结果数据，请取消选中)？")) {
+					return;
+				}
+				var ids = rows.map(row => row.id).join(',');
+				json = nui.encode({
+						"critria":{
+							"_expr": [{
+								"_property": "id",
+								"_op": "in",
+								"_value": ids
+							}]
+						}
+					}
+				);
+			}
+			nui.ajax({
+					url : "com.zhonghe.ame.payContract.payContract.exportPayContractExcel.biz.ext",
+					type : "post",
+					data : json,
+					cache : false,
+					contentType : 'text/json',
+					success : function(o) {
+						var filePath = o.downloadFile;
+						var fileName = "付费合同";
+						var myDate = new Date();
+						var year = myDate.getFullYear();
+						var month = myDate.getMonth() + 1;
+						var day = myDate.getDate();
+						var hours = myDate.getHours();
+						var minutes = myDate.getMinutes();
+						var seconds = myDate.getSeconds();
+						var curDateTime = year;
+						if (month > 9) {
+							curDateTime = curDateTime + "" + month;
+						} else {
+							curDateTime = curDateTime + "0" + month;
+						}
+						if (day > 9) {
+							curDateTime = curDateTime + day;
+						} else {
+							curDateTime = curDateTime + "0" + day;
+						}
+						if (hours > 9) {
+							curDateTime = curDateTime + hours;
+						} else {
+							curDateTime = curDateTime + "0" + hours;
+						}
+						if (minutes > 9) {
+							curDateTime = curDateTime + minutes;
+						} else {
+							curDateTime = curDateTime + "0" + minutes;
+						}
+						if (seconds > 9) {
+							curDateTime = curDateTime + seconds;
+						} else {
+							curDateTime = curDateTime + "0" + seconds;
+						}
+						fileName = fileName + "_" + curDateTime + ".xls";
+						var frm = document.getElementById("exprotExcelFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					},
+					error : function() {
+						showTips("导出数据异常，请联系管理员！", "danger");
+					}
+			});			
 		}
 		
 		function expandColumn(e) {
