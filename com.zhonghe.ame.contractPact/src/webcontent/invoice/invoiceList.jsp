@@ -551,7 +551,7 @@ html,body {
 					var ids = rows.map(row => row.id);
 					nui.open({
 						url : "/default/contractPact/invoice/selectTransactor.jsp",
-						title : "收费合同 - 变更经办人",
+						title : "开票管理 - 变更经办人",
 						width : 500,
 						height : 350,
 					    onload: function () {

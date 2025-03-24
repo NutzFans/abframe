@@ -143,9 +143,10 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="datagrid1" sizeList="[2000]" showPager="true" dataField="data" showSummaryRow="true" pageSize="2000" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.payment.payMent.queryPayMentAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true">
+				url="com.zhonghe.ame.payment.payMent.queryPayMentAll.biz.ext" allowSortColumn=true frozenStartColumn="0" frozenEndColumn="9" showSummaryRow="true" virtualScroll="true" virtualColumns="true"
+				multiSelect="true">
 				<div property="columns">
-					<div type="checkcolumn">○</div>
+					<div type="checkcolumn"></div>
 					<div field="invoiceType" width="80" align="center" headerAlign="center" allowSort="true" renderer="MIS_MA_INVOICETYPE">发票类型</div>
 					<div field="createTime" dateFormat="yyyy-MM-dd" width="100" align="center" headerAlign="center" allowSort="true">申请/付款日期</div>
 					<div field="endTime" dateFormat="yyyy-MM-dd" width="100" align="center" headerAlign="center" allowSort="true">最晚付款日期</div>
@@ -277,12 +278,14 @@ html,body {
 		}
 		
 		function printBtn() {
-			var row = grid.getSelected();
-			if (row) {
-				executeUrl = "<%=request.getContextPath()%>/contractPact/print/payMentListPrint.jsp?id=" + row.id;
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行打印", "danger");
+				return;
+			}else{
+				var selectRow = grid.getSelected();
+				executeUrl = "<%=request.getContextPath()%>/contractPact/print/payMentListPrint.jsp?id=" + selectRow.id;
 				window.open(executeUrl);
-			} else {
-				showTips("请选中一条记录", "danger");
 			}
 		}		
 		
@@ -403,104 +406,99 @@ html,body {
 		}
 
 		function deleteInfo() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行删除", "danger");
-				return;
-			} else {
-				var row = row[0];
-				if (row.appStatus == '4') {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.appStatus == '4');
+				if(status){
 					if (!confirm("是否删除？")) {
 						return;
-					} else {
-						if (row) {
-							var json = nui.encode({
-								'data' : row
-							});
-							nui.ajax({
-								url : "com.zhonghe.ame.payment.payMent.deletePayMentById.biz.ext",
-								type : 'POST',
-								data : json,
-								contentType : 'text/json',
-								success : function(o) {
-									if (o.result == 1) {
-										showTips("删除成功");
-										grid.reload();
-									} else {
-										showTips("删除失败，请联系信息技术部人员！", "danger");
-									}
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
+						var json = nui.encode({
+							'datas' : datas
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.payment.payMent.deletePayMentById.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("删除成功");
+									grid.reload();
+								} else {
+									showTips("删除失败，请联系信息技术部人员！", "danger");
 								}
-							});
-
-						} else {
-							showTips("只能选中一条项目记录进行删除", "danger");
-						}
+							}
+						});
 					}
-				} else {
+				}else{
 					showTips("只能删除审批状态为【作废】的数据", "danger");
 				}
 			}
 		}
 		
 		function zf_edit() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行作废", "danger");
-				return;
-			} else {
-				var row = row[0];
-				if (row.appStatus == '2') {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要作废的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.appStatus == '2');
+				if(status){
 					if (!confirm("是否作废？")) {
 						return;
-					} else {
-						if (row) {
-							var json = nui.encode({
-								'data' : row
-							});
-							nui.ajax({
-								url : "com.zhonghe.ame.payment.payMent.zfPayMentById.biz.ext",
-								type : 'POST',
-								data : json,
-								contentType : 'text/json',
-								success : function(o) {
-									if (o.result == 1) {
-										showTips("作废成功");
-										grid.reload();
-									} else {
-										showTips("作废失败，请联系信息技术部人员！", "danger");
-									}
+					}else{
+						var json = nui.encode({
+							'datas' : rows
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.payment.payMent.zfPayMentById.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("作废成功");
+									grid.reload();
+								} else {
+									showTips("作废失败，请联系信息技术部人员！", "danger");
 								}
-							});
-						} else {
-							showTips("只能选中一条项目记录进行作废", "danger");
-						}
-					}
-				} else {
+							}
+						});
+					}					
+				}else{
 					showTips("只能作废审批状态为【审批通过】的数据", "danger");
 				}
 			}
 		}
 		
 		function bgjbr_edit() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条项目记录进行经办人变更", "danger");
-				return;
-			} else {
-				var row = row[0];
-				if (row.appStatus == '2') {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要变更经办人的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.appStatus == '2');
+				if(status){
+					var ids = rows.map(row => row.id);
 					nui.open({
-						url : "/default/contractPact/payment/selectTransactor.jsp?id=" + row.id,
+						url : "/default/contractPact/payment/selectTransactor.jsp",
 						title : "付款管理 - 变更经办人",
 						width : 500,
 						height : 350,
+					    onload: function () {
+					        var iframe = this.getIFrameEl(); 
+					        iframe.contentWindow.initIds(ids); 
+					    },						
 						ondestroy : function(action) {
 							if (action == "ok") {
+								showTips("变更经办人成功");
 								grid.reload();
 							}
 						}
-					});
-				} else {
+					});					
+				}else{
 					showTips("只能对审批状态为【审批通过】的数据进行经办人变更", "danger");
 				}
 			}
@@ -508,12 +506,31 @@ html,body {
 		
 		//导出
 		function exportExcel() {
-			if (!confirm("是否确认导出？")) {
-				return;
+			var rows = grid.getSelecteds();
+			var json;
+			if(rows.length == 0){
+				if (!confirm("是否确认导出？")) {
+					return;
+				}
+				var form = new nui.Form("#form1");
+				var data = form.getData(); //获取表单JS对象数据
+				json = nui.encode(data);
+			}else{
+				if (!confirm("确定要导出选中数据(如需导出查询结果数据，请取消选中)？")) {
+					return;
+				}
+				var ids = rows.map(row => row.id).join(',');
+				json = nui.encode({
+						"critria":{
+							"_expr": [{
+								"_property": "id",
+								"_op": "in",
+								"_value": ids
+							}]
+						}
+					}
+				);
 			}
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.payment.payMent.exportPayMentExcel.biz.ext",
 				type : "post",
@@ -561,9 +578,6 @@ html,body {
 					frm.elements["downloadFile"].value = filePath;
 					frm.elements["fileName"].value = fileName;
 					frm.submit();
-				},
-				error : function() {
-					showTips("导出数据异常，请联系管理员！", "danger");
 				}
 			});
 		}						

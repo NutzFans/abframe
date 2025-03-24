@@ -63,7 +63,7 @@
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var id =<%=request.getParameter("id")%>;
+		var ids;
 
 		search();
 
@@ -83,9 +83,9 @@
 			if (row == undefined || row == "undefined") {
 				showTips("请选中需要变更的经办人！", "danger");
 				return;
-			} else {
+			}else{
 				var json = nui.encode({
-					'id' : id,
+					'ids' : ids,
 					'data' : row
 				});
 				nui.ajax({
@@ -101,9 +101,13 @@
 							showTips("变更经办人失败，请联系信息技术部人员！", "danger");
 						}
 					}
-				});
+				});				
 			}
 		}
+		
+		function initIds(data){
+			ids = data;
+		}		
 
 		function onRowDblClick(e) {
 			onOk();

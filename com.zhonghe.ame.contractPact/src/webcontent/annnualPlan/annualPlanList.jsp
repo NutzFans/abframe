@@ -33,7 +33,7 @@ html,body {
 							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
 							<input name="criteria._expr[13].createUserid" class="nui-hidden" id="createUserid" />
 						</td>
-						<td style="width: 90px; text-align: right;">合同承办部门:</td>
+						<td style="width: 90px; text-align: right;">合同承办单位:</td>
 						<td style="width: 155px">
 							<input id="secOrgName" name="criteria._expr[2]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="secondaryOrgname" />
@@ -111,14 +111,14 @@ html,body {
 		<div class="nui-fit">
 			<div id="annualPayGrid" sizeList="[1000]" dataField="payPlanInfos" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 100%;"
 				url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualPayPlan.biz.ext" idField="id" frozenStartColumn="0" frozenEndColumn="7" showSummaryRow="true" onshowrowdetail="onShowRowDetail"
-				virtualScroll="true" virtualColumns="true">
+				virtualScroll="true" virtualColumns="true" multiSelect="true">
 				<div property="columns">
-					<div type="checkcolumn">○</div>
+					<div type="checkcolumn"></div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" visible="false">id</div>
 					<div field="years" width="60" align="center" headerAlign="center" allowSort="true">年份</div>
 					<div field="createUsername" width="60" align="center" headerAlign="center" allowSort="true">经办人</div>
-					<div field="secondaryOrgname" width="150" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
+					<div field="secondaryOrgname" width="150" align="center" headerAlign="center" allowSort="true">合同承办单位</div>
 					<div field="contractNo" width="200" align="center" headerAlign="center" allowSort="true">合同编号</div>
 					<div field="contractName" width="200" align="center" headerAlign="center" allowSort="true">合同名称</div>
 					<div field="payer" width="100" align="center" headerAlign="center" allowSort="true" renderer="ZH_INVOICE_NAME_TYPE">付款方</div>
@@ -235,64 +235,83 @@ html,body {
 		}
 		
 		function exportExcel() {
-			if (!confirm("是否确认导出？")) {
-				return;
-			}
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			var json = nui.encode(data);
-			nui.ajax({
-				url : "com.zhonghe.ame.annualPlan.annualPlan.exportAnnualPayPlanExcel.biz.ext",
-				type : "post",
-				data : json,
-				cache : false,
-				contentType : 'text/json',
-				success : function(o) {
-					var filePath = o.downloadFile;
-					var fileName = "付款计划";
-					var myDate = new Date();
-					var year = myDate.getFullYear();
-					var month = myDate.getMonth() + 1;
-					var day = myDate.getDate();
-					var hours = myDate.getHours();
-					var minutes = myDate.getMinutes();
-					var seconds = myDate.getSeconds();
-					var curDateTime = year;
-					if (month > 9) {
-						curDateTime = curDateTime + "" + month;
-					} else {
-						curDateTime = curDateTime + "0" + month;
-					}
-					if (day > 9) {
-						curDateTime = curDateTime + day;
-					} else {
-						curDateTime = curDateTime + "0" + day;
-					}
-					if (hours > 9) {
-						curDateTime = curDateTime + hours;
-					} else {
-						curDateTime = curDateTime + "0" + hours;
-					}
-					if (minutes > 9) {
-						curDateTime = curDateTime + minutes;
-					} else {
-						curDateTime = curDateTime + "0" + minutes;
-					}
-					if (seconds > 9) {
-						curDateTime = curDateTime + seconds;
-					} else {
-						curDateTime = curDateTime + "0" + seconds;
-					}
-					fileName = fileName + "_" + curDateTime + ".xls";
-					var frm = document.getElementById("exprotExcelFlow");
-					frm.elements["downloadFile"].value = filePath;
-					frm.elements["fileName"].value = fileName;
-					frm.submit();
-				},
-				error : function() {
-					showTips("导出数据异常，请联系管理员！", "danger");
+			var rows = grid.getSelecteds();
+			var json;
+			if(rows.length == 0){
+				if (!confirm("是否确认导出？")) {
+					return;
 				}
-			});
+				var form = new nui.Form("#form1");
+				var data = form.getData(); //获取表单JS对象数据
+				json = nui.encode(data);
+			}else{
+				if (!confirm("确定要导出选中数据(如需导出查询结果数据，请取消选中)？")) {
+					return;
+				}
+				var ids = rows.map(row => row.id).join(',');
+				json = nui.encode({
+						"criteria":{
+							"_expr": [{
+								"_property": "id",
+								"_op": "in",
+								"_value": ids
+							}]
+						}
+					}
+				);
+			}
+			nui.ajax({
+					url : "com.zhonghe.ame.annualPlan.annualPlan.exportAnnualPayPlanExcel.biz.ext",
+					type : "post",
+					data : json,
+					cache : false,
+					contentType : 'text/json',
+					success : function(o) {
+						var filePath = o.downloadFile;
+						var fileName = "付款计划";
+						var myDate = new Date();
+						var year = myDate.getFullYear();
+						var month = myDate.getMonth() + 1;
+						var day = myDate.getDate();
+						var hours = myDate.getHours();
+						var minutes = myDate.getMinutes();
+						var seconds = myDate.getSeconds();
+						var curDateTime = year;
+						if (month > 9) {
+							curDateTime = curDateTime + "" + month;
+						} else {
+							curDateTime = curDateTime + "0" + month;
+						}
+						if (day > 9) {
+							curDateTime = curDateTime + day;
+						} else {
+							curDateTime = curDateTime + "0" + day;
+						}
+						if (hours > 9) {
+							curDateTime = curDateTime + hours;
+						} else {
+							curDateTime = curDateTime + "0" + hours;
+						}
+						if (minutes > 9) {
+							curDateTime = curDateTime + minutes;
+						} else {
+							curDateTime = curDateTime + "0" + minutes;
+						}
+						if (seconds > 9) {
+							curDateTime = curDateTime + seconds;
+						} else {
+							curDateTime = curDateTime + "0" + seconds;
+						}
+						fileName = fileName + "_" + curDateTime + ".xls";
+						var frm = document.getElementById("exprotExcelFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					},
+					error : function() {
+						showTips("导出数据异常，请联系管理员！", "danger");
+					}
+			});							
 		}						
 
 		function ZH_INVOICE_NAME_TYPE(e) {

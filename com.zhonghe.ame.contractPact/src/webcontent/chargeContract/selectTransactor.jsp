@@ -63,7 +63,7 @@
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("datagrid1");
-		var id =<%=request.getParameter("id")%>;
+		var ids;
 
 		search();
 
@@ -85,7 +85,7 @@
 				return;
 			} else {
 				var json = nui.encode({
-					'id' : id,
+					'ids' : ids,
 					'data' : row
 				});
 				nui.ajax({
@@ -104,6 +104,10 @@
 				});
 			}
 		}
+		
+		function initIds(data){
+			ids = data;
+		}		
 
 		function onRowDblClick(e) {
 			onOk();

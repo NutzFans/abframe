@@ -490,7 +490,6 @@
 		}
 
 		function deleteInfo() {
-			debugger
 			var rows = grid.getSelecteds();
 			if (rows.length == 0) {
 				showTips("请选中需要删除的数据记录", "danger");
@@ -582,7 +581,6 @@
 					    onload: function () {
 					        var iframe = this.getIFrameEl(); 
 					        iframe.contentWindow.initIds(ids); 
-					                        
 					    },						
 						ondestroy : function(action) {
 							if (action == "ok") {
