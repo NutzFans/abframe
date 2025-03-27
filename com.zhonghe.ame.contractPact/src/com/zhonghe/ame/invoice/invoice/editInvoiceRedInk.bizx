@@ -174,9 +174,9 @@
     <node>subprocess2</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo11" name="cutOutContractSum" displayName="cutOutContractSum" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link43" name="link43" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo11</sourceNode>
-      <targetNode>subprocess3</targetNode>
+      <targetNode>invokePojo12</targetNode>
     </sourceConnections>
     <targetConnections>link6</targetConnections>
     <location x="438" y="503"/>
@@ -198,36 +198,12 @@
     <figSize height="16" width="109"/>
     <node>invokePojo11</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="invoiceWfp" displayName="payContractWfp" type="subprocess">
-    <sourceConnections xsi:type="process:tLink" id="link44" name="link44" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>subprocess3</sourceNode>
-      <targetNode>invokePojo12</targetNode>
-    </sourceConnections>
-    <targetConnections>link43</targetConnections>
-    <location x="435" y="600"/>
-    <size height="27" width="27"/>
-    <nodeLabel>subprocess3label</nodeLabel>
-    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">com.zhonghe.ame.payContract.payContract.payContractWfp</process:partner>
-      <process:inputVariables>
-        <process:inputVariable id="0" name="omOrg" type="query" value="com.zhonghe.ame.contractPact.frameAgreement.OmOrganization" valueType="DataObject" pattern="reference">org</process:inputVariable>
-      </process:inputVariables>
-      <process:outputVariables>
-        <process:outputVariable id="0" name="wfp" type="query" value="com.eos.workflow.data.WFParticipant" valueType="DataObject">wfp</process:outputVariable>
-      </process:outputVariables>
-    </process:flow>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
-    <location x="419" y="635"/>
-    <figSize height="16" width="59"/>
-    <node>subprocess3</node>
-  </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo12" name="判断合同类型" displayName="contractType" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link50" name="link50" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo12</sourceNode>
       <targetNode>assign2</targetNode>
     </sourceConnections>
-    <targetConnections>link44</targetConnections>
+    <targetConnections>link9</targetConnections>
     <location x="570" y="599"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo12label</nodeLabel>
@@ -559,10 +535,6 @@
     <process:copy>
       <process:from type="query" pattern="reference">contractType</process:from>
       <process:to type="query">params/contractType</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">wfp</process:from>
-      <process:to type="query">params/wfp</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">invoiceSum</process:from>
