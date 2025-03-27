@@ -183,7 +183,7 @@
 			$('#div11').click(function() {
 				layer.open({
 					title : '部门领导审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_SBZXBMLDSP】的字典项数据，修改后【刷新缓存】',
+					content : '通过【机构人员管理】模块修改设备监理中心的【机构主管人员】字段',
 					btn : []
 				});
 			});

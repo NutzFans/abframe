@@ -128,4 +128,28 @@ public class OrgUtils {
 		}
 	}
 
+	@Bizlet("获取一级部门的机构负责人")
+	public HashMap<String, String> getOneOrgManager(int orgId) {
+		HashMap<String, String> person = new HashMap<String, String>();
+		try {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			String queryOrgSqlOne = "SELECT ORGLEVEL, ORGSEQ, JUDGE, MANAGERID FROM OM_ORGANIZATION WHERE ORGID = ?";
+			String queryEmpSqlOne = "SELECT EMPCODE, EMPNAME FROM OM_EMPLOYEE WHERE EMPID = ?";
+			Entity orgEntity = dbSession.queryOne(queryOrgSqlOne, orgId);
+			String orgSeq = orgEntity.getStr("ORGSEQ");
+			String[] splitToArray = StrUtil.splitToArray(orgSeq, ".");
+			String oneDepOrgId = splitToArray[2];
+			Entity oneDepOrgEntity = dbSession.queryOne(queryOrgSqlOne, oneDepOrgId);
+			if (StrUtil.isNotBlank(oneDepOrgEntity.getStr("MANAGERID"))) {
+				Entity empEntity = dbSession.queryOne(queryEmpSqlOne, oneDepOrgEntity.getInt("MANAGERID"));
+				person.put("empCode", empEntity.getStr("EMPCODE"));
+				person.put("empName", empEntity.getStr("EMPNAME"));
+				person.put("type", "person");
+			}
+			return person;
+		} catch (Exception e) {
+			return person;
+		}
+	}
+
 }

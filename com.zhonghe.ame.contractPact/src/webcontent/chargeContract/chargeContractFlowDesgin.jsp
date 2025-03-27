@@ -168,7 +168,7 @@
 			$('#div9').click(function() {
 				layer.open({
 					title : '设备监理中心经营管理审批 - 调整审批人',
-					content : '',
+					content : '通过【角色管理】模块修改角色编号为【manage13】的角色数据',
 					btn : []
 				});
 			});
@@ -177,7 +177,7 @@
 			$('#div10').click(function() {
 				layer.open({
 					title : '设备监理中心领导审批 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【manage13】的角色数据',
+					content : '通过【机构人员管理】模块修改设备监理中心的【机构主管人员】字段',
 					btn : []
 				});
 			});

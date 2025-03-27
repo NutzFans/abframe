@@ -24,14 +24,22 @@ public class OrgUtil {
 		DataObject org = this.queryOrgById(orgId);
 		if (ObjUtil.isNotNull(org)) {
 			String orgseq = org.getString("ORGSEQ");
-			String[] splitToArray = StrUtil.splitToArray(orgseq, ".");
-			if (splitToArray.length >= 3) {
-				String secOrg = splitToArray[2];
-				if (StrUtil.isNotBlank(secOrg)) {
-					DataObject data = this.queryOrgById(secOrg);
-					if (ObjUtil.isNotNull(data)) {
-						map.put("ORGID", data.getString("ORGID"));
-						map.put("ORGNAME", data.getString("ORGNAME"));
+			if (StrUtil.startWith(orgseq, ".1111.")) {
+				DataObject data = this.queryOrgById("1111");
+				if (ObjUtil.isNotNull(data)) {
+					map.put("ORGID", data.getString("ORGID"));
+					map.put("ORGNAME", data.getString("ORGNAME"));
+				}
+			} else {
+				String[] splitToArray = StrUtil.splitToArray(orgseq, ".");
+				if (splitToArray.length >= 3) {
+					String secOrg = splitToArray[2];
+					if (StrUtil.isNotBlank(secOrg)) {
+						DataObject data = this.queryOrgById(secOrg);
+						if (ObjUtil.isNotNull(data)) {
+							map.put("ORGID", data.getString("ORGID"));
+							map.put("ORGNAME", data.getString("ORGNAME"));
+						}
 					}
 				}
 			}
