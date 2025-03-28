@@ -46,7 +46,12 @@ public class OrgUtils {
 			String querySqlOne = "SELECT ORGSEQ FROM OM_ORGANIZATION WHERE ORGID = ?";
 			Entity entity = dbSession.queryOne(querySqlOne, orgId);
 			String orgseq = entity.getStr("ORGSEQ");
-			String secOrgseq = StrUtil.sub(orgseq, 0, StrUtil.ordinalIndexOf(orgseq, ".", 3) + 1);
+			String secOrgseq = "";
+			if(StrUtil.contains(orgseq, ".1111.")){
+				secOrgseq = StrUtil.sub(orgseq, 0, StrUtil.ordinalIndexOf(orgseq, ".", 2) + 1);
+			}else{
+				secOrgseq = StrUtil.sub(orgseq, 0, StrUtil.ordinalIndexOf(orgseq, ".", 3) + 1);
+			}
 			String param = secOrgseq + "%";
 			String querySqlTwo = "SELECT ORGID FROM OM_ORGANIZATION WHERE ORGSEQ LIKE ?";
 			List<Entity> entitys = dbSession.query(querySqlTwo, param);

@@ -32,11 +32,11 @@ body {
 						<tr>
 							<td colspan="1" class="form_label" align="right" style="width: 100px;">提报人姓名：</td>
 							<td colspan="1">
-								<input class="nui-textbox" name="infomantUser" id="infomantUser" required="true" style="width: 100%;" value="<%=userName%>" readonly="readonly" />
+								<input class="nui-textbox" name="infomantUser" id="infomantUser" required="true" style="width: 100%;" readonly="readonly" />
 							</td>
 							<td colspan="1" class="form_label" align="right" style="width: 100px;">采购单位：</td>
 							<td colspan="3">
-								<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width: 100%;" value="<%=userOrgName%>" readonly="readonly" />
+								<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width: 100%;" readonly="readonly" />
 								<input id="needOrgId" name="needOrgId" class="nui-hidden" required="true" style="width: 100%;" />
 							</td>
 						</tr>
@@ -162,7 +162,6 @@ body {
 		var grid = nui.get("grid_traveldetail");
 		var purType, orgid; //采购类型,归口部门ID
 		var istype, title, fileMsgBoxId;
-		nui.get("needOrgId").setValue(getOrgseq2());//设置第二级组织机构代码
 		var year = new Date().getFullYear();
 		var yeariterm = [];
 		for (var i = 0; i < 5; i++) {
@@ -174,6 +173,26 @@ body {
 		nui.get("year").setData(yeariterm);
 		nui.get("addbtn").disable();
 		nui.get("delbtn").disable();
+		
+		init();
+		
+		function init() {
+			getSecOrg(userOrgId);
+			nui.get("infomantUser").setValue(userName);
+		}
+		
+		function getSecOrg(userOrgId){
+			var json = nui.encode({'userOrgId' : userOrgId});
+			ajaxCommon({
+				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					nui.get("needOrgId").setValue(data.ORGID);
+					nui.get("needOrgName").setValue(data.ORGNAME);
+				}
+			});
+		}		
 
 		function loadItem() {
 			nui.get("items").setValue("");

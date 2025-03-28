@@ -30,11 +30,11 @@ body {
 							</td>
 							<td colspan="1" class="form_label" align="right" style="width: 120px;">提报人姓名：</td>
 							<td colspan="1">
-								<input class="nui-textbox" name="infomantUser" id="infomantUser" required="true" style="width: 100%;" value="<%=userName%>" readonly="readonly" />
+								<input class="nui-textbox" name="infomantUser" id="infomantUser" required="true" style="width: 100%;" readonly="readonly" />
 							</td>
 							<td colspan="1" class="form_label" align="right" style="width: 120px;">采购单位：</td>
 							<td colspan="1">
-								<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width: 100%;" value="<%=userOrgName%>" readonly="readonly" />
+								<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width: 100%;" readonly="readonly" />
 								<input id="needOrgId" name="needOrgId" class="nui-hidden" required="true" style="width: 100%;" />
 							</td>
 						</tr>
@@ -207,7 +207,26 @@ body {
 			});
 		}
 		nui.get("year").setData(yeariterm);
-		nui.get("needOrgId").setValue(getOrgseq2());
+		
+		init();
+		
+		function init() {
+			getSecOrg(userOrgId);
+			nui.get("infomantUser").setValue(userName);
+		}
+		
+		function getSecOrg(userOrgId){
+			var json = nui.encode({'userOrgId' : userOrgId});
+			ajaxCommon({
+				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					nui.get("needOrgId").setValue(data.ORGID);
+					nui.get("needOrgName").setValue(data.ORGNAME);
+				}
+			});
+		}
 
 		function addTicket() {
 			if (purType != "" && orgid != "" && purType != undefined && orgid != undefined && purType != 3) {

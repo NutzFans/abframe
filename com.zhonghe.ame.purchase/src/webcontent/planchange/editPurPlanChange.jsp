@@ -223,9 +223,8 @@ body {
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
+					getSecOrg(userOrgId);
 					nui.get("infomantUser").setValue(userName);
-					nui.get("needOrgName").setValue(userOrgName);
-					nui.get("needOrgId").setValue(userOrgId);
 					var jsonData = {
 						"planId" : o.purPlan.id
 					}
@@ -234,6 +233,19 @@ body {
 				}
 			});
 		}
+		
+		function getSecOrg(userOrgId){
+			var json = nui.encode({'userOrgId' : userOrgId});
+			ajaxCommon({
+				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
+				data : json,
+				success : function(result) {
+					var data = result.data;
+					nui.get("needOrgId").setValue(data.ORGID);
+					nui.get("needOrgName").setValue(data.ORGNAME);
+				}
+			});
+		}		
 		
 		function loadItem() {
 			purType = nui.get("type").getValue();

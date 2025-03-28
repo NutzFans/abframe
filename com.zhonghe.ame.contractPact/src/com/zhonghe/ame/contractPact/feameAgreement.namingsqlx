@@ -976,6 +976,17 @@
 			WHERE a.ORGID = #orgid#
 
 	]]></select>
+	<!-- 获取上海供应链-->
+	<select id="getFuncGYLSpr" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
+		     SELECT CASE WHEN d.USERID is null THEN f.USERID ELSE d.USERID end as USERID,
+		     CASE WHEN d.USERID is NULL THEN f.EMPNAME ELSE d.EMPNAME end as EMPNAME,'person' as typeCode FROM OM_ORGANIZATION a
+			LEFT JOIN OM_ORGANIZATION b on a.ORGSEQ like b.ORGSEQ+'%' 
+			LEFT JOIN EOS_DICT_ENTRY c on c.DICTTYPEID = #dicttypeid# and c.DICTID = CAST(b.ORGID as VARCHAR)
+			LEFT JOIN OM_EMPLOYEE d on c.DICTNAME = d.USERID
+			LEFT JOIN EOS_DICT_ENTRY e on e.DICTTYPEID = #dicttypeid# and e.DICTID = '0'
+			LEFT JOIN OM_EMPLOYEE f on e.DICTNAME = f.USERID
+			WHERE a.ORGID = #orgid#
+	]]></select>
 	<!-- 获取合同盖章人员-->
 	<select id="getSealUser" parameterClass="java.util.HashMap" resultMap="resultMap1"><![CDATA[
 		     select a.USERID,a.EMPNAME ,'person' as typeCode from EOS_DICT_ENTRY c 
