@@ -26,6 +26,8 @@ body {
 			<a id="kpgl_user_org_tc" class="nui-button" iconCls="icon-node" onclick="kpgl_user_org_tc()">开票管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充</a>
 			<p></p>
 			<a id="fkgl_user_org_tc" class="nui-button" iconCls="icon-node" onclick="fkgl_user_org_tc()">付款管理 - 申请人名称、申请人部门名称、二级组织、二级组织名称数据填充</a>
+			<p></p>
+			<a id="xecg_user_tc" class="nui-button" iconCls="icon-node" onclick="xecg_user_tc()">小额采购 - 申请人姓名数据填充</a>
 		</fieldset>
 	</div>
 
@@ -99,7 +101,30 @@ body {
 					}
 				});
 			}
-		}		
+		}
+		
+		// 小额采购 - 申请人姓名数据填充
+		function xecg_user_tc() {
+			nui.get("xecg_user_tc").disable();
+			if (!confirm("是否执行[小额采购 - 申请人姓名数据填充]操作？")) {
+				nui.get("xecg_user_tc").enable();
+			} else {
+				nui.ajax({
+					url : "com.primeton.eos.common.zhzxUtils.xecg_user_tc.biz.ext",
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(result) {
+						if (result.data == "1") {
+							nui.alert("小额采购 - 申请人姓名数据填充 - 执行成功");
+						} else {
+							nui.alert("小额采购 - 申请人姓名数据填充 - 执行失败");
+						}
+						nui.get("xecg_user_tc").enable();
+					}
+				});
+			}
+		}				
 		
 	</script>
 

@@ -115,4 +115,26 @@ public class ZhzxBizUtils {
 		}
 	}
 
+	@Bizlet("小额采购 - 申请人姓名数据填充")
+	public void xecg_user_tc() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String querySql = "SELECT * FROM zh_purchase_zero";
+		List<Entity> zhPurchaseZeroList = dbSession.query(querySql);
+		String updateSql = "UPDATE zh_purchase_zero SET create_username = ? WHERE id = ?";
+		if (zhPurchaseZeroList != null && zhPurchaseZeroList.size() > 0) {
+			String queryEmpSql = "SELECT EMPNAME FROM OM_EMPLOYEE WHERE USERID = ?";
+			for (Entity zhPurchaseZero : zhPurchaseZeroList) {
+				String userId = zhPurchaseZero.getStr("CREATED_BY");
+				String createUsername = "";
+				if (StrUtil.isNotBlank(userId)) {
+					Entity empEntity = dbSession.queryOne(queryEmpSql, userId);
+					if (empEntity != null) {
+						createUsername = empEntity.getStr("EMPNAME");
+					}
+				}
+				dbSession.execute(updateSql, createUsername, zhPurchaseZero.getStr("id"));
+			}
+		}
+	}
+
 }
