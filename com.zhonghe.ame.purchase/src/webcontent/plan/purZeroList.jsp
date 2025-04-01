@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>零星采购</title>
+<title>小额采购</title>
 <style type="text/css">
 html,body {
 	margin: 0;
@@ -25,7 +25,7 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 90px; text-align: right;">零星采购名称:</td>
+						<td style="width: 90px; text-align: right;">小额采购名称:</td>
 						<td style="width: 245px">
 							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 240px;" />
 							<input class="nui-hidden" name="criteria._expr[1]._property" value="purchaseName" />
@@ -52,7 +52,7 @@ html,body {
 							<input class="nui-hidden" name="criteria._or[1]._expr[1].createdBy" id="createdBy1" />
 							<input class="nui-hidden" name="criteria._or[1]._expr[1]._op" value="=" />
 						</td>
-						<td style="width: 90px; text-align: right;">零星采购编号:</td>
+						<td style="width: 90px; text-align: right;">小额采购编号:</td>
 						<td style="width: 205px">
 							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 200px;" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="purchaseCode" />
@@ -100,12 +100,12 @@ html,body {
 				<div property="columns">
 					<div name="temp123" type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-					<div field="purchaseName" width="100" align="left" headerAlign="center" renderer="lookInfo">零星采购名称</div>
-					<div field="purchaseCode" width="100" align="left" headerAlign="center">零星采购编号</div>
-					<div field="orgname" width="100" align="left" headerAlign="center">采购单位</div>
+					<div field="purchaseName" width="100" align="left" headerAlign="center" renderer="lookInfo">小额采购名称</div>
+					<div field="purchaseCode" width="100" align="left" headerAlign="center">小额采购编号</div>
+					<div field="createdOrgname" width="100" align="left" headerAlign="center">采购单位</div>
 					<div field="totalAmount" width="100" align="left" headerAlign="center">金额（万元）</div>
 					<div field="status" width="80" align="center" headerAlign="center" renderer="onActionRenderer">状态</div>
-					<div field="createdName" width="100" align="center" headerAlign="center">申请人</div>
+					<div field="createUsername" width="100" align="center" headerAlign="center">申请人</div>
 					<div field="createdTime" width="100" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">申请日期</div>
 				</div>
 			</div>

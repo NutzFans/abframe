@@ -141,6 +141,16 @@
 				window.close();
 			}
 		}
+		
+		function showTips(content, state) {
+			if(state) {
+				nui.showTips({content: content, state: state, x: "center", y: "center",timeout: 3500.});
+			}
+			else {
+				nui.showTips({content: content, state: "success", x: "center", y: "center",timeout: 3500.});
+			}
+		}		
+		
 	</script>
 
 </body>

@@ -51,7 +51,7 @@
   	  
 	  <div class="layui-row">
 	    <div class="layui-col-xs12">
-		    <label class="layui-form-label" style="width: 120px">零星采购名称</label>
+		    <label class="layui-form-label" style="width: 120px">小额采购名称</label>
 		    <div class="layui-input-block" >
 		      <input type="text" name="purchaseName" disabled="disabled" class="layui-input">
 		    </div>
@@ -62,13 +62,13 @@
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">申请人</label>
 		    <div class="layui-input-block">
-		      <input type="text" name="createdName" disabled="disabled" class="layui-input">
+		      <input type="text" name="createUsername" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">申请单位</label>
 		    <div class="layui-input-block">
-		      <input type="text" name="orgname" disabled="disabled" class="layui-input">
+		      <input type="text" name="createdOrgname" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	  </div>
