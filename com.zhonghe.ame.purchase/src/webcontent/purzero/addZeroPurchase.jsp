@@ -234,8 +234,8 @@ body {
 				}
 				grid_traveldetail.validate();
 				if (grid_traveldetail.isValid() == false) {
-					var error = grid.getCellErrors()[0];
-					grid.beginEditCell(error.record, error.column);
+					var error = grid_traveldetail.getCellErrors()[0];
+					grid_traveldetail.beginEditCell(error.record, error.column);
 					showTips("明细数据有错误，请检查!", "danger");
 					return;
 				}

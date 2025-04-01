@@ -66,6 +66,10 @@ body {
 							<td>
 								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" enabled="false" />
 							</td>
+							<td align="right" style="width: 170px">一体化平台采购需求计划编码：</td>
+							<td colspan="2">
+								<input name="ydhptXqjhCode" id="ydhptXqjhCode" class="nui-textbox" style="width: 100%;" required="true" enabled="false"/>
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">申请原因、市场调研情况或比价情况：</td>
@@ -79,33 +83,39 @@ body {
 		</fieldset>
 
 		<fieldset id="field3" style="border: solid 1px #aaa;">
-			<legend>明细</legend>
+			<legend>
+				明细
+			</legend>
 			<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="false" multiSelect="true" dataField="purZeroItem"
 				url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext">
 				<div property="columns">
-					<div field="itemName" width="130" align="center" headerAlign="center" vtype="required">
+					<div field="ythptWlCode" width="130" align="center" headerAlign="center" vtype="required">
+						物料编码
+						<input id="ythptWlCode" name="ythptWlCode" property="editor" class="nui-textbox" required="true" style="width: 100%"/>
+					</div>
+					<div field="itemName" width="130" align="center" headerAlign="center">
 						采购物项名称
-						<input id="itemName" name="itemName" property="editor" class="nui-textbox" enabled="false" />
+						<input id="itemName" name="itemName" property="editor" class="nui-textbox" enabled="false" style="width: 100%" />
 					</div>
 					<div field="brandSpec" width="130" align="center" headerAlign="center">
 						品牌/型号/规格
-						<input id="brandSpec" name="brandSpec" property="editor" class="nui-textbox" enabled="false" />
+						<input id="brandSpec" name="brandSpec" property="editor" class="nui-textbox" enabled="false" style="width: 100%" />
 					</div>
 					<div field="unit" displayField="unit" width="130" align="center" headerAlign="center">
 						单位
-						<input name="unit" property="editor" class="nui-textbox" enabled="false" />
+						<input name="unit" property="editor" class="nui-textbox" enabled="false" style="width: 100%" />
 					</div>
-					<div field="onePrice" width="130" align="center" headerAlign="center" vtype="required">
+					<div field="onePrice" width="130" align="center" headerAlign="center">
 						单价(万元)
-						<input id="onePrice" name="onePrice" property="editor" class="nui-spinner" minValue="0" maxValue="999999999" enabled="false" />
+						<input id="onePrice" name="onePrice" property="editor" class="nui-spinner" minValue="0" maxValue="999999999" enabled="false" style="width: 100%" />
 					</div>
-					<div field="num" width="130" align="center" headerAlign="center" vtype="required">
+					<div field="num" width="130" align="center" headerAlign="center">
 						数量
-						<input id="num" name="num" property="editor" class="nui-spinner" minValue="0" maxValue="999999999" enabled="false" />
+						<input id="num" name="num" property="editor" class="nui-spinner" minValue="0" maxValue="999999999" enabled="false" style="width: 100%" />
 					</div>
 					<div field="totalPrice" width="130" align="center" headerAlign="center">
 						总价(万元)
-						<input id="totalPrice" name="totalPrice" property="editor" class="nui-textbox" enabled="false" />
+						<input id="totalPrice" name="totalPrice" property="editor" class="nui-textbox" enabled="false" style="width: 100%" />
 					</div>
 				</div>
 			</div>
@@ -147,7 +157,6 @@ body {
 				success : function(o) {
 					var workItemInfo = o.workitem;
 					form.setData(o.purZero);
-					form.setEnabled(false);
 					var grid = nui.get("datagrid1");
 					grid.load({
 						processInstID : o.purZero.processid

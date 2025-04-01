@@ -114,6 +114,16 @@
 		    </div>
 	    </div>
 	  </div>
+	  
+	  <div class="layui-row">
+	    <div class="layui-col-xs12">
+		    <label class="layui-form-label" style="height: 50px">一体化平台采购<br>需求计划编码</label>
+		    <div class="layui-input-block">
+		    	<input type="text" name="ydhptXqjhCode" disabled="disabled" class="layui-input" style="height: 50px">
+		    </div>
+	    </div>
+	  </div>
+	  
 	  <div class="layui-row">
 	    <div class="layui-col-xs12">
 		    <label class="layui-form-label" style="height: 70px">申请原因、<br>市场调研情况<br>或比价情况</label>
@@ -235,11 +245,12 @@
 					,cellMinWidth: 90
 	  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 			    ,cols: [[
-			      {field:'itemName', width:240, title: '采购物项名称 '}
+			    	{field:'ythptWlCode', width:110, title: '物料编码'}
+			      ,{field:'itemName', width:240, title: '采购物项名称 '}
 			      ,{field:'brandSpec', width:240, title: '品牌/型号/规格'}
-			      ,{field:'unit', width:110, title: '单位'}
+			      ,{field:'unit', width:60, title: '单位'}
 			      ,{field:'onePrice',width:90, title: '单价(万元)'}
-			      ,{field:'num',width:110, title: '数量'}  
+			      ,{field:'num',width:60, title: '数量'}  
 			      ,{field:'totalPrice', width:100, title: '总价(万元)'}
 			    ]]
 			    ,parseData: function(res){ //res 即为原始返回的数据
