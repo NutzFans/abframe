@@ -81,7 +81,7 @@ body .mini-textboxlist {
 							</td>
 							<td align="right" style="width: 100px">建议采购方式：</td>
 							<td>
-								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" required="true" style="width: 100%;" onvaluechanged="purchasModeChange" />
+								<input id="purchasMode" name="purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS_NEW" required="true" style="width: 100%;" onvaluechanged="purchasModeChange" />
 							</td>
 						</tr>
 						<tr>
