@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryPayContractInfo" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
-  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="框架协议信息&#xD;&#xA;" title="huangqj&#x9;21-1-21 下午1:56">
-    <location x="134" y="464"/>
-    <size height="100" width="238"/>
-  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" collapsed="false" type="start">
     <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -26,7 +22,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
     <location x="41" y="126"/>
-    <figSize height="17" width="25"/>
+    <figSize height="16" width="25"/>
     <node>start0</node>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end1" name="结束" displayName="结束" collapsed="false" type="end">
@@ -38,11 +34,12 @@
     <process:returns>
       <process:return id="0" language="com.primeton.rdmgr.data.csomsData.MisCustinfo" name="miscustinfo" type="query" valueType="DataObject">miscustinfo</process:return>
       <process:return id="1" language="com.zhonghe.ame.payContract.payContract.ZhPayContract" name="data" type="query" valueType="DataObject">data</process:return>
+      <process:return id="2" language="com.eos.workflow.data.WFWorkItem" name="workItemInfo" type="query" valueType="DataObject">workItemInfo</process:return>
     </process:returns>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
     <location x="1232" y="126"/>
-    <figSize height="17" width="25"/>
+    <figSize height="16" width="25"/>
     <node>end1</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="付费合同信息" displayName="Query with page according to criteria entity" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
@@ -71,7 +68,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
     <location x="380" y="126"/>
-    <figSize height="17" width="73"/>
+    <figSize height="16" width="73"/>
     <node>invokePojo2</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokeService0" name="queryWorkItemDetail4SDO" displayName="WorkItemManagerService.queryWorkItemDetail4SDO" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
@@ -95,8 +92,8 @@
     </process:outputVariables>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
-    <location x="106" y="124"/>
-    <figSize height="17" width="157"/>
+    <location x="112" y="124"/>
+    <figSize height="16" width="145"/>
     <node>invokeService0</node>
   </nodes>
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="回退列表" displayName="queryBackActivity" type="subprocess">
@@ -121,7 +118,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
     <location x="1009" y="195"/>
-    <figSize height="17" width="49"/>
+    <figSize height="16" width="49"/>
     <node>subprocess1</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
@@ -140,7 +137,7 @@
       <targetNode>assign1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -164,7 +161,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="572" y="126"/>
-    <figSize height="17" width="25"/>
+    <figSize height="16" width="25"/>
     <node>assign0</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" collapsed="false" type="assign">
@@ -201,10 +198,14 @@
       <process:from type="query" pattern="reference">workitem/processInstID</process:from>
       <process:to type="query">data/processid</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem</process:from>
+      <process:to type="query">workItemInfo</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <location x="280" y="126"/>
-    <figSize height="17" width="32"/>
+    <figSize height="16" width="32"/>
     <node>assign2</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" collapsed="false" type="assign">
@@ -239,7 +240,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
     <location x="268" y="260"/>
-    <figSize height="17" width="32"/>
+    <figSize height="16" width="32"/>
     <node>assign3</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
@@ -257,8 +258,8 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
-    <location x="854" y="196"/>
-    <figSize height="17" width="30"/>
+    <location x="853" y="196"/>
+    <figSize height="16" width="32"/>
     <node>assign1</node>
   </nodes>
   <topRuler/>
@@ -283,6 +284,7 @@
   <process:outputs>
     <process:output description="" isArray="false" modelType="com.primeton.rdmgr.data.csomsData.MisCustinfo" name="miscustinfo"/>
     <process:output description="付费合同信息" isArray="false" modelType="com.zhonghe.ame.payContract.payContract.ZhPayContract" name="data"/>
+    <process:output description="" isArray="false" modelType="com.eos.workflow.data.WFWorkItem" name="workItemInfo"/>
   </process:outputs>
   <process:extAttribute1>public</process:extAttribute1>
   <process:transactionType>true</process:transactionType>

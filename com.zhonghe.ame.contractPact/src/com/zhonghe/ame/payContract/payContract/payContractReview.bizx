@@ -234,6 +234,10 @@
       <process:from type="literal" pattern="reference">1</process:from>
       <process:to type="query">misOpinion/isshow</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">misOpinion/backTo</process:from>
+      <process:to type="query">backToId</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <location x="292" y="335"/>
@@ -255,22 +259,21 @@
       <sourceNode>invokePojo2</sourceNode>
       <targetNode>invokeService2</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">misOpinion/backTo</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>backToId != null &amp;&amp; !&quot;submitBackManualActivity&quot;.equals(backToId)</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="link4" lineType="note" isDefault="false" type="exception">
       <sourceNode>invokePojo2</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="link14" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo2</sourceNode>
-      <targetNode>subprocess0</targetNode>
+      <targetNode>subprocess1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"/>
+          <process:leftOperand type="query"></process:leftOperand>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -411,7 +414,7 @@
     <figSize height="16" width="49"/>
     <node>invokeService2</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokeService3" name="退回流程" displayName="退回流程" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService3" name="退回流程" displayName="RollbackActivityManagerService.backActivity" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="link6" isDefault="true" type="transition">
       <sourceNode>invokeService3</sourceNode>
       <targetNode>transactioncommit0</targetNode>
@@ -652,7 +655,7 @@
       <sourceNode>subprocess0</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <targetConnections>link3</targetConnections>
+    <targetConnections>link46</targetConnections>
     <location x="522" y="426"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -849,6 +852,30 @@
     <figSize height="16" width="109"/>
     <node>invokeService5</node>
   </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="payContractSubmintBack" displayName="payContractSubmintBack" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link46" name="link46" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="523" y="361"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.payContractSubmintBack</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="workItemInfo" type="query" value="com.eos.workflow.data.WFWorkItem" valueType="DataObject" pattern="reference">wfWorkItem</process:inputVariable>
+        <process:inputVariable id="1" name="backToId" type="query" value="String" valueType="Primitive" pattern="reference">backToId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="466" y="396"/>
+    <figSize height="16" width="140"/>
+    <node>subprocess1</node>
+  </nodes>
   <topRuler>
     <guides position="1563" horizontal="true"/>
   </topRuler>
@@ -862,6 +889,7 @@
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFWorkItem" name="data"/>
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="countersignUser"/>
     <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="tempUsers"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="backToId" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" name="workItemID" primitiveType="String"/>

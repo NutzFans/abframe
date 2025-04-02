@@ -221,7 +221,9 @@
 					nui.get("custInfo").setValue(o.data.signatory);
 					nui.get("custInfo").setText(o.data.signatoryname);
 					queryHistory(o.data.relateCont);
-					nui.get("backTo").setData(o.data.backList);
+					
+					setBackList(o.workItemInfo,o.data.backList);
+					
 					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
 					inputFileExpandGrid.load({
 						"groupid" : "PAY_CONTRACT",
@@ -244,6 +246,16 @@
 				}
 			});
 		}
+		
+		function setBackList(workItemInfo, backList) {
+			if (workItemInfo.workItemName == '法务审批' || workItemInfo.workItemName == '审计法务部领导审批' || workItemInfo.workItemName == '企业发展部经办人审批' || workItemInfo.workItemName == '企业发展部领导审批'
+					|| workItemInfo.workItemName == '财务审批' || workItemInfo.workItemName == '财务主任审批' || workItemInfo.workItemName == '总法律顾问审批' || workItemInfo.workItemName == '总会计师审批') {
+				var submitBackList = [{id: "submitBackManualActivity", type: "submitBack", name: "付费合同经办人发起"}];
+				nui.get("backTo").setData(submitBackList);		
+			} else {
+				nui.get("backTo").setData(backList);	
+			}
+		}		
 		
 		function queryHistory(str) {
 			var json = {"id": str};

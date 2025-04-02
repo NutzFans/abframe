@@ -284,7 +284,9 @@
 						$("#purchasePlanLable").html("零星采购编号:");
 						$("#budgetSumLable").html("零采金额(元):");
 					}
-					nui.get("backTo").setData(o.data.backList);
+					
+					setBackList(o.workItemInfo,o.data.backList);
+					
 					//查询并加载附件
 					var grid_0 = nui.get("grid_0");
 					if (o.data.issupagreement == "1") {
@@ -321,14 +323,24 @@
 			});
 		}
 		
+		function setBackList(workItemInfo, backList) {
+			if (workItemInfo.workItemName == '法务审批' || workItemInfo.workItemName == '审计法务部领导审批' || workItemInfo.workItemName == '企业发展部经办人审批' || workItemInfo.workItemName == '企业发展部领导审批'
+					|| workItemInfo.workItemName == '财务审批' || workItemInfo.workItemName == '财务主任审批' || workItemInfo.workItemName == '总法律顾问审批' || workItemInfo.workItemName == '总会计师审批') {
+				var submitBackList = [{id: "submitBackManualActivity", type: "submitBack", name: "付费合同经办人发起"}];
+				nui.get("backTo").setData(submitBackList);		
+			} else {
+				nui.get("backTo").setData(backList);	
+			}
+		}
+
 		function countersign() {
 			selectOmEmployee();
 		}
-		
+
 		function selectOmEmployee() {
 			var btnEdit = this;
 			nui.open({
-				url: "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
+				url : "<%=request.getContextPath() %>/contractPact/selectUsers.jsp",
 				title : "选择需要加签的人员",
 				width : 430,
 				height : 400,
