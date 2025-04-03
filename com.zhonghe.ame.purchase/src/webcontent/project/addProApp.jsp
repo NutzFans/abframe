@@ -175,8 +175,7 @@ body .mini-textboxlist {
 
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>
-				估算表、采购方案和支撑材料(可上传多个附件)
-				<a href="<%=request.getContextPath()%>/purProgramMoneyTable.docx" download="采购立项费用估算表">采购立项费用估算表下载</a>
+				技术规格书、合同文本、费用估算表、支撑材料
 			</legend>
 			<jsp:include page="/ame_common/inputFile.jsp" />
 		</fieldset>
