@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="editChargeContract" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
-  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="付费新增和修改" title="huangqj&#x9;21-1-20 下午3:13">
-    <location x="51" y="714"/>
-    <size height="100" width="238"/>
-  </nodes>
   <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" displayName="事务开始" collapsed="false" type="transactionbegin">
     <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>transactionbegin0</sourceNode>
@@ -579,7 +575,7 @@
     <figSize height="16" width="49"/>
     <node>invokeService0</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokeService15" name="终止流程" displayName="终止流程" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService15" name="终止流程" displayName="ProcessInstManagerService.terminateProcessInstance" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="link24" isDefault="true" type="transition">
       <sourceNode>invokeService15</sourceNode>
       <targetNode>assign13</targetNode>
@@ -625,13 +621,13 @@
     <node>assign13</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokeService16" name="结束工作项" displayName="WorkItemManagerService.finishWorkItem" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link68" name="link68" displayName="link69" isDefault="true" type="transition">
-      <sourceNode>invokeService16</sourceNode>
-      <targetNode>assign0</targetNode>
-    </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link45" name="link45" displayName="连接线" lineType="note" type="exception">
       <sourceNode>invokeService16</sourceNode>
       <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService16</sourceNode>
+      <targetNode>subprocess5</targetNode>
     </sourceConnections>
     <targetConnections>link4</targetConnections>
     <location x="1149" y="753"/>
@@ -713,8 +709,8 @@
       <sourceNode>subprocess5</sourceNode>
       <targetNode>transactioncommit1</targetNode>
     </sourceConnections>
-    <targetConnections>link49</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link18</targetConnections>
     <location x="1140" y="270"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess5label</nodeLabel>
@@ -730,29 +726,6 @@
     <location x="1121" y="305"/>
     <figSize height="16" width="65"/>
     <node>subprocess5</node>
-  </nodes>
-  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link49" name="link49" displayName="link29" isDefault="true" type="transition">
-      <sourceNode>assign0</sourceNode>
-      <targetNode>subprocess5</targetNode>
-    </sourceConnections>
-    <targetConnections>link68</targetConnections>
-    <location x="1140" y="410"/>
-    <size height="28" width="28"/>
-    <nodeLabel>assign0label</nodeLabel>
-    <process:copy>
-      <process:from type="literal" pattern="reference">发起收费合同申请</process:from>
-      <process:to type="query">misOpinion/workitemname</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">cpData/processid</process:from>
-      <process:to type="query">misOpinion/processinstid</process:to>
-    </process:copy>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
-    <location x="1142" y="446"/>
-    <figSize height="16" width="25"/>
-    <node>assign0</node>
   </nodes>
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess6" name="保存附件2" displayName="saveContractFiles" collapsed="false" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link38" name="link38" displayName="连接线" lineType="note" type="exception">

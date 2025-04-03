@@ -11,7 +11,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
     <location x="62" y="96"/>
-    <figSize height="17" width="25"/>
+    <figSize height="16" width="25"/>
     <node>start0</node>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end1" name="结束" displayName="结束" collapsed="false" type="end">
@@ -21,11 +21,12 @@
     <nodeLabel>end1label</nodeLabel>
     <process:returns>
       <process:return id="0" language="com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractEntity" name="data" type="query" valueType="DataObject">data</process:return>
+      <process:return id="1" language="com.eos.workflow.data.WFWorkItem" name="workItemInfo" type="query" valueType="DataObject">workItemInfo</process:return>
     </process:returns>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
     <location x="795" y="96"/>
-    <figSize height="17" width="25"/>
+    <figSize height="16" width="25"/>
     <node>end1</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="收费合同信息" displayName="Query according to criteriaEntity and fill dataobject properties" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
@@ -47,12 +48,12 @@
       <process:inputVariable id="2" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">data</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>
-      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"></process:outputVariable>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
     </process:outputVariables>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
     <location x="479" y="96"/>
-    <figSize height="17" width="73"/>
+    <figSize height="16" width="73"/>
     <node>invokePojo2</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokeService0" name="queryWorkItemDetail4SDO" displayName="WorkItemManagerService.queryWorkItemDetail4SDO" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
@@ -76,8 +77,8 @@
     </process:outputVariables>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
-    <location x="144" y="93"/>
-    <figSize height="17" width="157"/>
+    <location x="150" y="93"/>
+    <figSize height="16" width="145"/>
     <node>invokeService0</node>
   </nodes>
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="回退列表" displayName="queryBackActivity" type="subprocess">
@@ -101,7 +102,7 @@
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
     <location x="635" y="96"/>
-    <figSize height="17" width="49"/>
+    <figSize height="16" width="49"/>
     <node>subprocess1</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" collapsed="false" type="assign">
@@ -138,10 +139,14 @@
       <process:from type="query" pattern="reference">workitem/processInstID</process:from>
       <process:to type="query">data/processid</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">workitem</process:from>
+      <process:to type="query">workItemInfo</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <location x="354" y="96"/>
-    <figSize height="17" width="32"/>
+    <figSize height="16" width="32"/>
     <node>assign2</node>
   </nodes>
   <topRuler/>
@@ -156,6 +161,7 @@
   </process:inputs>
   <process:outputs>
     <process:output description="收费合同信息" isArray="false" modelType="com.zhonghe.ame.chargeContract.chargeContract.ZhChargeContractEntity" name="data"/>
+    <process:output description="" isArray="false" modelType="com.eos.workflow.data.WFWorkItem" name="workItemInfo"/>
   </process:outputs>
   <process:extAttribute1>public</process:extAttribute1>
   <process:transactionType>true</process:transactionType>
