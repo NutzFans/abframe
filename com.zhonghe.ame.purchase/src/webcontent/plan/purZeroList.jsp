@@ -283,7 +283,7 @@ html,body {
 	
 		function onExportExcel(){
 			var data = form.getData();
-			exportExcel({"data":data,"url": "com.zhonghe.ame.purchase.purzero.exportPurZero.biz.ext","fileName":"零星采购明细"});
+			exportExcel({"data":data,"url": "com.zhonghe.ame.purchase.purzero.exportPurZero.biz.ext","fileName":"小额采购明细"});
 		}		
 		
 		function zf_edit() {
