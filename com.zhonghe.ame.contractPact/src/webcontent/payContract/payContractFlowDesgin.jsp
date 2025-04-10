@@ -92,6 +92,12 @@
 
 		<!-- 合同盖章 -->
 		<div id="div27" style="position: absolute; left: 785px; top: 1422px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div28" style="position: absolute; left: 400px; top: 835px; width: 75px; height: 50px; cursor: pointer;"></div>		
+		
+		<!-- 协管领导审批 -->
+		<div id="div29" style="position: absolute; left: 91px; top: 1261px; width: 75px; height: 50px; cursor: pointer;"></div>		
 
 	</div>
 
@@ -343,6 +349,24 @@
 					btn : []
 				});
 			});
+			
+			// 协管领导审批
+			$('#div28').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});	
+			
+			// 协管领导审批
+			$('#div29').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});						
 
 		});
 	</script>

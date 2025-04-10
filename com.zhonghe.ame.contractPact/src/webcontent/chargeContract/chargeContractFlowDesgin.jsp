@@ -83,6 +83,15 @@
 
 		<!-- 合同盖章 -->
 		<div id="div24" style="position: absolute; left: 710px; top: 1262px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div25" style="position: absolute; left: 342px; top: 766px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div26" style="position: absolute; left: 72px; top: 1182px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 总经理/分管领导审批 -->
+		<div id="div27" style="position: absolute; left: 193px; top: 1182px; width: 75px; height: 50px; cursor: pointer;"></div>							
 
 	</div>
 
@@ -281,11 +290,11 @@
 				});
 			});
 
-			// 总经理/分管领导审批
+			// 总经理审批
 			$('#div22').click(function() {
 				layer.open({
-					title : '总经理/分管领导审批 - 调整审批人',
-					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSZJLFG】的字典项数据，修改后【刷新缓存】',
+					title : '总经理审批 - 调整审批人',
+					content : '通过【角色管理】模块修改角色编号为【manage9】的角色数据',
 					btn : []
 				});
 			});
@@ -307,6 +316,33 @@
 					btn : []
 				});
 			});
+			
+			// 协管领导审批
+			$('#div25').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});	
+			
+			// 协管领导审批
+			$('#div26').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});	
+			
+			// 总经理/分管领导审批
+			$('#div27').click(function() {
+				layer.open({
+					title : '总经理/分管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSZJLFG】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});								
 
 		});
 	</script>

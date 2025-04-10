@@ -80,6 +80,9 @@
 
 		<!-- 法定代表人审批 -->
 		<div id="div23" style="position: absolute; left: 1126px; top: 1546px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div24" style="position: absolute; left: 1124px; top: 869px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
@@ -292,6 +295,15 @@
 				layer.open({
 					title : '法定代表人审批 - 调整审批人',
 					content : '通过【角色管理】模块修改角色编号为【manage10】的角色数据',
+					btn : []
+				});
+			});
+
+			// 协管领导审批
+			$('#div24').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});

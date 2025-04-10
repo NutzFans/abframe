@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:DataSetDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://www.primeton.com/datamodel" name="ZhInvoice" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" displayName="ZhInvoice" author="huangqj">
   <nodes xsi:type="model:SPEntityNode" id="Entity0" name="ZhInvoiceEntity" nodeType="table" displayName="Entity" author="huangqj" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="60"/>
-    <size height="1056" width="451"/>
+    <location x="60" y="32"/>
+    <size height="1074" width="451"/>
     <figSize height="20" width="451"/>
     <columnProperty id="property34" name="id" displayName="id" columnName="id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" queryId="true" dasType="int" showType="Int">
       <viewField dict="false" dictTypeId="" displayName="id" entityField="id" id="id" label="id" name="id" userDefined="true">
@@ -837,7 +837,7 @@
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property49" name="unitAddress" displayName="unitAddress" columnName="unit_address" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
+    <columnProperty id="property49" name="unitAddress" displayName="unitAddress" columnName="unit_address" nullAble="true" PK="false" columnType="nvarchar" eosDataType="String" length="255" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="unitAddress" entityField="unitAddress" id="unitAddress" label="unitAddress" name="unitAddress" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3179,12 +3179,70 @@
         </fieldEdit>
       </viewField>
     </columnProperty>
+    <columnProperty id="property191" name="chargeId" displayName="chargeId" columnName="charge_id" nullAble="true" PK="false" columnType="int" eosDataType="Int" length="10" dasType="int" showType="Int">
+      <viewField dict="false" dictTypeId="" displayName="chargeId" entityField="chargeId" id="chargeId" label="chargeId" name="chargeId" userDefined="true">
+        <fieldView showAllAttr="false">
+          <type name="write"/>
+          <attr defaultValue="" name="filter"/>
+          <attr defaultValue="" name="maxLengthString"/>
+          <attr defaultValue="" name="iterateId"/>
+          <attr defaultValue="" name="modelField"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="formatPattern"/>
+          <attr defaultValue="" name="propertyType"/>
+          <attr defaultValue="" name="scope"/>
+          <attr defaultValue="" name="property"/>
+          <attr name="ignore"/>
+          <attr name="value"/>
+          <attr name="maxLength"/>
+        </fieldView>
+        <fieldEdit showAllAttr="false">
+          <type name="text"/>
+          <attr defaultValue="" name="onmousemove"/>
+          <attr defaultValue="" name="modelField"/>
+          <attr defaultValue="" name="onfocus"/>
+          <attr defaultValue="" name="onmouseup"/>
+          <attr defaultValue="" name="title"/>
+          <attr defaultValue="" name="styleClass"/>
+          <attr defaultValue="" name="onmouseover"/>
+          <attr defaultValue="" name="validateAttr"/>
+          <attr name="accesskey"/>
+          <attr defaultValue="" name="readonly"/>
+          <attr defaultValue="" name="onselect"/>
+          <attr defaultValue="" name="scope"/>
+          <attr defaultValue="" name="property"/>
+          <attr defaultValue="" name="disabled"/>
+          <attr defaultValue="" name="id"/>
+          <attr defaultValue="" name="onkeydown"/>
+          <attr defaultValue="" name="value"/>
+          <attr defaultValue="" name="onblur"/>
+          <attr defaultValue="" name="indexed"/>
+          <attr defaultValue="" name="maxlength"/>
+          <attr defaultValue="" name="tabindex"/>
+          <attr defaultValue="" name="onclick"/>
+          <attr defaultValue="" name="onkeyup"/>
+          <attr defaultValue="" name="onchange"/>
+          <attr defaultValue="" name="extAttr"/>
+          <attr defaultValue="" name="onkeypress"/>
+          <attr defaultValue="" name="ondblclick"/>
+          <attr defaultValue="" name="iterateId"/>
+          <attr defaultValue="" name="size"/>
+          <attr defaultValue="" name="onmouseout"/>
+          <attr defaultValue="" name="name"/>
+          <attr defaultValue="" name="style"/>
+          <attr defaultValue="" name="onmousedown"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
     <spEntitySqlView product="default" view="" useSql="true" schema="" needSave="true">
       <sql>SELECT YEAR&#xD;
   ( zi.create_time ) AS invoice_year,&#xD;
-  zi.*&#xD;
+  zi.*,&#xD;
+  b.id AS charge_id&#xD;
 FROM&#xD;
-  zh_invoice AS zi</sql>
+  zh_invoice AS zi&#xD;
+  LEFT JOIN zh_charge_contract b ON zi.contract_no = b.contract_no&#xD;
+  AND zi.contract_name = b.contract_name</sql>
     </spEntitySqlView>
     <spEntitySqlView product="DB2 UDB" view="" useSql="true" schema="">
       <sql></sql>
@@ -3218,7 +3276,7 @@ FROM&#xD;
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:PEntityNode" id="node1" name="ZhInvoiceItem" nodeType="table" displayName="ZhInvoiceItem" author="huangqj" open="true" allUseViewModel="true" instanceClass="" table="zh_invoice_item" genStrategy="assigned">
-    <location x="60" y="1136"/>
+    <location x="60" y="1152"/>
     <size height="120" width="150"/>
     <figSize height="20" width="150"/>
     <columnProperty id="property27" name="id" displayName="id" columnName="id" nullAble="false" PK="true" columnType="INT" eosDataType="Int" dasType="int" overWriteDefaultColumnType="false" showType="Int" update="true" insert="true">
@@ -7651,7 +7709,7 @@ FROM&#xD;
   <nodes xsi:type="model:PEntityNode" id="node0" name="ZhInvoice" nodeType="table" displayName="ZhInvoice" author="huangqj" open="true" allUseViewModel="true" table="zh_invoice" genStrategy="assigned">
     <location x="60" y="2544"/>
     <size height="1042" width="150"/>
-    <figSize height="20" width="150"/>
+    <figSize height="20" width="219"/>
     <columnProperty id="property73" name="id" displayName="id" columnName="id" nullAble="false" PK="true" columnType="INT" eosDataType="Int" dasType="int" overWriteDefaultColumnType="false" showType="Int" update="true" insert="true">
       <comment xsi:nil="true"/>
       <viewField dict="false" dictTypeId="" displayName="id" entityField="id" id="id" label="id" name="id" userDefined="true">

@@ -27,6 +27,7 @@ body {
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="processid" />
+				<input id="chargeId" name="chargeId" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -317,6 +318,7 @@ body {
 							nui.get("payerName").setValue(data.signatoryName);
 							nui.get("invoiceNameType").setValue(data.payee);
 							nui.get("invoiceSumCapital").setValue(data.contractSum);
+							nui.get("chargeId").setValue(data.id);
 							btnEdit.doValueChanged();
 						}
 					}
@@ -480,6 +482,25 @@ body {
 				form.validate();
 				if (form.isValid() == false) {
 					showTips("请检查表单的完整性!", "danger");
+					return;
+				}
+				var checkChargePlan = "";
+				ajaxCommon({
+					"async" : false,
+					"url" : "com.zhonghe.ame.invoice.invoice.checkChargePlan.biz.ext",
+					"data" : nui.encode({
+						"chargeId" : nui.get("chargeId").getValue()
+					}),
+					"success" : function(data) {
+						checkChargePlan = data.result;
+					}
+				});
+				if (checkChargePlan == "2") {
+					alert("关联的收费合同中未设置本年度收款计划，无法提交开票流程！");
+					return;
+				}
+				if (checkChargePlan == "3") {
+					alert("检查关联的收费合同是否有本年度收款计划异常，请联系管理员！");
 					return;
 				}
 				var allotFlag = nui.get("allotFlag").getValue();

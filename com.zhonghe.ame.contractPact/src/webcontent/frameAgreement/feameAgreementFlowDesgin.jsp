@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/feameAgreementFlow.png'); width: 1353px; height: 2060px; position: relative;">
+	<div style="background-image: url('/default/common/flow/feameAgreementFlow.png'); width: 1463px; height: 2059px; position: relative;">
 
 		<!-- 承办部门项监部审批 -->
 		<div id="div1" style="position: absolute; left: 88px; top: 131px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -52,7 +52,7 @@
 		<div id="div13" style="position: absolute; left: 534px; top: 1170px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 承办部门分管领导审批 -->
-		<div id="div14" style="position: absolute; left: 192px; top: 1394px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div14" style="position: absolute; left: 208px; top: 1378px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 公司承办部门分管领导审批 -->
 		<div id="div15" style="position: absolute; left: 391px; top: 1380px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -65,6 +65,12 @@
 
 		<!-- 合同盖章 -->
 		<div id="div18" style="position: absolute; left: 389px; top: 1740px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div19" style="position: absolute; left: 54px; top: 1377px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div20" style="position: absolute; left: 566px; top: 1378px; width: 75px; height: 50px; cursor: pointer;"></div>				
 
 	</div>
 
@@ -195,7 +201,7 @@
 			$('#div14').click(function() {
 				layer.open({
 					title : '承办部门分管领导审批 - 调整审批人',
-					content : '通过【机构人员管理】模块修改发起人部门的【分管领导】字段',
+					content : '通过【业务字典管理】模块修改类型代码为【ZH_FGSZJLFG】的字典项数据，修改后【刷新缓存】',
 					btn : []
 				});
 			});
@@ -235,6 +241,24 @@
 					btn : []
 				});
 			});
+			
+			// 协管领导审批
+			$('#div19').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});
+			
+			// 协管领导审批
+			$('#div20').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});						
 
 		});
 	</script>

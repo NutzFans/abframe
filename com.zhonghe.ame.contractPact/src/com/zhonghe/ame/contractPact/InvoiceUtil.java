@@ -12,7 +12,10 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.Entity;
+import cn.hutool.db.Session;
 
+import com.eos.common.connection.DataSourceHelper;
 import com.eos.common.transaction.ITransactionManager;
 import com.eos.common.transaction.TransactionManagerFactory;
 import com.eos.das.entity.criteria.CriteriaType;
@@ -22,6 +25,7 @@ import com.eos.foundation.data.DataObjectUtil;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
 import com.eos.system.annotation.Bizlet;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.primeton.ame.schindler.sqlUtils;
 
 import commonj.sdo.DataObject;
@@ -394,7 +398,24 @@ public class InvoiceUtil {
 			throw e;
 		}
 	}
-	
+
+	@Bizlet("判断开票关联到收费合同是否有计划")
+	public String checkChargePlan(String chargeId) {
+		try {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			int year = DateUtil.thisYear();
+			String queryChargePlanSql = "SELECT * FROM annual_payment_plan WHERE charge_id = ? AND years = ?";
+			Entity entity = dbSession.queryOne(queryChargePlanSql, chargeId, year);
+			if (ObjectUtil.isNotNull(entity)) {
+				return "1";
+			} else {
+				return "2";
+			}
+		} catch (Exception e) {
+			return "3";
+		}
+	}
+
 	private HashMap<String, String> getSecOrg(String orgId) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		DataObject org = this.queryOrgById(orgId);
@@ -414,7 +435,7 @@ public class InvoiceUtil {
 		}
 		return map;
 	}
-	
+
 	private DataObject queryOneEntity(String sqlName, HashMap<String, Object> parameter) {
 		Object[] objects = DatabaseExt.queryByNamedSql("default", sqlName, parameter);
 		DataObject[] dataObjects = DataObjectUtil.convertDataObjects(objects, "commonj.sdo.DataObject", true);
@@ -429,6 +450,6 @@ public class InvoiceUtil {
 		map.put("orgId", orgId);
 		DataObject org = queryOneEntity("com.zhonghe.ame.contractPact.chargeContract.queryOrgById", map);
 		return org;
-	}	
-	
+	}
+
 }
