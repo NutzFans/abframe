@@ -3,12 +3,18 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <style type="text/css">
-	body {
-		margin: 0;padding: 0;border: 0;width: 100%;height: 100%;overflow: hidden;
-	}
-	body .mini-textboxlist{
-		border-collapse: collapse;
-	}
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body .mini-textboxlist {
+	border-collapse: collapse;
+}
 </style>
 <head>
 <title>编辑收款/开票计划</title>
@@ -40,7 +46,7 @@
 						<tr>
 							<td align="right" style="width: 130px">合同/项目名称：</td>
 							<td colspan="3">
-								<input name="contractName" id="contractName" class="nui-textbox" style="width: 100%" required="true" emptyText="如无具体项目请写 “潜在项目” "/>
+								<input name="contractName" id="contractName" class="nui-textbox" style="width: 100%" required="true" emptyText="如无具体项目请写 “潜在项目” " />
 							</td>
 							<td align="right" style="width: 130px">合同/项目状态：</td>
 							<td>
@@ -53,7 +59,7 @@
 								<span class="mini-buttonedit-border" style="padding-left: 0px; padding-right: 0px">
 									<input name="custInfo" id="custInfo" class="nui-textboxlist" style="width: 615px" dataField="custinfos" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustByNameInfo.biz.ext"
 										valueField="custid" textField="custname" allowInput="false" />
-									<span class="mini-buttonedit-buttons">
+									<span id="custInfoButton" class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
 										<span class="mini-buttonedit-button" onclick="selectCustInfo()" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
 											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
@@ -84,17 +90,17 @@
 						<tr>
 							<td align="right" style="width: 130px">风险等级：</td>
 							<td>
-								<input id="riskLevel" name="riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" style="width: 250px" required="true"/>
+								<input id="riskLevel" name="riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" style="width: 250px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">预计签署日期：</td>
 							<td>
-								<input id="estimatedDate" name="estimatedDate" class="nui-datepicker" style="width: 250px" required="true"/>
-							</td>							
+								<input id="estimatedDate" name="estimatedDate" class="nui-datepicker" style="width: 250px" required="true" />
+							</td>
 						</tr>
 					</table>
 				</div>
 			</fieldset>
-			
+
 			<fieldset id="field2" style="border: solid 1px #aaa;">
 				<legend>计划明细</legend>
 				<div style="padding: 5px;">
@@ -116,7 +122,7 @@
 						<tr>
 							<td align="right" style="width: 130px">1月份金额(元)：</td>
 							<td>
-								<input name="jan" id="jan" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum"/>
+								<input name="jan" id="jan" class="nui-textbox" vtype="float" style="width: 250px" required="true" onvaluechanged="editSum" />
 							</td>
 							<td align="right" style="width: 130px">2月份金额(元)：</td>
 							<td>
@@ -174,19 +180,31 @@
 			</fieldset>
 		</form>
 	</div>
-	
+
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;" iconCls="icon-save">保存</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" style="width: 80px; margin-right: 140px;" iconCls="icon-close">关闭</a>
-	</div>	
-	
+	</div>
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
-		
+
 		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #FFFFFF;")
-		
-		function setEditData(data){
+
+		function setEditData(data) {
+			if (!isStrEmpty(data.contractNo)) {
+				nui.get("contractName").setEnabled(false);
+				nui.get("contractStauts").setEnabled(false);
+				nui.get("custInfo").setEnabled(false);
+				$("#custInfoButton").css("display", "none");
+				nui.get("payee").setEnabled(false);
+				nui.get("major").setEnabled(false);
+				nui.get("projectType").setEnabled(false);
+				nui.get("headquarterGroup").setEnabled(false);
+				nui.get("riskLevel").setEnabled(false);
+				nui.get("estimatedDate").setEnabled(false);
+			}
 			form.setData(data);
 			nui.get("custInfo").setValue(data.signatory);
 			nui.get("custInfo").setText(data.signatoryName);
@@ -242,7 +260,7 @@
 			var sum = jan + feb + mar + apr + may + jun + jul + aug + sep + oct + nov + dec;
 			nui.get("sum").setValue(abs(sum));
 		}
-		
+
 		function onOk() {
 			if (!form.validate()) {
 				showTips("请检查表单的完整性!", "danger");
@@ -266,6 +284,14 @@
 					}
 				}
 			});
+		}
+
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	</script>
 </body>

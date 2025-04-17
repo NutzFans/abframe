@@ -17,12 +17,12 @@ html,body {
 }
 </style>
 <head>
-<title>收费/开票计划</title>
+<title>开票计划跟踪</title>
 </head>
 <body>
 	<div style="width: auto; height: 99%; padding: 5px;">
 		<div id="form1">
-			<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.annualPlan.annualPlan.AnnualChargePlanNewEntity" />
+			<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.annualPlan.annualPlan.AnnualChargePlanQueryEntity" />
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
@@ -123,10 +123,10 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="annualChargeGrid" sizeList="[1000]" dataField="chargePlanInfos" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext" idField="id" frozenStartColumn="0" frozenEndColumn="8" showSummaryRow="true" onshowrowdetail="onShowRowDetail"
-				virtualScroll="true" virtualColumns="true">
+				url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext" idField="id" frozenStartColumn="0" frozenEndColumn="8" showSummaryRow="true" virtualScroll="true" virtualColumns="true"
+				multiSelect="true" onshowrowdetail="onShowRowDetail">
 				<div property="columns">
-					<div type="checkcolumn">○</div>
+					<div type="checkcolumn"></div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
 					<div field="id" headerAlign="center" visible="false">id</div>
 					<div field="contractStauts" headerAlign="center" align="center" renderer="ZH_CONTRACT_STATUS" width="75" allowSort="true">合同状态</div>
@@ -140,18 +140,31 @@ html,body {
 					<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">合同金额（元）</div>
 					<div field="sum" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收款金额（元）</div>
 					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" sortField="sum">计划收入金额（元）</div>
-					<div field="jan" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">1月</div>
-					<div field="feb" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">2月</div>
-					<div field="mar" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">3月</div>
-					<div field="apr" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">4月</div>
-					<div field="may" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">5月</div>
-					<div field="jun" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">6月</div>
-					<div field="jul" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">7月</div>
-					<div field="aug" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">8月</div>
-					<div field="sep" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">9月</div>
-					<div field="oct" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">10月</div>
-					<div field="nov" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">11月</div>
-					<div field="dec" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">12月</div>
+					<div field="sumTotalBookIncome" width="135" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" sortField="sum">当年实际完成收入（元）</div>
+					<div field="jan" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">1月计划</div>
+					<div field="janActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">1月实际</div>
+					<div field="feb" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">2月计划</div>
+					<div field="febActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">2月实际</div>
+					<div field="mar" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">3月计划</div>
+					<div field="marActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">3月实际</div>
+					<div field="apr" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">4月计划</div>
+					<div field="aprActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">4月实际</div>
+					<div field="may" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">5月计划</div>
+					<div field="mayActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">5月实际</div>
+					<div field="jun" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">6月计划</div>
+					<div field="junActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">6月实际</div>
+					<div field="jul" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">7月计划</div>
+					<div field="julActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">7月实际</div>
+					<div field="aug" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">8月计划</div>
+					<div field="augActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">8月实际</div>
+					<div field="sep" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">9月计划</div>
+					<div field="sepActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">9月实际</div>
+					<div field="oct" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">10月计划</div>
+					<div field="octActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">10月实际</div>
+					<div field="nov" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">11月计划</div>
+					<div field="novActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">11月实际</div>
+					<div field="dec" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">12月计划</div>
+					<div field="decActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">12月实际</div>
 					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
@@ -160,10 +173,11 @@ html,body {
 				</div>
 			</div>
 		</div>
+
 	</div>
 
 	<div id="invoiceInfo" style="display: none;">
-		<div id="invoiceGrid" sizeList="[5]" dataField="invoiceInfos" pageSize="5" class="nui-datagrid" url="com.zhonghe.ame.annualPlan.annualPlan.queryInvoiceByNo.biz.ext"
+		<div id="invoiceGrid" sizeList="[5]" dataField="invoiceInfos" pageSize="5" class="nui-datagrid" url="com.zhonghe.ame.annualPlan.annualPlan.queryInvoiceDetailsByCriteria.biz.ext"
 			style="width: 710px; height: 203px; margin-left: 670px">
 			<div property="columns">
 				<div field="id" headerAlign="center" visible="false">id</div>
@@ -187,62 +201,40 @@ html,body {
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
-		var grid = nui.get("annualChargeGrid");
+		var annualChargeGrid = nui.get("annualChargeGrid");
 		var invoiceGrid = nui.get("invoiceGrid");
 		var invoiceInfo = document.getElementById("invoiceInfo");
 		var now = new Date();
-		
+		var currentYear = now.getFullYear();
+		var currentMonth = now.getMonth() + 1;
+
 		init();
-		
-		function init(){
+
+		function init() {
 			// 按钮权限
-			if(userId !='sysadmin'){
+			if (userId != 'sysadmin') {
 				// 新增按钮 - chargeAnnualPlan_add，编辑按钮 - chargeAnnualPlan_edit，删除按钮 - chargeAnnualPlan_del，同步按钮 - chargeAnnualPlan_sync
 				getOpeatorButtonAuth("chargeAnnualPlan_add,chargeAnnualPlan_edit,chargeAnnualPlan_del,chargeAnnualPlan_sync");
 			}
-					
-			var json = nui.encode({
-				'loginUserId' : userId,
-				'loginUserOrgId': userOrgId,
-				'authCode': 'chargeAnnualPlan'
-			});
-			nui.ajax({
-				url : "com.zhonghe.ame.annualPlan.auth.queryAnnualPlanAuth.biz.ext",
-				type : 'POST',
-				data : json,
-				contentType : 'text/json',
-				success : function(o) {
-					if(o.result == "2"){
-						nui.get("secOrgId").setValue(o.secOrgId);
-						nui.get("secOrgName").setValue(o.secOrgName);
-						nui.get("secOrgName").setReadOnly(true);
-						
-					}else if(o.result == "3"){
-						nui.get("createUserid").setValue(userId);
-						nui.get("createUsername").setValue(userName);
-						nui.get("createUsername").setReadOnly(true);						
-					}
-					nui.get("years").setValue(now.getFullYear());
-					search();
-				}
-			});
+			nui.get("years").setValue(now.getFullYear());
+			search();
 		}
-		
+
 		function search() {
 			var data = form.getData();
-			grid.sortBy("createTime", "desc");
-			grid.load(data);
+			annualChargeGrid.sortBy("createTime", "desc");
+			annualChargeGrid.load(data);
 		}
-		
+
 		function reset() {
 			form.reset();
 			init();
 		}
-		
-		function expandColumn(e){
-			if(e.record.isInvoice == "0"){
+
+		function expandColumn(e) {
+			if (e.record.isInvoice == "0") {
 				return "";
-			}else{
+			} else {
 				return "<div class='mini-grid-cell-inner  mini-grid-cell-nowrap' style=''><a class='mini-grid-ecIcon' href='javascript:#' onclick='return false'></a></div>"
 			}
 		}
@@ -254,9 +246,229 @@ html,body {
 			td.appendChild(invoiceInfo);
 			invoiceInfo.style.display = "block";
 			var data = {
-				'contractNo' : row.contractNo
+				'contractNo' : row.contractNo,
+				'secOrg' : row.secondaryOrg,
+				'startDate' : row.years + '-01-01',
+				'endDate' : row.years + "-12-31"
 			};
 			invoiceGrid.load(data);
+		}
+
+		function setBackColor(e) {
+			var record = e.record;
+			var field = e.field;
+			var dataYear = record.years;
+			if (field == 'jan' && isColorRender(currentYear, currentMonth, dataYear, 1)) {
+				var janActual = record.janActual;
+				if (areBigDecimalsEqual(e.value, janActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'janActual' && isColorRender(currentYear, currentMonth, dataYear, 1)) {
+				var jan = record.jan;
+				if (areBigDecimalsEqual(e.value, jan)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'feb' && isColorRender(currentYear, currentMonth, dataYear, 2)) {
+				var febActual = record.febActual;
+				if (areBigDecimalsEqual(e.value, febActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'febActual' && isColorRender(currentYear, currentMonth, dataYear, 2)) {
+				var feb = record.feb;
+				if (areBigDecimalsEqual(e.value, feb)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'mar' && isColorRender(currentYear, currentMonth, dataYear, 3)) {
+				var marActual = record.marActual;
+				if (areBigDecimalsEqual(e.value, marActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'marActual' && isColorRender(currentYear, currentMonth, dataYear, 3)) {
+				var mar = record.mar;
+				if (areBigDecimalsEqual(e.value, mar)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'apr' && isColorRender(currentYear, currentMonth, dataYear, 4)) {
+				var aprActual = record.aprActual;
+				if (areBigDecimalsEqual(e.value, aprActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'aprActual' && isColorRender(currentYear, currentMonth, dataYear, 4)) {
+				var apr = record.apr;
+				if (areBigDecimalsEqual(e.value, apr)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'may' && isColorRender(currentYear, currentMonth, dataYear, 5)) {
+				var mayActual = record.mayActual;
+				if (areBigDecimalsEqual(e.value, mayActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'mayActual' && isColorRender(currentYear, currentMonth, dataYear, 5)) {
+				var may = record.may;
+				if (areBigDecimalsEqual(e.value, may)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'jun' && isColorRender(currentYear, currentMonth, dataYear, 6)) {
+				var junActual = record.junActual;
+				if (areBigDecimalsEqual(e.value, junActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'junActual' && isColorRender(currentYear, currentMonth, dataYear, 6)) {
+				var jun = record.jun;
+				if (areBigDecimalsEqual(e.value, jun)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'jul' && isColorRender(currentYear, currentMonth, dataYear, 7)) {
+				var julActual = record.julActual;
+				if (areBigDecimalsEqual(e.value, julActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'julActual' && isColorRender(currentYear, currentMonth, dataYear, 7)) {
+				var jul = record.jul;
+				if (areBigDecimalsEqual(e.value, jul)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'aug' && isColorRender(currentYear, currentMonth, dataYear, 8)) {
+				var augActual = record.augActual;
+				if (areBigDecimalsEqual(e.value, augActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'augActual' && isColorRender(currentYear, currentMonth, dataYear, 8)) {
+				var aug = record.aug;
+				if (areBigDecimalsEqual(e.value, aug)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'sep' && isColorRender(currentYear, currentMonth, dataYear, 9)) {
+				var sepActual = record.sepActual;
+				if (areBigDecimalsEqual(e.value, sepActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'sepActual' && isColorRender(currentYear, currentMonth, dataYear, 9)) {
+				var sep = record.sep;
+				if (areBigDecimalsEqual(e.value, sep)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'oct' && isColorRender(currentYear, currentMonth, dataYear, 10)) {
+				var octActual = record.octActual;
+				if (areBigDecimalsEqual(e.value, octActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'octActual' && isColorRender(currentYear, currentMonth, dataYear, 10)) {
+				var oct = record.oct;
+				if (areBigDecimalsEqual(e.value, oct)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'nov' && isColorRender(currentYear, currentMonth, dataYear, 11)) {
+				var novActual = record.novActual;
+				if (areBigDecimalsEqual(e.value, novActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'novActual' && isColorRender(currentYear, currentMonth, dataYear, 11)) {
+				var nov = record.nov;
+				if (areBigDecimalsEqual(e.value, nov)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'dec' && isColorRender(currentYear, currentMonth, dataYear, 12)) {
+				var decActual = record.decActual;
+				if (areBigDecimalsEqual(e.value, decActual)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			if (field == 'decActual' && isColorRender(currentYear, currentMonth, dataYear, 12)) {
+				var dec = record.dec;
+				if (areBigDecimalsEqual(e.value, dec)) {
+					e.cellStyle = "background-color: #f6ffed";
+				} else {
+					e.cellStyle = "background-color: #ffccc7";
+				}
+			}
+			return e.value;
+		}
+
+		function areBigDecimalsEqual(value1, value2) {
+			var formattedValue1 = parseFloat(value1).toFixed(2);
+			var formattedValue2 = parseFloat(value2).toFixed(2);
+			return formattedValue1 === formattedValue2;
+		}
+
+		function isColorRender(currentYear, currentMonth, dataYear, dataMonth) {
+			if (dataYear < currentYear) {
+				return true;
+			}
+			if (dataYear == currentYear && dataMonth <= currentMonth) {
+				return true;
+			}
+			if (dataYear > currentYear) {
+				return false;
+			}
 		}
 
 		function add() {
@@ -275,7 +487,7 @@ html,body {
 		}
 
 		function edit() {
-			var row = grid.getSelecteds();
+			var row = annualChargeGrid.getSelecteds();
 			if (row.length > 1 || row.length == 0) {
 				showTips("只能选中一条记录进行编辑", "danger");
 				return;
@@ -296,24 +508,25 @@ html,body {
 					}
 				})
 			} else {
-				showTips("只能编辑合同状态为【待签、非合同】的数据", "danger");
+				showTips("只能编辑合同状态为【待签、非合同、产值分配】的数据", "danger");
 			}
 		}
 
 		function deleteInfo() {
-			var row = grid.getSelecteds();
-			if (row.length > 1 || row.length == 0) {
-				showTips("只能选中一条记录进行删除", "danger");
-				return;
+			var rows = annualChargeGrid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
 			} else {
-				var data = row[0];
-				if (data.contractStauts != '1') {
-					if (!confirm("是否删除？")) {
-						return;
-					} else {
-						if (data) {
+				var status = rows.every(item => item.contractStauts != '1');
+				if (status) {
+					status = rows.every(item=> isStrEmpty(item.contractNo));
+					if (status) {
+						if (!confirm("是否删除？")) {
+							return;
+						} else {
+							var datas = rows.map(row => ({ id: row.id }));
 							var json = nui.encode({
-								'annualChargePlan' : data
+								'datas' : datas
 							});
 							nui.ajax({
 								url : "com.zhonghe.ame.annualPlan.annualPlan.delAnnualChargePlan.biz.ext",
@@ -323,92 +536,30 @@ html,body {
 								success : function(o) {
 									if (o.result == 1) {
 										showTips("删除成功");
-										grid.reload();
+										annualChargeGrid.reload();
 									} else {
 										showTips("删除失败，请联系信息技术部人员！", "danger");
 									}
 								}
 							});
-						} else {
-							showTips("只能选中一条记录进行删除", "danger");
 						}
+					} else {
+						showTips("存在合同编号且合同状态为【待签、非合同、产值分配】的数据由系统生产，无法删除", "danger");
 					}
 				} else {
-					showTips("只能删除合同状态为【待签、非合同】的数据", "danger");
+					showTips("只能删除合同状态为【待签、非合同、产值分配】的数据", "danger");
 				}
 			}
 		}
-
-		function exportExcel() {
-			if (!confirm("是否确认导出？")) {
-				return;
-			}
-			var form = new nui.Form("#form1");
-			var data = form.getData(); //获取表单JS对象数据
-			var json = nui.encode(data);
-			nui.ajax({
-				url : "com.zhonghe.ame.annualPlan.annualPlan.exportAnnualChargePlanExcel.biz.ext",
-				type : "post",
-				data : json,
-				cache : false,
-				contentType : 'text/json',
-				success : function(o) {
-					var filePath = o.downloadFile;
-					var fileName = "收款-开票计划";
-					var myDate = new Date();
-					var year = myDate.getFullYear();
-					var month = myDate.getMonth() + 1;
-					var day = myDate.getDate();
-					var hours = myDate.getHours();
-					var minutes = myDate.getMinutes();
-					var seconds = myDate.getSeconds();
-					var curDateTime = year;
-					if (month > 9) {
-						curDateTime = curDateTime + "" + month;
-					} else {
-						curDateTime = curDateTime + "0" + month;
-					}
-					if (day > 9) {
-						curDateTime = curDateTime + day;
-					} else {
-						curDateTime = curDateTime + "0" + day;
-					}
-					if (hours > 9) {
-						curDateTime = curDateTime + hours;
-					} else {
-						curDateTime = curDateTime + "0" + hours;
-					}
-					if (minutes > 9) {
-						curDateTime = curDateTime + minutes;
-					} else {
-						curDateTime = curDateTime + "0" + minutes;
-					}
-					if (seconds > 9) {
-						curDateTime = curDateTime + seconds;
-					} else {
-						curDateTime = curDateTime + "0" + seconds;
-					}
-					fileName = fileName + "_" + curDateTime + ".xls";
-					var frm = document.getElementById("exprotExcelFlow");
-					frm.elements["downloadFile"].value = filePath;
-					frm.elements["fileName"].value = fileName;
-					frm.submit();
-				},
-				error : function() {
-					showTips("导出数据异常，请联系管理员！", "danger");
-				}
-			});
-		}
-
-		// 同步数据
+		
 		function syncInfo() {
-			var row = grid.getSelecteds();
-			if (row.length > 0) {
+			var rows = annualChargeGrid.getSelecteds();
+			if (rows.length > 0) {
 				nui.MessageBox.show({
-					width : 300,
+					width : 400,
 					title : "选中数据同步 -> 年度收入预算",
 					buttons : [ "ok", "cancel" ],
-					message : "您选中了一条数据，是否同步该条数据 ?",
+					message : "您通过复选框选中了多条数据，是否同步这些选中的数据 ?",
 					iconCls : "mini-messagebox-question",
 					callback : function(action) {
 						if (action == "ok") {
@@ -416,9 +567,9 @@ html,body {
 								if (action == "ok") {
 									if (value == "同意选中数据同步") {
 										var syncwait = nui.loading("数据同步中......", "等待");
-										var data = row[0];
+										var datas = rows.map(function(row) {return row.id;}).join(',');
 										var json = nui.encode({
-											'id' : data.id
+											'datas' : datas
 										});
 										nui.ajax({
 											url : "com.zhonghe.ame.annualPlan.annualPlan.syncAnnualPlanYear.biz.ext",
@@ -433,7 +584,7 @@ html,body {
 													showTips("数据同步异常，请联系管理员！", "danger");
 												}
 											}
-										});
+										});										
 									} else {
 										showTips("输入内容错误，请重新操作！", "danger");
 									}
@@ -480,6 +631,87 @@ html,body {
 				});
 			}
 		}
+		
+		//导出
+		function exportExcel() {
+			var rows = annualChargeGrid.getSelecteds();
+			var json;
+			if(rows.length == 0){
+				if (!confirm("是否确认导出？")) {
+					return;
+				}
+				var form = new nui.Form("#form1");
+				var data = form.getData(); //获取表单JS对象数据
+				json = nui.encode(data);
+			}else{
+				if (!confirm("确定要导出选中数据(如需导出查询结果数据，请取消选中)？")) {
+					return;
+				}
+				var ids = rows.map(row => row.id).join(',');
+				json = nui.encode({
+						"criteria":{
+							"_expr": [{
+								"_property": "id",
+								"_op": "in",
+								"_value": ids
+							}]
+						}
+					}
+				);
+			}
+			nui.ajax({
+					url : "com.zhonghe.ame.annualPlan.annualPlan.exportAnnualChargePlanExcel.biz.ext",
+					type : "post",
+					data : json,
+					cache : false,
+					contentType : 'text/json',
+					success : function(o) {
+						var filePath = o.downloadFile;
+						var fileName = "收款-开票计划";
+						var myDate = new Date();
+						var year = myDate.getFullYear();
+						var month = myDate.getMonth() + 1;
+						var day = myDate.getDate();
+						var hours = myDate.getHours();
+						var minutes = myDate.getMinutes();
+						var seconds = myDate.getSeconds();
+						var curDateTime = year;
+						if (month > 9) {
+							curDateTime = curDateTime + "" + month;
+						} else {
+							curDateTime = curDateTime + "0" + month;
+						}
+						if (day > 9) {
+							curDateTime = curDateTime + day;
+						} else {
+							curDateTime = curDateTime + "0" + day;
+						}
+						if (hours > 9) {
+							curDateTime = curDateTime + hours;
+						} else {
+							curDateTime = curDateTime + "0" + hours;
+						}
+						if (minutes > 9) {
+							curDateTime = curDateTime + minutes;
+						} else {
+							curDateTime = curDateTime + "0" + minutes;
+						}
+						if (seconds > 9) {
+							curDateTime = curDateTime + seconds;
+						} else {
+							curDateTime = curDateTime + "0" + seconds;
+						}
+						fileName = fileName + "_" + curDateTime + ".xls";
+						var frm = document.getElementById("exprotExcelFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					},
+					error : function() {
+						showTips("导出数据异常，请联系管理员！", "danger");
+					}
+			});					
+		}		
 
 		function PAYER(e) {
 			return nui.getDictText("PAYER", e.value);
@@ -496,8 +728,8 @@ html,body {
 		function ZH_GROUP(e) {
 			return nui.getDictText("ZH_GROUP", e.value);
 		}
-		
-		function RISK_LEVEL(e){
+
+		function RISK_LEVEL(e) {
 			return nui.getDictText("RISK_LEVEL", e.value);
 		}
 
@@ -508,6 +740,14 @@ html,body {
 				e.cellStyle = "color: red";
 			}
 			return nui.getDictText("ZH_CONTRACT_STATUS", e.value);
+		}
+
+		function isStrEmpty(obj) {
+			if (typeof obj == "undefined" || obj == null || obj == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	</script>
 

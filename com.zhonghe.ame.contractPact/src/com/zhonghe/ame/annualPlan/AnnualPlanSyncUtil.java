@@ -5,11 +5,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.Entity;
+import cn.hutool.db.Session;
 
+import com.eos.common.connection.DataSourceHelper;
 import com.eos.foundation.data.DataObjectUtil;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.system.annotation.Bizlet;
@@ -65,6 +70,31 @@ public class AnnualPlanSyncUtil {
 		Object[] objects = DatabaseExt.queryByNamedSql("default", "com.zhonghe.ame.annualPlan.annualPlan.queryAnnualPlanYear", map);
 		DataObject[] dataObjects = DataObjectUtil.convertDataObjects(objects, "commonj.sdo.DataObject", true);
 		return dataObjects;
+	}
+
+	@Bizlet("清理数据中无法和开票收款计划关联的数据(同步数据)")
+	public void cleanUpUnrelatedItemsData() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String queryChargePlanSql = "SELECT temp.* FROM( SELECT ap.id FROM annual_payment_plan AS ap LEFT JOIN zh_charge_contract AS zc ON zc.id = ap.charge_id WHERE ap.charge_id IS NOT NULL AND zc.app_status= 2) AS temp UNION ALL SELECT ac.id FROM annual_charge_plan AS ac";
+		List<Entity> chargePlanList = dbSession.query(queryChargePlanSql);
+		if (chargePlanList != null && chargePlanList.size() > 0) {
+			Map<String, String> chargePlanIdMap = chargePlanList.stream().collect(Collectors.toMap(chargePlan -> chargePlan.getStr("id"), chargePlan -> chargePlan.getStr("id")));
+			String queryYearPlanSql = "SELECT id, source_id FROM annual_plan_year WHERE data_source_type='1'";
+			List<Entity> yearPlanList = dbSession.query(queryYearPlanSql);
+			if (yearPlanList != null && yearPlanList.size() > 0) {
+				String delYearPlanSql = "DELETE FROM annual_plan_year WHERE id=?";
+				for (Entity yearPlan : yearPlanList) {
+					String sourceId = yearPlan.getStr("source_id");
+					if (StrUtil.isNotBlank(sourceId)) {
+						if (!chargePlanIdMap.containsKey(sourceId)) {
+							dbSession.execute(delYearPlanSql, yearPlan.getStr("id"));
+						}
+					} else {
+						dbSession.execute(delYearPlanSql, yearPlan.getStr("id"));
+					}
+				}
+			}
+		}
 	}
 
 }
