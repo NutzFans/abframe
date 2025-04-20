@@ -193,6 +193,16 @@ body .mini-textboxlist {
 					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("inputFileExpandGrid").getData().length;
+				if (gridFileCount == 0) {
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if (newFileCount == 0) {
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}
 			}
 			document.getElementById("fileCatalog").value = "purReviewReport";
 			inputFileExpandForm.submit();

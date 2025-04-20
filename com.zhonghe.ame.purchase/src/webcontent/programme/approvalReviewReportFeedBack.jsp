@@ -27,22 +27,18 @@ body .mini-textboxlist {
 		long workitemid = (Long) request.getAttribute("workItemID");
 	%>
 	<div class="nui-fit" style="padding: 5px;">
-		<fieldset id="field1" style="border: solid 1px #aaa;">
-			<legend>评审结果</legend>
-			<form id="form1" method="post">
+		<form id="form1" method="post">
+			<fieldset id="field1" style="border: solid 1px #aaa;">
+				<legend>评审结果</legend>
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="processid" />
-				<input name="type" id="type" class="nui-hidden" />
-				<input class="nui-hidden" name="purchasMode" id="purchasMode" />
-				<input class="nui-hidden" name="proAppUserId" id="proAppUserId" />
-				<input class="nui-hidden" name="proAppUserName" id="proAppUserName" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
 							<td align="right" style="width: 90px">立项编号：</td>
 							<td>
-								<input name="proappId" id="proappId" onbuttonclick="onButtonEdit" allowInput="false" class="nui-buttonedit" style="width: 350px" required="true" />
+								<input name="proappId" id="proappId" allowInput="false" class="nui-buttonedit" style="width: 350px" readonly="readonly" />
 							</td>
 							<td align="right" style="width: 90px">采购需求单位：</td>
 							<td>
@@ -53,36 +49,54 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 90px">立项名称：</td>
 							<td>
-								<input name="proAppName" id="proAppName" class="nui-textbox" style="width: 100%;" required="true" readonly="readonly" />
+								<input name="proAppName" id="proAppName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
 							<td align="right" style="width: 90px;">评审结果名称：</td>
 							<td>
 								<input name="type" id="type" class="nui-hidden" />
 								<span data-placement="left" data-tooltip="默认使用立项名称,可自行修改">
-									<input name="reportName" id="reportName" class="nui-textbox" style="width: 100%" required="true" />
+									<input name="reportName" id="reportName" class="nui-textbox" style="width: 100%" readonly="readonly" />
 								</span>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 90px">立项金额：</td>
 							<td>
-								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" style="width: 100%;" required="true" readonly="readonly" />
+								<input name="proAppApplyPrice" id="proAppApplyPrice" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td class="form_label" align="right" style="width: 120px;">归口部门：</td>
+							<td class="form_label" align="right" style="width: 90px;">归口部门：</td>
 							<td>
-								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" readonly="readonly" style="width: 100%;" required="true" />
+								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" readonly="readonly" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 90px;">评审结果说明：</td>
 							<td colspan="3">
-								<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" required="true" />
+								<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" readonly="readonly" />
 							</td>
 						</tr>
 					</table>
 				</div>
-			</form>
-		</fieldset>
+			</fieldset>
+
+			<fieldset style="border: solid 1px #aaa;">
+				<legend>完善定标信息</legend>
+				<div style="padding: 5px;">
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 90px">中标单位：</td>
+							<td>
+								<input class="nui-textbox" name="winner" id="winner" style="width: 350px" readonly="readonly" />
+							</td>
+							<td align="right" style="width: 120px">中标金额（万元）：</td>
+							<td>
+								<input name="awardAmount" id="awardAmount" class="nui-spinner" minValue="0" maxValue="999999" style="width: 350px" readonly="readonly" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</fieldset>
+		</form>
 
 		<fieldset style="border: solid 1px #aaa;">
 			<legend>采购立项明细</legend>
@@ -108,8 +122,13 @@ body .mini-textboxlist {
 
 		<fieldset id="field4" style="border: solid 1px #aaa;">
 			<legend>评审结果 - 附件</legend>
-			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
 		</fieldset>
+		
+		<fieldset id="field5" style="border: solid 1px #aaa;">
+			<legend style="color: red;">中标资料 - 附件(中标通知等)</legend>
+			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+		</fieldset>		
 
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>审批信息</legend>
@@ -118,17 +137,17 @@ body .mini-textboxlist {
 	</div>
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">中止</a>
-		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 20px;">关闭</a>
+		<a class="nui-button" iconCls="icon-print" onclick="printBtn()" style="width: 80px;">打印</a>
 	</div>
 
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
-		var gridDtl = nui.get("grid_detail");
 		var id = <%=request.getParameter("id")%>;
+		var gridDtl = nui.get("grid_detail");
+		var id;
 
 		init();
 
@@ -142,13 +161,16 @@ body .mini-textboxlist {
 				contentType : 'text/json',
 				success : function(o) {
 					var result = o.reviewReport[0];
+					id = result.id;
 					form.setData(result);
-					queryProAppByCode(result.proAppCode);
 					nui.get('orgUnits').setValue(result.proAppOrgId);
 					nui.get('orgUnits').setText(result.proAppOrgName);
 					nui.get("proappId").setValue(result.proappId);
 					nui.get("proappId").setText(result.proAppCode);
-					nui.get("purchasMode").setValue(result.purchasMode);
+					gridDtl.load({
+						"pid" : result.proappId
+					})
+
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "proAppCost",
@@ -156,16 +178,12 @@ body .mini-textboxlist {
 					});
 					grid_0.sortBy("fileTime", "desc");
 
-					gridDtl.load({
-						"pid" : result.proappId
-					})
-
-					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
-					inputFileExpandGrid.load({
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
 						"groupid" : "purReviewReport",
 						"relationid" : result.id
 					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");
+					detailFileExpandGrid.sortBy("fileTime", "desc");
 
 					var grid = nui.get("datagrid1");
 					grid.load({
@@ -181,30 +199,13 @@ body .mini-textboxlist {
 					nui.get("isshow").setValue("1");
 					nui.get("auditstatus").setValue("4");
 					document.getElementById("salesEdit").style.display = "none";
-					nui.get("auditopinion").setValue("");
+					if (o.workitem.workItemName == '发起人接收及中标反馈') {
+						nui.alert("可使用打印按钮打印审批单<br>提交时需上传相关附件");
+					}
 				}
 			});
 		}
 		
-
-		function queryProAppByCode(code) {
-			var json = nui.encode({
-				"code" : code
-			});
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseProApp.queryProAppByCode.biz.ext",
-				data : json,
-				type : 'POST',
-				cache : false,
-				contentType : 'text/json',
-				success : function(result) {
-					var data = result.data;
-					nui.get("proAppUserId").setValue(data.createdBy);
-					nui.get("proAppUserName").setValue(data.createdUsername);
-				}
-			});
-		}
-
 		function onOk(e) {
 			nui.get("auditstatus").setValue("4");
 			istype = e;
@@ -219,7 +220,7 @@ body .mini-textboxlist {
 					// 刚新增(未上传)的文件数量
 					var newFileCount = document.getElementsByName("uploadfile").length;
 					if (newFileCount == 0) {
-						showTips("请上传相关附件", "danger");
+						showTips("请上传中标相关资料", "danger");
 						return;
 					}
 				}
@@ -230,30 +231,28 @@ body .mini-textboxlist {
 				info = "是否中止流程？"
 				nui.get("auditstatus").setValue(2);
 			}
-
 			document.getElementById("fileCatalog").value = "purReviewReport";
-
 			nui.confirm("确定" + info, "系统提示", function(action) {
 				if (action == "ok") {
 					inputFileExpandForm.submit();
 				}
 			})
 		}
-
+		
 		function SaveData() {
 			var data = form.getData();
 			data.istype = istype;
-			data.proAppOrgId = nui.get('orgUnits').getValue();
-			data.proAppOrgName = nui.get('orgUnits').getText();
 			data.files = nui.get("fileids").getValue();
 			var data_opioion = opioionform.getData();
 			var json = nui.encode({
+				'param' : data,
 				'reviewReport' : data,
+				workItemID :<%=workitemid%>,
 				"misOpinion" : data_opioion.misOpinion
 			});
 			var msgBoxId = nui.loading("正在处理...", "请稍后");
 			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseReviewReport.editReviewReport.biz.ext",
+				url : "com.zhonghe.ame.purchase.purchaseReviewReport.purReviewReportApproval.biz.ext",
 				type : 'POST',
 				data : json,
 				success : function(text) {
@@ -267,54 +266,26 @@ body .mini-textboxlist {
 				}
 			});
 		}
-
-		function onButtonEdit(e) {
-			var btnEdit = this;
-			mini.open({
-				url : "/default/purchase/project/procurementProAppList.jsp",
-				title : "采购立项列表",
-				width : '80%',
-				height : '80%',
-				ondestroy : function(action) {
-					if (action == "ok") {
-						var iframe = this.getIFrameEl();
-						var data = iframe.contentWindow.GetData();
-						data = mini.clone(data); //必须
-						if (data) {
-							btnEdit.setValue(data.id);
-							btnEdit.setText(data.proAppCode);
-							nui.get("proAppUserId").setValue(data.createdBy);
-							nui.get("proAppUserName").setValue(data.createdUsername);
-							nui.get("proAppName").setValue(data.proAppName);
-							nui.get('reportName').setValue(data.proAppName);
-							nui.get('orgUnits').setValue(data.proAppOrgId);
-							nui.get('orgUnits').setText(data.proAppOrgName);
-							nui.get("proAppApplyPrice").setValue(data.proAppApplyPrice);
-							nui.get("putunder").setValue(data.putunder);
-							nui.get("purchasMode").setValue(data.purchasMode);
-							nui.get("type").setValue(data.type);
-							btnEdit.doValueChanged();
-							gridDtl.load({
-								"pid" : data.id
-							})
-
-						}
-					}
-				}
-			});
-		}
-
+		
+		function printBtn() {
+			var url = "<%=request.getContextPath()%>/purchase/programme/reviewReportDetail.jsp?id=" + id;
+			var myWindow = window.open(url);
+			myWindow.onload = function() {
+				myWindow.document.title = "打印页面";
+			};
+		}		
+		
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
-
+		
 		//标准方法接口定义
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
 				return window.CloseOwnerWindow(action);
 			else
 				window.close();
-		}
+		}						
 	</script>
 
 </body>

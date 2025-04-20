@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/purchaseReviceReportFlow.png'); width: 1463px; height: 1103px; position: relative;">
+	<div style="background-image: url('/default/common/flow/purchaseReviceReportFlow.png'); width: 1463px; height: 1167px; position: relative;">
 
 		<!-- 采购需求单位经办人确认 -->
 		<div id="div1" style="position: absolute; left: 403px; top: 246px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -35,6 +35,9 @@
 		
 		<!-- 中核供应链负责人审核 -->
 		<div id="div8" style="position: absolute; left: 612px; top: 349px; width: 75px; height: 50px; cursor: pointer;"></div>
+		
+		<!-- 协管领导审批 -->
+		<div id="div9" style="position: absolute; left: 179px; top: 573px; width: 75px; height: 50px; cursor: pointer;"></div>		
 
 	</div>
 
@@ -114,7 +117,16 @@
 					content : '通过【角色管理】模块修改角色编号为【zh_gyl_fzr_ps】的角色数据',
 					btn : []
 				});
-			});						
+			});
+			
+			// 协管领导审批
+			$('#div9').click(function() {
+				layer.open({
+					title : '协管领导审批 - 调整审批人',
+					content : '通过【业务字典管理】模块修改类型代码为【HT_XG_LD】的字典项数据，修改后【刷新缓存】',
+					btn : []
+				});
+			});									
 
 		});
 	</script>

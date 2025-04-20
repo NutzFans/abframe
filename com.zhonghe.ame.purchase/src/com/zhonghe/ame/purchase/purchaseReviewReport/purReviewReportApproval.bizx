@@ -168,6 +168,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link38" name="link38" displayName="连接线" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">param/files</process:leftOperand>
+          <process:rightOperand type="literal">null</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link7</targetConnections>
     <location x="209" y="250"/>
     <size height="28" width="28"/>
@@ -251,6 +261,7 @@
     </sourceConnections>
     <targetConnections>link13</targetConnections>
     <targetConnections>link10</targetConnections>
+    <targetConnections>link39</targetConnections>
     <location x="460" y="251"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo2label</nodeLabel>
@@ -439,7 +450,7 @@
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
           <process:leftOperand type="query">wfWorkItem/workItemName</process:leftOperand>
-          <process:rightOperand type="literal">总办会定标后发起人完善定标信息</process:rightOperand>
+          <process:rightOperand type="literal">总办会定标后采购需求单位经办人完善定标信息</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -449,7 +460,7 @@
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
           <process:leftOperand type="query">wfWorkItem/workItemName</process:leftOperand>
-          <process:rightOperand type="literal">发起人完善定标信息</process:rightOperand>
+          <process:rightOperand type="literal">采购需求单位经办人完善定标信息</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -724,6 +735,30 @@
     <location x="96" y="394"/>
     <figSize height="16" width="25"/>
     <node>assign6</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="保存附件" displayName="saveProFiles" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link38</targetConnections>
+    <location x="330" y="189"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.purchase.purchaseProApp.saveProFiles</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="str" type="query" value="String" valueType="Primitive" pattern="reference">param/files</process:inputVariable>
+        <process:inputVariable id="1" name="groupId" type="literal" value="String" valueType="Primitive" pattern="reference">purReviewReport</process:inputVariable>
+        <process:inputVariable id="2" name="relationId" type="query" value="String" valueType="Primitive" pattern="reference">param/id</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="319" y="224"/>
+    <figSize height="16" width="49"/>
+    <node>subprocess0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
