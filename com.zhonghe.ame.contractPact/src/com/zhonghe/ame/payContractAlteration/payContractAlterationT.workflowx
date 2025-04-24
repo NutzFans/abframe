@@ -270,6 +270,16 @@
         <description>是否有协管领导</description>
         <isArray>false</isArray>
       </dataField>
+      <dataField>
+        <name>orgClass</name>
+        <dataType>
+          <typeClass>primitive</typeClass>
+          <typeValue>String</typeValue>
+        </dataType>
+        <initialValue></initialValue>
+        <description>组织分类</description>
+        <isArray>false</isArray>
+      </dataField>
     </dataFields>
     <triggerEvents/>
     <timeLimit>
@@ -300,7 +310,7 @@
       <resourceName>默认日历</resourceName>
       <parameters/>
     </calendarInfo>
-    <extendNodes><extendNode><key>IsForWardBiz</key><value>false</value><desc/></extendNode><extendNode><key>openLog</key><value>false</value><desc/></extendNode></extendNodes>
+    <extendNodes><extendNode><key>IsForWardBiz</key><value>false</value><desc></desc></extendNode><extendNode><key>openLog</key><value>false</value><desc></desc></extendNode></extendNodes>
   </processHeader>
   <transitions>
     <transition>
@@ -317,8 +327,8 @@
       <to>manualActivity1</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司</displayName>
-      <type>simpleCondition</type>
+      <displayName>分公司/事业部</displayName>
+      <type>branch-rule</type>
       <simpleCondition>
         <leftValueType>variable</leftValueType>
         <leftValue>org/judge</leftValue>
@@ -327,6 +337,12 @@
         <rightValueType>constant</rightValueType>
       </simpleCondition>
       <bendPoints/>
+      <branchRule>
+        <resourceType>branch-rule</resourceType>
+        <resourceID>PROCESS:a6564e6de8fa431aad10b9822c37e1e9</resourceID>
+        <resourceName>分公司或事业部</resourceName>
+        <parameters/>
+      </branchRule>
     </transition>
     <transition>
       <from>manualActivity</from>
@@ -346,9 +362,9 @@
       <type>simpleCondition</type>
       <simpleCondition>
         <leftValueType>variable</leftValueType>
-        <leftValue>type1</leftValue>
+        <leftValue>orgClass</leftValue>
         <compType>EQ</compType>
-        <rightValue>1</rightValue>
+        <rightValue>3</rightValue>
         <rightValueType>constant</rightValueType>
       </simpleCondition>
       <bendPoints/>
@@ -450,10 +466,10 @@
       <type>simpleCondition</type>
       <bendPoints>
         <bendPoint>
-          <w1>0</w1>
-          <h1>98</h1>
-          <w2>-662</w2>
-          <h2>-7</h2>
+          <w1>-1</w1>
+          <h1>99</h1>
+          <w2>-769</w2>
+          <h2>-6</h2>
         </bendPoint>
       </bendPoints>
     </transition>
@@ -511,7 +527,7 @@
       <isDefault>false</isDefault>
       <priority>60</priority>
       <displayName>职能部门及各中心</displayName>
-      <type>simpleCondition</type>
+      <type>branch-rule</type>
       <simpleCondition>
         <leftValueType>variable</leftValueType>
         <leftValue>org/judge</leftValue>
@@ -527,13 +543,19 @@
           <h2>1</h2>
         </bendPoint>
       </bendPoints>
+      <branchRule>
+        <resourceType>branch-rule</resourceType>
+        <resourceID>PROCESS:6d40893c53ad494e80abdf0cf5e08e2d</resourceID>
+        <resourceName>职能部门及各中心</resourceName>
+        <parameters/>
+      </branchRule>
     </transition>
     <transition>
       <from>routeActivity1</from>
       <to>manualActivity45122</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司：金额&gt;200万</displayName>
+      <displayName>分公司/事业部：金额&gt;200万</displayName>
       <type>branch-rule</type>
       <bendPoints/>
       <branchRule>
@@ -548,7 +570,7 @@
       <to>manualActivity11</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>金额&gt;=50万且不为房屋租赁/物业、员工福利类 或者 金额&lt;50万的业务合作类</displayName>
+      <displayName>金额&gt;=50万且不为房屋租赁/物业、员工福利类 或者 金额&lt;50万的业务合作、网络及信息化建设、法律法务审计、其他工程建设、其他类</displayName>
       <type>branch-rule</type>
       <bendPoints>
         <bendPoint>
@@ -570,7 +592,7 @@
       <to>routeActivity4</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司：金额&lt;=200万</displayName>
+      <displayName>分公司/事业部：金额&lt;=200万</displayName>
       <type>branch-rule</type>
       <bendPoints>
         <bendPoint>
@@ -904,7 +926,7 @@
       <to>manualActivity10</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司：合同金额&lt;=50万的非业务合作类 或者 房屋租售/物业、员工服务类</displayName>
+      <displayName>分公司/事业部：合同金额&lt;=50万的非(非业务合作、 网络及信息化建设、法律法务审计、其他工程建设、其他类)或者房屋租售/物业、员工服务类</displayName>
       <type>branch-rule</type>
       <bendPoints/>
       <branchRule>
@@ -919,7 +941,7 @@
       <to>manualActivity611</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>设备监理中心：金额&lt;=50万的非业务合作类 或者 房屋租售/物业、员工服务类</displayName>
+      <displayName>设备监理中心：合同金额&lt;=50万的非(业务合作、 网络及信息化建设、法律法务审计、其他工程建设、其他类)或者房屋租售/物业、员工服务类</displayName>
       <type>branch-rule</type>
       <bendPoints/>
       <branchRule>
@@ -934,7 +956,7 @@
       <to>manualActivity61</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>其他业务中心：金额&lt;=50万的非业务合作类</displayName>
+      <displayName>其他业务中心：合同金额&lt;=50万的非(业务合作、 网络及信息化建设、法律法务审计、其他工程建设、其他类)</displayName>
       <type>branch-rule</type>
       <bendPoints/>
       <branchRule>
@@ -949,7 +971,7 @@
       <to>manualActivity451</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司：金额&gt;200万</displayName>
+      <displayName>分公司/事业部：金额&gt;200万</displayName>
       <type>branch-rule</type>
       <bendPoints/>
       <branchRule>
@@ -964,7 +986,7 @@
       <to>manualActivity4512</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司：金额&gt;200万</displayName>
+      <displayName>分公司/事业部：金额&gt;200万</displayName>
       <type>branch-rule</type>
       <bendPoints/>
       <branchRule>
@@ -979,7 +1001,7 @@
       <to>manualActivity361</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>非职能：金额&lt;=50万的业务合作</displayName>
+      <displayName>非职能：金额&lt;=50万的业务合作、网络及信息化建设、法律法务审计、其他工程建设、其他类</displayName>
       <type>branch-rule</type>
       <bendPoints>
         <bendPoint>
@@ -1013,7 +1035,7 @@
       <to>routeActivity10</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司：金额&lt;=200万</displayName>
+      <displayName>分公司/事业部：金额&lt;=200万</displayName>
       <type>branch-rule</type>
       <bendPoints>
         <bendPoint>
@@ -1183,8 +1205,8 @@
       <to>manualActivity15</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
-      <displayName>分公司</displayName>
-      <type>simpleCondition</type>
+      <displayName>分公司/事业部</displayName>
+      <type>branch-rule</type>
       <simpleCondition>
         <leftValueType>variable</leftValueType>
         <leftValue>org/judge</leftValue>
@@ -1193,6 +1215,12 @@
         <rightValueType>constant</rightValueType>
       </simpleCondition>
       <bendPoints/>
+      <branchRule>
+        <resourceType>branch-rule</resourceType>
+        <resourceID>PROCESS:a6564e6de8fa431aad10b9822c37e1e9</resourceID>
+        <resourceName>分公司或事业部</resourceName>
+        <parameters/>
+      </branchRule>
     </transition>
     <transition>
       <from>routeActivity8</from>
@@ -1996,7 +2024,7 @@
     </activity>
     <activity>
       <activityId>manualActivity2</activityId>
-      <activityName>分公司财务部审批</activityName>
+      <activityName>分公司/事业部财务部审批</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -2186,7 +2214,7 @@
     </activity>
     <activity>
       <activityId>manualActivity34</activityId>
-      <activityName>分公司经营管理部门经办人审批</activityName>
+      <activityName>分公司/事业部经营管理部门经办人审批</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -2362,7 +2390,7 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>256</x>
+        <x>205</x>
         <y>137</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
@@ -2376,7 +2404,7 @@
     </activity>
     <activity>
       <activityId>manualActivity4</activityId>
-      <activityName>分公司经营管理部门主任审批</activityName>
+      <activityName>分公司/事业部经营管理部门主任审批</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -2552,7 +2580,7 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>76</x>
+        <x>-30</x>
         <y>137</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
@@ -2566,7 +2594,7 @@
     </activity>
     <activity>
       <activityId>manualActivity5</activityId>
-      <activityName>分公司负责人审批</activityName>
+      <activityName>分公司/事业部负责人审批</activityName>
       <description></description>
       <splitType>XOR</splitType>
       <joinType>XOR</joinType>
@@ -2729,7 +2757,7 @@
         <color>16777215</color>
         <height>45</height>
         <width>64</width>
-        <x>76</x>
+        <x>-30</x>
         <y>257</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
@@ -7814,8 +7842,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>(【PROC:是否本部】!=&quot;1&quot;[并且]【PROC:合同金额】&lt;=&quot;500000&quot;[并且]【PROC:合同类型】!=&quot;15&quot;)[或者](【PROC:是否本部】!=&quot;1&quot;[并且]【PROC:合同类型】==&quot;7&quot;)[或者](【PROC:是否本部】!=&quot;1&quot;[并且]【PROC:合同类型】==&quot;13&quot;)</desc>
-              <expr>($PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]!=&quot;1&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;)||($PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]!=&quot;1&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;7&quot;)||($PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]!=&quot;1&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;13&quot;)</expr>
+              <desc>(【PROC:合同金额】&lt;=&quot;500000&quot;[并且](【PROC:合同类型】!=&quot;15&quot;[并且]【PROC:合同类型】!=&quot;18&quot;[并且]【PROC:合同类型】!=&quot;19&quot;[并且]【PROC:合同类型】!=&quot;20&quot;[并且]【PROC:合同类型】!=&quot;23&quot;)[并且](【PROC:组织分类】==&quot;4&quot;[或者]【PROC:组织分类】==&quot;5&quot;))[或者]((【PROC:组织分类】==&quot;4&quot;[或者]【PROC:组织分类】==&quot;5&quot;)[并且](【PROC:合同类型】==&quot;7&quot;[或者]【PROC:合同类型】==&quot;13&quot;))</desc>
+              <expr>($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;18&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;19&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;20&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;23&quot;)&amp;&amp;($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;4&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;5&quot;))||(($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;4&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;5&quot;)&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;7&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;13&quot;))</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -7824,14 +7852,6 @@
           </content>
         </contentList>
         <referenceList>
-          <reference>
-            <resource>
-              <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7dcddc364fcc4bd4aeac245af9cb6484</resourceID>
-              <resourceName>PROC:是否本部</resourceName>
-              <parameters/>
-            </resource>
-          </reference>
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
@@ -7845,6 +7865,14 @@
               <resourceType>business-variable</resourceType>
               <resourceID>PROCESS:6c77052a524046998e1d0fc1bc75fd01</resourceID>
               <resourceName>PROC:合同类型</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -7860,8 +7888,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>【PROC:type1】==&quot;2&quot;[并且]【PROC:合同金额】&lt;=&quot;500000&quot;[并且]【PROC:合同类型】!=&quot;15&quot;</desc>
-              <expr>$PVAR[PROCESS:7053dd53b70444238aec3127cf6ae30e]==&quot;2&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;</expr>
+              <desc>(【PROC:合同金额】&lt;=&quot;500000&quot;[并且](【PROC:合同类型】!=&quot;15&quot;[并且]【PROC:合同类型】!=&quot;18&quot;[并且]【PROC:合同类型】!=&quot;19&quot;[并且]【PROC:合同类型】!=&quot;20&quot;[并且]【PROC:合同类型】!=&quot;23&quot;)[并且]【PROC:组织分类】==&quot;2&quot;)</desc>
+              <expr>($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;18&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;19&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;20&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;23&quot;)&amp;&amp;$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;2&quot;)</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -7870,14 +7898,6 @@
           </content>
         </contentList>
         <referenceList>
-          <reference>
-            <resource>
-              <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7053dd53b70444238aec3127cf6ae30e</resourceID>
-              <resourceName>PROC:type1</resourceName>
-              <parameters/>
-            </resource>
-          </reference>
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
@@ -7891,6 +7911,14 @@
               <resourceType>business-variable</resourceType>
               <resourceID>PROCESS:6c77052a524046998e1d0fc1bc75fd01</resourceID>
               <resourceName>PROC:合同类型</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -7906,8 +7934,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>(【PROC:type1】==&quot;1&quot;[并且]【PROC:合同金额】&lt;=&quot;500000&quot;[并且]【PROC:合同类型】!=&quot;15&quot;)[或者](【PROC:type1】==&quot;1&quot;[并且]【PROC:合同类型】==&quot;7&quot;)[或者](【PROC:type1】==&quot;1&quot;[并且]【PROC:合同类型】==&quot;13&quot;)</desc>
-              <expr>($PVAR[PROCESS:7053dd53b70444238aec3127cf6ae30e]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;)||($PVAR[PROCESS:7053dd53b70444238aec3127cf6ae30e]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;7&quot;)||($PVAR[PROCESS:7053dd53b70444238aec3127cf6ae30e]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;13&quot;)</expr>
+              <desc>(【PROC:合同金额】&lt;=&quot;500000&quot;[并且](【PROC:合同类型】!=&quot;15&quot;[并且]【PROC:合同类型】!=&quot;18&quot;[并且]【PROC:合同类型】!=&quot;19&quot;[并且]【PROC:合同类型】!=&quot;20&quot;[并且]【PROC:合同类型】!=&quot;23&quot;)[并且]【PROC:组织分类】==&quot;3&quot;)[或者](【PROC:组织分类】==&quot;3&quot;[并且](【PROC:合同类型】==&quot;7&quot;[或者]【PROC:合同类型】==&quot;13&quot;))</desc>
+              <expr>($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;18&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;19&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;20&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;23&quot;)&amp;&amp;$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;3&quot;)||($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;3&quot;&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;7&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;13&quot;))</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -7916,14 +7944,6 @@
           </content>
         </contentList>
         <referenceList>
-          <reference>
-            <resource>
-              <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7053dd53b70444238aec3127cf6ae30e</resourceID>
-              <resourceName>PROC:type1</resourceName>
-              <parameters/>
-            </resource>
-          </reference>
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
@@ -7940,6 +7960,14 @@
               <parameters/>
             </resource>
           </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
         </referenceList>
         <addUp>0</addUp>
         <description></description>
@@ -7952,8 +7980,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>【PROC:type1】!=&quot;0&quot;[并且]【PROC:合同金额】&lt;=&quot;500000&quot;[并且]【PROC:合同类型】==&quot;15&quot;</desc>
-              <expr>$PVAR[PROCESS:7053dd53b70444238aec3127cf6ae30e]!=&quot;0&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;15&quot;</expr>
+              <desc>(【PROC:合同金额】&lt;=&quot;500000&quot;[并且](【PROC:组织分类】==&quot;2&quot;[或者]【PROC:组织分类】==&quot;3&quot;)[并且](【PROC:合同类型】==&quot;15&quot;[或者]【PROC:合同类型】==&quot;18&quot;[或者]【PROC:合同类型】==&quot;19&quot;[或者]【PROC:合同类型】==&quot;20&quot;[或者]【PROC:合同类型】==&quot;23&quot;))</desc>
+              <expr>($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;500000&quot;&amp;&amp;($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;2&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;3&quot;)&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;15&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;18&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;19&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;20&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;23&quot;))</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -7965,16 +7993,16 @@
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7053dd53b70444238aec3127cf6ae30e</resourceID>
-              <resourceName>PROC:type1</resourceName>
+              <resourceID>PROCESS:27a1d6bb787c4caeac41ff76589b82d5</resourceID>
+              <resourceName>PROC:合同金额</resourceName>
               <parameters/>
             </resource>
           </reference>
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:27a1d6bb787c4caeac41ff76589b82d5</resourceID>
-              <resourceName>PROC:合同金额</resourceName>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8066,8 +8094,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>(【PROC:是否本部】!=&quot;1&quot;[并且]【PROC:合同金额】&gt;&quot;2000000&quot;)</desc>
-              <expr>($PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]!=&quot;1&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;&quot;2000000&quot;)</expr>
+              <desc>(【PROC:组织分类】==&quot;5&quot;[并且]【PROC:合同金额】&gt;&quot;2000000&quot;)[或者](【PROC:组织分类】==&quot;4&quot;[并且]【PROC:合同金额】&gt;&quot;2000000&quot;)</desc>
+              <expr>($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;5&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;&quot;2000000&quot;)||($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;4&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;&quot;2000000&quot;)</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -8079,8 +8107,8 @@
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7dcddc364fcc4bd4aeac245af9cb6484</resourceID>
-              <resourceName>PROC:是否本部</resourceName>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8104,8 +8132,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>(【PROC:合同金额】&gt;= &quot;500000&quot;[并且]【PROC:合同类型】!=&quot;7&quot;[并且]【PROC:合同类型】!=&quot;13&quot;)[或者](【PROC:合同金额】&lt;&quot;500000&quot;[并且]【PROC:合同类型】==&quot;15&quot;)[或者](【PROC:是否本部】==&quot;1&quot;[并且]【PROC:type1】==&quot;0&quot;)</desc>
-              <expr>($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;= &quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;7&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;13&quot;)||($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;15&quot;)||($PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:7053dd53b70444238aec3127cf6ae30e]==&quot;0&quot;)</expr>
+              <desc>(【PROC:合同金额】&gt;=&quot;500000&quot;[并且]【PROC:合同类型】!=&quot;7&quot;[并且]【PROC:合同类型】!=&quot;13&quot;)[或者](【PROC:合同金额】&lt;&quot;500000&quot;[并且](【PROC:合同类型】==&quot;15&quot;[或者]【PROC:合同类型】==&quot;18&quot;[或者]【PROC:合同类型】==&quot;19&quot;[或者]【PROC:合同类型】==&quot;20&quot;[或者]【PROC:合同类型】==&quot;23&quot;))[或者](【PROC:组织分类】==&quot;1&quot;)</desc>
+              <expr>($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;=&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;7&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;13&quot;)||($PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;&quot;500000&quot;&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;15&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;18&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;19&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;20&quot;||$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]==&quot;23&quot;))||($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;1&quot;)</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -8133,16 +8161,8 @@
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7dcddc364fcc4bd4aeac245af9cb6484</resourceID>
-              <resourceName>PROC:是否本部</resourceName>
-              <parameters/>
-            </resource>
-          </reference>
-          <reference>
-            <resource>
-              <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7053dd53b70444238aec3127cf6ae30e</resourceID>
-              <resourceName>PROC:type1</resourceName>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8160,8 +8180,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>(【PROC:是否本部】!=&quot;1&quot;[并且]【PROC:合同金额】&lt;=&quot;2000000&quot;)</desc>
-              <expr>($PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]!=&quot;1&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;2000000&quot;)</expr>
+              <desc>(【PROC:组织分类】==&quot;5&quot;[并且]【PROC:合同金额】&lt;=&quot;2000000&quot;)[或者](【PROC:组织分类】==&quot;4&quot;[并且]【PROC:合同金额】&lt;=&quot;2000000&quot;)</desc>
+              <expr>($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;5&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;2000000&quot;)||($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;4&quot;&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&lt;=&quot;2000000&quot;)</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -8173,8 +8193,8 @@
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7dcddc364fcc4bd4aeac245af9cb6484</resourceID>
-              <resourceName>PROC:是否本部</resourceName>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8198,8 +8218,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>【PROC:是否本部】==&quot;1&quot;[并且]【PROC:是否有协管领导】==&quot;1&quot;</desc>
-              <expr>$PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:ed9920185b464ec8bf213921ae975403]==&quot;1&quot;</expr>
+              <desc>((【PROC:组织分类】==&quot;2&quot;[或者]【PROC:组织分类】==&quot;3&quot;)[并且](【PROC:合同类型】!=&quot;15&quot;[并且]【PROC:合同类型】!=&quot;18&quot;[并且]【PROC:合同类型】!=&quot;19&quot;[并且]【PROC:合同类型】!=&quot;20&quot;[并且]【PROC:合同类型】!=&quot;23&quot;)[并且]【PROC:合同金额】&gt;&quot;500000&quot;[并且]【PROC:是否有协管领导】==&quot;1&quot;)[或者](【PROC:组织分类】==&quot;1&quot;[并且]【PROC:是否有协管领导】==&quot;1&quot;)</desc>
+              <expr>(($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;2&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;3&quot;)&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;18&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;19&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;20&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;23&quot;)&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:ed9920185b464ec8bf213921ae975403]==&quot;1&quot;)||($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:ed9920185b464ec8bf213921ae975403]==&quot;1&quot;)</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -8211,8 +8231,24 @@
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7dcddc364fcc4bd4aeac245af9cb6484</resourceID>
-              <resourceName>PROC:是否本部</resourceName>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:6c77052a524046998e1d0fc1bc75fd01</resourceID>
+              <resourceName>PROC:合同类型</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:27a1d6bb787c4caeac41ff76589b82d5</resourceID>
+              <resourceName>PROC:合同金额</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8236,8 +8272,8 @@
         <contentList>
           <content>
             <condition>
-              <desc>【PROC:是否本部】==&quot;1&quot;[并且]【PROC:是否有协管领导】==&quot;0&quot;</desc>
-              <expr>$PVAR[PROCESS:7dcddc364fcc4bd4aeac245af9cb6484]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:ed9920185b464ec8bf213921ae975403]==&quot;0&quot;</expr>
+              <desc>((【PROC:组织分类】==&quot;2&quot;[或者]【PROC:组织分类】==&quot;3&quot;)[并且](【PROC:合同类型】!=&quot;15&quot;[并且]【PROC:合同类型】!=&quot;18&quot;[并且]【PROC:合同类型】!=&quot;19&quot;[并且]【PROC:合同类型】!=&quot;20&quot;[并且]【PROC:合同类型】!=&quot;23&quot;)[并且]【PROC:合同金额】&gt;&quot;500000&quot;[并且]【PROC:是否有协管领导】==&quot;0&quot;)[或者](【PROC:组织分类】==&quot;1&quot;[并且]【PROC:是否有协管领导】==&quot;0&quot;)</desc>
+              <expr>(($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;2&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;3&quot;)&amp;&amp;($PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;15&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;18&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;19&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;20&quot;&amp;&amp;$PVAR[PROCESS:6c77052a524046998e1d0fc1bc75fd01]!=&quot;23&quot;)&amp;&amp;$PVAR[PROCESS:27a1d6bb787c4caeac41ff76589b82d5]&gt;&quot;500000&quot;&amp;&amp;$PVAR[PROCESS:ed9920185b464ec8bf213921ae975403]==&quot;0&quot;)||($PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;1&quot;&amp;&amp;$PVAR[PROCESS:ed9920185b464ec8bf213921ae975403]==&quot;0&quot;)</expr>
               <contentType>0</contentType>
             </condition>
             <result>
@@ -8249,8 +8285,24 @@
           <reference>
             <resource>
               <resourceType>business-variable</resourceType>
-              <resourceID>PROCESS:7dcddc364fcc4bd4aeac245af9cb6484</resourceID>
-              <resourceName>PROC:是否本部</resourceName>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:6c77052a524046998e1d0fc1bc75fd01</resourceID>
+              <resourceName>PROC:合同类型</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:27a1d6bb787c4caeac41ff76589b82d5</resourceID>
+              <resourceName>PROC:合同金额</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8259,6 +8311,66 @@
               <resourceType>business-variable</resourceType>
               <resourceID>PROCESS:ed9920185b464ec8bf213921ae975403</resourceID>
               <resourceName>PROC:是否有协管领导</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+        </referenceList>
+        <addUp>0</addUp>
+        <description></description>
+      </rule>
+      <rule>
+        <ruleUUID>PROCESS:a6564e6de8fa431aad10b9822c37e1e9</ruleUUID>
+        <ruleName>分公司或事业部</ruleName>
+        <ruleType>branch-rule</ruleType>
+        <catalogID>-1</catalogID>
+        <contentList>
+          <content>
+            <condition>
+              <desc>【PROC:组织分类】==&quot;5&quot;[或者]【PROC:组织分类】==&quot;4&quot;</desc>
+              <expr>$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;5&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;4&quot;</expr>
+              <contentType>0</contentType>
+            </condition>
+            <result>
+              <contentType>ORG</contentType>
+            </result>
+          </content>
+        </contentList>
+        <referenceList>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
+              <parameters/>
+            </resource>
+          </reference>
+        </referenceList>
+        <addUp>0</addUp>
+        <description></description>
+      </rule>
+      <rule>
+        <ruleUUID>PROCESS:6d40893c53ad494e80abdf0cf5e08e2d</ruleUUID>
+        <ruleName>职能部门及各中心</ruleName>
+        <ruleType>branch-rule</ruleType>
+        <catalogID>-1</catalogID>
+        <contentList>
+          <content>
+            <condition>
+              <desc>【PROC:组织分类】==&quot;1&quot;[或者]【PROC:组织分类】==&quot;2&quot;[或者]【PROC:组织分类】==&quot;3&quot;</desc>
+              <expr>$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;1&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;2&quot;||$PVAR[PROCESS:f6a58dcbb7374dceb1463f235c18d8de]==&quot;3&quot;</expr>
+              <contentType>0</contentType>
+            </condition>
+            <result>
+              <contentType>ORG</contentType>
+            </result>
+          </content>
+        </contentList>
+        <referenceList>
+          <reference>
+            <resource>
+              <resourceType>business-variable</resourceType>
+              <resourceID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</resourceID>
+              <resourceName>PROC:组织分类</resourceName>
               <parameters/>
             </resource>
           </reference>
@@ -8296,6 +8408,12 @@
         <variableName>是否有协管领导</variableName>
         <xpath>isXgLd</xpath>
         <variableUUID>PROCESS:ed9920185b464ec8bf213921ae975403</variableUUID>
+        <description></description>
+      </businessVariable>
+      <businessVariable>
+        <variableName>组织分类</variableName>
+        <xpath>orgClass</xpath>
+        <variableUUID>PROCESS:f6a58dcbb7374dceb1463f235c18d8de</variableUUID>
         <description></description>
       </businessVariable>
     </businessVariables>

@@ -544,7 +544,6 @@ body {
 								closeOk();
 							}
 						} else {
-							showTips("提交失败！");
 							nui.get("saveFeame").enable();
 							nui.get("creatFeame").enable();
 						}

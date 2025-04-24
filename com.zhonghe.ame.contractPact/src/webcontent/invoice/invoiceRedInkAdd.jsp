@@ -610,7 +610,6 @@ body {
 								closeOk();
 							}
 						} else {
-							showTips("发起红冲/作废提交失败！", "danger");
 							nui.get("saveFeame").enable();
 							nui.get("creatFeame").enable();
 						}

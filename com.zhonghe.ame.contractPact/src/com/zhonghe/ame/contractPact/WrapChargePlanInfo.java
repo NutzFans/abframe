@@ -2,11 +2,15 @@ package com.zhonghe.ame.contractPact;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -15,23 +19,30 @@ import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
 import com.eos.common.connection.DataSourceHelper;
+import com.eos.das.entity.criteria.ExprType;
+import com.eos.das.entity.criteria.OrderbyType;
+import com.eos.das.entity.criteria.impl.CriteriaTypeImpl;
 import com.eos.foundation.data.DataObjectUtil;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
 import com.eos.system.annotation.Bizlet;
+
 import commonj.sdo.DataObject;
 
 @Bizlet("包装收款/开票计划数据")
 public class WrapChargePlanInfo {
 
 	@Bizlet("包装开票计划跟踪数据")
-	public DataObject[] wrap(DataObject[] dataObjects) throws Exception {
+	public DataObject[] wrap(DataObject[] dataObjects, DataObject criteria) throws Exception {
 		if (dataObjects != null && dataObjects.length > 0) {
 			List<DataObject> warpDatas = new ArrayList<DataObject>();
 			Session dbSession = new Session(DataSourceHelper.getDataSource());
 			List<DataObject> feeCollectionPlanList = new ArrayList<DataObject>();
 			List<DataObject> invoiceCollectionPlanList = new ArrayList<DataObject>();
 			Map<String, DataObject> invoiceCollectionContractNoPlanMap = new HashMap<String, DataObject>();
+
+			boolean criteriaBoolean = this.isCriteriaField(criteria);
+			Map<String, String> orderMap = this.getCriteriaOrder(criteria);
 
 			for (DataObject dataObject : dataObjects) {
 				if (CharSequenceUtil.equals("1", dataObject.getString("isChargePlan"))) {
@@ -62,20 +73,23 @@ public class WrapChargePlanInfo {
 
 				feeCollectionPlan = this.fetchFillData(feeCollectionPlan, invoiceBySecList);
 
-				// 获取合同编号相同但二级组织不同到开票数据集合
-				List<Entity> invoiceByNotSecList = dbSession.query(queryInvoiceByNotSecSql, contractNo, startDate, endDate, secOrg);
-				if (invoiceByNotSecList != null && invoiceByNotSecList.size() > 0) {
-					for (Entity invoiceByNotSec : invoiceByNotSecList) {
-						String key = CharSequenceUtil.format("{}_{}_{}", year, contractNo, invoiceByNotSec.getStr("secondary_org"));
-						if (!invoiceCollectionContractNoPlanMap.containsKey(key)) {
-							DataObject annualChargePlan = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.AnnualChargePlan");
-							annualChargePlan = this.fetchAnnualChargePlan(annualChargePlan, feeCollectionPlan, invoiceByNotSec);
-							DatabaseExt.getPrimaryKey(annualChargePlan);
-							DatabaseUtil.insertEntity("default", annualChargePlan);
-							invoiceCollectionContractNoPlanMap.put(key, annualChargePlan);
+				if (!criteriaBoolean) {
+					// 获取合同编号相同但二级组织不同到开票数据集合
+					List<Entity> invoiceByNotSecList = dbSession.query(queryInvoiceByNotSecSql, contractNo, startDate, endDate, secOrg);
+					if (invoiceByNotSecList != null && invoiceByNotSecList.size() > 0) {
+						for (Entity invoiceByNotSec : invoiceByNotSecList) {
+							String key = CharSequenceUtil.format("{}_{}_{}", year, contractNo, invoiceByNotSec.getStr("secondary_org"));
+							if (!invoiceCollectionContractNoPlanMap.containsKey(key)) {
+								DataObject annualChargePlan = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.AnnualChargePlan");
+								annualChargePlan = this.fetchAnnualChargePlan(annualChargePlan, feeCollectionPlan, invoiceByNotSec);
+								DatabaseExt.getPrimaryKey(annualChargePlan);
+								DatabaseUtil.insertEntity("default", annualChargePlan);
+								invoiceCollectionContractNoPlanMap.put(key, annualChargePlan);
+							}
 						}
 					}
 				}
+
 				warpDatas.add(feeCollectionPlan);
 			}
 
@@ -100,6 +114,24 @@ public class WrapChargePlanInfo {
 				dataObject = this.fetchFillData(dataObject, invoiceBySecList);
 				warpDatas.add(dataObject);
 			}
+
+			if ("1".equals(orderMap.get("isOrder"))) {
+				if ("sumExcludeTax".equals(orderMap.get("orderbyName"))) {
+					if ("asc".equals(orderMap.get("orderbySort"))) {
+						warpDatas = warpDatas.stream().sorted(Comparator.comparing((dataObject) -> ((DataObject) dataObject).getBigDecimal("sumExcludeTax"))).collect(Collectors.toList());
+					} else {
+						warpDatas = warpDatas.stream().sorted(Comparator.comparing((dataObject) -> ((DataObject) dataObject).getBigDecimal("sumExcludeTax")).reversed()).collect(Collectors.toList());
+					}
+				} else if ("sumTotalBookIncome".equals(orderMap.get("orderbyName"))) {
+					if ("asc".equals(orderMap.get("orderbySort"))) {
+						warpDatas = warpDatas.stream().sorted(Comparator.comparing((dataObject) -> ((DataObject) dataObject).getBigDecimal("sumTotalBookIncome"))).collect(Collectors.toList());
+					} else {
+						warpDatas = warpDatas.stream().sorted(Comparator.comparing((dataObject) -> ((DataObject) dataObject).getBigDecimal("sumTotalBookIncome")).reversed())
+								.collect(Collectors.toList());
+					}
+				}
+			}
+
 			return ArrayUtil.toArray(warpDatas, DataObject.class);
 		} else {
 			return dataObjects;
@@ -189,4 +221,40 @@ public class WrapChargePlanInfo {
 		annualChargePlan.set("contractNo", feeCollectionPlan.getString("contractNo"));
 		return annualChargePlan;
 	}
+
+	private boolean isCriteriaField(DataObject criteria) {
+		CriteriaTypeImpl criteriaTypeImpl = (CriteriaTypeImpl) criteria;
+		List<ExprType> exprTypeList = criteriaTypeImpl.get_expr();
+		if (exprTypeList != null && exprTypeList.size() > 0) {
+			for (ExprType exprType : exprTypeList) {
+				String fieldName = exprType.get_property();
+				String fieldValue = exprType.get_value();
+				if (!StrUtil.equals("years", fieldName) && StrUtil.isNotBlank(fieldValue)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private Map<String, String> getCriteriaOrder(DataObject criteria) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("isOrder", "0");
+		CriteriaTypeImpl criteriaTypeImpl = (CriteriaTypeImpl) criteria;
+		List<OrderbyType> orderbyTypeList = criteriaTypeImpl.get_orderby();
+		if (orderbyTypeList != null && orderbyTypeList.size() > 0) {
+			for (OrderbyType orderbyType : orderbyTypeList) {
+				String orderbyName = orderbyType.get_property();
+				String orderbySort = orderbyType.get_sort();
+				if (StrUtil.equals("sumExcludeTax", orderbyName) || StrUtil.equals("sumTotalBookIncome", orderbyName)) {
+					map.put("isOrder", "1");
+					map.put("orderbyName", orderbyName);
+					map.put("orderbySort", orderbySort);
+					return map;
+				}
+			}
+		}
+		return map;
+	}
+
 }

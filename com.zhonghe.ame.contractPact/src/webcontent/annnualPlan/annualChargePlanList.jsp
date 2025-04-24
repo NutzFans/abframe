@@ -61,33 +61,47 @@ html,body {
 						</td>
 						<td style="width: 60px; text-align: right;">收款方:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[6].payee" class="nui-dictcombobox" dictTypeId="PAYER" nullItemText="全部" showNullItem="true" style="width: 150px" />
+							<input name="criteria._expr[6]._value" class="nui-dictcombobox" dictTypeId="PAYER" nullItemText="全部" showNullItem="true" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[6]._property" value="payee" />
+							<input class="nui-hidden" name="criteria._expr[6]._op" value="=" />
 						</td>
 					</tr>
 					<tr>
 						<td style="width: 60px; text-align: right;">专业类别:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[7].major" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" nullItemText="全部" showNullItem="true" style="width: 150px" />
+							<input name="criteria._expr[7]._value" class="nui-dictcombobox" dictTypeId="ZH_MAJOR_TYPE" nullItemText="全部" showNullItem="true" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[7]._property" value="major" />
+							<input class="nui-hidden" name="criteria._expr[7]._op" value="=" />
 						</td>
 						<td style="width: 60px; text-align: right;">工程类别:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[8].projectType" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[8]._value" class="nui-dictcombobox" dictTypeId="ZH_PROJECT_TYPE" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[8]._property" value="projectType" />
+							<input class="nui-hidden" name="criteria._expr[8]._op" value="=" />
 						</td>
 						<td style="width: 70px; text-align: right;">集团内/外:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[9].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[9]._value" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[9]._property" value="headquarterGroup" />
+							<input class="nui-hidden" name="criteria._expr[9]._op" value="=" />
 						</td>
 						<td style="width: 70px; text-align: right;">合同状态:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[10].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[10]._value" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[10]._property" value="contractStauts" />
+							<input class="nui-hidden" name="criteria._expr[10]._op" value="=" />
 						</td>
 						<td style="width: 70px; text-align: right;">风险等级:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[20].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[20]._value" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input class="nui-hidden" name="criteria._expr[20]._property" value="riskLevel" />
+							<input class="nui-hidden" name="criteria._expr[20]._op" value="=" />
 						</td>
 						<td style="width: 60px; text-align: right;">年份:</td>
 						<td colspan="3">
-							<input id="years" name="criteria._expr[11].years" class="nui-textbox" style="width: 65px" />
+							<input id="years" name="criteria._expr[11]._value" class="nui-textbox" style="width: 65px" />
+							<input class="nui-hidden" name="criteria._expr[11]._property" value="years" />
+							<input class="nui-hidden" name="criteria._expr[11]._op" value="=" />
 							<span style="color: red; vertical-align: inherit">默认当前年份</span>
 						</td>
 					</tr>
@@ -139,32 +153,32 @@ html,body {
 					<div field="payee" width="100" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
 					<div field="contractSum" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">合同金额（元）</div>
 					<div field="sum" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收款金额（元）</div>
-					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" sortField="sum">计划收入金额（元）</div>
-					<div field="sumTotalBookIncome" width="135" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" sortField="sum">当年实际完成收入（元）</div>
-					<div field="jan" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">1月计划</div>
-					<div field="janActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">1月实际</div>
-					<div field="feb" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">2月计划</div>
-					<div field="febActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">2月实际</div>
-					<div field="mar" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">3月计划</div>
-					<div field="marActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">3月实际</div>
-					<div field="apr" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">4月计划</div>
-					<div field="aprActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">4月实际</div>
-					<div field="may" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">5月计划</div>
-					<div field="mayActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">5月实际</div>
-					<div field="jun" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">6月计划</div>
-					<div field="junActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">6月实际</div>
-					<div field="jul" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">7月计划</div>
-					<div field="julActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">7月实际</div>
-					<div field="aug" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">8月计划</div>
-					<div field="augActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">8月实际</div>
-					<div field="sep" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">9月计划</div>
-					<div field="sepActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">9月实际</div>
-					<div field="oct" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">10月计划</div>
-					<div field="octActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">10月实际</div>
-					<div field="nov" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">11月计划</div>
-					<div field="novActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">11月实际</div>
-					<div field="dec" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">12月计划</div>
-					<div field="decActual" width="120" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency" renderer="setBackColor">12月实际</div>
+					<div field="sumExcludeTax" width="130" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">计划收入金额（元）</div>
+					<div field="sumTotalBookIncome" width="135" align="center" headerAlign="center" allowSort="true" summaryType="sum" dataType="currency">当年实际完成收入（元）</div>
+					<div field="jan" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">1月计划</div>
+					<div field="janActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">1月实际</div>
+					<div field="feb" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">2月计划</div>
+					<div field="febActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">2月实际</div>
+					<div field="mar" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">3月计划</div>
+					<div field="marActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">3月实际</div>
+					<div field="apr" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">4月计划</div>
+					<div field="aprActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">4月实际</div>
+					<div field="may" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">5月计划</div>
+					<div field="mayActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">5月实际</div>
+					<div field="jun" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">6月计划</div>
+					<div field="junActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">6月实际</div>
+					<div field="jul" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">7月计划</div>
+					<div field="julActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">7月实际</div>
+					<div field="aug" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">8月计划</div>
+					<div field="augActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">8月实际</div>
+					<div field="sep" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">9月计划</div>
+					<div field="sepActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">9月实际</div>
+					<div field="oct" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">10月计划</div>
+					<div field="octActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">10月实际</div>
+					<div field="nov" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">11月计划</div>
+					<div field="novActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">11月实际</div>
+					<div field="dec" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">12月计划</div>
+					<div field="decActual" width="120" align="center" headerAlign="center" allowSort="false" summaryType="sum" dataType="currency" renderer="setBackColor">12月实际</div>
 					<div field="major" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="projectType" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_PROJECT_TYPE">工程类别</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
@@ -210,14 +224,38 @@ html,body {
 
 		init();
 
-		function init() {
+		function init(){
 			// 按钮权限
-			if (userId != 'sysadmin') {
+			if(userId !='sysadmin'){
 				// 新增按钮 - chargeAnnualPlan_add，编辑按钮 - chargeAnnualPlan_edit，删除按钮 - chargeAnnualPlan_del，同步按钮 - chargeAnnualPlan_sync
 				getOpeatorButtonAuth("chargeAnnualPlan_add,chargeAnnualPlan_edit,chargeAnnualPlan_del,chargeAnnualPlan_sync");
 			}
-			nui.get("years").setValue(now.getFullYear());
-			search();
+					
+			var json = nui.encode({
+				'loginUserId' : userId,
+				'loginUserOrgId': userOrgId,
+				'authCode': 'chargeAnnualPlan'
+			});
+			nui.ajax({
+				url : "com.zhonghe.ame.annualPlan.auth.queryAnnualPlanAuth.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(o) {
+					if(o.result == "2"){
+						nui.get("secOrgId").setValue(o.secOrgId);
+						nui.get("secOrgName").setValue(o.secOrgName);
+						nui.get("secOrgName").setReadOnly(true);
+						
+					}else if(o.result == "3"){
+						nui.get("createUserid").setValue(userId);
+						nui.get("createUsername").setValue(userName);
+						nui.get("createUsername").setReadOnly(true);						
+					}
+					nui.get("years").setValue(now.getFullYear());
+					search();
+				}
+			});
 		}
 
 		function search() {

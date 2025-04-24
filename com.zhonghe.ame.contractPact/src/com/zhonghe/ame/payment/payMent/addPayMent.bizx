@@ -103,7 +103,6 @@
     <node>invokePojo1</node>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" collapsed="false" type="end">
-    <targetConnections>link15</targetConnections>
     <targetConnections>link24</targetConnections>
     <location x="1417" y="168"/>
     <size height="28" width="28"/>
@@ -188,11 +187,9 @@
     <node>assign4</node>
   </nodes>
   <nodes xsi:type="process:tTransactionRollback" id="transactionrollback0" name="事务回滚" displayName="事务回滚" collapsed="false" type="transactionrollback">
-    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="link14" isDefault="true" type="transition">
-      <bendPoint heightToEnd="-142" heightToStart="-11" widthToEnd="-8" widthToStart="582"/>
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>transactionrollback0</sourceNode>
-      <targetNode>end0</targetNode>
-      <process:transitionCondition/>
+      <targetNode>throw0</targetNode>
     </sourceConnections>
     <targetConnections>link3</targetConnections>
     <targetConnections>link46</targetConnections>
@@ -657,6 +654,10 @@
       <process:from type="query" pattern="reference">isXgLd</process:from>
       <process:to type="query">params/isXgLd</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgClass</process:from>
+      <process:to type="query">params/orgClass</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
     <location x="984" y="408"/>
@@ -749,9 +750,20 @@
     <node>invokePojo6</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" collapsed="false" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign1</sourceNode>
-      <targetNode>invokePojo7</targetNode>
+      <targetNode>throw1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">orgClass</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
     <location x="516" y="159"/>
@@ -765,6 +777,10 @@
       <process:from type="query" pattern="reference">secOrgMap/ORGNAME</process:from>
       <process:to type="query">cpData/secondaryOrgname</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">secOrgMap/ORGTYPE</process:from>
+      <process:to type="query">orgClass</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="518" y="195"/>
@@ -776,7 +792,7 @@
       <sourceNode>invokePojo7</sourceNode>
       <targetNode>invokeService0</targetNode>
     </sourceConnections>
-    <targetConnections>link7</targetConnections>
+    <targetConnections>link9</targetConnections>
     <location x="520" y="270"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo7label</nodeLabel>
@@ -796,6 +812,88 @@
     <location x="443" y="306"/>
     <figSize height="16" width="176"/>
     <node>invokePojo7</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw1" name="组织分类异常" displayName="异常抛出" collapsed="false" type="throw">
+    <targetConnections>link8</targetConnections>
+    <location x="517" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw1label</nodeLabel>
+    <process:exception code="T100001" message="发起人所属组织分类未明确，请联系管理员" type="com.eos.system.exception.EOSRuntimeException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw1label" name="label" nodeType="label">
+    <location x="495" y="116"/>
+    <figSize height="16" width="73"/>
+    <node>throw1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="项监部/部门负责人" displayName="getProjectOrgPerson" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>invokePojo7</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">wfp/id</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>throw2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="360" y="270"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.common.getProjectOrgPerson</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="orgId" type="query" value="Int" valueType="Primitive" pattern="reference">m:userObject/userOrgId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="wfp" type="query" value="com.eos.workflow.data.WFParticipant" valueType="DataObject">wfp</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="323" y="305"/>
+    <figSize height="16" width="101"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw2" name="未找到负责人" displayName="异常抛出" collapsed="false" type="throw">
+    <targetConnections>link10</targetConnections>
+    <location x="360" y="372"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw2label</nodeLabel>
+    <process:exception code="T100000" message="发起后的下一个审批节点人员未找到，请联系管理员" type="com.eos.system.exception.EOSRuntimeException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw2label" name="label" nodeType="label">
+    <location x="338" y="408"/>
+    <figSize height="16" width="73"/>
+    <node>throw2</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw0" name="异常抛出" displayName="异常抛出" collapsed="false" type="throw">
+    <targetConnections>link11</targetConnections>
+    <location x="677" y="37"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw0label</nodeLabel>
+    <process:exception code="FK10000" message="付款流程提交失败，请联系管理员" type="com.eos.system.exception.EOSException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw0label" name="label" nodeType="label">
+    <location x="667" y="73"/>
+    <figSize height="16" width="49"/>
+    <node>throw0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
@@ -829,6 +927,7 @@
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="params"/>
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="secOrgMap"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="isXgLd" primitiveType="String"/>
+    <process:variable description="组织分类" historyStateLocation="client" isArray="false" name="orgClass" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.payment.payMent.ZhPayment" name="cpData"/>

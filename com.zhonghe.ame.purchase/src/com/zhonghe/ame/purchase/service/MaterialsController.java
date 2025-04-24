@@ -26,6 +26,7 @@ public class MaterialsController{
 	@Path("/addMaterialsSort")
 	//@Consumes("application/x-www-form-urlencoded") @FormParam("materials")
 	public String addMaterialsSort(String materials) throws Throwable{
+		System.out.print("物资编码同步 - 物资分类信息接口被调用");
 		//解密
 		String material= Rest3DES.getDecString(materials,key);
 		String result=materialsService.materialsSort(material);	
@@ -38,6 +39,7 @@ public class MaterialsController{
 	@Path("/addMaterialsMaterData")
 	//@Consumes("application/x-www-form-urlencoded") @FormParam("materials")
 	public String addMaterialsMaterData(String materials) throws Throwable{
+		System.out.print("物资编码同步 - 物资主信息接口被调用");
 		//解密
 		System.out.println(materials);
 		String material= Rest3DES.getDecString(materials,key);
@@ -49,7 +51,7 @@ public class MaterialsController{
 	@GET
 	@Path("/get")
 	public String testCon(){
-		return "测试通过";
+		return "Test Connection Success";
 	}
 
 }

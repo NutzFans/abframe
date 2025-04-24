@@ -314,7 +314,6 @@ body {
 								closeOk();
 							}
 						} else {
-							showTips("提交失败！", "danger");
 							nui.get("saveFeame").enable();
 							nui.get("creatFeame").enable();
 						}

@@ -1,17 +1,14 @@
 package com.zhonghe.ame.contractPact;
 
-import static com.eos.system.annotation.ParamType.CONSTANT;
-
 import java.util.HashMap;
-import java.util.Map;
 
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import com.eos.foundation.data.DataObjectUtil;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.system.annotation.Bizlet;
-import com.eos.system.annotation.BizletParam;
 
 import commonj.sdo.DataObject;
 
@@ -22,23 +19,25 @@ public class OrgUtil {
 	public HashMap<String, String> getSecOrg(String orgId) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		DataObject org = this.queryOrgById(orgId);
-		if (ObjUtil.isNotNull(org)) {
+		if (ObjectUtil.isNotNull(org)) {
 			String orgseq = org.getString("ORGSEQ");
-			if (StrUtil.startWith(orgseq, ".1111.")) {
+			if (CharSequenceUtil.startWith(orgseq, ".1111.")) {
 				DataObject data = this.queryOrgById("1111");
-				if (ObjUtil.isNotNull(data)) {
+				if (ObjectUtil.isNotNull(data)) {
 					map.put("ORGID", data.getString("ORGID"));
 					map.put("ORGNAME", data.getString("ORGNAME"));
+					map.put("ORGTYPE", "10"); // 中核上海供应链
 				}
 			} else {
-				String[] splitToArray = StrUtil.splitToArray(orgseq, ".");
+				String[] splitToArray = CharSequenceUtil.splitToArray(orgseq, ".");
 				if (splitToArray.length >= 3) {
 					String secOrg = splitToArray[2];
-					if (StrUtil.isNotBlank(secOrg)) {
+					if (CharSequenceUtil.isNotBlank(secOrg)) {
 						DataObject data = this.queryOrgById(secOrg);
-						if (ObjUtil.isNotNull(data)) {
+						if (ObjectUtil.isNotNull(data)) {
 							map.put("ORGID", data.getString("ORGID"));
 							map.put("ORGNAME", data.getString("ORGNAME"));
+							map.put("ORGTYPE", this.getOrgType(secOrg));
 						}
 					}
 				}
@@ -61,6 +60,37 @@ public class OrgUtil {
 		map.put("orgId", orgId);
 		DataObject org = queryOneEntity("com.zhonghe.ame.contractPact.chargeContract.queryOrgById", map);
 		return org;
+	}
+
+	private DataObject queryDictById(String dictId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("dictId", dictId);
+		DataObject dict = queryOneEntity("com.zhonghe.ame.contractPact.chargeContract.queryDictById", map);
+		return dict;
+	}
+
+	private String getOrgType(String secOrgId) {
+		DataObject dict = this.queryDictById(secOrgId);
+		if (ObjectUtil.isNotNull(dict)) {
+			String dictTypeId = dict.getString("DICTTYPEID");
+			if (StrUtil.equals("ORG_CLASS_FUNCTIONAL_DEP", dictTypeId)) {
+				return "1"; // 职能部门
+			}
+			if (StrUtil.equals("ORG_CLASS_SERVICE_CENTER", dictTypeId)) {
+				return "2"; // 业务中心
+			}
+			if (StrUtil.equals("ORG_CLASS_SUPERVISION_CENTER", dictTypeId)) {
+				return "3"; // 设备监理中心
+			}
+			if (StrUtil.equals("ORG_CLASS_DIVISION_DEP", dictTypeId)) {
+				return "4"; // 事业部
+			}
+			if (StrUtil.equals("ORG_CLASS_BRANCH_OFFICE", dictTypeId)) {
+				return "5"; // 分公司
+			}
+			return null;
+		}
+		return null;
 	}
 
 }

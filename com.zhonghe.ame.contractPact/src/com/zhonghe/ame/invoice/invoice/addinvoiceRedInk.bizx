@@ -149,10 +149,19 @@
     <node>invokePojo3</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值" displayName="赋值" collapsed="false" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link30" name="link30" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign4</sourceNode>
-      <targetNode>invokeService0</targetNode>
-      <process:transitionCondition/>
+      <targetNode>throw1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link31" name="link31" displayName="连接线" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">orgClass</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link11</targetConnections>
     <location x="750" y="249"/>
@@ -186,6 +195,10 @@
       <process:from type="query" pattern="reference">secOrgMap/ORGNAME</process:from>
       <process:to type="query">cpData/secondaryOrgname</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">secOrgMap/ORGTYPE</process:from>
+      <process:to type="query">orgClass</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
     <location x="752" y="285"/>
@@ -200,6 +213,17 @@
     <targetConnections>link19</targetConnections>
     <targetConnections>link62</targetConnections>
     <targetConnections>link63</targetConnections>
+    <targetConnections>link14</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link21</targetConnections>
+    <targetConnections>link22</targetConnections>
+    <targetConnections>link25</targetConnections>
+    <targetConnections>link26</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link29</targetConnections>
+    <targetConnections>link35</targetConnections>
     <location x="1112" y="188"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionrollback0label</nodeLabel>
@@ -215,7 +239,11 @@
       <targetNode>invokePojo1</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
-    <targetConnections>link37</targetConnections>
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link33</targetConnections>
     <location x="870" y="252"/>
     <size height="22" width="28"/>
     <nodeLabel>invokeService0label</nodeLabel>
@@ -251,6 +279,10 @@
           <process:rightOperand type="literal">0</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService3</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link41</targetConnections>
     <location x="1414" y="330"/>
@@ -299,6 +331,10 @@
     <sourceConnections xsi:type="process:tLink" id="link41" name="link41" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService4</sourceNode>
       <targetNode>invokeService3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link27" name="link27" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService4</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link48</targetConnections>
     <location x="1413" y="390"/>
@@ -349,7 +385,11 @@
       <sourceNode>invokeService5</sourceNode>
       <targetNode>invokeService9</targetNode>
     </sourceConnections>
-    <targetConnections>link13</targetConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService5</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
     <location x="1245" y="554"/>
     <size height="22" width="28"/>
     <nodeLabel>invokeService5label</nodeLabel>
@@ -394,9 +434,13 @@
     <node>invokePojo12</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="设置相关数据" id="invokeService7" name="合同类型" displayName="RelativeDataManagerService.setRelativeData" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService7</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService7</sourceNode>
-      <targetNode>invokeService5</targetNode>
+      <targetNode>invokeService6</targetNode>
     </sourceConnections>
     <targetConnections>link50</targetConnections>
     <location x="1095" y="554"/>
@@ -422,6 +466,10 @@
       <sourceNode>invokeService9</sourceNode>
       <targetNode>invokeService11</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService9</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
     <targetConnections>link55</targetConnections>
     <location x="1335" y="554"/>
     <size height="22" width="28"/>
@@ -445,6 +493,10 @@
     <sourceConnections xsi:type="process:tLink" id="link46" name="link46" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService11</sourceNode>
       <targetNode>invokeService1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService11</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link42</targetConnections>
     <location x="1413" y="554"/>
@@ -470,6 +522,10 @@
       <sourceNode>invokeService12</sourceNode>
       <targetNode>invokeService4</targetNode>
       <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link26" name="link26" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService12</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link2</targetConnections>
     <location x="1413" y="458"/>
@@ -704,6 +760,10 @@
       <sourceNode>invokeService1</sourceNode>
       <targetNode>invokeService2</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link22" name="link22" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
     <targetConnections>link46</targetConnections>
     <location x="1496" y="554"/>
     <size height="22" width="28"/>
@@ -728,7 +788,7 @@
     <location x="1112" y="45"/>
     <size height="28" width="28"/>
     <nodeLabel>throw0label</nodeLabel>
-    <process:exception code="B200100" message="提交失败" type="com.eos.system.exception.EOSException">
+    <process:exception code="KP10000" message="开票流程提交失败，请联系管理员" type="com.eos.system.exception.EOSException">
       <process:args/>
     </process:exception>
   </nodes>
@@ -741,6 +801,10 @@
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService2</sourceNode>
       <targetNode>invokeService12</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService2</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
     <location x="1486" y="486"/>
@@ -1023,6 +1087,96 @@
     <figSize height="16" width="101"/>
     <node>invokePojo7</node>
   </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw1" name="组织分类异常" displayName="异常抛出" collapsed="false" type="throw">
+    <targetConnections>link30</targetConnections>
+    <location x="752" y="176"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw1label</nodeLabel>
+    <process:exception code="T100001" message="发起人所属组织分类未明确，请联系管理员" type="com.eos.system.exception.EOSRuntimeException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw1label" name="label" nodeType="label">
+    <location x="730" y="212"/>
+    <figSize height="16" width="73"/>
+    <node>throw1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="项监部/部门负责人" displayName="getProjectOrgPerson" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link32" name="link32" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>throw2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link33" name="link33" displayName="连接线" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>invokeService0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">wfp/id</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link31</targetConnections>
+    <location x="706" y="332"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.common.getProjectOrgPerson</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="orgId" type="query" value="Int" valueType="Primitive" pattern="reference">m:userObject/userOrgId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="wfp" type="query" value="com.eos.workflow.data.WFParticipant" valueType="DataObject">wfp</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="669" y="367"/>
+    <figSize height="16" width="101"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw2" name="未找到负责人" displayName="异常抛出" collapsed="false" type="throw">
+    <targetConnections>link32</targetConnections>
+    <location x="706" y="420"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw2label</nodeLabel>
+    <process:exception code="T100000" message="发起后的下一个审批节点人员未找到，请联系管理员" type="com.eos.system.exception.EOSRuntimeException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw2label" name="label" nodeType="label">
+    <location x="684" y="456"/>
+    <figSize height="16" width="73"/>
+    <node>throw2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="设置相关数据" id="invokeService6" name="组织分类" displayName="RelativeDataManagerService.setRelativeData" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService6</sourceNode>
+      <targetNode>invokeService5</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link35" name="link35" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService6</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="1170" y="554"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService6label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.RelativeDataComponent/RelativeDataManagerService.setRelativeData</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">cpData/processid</process:inputVariable>
+      <process:inputVariable id="1" name="xpath" type="literal" value="java.lang.String" valueType="Java" pattern="reference">orgClass</process:inputVariable>
+      <process:inputVariable id="2" name="relaData" type="query" value="java.lang.Object" valueType="Java" pattern="reference">orgClass</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService6label" name="label" nodeType="label">
+    <location x="1160" y="584"/>
+    <figSize height="16" width="49"/>
+    <node>invokeService6</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="cuiying" createTime="2020-08-17 14:14:05" date="2020-08-17Z" description="新增项目检查计划" name="addCheckPlanBiz" version="7.0.0.0"/>
@@ -1048,6 +1202,7 @@
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_common.ame_common.MisOpinion" name="misOpinion"/>
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice" name="historyCpData"/>
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="secOrgMap"/>
+    <process:variable description="组织分类" historyStateLocation="client" isArray="false" name="orgClass" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.zhonghe.ame.invoice.ZhInvoice.ZhInvoice" name="cpData"/>

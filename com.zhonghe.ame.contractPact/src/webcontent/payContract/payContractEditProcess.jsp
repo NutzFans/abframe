@@ -438,7 +438,6 @@
 								closeOk();
 							}
 						} else {
-							showTips("付费合同提交失败")
 							nui.get("saveReimb").enable();
 							nui.get("creatReimbProcess").enable();
 							nui.get("zzReimb").enable();

@@ -78,32 +78,19 @@
 	function showTips(content, state) {
 		//  state  default|success|info|warning|danger
 		if(state) {
-			nui.showTips({content: content, state: state, x: "center", y: "center",timeout: 3500.});
+			nui.showTips({content: content, state: state, x: "center", y: "center",timeout: 6000.});
 		}
 		else {
-			nui.showTips({content: content, state: "success", x: "center", y: "center",timeout: 3500.});
+			nui.showTips({content: content, state: "success", x: "center", y: "center",timeout: 6000.});
 		}
 	}
-	
- 	//ajax示例
- 	/* ajaxCommon({
-		"url": "com.zhonghe.ame.purchase.common.expentOrg.biz.ext",
-		"data": json,
-		"success": function(data) {
-			nui.getbyName("area.id").setValue(data.nextCode);
-		}
-	}); */
 	
 	//ajax
 	function ajaxCommon(params){
 	 	if(typeof(params.async) == "undefined") {
 	 		params.async = true;
 	 	}
-	 	var msgBoxId = nui.mask({
-		            el: document.body,
-		            cls: 'mini-mask-loading',
-		            html: '处理中...'
-		        });
+	 	var msgBoxId = nui.mask({el: document.body,cls: 'mini-mask-loading',html: '处理中...'});
 		nui.ajax({
 	        url: params.url,
 	        data: params.data,
@@ -112,12 +99,13 @@
 	        cache: false,
 	        contentType: 'text/json',
 	        success: function (data) {
-// 	        	nui.hideMessageBox(msgBoxId);
 	        	nui.unmask(document.body);
 	        	if(data.exception) {
 	        		showTips(data.exception.message,"danger");
-	        	}
-	        	else {
+	        		if(params.success) {
+	        			params.success(data);
+	        		}
+	        	} else {
 	        		if(params.success) {
 	        			params.success(data);
 	        		}
@@ -127,8 +115,7 @@
 				if(params.error) {
 	        		params.error(jqXHR, textStatus, errorThrown);
 	        	}
-// 	        	nui.hideMessageBox(msgBoxId);
-						nui.unmask(document.body);
+				nui.unmask(document.body);
 	        }
 	    });
 	}
