@@ -52,7 +52,7 @@
 			<div field="linkman" width="60" align="center"  headerAlign="center" >联系人
 				<input name="criteria._expr[1].linkman" property="filter" class="nui-textbox"  width="100%" onvaluechanged="search"/>
 			</div>
-			<div field="linktel" width="110" align="left"  headerAlign="center" renderer="linktel">联系电话
+			<div field="linktel" width="110" align="left"  headerAlign="center">联系电话
 				<input name="criteria._expr[2].linktel" property="filter" class="nui-textbox"  width="100%" onvaluechanged="search"/>
 			</div>			
 			<div field="custtype" width="110" align="center" headerAlign="center" renderer="dictcusttype">供应商类型
@@ -315,16 +315,6 @@
 			}
         }
         
-        function linktel(e){
-        	var key = CryptoJS.enc.Utf8.parse('zhongheprimetons');
-        	var decrypted = CryptoJS.AES.decrypt(e.value, key, {
-                mode: CryptoJS.mode.ECB,
-                padding: CryptoJS.pad.Pkcs7
-            });
-            var decryptedUTF8 = decrypted.toString(CryptoJS.enc.Utf8);
-            return decryptedUTF8;
-        }
-	    
   </script>
 </body>
 </html>
