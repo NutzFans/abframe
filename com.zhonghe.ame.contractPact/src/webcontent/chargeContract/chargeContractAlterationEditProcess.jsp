@@ -407,7 +407,6 @@
 								closeOk();
 							}
 						} else {
-							showTips("收费合同补充协议提交失败")
 							nui.get("saveReimb").enable();
 							nui.get("creatReimbProcess").enable();
 							nui.get("zzReimb").enable();

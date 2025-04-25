@@ -391,7 +391,6 @@
 								closeOk();
 							}
 						} else {
-							showTips("收费合同提交失败！", "danger");
 							nui.get("saveReimb").enable();
 							nui.get("creatReimbProcess").enable();
 						}
