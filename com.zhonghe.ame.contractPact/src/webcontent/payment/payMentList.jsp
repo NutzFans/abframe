@@ -298,8 +298,8 @@ html,body {
 			nui.open({
 				url : url,
 				title : title,
-				width : width,
-				height : 550,
+				width : "100%",
+				height : "100%",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 					if (iframe.contentWindow.initData) {

@@ -763,12 +763,11 @@
 			var processId = selectRow.processid;
 			var url = "/default/bps/wfclient/task/processinstView.jsp";
 			var title = "流程图查看";
-			var width = 1000;
 			nui.open({
 				url : url,
 				title : title,
-				width : width,
-				height : 550,
+				width : "100%",
+				height : "100%",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 					if (iframe.contentWindow.initData) {
