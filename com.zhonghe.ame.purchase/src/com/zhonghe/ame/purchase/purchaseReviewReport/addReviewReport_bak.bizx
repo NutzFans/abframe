@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="addReviewReport_bak" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <location x="45" y="30"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link10</targetConnections>
+    <location x="1250" y="713"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="result" type="query" valueType="Primitive">result</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="47" y="66"/>
+    <figSize height="16" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="1252" y="749"/>
+    <figSize height="16" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="getPrimaryKey" displayName="getPrimaryKey" collapsed="false" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="331" y="235"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.getPrimaryKey</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="entity" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">reviewReport</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="302" y="271"/>
+    <figSize height="16" width="80"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="insertEntity" displayName="insertEntity" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" lineType="note" isDefault="false" type="exception">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <targetConnections>link22</targetConnections>
+    <location x="660" y="235"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.insertEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">reviewReport</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="640" y="271"/>
+    <figSize height="16" width="63"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="1251" y="619"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="1253" y="655"/>
+    <figSize height="16" width="25"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionRollback" id="transactionrollback0" name="事务回滚" displayName="事务回滚" type="transactionrollback">
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactionrollback0</sourceNode>
+      <targetNode>throw0</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link25</targetConnections>
+    <targetConnections>link29</targetConnections>
+    <targetConnections>link31</targetConnections>
+    <targetConnections>link33</targetConnections>
+    <location x="455" y="441"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactionrollback0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionrollback0label" name="label" nodeType="label">
+    <location x="445" y="477"/>
+    <figSize height="16" width="49"/>
+    <node>transactionrollback0</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" displayName="事务提交" type="transactioncommit">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactioncommit0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="1250" y="524"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactioncommit0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactioncommit0label" name="label" nodeType="label">
+    <location x="1240" y="560"/>
+    <figSize height="16" width="49"/>
+    <node>transactioncommit0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService0" name="创建流程" displayName="ProcessInstManagerService.createProcessInstance" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link33" name="link33" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="180" y="238"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService0label</nodeLabel>
+    <process:service transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.createProcessInstance</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processDefName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.zhonghe.ame.purchase.purchaseReviceReport</process:inputVariable>
+      <process:inputVariable id="1" name="processInstName" type="query" value="java.lang.String" valueType="Java" pattern="reference">desc</process:inputVariable>
+      <process:inputVariable id="2" name="processInstDesc" type="query" value="java.lang.String" valueType="Java" pattern="reference">desc</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="long" valueType="Java">reviewReport/processid</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
+    <location x="170" y="268"/>
+    <figSize height="16" width="49"/>
+    <node>invokeService0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService3" name="开始并完成第一个流程" displayName="ProcessInstManagerService.startProcessInstAndFinishFirstWorkItem" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link26" name="link26" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService3</sourceNode>
+      <targetNode>assign15</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService3</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="1054" y="344"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService3label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.startProcessInstAndFinishFirstWorkItem</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">reviewReport/processid</process:inputVariable>
+      <process:inputVariable id="1" name="isTransactionSplit" type="literal" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+      <process:inputVariable id="2" name="params" type="expression" value="java.lang.Object[]" valueType="Java" pattern="reference">null</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService3label" name="label" nodeType="label">
+    <location x="1008" y="374"/>
+    <figSize height="16" width="121"/>
+    <node>invokeService3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link27" name="link27" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>transactionbegin1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="46" y="135"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">userName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/reportName</process:from>
+      <process:to type="query">rrName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">userName+&quot;发起采购评审结果审批流程：&quot;+rrName</process:from>
+      <process:to type="query">desc</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/files</process:from>
+      <process:to type="query">str</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/istype</process:from>
+      <process:to type="query">reviewReport/status</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">reviewReport/createdBy</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">reviewReport/createdTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userOrgId</process:from>
+      <process:to type="query">reviewReport/createdOrgid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">reviewReport/createdByName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userOrgName</process:from>
+      <process:to type="query">reviewReport/createdOrgname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">ZH_QFBFZR</process:from>
+      <process:to type="query">params/qfbRoleCode</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/proAppUserId</process:from>
+      <process:to type="query">proAppUser/id</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/proAppUserName</process:from>
+      <process:to type="query">proAppUser/name</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">person</process:from>
+      <process:to type="query">proAppUser/typeCode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="48" y="171"/>
+    <figSize height="16" width="25"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="getCode" displayName="getCode" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" lineType="note" isDefault="false" type="exception">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link2" name="link2" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NE">
+          <process:leftOperand type="query">str</process:leftOperand>
+          <process:rightOperand type="literal">null</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link22" name="link22" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="454" y="235"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.purchase.common.getCode</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="name" type="literal" value="String" valueType="Primitive" pattern="reference">purReviewReport.code</process:inputVariable>
+        <process:inputVariable id="1" name="typeCode" type="literal" value="String" valueType="Primitive" pattern="reference">CC0309</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="code" type="query" value="String" valueType="Primitive">reviewReport/code</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="445" y="270"/>
+    <figSize height="16" width="45"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="保存附件" displayName="saveProFiles" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="554" y="171"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.purchase.purchaseProApp.saveProFiles</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="str" type="query" value="String" valueType="Primitive" pattern="reference">str</process:inputVariable>
+        <process:inputVariable id="1" name="groupId" type="literal" value="String" valueType="Primitive" pattern="reference">purReviewReport</process:inputVariable>
+        <process:inputVariable id="2" name="relationId" type="query" value="String" valueType="Primitive" pattern="reference">reviewReport/id</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="543" y="206"/>
+    <figSize height="16" width="49"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw0" name="异常抛出" displayName="异常抛出" type="throw">
+    <targetConnections>link24</targetConnections>
+    <location x="454" y="578"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw0label</nodeLabel>
+    <process:exception code="B700100" message="采购评审报告提交失败" type="com.eos.system.exception.EOSException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw0label" name="label" nodeType="label">
+    <location x="444" y="614"/>
+    <figSize height="16" width="49"/>
+    <node>throw0</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionBegin" id="transactionbegin1" name="事务开始" displayName="事务开始" type="transactionbegin">
+    <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactionbegin1</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link27</targetConnections>
+    <location x="45" y="235"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactionbegin1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionbegin1label" name="label" nodeType="label">
+    <location x="35" y="271"/>
+    <figSize height="16" width="49"/>
+    <node>transactionbegin1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="link22" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>invokeService4</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="GT">
+          <process:leftOperand type="query">reviewReport/proAppApplyPrice</process:leftOperand>
+          <process:rightOperand type="literal">50</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="909" y="235"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/type</process:from>
+      <process:to type="query">params/type</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/putunder</process:from>
+      <process:to type="query">params/headOrgid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">deptType</process:from>
+      <process:to type="query">params/deptType</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userOrgId</process:from>
+      <process:to type="query">params/needOrgId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/purchasMode</process:from>
+      <process:to type="query">params/purchasMode</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/proAppOrgId</process:from>
+      <process:to type="query">params/proAppOrgId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">proAppUser</process:from>
+      <process:to type="query">params/proAppUser</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orgMap/ORGID</process:from>
+      <process:to type="query">params/secOrg</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">isXgLd</process:from>
+      <process:to type="query">params/isXgLd</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="911" y="271"/>
+    <figSize height="16" width="25"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService4" name="设置流程数据" displayName="RelativeDataManagerService.setRelativeDataBatch" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService4</sourceNode>
+      <targetNode>invokeService3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" type="transition">
+      <sourceNode>invokeService4</sourceNode>
+      <targetNode>invokeService1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">reviewReport/istype</process:leftOperand>
+          <process:rightOperand type="literal">0</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="1053" y="238"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService4label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.RelativeDataComponent/RelativeDataManagerService.setRelativeDataBatch</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">reviewReport/processid</process:inputVariable>
+      <process:inputVariable id="1" name="relaDatas" type="query" value="java.util.Map&lt;java.lang.String,java.lang.Object>" valueType="Java" pattern="reference">params</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService4label" name="label" nodeType="label">
+    <location x="1031" y="268"/>
+    <figSize height="16" width="73"/>
+    <node>invokeService4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="企发部分管领导审批" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokeService4</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="970" y="163"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">ZH_QFBFGLD</process:from>
+      <process:to type="query">params/qfbRoleCode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="930" y="199"/>
+    <figSize height="16" width="109"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="暂时保存" displayName="ProcessInstManagerService.startProcessInstance" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="1250" y="237"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService1label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.startProcessInstance</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">reviewReport/processid</process:inputVariable>
+      <process:inputVariable id="1" name="isTransactionSplit" type="literal" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+      <process:inputVariable id="2" name="params" type="expression" value="java.lang.Object[]" valueType="Java" pattern="reference">null</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService1label" name="label" nodeType="label">
+    <location x="1240" y="267"/>
+    <figSize height="16" width="49"/>
+    <node>invokeService1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess5" name="approvalOp" displayName="approvalOp" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="1053" y="524"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess5label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.common.approvalOp</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="misOpinion" type="query" value="com.primeton.eos.ame_common.ame_common.MisOpinion" valueType="DataObject" pattern="reference">misOpinion</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess5label" name="label" nodeType="label">
+    <location x="1034" y="559"/>
+    <figSize height="16" width="65"/>
+    <node>subprocess5</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign15" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="link3" isDefault="true" type="transition">
+      <sourceNode>assign15</sourceNode>
+      <targetNode>subprocess5</targetNode>
+    </sourceConnections>
+    <targetConnections>link26</targetConnections>
+    <location x="1053" y="419"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign15label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">发起申请</process:from>
+      <process:to type="query">misOpinion/workitemname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">reviewReport/processid</process:from>
+      <process:to type="query">misOpinion/processinstid</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign15label" name="label" nodeType="label">
+    <location x="1055" y="455"/>
+    <figSize height="16" width="25"/>
+    <node>assign15</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="OrgUtils.getOrgJudgeNew" displayName="OrgUtils.getOrgJudgeNew" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>assign5</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="795" y="235"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.purchase.OrgUtils.getOrgJudgeNew</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="orgId" type="query" value="int" valueType="Java" pattern="reference">reviewReport/proAppOrgId</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">deptType</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="734" y="271"/>
+    <figSize height="16" width="145"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="OrgUtil.getSecOrg" displayName="OrgUtil.getSecOrg" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="link22" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>invokePojo4</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <location x="49" y="432"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.OrgUtil.getSecOrg</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="orgId" type="query" value="java.lang.String" valueType="Java" pattern="reference">reviewReport/proAppOrgId</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.util.HashMap&lt;java.lang.String,java.lang.String>" valueType="Java">orgMap</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="10" y="468"/>
+    <figSize height="16" width="101"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="DictUtil.isThereADictionaryEntry" displayName="DictUtil.isThereADictionaryEntry" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>invokeService0</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="184" y="341"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.contractPact.DictUtil.isThereADictionaryEntry</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dictTypeId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">HT_XG_LD</process:inputVariable>
+      <process:inputVariable id="1" name="dictId" type="query" value="java.lang.String" valueType="Java" pattern="reference">orgMap/ORGID</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">isXgLd</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="107" y="377"/>
+    <figSize height="16" width="176"/>
+    <node>invokePojo4</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="huangqj" createTime="2021-03-03 10:36:54" date="2021-03-03Z" description="" name="addReviewReport" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="str" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" name="strs" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.AtFileupload" name="atFileUpload"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="userName" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="rrName" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="desc" primitiveType="String"/>
+    <process:variable anyType="java.util.Map" description="" historyStateLocation="client" isArray="false" name="params"/>
+    <process:variable description="审批意见" historyStateLocation="client" isArray="false" modelType="com.primeton.eos.ame_common.ame_common.MisOpinion" name="misOpinion"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="proAppUser"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="deptType" primitiveType="String"/>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="orgMap"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="isXgLd" primitiveType="String"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" modelType="com.zhonghe.ame.purchase.purchase.ZhPurchaseReviewreport" name="reviewReport"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" name="result" primitiveType="String"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>
