@@ -25,6 +25,7 @@ body {
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input name="id" id="id" class="nui-hidden" />
+				<input class="nui-hidden" name="processid" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -258,12 +259,15 @@ body {
 		
 		function onOk(e) {
 			type = e;
+			var info;
+			nui.get("auditstatus").setValue("4");
 			if (type == 0) {
 				var purchaseName = nui.get("purchaseName").getValue();
 				if (isStrEmpty(purchaseName)) {
 					showTips("请填写小额采购名称并保证其正确性！", "danger");
 					return;
 				}
+				info = "暂存流程表单？"
 			} else if (type == 1) {
 				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
@@ -291,37 +295,54 @@ body {
 						return;
 					}
 				}
+				info = "提交流程表单？"
 			} else {
 				nui.get("auditstatus").setValue(2);
+				info = "终止流程表单？"
 			}
+			
 			document.getElementById("fileCatalog").value = "purchaseZero";
-			form2.submit();			
+			
+			nui.confirm("确定" + info, "系统提示", function(action) {
+				if (action == "ok") {
+					nui.get("saveFeame").disable();
+					nui.get("creatFeame").disable();
+					nui.get("zzFeame").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					form2.submit();			
+				}
+			});					
 		}
 		
 		function SaveData() {
-			var formData = form.getData();
-			var gridChanges = grid_traveldetail.getChanges();
-			formData.type = type;
-			formData.files = nui.get("fileids").getValue();
-			var data_opioion = opioionform.getData();
-			var json = nui.encode({
-				"purZero" : formData,
-				"purZeroItem" : gridChanges,
-				"misOpinion" : data_opioion.misOpinion
-			});
-			ajaxCommon({
-				"url" : "com.zhonghe.ame.purchase.purzero.editPurZero.biz.ext",
-				data : json,
-				contentType : 'text/json',
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("操作成功");
-						closeOk();
-					} else {
-						showTips("操作失败,请联系管理员", "danger");
+			setTimeout(function () {
+				nui.unmask(document.body);
+				var formData = form.getData();
+				var gridChanges = grid_traveldetail.getChanges();
+				formData.type = type;
+				formData.files = nui.get("fileids").getValue();
+				var data_opioion = opioionform.getData();
+				var json = nui.encode({
+					"purZero" : formData,
+					"purZeroItem" : gridChanges,
+					"misOpinion" : data_opioion.misOpinion
+				});
+				ajaxCommon({
+					"url" : "com.zhonghe.ame.purchase.purzero.editPurZero.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == "1") {
+							showTips("操作成功");
+							closeOk();
+						} else {
+							nui.get("saveFeame").enable();
+							nui.get("creatFeame").enable();
+							nui.get("zzFeame").enable();
+						}
 					}
-				}
-			});
+				});
+			}, 2000);		
 		}		
 		
 	</script>

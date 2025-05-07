@@ -90,7 +90,6 @@
 	 	if(typeof(params.async) == "undefined") {
 	 		params.async = true;
 	 	}
-	 	var msgBoxId = nui.mask({el: document.body,cls: 'mini-mask-loading',html: '处理中...'});
 		nui.ajax({
 	        url: params.url,
 	        data: params.data,
@@ -99,7 +98,6 @@
 	        cache: false,
 	        contentType: 'text/json',
 	        success: function (data) {
-	        	nui.unmask(document.body);
 	        	if(data.exception) {
 	        		showTips(data.exception.message,"danger");
 	        		if(params.success) {
@@ -110,12 +108,6 @@
 	        			params.success(data);
 	        		}
 	        	}
-	        },
-	        error: function (jqXHR, textStatus, errorThrown) {
-				if(params.error) {
-	        		params.error(jqXHR, textStatus, errorThrown);
-	        	}
-				nui.unmask(document.body);
 	        }
 	    });
 	}

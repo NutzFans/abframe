@@ -176,15 +176,15 @@ body .mini-textboxlist {
 
 		function onOk(e) {
 			istype = e;
+			var info;
 			if (istype == 0) {
-				title = "暂存";
 				var proappId = nui.get("proappId").getValue();
 				if (isStrEmpty(proappId)) {
 					showTips("请选中立项编号并保证其正确性！", "danger");
 					return;
 				}
+				info = "暂存流程表单？"
 			} else if (istype == 1) {
-				title = "提交";
 				if (nui.get("purchasMode").getValue() == null) {
 					nui.alert("采购类型为空请联系管理员处理!");
 					return;
@@ -203,46 +203,49 @@ body .mini-textboxlist {
 						return;
 					}
 				}
+				info = "提交流程表单？"
 			}
 			document.getElementById("fileCatalog").value = "purReviewReport";
-			inputFileExpandForm.submit();
+		
+			nui.confirm("确定" + info, "系统提示", function(action) {
+				if (action == "ok") {
+					nui.get("saveReimb").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					inputFileExpandForm.submit();
+				}
+			});			
 		}
 
 		function SaveData() {
-			var data = form.getData();
-			data.proAppOrgId = nui.get('orgUnits').getValue();
-			data.proAppOrgName = nui.get('orgUnits').getText();
-			data.files = nui.get("fileids").getValue();
-			data.istype = istype;
-			if (istype == "0") {
-				data.status = '0';
-			}
-			var json = nui.encode({
-				'reviewReport' : data,
-				"misOpinion" : {
-					"auditstatus" : 3
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var data = form.getData();
+				data.proAppOrgId = nui.get('orgUnits').getValue();
+				data.proAppOrgName = nui.get('orgUnits').getText();
+				data.files = nui.get("fileids").getValue();
+				data.istype = istype;
+				if (istype == "0") {
+					data.status = '0';
 				}
-			});
-			if (!confirm("是否提交？")) {
-				return;
-			} else {
-				var msgBoxId = form.loading("正在处理...", "请稍后");
-				nui.ajax({
+				var json = nui.encode({
+					'reviewReport' : data
+				});
+				ajaxCommon({
 					url : "com.zhonghe.ame.purchase.purchaseReviewReport.addReviewReport.biz.ext",
 					data : json,
-					type : 'POST',
+					contentType : 'text/json',
 					success : function(text) {
-						nui.hideMessageBox(msgBoxId);
 						if (text.result == "1") {
-							showTips("提交成功");
+							showTips("操作成功");
 							closeOk();
 						} else {
-							nui.hideMessageBox(msgBoxId);
-							nui.alert("提交失败")
+							nui.get("saveReimb").enable();
+							nui.get("creatReimbProcess").enable();
 						}
 					}
 				});
-			}
+			}, 2000);
 		}
 	</script>
 

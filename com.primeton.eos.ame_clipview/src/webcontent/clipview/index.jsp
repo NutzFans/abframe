@@ -49,7 +49,7 @@
             </a>
 			 <ul class="layui-nav layui-layout-left" style="">
 				 <li class="layui-nav-item" lay-unselect style="margin-left: 0px;">
-				 	<a  class="layui-nav-item" style="font-size: 16px;font-weight: bold;font-family: inherit;padding-left: 0">经营管理系统</a>
+				 	<a  class="layui-nav-item" style="font-size: 16px;font-weight: bold;font-family: inherit;padding-left: 0">经营管理系统 <span style="font-weight: normal;">（请勿在平台中处理、传递涉密和敏感信息）</span></a>
                     <a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
                 </li>
 				

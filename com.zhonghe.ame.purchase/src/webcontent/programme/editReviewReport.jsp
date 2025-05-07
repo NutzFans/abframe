@@ -118,9 +118,9 @@ body .mini-textboxlist {
 	</div>
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
+		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">暂存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">中止</a>
+		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">终止</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
 
@@ -206,8 +206,9 @@ body .mini-textboxlist {
 		}
 
 		function onOk(e) {
-			nui.get("auditstatus").setValue("4");
 			istype = e;
+			var info;
+			nui.get("auditstatus").setValue("4");
 			if (istype == 1) {
 				if (!form.validate()) {
 					showTips("请检查表单完整性", "danger");
@@ -223,11 +224,11 @@ body .mini-textboxlist {
 						return;
 					}
 				}
-				info = "是否提交？"
+				info = "提交流程表单？"
 			} else if (istype == 0) {
-				info = "是否暂时保存？"
+				info = "暂存流程表单？"
 			} else {
-				info = "是否中止流程？"
+				info = "终止流程表单？"
 				nui.get("auditstatus").setValue(2);
 			}
 
@@ -235,37 +236,44 @@ body .mini-textboxlist {
 
 			nui.confirm("确定" + info, "系统提示", function(action) {
 				if (action == "ok") {
+					nui.get("saveReimb").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.get("zzFeame").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '流程表单提交中...'});
 					inputFileExpandForm.submit();
 				}
 			})
 		}
 
 		function SaveData() {
-			var data = form.getData();
-			data.istype = istype;
-			data.proAppOrgId = nui.get('orgUnits').getValue();
-			data.proAppOrgName = nui.get('orgUnits').getText();
-			data.files = nui.get("fileids").getValue();
-			var data_opioion = opioionform.getData();
-			var json = nui.encode({
-				'reviewReport' : data,
-				"misOpinion" : data_opioion.misOpinion
-			});
-			var msgBoxId = nui.loading("正在处理...", "请稍后");
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseReviewReport.editReviewReport.biz.ext",
-				type : 'POST',
-				data : json,
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("提交成功")
-						closeOk();
-					} else {
-						nui.hideMessageBox(msgBoxId);
-						nui.alert("提交失败")
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var data = form.getData();
+				data.istype = istype;
+				data.proAppOrgId = nui.get('orgUnits').getValue();
+				data.proAppOrgName = nui.get('orgUnits').getText();
+				data.files = nui.get("fileids").getValue();
+				var data_opioion = opioionform.getData();
+				var json = nui.encode({
+					'reviewReport' : data,
+					"misOpinion" : data_opioion.misOpinion
+				});
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseReviewReport.editReviewReport.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == "1") {
+							showTips("提交成功")
+							closeOk();
+						} else {
+							nui.get("saveReimb").enable();
+							nui.get("creatReimbProcess").enable();
+							nui.get("zzFeame").enable();
+						}
 					}
-				}
-			});
+				});				
+			}, 2000);
 		}
 
 		function onButtonEdit(e) {

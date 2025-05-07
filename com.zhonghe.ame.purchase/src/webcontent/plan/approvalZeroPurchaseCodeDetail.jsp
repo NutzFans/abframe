@@ -123,7 +123,7 @@ body {
 
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>附件</legend>
-			<jsp:include page="/ame_common/inputFile.jsp" />
+			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
 
 		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
@@ -132,7 +132,7 @@ body {
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
-		<a class="nui-button" onclick="submit" style="width: 60px; margin-right: 20px;">提交</a>
+		<a class="nui-button" onclick="submit" id="creatReimbProcess" style="width: 60px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel" style="width: 60px;">关闭</a>
 	</div>
 
@@ -215,7 +215,7 @@ body {
 							}
 							users = users + "】";
 							titleText = "增加审批人员" + users + "并提交";
-							form2.submit();
+							submitProcess(titleText);
 						}
 					}
 				}
@@ -225,51 +225,60 @@ body {
 		function submit() {
 			var auditstatus = nui.get("auditstatus").getValue();
 			if (auditstatus == "2") { //终止流程
-				titleText = "终止";
+				submitProcess("终止");
 			} else if (auditstatus == "0") { //退回流程
 				if (!nui.get("backTo").getValue()) {
 					showTips("退回环节不能为空！");
 					return;
 				}
-				titleText = "退回";
+				submitProcess("退回");
 			} else if (auditstatus == "1") { //提交流程
-				titleText = "提交";
+				submitProcess("提交");
 			}
-			document.getElementById("fileCatalog").value = "purchaseZero";
-			form2.submit();
 		}
-
+		
+		function submitProcess(title) {
+			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
+				if (action == "ok") {
+					nui.get("countersign").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({
+						el : document.body,
+						cls : 'mini-mask-loading',
+						html : '表单提交中...'
+					});
+					SaveData();
+				}
+			});
+		}		
 
 		function SaveData() {
-			nui.confirm("确定" + titleText + "流程吗？", "系统提示", function(action) {
-				if (action == "ok") {
-					var misOpinion = opioionform.getData().misOpinion;
-					var data = form.getData();
-					data.files = nui.get("fileids").getValue();
-					var json = {
-						misOpinion : misOpinion,
-						workItemID :<%=workitemid%>,
-						"countersignUsers" : countersignUsers,
-						"purZero" : data
-					};
-					nui.ajax({
-						url : "com.zhonghe.ame.purchase.purchaseItems.approvalPurZero.biz.ext",
-						type : "post",
-						data : json,
-						contentType : "text/json",
-						success : function(o) {
-							if (o.result == "success") {
-								showTips("操作成功");
-								closeOk();
-							} else {
-								showTips("操作失败,请联系管理员", "danger");
-								nui.get("saveReimb").enable();
-								nui.get("creatReimbProcess").enable();
-							}
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var misOpinion = opioionform.getData().misOpinion;
+				var data = form.getData();
+				data.files = nui.get("fileids").getValue();
+				var json = {
+					"misOpinion" : misOpinion,
+					"workItemID" :<%=workitemid%>,
+					"countersignUsers" : countersignUsers,
+					"purZero" : data
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseItems.approvalPurZero.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "success") {
+							showTips("提交成功");
+							closeOk();
+						} else {
+							nui.get("countersign").enable();
+							nui.get("creatReimbProcess").enable();
 						}
-					})
-				}
-			})
+					}
+				});
+			}, 2000);
 		}
 	</script>
 

@@ -178,9 +178,10 @@ body .mini-textboxlist {
 				技术规格书、合同文本、费用估算表、支撑材料
 			</legend>
 			<jsp:include page="/ame_common/inputFile.jsp" />
-		</fieldset>
+		</fieldset>		
+		
 	</div>
-
+	
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">暂存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
@@ -416,12 +417,15 @@ body .mini-textboxlist {
 
 		function onOk(e) {
 			istype = e;
+			var info;
 			if (istype == 0) {
 				var proAppName = nui.get("proAppName").getValue();
-				if (isStrEmpty(proAppName)) {
-					showTips("请填写立项名称并保证其正确性！", "danger");
+				var type = nui.get("type").getValue();
+				if (isStrEmpty(proAppName)||isStrEmpty(type)) {
+					showTips("暂存时，请确保填写立项名称和集采类型字段！", "danger");
 					return;
 				}
+				info = "暂存流程表单？"
 			} else if (istype == 1) {
 				form.validate();
 				if (form.isValid() == false) {
@@ -445,11 +449,19 @@ body .mini-textboxlist {
 						return;
 					}
 				}
+				info = "提交流程表单？"
 			}
-			nui.get("saveReimb").disable();
-			nui.get("creatReimbProcess").disable();
+			
 			document.getElementById("fileCatalog").value = "proAppCost";
-			form2.submit();
+			
+			nui.confirm("确定" + info, "系统提示", function(action) {
+				if (action == "ok") {
+					nui.get("saveReimb").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					form2.submit();
+				}
+			});			
 		}
 
 		function setPutunder(proAppDtl) {
@@ -464,35 +476,38 @@ body .mini-textboxlist {
 		}
 
 		function SaveData() {
-			var data = form.getData();
-			var proAppDtl = gridDtl.getData();
-			data.putunder = this.setPutunder(proAppDtl);
-			data.supplierId = nui.get("supplierSel").getValue();
-			data.supplierName = nui.get("supplierSel").getText();
-			data.proAppOrgId = nui.get('orgUnits').getValue();
-			data.proAppOrgName = nui.get('orgUnits').getText();
-			data.istype = istype;
-			data.files = nui.get("fileids").getValue();
-			var json = nui.encode({
-				"proApp" : data,
-				"proAppDtl" : proAppDtl
-			});
-			ajaxCommon({
-				url : "com.zhonghe.ame.purchase.purchaseProApp.addProApp.biz.ext",
-				data : json,
-				contentType : 'text/json',
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("操作成功");
-						closeOk();
-					} else {
-						showTips("操作失败,请联系管理员", "danger");
-						nui.get("saveReimb").enable();
-						nui.get("creatReimbProcess").enable();
+	        setTimeout(function () {
+	            nui.unmask(document.body);
+				var data = form.getData();
+				var proAppDtl = gridDtl.getData();
+				data.putunder = this.setPutunder(proAppDtl);
+				data.supplierId = nui.get("supplierSel").getValue();
+				data.supplierName = nui.get("supplierSel").getText();
+				data.proAppOrgId = nui.get('orgUnits').getValue();
+				data.proAppOrgName = nui.get('orgUnits').getText();
+				data.istype = istype;
+				data.files = nui.get("fileids").getValue();
+				var json = nui.encode({
+					"proApp" : data,
+					"proAppDtl" : proAppDtl
+				});
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseProApp.addProApp.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == "1") {
+							showTips("操作成功");
+							closeOk();
+						} else {
+							nui.get("saveReimb").enable();
+							nui.get("creatReimbProcess").enable();
+						}
 					}
-				}
-			});
+				});
+	        }, 2000);
 		}
+			
 	</script>
 
 </body>

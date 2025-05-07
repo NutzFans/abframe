@@ -216,12 +216,14 @@ body {
 
 		function onOk(e) {
 			type = e;
+			var info;
 			if (type == 0) {
 				var purchaseName = nui.get("purchaseName").getValue();
 				if (isStrEmpty(purchaseName)) {
 					showTips("请填写小额采购名称并保证其正确性！", "danger");
 					return;
 				}
+				info = "暂存流程表单？"
 			} else if (type == 1) {
 				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
@@ -249,37 +251,47 @@ body {
 						return;
 					}
 				}
+				info = "提交流程表单？"
 			}
-			nui.get("saveReimb").disable();
-			nui.get("creatReimbProcess").disable();
+			
 			document.getElementById("fileCatalog").value = "purchaseZero";
-			form2.submit();
+			
+			nui.confirm("确定" + info, "系统提示", function(action) {
+				if (action == "ok") {
+					nui.get("saveReimb").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					form2.submit();
+				}
+			});
 		}
 
 		function SaveData() {
-			var formData = form.getData();
-			var gridData = grid_traveldetail.getData();
-			formData.type = type;
-			formData.files = nui.get("fileids").getValue();
-			var json = nui.encode({
-				"purZero" : formData,
-				"purZeroItem" : gridData
-			});
-			ajaxCommon({
-				"url" : "com.zhonghe.ame.purchase.purchaseItems.addPurZero.biz.ext",
-				data : json,
-				contentType : 'text/json',
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("操作成功");
-						closeOk();
-					} else {
-						showTips("操作失败,请联系管理员", "danger");
-						nui.get("saveReimb").enable();
-						nui.get("creatReimbProcess").enable();
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var formData = form.getData();
+				var gridData = grid_traveldetail.getData();
+				formData.type = type;
+				formData.files = nui.get("fileids").getValue();
+				var json = nui.encode({
+					"purZero" : formData,
+					"purZeroItem" : gridData
+				});
+				ajaxCommon({
+					"url" : "com.zhonghe.ame.purchase.purchaseItems.addPurZero.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == "1") {
+							showTips("操作成功");
+							closeOk();
+						} else {
+							nui.get("saveReimb").enable();
+							nui.get("creatReimbProcess").enable();
+						}
 					}
-				}
-			});
+				});	
+			}, 2000);
 		}
 	</script>
 

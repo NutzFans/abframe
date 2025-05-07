@@ -476,15 +476,16 @@ body .mini-textboxlist {
 		
 		function onOk(e) {
 			istype = e;
+			var info;
+			nui.get("auditstatus").setValue("4");
 			if (istype == 0) {
-				title = "暂存";
 				var proAppName = nui.get("proAppName").getValue();
 				if (isStrEmpty(proAppName)) {
 					showTips("请填写立项名称并保证其正确性！", "danger");
 					return;
 				}
+				info = "暂存流程表单？"
 			} else if (istype == 1) {
-				title = "提交";
 				form.validate();
 				if (form.isValid() == false) {
 					showTips("请检查表单的完整性!", "danger");
@@ -507,14 +508,23 @@ body .mini-textboxlist {
 						return;
 					}
 				}
+				info = "提交流程表单？"
 			} else if (istype == 2) {
-				nui.get("auditstatus").setValue(2);
+				nui.get("auditstatus").setValue("2");
+				info = "终止流程表单？"
 			}
-			nui.get("saveReimb").disable();
-			nui.get("creatReimbProcess").disable();
-			nui.get("zzFeame").disable();
+			
 			document.getElementById("fileCatalog").value = "proAppCost";
-			form2.submit();
+			
+			nui.confirm("确定" + info, "系统提示", function(action) {
+				if (action == "ok") {
+					nui.get("saveReimb").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.get("zzFeame").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					form2.submit();			
+				}
+			});
 		}
 		
 		function setPutunder(proAppDtl) {
@@ -529,37 +539,39 @@ body .mini-textboxlist {
 		}		
 		
 		function SaveData() {
-			var data = form.getData();
-			var proAppDtl = gridDtl.getData();
-			data.putunder = this.setPutunder(proAppDtl);
-			data.supplierId = nui.get("supplierSel").getValue();
-			data.supplierName = nui.get("supplierSel").getText();
-			data.proAppOrgId = nui.get('orgUnits').getValue();
-			data.proAppOrgName = nui.get('orgUnits').getText();
-			data.istype = istype;
-			data.files = nui.get("fileids").getValue();
-			var data_opioion = opioionform.getData();
-			var json = nui.encode({
-				"proApp" : data,
-				"proAppDtl" : proAppDtl,
-				"misOpinion" : data_opioion.misOpinion
-			});
-			ajaxCommon({
-				url : "com.zhonghe.ame.purchase.purchaseProApp.editProApp.biz.ext",
-				data : json,
-				contentType : 'text/json',
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("操作成功");
-						closeOk();
-					} else {
-						showTips("操作失败,请联系管理员", "danger");
-						nui.get("saveReimb").enable();
-						nui.get("creatReimbProcess").enable();
-						nui.get("zzFeame").enable();
+			setTimeout(function () {
+				nui.unmask(document.body);
+				var data = form.getData();
+				var proAppDtl = gridDtl.getData();
+				data.putunder = this.setPutunder(proAppDtl);
+				data.supplierId = nui.get("supplierSel").getValue();
+				data.supplierName = nui.get("supplierSel").getText();
+				data.proAppOrgId = nui.get('orgUnits').getValue();
+				data.proAppOrgName = nui.get('orgUnits').getText();
+				data.istype = istype;
+				data.files = nui.get("fileids").getValue();
+				var data_opioion = opioionform.getData();
+				var json = nui.encode({
+					"proApp" : data,
+					"proAppDtl" : proAppDtl,
+					"misOpinion" : data_opioion.misOpinion
+				});
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseProApp.editProApp.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == "1") {
+							showTips("操作成功");
+							closeOk();
+						} else {
+							nui.get("saveReimb").enable();
+							nui.get("creatReimbProcess").enable();
+							nui.get("zzFeame").enable();
+						}
 					}
-				}
-			});
+				});			
+			}, 2000);
 		}														
 		
 	</script>

@@ -2,11 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@include file="/purchase/common/common.jsp"%>
 <html>
-
 <head>
 <title>评审结果</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
 body {
 	margin: 0;
@@ -29,9 +26,10 @@ body .mini-textboxlist {
 	<div class="nui-fit" style="padding: 5px;">
 		<form id="form1" method="post">
 			<fieldset id="field1" style="border: solid 1px #aaa;">
-				<legend>评审结果</legend>
+			<legend>评审结果</legend>
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
+				<input class="nui-hidden" name="proappId" />
 				<input class="nui-hidden" name="processid" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
@@ -78,7 +76,7 @@ body .mini-textboxlist {
 					</table>
 				</div>
 			</fieldset>
-
+			
 			<fieldset style="border: solid 1px #aaa;">
 				<legend>完善定标信息</legend>
 				<div style="padding: 5px;">
@@ -95,8 +93,9 @@ body .mini-textboxlist {
 						</tr>
 					</table>
 				</div>
-			</fieldset>
-		</form>
+			</fieldset>			
+			
+		</form>	
 
 		<fieldset style="border: solid 1px #aaa;">
 			<legend>采购立项明细</legend>
@@ -122,30 +121,33 @@ body .mini-textboxlist {
 
 		<fieldset id="field4" style="border: solid 1px #aaa;">
 			<legend>评审结果 - 附件</legend>
-			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
 		</fieldset>
 
-		<fieldset id="field2" style="border: solid 1px #aaa;">
+		<fieldset style="border: solid 1px #aaa;">
 			<legend>审批信息</legend>
-			<jsp:include page="/ame_common/misOpinion.jsp" />
+			<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 		</fieldset>
 	</div>
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
-		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
+		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
+		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" style="width: 80px; margin-right: 20px;">提交</a>
+		<a class="nui-button" onclick="onCancel" id="saveReimbProcess" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
 
 	<script type="text/javascript">
 		nui.parse();
-		var form = new nui.Form("#form1");
 		var id = <%=request.getParameter("id")%>;
+		var form = new nui.Form("#form1");
+		var countersignUsers, titleText;
 		var gridDtl = nui.get("grid_detail");
 
 		init();
 
 		function init() {
-			var json = nui.encode({"workitemid" :<%=workitemid%>});
+			var data = {workitemid :<%=workitemid%>};
+			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext",
 				data : json,
@@ -162,102 +164,148 @@ body .mini-textboxlist {
 					gridDtl.load({
 						"pid" : result.proappId
 					})
-
+					nui.get("backTo").setData(result.backList);
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "proAppCost",
 						"relationid" : result.proappId
 					});
 					grid_0.sortBy("fileTime", "desc");
-
-					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
-					inputFileExpandGrid.load({
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
 						"groupid" : "purReviewReport",
 						"relationid" : result.id
 					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");
-
+					detailFileExpandGrid.sortBy("fileTime", "desc");
 					var grid = nui.get("datagrid1");
 					grid.load({
 						processInstID : result.processid
 					});
 					grid.sortBy("time", "desc");
-					//设置审核意见基本信息
-					nui.get("processinstid").setValue(o.workitem.processInstID);
-					nui.get("processinstname").setValue(o.workitem.processInstName);
-					nui.get("activitydefid").setValue(o.workitem.activityDefID);
-					nui.get("workitemname").setValue(o.workitem.workItemName);
-					nui.get("workitemid").setValue(<%=workitemid%>);
-					nui.get("isshow").setValue("1");
-					nui.get("auditstatus").setValue("4");
-					document.getElementById("salesEdit").style.display = "none";
+					initMisOpinion({
+						auditstatus : "1"
+					});
 					nui.get("auditopinion").setValue("已完善。");
 				}
 			});
 		}
 		
-		function onOk(e) {
-			nui.get("auditstatus").setValue("4");
-			istype = e;
-			if (istype == 1) {
-				if (!form.validate()) {
-					showTips("请检查表单完整性", "danger");
-					return;
-				}
-				info = "是否提交？"
-			} else if (istype == 0) {
-				info = "是否暂时保存？"
-			} else {
-				info = "是否中止流程？"
-				nui.get("auditstatus").setValue(2);
-			}
-			document.getElementById("fileCatalog").value = "purReviewReport";
-			nui.confirm("确定" + info, "系统提示", function(action) {
-				if (action == "ok") {
-					inputFileExpandForm.submit();
-				}
-			})
+		function countersign() {
+			selectOmEmployee2();
 		}
 		
-		function SaveData() {
-			var data = form.getData();
-			data.istype = istype;
-			data.files = nui.get("fileids").getValue();
-			var data_opioion = opioionform.getData();
-			var json = nui.encode({
-				'param' : data,
-				'reviewReport' : data,
-				workItemID :<%=workitemid%>,
-				"misOpinion" : data_opioion.misOpinion
-			});
-			var msgBoxId = nui.loading("正在处理...", "请稍后");
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseReviewReport.purReviewReportApproval.biz.ext",
-				type : 'POST',
-				data : json,
-				success : function(text) {
-					if (text.result == "1") {
-						showTips("提交成功")
-						closeOk();
-					} else {
-						nui.hideMessageBox(msgBoxId);
-						nui.alert("提交失败")
+		function selectOmEmployee2() {
+			var btnEdit = this;
+			nui.open({
+				url : "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
+				title : "立项单位经办人",
+				width : 430,
+				height : 400,
+				ondestroy : function(action) {
+					var user, users = "【";
+					countersignUsers = [];
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var data = iframe.contentWindow.GetData();
+						data = nui.clone(data); //必须
+						if (data) {
+							console.log(data)
+							for (var i = 0; i < data.length; i++) {
+								user = {};
+								user.id = data[i].userid
+								user.name = data[i].empname
+								user.typeCode = "person"
+								countersignUsers.push(user);
+								if (i == 0) {
+									users = users + data[i].empname;
+								} else {
+
+									users = users + "," + data[i].empname;
+								}
+							}
+							users = users + "】";
+							titleText = "增加审批人员" + users + "并提交";
+							submitProcess(titleText);
+						}
 					}
 				}
 			});
 		}
 		
+		function onOk() {
+			var auditstatus = nui.get("auditstatus").getValue();
+			if (auditstatus == "2") { //终止流程
+				titleText = "终止";
+				submitProcess(titleText);
+			} else if (auditstatus == "0") { //退回流程
+				if (!nui.get("backTo").getValue()) {
+					nui.alert("退回环节不能为空！");
+					return;
+				}
+				titleText = "退回";
+				submitProcess(titleText);
+			} else if (auditstatus == "1") { //提交流程
+				if (!form.validate()) {
+					showTips("请检查表单的完整性!", "danger");
+					return;
+				}
+				titleText = "提交";
+				submitProcess(titleText);
+			}
+
+		}
+		
+		function submitProcess(title) {
+			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
+				if (action == "ok") {
+					nui.get("countersign").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					saveData();
+				}
+			});
+		}
+		
+		function saveData() {
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var data = form.getData();
+				data.files = nui.get("fileids").getValue();
+				var misOpinion = opioionform.getData().misOpinion;//审核意见
+				var json = {
+					'reviewReport' : data,
+					'misOpinion' : misOpinion,
+					'workItemID' :<%=workitemid%>,
+					"countersignUsers" : countersignUsers
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseReviewReport.purReviewReportApproval.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							showTips("提交成功");
+							CloseWindow("ok");
+						} else {
+							nui.get("countersign").enable();
+							nui.get("creatReimbProcess").enable();
+						}
+					}
+				});				
+			}, 2000);
+		}
+
 		function onCancel(e) {
 			CloseWindow("cancel");
 		}
-		
+
 		//标准方法接口定义
 		function CloseWindow(action) {
 			if (window.CloseOwnerWindow)
 				return window.CloseOwnerWindow(action);
 			else
 				window.close();
-		}						
+		}
 	</script>
 
 </body>

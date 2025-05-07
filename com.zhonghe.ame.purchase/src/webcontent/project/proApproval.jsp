@@ -26,8 +26,6 @@
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>采购立项 </legend>
 			<form id="form1" method="post">
-				<input name="files" id="fileids" class="nui-hidden" />
-				<input name="files1" id="fileids1" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
@@ -228,61 +226,57 @@
 		function submit() {
 			var auditstatus = nui.get("auditstatus").getValue();
 			if (auditstatus == "2") { //终止流程
-				titleText = "终止";
 				submitProcess("终止");
 			} else if (auditstatus == "0") { //退回流程
 				if (!nui.get("backTo").getValue()) {
 					showTips("退回环节不能为空！");
 					return;
 				}
-				titleText = "退回";
 				submitProcess("退回");
 			} else if (auditstatus == "1") { //提交流程
-				titleText = "提交";
 				submitProcess("提交");
-
 			}
 		}
 		
 		function submitProcess(title) {
 			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
+					nui.get("countersign").disable();
 					nui.get("creatReimbProcess").disable();
-					var data = form.getData();
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					var json = {
-						"param" : data,
-						misOpinion : misOpinion,
-						workItemID :<%=workitemid%>,
-						"countersignUsers" : countersignUsers
-					};
-					saveData(json);
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					saveData();
 				}
 			});
 		}
 		
-		function saveData(json) {
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseProApp.proAppApproval.biz.ext",
-				data : json,
-				type : 'POST',
-				cache : false,
-				contentType : 'text/json',
-				success : function(o) {
-					if (o.result == "success") {
-						showTips("提交成功")
-						closeOk();
-					} else {
-						showTips("提交失败，请联系信息技术部人员！", "danger")
-						nui.get("creatReimbProcess").enable();
+		function saveData() {
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var data = form.getData();
+				var misOpinion = opioionform.getData().misOpinion;//审核意见
+				var json = {
+					"proApp" : data,
+					"misOpinion" : misOpinion,
+					"workItemID" :<%=workitemid%>,
+					"countersignUsers" : countersignUsers
+				};			
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseProApp.proAppApproval.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "success") {
+							showTips("提交成功");
+							closeOk();
+						} else {
+							nui.get("countersign").enable();
+							nui.get("creatReimbProcess").enable();
+						}
 					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert(jqXHR.responseText);
-				}
-			});
+				});
+			}, 2000);
 		}
-		
+
 		function onSumamount(e) {
 			var sumamount = addFloat(e.row.amount, e.row.sumamount);
 			if (e.row._state) {
@@ -291,20 +285,19 @@
 				return sumamount;
 			}
 		}
-		
+
 		function countersign() {
 			selectOmEmployee();
 		}
-		
+
 		function selectOmEmployee() {
 			var btnEdit = this;
 			nui.open({
-				 url: "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
+				url : "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
 				title : "立项单位经办人",
 				width : 430,
 				height : 400,
 				ondestroy : function(action) {
-					console.log(action)
 					var user, users = "【";
 					countersignUsers = [];
 					if (action == "ok") {

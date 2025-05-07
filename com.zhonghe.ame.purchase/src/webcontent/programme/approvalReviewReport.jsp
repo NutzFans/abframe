@@ -24,9 +24,9 @@ body .mini-textboxlist {
 		long workitemid = (Long) request.getAttribute("workItemID");
 	%>
 	<div class="nui-fit" style="padding: 5px;">
-		<fieldset id="field1" style="border: solid 1px #aaa;">
+		<form id="form1" method="post">
+			<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>评审结果</legend>
-			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input class="nui-hidden" name="proappId" />
@@ -75,8 +75,8 @@ body .mini-textboxlist {
 						</tr>
 					</table>
 				</div>
-			</form>
-		</fieldset>
+			</fieldset>
+		</form>	
 
 		<fieldset style="border: solid 1px #aaa;">
 			<legend>采购立项明细</legend>
@@ -102,7 +102,7 @@ body .mini-textboxlist {
 
 		<fieldset id="field4" style="border: solid 1px #aaa;">
 			<legend>评审结果 - 附件</legend>
-			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
 		</fieldset>
 
 		<fieldset style="border: solid 1px #aaa;">
@@ -152,12 +152,12 @@ body .mini-textboxlist {
 						"relationid" : result.proappId
 					});
 					grid_0.sortBy("fileTime", "desc");
-					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
-					inputFileExpandGrid.load({
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
 						"groupid" : "purReviewReport",
 						"relationid" : result.id
 					});
-					inputFileExpandGrid.sortBy("fileTime", "desc");
+					detailFileExpandGrid.sortBy("fileTime", "desc");
 					var grid = nui.get("datagrid1");
 					grid.load({
 						processInstID : result.processid
@@ -234,49 +234,42 @@ body .mini-textboxlist {
 		function submitProcess(title) {
 			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
-					var data = form.getData();
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					var json = {
-						'param' : data,
-						'misOpinion' : misOpinion,
-						'workItemID' :<%=workitemid%>,
-						"countersignUsers" : countersignUsers
-					};
-					mini.mask({
-						el : document.body,
-						cls : 'mini-mask-loading',
-						html : titleText + '中...'
-					});
-					saveData(json);
+					nui.get("countersign").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					saveData();
 				}
 			});
 		}
 		
-		function saveData(json) {
-			nui.ajax({
-				url : "com.zhonghe.ame.purchase.purchaseReviewReport.purReviewReportApproval.biz.ext",
-				type : "post",
-				data : json,
-				contentType : "text/json",
-				success : function(o) {
-					nui.unmask(document.body);
-					if (o.result == "1") {
-						nui.alert(titleText + "成功", "系统提示", function() {
+		function saveData() {
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var data = form.getData();
+				data.files = nui.get("fileids").getValue();
+				var misOpinion = opioionform.getData().misOpinion;//审核意见
+				var json = {
+					'reviewReport' : data,
+					'misOpinion' : misOpinion,
+					'workItemID' :<%=workitemid%>,
+					"countersignUsers" : countersignUsers
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseReviewReport.purReviewReportApproval.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							showTips("提交成功");
 							CloseWindow("ok");
-						});
-					} else {
-						nui.alert("提交失败，请联系信息技术部人员！", "系统提示", function(action) {
-							CloseWindow("ok");
-						});
+						} else {
+							nui.get("countersign").enable();
+							nui.get("creatReimbProcess").enable();
+						}
 					}
-				}
-			});
+				});				
+			}, 2000);
 		}
-		
-		function SaveData() {
-			saveData();
-		}
-		
 
 		function onCancel(e) {
 			CloseWindow("cancel");
