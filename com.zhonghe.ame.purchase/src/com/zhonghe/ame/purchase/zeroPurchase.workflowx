@@ -60,6 +60,16 @@
         <description>审批人</description>
         <isArray>false</isArray>
       </dataField>
+      <dataField>
+        <name>wfps</name>
+        <dataType>
+          <typeClass>sdo</typeClass>
+          <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
+        </dataType>
+        <initialValue></initialValue>
+        <description>审批人(多人)</description>
+        <isArray>true</isArray>
+      </dataField>
     </dataFields>
     <triggerEvents>
       <triggerEvent>
@@ -124,17 +134,14 @@
     <parameters/>
     <splitTransaction>false</splitTransaction>
     <longProcess>true</longProcess>
-    <bizEntityInfo>
-      <bizEntityName></bizEntityName>
-      <relevantKey></relevantKey>
-    </bizEntityInfo>
+    <bizEntityInfo/>
     <calendarInfo>
       <resourceType>business-calendar</resourceType>
       <resourceID>default</resourceID>
       <resourceName>默认日历</resourceName>
       <parameters/>
     </calendarInfo>
-    <extendNodes><extendNode><key>IsForWardBiz</key><value>false</value><desc></desc></extendNode><extendNode><key>openLog</key><value>false</value><desc></desc></extendNode></extendNodes>
+    <extendNodes><extendNode><key>IsForWardBiz</key><value>false</value><desc/></extendNode><extendNode><key>openLog</key><value>false</value><desc/></extendNode></extendNodes>
   </processHeader>
   <transitions>
     <transition>
@@ -1600,9 +1607,9 @@
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>relevantdata</participantType>
+            <participantType>process-starter</participantType>
             <specialActivityID></specialActivityID>
-            <specialPath>wfp</specialPath>
+            <specialPath></specialPath>
           </participants>
           <formFields/>
           <timeLimit>
@@ -1626,52 +1633,7 @@
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
-          <triggerEvents>
-            <triggerEvent>
-              <applicationInfo>
-                <actionType>logic-flow</actionType>
-                <suppressJoinFailure>suppress</suppressJoinFailure>
-                <application>
-                  <actionType>logic-flow</actionType>
-                  <applicationUri>com.zhonghe.ame.contractPact.frameAgreement.queryNewAppPersons</applicationUri>
-                  <transactionType>join</transactionType>
-                  <exceptionStrategy>rollback</exceptionStrategy>
-                  <invokePattern>synchronous</invokePattern>
-                  <parameters>
-                    <parameter>
-                      <name>roleid</name>
-                      <dataType>
-                        <typeClass>primitive</typeClass>
-                        <typeValue>String</typeValue>
-                      </dataType>
-                      <isArray>false</isArray>
-                      <fillBack>false</fillBack>
-                      <description></description>
-                      <mode>parameter</mode>
-                      <value>cgzx_role</value>
-                      <valueType>constant</valueType>
-                    </parameter>
-                    <parameter>
-                      <name>out</name>
-                      <dataType>
-                        <typeClass>sdo</typeClass>
-                        <typeValue>com.eos.workflow.data.WFParticipant[]</typeValue>
-                      </dataType>
-                      <isArray>true</isArray>
-                      <fillBack>true</fillBack>
-                      <description></description>
-                      <mode>result</mode>
-                      <value>wfp</value>
-                      <valueType>variable</valueType>
-                    </parameter>
-                  </parameters>
-                </application>
-                <assignments/>
-              </applicationInfo>
-              <eventType>before-start-act</eventType>
-              <description></description>
-            </triggerEvent>
-          </triggerEvents>
+          <triggerEvents/>
           <rollBack>
             <applicationInfo>
               <actionType>service-component</actionType>
@@ -1779,7 +1741,7 @@
           <participants>
             <participantType>relevantdata</participantType>
             <specialActivityID></specialActivityID>
-            <specialPath>wfp</specialPath>
+            <specialPath>wfps</specialPath>
           </participants>
           <formFields/>
           <timeLimit>
@@ -1795,7 +1757,7 @@
             </calendarSet>
           </timeLimit>
           <multiWorkItem>
-            <isMulWIValid>false</isMulWIValid>
+            <isMulWIValid>true</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
             <finishRequiredPercent>0</finishRequiredPercent>
@@ -1810,7 +1772,7 @@
                 <suppressJoinFailure>suppress</suppressJoinFailure>
                 <application>
                   <actionType>logic-flow</actionType>
-                  <applicationUri>com.zhonghe.ame.contractPact.frameAgreement.queryAppPerson</applicationUri>
+                  <applicationUri>com.zhonghe.ame.contractPact.frameAgreement.queryAppPersons</applicationUri>
                   <transactionType>join</transactionType>
                   <exceptionStrategy>rollback</exceptionStrategy>
                   <invokePattern>synchronous</invokePattern>
@@ -1825,20 +1787,20 @@
                       <fillBack>false</fillBack>
                       <description></description>
                       <mode>parameter</mode>
-                      <value>purchaseFz</value>
+                      <value>cg_sm_am_qf</value>
                       <valueType>constant</valueType>
                     </parameter>
                     <parameter>
                       <name>out</name>
                       <dataType>
                         <typeClass>sdo</typeClass>
-                        <typeValue>com.eos.workflow.data.WFParticipant</typeValue>
+                        <typeValue>com.eos.workflow.data.WFParticipant[]</typeValue>
                       </dataType>
-                      <isArray>false</isArray>
+                      <isArray>true</isArray>
                       <fillBack>true</fillBack>
                       <description></description>
                       <mode>result</mode>
-                      <value>wfp</value>
+                      <value>wfps</value>
                       <valueType>variable</valueType>
                     </parameter>
                   </parameters>
