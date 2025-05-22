@@ -176,12 +176,13 @@ public class SyncUpdateOrg {
 
 	// 同步登陆帐号
 	private void syncAccount(JSONArray personJsonArray, Session dbSession) throws Exception {
-		String querySql = "SELECT * FROM AC_OPERATOR WHERE USERID = ?";
+		String querySql = "SELECT * FROM AC_OPERATOR WHERE USERID = ? AND FILE_PATH = ?";
 		for (int i = 0; i < personJsonArray.size(); i++) {
 			JSONObject personObj = personJsonArray.getJSONObject(i);
 			String userId = personObj.getStr("loginName");
+			String filePath = personObj.getStr("id");
 			userId = this.addUserIdPrefix(userId);
-			Entity entity = dbSession.queryOne(querySql, userId);
+			Entity entity = dbSession.queryOne(querySql, userId, filePath);
 			if (ObjectUtil.isNotNull(entity)) {
 				entity.set("OPERATORNAME", personObj.getStr("name"));
 				if (personObj.getBool("isAvailable", false)) {
@@ -197,7 +198,7 @@ public class SyncUpdateOrg {
 				entity.set("UNLOCKTIME", personObj.getStr("alterTime"));
 				entity.set("PAGESTYLE", personObj.getStr("posts", null));
 				entity.set("FILE_PATH", personObj.getStr("id"));
-				dbSession.update(entity, new Entity("AC_OPERATOR").set("USERID", userId));
+				dbSession.update(entity, new Entity("AC_OPERATOR").set("USERID", userId).set("FILE_PATH", filePath));
 				String accountRoleSql = "SELECT * FROM AC_OPERATORROLE WHERE ROLEID='employee' AND OPERATORID = ?";
 				Entity accountRole = dbSession.queryOne(accountRoleSql, entity.getStr("OPERATORID"));
 				if (ObjectUtil.isNull(accountRole)) {
@@ -315,14 +316,15 @@ public class SyncUpdateOrg {
 	}
 
 	private void syncEmp(JSONArray personJsonArray, Session dbSession) throws Exception {
-		String querySql = "SELECT * FROM OM_EMPLOYEE WHERE EMPCODE = ?";
+		String querySql = "SELECT * FROM OM_EMPLOYEE WHERE EMPCODE = ? AND TAG = ?";
 		String notSyncUserSql = "SELECT EMPCODE, EMPNAME FROM AC_OPERATORROLE AS ao, OM_EMPLOYEE AS oe WHERE ao.ROLEID='NOT_OA_USER' AND ao.OPERATORID = oe.OPERATORID";
 		List<Entity> notSyncUserList = dbSession.query(notSyncUserSql);
 		for (int i = 0; i < personJsonArray.size(); i++) {
 			JSONObject personObj = personJsonArray.getJSONObject(i);
 			String empCode = personObj.getStr("loginName");
+			String tag = personObj.getStr("id");
 			empCode = this.addEmpCodePrefix(empCode);
-			Entity entity = dbSession.queryOne(querySql, empCode);
+			Entity entity = dbSession.queryOne(querySql, empCode, tag);
 			if (ObjectUtil.isNotNull(entity)) {
 				if (personObj.getBool("isAvailable", false).booleanValue()) {
 					entity.set("TAG", personObj.getStr("id"));
@@ -340,12 +342,12 @@ public class SyncUpdateOrg {
 						entity.set("ORGID", orgCode);
 					}
 					entity.set("LASTMODYTIME", personObj.getStr("alterTime"));
-					dbSession.update(entity, new Entity("OM_EMPLOYEE").set("EMPCODE", empCode));
+					dbSession.update(entity, new Entity("OM_EMPLOYEE").set("EMPCODE", empCode).set("TAG", tag));
 				} else {
 					entity.set("TAG", personObj.getStr("id"));
 					entity.set("EMPSTATUS", "leave");
 					entity.set("LASTMODYTIME", personObj.getStr("alterTime"));
-					dbSession.update(entity, new Entity("OM_EMPLOYEE").set("EMPCODE", empCode));
+					dbSession.update(entity, new Entity("OM_EMPLOYEE").set("EMPCODE", empCode).set("TAG", tag));
 				}
 			} else {
 				if (personObj.getBool("isAvailable", false)) {
@@ -429,24 +431,25 @@ public class SyncUpdateOrg {
 			}
 		}
 		// 清理员工中的无效数据
-		String queryEmpSql = "SELECT EMPID, EMPCODE, ORGID FROM OM_EMPLOYEE WHERE ORGID IS NOT NULL";
+		String queryEmpSql = "SELECT EMPID, EMPCODE, ORGID, TAG FROM OM_EMPLOYEE WHERE ORGID IS NOT NULL";
 		List<Entity> empEntityList = dbSession.query(queryEmpSql);
 		if (empEntityList != null && empEntityList.size() > 0) {
 			String queryOrgByIdSql = "SELECT * FROM OM_ORGANIZATION WHERE STATUS = 'running' AND ORGID = ? ";
-			String delEmpSql = "DELETE FROM OM_EMPLOYEE WHERE EMPID = ?";
-			String delAcOperatorSql = "DELETE FROM AC_OPERATOR WHERE USERID = ?";
+			String delEmpSql = "DELETE FROM OM_EMPLOYEE WHERE EMPID = ? AND TAG = ?";
+			String delAcOperatorSql = "DELETE FROM AC_OPERATOR WHERE USERID = ? AND FILE_PATH = ?";
 			String delEmpOrgSql = "DELETE FROM OM_EMPORG WHERE EMPID = ?";
 			String delEmpHisSql = "DELETE FROM OM_EMPORG_HIS WHERE EMPID = ?";
 			for (Entity entity : empEntityList) {
 				String orgId = entity.getStr("ORGID");
 				String empId = entity.getStr("EMPID");
 				String empCode = entity.getStr("EMPCODE");
+				String tag = entity.getStr("TAG");
 				Entity result = dbSession.queryOne(queryOrgByIdSql, orgId);
 				if (result == null) {
-					dbSession.execute(delEmpSql, empId);
+					dbSession.execute(delEmpSql, empId, tag);
 					dbSession.execute(delEmpOrgSql, empId);
 					dbSession.execute(delEmpHisSql, empId);
-					dbSession.execute(delAcOperatorSql, empCode);
+					dbSession.execute(delAcOperatorSql, empCode, tag);
 				}
 			}
 		}
