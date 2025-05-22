@@ -85,6 +85,8 @@ html,body {
 				<tr>
 					<td>
 						<a class="nui-button" id="checkview" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="zc_edit()">编辑</a>
+						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="lxcg_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
 						<a class="nui-button" id="lxcg_exportExcel" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
@@ -96,7 +98,7 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="datagrid1" frozenStartColumn="0" sizeList="[25,50,100]" showPager="true" dataField="purZeroList" class="nui-datagrid" style="width: 100%; height: 100%;" pageSize="25"
-				url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext" multiSelect="false">
+				url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroList.biz.ext" multiSelect="true">
 				<div property="columns">
 					<div name="temp123" type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
@@ -199,7 +201,6 @@ html,body {
 					nui.alert("只能选中一条项目记录进行删除");
 				} else {
 					var row = row[0];
-					console.log(row);
 					if (row) {
 						var json = nui.encode({
 							id : row.id
@@ -227,7 +228,6 @@ html,body {
 		function onActionRenderer(e) {
 			var record = e.record;
 			var processId = record.processid;
-			console.log(e.value);
 			var s = "<a  href='javascript:void(0)' onclick='feeView();' >" + nui.getDictText('ZH_FLOW_TYPE', e.value) + "</a>";
 			return s;
 		}
@@ -284,7 +284,42 @@ html,body {
 		function onExportExcel(){
 			var data = form.getData();
 			exportExcel({"data":data,"url": "com.zhonghe.ame.purchase.purzero.exportPurZero.biz.ext","fileName":"小额采购明细"});
-		}		
+		}
+		
+		
+		// 暂存编辑
+		function zc_edit() {
+			var row = grid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("只能选中一条数据记录进行编辑", "danger");
+				return;
+			}
+			var data = row[0];
+			if (data.status == '0') {
+				var json = {
+					"processID" : data.processid
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.invoice.invoice.getWorkItemByProcessInstID.biz.ext",
+					data : json,
+					success : function(result) {
+						if (JSON.stringify(result) !== '{}') {
+							nui.open({
+								url : "/default/bps/wfclient/task/dispatchTaskExecute.jsp?workItemID=" + result.workItemID,
+								width : '100%',
+								height : '100%',
+								ondestroy : function(action) {
+									grid.reload();
+									search();
+								}
+							})
+						}
+					}
+				});
+			} else {
+				showTips("只能编辑审批状态为【草稿】的数据", "danger");
+			}
+		}				
 		
 		function zf_edit() {
 			var row = grid.getSelecteds();
@@ -311,7 +346,7 @@ html,body {
 										showTips("作废成功");
 										grid.reload();
 									} else if (o.result == 2) {
-										showTips("有付费合同关联了该零星采购无法作废！", "danger");
+										showTips("有付费合同关联了该小额采购无法作废！", "danger");
 									} else {
 										showTips("作废失败，请联系信息技术部人员！", "danger");
 									}
@@ -326,6 +361,41 @@ html,body {
 				}
 			}
 		}
+		
+		function deleteInfo() {
+			var rows = grid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
+			}else{
+				var status = rows.every(item => item.status === '4');
+				if(status){
+					if (!confirm("是否删除？")) {
+						return;
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
+						var json = nui.encode({
+							'datas' : datas
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.purchase.purchaseItems.deleteProZero.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("删除成功");
+									grid.reload();
+								} else {
+									showTips("删除失败，请联系信息技术部人员！", "danger");
+								}
+							}
+						});
+					}
+				}else{
+					showTips("只能删除审批状态为【作废】的数据", "danger");
+				}
+			}
+		}		
 		
 		function help() {
 			executeUrl = "<%= request.getContextPath() %>/purchase/plan/purZeroDesgin.jsp";

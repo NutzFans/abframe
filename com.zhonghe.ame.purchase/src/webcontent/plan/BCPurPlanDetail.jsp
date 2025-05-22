@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>采购 - 年度计划</title>
+<title>采购 - 临时计划</title>
 <style type="text/css">
 html,body {
 	font-size: 12px;
@@ -19,7 +19,7 @@ html,body {
 <body>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
-			<legend>采购 - 年度计划</legend>
+			<legend>采购 - 临时计划</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input id="id" name="id" class="nui-hidden" />
@@ -27,7 +27,7 @@ html,body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 120px;">采购计划(年度)名称：</td>
+							<td align="right" style="width: 120px;">采购计划(临时)名称：</td>
 							<td colspan="5">
 								<input id="name" name="name" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
@@ -171,6 +171,7 @@ html,body {
 		function zhPutUnder(e) {
 			return nui.getDictText('ZH_PUTUNDER', e.value);
 		}
+		
 	</script>
 
 </body>

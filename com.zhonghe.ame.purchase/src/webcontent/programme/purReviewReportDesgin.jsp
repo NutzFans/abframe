@@ -10,34 +10,34 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/purchaseReviceReportFlow.png'); width: 1463px; height: 1167px; position: relative;">
+	<div style="background-image: url('/default/common/flow/purchaseReviceReportFlow.png'); width: 1463px; height: 1320px; position: relative;">
 
 		<!-- 采购需求单位经办人确认 -->
-		<div id="div1" style="position: absolute; left: 403px; top: 246px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div1" style="position: absolute; left: 386px; top: 207px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 采购需求单位主要负责人确认 -->
-		<div id="div2" style="position: absolute; left: 403px; top: 350px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div2" style="position: absolute; left: 388px; top: 301px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 公司物项归口部门经办人审核 -->
-		<div id="div3" style="position: absolute; left: 403px; top: 463px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div3" style="position: absolute; left: 388px; top: 397px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 公司物项归口部门负责人审核 -->
-		<div id="div4" style="position: absolute; left: 403px; top: 574px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div4" style="position: absolute; left: 390px; top: 494px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 分管采购公司领导审批 -->
-		<div id="div5" style="position: absolute; left: 177px; top: 670px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div5" style="position: absolute; left: 117px; top: 813px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 采购需求单位分管领导(批) -->
-		<div id="div6" style="position: absolute; left: 403px; top: 670px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div6" style="position: absolute; left: 118px; top: 702px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 企业发展部备案 -->
-		<div id="div7" style="position: absolute; left: 403px; top: 909px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div7" style="position: absolute; left: 390px; top: 1021px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 中核供应链负责人审核 -->
-		<div id="div8" style="position: absolute; left: 612px; top: 349px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div8" style="position: absolute; left: 629px; top: 302px; width: 75px; height: 50px; cursor: pointer;"></div>
 		
 		<!-- 协管领导审批 -->
-		<div id="div9" style="position: absolute; left: 179px; top: 573px; width: 75px; height: 50px; cursor: pointer;"></div>		
+		<div id="div9" style="position: absolute; left: 117px; top: 599px; width: 75px; height: 50px; cursor: pointer;"></div>		
 
 	</div>
 
@@ -105,7 +105,7 @@
 			$('#div7').click(function() {
 				layer.open({
 					title : '企业发展部备案 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【purchaseFz】的角色数据',
+					content : '通过【角色管理】模块修改角色编号为【cg_ps_re_qf】的角色数据',
 					btn : []
 				});
 			});

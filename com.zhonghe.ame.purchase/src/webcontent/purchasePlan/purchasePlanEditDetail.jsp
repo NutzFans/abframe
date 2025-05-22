@@ -26,7 +26,7 @@ html,body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 120px;">采购计划(年度)名称：</td>
+							<td align="right" style="width: 120px;">年度采购计划名称：</td>
 							<td colspan="5">
 								<input id="name" name="name" class="nui-textbox" required="true" style="width: 100%;" />
 							</td>
@@ -147,7 +147,6 @@ html,body {
 	</div>
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="onOk(2)" id="zzFeame" iconCls="icon-split" style="width: 80px; margin-right: 20px;">中止</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
@@ -180,6 +179,7 @@ html,body {
 				"url" : "com.zhonghe.ame.purchase.purchaseplan.getPurPlanByWorkitemId.biz.ext",
 				"data" : json,
 				"success" : function(o) {
+					//付款申请基本信息
 					form.setData(o.data)
 					if (o.data.type == 1 || o.data.type == 2) {
 						nui.get("putunder").set({
@@ -425,7 +425,7 @@ html,body {
 				info = "暂存流程表单？"
 			} else if (istype == 1) {
 				if (!form.validate()) {
-					showTips("请检查表单的完整性!", "danger");
+					showTips("请检查表单的完整性!");
 					return;
 				}
 				grid.validate();
@@ -435,9 +435,6 @@ html,body {
 					showTips("明细数据有错误，请检查!", "danger");
 					return;
 				}
-				var tempData = grid.data;
-				var putunder = getUniqueValuesString(tempData,"centralizedDept");
-				nui.get("putunder").setValue(putunder);
 				// 已上传的文件数量
 				var gridFileCount = nui.get("grid_0").getData().length;
 				if (gridFileCount == 0) {
@@ -457,7 +454,6 @@ html,body {
 			
 			nui.confirm("确定" + info, "系统提示", function(action) {
 				if (action == "ok") {
-					nui.get("saveReimb").disable();
 					nui.get("creatReimbProcess").disable();
 					nui.get("zzFeame").disable();
 					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '流程表单提交中...'});
@@ -488,7 +484,6 @@ html,body {
 							showTips("操作成功");
 							closeOk();
 						} else {
-							nui.get("saveReimb").enable();
 							nui.get("creatReimbProcess").enable();
 							nui.get("zzFeame").enable();
 						}
@@ -496,12 +491,6 @@ html,body {
 				});
 			}, 2000);		
 		}
-		
-		function getUniqueValuesString(arr, key) {
-			const uniqueValues = [...new Set(arr.map(obj => obj[key]))];
-			return uniqueValues.join(',');
-		}		
-		
 	</script>
 
 </body>

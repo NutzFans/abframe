@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/zeroPurchaseFlow.png'); width: 1463px; height: 1135px; position: relative;">
+	<div style="background-image: url('/default/common/flow/zeroPurchaseFlow.png'); width: 1463px; height: 1155px; position: relative;">
 
 		<!-- 分公司部门负责人审核 -->
 		<div id="div1" style="position: absolute; left: 163px; top: 198px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -19,7 +19,7 @@
 		<div id="div2" style="position: absolute; left: 163px; top: 334px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 中核供应链负责人审核 -->
-		<div id="div3" style="position: absolute; left: 1018px; top: 198px; width: 75px; height: 50px; cursor: pointer;"></div>
+		<div id="div3" style="position: absolute; left: 1038px; top: 218px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 		<!-- 部门负责人审核 -->
 		<div id="div4" style="position: absolute; left: 556px; top: 334px; width: 75px; height: 50px; cursor: pointer;"></div>
@@ -32,9 +32,6 @@
 
 		<!-- 企业发展部审批 -->
 		<div id="div8" style="position: absolute; left: 558px; top: 814px; width: 75px; height: 50px; cursor: pointer;"></div>
-
-		<!-- 集采委托机构接收并于一体化平台补录信息 -->
-		<div id="div9" style="position: absolute; left: 560px; top: 950px; width: 75px; height: 50px; cursor: pointer;"></div>
 
 	</div>
 
@@ -83,7 +80,7 @@
 			// 公司本部设备监理经营主管
 			$('#div5').click(function() {
 				layer.open({
-					title : '部门负责人审核 - 调整审批人',
+					title : '公司本部设备监理经营主管 - 调整审批人',
 					content : '通过【角色管理】模块修改角色编号为【manage13】的角色数据',
 					btn : []
 				});
@@ -102,16 +99,7 @@
 			$('#div8').click(function() {
 				layer.open({
 					title : '企业发展部审批 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【purchaseFz】的角色数据',
-					btn : []
-				});
-			});
-			
-			// 集采委托机构接收并于一体化平台补录信息
-			$('#div9').click(function() {
-				layer.open({
-					title : '集采委托机构接收并于一体化平台补录信息 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【cgzx_role】的角色数据',
+					content : '通过【角色管理】模块修改角色编号为【cg_sm_am_qf】的角色数据',
 					btn : []
 				});
 			});			

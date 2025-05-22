@@ -63,13 +63,19 @@ body {
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">是否为科研项目：</td>
-							<td>
-								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" enabled="false" />
-							</td>
-							<td align="right" style="width: 170px">一体化平台采购需求计划编码：</td>
 							<td colspan="2">
-								<input name="ydhptXqjhCode" id="ydhptXqjhCode" class="nui-textbox" style="width: 100%;" required="true" emptyText="一体化平台采购需求计划编码" />
+								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%;" required="true" enabled="false" />
 							</td>
+							<td align="right" style="width: 140px">是否有采购计划：</td>
+							<td>
+								<input name="isPlan" id="isPlan" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 170px">一体化平台采购需求计划编码：</td>
+							<td colspan="5">
+								<input name="ydhptXqjhCode" id="ydhptXqjhCode" class="nui-textbox" style="width: 100%;" required="true" emptyText="一体化平台采购需求计划编码" />
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">申请原因、市场调研情况或比价情况：</td>
@@ -244,6 +250,29 @@ body {
 					showTips("请补充物料编码!", "danger");
 					return;
 				}
+				
+				var checkWuLiao = false;
+				var tempDatas = grid_traveldetail.data;
+				if(tempDatas){
+					var wuLiaoCodes = tempDatas.map(tempData => tempData.ythptWlCode);
+					var json = {"wuLiaoCodes" : wuLiaoCodes}
+					ajaxCommon({
+						url : "com.zhonghe.ame.purchase.purchaseItems.checkWuLiao.biz.ext",
+						async : false,
+						data : json,
+						contentType : 'text/json',
+						success : function(result) {
+							if (result.data != "success") {
+								showTips(result.data, "danger");
+								checkWuLiao = true;
+							}
+						}
+					});
+				}
+				if(checkWuLiao){
+					return;
+				}
+				
 				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
 					return;

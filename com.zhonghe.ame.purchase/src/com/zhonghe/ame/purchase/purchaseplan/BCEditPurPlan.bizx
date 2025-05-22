@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="editPurPlan" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="BCEditPurPlan" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
     <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -46,7 +46,7 @@
       <targetNode>assign4</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -74,7 +74,7 @@
     <figSize height="16" width="49"/>
     <node>invokeService0</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="终止流程" displayName="终止流程" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="终止流程" displayName="ProcessInstManagerService.terminateProcessInstance" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link28" name="link28" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokeService1</sourceNode>
       <targetNode>assign9</targetNode>
@@ -104,6 +104,7 @@
     <sourceConnections xsi:type="process:tLink" id="link27" name="link27" displayName="link12" isDefault="true" type="transition">
       <sourceNode>assign9</sourceNode>
       <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <targetConnections>link28</targetConnections>
     <location x="450" y="149"/>
@@ -289,6 +290,10 @@
       <process:from type="query" pattern="reference">purPlan/putunder</process:from>
       <process:to type="query">params/putunder</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">purPlan/budgetAmount</process:from>
+      <process:to type="query">params/changeAmount</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
     <location x="887" y="273"/>
@@ -393,7 +398,7 @@
       <targetNode>subprocess7</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -412,7 +417,7 @@
     <process:inputVariables>
       <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">workitem/processInstID</process:inputVariable>
       <process:inputVariable id="1" name="xpath" type="literal" value="java.lang.String" valueType="Java" pattern="reference">backToNode</process:inputVariable>
-      <process:inputVariable id="2" name="relaData" type="literal" value="java.lang.Object" valueType="Java" pattern="reference"></process:inputVariable>
+      <process:inputVariable id="2" name="relaData" type="literal" value="java.lang.Object" valueType="Java" pattern="reference"/>
     </process:inputVariables>
     <process:outputVariables/>
   </nodes>

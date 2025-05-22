@@ -3,153 +3,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>打印页面</title>
-  <meta name="renderer" content="webkit">
-  <script src="<%= request.getContextPath() %>/common/nui/warterMark.js" type="text/javascript"></script>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
-	<style type="text/css">
-	 .layui-form-label {
-			width: 145px !important;
-			text-align: left !important;
-		}
-	.layui-input-block {
-    margin-left: 145px !important;
-    }
-    .layui-elem-quote{
-        font-weight: bold;
-		}
-		.layui-textarea{
-				height: 20px;
-				min-height: 20px!important;
-		}
-	.layui-table-cell {
-            font-size:14px;
-            padding:0 5px;
-            height:auto;
-            overflow:visible;
-            text-overflow:inherit;
-            white-space:normal;
-            word-break: break-all;
-        }
-	</style>
+<meta charset="utf-8">
+<title>打印页面</title>
+<meta name="renderer" content="webkit">
+<script src="<%=request.getContextPath()%>/common/nui/warterMark.js" type="text/javascript"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
+<style type="text/css">
+.layui-table,.layui-table-view {
+	margin: 0px;
+}
+
+.layui-elem-quote {
+	font-weight: bold;
+}
+
+.layui-table-cell {
+	font-size: 14px;
+	padding: 0 5px;
+	height: auto;
+	overflow: visible;
+	text-overflow: inherit;
+	white-space: normal;
+	word-break: break-all;
+}
+</style>
 </head>
 <body>
-<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
-<div style="margin: 0 auto; width: 900px;height: auto;">
-	<div align="right">
-		<button type="button" id="checkview" class="layui-btn"  onclick="preview()">打印</button>
+	<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+	<div style="margin: 0 auto; width: 900px; height: auto;">
+		<div align="right">
+			<button type="button" id="checkview" class="layui-btn" onclick="preview()">打印</button>
+		</div>
+		<form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
+			<h3 id="name" align="center"></h3>
+			<blockquote class="layui-elem-quote" style="width: 97%">
+				基本信息
+				<i id="status" class="layui-icon" style="font-size: 15px; float: right; color: #5FB878;">审批通过</i>
+			</blockquote>
+
+			<div class="layui-row">
+				<div class="layui-col-xs12">
+					<label class="layui-form-label" style="width: 170px">小额采购名称</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="purchaseName" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-row">
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">申请人</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="createUsername" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">申请单位</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="createdOrgname" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">申请时间</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="createdTime" disabled="disabled" placeholder="yyyy-MM-dd" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">编号</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="purchaseCode" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">供应商名称</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="contractor" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">预计采购时间</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="purchaseDate" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">总金额(万元)</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="totalAmount" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">是否为科研项目</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="keYanProject" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-row">
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">
+						一体化平台计划编码
+					</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="ydhptXqjhCode" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 170px">是否有采购计划</label>
+					<div class="layui-input-block" style="margin-left: 170px">
+						<input type="text" name="isPlan" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-row">
+				<div class="layui-col-xs12">
+					<div class="layui-form-text">
+						<label class="layui-form-label">申请原因、市场调研情况或比价情况</label>
+						<div class="layui-input-block">
+							<textarea autoHeight="true" name="applyReason" disabled="disabled" class="layui-textarea"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<fieldset class="layui-elem-field layui-field-title" id="fieldsetFileGrid" style="margin-top: 20px;">
+			<blockquote class="layui-elem-quote">
+				附件信息&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href='javascript:void(0)' onclick='downloadZipFile();' style='color: #1b3fba'>打包下载</a>
+			</blockquote>
+			<table class="layui-hide" id="fileGrid"></table>
+		</fieldset>
+		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+			<blockquote class="layui-elem-quote">计划明细(单位万元)</blockquote>
+			<table class="layui-hide" id="grid"></table>
+		</fieldset>
+		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+			<blockquote class="layui-elem-quote">审批记录</blockquote>
+			<table class="layui-hide" id="approvalGrid"></table>
+		</fieldset>
 	</div>
-  <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm" >
-  	<h3 id="name" align="center"></h3>
-  	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    <blockquote class="layui-elem-quote" style="width: 97%">基本信息
-    <i id="status" class="layui-icon" style="font-size: 15px;float:right; color: #5FB878;">审批通过</i> 
-    </blockquote>
-  	  
-	  <div class="layui-row">
-	    <div class="layui-col-xs12">
-		    <label class="layui-form-label" style="width: 120px">小额采购名称</label>
-		    <div class="layui-input-block" >
-		      <input type="text" name="purchaseName" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	  </div>
-	  
-	  <div class="layui-row">
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">申请人</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="createUsername" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">申请单位</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="createdOrgname" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	  </div>
-	  <div class="layui-row">
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">申请时间</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="createdTime" disabled="disabled" placeholder="yyyy-MM-dd" class="layui-input">
-		    </div>
-	    </div>
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">编号</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="purchaseCode" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	  </div>
-	  <div class="layui-row">
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">供应商名称</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="contractor" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">预计采购时间</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="purchaseDate" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	  </div>
-	  <div class="layui-row">
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">总金额(万元)</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="totalAmount" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	    <div class="layui-col-xs6">
-		    <label class="layui-form-label">是否为科研项目</label>
-		    <div class="layui-input-block">
-		      <input type="text" name="keYanProject" disabled="disabled" class="layui-input">
-		    </div>
-	    </div>
-	  </div>
-	  
-	  <div class="layui-row">
-	    <div class="layui-col-xs12">
-		    <label class="layui-form-label" style="height: 50px">一体化平台采购<br>需求计划编码</label>
-		    <div class="layui-input-block">
-		    	<input type="text" name="ydhptXqjhCode" disabled="disabled" class="layui-input" style="height: 50px">
-		    </div>
-	    </div>
-	  </div>
-	  
-	  <div class="layui-row">
-	    <div class="layui-col-xs12">
-		    <label class="layui-form-label" style="height: 70px">申请原因、<br>市场调研情况<br>或比价情况</label>
-		    <div class="layui-input-block">
-		      <textarea autoHeight="true" name ="applyReason" disabled="disabled" class="layui-textarea"></textarea>
-		    </div>
-	    </div>
-	  </div>
-	  
-	  </fieldset>
-	   </form>
-	  <fieldset class="layui-elem-field layui-field-title" id="fieldsetFileGrid"  style="margin-top: 20px;">
-    	<blockquote class="layui-elem-quote">
-    		附件信息&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='downloadZipFile();' style='color: #1b3fba'>打包下载</a>
-    	</blockquote>
-    	<table class="layui-hide" id="fileGrid"></table>
- 	  </fieldset>
-	  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    	<blockquote class="layui-elem-quote">计划明细(单位万元)</blockquote>
-    	<table class="layui-hide" id="grid"></table>
- 	  </fieldset>
-	  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    	<blockquote class="layui-elem-quote">审批记录</blockquote>
-    	<table class="layui-hide" id="approvalGrid"></table>
- 	  </fieldset>
-</div>
 
 	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
@@ -157,16 +160,16 @@
 		<input type="hidden" name="fileName" filter="false" />
 	</form>
 
-<script src="<%= request.getContextPath() %>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
-<script>
- layui.use([ 'jquery', 'layer', 'form', 'table'], function() {
+	<script src="<%=request.getContextPath()%>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+	<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+	<script>
+ 		layui.use([ 'jquery', 'layer', 'form', 'table'], function() {
  			var $ = layui.jquery;
 			var layer = layui.layer;
 			var form = layui.form;
 			var table = layui.table;
  			var processInstID;
- 			id = <%= request.getParameter("id") %> ;
+ 			id = <%=request.getParameter("id")%> ;
  			form.render();
  			getData();
  			function getData(){
@@ -179,6 +182,7 @@
 			    	var formData=data.purZero;
 				    	formData.createdTime = layui.util.toDateString(formData.createdTime,'yyyy-MM-dd')
 				    	formData.keYanProject = nui.getDictText('ZH_YN',formData.keYanProject)
+				    	formData.isPlan = nui.getDictText('ZH_YN',formData.isPlan)
 				    	form.val("dataFrm",formData);
 				    	processInstID= formData.processid;
 				    	 document.getElementById("name").innerHTML = formData.purchaseName;
@@ -318,20 +322,19 @@
 			return num
 		}
 		
-		 setWatermark('<%=userName %>')
-		  //打印按钮
+		 setWatermark('<%=userName%>')
+		//打印按钮
 		function preview() {
-	        document.getElementById('checkview').style.display="none";
-	        /* window.document.body.innerHTML = document.documentElement.innerHTML; */
-	        print();
-	        document.getElementById('checkview').style.display="";
-	    };
-    
-    
-    	function onCheckRenderer(e) {
-			return nui.getDictText('MIS_AUDITSTATUS',e);
+			document.getElementById('checkview').style.display = "none";
+			/* window.document.body.innerHTML = document.documentElement.innerHTML; */
+			print();
+			document.getElementById('checkview').style.display = "";
+		};
+
+		function onCheckRenderer(e) {
+			return nui.getDictText('MIS_AUDITSTATUS', e);
 		}
-		
+
 		function downloadZipFile() {
 			if (!confirm("是否确认打包下载？")) {
 				return;
@@ -359,8 +362,7 @@
 					}
 				}
 			})
-		}		
-		
-</script>
+		}
+	</script>
 </body>
 </html>

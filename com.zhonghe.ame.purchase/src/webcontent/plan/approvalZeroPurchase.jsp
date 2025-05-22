@@ -63,8 +63,12 @@ body {
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">是否为科研项目：</td>
+							<td colspan="2">
+								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%;" required="true" enabled="false" />
+							</td>
+							<td align="right" style="width: 140px">是否有采购计划：</td>
 							<td>
-								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" enabled="false" />
+								<input name="isPlan" id="isPlan" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" enabled="false" />
 							</td>
 						</tr>
 						<tr>

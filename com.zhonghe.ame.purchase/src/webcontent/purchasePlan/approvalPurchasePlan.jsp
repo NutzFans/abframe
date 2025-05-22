@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>采购计划审批</title>
+<title>采购 - 年度计划</title>
 <style type="text/css">
 html,body {
 	font-size: 12px;
@@ -22,56 +22,63 @@ html,body {
 	%>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
-			<legend>采购计划</legend>
+			<legend>采购 - 年度计划</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
-				<input id="id" name="id" class="nui-hidden" readonly="readonly" />
+				<input id="id" name="id" class="nui-hidden" />
+				<input class="nui-hidden" name="processid" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td colspan="1" class="form_label" align="right" style="width: 120px;">年度采购计划名称：</td>
+							<td align="right" style="width: 120px;">采购计划(年度)名称：</td>
 							<td colspan="5">
 								<input id="name" name="name" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
-							<td colspan="1" class="form_label" align="right" style="width: 100px;">提报人姓名：</td>
-							<td colspan="1">
+							<td align="right" style="width: 100px;">提报人姓名：</td>
+							<td>
 								<input class="nui-textbox" name="infomantUser" id="infomantUser" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td colspan="1" class="form_label" align="right" style="width: 100px;">采购单位：</td>
+							<td align="right" style="width: 100px;">采购单位：</td>
 							<td colspan="3">
 								<input id="needOrgName" name="needOrgName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" align="right" style="width: 120px;">计划年度：</td>
-							<td colspan="1">
+							<td align="right" style="width: 120px;">计划年度：</td>
+							<td>
 								<input id="year" name="year" style="width: 100%;" class="nui-textbox" style="width:100%;" readonly="readonly" //>
 							</td>
-							<td class="form_label" align="right" style="width: 100px;">采购类型：</td>
-							<td colspan="1">
+							<td align="right" style="width: 100px;">采购类型：</td>
+							<td>
 								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE_NEW" readonly="readonly" style="width: 100%;" />
 							</td>
-							<td class="form_label" align="right" style="width: 120px;">计划总金额(万元)：</td>
-							<td colspan="1">
+							<td align="right" style="width: 120px;">计划总金额(万元)：</td>
+							<td>
 								<input id="budgetAmount" name="budgetAmount" class="nui-textbox" readonly="readonly" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" align="right" style="width: 120px;">物项归口部门：</td>
-							<td colspan="3">
-								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" multiSelect="true" readonly="readonly" style="width: 100%;" />
+							<td align="right" style="width: 160px;">本年度预计使用金额(万元)：</td>
+							<td>
+								<input id="yearBudgetAmount" name="yearBudgetAmount" class="nui-textbox" readonly="readonly" style="width: 100%;" />
 							</td>
-							<td class="form_label" align="right" style="width: 120px;">财务年度预算科目：</td>
-							<td colspan="1">
-								<input id="SUBJECT" name="subject" class="nui-textbox" style="width: 100%;" readonly="readonly" />
+							<td align="right" style="width: 120px;">财务年度预算科目：</td>
+							<td>
+								<input id="subject" name="subject" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" style="width: 120px;" align="right">备注：</td>
-							<td colspan="6">
-								<input style="width: 100%; height: 120px;" name="remark" class="nui-textarea" id="remark" />
+							<td align="right" style="width: 120px;">物项归口部门：</td>
+							<td colspan="5">
+								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" multiSelect="true" readonly="readonly" style="width: 100%;" />
+							</td>
+						</tr>
+						<tr>
+							<td style="width: 120px;" align="right">备注：</td>
+							<td colspan="5">
+								<input style="width: 100%; height: 120px;" name="remark" class="nui-textarea" id="remark" readonly="readonly" />
 							</td>
 						</tr>
 					</table>
@@ -122,7 +129,7 @@ html,body {
 
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend> 相关附件 </legend>
-			<jsp:include page="/ame_common/inputFile.jsp" />
+			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
 
 		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
@@ -130,7 +137,7 @@ html,body {
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
-		<a class="nui-button" onclick="submit()" iconCls="icon-ok" style="width: 60px; margin-right: 20px;">提交</a>
+		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 60px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel" iconCls="icon-close" style="width: 60px;">关闭</a>
 	</div>
 
@@ -222,7 +229,7 @@ html,body {
 							}
 							users = users + "】";
 							titleText = "增加审批人员" + users + "并提交";
-							form2.submit();
+							submitProcess(titleText);
 						}
 					}
 
@@ -254,39 +261,47 @@ html,body {
 			} else if (auditstatus == "1") { //提交流程
 				titleText = "提交";
 			}
-			form2.submit();
+			submitProcess(titleText);
 		}
 		
-	    function SaveData(){
-	    	saveData();
-	    }
-	    
-		function saveData(json) {
+		function submitProcess(title) {
 			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
-					var misOpinion = opioionform.getData().misOpinion;//审核意见
-					var json = {
-						misOpinion : misOpinion,
-						workItemID :<%=workitemid%>,
-						"countersignUsers" : countersignUsers
-					};
-					var msgBoxId = form.loading("正在处理...", "请稍后");
-					ajaxCommon({
-						url : "com.zhonghe.ame.purchase.purchaseItems.approvalPurPlan.biz.ext",
-						data : json,
-						success : function(o) {
-							nui.unmask(document.body);
-							if (o.result == "success") {
-								showTips(titleText + "成功", "系统提示")
-								closeOk();
-							} else {
-								showTips("提交失败，请联系信息技术部人员！", "danger")
-								closeOk();
-							}
-						}
-					})
+					nui.get("countersign").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					saveData();
 				}
 			});
+		}		
+		
+		function saveData() {
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var formData = form.getData();
+				formData.files = nui.get("fileids").getValue();
+				var misOpinion = opioionform.getData().misOpinion;
+				var json = {
+					"purPlan" : formData,
+					"misOpinion" : misOpinion,
+					"workItemID" :<%=workitemid%>,
+					"countersignUsers" : countersignUsers
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseItems.approvalPurPlan.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							showTips("提交成功");
+							CloseWindow("ok");
+						} else {
+							nui.get("countersign").enable();
+							nui.get("creatReimbProcess").enable();
+						}
+					}
+				});				
+			}, 2000);
 		}
 	</script>
 

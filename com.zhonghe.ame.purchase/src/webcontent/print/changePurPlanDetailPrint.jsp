@@ -31,9 +31,12 @@
 </style>
 </head>
 <body>
-	<div style="margin: 0 auto; width: 98%; height: auto;">
+	<div style="margin: 0 auto; width: 900px; height: auto;">
+		<div align="right">
+			<button type="button" id="checkview" class="layui-btn" onclick="preview()">打印</button>
+		</div>
 		<form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
-			<h2 id="name" align="center" style="margin-top: 10px"></h2>
+			<h3 id="name" align="center" style="margin-top: 10px"></h3>
 			<blockquote class="layui-elem-quote" style="margin-top: 10px; margin-bottom: 5px">
 				基本信息
 				<i id="status" class="layui-icon" style="font-size: 15px; float: right; color: #5FB878;"></i>
@@ -47,25 +50,27 @@
 				</div>
 			</div>
 			<div class="layui-row">
-				<div class="layui-col-xs3">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">计划年度</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="year" disabled="disabled" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs3">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">计划类型</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="extend2" disabled="disabled" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs3">
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">经办人</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="infomantUser" disabled="disabled" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs3">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">采购计划单位</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="needOrgName" disabled="disabled" class="layui-input">
@@ -73,25 +78,27 @@
 				</div>
 			</div>
 			<div class="layui-row">
-				<div class="layui-col-xs3">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">申请时间</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="createdTime" disabled="disabled" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs3">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">采购类型</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="type" disabled="disabled" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs3">
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">计划金额(万元)</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="budgetAmount" disabled="disabled" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs3">
+				<div class="layui-col-xs6">
 					<label class="layui-form-label" style="width: 170px">变更后计划金额(万元)</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="newBudgetAmount" disabled="disabled" class="layui-input">
@@ -101,9 +108,9 @@
 			<div class="layui-row">
 				<div class="layui-col-xs12">
 					<div class="layui-form-text">
-						<label class="layui-form-label">备注</label>
+						<label class="layui-form-label">变更原因</label>
 						<div class="layui-input-block">
-							<textarea autoHeight="true" name="remark" disabled="disabled" class="layui-textarea"></textarea>
+							<textarea autoHeight="true" name="changeReason" disabled="disabled" class="layui-textarea"></textarea>
 						</div>
 					</div>
 				</div>
@@ -118,6 +125,10 @@
 
 		<blockquote class="layui-elem-quote" style="margin-top: 10px; margin-bottom: 5px">计划明细(单位万元)</blockquote>
 		<table id="grid" class="layui-hide"></table>
+
+		<blockquote class="layui-elem-quote" style="margin-top: 10px; margin-bottom: 5px">审批记录</blockquote>
+		<table id="approvalGrid" class="layui-hide"></table>
+
 	</div>
 
 	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
@@ -129,14 +140,14 @@
 	<script src="<%=request.getContextPath()%>/common/layuimini/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 
 	<script type="text/javascript">
-		setWatermark('<%=userName%>');
-			
+		setWatermark('<%=userName%>')
+	
 		layui.use([ 'jquery', 'form', 'table' ], function() {
 			var $ = layui.jquery;
 			var form = layui.form;
 			var table = layui.table;
-			var extend2;
-			id = <%=request.getParameter("id")%>;
+			var processInstID;
+			id =<%=request.getParameter("id")%>;
 
 			form.render();
 
@@ -159,13 +170,13 @@
 						formData.type = nui.getDictText('ZH_PURCHASE_NEW', formData.type);
 						formData.newBudgetAmount = formData.budgetAmount == formData.newBudgetAmount ? "/" : formData.newBudgetAmount;
 						form.val("dataFrm", formData);
-						extend2 = formData.extend2;
+						processInstID = formData.processid;
 
 						$(function() {
 							$.fn.autoHeight = function() {
 								function autoHeight(elem) {
 									elem.style.height = 'auto';
-									elem.scrollTop = 0; //防抖动
+									elem.scrollTop = 0;
 									elem.style.height = elem.scrollHeight + 5 + 'px';
 								}
 								this.each(function() {
@@ -177,6 +188,48 @@
 							}
 							$('textarea[autoHeight]').autoHeight();
 						})
+
+						table.render({
+							elem : '#approvalGrid',
+							url : 'com.zhonghe.ame.purchase.common.queryApproval.biz.ext',
+							where : {
+								"processInstID" : processInstID,
+								"sortField" : "time",
+								"sortOrder" : "desc"
+							},
+							request : {
+								pageName : 'page.begin',
+								limitName : 'page.count'
+							},
+							method : 'post',
+							cols : [ [ {
+								field : 'time',
+								width : 180,
+								title : '处理时间',
+								templet : "<div>{{layui.util.toDateString(d.time, 'yyyy-MM-dd HH:mm:ss')}}</div>"
+							}, {
+								field : 'workitemname',
+								title : '节点名称'
+							}, {
+								field : 'operatorname',
+								width : 90,
+								title : '操作人'
+							}, {
+								field : 'auditstatus',
+								width : 90,
+								title : '处理结果',
+								templet : "<div>{{onCheckRenderer(d.auditstatus)}}</div>"
+							}, {
+								field : 'auditopinion',
+								title : '审批意见'
+							}] ],
+							parseData : function(res) {
+								return {
+									"code" : "0",
+									"data" : res.misOpinions
+								};
+							}
+						});
 					}
 				});
 			}
@@ -205,12 +258,12 @@
 				method : 'post',
 				cols : [ [ {
 					field : 'fileName',
-					width : '90%',
+					width : '88%',
 					title : '附件名称',
 					templet : "<div>{{getdetail(d)}}</div>"
 				}, {
 					field : 'fileSize',
-					width : '10%',
+					width : '12%',
 					title : '文件大小',
 					templet : "<div>{{getFileSize(d.fileSize)}}</div>"
 				} ] ],
@@ -228,7 +281,6 @@
 				where : {
 					"planId" : id
 				},
-				cellMinWidth : 90,
 				method : 'post',
 				cols : [ [ {
 					field : 'code',
@@ -244,34 +296,21 @@
 					field : 'purchaseTwoName',
 					title : '中类名称'
 				}, {
+					field : 'number',
+					title : '预算数量'
+				}, {
 					field : 'newNumber',
-					title : '数量'
+					title : '变更后数量'
 				}, {
 					field : 'oldBudgetAmount',
 					title : '预算金额'
 				}, {
 					field : 'newBudgetAmount',
-					title : '变更后金额',
-					templet : function(d) {
-						return d.oldBudgetAmount == d.newBudgetAmount ? "/" : d.newBudgetAmount;
-					}
+					title : '变更后金额'
 				}, {
-					field : 'sumamount',
-					title : '已立项金额',
-					templet : function(d) {
-						return extend2 == "变更计划" ? "/" : d.sumamount;
-					}
-				}, {
-					field : 'sumamountRate',
-					title : '计划执行情况',
-					templet : function(d) {
-						return extend2 == "变更计划" ? "/" : d.sumamountRate;
-					}
-				}, {
-					field : 'remark',
-					width : 300,
-					title : '备注'
-				} ] ],
+					field : 'changeReason',
+					title : '调整原因'
+				}] ],
 				parseData : function(res) {
 					return {
 						"code" : "0",
@@ -280,7 +319,7 @@
 				}
 			});
 
-		});	
+		});
 
 		function getdetail(e) {
 			return "<a href='javascript:void(0)' style ='color: #1b3fba;'  onclick='checkDetail(" + e.fileId + ");' title='点击查看'>" + e.fileName + "</a>";
@@ -303,6 +342,16 @@
 			}
 			return value + unit;
 		}
+
+		function onCheckRenderer(e) {
+			return nui.getDictText('MIS_AUDITSTATUS', e);
+		}
+
+		function preview() {
+			document.getElementById('checkview').style.display = "none";
+			print();
+			document.getElementById('checkview').style.display = "";
+		};
 
 		function downloadZipFile() {
 			if (!confirm("是否确认打包下载？")) {
@@ -332,7 +381,6 @@
 				}
 			})
 		}
-				
 	</script>
 
 </body>

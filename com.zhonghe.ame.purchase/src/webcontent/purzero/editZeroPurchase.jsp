@@ -64,8 +64,12 @@ body {
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">是否为科研项目：</td>
+							<td colspan="2">
+								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 100%;" required="true" />
+							</td>
+							<td align="right" style="width: 140px">是否有采购计划：</td>
 							<td>
-								<input name="keYanProject" id="keYanProject" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" />
+								<input name="isPlan" id="isPlan" class="nui-dictcombobox" dictTypeId="ZH_YN" style="width: 200px" required="true" />
 							</td>
 						</tr>
 						<tr>
@@ -151,9 +155,7 @@ body {
 		init();
 
 		function init() {
-			var json = nui.encode({
-				"workitemid" :<%=workItemID%>
-			});
+			var json = nui.encode({"workitemid" :<%=workItemID%>});
 			nui.ajax({
 				url : "com.zhonghe.ame.purchase.purchaseItems.queryPurZeroDetail.biz.ext",
 				type : 'POST',
@@ -195,6 +197,11 @@ body {
 						"relationid" : o.purZero.id
 					});
 					grid_0.sortBy("fileTime", "desc");
+					setTimeout(function() {
+						if (grid_traveldetail.getData().length > 0) {
+							nui.get("isPlan").setReadOnly(true);
+						}
+					}, 2000);
 				}
 			});
 		}
@@ -203,7 +210,13 @@ body {
 			var record = e.record;
 			if (e.field == "num" || e.field == "onePrice") {
 				if (record.num != null && record.onePrice != null) {
-					var totalPrice1 = mulFloat(record.num, record.onePrice);
+					var totalPrice1 = mulFloat(record.num, record.onePrice).toString();
+					if (record.hasOwnProperty('sumamount')) {
+						if (Number(totalPrice1) > Number(record.sumamount)) {
+							showTips("总价不能超过剩余可立项的金额：" + record.sumamount + "（万元）", "danger");
+							return;
+						}
+					}
 					grid_traveldetail.updateRow(e.row, {
 						totalPrice : totalPrice1
 					});
@@ -216,24 +229,79 @@ body {
 				}
 			}
 		}
-		
+
 		function addTicket() {
-			var rowS = {
-				name : "New Row"
+			var isPlan = nui.get("isPlan").getValue();
+			if (!isPlan) {
+				showTips("请先选择是否有采购计划", "danger");
+				return;
+			} else {
+				if (isPlan == "0") {
+					var rowS = {
+						name : "New Row"
+					}
+					grid_traveldetail.addRow(rowS);
+					if (grid_traveldetail.getData().length > 0) {
+						nui.get("isPlan").setReadOnly(true);
+					}
+				} else if (isPlan == "1") {
+					nui.open({
+						url : "/default/purchase/common/selectPurchasePlan.jsp",
+						title : "小额采购 - 采购计划选择",
+						width : '1300',
+						height : '610',
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.initData({
+								"type" : "2",
+								"orgId" : userOrgId
+							});
+						},
+						ondestroy : function(action) {
+							if (action == "ok") {
+								var iframe = this.getIFrameEl();
+								var data = iframe.contentWindow.GetData();
+								data = nui.clone(data);
+								if (data && data.length > 0) {
+									var rows = grid_traveldetail.getData();
+									if (rows) {
+										index = grid_traveldetail.indexOf(rows[rows.length - 1]);
+										index = index + 1;
+									}
+									for (var i = 0; i < data.length; i++) {
+										data[i].planId = data[i].id
+										data[i].id = null
+										data[i].planCode = data[i].code
+										data[i].itemName = data[i].materialName
+										data[i].brandSpec = data[i].purchaseFirstName + " - " + data[i].purchaseTwoName
+										data[i].unit = nui.getDictText("ZH_UNIT", data[i].newUnit)
+										data[i].num = data[i].newNumber
+									}
+									grid_traveldetail.addRows(data, index);
+									if (grid_traveldetail.getData().length > 0) {
+										nui.get("isPlan").setReadOnly(true);
+									}
+								}
+							}
+						}
+					});
+				}
 			}
-			grid_traveldetail.addRow(rowS);
 		}
 
 		function removeTicket() {
 			var rows = grid_traveldetail.getSelecteds();
 			if (rows.length > 0) {
 				grid_traveldetail.removeRows(rows, true);
+				if (grid_traveldetail.getData().length == 0) {
+					nui.get("isPlan").setReadOnly(false);
+				}
 				totalAmount();
 			} else {
-				nui.alert("请至少选中一条记录！");
+				showTips("请至少选中一条记录！", "danger");
 			}
 		}
-		
+
 		function totalAmount() {
 			var tempData = grid_traveldetail.data;
 			var a = tempData.length;
@@ -248,15 +316,15 @@ body {
 			}
 			nui.get("totalAmount").setValue(b)
 		}
-		
+
 		function isStrEmpty(obj) {
 			if (typeof obj == "undefined" || obj == null || obj == "") {
 				return true;
 			} else {
 				return false;
 			}
-		}		
-		
+		}
+
 		function onOk(e) {
 			type = e;
 			var info;
@@ -300,22 +368,26 @@ body {
 				nui.get("auditstatus").setValue(2);
 				info = "终止流程表单？"
 			}
-			
+
 			document.getElementById("fileCatalog").value = "purchaseZero";
-			
+
 			nui.confirm("确定" + info, "系统提示", function(action) {
 				if (action == "ok") {
 					nui.get("saveFeame").disable();
 					nui.get("creatFeame").disable();
 					nui.get("zzFeame").disable();
-					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
-					form2.submit();			
+					nui.mask({
+						el : document.body,
+						cls : 'mini-mask-loading',
+						html : '表单提交中...'
+					});
+					form2.submit();
 				}
-			});					
+			});
 		}
-		
+
 		function SaveData() {
-			setTimeout(function () {
+			setTimeout(function() {
 				nui.unmask(document.body);
 				var formData = form.getData();
 				var gridChanges = grid_traveldetail.getChanges();
@@ -342,9 +414,8 @@ body {
 						}
 					}
 				});
-			}, 2000);		
-		}		
-		
+			}, 2000);
+		}
 	</script>
 
 </body>

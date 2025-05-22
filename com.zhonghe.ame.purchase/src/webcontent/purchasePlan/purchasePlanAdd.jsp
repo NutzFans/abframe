@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>新增采购计划</title>
+<title>采购 - 年度计划</title>
 <style type="text/css">
 body {
 	margin: 0;
@@ -18,65 +18,71 @@ body {
 <body>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
-			<legend>采购计划</legend>
+			<legend>采购 - 年度计划</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td colspan="1" class="form_label" align="right" style="width: 120px;">年度采购计划名称：</td>
+							<td align="right" style="width: 120px;">采购计划(年度)名称：</td>
 							<td colspan="5">
 								<input id="name" name="name" class="nui-textbox" required="true" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
-							<td colspan="1" class="form_label" align="right" style="width: 100px;">提报人姓名：</td>
-							<td colspan="1">
+							<td align="right" style="width: 100px;">提报人姓名：</td>
+							<td>
 								<input class="nui-textbox" name="infomantUser" id="infomantUser" required="true" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td colspan="1" class="form_label" align="right" style="width: 100px;">采购单位：</td>
+							<td align="right" style="width: 100px;">采购单位：</td>
 							<td colspan="3">
 								<input id="needOrgName" name="needOrgName" class="nui-textbox" required="true" style="width: 100%;" readonly="readonly" />
 								<input id="needOrgId" name="needOrgId" class="nui-hidden" required="true" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" align="right" style="width: 120px;">计划年度：</td>
-							<td colspan="1">
+							<td align="right" style="width: 120px;">计划年度：</td>
+							<td>
 								<input id="year" name="year" style="width: 100%;" class="nui-combobox" style="width:100%;" required="true" />
 							</td>
-							<td class="form_label" align="right" style="width: 100px;">采购类型：</td>
-							<td colspan="1">
+							<td align="right" style="width: 100px;">采购类型：</td>
+							<td>
 								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE_NEW" onvaluechanged="changeexptype" onbeforeshowpopup="beforechanged" required="true" style="width: 100%;" />
 							</td>
-							<td class="form_label" align="right" style="width: 120px;">计划总金额(万元)：</td>
-							<td colspan="1">
+							<td align="right" style="width: 120px;">计划总金额(万元)：</td>
+							<td>
 								<input id="budgetAmount" name="budgetAmount" class="nui-textbox" required="true" readOnly="readOnly" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" align="right" style="width: 120px;">物项归口部门：</td>
-							<td colspan="3">
-								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" multiSelect="true" onvaluechanged="putunderChanged" style="width: 100%;" />
+							<td align="right" style="width: 160px;">本年度预计使用金额(万元)：</td>
+							<td>
+								<input id="yearBudgetAmount" name="yearBudgetAmount" class="nui-textbox" required="true" style="width: 100%;" />
 							</td>
-							<td class="form_label" align="right" style="width: 120px;">财务年度预算科目：</td>
-							<td colspan="1">
+							<td align="right" style="width: 120px;">财务年度预算科目：</td>
+							<td>
 								<input id="SUBJECT" name="subject" class="nui-textbox" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" style="width: 120px;" align="right">归口部门下可采购物项：</td>
-							<td colspan="6">
+							<td align="right" style="width: 120px;">物项归口部门：</td>
+							<td colspan="5">
+								<input id="putunder" name="putunder" class="nui-dictcombobox" dictTypeId="ZH_PUTUNDER" multiSelect="true" onvaluechanged="putunderChanged" required="true" style="width: 100%;" />
+							</td>
+						</tr>
+						<tr>
+							<td style="width: 140px;" align="right">归口部门下可采购物项：</td>
+							<td colspan="5">
 								<input style="width: 100%; height: 120px;" id="items" type="checkbox" class="nui-textarea" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label" style="width: 120px; color: red" align="right">提示：</td>
-							<td colspan="6" style="color: red">添加年度采购计划，选择一级集采物项时细分到物项大类即可。整理好的小类细分项填写到备注框或以附件形式添加。</td>
+							<td style="width: 120px; color: red" align="right">提示：</td>
+							<td colspan="5" style="color: red">添加年度采购计划，选择一级集采物项时细分到物项大类即可。整理好的小类细分项填写到备注框或以附件形式添加。</td>
 						</tr>
 						<tr>
-							<td class="form_label" style="width: 120px;" align="right">备注：</td>
-							<td colspan="6">
+							<td style="width: 120px;" align="right">备注：</td>
+							<td colspan="5">
 								<input style="width: 100%; height: 120px;" name="remark" class="nui-textarea" id="remark" />
 							</td>
 						</tr>
@@ -138,9 +144,7 @@ body {
 		</fieldset>
 
 		<fieldset id="field2" style="border: solid 1px #aaa;">
-			<legend>
-				上传相关附件
-			</legend>
+			<legend> 上传相关附件 </legend>
 			<jsp:include page="/ame_common/inputFile.jsp" />
 		</fieldset>
 	</div>
@@ -239,7 +243,7 @@ body {
 		function addTicket() {
 			if (purType != "" && orgid != "" && purType != undefined && orgid != undefined && purType != 3) {
 				mini.open({
-					url: "<%=request.getContextPath() %>/purchase/planchange/selectItems.jsp?orgid="+orgid+"&purType="+purType,
+					url: "<%=request.getContextPath()%>/purchase/planchange/selectItems.jsp?orgid=" + orgid + "&purType=" + purType,
 					showMaxButton : false,
 					title : "选择树",
 					width : "80%",
@@ -274,16 +278,15 @@ body {
 				}
 				grid.addRow(rowS);
 			} else {
-				showTips("请先选择采购类型及归口部门")
+				showTips("请先选择采购类型及归口部门", "danger")
 			}
 		}
-		
 
 		var exptypeOld;
+
 		function beforechanged() {
 			exptypeOld = nui.get("type").getValue();
 		}
-		
 
 		function changeexptype() {
 			purType = nui.get("type").getValue();
@@ -297,9 +300,7 @@ body {
 				});
 				nui.get("putunder").setValue("");
 			}
-			//切换采购类型提示。
 			var detailRows = grid.getData();
-
 			if (detailRows.length > 0) {
 				if (confirm("切换采购类型将会清空已填写物项明细，请确定是否切换吗？")) {
 					grid.clearRows();
@@ -310,7 +311,6 @@ body {
 			}
 			loadItem();
 		}
-		
 
 		function putunderChanged() {
 			var putunder = nui.get("putunder").getValue()
@@ -331,18 +331,17 @@ body {
 			}
 			loadItem();
 		}
-		
 
 		function removeTicket() {
 			var rows = grid.getSelecteds();
 			if (rows.length > 0) {
 				grid.removeRows(rows, true);
 			} else {
-				nui.alert("请至少选中一条记录！");
+				showTips("请至少选中一条记录！", "danger");
 			}
 			totalAmount();
 		}
-		
+
 		function getHTZQ(e) {
 			var record = e.record;
 			if (e.field == "number" || e.field == "onePrice") {
@@ -359,7 +358,7 @@ body {
 				}
 			}
 		}
-		
+
 		function totalAmount() {
 			var tempData = grid.data;
 			var a = tempData.length;
@@ -374,7 +373,6 @@ body {
 			}
 			nui.get("budgetAmount").setValue(b)
 		}
-		
 
 		function zhPutUnder(e) {
 			return nui.getDictText('ZH_PUTUNDER', e.value);
@@ -383,7 +381,7 @@ body {
 		function unitValue(e) {
 			return nui.getDictText("ZH_UNIT", e.value);
 		}
-		
+
 		function isStrEmpty(obj) {
 			if (typeof obj == "undefined" || obj == null || obj == "") {
 				return true;
@@ -391,20 +389,21 @@ body {
 				return false;
 			}
 		}
-		
+
 		function onOk(e) {
 			istype = e;
+			var info;
 			if (istype == 0) {
-				title = "暂存";
 				var name = nui.get("name").getValue();
 				if (isStrEmpty(name)) {
 					showTips("请填写采购计划名称并保证其正确性！", "danger");
 					return;
 				}
+				info = "暂存流程表单？"
 			} else if (istype == 1) {
 				title = "提交";
 				if (!form.validate()) {
-					showTips("请检查表单的完整性!");
+					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
 				grid.validate();
@@ -414,6 +413,9 @@ body {
 					showTips("明细数据有错误，请检查!", "danger");
 					return;
 				}
+				var tempData = grid.data;
+				var putunder = getUniqueValuesString(tempData,"centralizedDept");
+				nui.get("putunder").setValue(putunder);
 				// 已上传的文件数量
 				var gridFileCount = nui.get("grid_0").getData().length;
 				if (gridFileCount == 0) {
@@ -424,36 +426,58 @@ body {
 						return;
 					}
 				}
+				info = "提交流程表单？"
 			}
-			document.getElementById("fileCatalog").value = "PurchasePlan";
-			form2.submit();
-		}
 
-		function SaveData() {
-			var formData = form.getData();
-			var gridData = grid.getData();
-			formData.istype = istype;
-			var judge =<%=request.getParameter("judge")%>;
-			var json = nui.encode({
-				"purPlan" : formData,
-				"purPlanItem" : gridData,
-				"judge" : judge,
-				"files" : nui.get("fileids").getValue()
-			});
-			var type = nui.get("type").value;
-			ajaxCommon({
-				"url" : "com.zhonghe.ame.purchase.purchaseplan.addPurPlan.biz.ext",
-				"data" : json,
-				"success" : function(data) {
-					if (data.result == 1) {
-						showTips(title + "采购计划成功");
-						closeOk();
-					} else {
-						showTips(title + "采购计划失败", "danger");
-					}
+			document.getElementById("fileCatalog").value = "PurchasePlan";
+
+			nui.confirm("确定" + info, "系统提示", function(action) {
+				if (action == "ok") {
+					nui.get("saveReimb").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({
+						el : document.body,
+						cls : 'mini-mask-loading',
+						html : '表单提交中...'
+					});
+					form2.submit();
 				}
 			});
 		}
+
+		function SaveData() {
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var formData = form.getData();
+				var gridData = grid.getData();
+				formData.istype = istype;
+				formData.files = nui.get("fileids").getValue();
+				var json = nui.encode({
+					"purPlan" : formData,
+					"purPlanItem" : gridData,
+				});
+				ajaxCommon({
+					"url" : "com.zhonghe.ame.purchase.purchaseplan.addPurPlan.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(text) {
+						if (text.result == "1") {
+							showTips("操作成功");
+							closeOk();
+						} else {
+							nui.get("saveReimb").enable();
+							nui.get("creatReimbProcess").enable();
+						}
+					}
+				});
+			}, 2000);
+		}
+		
+		function getUniqueValuesString(arr, key) {
+			const uniqueValues = [...new Set(arr.map(obj => obj[key]))];
+			return uniqueValues.join(',');
+		}			
+		
 	</script>
 
 </body>

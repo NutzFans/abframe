@@ -101,9 +101,9 @@
 			<div class="layui-row">
 				<div class="layui-col-xs12">
 					<div class="layui-form-text">
-						<label class="layui-form-label">备注</label>
+						<label class="layui-form-label">变更原因</label>
 						<div class="layui-input-block">
-							<textarea autoHeight="true" name="remark" disabled="disabled" class="layui-textarea"></textarea>
+							<textarea autoHeight="true" name="changeReason" disabled="disabled" class="layui-textarea"></textarea>
 						</div>
 					</div>
 				</div>
@@ -135,7 +135,6 @@
 			var $ = layui.jquery;
 			var form = layui.form;
 			var table = layui.table;
-			var extend2;
 			id = <%=request.getParameter("id")%>;
 
 			form.render();
@@ -159,7 +158,6 @@
 						formData.type = nui.getDictText('ZH_PURCHASE_NEW', formData.type);
 						formData.newBudgetAmount = formData.budgetAmount == formData.newBudgetAmount ? "/" : formData.newBudgetAmount;
 						form.val("dataFrm", formData);
-						extend2 = formData.extend2;
 
 						$(function() {
 							$.fn.autoHeight = function() {
@@ -244,33 +242,21 @@
 					field : 'purchaseTwoName',
 					title : '中类名称'
 				}, {
+					field : 'number',
+					title : '预算数量'
+				}, {
 					field : 'newNumber',
-					title : '数量'
+					title : '变更后数量'
 				}, {
 					field : 'oldBudgetAmount',
-					title : '预算金额'
+					title : '原预算金额(万元)'
 				}, {
 					field : 'newBudgetAmount',
-					title : '变更后金额',
-					templet : function(d) {
-						return d.oldBudgetAmount == d.newBudgetAmount ? "/" : d.newBudgetAmount;
-					}
+					title : '变更后金额(万元)'
 				}, {
-					field : 'sumamount',
-					title : '已立项金额',
-					templet : function(d) {
-						return extend2 == "变更计划" ? "/" : d.sumamount;
-					}
-				}, {
-					field : 'sumamountRate',
-					title : '计划执行情况',
-					templet : function(d) {
-						return extend2 == "变更计划" ? "/" : d.sumamountRate;
-					}
-				}, {
-					field : 'remark',
+					field : 'changeReason',
 					width : 300,
-					title : '备注'
+					title : '调整原因'
 				} ] ],
 				parseData : function(res) {
 					return {

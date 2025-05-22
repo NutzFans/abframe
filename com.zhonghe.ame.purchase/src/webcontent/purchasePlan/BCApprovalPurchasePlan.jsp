@@ -3,7 +3,7 @@
 <%@include file="/purchase/common/common.jsp"%>
 <html>
 <head>
-<title>采购 - 年度计划</title>
+<title>采购 - 临时计划</title>
 <style type="text/css">
 html,body {
 	font-size: 12px;
@@ -17,9 +17,12 @@ html,body {
 </style>
 </head>
 <body>
+	<%
+		long workitemid = (Long) request.getAttribute("workItemID");
+	%>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
-			<legend>采购 - 年度计划</legend>
+			<legend>采购 - 临时计划</legend>
 			<form id="form1" method="post">
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input id="id" name="id" class="nui-hidden" />
@@ -27,7 +30,7 @@ html,body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 120px;">采购计划(年度)名称：</td>
+							<td align="right" style="width: 120px;">采购计划(临时)名称：</td>
 							<td colspan="5">
 								<input id="name" name="name" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
@@ -128,18 +131,30 @@ html,body {
 			<legend> 相关附件 </legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
+
+		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
+	</div>
+
+	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
+		<a class="nui-button" onclick="countersign()" id="countersign" iconCls="icon-user" style="width: 80px; margin-right: 20px;">加签</a>
+		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 60px; margin-right: 20px;">提交</a>
+		<a class="nui-button" onclick="closeCancel" iconCls="icon-close" style="width: 60px;">关闭</a>
 	</div>
 
 	<script type="text/javascript">
 		nui.parse();
-		var processid = <%=request.getParameter("processInstID")%> ;
+		var workItemID =<%=request.getParameter("workItemID")%>;
 		var form = new nui.Form("#form1");
 		var grid = nui.get("grid_traveldetail");
+		var opioionform = new nui.Form("opioionform");
+		var purType, orgid;
+		var istype, titleText;
+		var countersignUsers;
 		
 		init();
 		
 		function init() {
-			var data = {"processid" : processid};
+			var data = {workitemid :<%=workitemid%>};
 			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.purchase.purchaseItems.queryPurPlanDetail.biz.ext",
@@ -147,16 +162,77 @@ html,body {
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
+					if (o.purPlan.type != 2) {
+						grid.hideColumns([ 13, 14 ])
+					}
+					if (o.purPlan.type == 3) {
+						grid.hideColumns([ 4, 6 ])
+					}
+					nui.get("backTo").setData(o.purPlan.backList);
+
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "PurchasePlan",
 						"relationid" : o.purPlan.id
 					});
 					grid_0.sortBy("fileTime", "desc");
+
+					var grid1 = nui.get("datagrid1");
+					grid1.load({
+						processInstID : o.purPlan.processid
+					});
+					grid1.sortBy("time", "desc");
+					//初始化处理意见
+					initMisOpinion({
+						auditstatus : "1"
+					});
 					var jsonData = {
 						"planId" : o.purPlan.id
 					}
 					grid.load(jsonData);
+				}
+			});
+		}
+		
+		function countersign() {
+			selectOmEmployee();
+		}
+		
+       	function selectOmEmployee(){
+	    	var btnEdit = this;
+	        nui.open({
+	            url: "<%=request.getContextPath()%>/contractPact/selectUsers.jsp",
+				title : "立项单位经办人",
+				width : 430,
+				height : 400,
+				ondestroy : function(action) {
+					console.log(action)
+					var user, users = "【";
+					countersignUsers = [];
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var data = iframe.contentWindow.GetData();
+						data = nui.clone(data); //必须
+						if (data) {
+							for (var i = 0; i < data.length; i++) {
+								user = {};
+								user.id = data[i].userid
+								user.name = data[i].empname
+								user.typeCode = "person"
+								countersignUsers.push(user);
+								if (i == 0) {
+									users = users + data[i].empname;
+								} else {
+
+									users = users + "," + data[i].empname;
+								}
+							}
+							users = users + "】";
+							titleText = "增加审批人员" + users + "并提交";
+							submitProcess(titleText);
+						}
+					}
+
 				}
 			});
 		}
@@ -170,6 +246,62 @@ html,body {
 
 		function zhPutUnder(e) {
 			return nui.getDictText('ZH_PUTUNDER', e.value);
+		}
+		
+		function submit() {
+			var auditstatus = nui.get("auditstatus").getValue();
+			if (auditstatus == "2") { //终止流程
+				titleText = "终止";
+			} else if (auditstatus == "0") { //退回流程
+				if (!nui.get("backTo").getValue()) {
+					showTips("退回环节不能为空！");
+					return;
+				}
+				titleText = "退回";
+			} else if (auditstatus == "1") { //提交流程
+				titleText = "提交";
+			}
+			submitProcess(titleText);
+		}
+		
+		function submitProcess(title) {
+			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
+				if (action == "ok") {
+					nui.get("countersign").disable();
+					nui.get("creatReimbProcess").disable();
+					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
+					saveData();
+				}
+			});
+		}		
+		
+		function saveData() {
+			setTimeout(function() {
+				nui.unmask(document.body);
+				var formData = form.getData();
+				formData.files = nui.get("fileids").getValue();
+				var misOpinion = opioionform.getData().misOpinion;
+				var json = {
+					"purPlan" : formData,
+					"misOpinion" : misOpinion,
+					"workItemID" :<%=workitemid%>,
+					"countersignUsers" : countersignUsers
+				};
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseItems.BCApprovalPurPlan.biz.ext",
+					data : json,
+					contentType : 'text/json',
+					success : function(o) {
+						if (o.result == "1") {
+							showTips("提交成功");
+							CloseWindow("ok");
+						} else {
+							nui.get("countersign").enable();
+							nui.get("creatReimbProcess").enable();
+						}
+					}
+				});				
+			}, 2000);
 		}
 	</script>
 
