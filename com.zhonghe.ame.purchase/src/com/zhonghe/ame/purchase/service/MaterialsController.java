@@ -11,7 +11,9 @@ import com.eos.system.logging.Logger;
 @Path("/rest/services")
 public class MaterialsController {
 
-	String key = "IUGZD4J7O2XBF78MRUDOISY2";
+	String materialsSortKey = "1WT71G8FQGQR3B1H2MVA699H";
+
+	String materialsMaterDataKey = "IUGZD4J7O2XBF78MRUDOISY2";
 
 	MaterialsService materialsService = new MaterialsService();
 
@@ -21,12 +23,12 @@ public class MaterialsController {
 	@POST
 	@Path("/addMaterialsSort")
 	public String addMaterialsSort(String materials) throws Throwable {
-		logger.info("物资编码同步 - 物资分类信息接口被调用");
+		logger.info("物资分类同步 - 物资分类信息接口被调用");
+		logger.info("加密数据：" + materials);
 
 		// 解密
-		String material = Rest3DES.getDecString(materials, key);
-		logger.info("物资编码同步 - 物资分类信息解密完成");
-		logger.info(material);
+		String material = Rest3DES.getDecString(materials, materialsSortKey);
+		logger.info("解密数据：" + material);
 
 		// 处理
 		String result = materialsService.materialsSort(material);
@@ -38,12 +40,12 @@ public class MaterialsController {
 	@POST
 	@Path("/addMaterialsMaterData")
 	public String addMaterialsMaterData(String materials) throws Throwable {
-		logger.info("物资编码同步 - 物资主信息接口被调用");
+		logger.info("物资主信息同步 - 物资主信息接口被调用");
+		logger.info("加密数据：" + materials);
 
 		// 解密
-		String material = Rest3DES.getDecString(materials, key);
-		logger.info("物资编码同步 - 物资主信息解密完成");
-		logger.info(material);
+		String material = Rest3DES.getDecString(materials, materialsMaterDataKey);
+		logger.info("解密数据：" + material);
 
 		// 处理
 		String result = materialsService.materialsMasterData(material);

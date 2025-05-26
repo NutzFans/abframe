@@ -137,4 +137,38 @@ public class ZhzxBizUtils {
 		}
 	}
 
+	@Bizlet("评审结构 - 最终采购方式数据填充")
+	public void psjg_final_purchas_mode_tc() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String querySql = "SELECT * FROM zh_purchase_reviewreport";
+		List<Entity> zhPurchaseReviewList = dbSession.query(querySql);
+		String updateSql = "UPDATE zh_purchase_reviewreport SET final_purchas_mode = ? WHERE id = ?";
+		if (zhPurchaseReviewList != null && zhPurchaseReviewList.size() > 0) {
+			String queryProAppSql = "SELECT * FROM zh_project_approval WHERE id = ?";
+			for (Entity zhPurchaseReview : zhPurchaseReviewList) {
+				String proAppId = zhPurchaseReview.getStr("proapp_id");
+				if (StrUtil.isNotBlank(proAppId)) {
+					Entity proAppEntity = dbSession.queryOne(queryProAppSql, proAppId);
+					if (proAppEntity != null) {
+						String purchasMode = proAppEntity.getStr("purchas_mode");
+						dbSession.execute(updateSql, purchasMode, zhPurchaseReview.getStr("id"));
+					}
+				}
+			}
+		}
+	}
+
+	@Bizlet("采购立项 - 最终采购方式数据填充")
+	public void cglx_final_purchas_mode_tc() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String querySql = "SELECT * FROM zh_project_approval";
+		List<Entity> zhProAppList = dbSession.query(querySql);
+		String updateSql = "UPDATE zh_project_approval SET final_purchas_mode = ? WHERE id = ?";
+		if (zhProAppList != null & zhProAppList.size() > 0) {
+			for (Entity zhProApp : zhProAppList) {
+				dbSession.execute(updateSql, zhProApp.getStr("purchas_mode"), zhProApp.getStr("id"));
+			}
+		}
+	}
+
 }
