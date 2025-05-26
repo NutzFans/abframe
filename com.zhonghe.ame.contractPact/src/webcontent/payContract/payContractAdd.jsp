@@ -128,7 +128,7 @@
 						<tr>
 							<td align="right" style="width: 100px">是否为采购合同:</td>
 							<td>
-								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE" style="width: 100%" required="true" onvaluechanged="contractNatureChanged" />
+								<input id="contractNature" name="contractNature" class="nui-dictcombobox" dictTypeId="CONTRACT_NATURE_NEW" style="width: 100%" required="true" onvaluechanged="contractNatureChanged" />
 							</td>
 							<td align="right" style="width: 100px" id="purchasePlanLable">采购立项编号:</td>
 							<td>
@@ -551,7 +551,7 @@
 			} else if (nui.get("contractNature").getValue() == 3) {
 				mini.open({
 					url : "/default/contractPact/payContract/purZeroPlanList.jsp",
-					title : "零星采购列表",
+					title : "小额采购列表",
 					width : '80%',
 					height : '80%',
 					ondestroy : function(action) {
@@ -728,8 +728,8 @@
 				nui.get("scalingSum").setRequired(false);
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 3) {
-				$("#purchasePlanLable").html("零星采购编号:");
-				$("#budgetSumLable").html("零采金额(元):");
+				$("#purchasePlanLable").html("小额采购编号:");
+				$("#budgetSumLable").html("小额采购金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");

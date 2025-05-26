@@ -4,7 +4,7 @@
 <%@include file="/common/common.jsp"%>
 <html>
 <head>
-<title>零星采购列表</title>
+<title>小额采购列表</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script src="<%=request.getContextPath()%>/common/nui/nui.js" type="text/javascript"></script>
 <style type="text/css">
@@ -19,13 +19,13 @@
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 130px; text-align: right;">零星采购名称:</td>
+						<td style="width: 130px; text-align: right;">小额采购名称:</td>
 						<td style="width: 205px">
 							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 200px" />
 							<input class="nui-hidden" name="criteria._expr[1]._property" value="purchaseName" />
 							<input class="nui-hidden" name="criteria._expr[1]._op" value="like" />
 						</td>
-						<td style="width: 130px; text-align: right;">零星采购编号:</td>
+						<td style="width: 130px; text-align: right;">小额采购编号:</td>
 						<td style="width: 155px">
 							<input name="criteria._expr[2]._value" class="nui-textbox" style="width: 200px;" />
 							<input class="nui-hidden" name="criteria._expr[2]._property" value="purchaseCode" />
@@ -46,8 +46,8 @@
 				<div property="columns">
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
 					<div type="checkcolumn"></div>
-					<div field="purchaseName" width="100" align="center" headerAlign="center" allowSort="true">零星采购名称</div>
-					<div field="purchaseCode" width="100" align="center" headerAlign="center" allowSort="true">零星采购编号</div>
+					<div field="purchaseName" width="100" align="center" headerAlign="center" allowSort="true">小额采购名称</div>
+					<div field="purchaseCode" width="100" align="center" headerAlign="center" allowSort="true">小额采购编号</div>
 					<div field="orgname" width="200" align="center" headerAlign="center" allowSort="true">采购单位</div>
 					<div field="totalAmount" width="100" align="center" headerAlign="center" allowSort="true">总金额(万元)</div>
 					<div field="status" width="80" align="center" headerAlign="center" allowSort="true" renderer="getStatus">状态</div>

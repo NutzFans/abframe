@@ -24,7 +24,9 @@ import com.eos.common.connection.DataSourceHelper;
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
 import com.eos.foundation.eoscommon.BusinessDictUtil;
+import com.eos.runtime.core.TraceLoggerFactory;
 import com.eos.system.annotation.Bizlet;
+import com.eos.system.logging.Logger;
 import com.primeton.ame.schindler.ISysSynchroGetOrgWebServiceServiceStub.SysSynchroGetOrgInfoContext;
 import com.primeton.ame.schindler.org.AcOperator;
 import com.primeton.ame.schindler.org.OmEmployee;
@@ -44,12 +46,14 @@ public class SyncUpdateOrg {
 
 	private final static String url = BusinessDictUtil.getDictName("AME_SYSCONF", "OASYNCURL");
 
+	Logger logger = TraceLoggerFactory.getLogger(this.getClass());
+
 	@Bizlet("同步OA更新组织机构信息")
 	public void syncUpdateOrg() throws Exception {
-		Console.log("（≡・ x ・≡）开始执行同步OA操作（≡・ x ・≡）");
-		Console.log(url);
-		Console.log(oauser);
-		Console.log(oapassword);
+		logger.info("（≡・ x ・≡）开始执行同步OA操作（≡・ x ・≡）");
+		logger.info(url);
+		logger.info(oauser);
+		logger.info(oapassword);
 
 		// 工作组信息
 		JSONArray groupJsonArray = this.analyzeWsByType("group");
@@ -62,37 +66,37 @@ public class SyncUpdateOrg {
 		// 人员信息
 		JSONArray personJsonArray = this.analyzeWsByType("person");
 
-		Console.log("（≡・ x ・≡）完成OA的WS信息获取，执行解析操作（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成OA的WS信息获取，执行解析操作（≡・ x ・≡）");
 
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 
 		this.syncGroupAndPost(groupJsonArray, postJsonArray, dbSession);
 
-		Console.log("（≡・ x ・≡）完成了工作组、职位数据的解析同步（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成了工作组、职位数据的解析同步（≡・ x ・≡）");
 
 		this.syncAccount(personJsonArray, dbSession);
 
-		Console.log("（≡・ x ・≡）完成了登录用户数据的解析同步（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成了登录用户数据的解析同步（≡・ x ・≡）");
 
 		this.syncOrg(orgJsonArray, dbSession);
 
-		Console.log("（≡・ x ・≡）完成了机构数据的解析同步（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成了机构数据的解析同步（≡・ x ・≡）");
 
 		this.syncDept(deptJsonArray, dbSession);
 
-		Console.log("（≡・ x ・≡）完成了部门数据的解析同步（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成了部门数据的解析同步（≡・ x ・≡）");
 
 		this.syncEmp(personJsonArray, dbSession);
 
-		Console.log("（≡・ x ・≡）完成了员工数据的解析同步（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成了员工数据的解析同步（≡・ x ・≡）");
 
-		Console.log("（≡・ x ・≡）开始执行数据清理工作（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）开始执行数据清理工作（≡・ x ・≡）");
 
 		this.clearData(dbSession);
 
-		Console.log("（≡・ x ・≡）完成了数据清理工作（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）完成了数据清理工作（≡・ x ・≡）");
 
-		Console.log("（≡・ x ・≡）同步OA操作执行完成（≡・ x ・≡）");
+		logger.info("（≡・ x ・≡）同步OA操作执行完成（≡・ x ・≡）");
 
 	}
 

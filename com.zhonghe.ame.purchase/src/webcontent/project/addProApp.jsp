@@ -203,6 +203,8 @@ body .mini-textboxlist {
 
 		$("#orgUnits > tbody > tr > td").attr("style", "background: #FFFFE6");
 		$("#supplierSel > tbody > tr > td").attr("style", "background: #FFFFE6");
+		
+		nui.alert("对于【确系无法通过框架协议或电子商城实现小额采购(不超过2万元)】<br>情形的直接采购，请通过小额采购模块发起相关流程。");
 
 		function addTicket() {
 			var type = nui.get("type").getValue();
