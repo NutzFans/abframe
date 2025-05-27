@@ -275,10 +275,13 @@ html,body {
 		function saveData() {
 			nui.confirm("确定" + titleText + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
+					var formData = form.getData();
+					formData.files = nui.get("fileids").getValue();
 					var misOpinion = opioionform.getData().misOpinion;
 					var json = {
-						misOpinion : misOpinion,
-						workItemID :<%=workitemid%>,
+						"purPlan" : formData,
+						"misOpinion" : misOpinion,
+						"workItemID" :<%=workitemid%>,
 						"countersignUsers" : countersignUsers
 					};
 					var msgBoxId = form.loading("正在处理...", "请稍后");

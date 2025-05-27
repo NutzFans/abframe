@@ -79,9 +79,9 @@ html,body {
 						<td style="width: 155px">
 							<input name="criteria._expr[51].type" class="nui-dictcombobox" dictTypeId="ZH_PURCHASE_NEW" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
-						<td style="width: 60px; text-align: right;">采购方式:</td>
+						<td style="width: 60px; text-align: right;">最终采购方式:</td>
 						<td style="width: 155px">
-							<input name="criteria._expr[52].purchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[52].finalPurchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
 						<td style="width: 60px; text-align: right;">物项类别:</td>
 						<td style="width: 155px">
@@ -140,7 +140,8 @@ html,body {
 					<div field="status" width="60" align="center" renderer="onActionRenderer" headerAlign="center">审批状态</div>
 					<div field="proAppApplyPrice" width="80" align="center" headerAlign="center">立项申请金额(万元)</div>
 					<div field="type" width="60" align="center" headerAlign="center" renderer="ZH_PURCHASE">集采类型</div>
-					<div field="purchasMode" width="60" align="center" headerAlign="center" renderer="ZH_CGFS">采购方式</div>
+					<div field="purchasMode" width="60" align="center" headerAlign="center" renderer="ZH_CGFS">建议采购方式</div>
+					<div field="finalPurchasMode" width="60" align="center" headerAlign="center" renderer="ZH_CGFS">最终采购方式</div>
 					<div field="proAppObjType" width="60" align="center" headerAlign="center" renderer="MIS_APPOBJTYPE">物项类别</div>
 					<div field="projectId" align="center" headerAlign="center">所属项目名称</div>
 				</div>

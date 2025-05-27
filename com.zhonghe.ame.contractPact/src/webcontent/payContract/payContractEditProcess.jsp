@@ -310,12 +310,10 @@
 							alert(" '立项金额' 字段为必填项，数据来源于对应的采购立项");
 							return;
 						}
-						if(procurementType != "零星采购"){
-							var scalingSum = nui.get("scalingSum").getValue();
-							if (scalingSum == null || scalingSum == "") {
-								alert(" '定标金额' 字段为必填项，数据来源于对应的采购立项评审结果");
-								return;
-							}
+						var scalingSum = nui.get("scalingSum").getValue();
+						if (scalingSum == null || scalingSum == "") {
+							alert(" '定标金额' 字段为必填项，数据来源于对应的采购立项评审结果");
+							return;
 						}
 						var contractSum = nui.get("contractSum").getValue();
 						abs = function(val) {
@@ -332,7 +330,7 @@
 								alert("采购方式是招标，合同金额等于定标金额才能提交");
 								return;
 							}
-						} else if(procurementType != "零星采购"){
+						} else {
 							if (parseInt(contractSumAbs) > parseInt(scalingSumAbs)) {
 								alert("采购方式是招标以外的，合同金额应小于等于定标金额才能提交");
 								return;
@@ -343,7 +341,7 @@
 				if (nui.get("contractNature").getValue() == 3) {
 					var budgetSum = nui.get("budgetSum").getValue();
 					if (budgetSum == null || budgetSum == "") {
-						alert(" '立项金额' 字段为必填项，数据来源于对应的零星采购");
+						alert(" '立项金额' 字段为必填项，数据来源于对应的小额采购");
 						return;
 					}
 				}
@@ -481,7 +479,7 @@
 								}
 								nui.get("proAppId").setValue(data.id);
 								nui.get("procurementType").setValue("");
-								nui.get("procurementType").setValue(data.purchasMode);
+								nui.get("procurementType").setValue(data.finalPurchasMode);
 								btnEdit.doValueChanged();
 								var json = {
 									"critria" : {
@@ -514,7 +512,7 @@
 			} else if (nui.get("contractNature").getValue() == 3) {
 				mini.open({
 					url : "/default/contractPact/payContract/purZeroPlanList.jsp",
-					title : "零星采购列表",
+					title : "小额采购列表",
 					width : '80%',
 					height : '80%',
 					ondestroy : function(action) {
@@ -538,7 +536,7 @@
 									nui.get("budgetSum").setValue(abs(budgetSum * 10000));
 								}
 								nui.get("proAppId").setValue(data.id);
-								nui.get("procurementType").setValue("零星采购");
+								nui.get("procurementType").setValue("直接采购(小额采购)");
 								btnEdit.doValueChanged();
 							}
 						}
@@ -569,8 +567,8 @@
 					queryPlan(o.payContract.id);
 					nui.get("purchasePlan").setText(o.payContract.purchasePlan);
 					if (nui.get("contractNature").getValue() == 3) {
-						$("#purchasePlanLable").html("零星采购编号:");
-						$("#budgetSumLable").html("零采金额(元):");
+						$("#purchasePlanLable").html("小额采购编号:");
+						$("#budgetSumLable").html("小额采购金额(元):");
 						nui.get("purchasePlan").setRequired(true);
 						nui.get("purchasePlan").enable();
 					}else if(nui.get("contractNature").getValue() == 1){
@@ -768,8 +766,8 @@
 				nui.get("scalingSum").setRequired(false);
 				nui.get("scalingSum").setValue("");
 			} else if (nui.get("contractNature").getValue() == 3) {
-				$("#purchasePlanLable").html("零星采购编号:");
-				$("#budgetSumLable").html("零采金额(元):");
+				$("#purchasePlanLable").html("小额采购编号:");
+				$("#budgetSumLable").html("小额采购金额(元):");
 				nui.get("purchasePlan").setRequired(true);
 				nui.get("purchasePlan").enable();
 				nui.get("purchasePlan").setValue("");

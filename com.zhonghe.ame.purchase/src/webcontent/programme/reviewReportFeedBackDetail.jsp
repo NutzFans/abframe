@@ -11,15 +11,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 <style type="text/css">
-.layui-form-label {
-	width: 145px !important;
-	text-align: left !important;
-}
-
-.layui-input-block {
-	margin-left: 145px !important;
-}
-
 .layui-elem-quote {
 	font-weight: bold;
 }
@@ -56,8 +47,8 @@
 
 				<div class="layui-row">
 					<div class="layui-col-xs12">
-						<label class="layui-form-label" style="width: 120px">评审结果名称</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">评审结果名称</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="reportName" disabled="disabled" class="layui-input">
 						</div>
 					</div>
@@ -65,8 +56,8 @@
 
 				<div class="layui-row">
 					<div class="layui-col-xs12">
-						<label class="layui-form-label">申请人</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">申请人</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="createdByName" disabled="disabled" class="layui-input">
 						</div>
 					</div>
@@ -74,74 +65,85 @@
 				
 				<div class="layui-row">
 					<div class="layui-col-xs12">
-						<label class="layui-form-label">采购需求单位</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">采购需求单位</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="proAppOrgName" disabled="disabled" class="layui-input">
 						</div>
 					</div>				
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">申请时间</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">申请时间</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="createdTime" disabled="disabled" placeholder="yyyy-MM-dd" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">立项编号</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">立项编号</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input id="proAppCode" type="text" name="proAppCode" class="layui-input" style="cursor: pointer; color: #1b3fba" readonly="readonly">
 						</div>
 					</div>
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">立项名称</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">立项名称</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name=proAppName disabled="disabled" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">立项金额</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">立项金额</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="proAppApplyPrice" disabled="disabled" class="layui-input">
 						</div>
 					</div>
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">集采类型</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">集采类型</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="type" disabled="disabled" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">归口部门</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">归口部门</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="putunder" disabled="disabled" class="layui-input">
 						</div>
 					</div>
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">中标单位</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">中标单位</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="winner" disabled="disabled" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs6">
-						<label class="layui-form-label">中标金额（万元）</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label" style="width: 170px">中标金额（万元）</label>
+						<div class="layui-input-block" style="margin-left: 170px">
 							<input type="text" name="awardAmount" disabled="disabled" class="layui-input">
 						</div>
 					</div>
 				</div>
+				
+				<div class="layui-row">
+					<div class="layui-col-xs12">
+						<label class="layui-form-label" style="width: 170px">最终采购方式</label>
+						<div class="layui-input-block" style="margin-left: 170px">
+							<input type="text" name="finalPurchasMode" disabled="disabled" class="layui-input">
+						</div>
+					</div>				
+				</div>				
 
 				<div class="layui-row">
 					<div class="layui-col-xs12">
-						<label class="layui-form-label">评审结果说明</label>
-						<div class="layui-input-block">
-							<textarea autoHeight="true" name="remark" disabled="disabled" class="layui-textarea"></textarea>
+						<div class="layui-form-text">
+							<label class="layui-form-label">评审结果说明</label>
+							<div class="layui-input-block">
+								<textarea autoHeight="true" name="remark" disabled="disabled" class="layui-textarea"></textarea>
+							</div>							  
 						</div>
 					</div>
 				</div>
@@ -204,6 +206,7 @@
 							//设置字典值
 							formData.putunder = nui.getDictText('ZH_PUTUNDER', formData.putunder)
 							formData.type = nui.getDictText('ZH_PURCHASE', formData.type)
+							formData.finalPurchasMode = nui.getDictText('ZH_CGFS_NEW', formData.finalPurchasMode)
 							form.val("dataFrm", formData);
 							processInstID = formData.processid;
 							proappId = formData.proappId;

@@ -50,7 +50,7 @@
 					<div field="proAppCode" width="150" align="center" headerAlign="center" allowSort="true">立项编号</div>
 					<div field="proAppOrgName" width="100" align="center" headerAlign="center" allowSort="true">立项单位</div>
 					<div field="projectId" width="100" align="center" headerAlign="center" allowSort="true">所属项目名称</div>
-					<div field="purchasMode" width="100" align="center" headerAlign="center" allowSort="true" renderer="getPurchasMode">采购方式</div>
+					<div field="finalPurchasMode" width="100" align="center" headerAlign="center" allowSort="true" renderer="getPurchasMode">采购方式</div>
 					<div field="proAppApplyPrice" width="100" align="center" headerAlign="center" allowSort="true">立项申请金额(万元)</div>
 					<div field="createdTime" dateFormat="yyyy-MM-dd" width="100" allowSort="true" align="center" headerAlign="center">申请日期</div>
 					<div field="status" width="100" align="center" headerAlign="center" allowSort="true" renderer="getStatus">状态</div>

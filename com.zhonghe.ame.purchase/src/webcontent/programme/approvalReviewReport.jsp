@@ -68,6 +68,12 @@ body .mini-textboxlist {
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 90px">最终采购方式：</td>
+							<td>
+								<input id="finalPurchasMode" name="finalPurchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS_NEW" readonly="readonly" style="width: 100%;"/>
+							</td>
+						</tr>
+						<tr>
 							<td align="right" style="width: 90px;">评审结果说明：</td>
 							<td colspan="3">
 								<input style="width: 100%; height: 120px;" name="remark" id="remark" class="nui-textarea" readonly="readonly" />

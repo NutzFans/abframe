@@ -70,6 +70,10 @@ body {
 						<td style="width: 245px">
 							<input name="critria._expr[23].status" class="nui-dictcombobox" dictTypeId="ZH_FLOW_TYPE" showNullItem="true" nullItemText="全部" style="width: 240px" />
 						</td>
+						<td style="width: 60px; text-align: right;">最终采购方式:</td>
+						<td style="width: 205px">
+							<input name="critria._expr[24].finalPurchasMode" class="nui-dictcombobox" dictTypeId="ZH_CGFS_NEW" showNullItem="true" nullItemText="全部" style="width: 200px" />
+						</td>
 						<td colspan="2">
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
@@ -109,6 +113,7 @@ body {
 					<div field="proAppCode" width="110" align="center" headerAlign="center">采购立项编号</div>
 					<div field="reportName" width="200" align="center" headerAlign="center" renderer="lookInfo">评审结果名称</div>
 					<div field="type" width="60" align="center" headerAlign="center" renderer="ZH_PURCHASE">集采类型</div>
+					<div field="finalPurchasMode" width="60" align="center" headerAlign="center" renderer="ZH_CGFS_NEW">最终采购方式</div>
 					<div width="60" field="status" align="center" renderer="onActionRenderer" headerAlign="center">审批状态</div>
 				</div>
 			</div>
@@ -405,6 +410,10 @@ body {
 		
 		function ZH_PURCHASE(e) {
 			return nui.getDictText("ZH_PURCHASE", e.value);
+		}
+		
+		function ZH_CGFS_NEW(e){
+			return nui.getDictText("ZH_CGFS_NEW", e.value);
 		}
 		
 		function help() {

@@ -119,7 +119,7 @@
 					</div>
 				</div>
 				<div class="layui-col-xs6">
-					<label class="layui-form-label" style="width: 170px">是否有采购计划</label>
+					<label class="layui-form-label" style="width: 170px">是否已有年度采购计划</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="isPlan" disabled="disabled" class="layui-input">
 					</div>
