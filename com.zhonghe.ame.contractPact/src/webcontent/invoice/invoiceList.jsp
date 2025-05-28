@@ -93,9 +93,8 @@ html,body {
 							<input name="critria._expr[24].invoiceUsed" class="nui-dictcombobox" dictTypeId="INVOICE_USED" showNullItem="true" nullItemText="全部" style="width: 200px" />
 						</td>
 						<td style="width: 60px; text-align: right;">付款单位:</td>
-						<td style="width: 155px">
-							<input name="critria._expr[25]._value" class="nui-combobox" url="com.zhonghe.ame.chargeContract.chargeContract.queryCusts.biz.ext" filterType="like" textField="custname" valueField="custname"
-								dataField="custs" valueFromSelect="true" allowInput="true" style="width: 150px" />
+						<td style="width: 155px">						
+							<input name="critria._expr[25]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[25]._property" value="payerName" />
 							<input class="nui-hidden" name="critria._expr[25]._op" value="like" />
 						</td>

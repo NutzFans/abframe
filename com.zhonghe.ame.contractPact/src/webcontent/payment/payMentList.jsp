@@ -102,8 +102,7 @@ html,body {
 						</td>
 						<td style="width: 60px; text-align: right;">收款单位:</td>
 						<td style="width: 155px">
-							<input name="critria._expr[27]._value" class="nui-combobox" valueField="custname" url="com.primeton.eos.ame_pur.PurSupplier.queryPurSuppliersIsqualified.biz.ext" filterType="like"
-								textField="custname" dataField="pursuppliers" valueFromSelect="true" allowInput="true" style="width: 150px" />
+							<input name="critria._expr[27]._value" class="nui-textbox" style="width: 150px" />
 							<input class="nui-hidden" name="critria._expr[27]._property" value="signatoryName" />
 							<input class="nui-hidden" name="critria._expr[27]._op" value="like" />
 						</td>
