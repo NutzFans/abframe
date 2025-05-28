@@ -296,8 +296,8 @@ table,table tr td {
 					$("#remark").html(data.remark);
 					nui.get("createUsername").setValue(data.createUsername);
 					if (nui.get("contractNature").getValue() == 3) {
-						$("#purchasePlanLable").html("零星采购编号:");
-						$("#budgetSumLable").html("零采金额(元):");
+						$("#purchasePlanLable").html("小额采购编号:");
+						$("#budgetSumLable").html("小额采购金额(元):");
 					}
 					if (data.createUsername != null) {
 						createUsername = data.createUsername

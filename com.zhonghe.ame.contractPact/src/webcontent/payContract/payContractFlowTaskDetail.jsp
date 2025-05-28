@@ -268,7 +268,7 @@
 					form.setData(o.data);
 					queryPlan(o.data.id);
 					if (nui.get("contractNature").getValue() == 3) {
-						$("#purchasePlanLable").html("零星采购编号:");
+						$("#purchasePlanLable").html("小额采购编号:");
 					}
 					
 					// 补充合同信息

@@ -346,11 +346,17 @@ body {
 					showTips("小额采购总金额不能大于2万元!", "danger");
 					return;
 				}
-				grid_traveldetail.validate();
-				if (grid_traveldetail.isValid() == false) {
-					var error = grid_traveldetail.getCellErrors()[0];
-					grid_traveldetail.beginEditCell(error.record, error.column);
-					showTips("明细数据有错误，请检查!", "danger");
+				var gridData = grid_traveldetail.getData();
+				if(gridData.length > 0){
+					grid_traveldetail.validate();
+					if (grid_traveldetail.isValid() == false) {
+						var error = grid_traveldetail.getCellErrors()[0];
+						grid_traveldetail.beginEditCell(error.record, error.column);
+						showTips("明细数据有错误，请检查!", "danger");
+						return;
+					}
+				}else{
+					showTips("请填写明细数据!", "danger");
 					return;
 				}
 				// 已上传的文件数量
