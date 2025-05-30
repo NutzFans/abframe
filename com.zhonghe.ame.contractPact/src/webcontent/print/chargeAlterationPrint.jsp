@@ -60,7 +60,7 @@ table,table tr td {
 		</div>
 	</div>
 
-	<div title="付费合同补充协议打印" style="height: auto;">
+	<div title="收费合同补充协议打印" style="height: auto;">
 		<div id="pipi" class="nui-panel" style="font-size: 13px; width: 840px; height: 30px; margin: 0 auto; text-align: center;" align="left"></div>
 		<div class="" style="width: 788px;margin: 0 auto;font-size: 14px;border:1px solid #999999;">
 			<div class="base_div">收费合同基本信息 - 补充协议</div>
@@ -321,7 +321,7 @@ table,table tr td {
 					nui.get("signingDate").setValue(data.signingDate);
 					nui.get("custInfo").setValue(data.signatory);
 					nui.get("custInfo").setText(data.signatoryName);
-					document.getElementById("pipi").innerHTML = "【" + data.createUsername + "发起的" + data.contractName + "付费合同】";
+					document.getElementById("pipi").innerHTML = "【" + data.createUsername + "发起的" + data.contractName + "收费合同】";
 					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
 					detailFileExpandGrid.load({
 						"groupid" : "CHARGE_CONTRACT",
