@@ -30,9 +30,10 @@
 					<div field=purchaseFirstName align="center" headerAlign="center">物项大类名称</div>
 					<div field="purchaseTwoName" align="center" headerAlign="center">物项中类名称</div>
 					<div field="materialName" align="center" headerAlign="center">采购物项名称</div>
-					<div field="unit" width="40" align="center" headerAlign="center" renderer="unitValue">单位</div>
-					<div field="number" width="50" align="center" headerAlign="center">数量</div>
-					<div field="budgetAmount" width="80" align="center" headerAlign="center">预算金额(万元)</div>
+					<div field="newUnit" width="40" align="center" headerAlign="center" renderer="unitValue">单位</div>
+					<div field="newNumber" width="50" align="center" headerAlign="center">数量</div>
+					<div field="budgetAmount" width="80" align="center" headerAlign="center">计划初始金额(万元)</div>
+					<div field="newBudgetAmount" width="80" align="center" headerAlign="center" renderer="newBudgetAmountRender">上次变更后金额(万元)</div>
 				</div>
 			</div>
 		</div>
@@ -87,6 +88,15 @@
 		function unitValue(e) {
 			return nui.getDictText("ZH_UNIT", e.value);
 		}
+		
+		function newBudgetAmountRender(e){
+			if (e.row.budgetAmount == e.value) {
+				return "/";
+			} else {
+				return e.value;
+			}
+		}
+		
 	</script>
 </body>
 </html>

@@ -46,13 +46,19 @@ body {
 							<td>
 								<input class="nui-dictcombobox" name="historyType" id="historyType" dictTypeId="ZH_PURCHASE_NEW" style="width: 100%;" enabled="false" />
 							</td>
-							<td align="right" style="width: 120px;">计划金额(万元)：</td>
-							<td>
-								<input id="historyBudgetAmount" name="historyBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false" />
-							</td>
 							<td align="right" style="width: 120px;">财务年度预算科目：</td>
 							<td>
 								<input id="historySubject" name="historySubject" class="nui-textbox" style="width: 100%;" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 150px;">计划初始总金额(万元)：</td>
+							<td>
+								<input id="historyBudgetAmount" name="historyBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false" />
+							</td>
+							<td align="right" style="width: 150px;">上次变更后总金额(万元)：</td>
+							<td>
+								<input id="shangCiBudgetAmount" name="shangCiBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -74,7 +80,7 @@ body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 120px;">采购计划(变更)名称：</td>
+							<td align="right" style="width: 150px;">采购计划(变更)名称：</td>
 							<td colspan="3">
 								<input id="name" name="name" class="nui-textbox" required="true" style="width: 100%;" />
 							</td>
@@ -97,11 +103,11 @@ body {
 							<td>
 								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE_NEW" required="true" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td align="right" style="width: 120px;">变更后金额(万元)：</td>
+							<td align="right" style="width: 150px;">本次变更后总金额(万元)：</td>
 							<td>
 								<input id="newBudgetAmount" name="newBudgetAmount" class="nui-textbox" required="true" readOnly="readOnly" style="width: 100%;" />
 							</td>
-							<td align="right" style="width: 120px;">变更金额(万元)：</td>
+							<td align="right" style="width: 120px;">本次变更金额(万元)：</td>
 							<td>
 								<input id="bgBudget" name="bgBudget" class="nui-textbox" style="width: 100%;" required="true" readOnly="readOnly" />
 							</td>
@@ -180,7 +186,7 @@ body {
 						<div property="columns">
 							<div field="onePrice" width="70" align="center" headerAlign="center" vtype="required">
 								<span style="color: red;">单价(万元)</span>
-								<input id="supplierName" name="onePrice" width="100%" property="editor" class="nui-textbox" />
+								<input name="onePrice" width="100%" property="editor" class="nui-textbox" />
 							</div>
 							<div field="newUnit" width="40" align="center" headerAlign="center" renderer="unitValue">
 								<span style="color: red;">单位</span>
@@ -221,7 +227,7 @@ body {
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid = nui.get("grid_traveldetail");
-		var istype;
+		var istype, shangCiBudgetAmount;
 
 		function setEditData(data) {
 			init();
@@ -232,6 +238,13 @@ body {
 			nui.get("historyYear").setValue(data.year);
 			nui.get("historyType").setValue(data.type);
 			nui.get("historyBudgetAmount").setValue(data.budgetAmount);
+			if(data.budgetAmount == data.newBudgetAmount){
+				nui.get("shangCiBudgetAmount").setValue("/");
+				shangCiBudgetAmount = data.budgetAmount;
+			}else{
+				nui.get("shangCiBudgetAmount").setValue(data.newBudgetAmount);
+				shangCiBudgetAmount = data.newBudgetAmount;
+			}
 			nui.get("historySubject").setValue(data.subject);
 			nui.get("historyRemark").setValue(data.remark);
 			nui.get("year").setValue(data.year);
@@ -279,6 +292,9 @@ body {
 						if (data) {
 							var tempData = grid.data;
 							if(!hasPropertyValue(tempData, "code", data.code)){
+								data.unit = data.newUnit;
+								data.number = data.newNumber;
+								data.budgetAmount = data.newBudgetAmount;
 								grid.addRow(data);
 							}else{
 								showTips("变更 - 计划明细中已存在相同数据！", "danger");
@@ -336,9 +352,15 @@ body {
 				}
 			}
 			var y = subFloat(b, c);
+			var shangCiBudgetAmount = nui.get("shangCiBudgetAmount").getValue();
 			var historyBudgetAmount = nui.get("historyBudgetAmount").getValue();
-			var newBudgetAmount = addFloat(historyBudgetAmount, y);
-			var bgBudget = subFloat(newBudgetAmount, historyBudgetAmount);
+			if(shangCiBudgetAmount != "/"){
+				var newBudgetAmount = addFloat(shangCiBudgetAmount, y);
+				var bgBudget = subFloat(newBudgetAmount, shangCiBudgetAmount);
+			}else{
+				var newBudgetAmount = addFloat(historyBudgetAmount, y);
+				var bgBudget = subFloat(newBudgetAmount, historyBudgetAmount);
+			}
 			nui.get("newBudgetAmount").setValue(newBudgetAmount);
 			nui.get("bgBudget").setValue(bgBudget);
 			var putunder = getUniqueValuesString(tempData,"centralizedDept");
@@ -404,6 +426,7 @@ body {
 				var gridData = grid.getData();
 				formData.istype = istype;
 				formData.budgetAmount = nui.get("historyBudgetAmount").getValue();
+				formData.extend4 = shangCiBudgetAmount;
 				formData.oldId = nui.get("historyId").getValue();
 				formData.files = nui.get("fileids").getValue();
 				var json = nui.encode({

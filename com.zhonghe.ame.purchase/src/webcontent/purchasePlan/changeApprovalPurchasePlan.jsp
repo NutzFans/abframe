@@ -49,13 +49,19 @@ body {
 							<td>
 								<input class="nui-dictcombobox" name="historyType" id="historyType" dictTypeId="ZH_PURCHASE_NEW" style="width: 100%;" enabled="false" />
 							</td>
-							<td align="right" style="width: 120px;">计划金额(万元)：</td>
-							<td>
-								<input id="historyBudgetAmount" name="historyBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false" />
-							</td>
 							<td align="right" style="width: 120px;">财务年度预算科目：</td>
 							<td>
 								<input id="historySubject" name="historySubject" class="nui-textbox" style="width: 100%;" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 150px;">计划初始总金额(万元)：</td>
+							<td>
+								<input id="historyBudgetAmount" name="historyBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false" />
+							</td>
+							<td align="right" style="width: 150px;">上次变更后总金额(万元)：</td>
+							<td>
+								<input id="shangCiBudgetAmount" name="shangCiBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -80,7 +86,7 @@ body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 120px;">采购计划(变更)名称：</td>
+							<td align="right" style="width: 150px;">采购计划(变更)名称：</td>
 							<td colspan="3">
 								<input id="name" name="name" class="nui-textbox" required="true" style="width: 100%;" enabled="false" />
 							</td>
@@ -103,13 +109,13 @@ body {
 							<td>
 								<input class="nui-dictcombobox" name="type" id="type" dictTypeId="ZH_PURCHASE_NEW" style="width: 100%;" enabled="false"/>
 							</td>
-							<td align="right" style="width: 120px;">变更后金额(万元)：</td>
+							<td align="right" style="width: 150px;">本次变更后总金额(万元)：</td>
 							<td>
-								<input id="newBudgetAmount" name="newBudgetAmount" class="nui-textbox" style="width: 100%;" enabled="false"/>
+								<input id="newBudgetAmount" name="newBudgetAmount" class="nui-textbox" enabled="false" style="width: 100%;" />
 							</td>
-							<td align="right" style="width: 120px;">变更金额(万元)：</td>
+							<td align="right" style="width: 120px;">本次变更金额(万元)：</td>
 							<td>
-								<input id="bgBudget" name="bgBudget" class="nui-textbox" style="width: 100%;" enabled="false"/>
+								<input id="bgBudget" name="bgBudget" class="nui-textbox" style="width: 100%;" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -232,8 +238,13 @@ body {
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
-					var bgBudget = subFloat(o.purPlan.newBudgetAmount, o.purPlan.budgetAmount);
+					var bgBudget = subFloat(o.purPlan.newBudgetAmount, o.purPlan.extend4);
 					nui.get("bgBudget").setValue(bgBudget);
+					if(o.purPlan.budgetAmount == o.purPlan.extend4){
+						nui.get("shangCiBudgetAmount").setValue("/");
+					}else{
+						nui.get("shangCiBudgetAmount").setValue(o.purPlan.extend4);
+					}
 					queryHistory(o.purPlan.oldId);	
 					var jsonData = {
 						"planId" : o.purPlan.id

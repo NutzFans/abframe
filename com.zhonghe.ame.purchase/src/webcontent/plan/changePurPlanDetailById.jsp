@@ -40,61 +40,75 @@
 			</blockquote>
 			<div class="layui-row">
 				<div class="layui-col-xs12">
-					<label class="layui-form-label" style="width: 170px">采购计划名称</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">采购计划名称</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="name" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 			</div>
 			<div class="layui-row">
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">计划年度</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">计划年度</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="year" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">计划类型</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">计划类型</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="extend2" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">经办人</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">经办人</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="infomantUser" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">采购计划单位</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">采购计划单位</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="needOrgName" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 			</div>
 			<div class="layui-row">
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">申请时间</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">申请时间</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="createdTime" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">采购类型</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">采购类型</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="type" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">计划金额(万元)</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">计划初始总金额(万元)</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="budgetAmount" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs3">
-					<label class="layui-form-label" style="width: 170px">变更后计划金额(万元)</label>
-					<div class="layui-input-block" style="margin-left: 170px">
+					<label class="layui-form-label" style="width: 190px">上次变更后总金额(万元)</label>
+					<div class="layui-input-block" style="margin-left: 190px">
+						<input type="text" name="shangCiBudgetAmount" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 190px">本次变更后总金额(万元)</label>
+					<div class="layui-input-block" style="margin-left: 190px">
 						<input type="text" name="newBudgetAmount" disabled="disabled" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<label class="layui-form-label" style="width: 190px">本次变更金额(万元)</label>
+					<div class="layui-input-block" style="margin-left: 190px">
+						<input type="text" name="bgBudget" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -150,13 +164,16 @@
 					type : "POST",
 					dataType : "json",
 					success : function(data) {
+						console.log(data.purPlan);
 						var formData = data.purPlan;
 						document.getElementById("name").innerHTML = formData.name;
 						renderStatus(formData.status);
 						formData.createdTime = layui.util.toDateString(formData.createdTime, 'yyyy-MM-dd');
 						formData.extend2 = nui.getDictText('CG_PLAN_TYPE', formData.extend2);
 						formData.type = nui.getDictText('ZH_PURCHASE_NEW', formData.type);
-						formData.newBudgetAmount = formData.budgetAmount == formData.newBudgetAmount ? "/" : formData.newBudgetAmount;
+						formData.shangCiBudgetAmount = formData.budgetAmount == formData.extend4 ? "/" : formData.extend4;
+						var bgBudget = subFloat(formData.newBudgetAmount, formData.extend4);
+					    formData.bgBudget = bgBudget;
 						form.val("dataFrm", formData);
 
 						$(function() {
