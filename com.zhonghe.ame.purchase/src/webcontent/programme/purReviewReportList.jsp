@@ -32,18 +32,24 @@ body {
 						</td>
 						<td style="width: 60px; text-align: right;">申请单位:</td>
 						<td style="width: 245px">
-							<input id="orgseq" style="width: 240px" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true" />
-							<input class="nui-hidden" name="critria._expr[7]._property" value="proappId" id="IdByOrgProp" />
-							<input class="nui-hidden" name="critria._expr[7]._op" value="in" id="IdByOrgOp" />
-							<input class="nui-hidden" name="critria._expr[7]._ref" value="1" id="IdByOrgRef" />
+							<input id="orgid2" name="critria._ref[0]._expr[0]._value" class="nui-combobox" textField="orgname" valueField="orgseq" dataField="orgs" showNullItem="true" allowInput="true"
+								style="width: 150px" valueFromSelect="true" />
+							<input class="nui-hidden" name="critria._expr[2]._property" value="proAppOrgId" id="implementOrgProp" />
+							<input class="nui-hidden" name="critria._expr[2]._op" value="in" id="implementOrgOp" />
+							<input class="nui-hidden" name="critria._expr[2]._ref" value="1" id="implementOrgRef" />
 							<input class="nui-hidden" name="critria._ref[0]._id" value="1" />
-							<input class="nui-hidden" name="critria._ref[0]._entity" value="com.zhonghe.ame.purchase.purchase.queryProAppIds" />
-							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="ids" />
-							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="newOrgId" />
-							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="in" />
-							<input class="nui-hidden" name="critria._ref[0]._expr[0]._value" id="orgids" />
-							<input class="nui-hidden" name="critria._expr[6].createdBy" id="createdBy" />
-							<input class="nui-hidden" name="critria._expr[6]._op" value="=" />
+							<input class="nui-hidden" name="critria._ref[0]._entity" value="org.gocom.abframe.dataset.organization.OmOrganization" />
+							<input class="nui-hidden" name="critria._ref[0]._select._field[0]" value="orgid" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._property" value="orgseq" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._op" value="like" />
+							<input class="nui-hidden" name="critria._ref[0]._expr[0]._likeRule" value="end" />
+							<input class="nui-hidden" name="critria._expr[3]._property" value="proAppOrgId" id="implementOrgProp2" />
+							<input class="nui-hidden" name="critria._expr[3]._op" value="in" id="implementOrgOp2" />
+							<input class="nui-hidden" name="critria._expr[3]._value" id="orgids2" />
+							<input class="nui-hidden" name="critria._expr[4]._property" value="createdOrgid" id="implementOrgProp3" />
+							<input class="nui-hidden" name="critria._expr[4]._op" value="in" id="implementOrgOp3" />
+							<input class="nui-hidden" name="critria._expr[4]._value" id="orgids3" />
+							<input class="nui-hidden" name="critria._expr[6].createdBy" id="createUserid" />
 						</td>
 						<td style="width: 90px; text-align: right;">评审结果编号:</td>
 						<td style="width: 205px">
@@ -119,12 +125,12 @@ body {
 			</div>
 		</div>
 	</div>
-	
+
 	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
 		<input type="hidden" name="downloadFile" filter="false" />
 		<input type="hidden" name="fileName" filter="false" />
-	</form>	
+	</form>
 
 	<script type="text/javascript">
 		nui.parse();
@@ -147,16 +153,23 @@ body {
 				type : 'POST',
 				"success" : function(text) {
 					if(text.errcode == "没有有权的机构"){
-						nui.get("createdBy").setValue(userId);
+						nui.get("createUserid").setValue(userId);
 						authOrg = false;						
 					}else{
-						nui.get("createdBy").setName("critria._or[0]._expr[0].createdBy");
-						nui.get("createdBy").setValue(userId);
-						nui.get("orgseq").setData(text.orgs);
-						nui.get("IdByOrgProp").setName("critria._or[0]._expr[1]._property");
-						nui.get("IdByOrgOp").setName("critria._or[0]._expr[1]._op");
-						nui.get("IdByOrgRef").setName("critria._or[0]._expr[1]._ref");
-						nui.get("orgids").setValue(text.orgids);
+						nui.get("createUserid").setName("critria._or[0]._and[0]._expr[0].createdBy");
+						nui.get("createUserid").setValue(userId);
+						nui.get("implementOrgProp").setName("critria._or[0]._and[1]._expr[2]._property");
+						nui.get("implementOrgOp").setName("critria._or[0]._and[1]._expr[2]._op");
+						nui.get("implementOrgRef").setName("critria._or[0]._and[1]._expr[2]._ref");
+						nui.get("orgid2").setData(text.orgs);
+						nui.get("implementOrgProp2").setName("critria._or[0]._and[1]._expr[3]._property");
+						nui.get("implementOrgOp2").setName("critria._or[0]._and[1]._expr[3]._op");
+						nui.get("orgids2").setName("critria._or[0]._and[1]._expr[3]._value");
+						nui.get("orgids2").setValue(text.orgids);
+						nui.get("implementOrgProp3").setName("critria._or[0]._and[2]._expr[4]._property");
+						nui.get("implementOrgOp3").setName("critria._or[0]._and[2]._expr[4]._op");
+						nui.get("orgids3").setName("critria._or[0]._and[2]._expr[4]._value");
+						nui.get("orgids3").setValue(text.orgids);
 						authOrg = true;
 					}
 					search();
@@ -166,23 +179,18 @@ body {
 		
 		function search() {
 			if(authOrg){
-				if(nui.get("orgseq").getValue() != ""){
-					var json = nui.encode({orgseq : nui.get("orgseq").getValue()});
-					nui.ajax({
-						url : "com.zhonghe.ame.purchase.common.getOrgByOrgseq.biz.ext",
-						data : json,
-						async: false,
-						type : 'POST',
-						contentType : 'text/json',
-						success : function(data) {
-							nui.get("createdBy").setName("critria._expr[6].createdBy");
-							nui.get("createdBy").setValue("");
-							nui.get("IdByOrgProp").setName("critria._expr[7]._property");
-							nui.get("IdByOrgOp").setName("critria._expr[7]._op");
-							nui.get("IdByOrgRef").setName("critria._expr[7]._ref");
-							nui.get("orgids").setValue(data.orgids);
-						}
-					});	
+				if(nui.get("orgid2").getValue() != ""){
+					nui.get("createUserid").setName("critria._expr[0].createdBy");
+					nui.get("createUserid").setValue("");
+					nui.get("implementOrgProp").setName("critria._expr[2]._property");
+					nui.get("implementOrgOp").setName("critria._expr[2]._op");
+					nui.get("implementOrgRef").setName("critria._expr[2]._ref");
+					nui.get("implementOrgProp2").setName("critria._expr[3]._property");
+					nui.get("implementOrgOp2").setName("critria._expr[3]._op");
+					nui.get("orgids2").setName("critria._expr[3]._value");
+					nui.get("implementOrgProp3").setName("implementOrgProp3");
+					nui.get("implementOrgOp3").setName("implementOrgOp3");
+					nui.get("orgids3").setName("orgids3");
 				}
 			}
 			var data = form.getData(); //获取表单JS对象数据
@@ -417,7 +425,7 @@ body {
 		}
 		
 		function help() {
-			executeUrl = "<%= request.getContextPath() %>/purchase/programme/purReviewReportDesgin.jsp";
+			executeUrl = "<%=request.getContextPath()%>/purchase/programme/purReviewReportDesgin.jsp";
 			window.open(executeUrl);
 		}		
 				
