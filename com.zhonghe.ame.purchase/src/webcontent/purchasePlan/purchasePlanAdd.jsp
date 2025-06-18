@@ -454,7 +454,7 @@ body {
 				formData.files = nui.get("fileids").getValue();
 				var json = nui.encode({
 					"purPlan" : formData,
-					"purPlanItem" : gridData,
+					"purPlanItem" : gridData
 				});
 				ajaxCommon({
 					"url" : "com.zhonghe.ame.purchase.purchaseplan.addPurPlan.biz.ext",

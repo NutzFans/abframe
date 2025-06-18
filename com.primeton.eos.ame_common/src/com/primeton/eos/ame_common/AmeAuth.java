@@ -6,11 +6,12 @@ package com.primeton.eos.ame_common;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import cn.hutool.core.util.StrUtil;
 
 import com.eos.foundation.database.DatabaseExt;
 import com.eos.foundation.database.DatabaseUtil;
@@ -197,7 +198,11 @@ public class AmeAuth {
 			if (Integer.parseInt(orglevel) + 1 <= orgids.length) {
 				HashMap param = new HashMap();
 				if ("1".equals(orglevel)) {
-					param.put("orgid", 1111);
+					if(StrUtil.contains(orgseq, ".1.")){
+						param.put("orgid", 1111);
+					}else if(StrUtil.contains(orgseq, ".1111.")){
+						param.put("orgid", 1);
+					}
 					Object[] list = DatabaseExt.queryByNamedSql("default", "com.primeton.eos.ame_common.ameCommon.selectOrgids", param);
 					if (list.length != 0) {
 						DataObject result = (DataObject) list[0];
