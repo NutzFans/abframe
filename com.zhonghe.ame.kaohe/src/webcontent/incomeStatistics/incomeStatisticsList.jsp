@@ -55,15 +55,17 @@ html,body {
 					<tr>
 						<td>
 							<a class="nui-button" id="khsrtj_sckz" iconCls="icon-add" onclick="sckz()">生成快照</a>
+							<a class="nui-button" id="khsrtj_del" iconCls="icon-remove" onclick="khsrtj_del()">删除</a>
 						</td>
 					</tr>
 				</table>
 			</div>
 
 			<div class="nui-fit">
-				<div id="statisticsGrid" sizeList="[50,100,500]" showPager="true" dataField="statisticsSnapshotList" pageSize="50" class="nui-datagrid" style="width: 100%; height: 100%;"
+				<div id="statisticsGrid" sizeList="[50,100,500]" showPager="true" multiSelect="true" dataField="statisticsSnapshotList" pageSize="50" class="nui-datagrid" style="width: 100%; height: 100%;"
 					url="com.zhonghe.ame.kaohe.incomeStatistics.queryStatisticsSnapshotList.biz.ext">
 					<div property="columns">
+						<div type="checkcolumn"></div>
 						<div field="secondaryOrgname" width="200" headerAlign="center" allowSort="true" align="center">考核单位</div>
 						<div field="years" width="80" headerAlign="center" allowSort="true" align="center">考核年份</div>
 						<div field="months" width="80" headerAlign="center" allowSort="true" align="center">考核月份</div>
@@ -96,6 +98,7 @@ html,body {
 							<td>
 								<a class="nui-button" id="srzbfxycSearch" iconCls="icon-search" onclick="srzbfxycSearch()">查询</a>
 								<a class="nui-button" id="srzbfxycReset" iconCls="icon-reload" onclick="srzbfxycReset()">重置</a>
+								<a class="nui-button" id="srzbfxycExport" iconCls="icon-download" onclick="srzbfxycExport()">导出</a>
 							</td>
 						</tr>
 					</table>
@@ -181,19 +184,20 @@ html,body {
 						<tr>
 							<td style="width: 60px; text-align: right;">考核年份:</td>
 							<td>
-								<input id="khsrtjmxYears" class="nui-textbox" style="width: 100px" />
+								<input id="khsrtjmxYears" name="criteria._expr[1].years" class="nui-textbox" style="width: 100px" />
 							</td>
 							<td style="width: 60px; text-align: right;">考核月份:</td>
 							<td>
-								<input id="khsrtjmxMonths" class="nui-textbox" style="width: 100px" />
+								<input id="khsrtjmxMonths" name="criteria._expr[2].months" class="nui-textbox" style="width: 100px" />
 							</td>
 							<td style="width: 60px; text-align: right;">考核单位:</td>
 							<td>
-								<input id="khsrtjmxSecondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
+								<input id="khsrtjmxSecondaryOrg" name="criteria._expr[3].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
 							</td>
 							<td>
 								<a class="nui-button" id="khsrtjmxSearch" iconCls="icon-search" onclick="khsrtjmxSearch()">查询</a>
 								<a class="nui-button" id="khsrtjmxReset" iconCls="icon-reload" onclick="khsrtjmxReset()">重置</a>
+								<a class="nui-button" id="srtjmxExport" iconCls="icon-download" onclick="srtjmxExport()">导出</a>
 							</td>
 						</tr>
 					</table>
@@ -237,6 +241,12 @@ html,body {
 		</div>
 
 	</div>
+
+	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>
 
 	<script type="text/javascript">
 		nui.parse();
@@ -289,7 +299,7 @@ html,body {
 		function init(){
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				getOpeatorButtonAuth("khsrtj_sckz");
+				getOpeatorButtonAuth("khsrtj_sckz,khsrtj_del");
 			}
 			//code:对应功能编码，map：对于机构的查询条件
 			var json = {
@@ -439,18 +449,9 @@ html,body {
 		}
 		
 		function khsrtjmxSearch(){
+			var data = khsrtjmxForm.getData();
 			statisticsSnapshotDetailGrid.sortBy("contractStauts", "asc");
-			statisticsSnapshotDetailGrid.load({
-				"criteria" : {
-					"_expr" : [ {
-						"years" : nui.get("khsrtjmxYears").getValue()
-					}, {
-						"months" : nui.get("khsrtjmxMonths").getValue()
-					}, {
-						"secondaryOrg" : nui.get("khsrtjmxSecondaryOrg").getValue()
-					} ]
-				}
-			});
+			statisticsSnapshotDetailGrid.load(data);
 		}
 		
 		function khsrtjmxReset(){
@@ -480,7 +481,59 @@ html,body {
 				e.cellStyle = "color: red";
 			}
 			return e.value;
-		}				
+		}
+		
+		function khsrtj_del(){
+			var rows = statisticsGrid.getSelecteds();
+			if (rows.length == 0) {
+				showTips("请选中需要删除的数据记录", "danger");
+			}else{
+				if(!confirm("是否删除？")){
+					return;
+				}else{
+					var datas = rows.map(row => ({ id: row.id }));
+					var json = nui.encode({
+						'datas' : datas
+					});
+					nui.ajax({
+						url : "com.zhonghe.ame.kaohe.incomeStatistics.deleteStatisticsSnapshot.biz.ext",
+						type : 'POST',
+						data : json,
+						contentType : 'text/json',
+						success : function(o) {
+							if (o.result == 1) {
+								showTips("删除成功");
+								statisticsGrid.reload();
+							} else {
+								showTips("删除失败，请联系信息技术部人员！", "danger");
+							}
+						}
+					});				
+				}
+			}
+		}
+		
+		function srzbfxycExport() {
+			var data = {
+				"year" : nui.get("srzbfxycYears").getValue(),
+				"month" : nui.get("srzbfxycMonths").getValue(),
+				"secOrg" : nui.get("srzbfxycSecondaryOrg").getValue()
+			};
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.kaohe.incomeStatistics.exportSRZBFXYCExcel.biz.ext",
+				"fileName" : "收入指标分析预测"
+			})
+		}
+		
+		function srtjmxExport(){
+			var data = khsrtjmxForm.getData();
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.kaohe.incomeStatistics.exportStatisticsSnapshotDetailExcel.biz.ext",
+				"fileName" : "考核收入统计明细"
+			})
+		}			
 		
 	</script>
 
