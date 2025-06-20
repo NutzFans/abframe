@@ -100,25 +100,22 @@ html,body {
 			<input id="statisticsSnapshotDetailYears" name="criteria._expr[0].years" class="nui-hidden" />
 			<input id="statisticsSnapshotDetailMonths" name="criteria._expr[1].months" class="nui-hidden" />
 			<input id="statisticsSnapshotDetailSecondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-hidden" />
-			<input name="criteria._expr[4]._op" value="like" class="nui-hidden"/>
-			<div class="nui-toolbar" style="border-bottom: 0; margin-top: 10px; padding: 5px; text-align: center; background: #f1f2f6;">
-				<div style="display: inline; float: left;">
-					<input name="criteria._expr[3].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_KAOHE" showNullItem="true" emptyText="合同状态" width="75" onvaluechanged="statisticsSnapshotDetailSearch"/>
+			<input name="criteria._expr[4]._op" value="like" class="nui-hidden" />
+			<div class="nui-toolbar" style="border-bottom: 0; margin-top: 10px; padding: 5px; background: #f1f2f6; position: relative;">
+				<div style="display: flex; gap: 5px; position: relative; z-index: 1;">
+					<input name="criteria._expr[3].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_KAOHE" showNullItem="true" emptyText="合同状态" width="75"
+						onvaluechanged="statisticsSnapshotDetailSearch" />
+					<input name="criteria._expr[4].contractName" class="nui-textbox" width="200" emptyText="合同名称(回车查询)" onvaluechanged="statisticsSnapshotDetailSearch" />
+					<input name="criteria._expr[5].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" emptyText="集团内外" width="75" onvaluechanged="statisticsSnapshotDetailSearch" />
+					<input name="criteria._expr[6].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" emptyText="风险等级" width="75" onvaluechanged="statisticsSnapshotDetailSearch" />
 				</div>
-				<div style="display: inline; float: left; margin-left: 5px">
-					<input name="criteria._expr[4].contractName" class="nui-textbox" width="200" emptyText="合同名称(回车查询)" onvaluechanged="statisticsSnapshotDetailSearch"/>
+				<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
+					<span style="font-size: 14px; font-weight: bold;">考核收入统计明细</span>
 				</div>
-				<div style="display: inline; float: left; margin-left: 5px">
-					<input name="criteria._expr[5].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" emptyText="集团内外" width="75" onvaluechanged="statisticsSnapshotDetailSearch"/>
-				</div>
-				<div style="display: inline; float: left; margin-left: 5px">
-					<input name="criteria._expr[6].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" emptyText="风险等级" width="75" onvaluechanged="statisticsSnapshotDetailSearch"/>
-				</div>
-				<span style="font-size: 14px; font-weight: bold;">考核收入统计明细</span>
 			</div>
 		</div>
 		<div class="nui-fit">
-			<div id="statisticsSnapshotDetailGrid" sizeList="[1000]" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 98%" showSummaryRow="true" virtualScroll="true" virtualColumns="true"
+			<div id="statisticsSnapshotDetailGrid" sizeList="[1000]" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 97%" showSummaryRow="true" virtualScroll="true" virtualColumns="true"
 				frozenStartColumn="0" frozenEndColumn="9" url="com.zhonghe.ame.kaohe.incomeStatistics.queryStatisticsSnapshotDetailListBySec.biz.ext" dataField="statisticsSnapshotDetailList">
 				<div property="columns">
 					<div field="contractStauts" headerAlign="center" align="center" width="75" renderer="ZH_CONTRACT_STATUS_KAOHE">合同状态</div>
