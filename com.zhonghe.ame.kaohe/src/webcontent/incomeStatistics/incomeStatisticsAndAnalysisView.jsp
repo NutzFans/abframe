@@ -35,28 +35,28 @@ html,body {
 			<div id="operatingRevenueGrid" class="nui-datagrid" showPager="false" style="width: 100%; height: 90px;" url="com.zhonghe.ame.kaohe.incomeStatistics.queryOperatingRevenue.biz.ext"
 				dataField="operatingRevenueList">
 				<div property="columns">
-					<div field="expectedValue" headerAlign="center" align="center">期望值</div>
+					<div field="expectedValue" headerAlign="center" align="center" dataType="currency">期望值</div>
 					<div header="全年预测及缺口情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="annualForecastedBookValue" headerAlign="center" align="center">全年预测（账面值）</div>
-							<div field="annualForecastAssessmentValue" headerAlign="center" align="center">全年预测（考核值）</div>
-							<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR">考核值缺口</div>
+							<div field="annualForecastedBookValue" headerAlign="center" align="center" dataType="currency">全年预测（账面值）</div>
+							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency">全年预测（考核值）</div>
+							<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" dataType="currency">考核值缺口</div>
 						</div>
 					</div>
 					<div header="已完成情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center">截至当月已完成（账面值）</div>
-							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center">截至当月已完成（考核值）</div>
+							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（账面值）</div>
+							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（考核值）</div>
 							<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 						</div>
 					</div>
 					<div header="后续待完成分解" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center">后续待完成合计</div>
-							<div field="totalHandheldContractAmount" headerAlign="center" align="center">（1）手持合同</div>
-							<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center">（2）待签合同</div>
-							<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center">待签：低风险</div>
-							<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center">待签：中风险</div>
+							<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center" dataType="currency">后续待完成合计</div>
+							<div field="totalHandheldContractAmount" headerAlign="center" align="center" dataType="currency">（1）手持合同</div>
+							<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" dataType="currency">（2）待签合同</div>
+							<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" dataType="currency">待签：低风险</div>
+							<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" dataType="currency">待签：中风险</div>
 						</div>
 					</div>
 				</div>
@@ -66,53 +66,71 @@ html,body {
 			<span style="margin-left: 10px; font-weight: bold;">表2：集团外收入（单位：万元）</span>
 		</div>
 		<div>
-			<div id="externalIncomeOfTheGroupGrid" class="nui-datagrid" showPager="false" style="width: 100%; height: 90px;"
-				url="com.zhonghe.ame.kaohe.incomeStatistics.queryExternalIncomeOfTheGroup.biz.ext" dataField="externalIncomeOfTheGroupList">
+			<div id="externalIncomeOfTheGroupGrid" class="nui-datagrid" showPager="false" style="width: 100%; height: 90px;" url="com.zhonghe.ame.kaohe.incomeStatistics.queryExternalIncomeOfTheGroup.biz.ext"
+				dataField="externalIncomeOfTheGroupList">
 				<div property="columns">
-					<div field="expectedValue" headerAlign="center" align="center">期望值</div>
+					<div field="expectedValue" headerAlign="center" align="center" dataType="currency">期望值</div>
 					<div header="全年预测及缺口情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="annualForecastedBookValue" headerAlign="center" align="center">全年预测（账面值）</div>
-							<div field="annualForecastAssessmentValue" headerAlign="center" align="center">全年预测（考核值）</div>
-							<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR">考核值缺口</div>
+							<div field="annualForecastedBookValue" headerAlign="center" align="center" dataType="currency">全年预测（账面值）</div>
+							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency">全年预测（考核值）</div>
+							<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" dataType="currency">考核值缺口</div>
 						</div>
 					</div>
 					<div header="已完成情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center">截至当月已完成（账面值）</div>
-							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center">截至当月已完成（考核值）</div>
+							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（账面值）</div>
+							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（考核值）</div>
 							<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 						</div>
 					</div>
 					<div header="后续待完成分解" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center">后续待完成合计</div>
-							<div field="totalHandheldContractAmount" headerAlign="center" align="center">（1）手持合同</div>
-							<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center">（2）待签合同</div>
-							<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center">待签：低风险</div>
-							<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center">待签：中风险</div>
+							<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center" dataType="currency">后续待完成合计</div>
+							<div field="totalHandheldContractAmount" headerAlign="center" align="center" dataType="currency">（1）手持合同</div>
+							<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" dataType="currency">（2）待签合同</div>
+							<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" dataType="currency">待签：低风险</div>
+							<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" dataType="currency">待签：中风险</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="nui-toolbar" style="border-bottom: 0; margin-top: 10px; padding: 5px; text-align: center; background: #f1f2f6;">
-			<span style="font-size: 14px; font-weight: bold;">考核收入统计明细</span>
+		<div id=statisticsSnapshotDetailForm>
+			<input id="statisticsSnapshotDetailYears" name="criteria._expr[0].years" class="nui-hidden" />
+			<input id="statisticsSnapshotDetailMonths" name="criteria._expr[1].months" class="nui-hidden" />
+			<input id="statisticsSnapshotDetailSecondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-hidden" />
+			<input name="criteria._expr[4]._op" value="like" class="nui-hidden"/>
+			<div class="nui-toolbar" style="border-bottom: 0; margin-top: 10px; padding: 5px; text-align: center; background: #f1f2f6;">
+				<div style="display: inline; float: left;">
+					<input name="criteria._expr[3].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_KAOHE" showNullItem="true" emptyText="合同状态" width="75" onvaluechanged="statisticsSnapshotDetailSearch"/>
+				</div>
+				<div style="display: inline; float: left; margin-left: 5px">
+					<input name="criteria._expr[4].contractName" class="nui-textbox" width="200" emptyText="合同名称(回车查询)" onvaluechanged="statisticsSnapshotDetailSearch"/>
+				</div>
+				<div style="display: inline; float: left; margin-left: 5px">
+					<input name="criteria._expr[5].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" emptyText="集团内外" width="75" onvaluechanged="statisticsSnapshotDetailSearch"/>
+				</div>
+				<div style="display: inline; float: left; margin-left: 5px">
+					<input name="criteria._expr[6].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" emptyText="风险等级" width="75" onvaluechanged="statisticsSnapshotDetailSearch"/>
+				</div>
+				<span style="font-size: 14px; font-weight: bold;">考核收入统计明细</span>
+			</div>
 		</div>
 		<div class="nui-fit">
 			<div id="statisticsSnapshotDetailGrid" sizeList="[1000]" pageSize="1000" class="nui-datagrid" style="width: 100%; height: 98%" showSummaryRow="true" virtualScroll="true" virtualColumns="true"
-				frozenStartColumn="0" frozenEndColumn="9" url="com.zhonghe.ame.kaohe.incomeStatistics.queryStatisticsSnapshotDetailList.biz.ext" dataField="statisticsSnapshotDetailList">
+				frozenStartColumn="0" frozenEndColumn="9" url="com.zhonghe.ame.kaohe.incomeStatistics.queryStatisticsSnapshotDetailListBySec.biz.ext" dataField="statisticsSnapshotDetailList">
 				<div property="columns">
 					<div field="contractStauts" headerAlign="center" align="center" width="75" renderer="ZH_CONTRACT_STATUS_KAOHE">合同状态</div>
 					<div field="contractNo" headerAlign="center" align="center" width="200">合同编号</div>
 					<div field="contractName" headerAlign="center" align="center" width="200">合同名称</div>
 					<div field="createUsername" headerAlign="center" align="center" width="60">经办人</div>
 					<div field="signatoryName" headerAlign="center" align="center" width="200">付款单位</div>
-					<div field="sum" headerAlign="center" align="center" width="115">计划收款金额（元）</div>
-					<div field="sumExcludeTax" headerAlign="center" align="center" width="115">计划收入金额（元）</div>
+					<div field="sum" headerAlign="center" align="center" width="135" summaryType="sum" dataType="currency">全年计划收款金额（元）</div>
+					<div field="sumExcludeTax" headerAlign="center" align="center" width="135" summaryType="sum" dataType="currency">全年计划收入金额（元）</div>
 					<div field="sumTotalBookIncome" headerAlign="center" align="center" width="150" summaryType="sum" dataType="currency">截至当月已完成收入（元）</div>
 					<div field="coefficient" headerAlign="center" align="center" width="60">系数</div>
-					<div field="coefficientSum" headerAlign="center" align="center" width="125" summaryType="sum" dataType="currency">营业收入考核值（元）</div>
+					<div field="coefficientSum" headerAlign="center" align="center" width="145" summaryType="sum" dataType="currency">全年营业收入考核值（元）</div>
 					<div field="jan" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月(不含税)</div>
 					<div field="feb" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月(不含税)</div>
 					<div field="mar" headerAlign="center" align="center" summaryType="sum" dataType="currency">3月(不含税)</div>
@@ -137,6 +155,7 @@ html,body {
 		var reqId ='<%=request.getParameter("id")%>';
 
 		nui.parse();
+		var statisticsSnapshotDetailForm = new nui.Form("#statisticsSnapshotDetailForm");
 		var operatingRevenueGrid = nui.get("operatingRevenueGrid");
 		var externalIncomeOfTheGroupGrid = nui.get("externalIncomeOfTheGroupGrid");
 		var statisticsSnapshotDetailGrid = nui.get("statisticsSnapshotDetailGrid");
@@ -170,18 +189,12 @@ html,body {
 						"month" : data.months,
 						"secOrg" : data.secondaryOrg
 					});
+					nui.get("statisticsSnapshotDetailYears").setValue(data.years);
+					nui.get("statisticsSnapshotDetailMonths").setValue(data.months);
+					nui.get("statisticsSnapshotDetailSecondaryOrg").setValue(data.secondaryOrg);
+					var searchData = statisticsSnapshotDetailForm.getData();
 					statisticsSnapshotDetailGrid.sortBy("contractStauts", "asc");
-					statisticsSnapshotDetailGrid.load({
-						"criteria" : {
-							"_expr" : [ {
-								"years" : data.years
-							}, {
-								"months" : data.months
-							}, {
-								"secondaryOrg" : data.secondaryOrg
-							} ]
-						}
-					});
+					statisticsSnapshotDetailGrid.load(searchData);
 					nui.unmask(document.body);
 				}
 			});
@@ -209,6 +222,12 @@ html,body {
 				e.cellStyle = "color: red";
 			}
 			return e.value;
+		}
+
+		function statisticsSnapshotDetailSearch() {
+			var searchData = statisticsSnapshotDetailForm.getData();
+			statisticsSnapshotDetailGrid.sortBy("contractStauts", "asc");
+			statisticsSnapshotDetailGrid.load(searchData);
 		}
 	</script>
 

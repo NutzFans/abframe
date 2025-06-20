@@ -102,6 +102,10 @@ html,body {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
+			if (uniquenessVerification(nui.get("contractNo").getValue())) {
+				showTips("该合同已配置过考核收入系数！", "danger");
+				return;
+			}
 			nui.confirm("确定保存数据吗？", "系统提示", function(action) {
 				if (action == "ok") {
 					nui.get("saveBtn").disable();
@@ -134,6 +138,27 @@ html,body {
 					}, 2000);
 				}
 			});
+		}
+
+		function uniquenessVerification(contractNo) {
+			var verification;
+			var json = nui.encode({
+				"contractNo" : contractNo
+			});
+			ajaxCommon({
+				"url" : "com.zhonghe.ame.kaohe.incomeCoefficient.contractNoUniquenessVerification.biz.ext",
+				data : json,
+				async : false,
+				contentType : 'text/json',
+				success : function(text) {
+					if (text.result > 0) {
+						verification = true;
+					} else {
+						verification = false;
+					}
+				}
+			});
+			return verification;
 		}
 	</script>
 

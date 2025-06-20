@@ -109,32 +109,32 @@ html,body {
 				<span style="margin-left: 10px; font-weight: bold;">表1：营业收入（单位：万元）</span>
 			</div>
 			<div>
-				<div id="operatingRevenueGrid" class="nui-datagrid" showPager="false" style="width: 100%;" url="com.zhonghe.ame.kaohe.incomeStatistics.queryOperatingRevenue.biz.ext"
+				<div id="operatingRevenueGrid" class="nui-datagrid" showPager="false" showSummaryRow="true" style="width: 100%;" url="com.zhonghe.ame.kaohe.incomeStatistics.queryOperatingRevenue.biz.ext"
 					dataField="operatingRevenueList">
 					<div property="columns">
 						<div field="secondaryOrgname" headerAlign="center" align="center" width="110">考核单位</div>
-						<div field="expectedValue" headerAlign="center" align="center" width="60">期望值</div>
+						<div field="expectedValue" headerAlign="center" align="center" width="60" summaryType="sum" dataType="currency">期望值</div>
 						<div header="全年预测及缺口情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="annualForecastedBookValue" headerAlign="center" align="center">全年预测（账面值）</div>
-								<div field="annualForecastAssessmentValue" headerAlign="center" align="center">全年预测（考核值）</div>
-								<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR">考核值缺口</div>
+								<div field="annualForecastedBookValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（账面值）</div>
+								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（考核值）</div>
+								<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" summaryType="sum" dataType="currency">考核值缺口</div>
 							</div>
 						</div>
 						<div header="已完成情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="110">截至当月已完成（账面值）</div>
-								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="110">截至当月已完成（考核值）</div>
+								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（账面值）</div>
+								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（考核值）</div>
 								<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 							</div>
 						</div>
 						<div header="后续待完成分解" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center">后续待完成合计</div>
-								<div field="totalHandheldContractAmount" headerAlign="center" align="center">（1）手持合同</div>
-								<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center">（2）待签合同</div>
-								<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center">待签：低风险</div>
-								<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center">待签：中风险</div>
+								<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center" summaryType="sum" dataType="currency">后续待完成合计</div>
+								<div field="totalHandheldContractAmount" headerAlign="center" align="center" summaryType="sum" dataType="currency">（1）手持合同</div>
+								<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">（2）待签合同</div>
+								<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：低风险</div>
+								<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：中风险</div>
 							</div>
 						</div>
 					</div>
@@ -144,32 +144,32 @@ html,body {
 				<span style="margin-left: 10px; font-weight: bold;">表2：集团外收入（单位：万元）</span>
 			</div>
 			<div>
-				<div id="externalIncomeOfTheGroupGrid" class="nui-datagrid" showPager="false" style="width: 100%;" url="com.zhonghe.ame.kaohe.incomeStatistics.queryExternalIncomeOfTheGroup.biz.ext"
-					dataField="externalIncomeOfTheGroupList">
+				<div id="externalIncomeOfTheGroupGrid" class="nui-datagrid" showPager="false" showSummaryRow="true" style="width: 100%;"
+					url="com.zhonghe.ame.kaohe.incomeStatistics.queryExternalIncomeOfTheGroup.biz.ext" dataField="externalIncomeOfTheGroupList">
 					<div property="columns">
 						<div field="secondaryOrgname" headerAlign="center" align="center" width="110">考核单位</div>
-						<div field="expectedValue" headerAlign="center" align="center" width="60">期望值</div>
+						<div field="expectedValue" headerAlign="center" align="center" width="60" summaryType="sum" dataType="currency">期望值</div>
 						<div header="全年预测及缺口情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="annualForecastedBookValue" headerAlign="center" align="center">全年预测（账面值）</div>
-								<div field="annualForecastAssessmentValue" headerAlign="center" align="center">全年预测（考核值）</div>
-								<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR">考核值缺口</div>
+								<div field="annualForecastedBookValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（账面值）</div>
+								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（考核值）</div>
+								<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" summaryType="sum" dataType="currency">考核值缺口</div>
 							</div>
 						</div>
 						<div header="已完成情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="110">截至当月已完成（账面值）</div>
-								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="110">截至当月已完成（考核值）</div>
+								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（账面值）</div>
+								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（考核值）</div>
 								<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 							</div>
 						</div>
 						<div header="后续待完成分解" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center">后续待完成合计</div>
-								<div field="totalHandheldContractAmount" headerAlign="center" align="center">（1）手持合同</div>
-								<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center">（2）待签合同</div>
-								<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center">待签：低风险</div>
-								<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center">待签：中风险</div>
+								<div field="totalToBeCompletedInTheFuture" headerAlign="center" align="center" summaryType="sum" dataType="currency">后续待完成合计</div>
+								<div field="totalHandheldContractAmount" headerAlign="center" align="center" summaryType="sum" dataType="currency">（1）手持合同</div>
+								<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">（2）待签合同</div>
+								<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：低风险</div>
+								<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：中风险</div>
 							</div>
 						</div>
 					</div>
@@ -194,6 +194,23 @@ html,body {
 							<td>
 								<input id="khsrtjmxSecondaryOrg" name="criteria._expr[3].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
 							</td>
+							<td style="width: 60px; text-align: right;">合同状态:</td>
+							<td>
+								<input name="criteria._expr[4].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_KAOHE" showNullItem="true" style="width: 100px"/>
+							</td>
+							<td style="width: 60px; text-align: right;">合同名称 :</td>
+							<td>
+								<input name="criteria._expr[5].contractName" class="nui-textbox" style="width: 200px"/>
+								<input name="criteria._expr[5]._op" value="like" class="nui-hidden"/>
+							</td>
+							<td style="width: 60px; text-align: right;">集团内外:</td>
+							<td>
+								<input name="criteria._expr[6].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" style="width: 100px"/>
+							</td>
+							<td style="width: 60px; text-align: right;">风险等级:</td>
+							<td>
+								<input name="criteria._expr[7].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" style="width: 100px"/>
+							</td>
 							<td>
 								<a class="nui-button" id="khsrtjmxSearch" iconCls="icon-search" onclick="khsrtjmxSearch()">查询</a>
 								<a class="nui-button" id="khsrtjmxReset" iconCls="icon-reload" onclick="khsrtjmxReset()">重置</a>
@@ -214,11 +231,11 @@ html,body {
 						<div field="contractName" headerAlign="center" align="center" width="200">合同名称</div>
 						<div field="createUsername" headerAlign="center" align="center" width="60">经办人</div>
 						<div field="signatoryName" headerAlign="center" align="center" width="200">付款单位</div>
-						<div field="sum" headerAlign="center" align="center" width="115">计划收款金额（元）</div>
-						<div field="sumExcludeTax" headerAlign="center" align="center" width="115">计划收入金额（元）</div>
+						<div field="sum" headerAlign="center" align="center" width="135" summaryType="sum" dataType="currency">全年计划收款金额（元）</div>
+						<div field="sumExcludeTax" headerAlign="center" align="center" width="135" summaryType="sum" dataType="currency">全年计划收入金额（元）</div>
 						<div field="sumTotalBookIncome" headerAlign="center" align="center" width="150" summaryType="sum" dataType="currency">截至当月已完成收入（元）</div>
 						<div field="coefficient" headerAlign="center" align="center" width="60">系数</div>
-						<div field="coefficientSum" headerAlign="center" align="center" width="125" summaryType="sum" dataType="currency">营业收入考核值（元）</div>
+						<div field="coefficientSum" headerAlign="center" align="center" width="145" summaryType="sum" dataType="currency">全年营业收入考核值（元）</div>
 						<div field="jan" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月(不含税)</div>
 						<div field="feb" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月(不含税)</div>
 						<div field="mar" headerAlign="center" align="center" summaryType="sum" dataType="currency">3月(不含税)</div>
