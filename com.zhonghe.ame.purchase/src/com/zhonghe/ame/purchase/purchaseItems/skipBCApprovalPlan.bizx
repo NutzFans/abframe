@@ -210,9 +210,24 @@
     <node>subprocess1</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="queryNextWorkItemsByWorkItemID" displayName="WorkItemManagerService.queryNextWorkItemsByWorkItemID" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link16" name="link16" displayName="连接线" isDefault="false" type="transition">
       <sourceNode>invokeService1</sourceNode>
       <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>nextWorkItems != null &amp;&amp; nextWorkItems.size()>0</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>end5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link14</targetConnections>
     <location x="1050" y="67"/>
@@ -298,9 +313,25 @@
     <node>assign0</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="WorkItemUtil.getWorkItem" displayName="" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link17" name="link17" displayName="连接线" isDefault="false" type="transition">
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">nextWorkItem/workItemName</process:leftOperand>
+          <process:rightOperand type="literal">分管采购公司领导审核(批)</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>end6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link16</targetConnections>
     <location x="1054" y="150"/>
@@ -382,6 +413,30 @@
     <location x="1054" y="532"/>
     <figSize height="16" width="25"/>
     <node>end3</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end5" name="结束" displayName="结束" type="end">
+    <targetConnections>link9</targetConnections>
+    <location x="1200" y="64"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end5label</nodeLabel>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end5label" name="label" nodeType="label">
+    <location x="1202" y="100"/>
+    <figSize height="16" width="25"/>
+    <node>end5</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end6" name="结束" displayName="结束" type="end">
+    <targetConnections>link10</targetConnections>
+    <location x="1202" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end6label</nodeLabel>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end6label" name="label" nodeType="label">
+    <location x="1204" y="186"/>
+    <figSize height="16" width="25"/>
+    <node>end6</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
