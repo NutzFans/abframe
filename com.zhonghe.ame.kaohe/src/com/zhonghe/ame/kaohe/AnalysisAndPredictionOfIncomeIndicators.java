@@ -140,7 +140,7 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 		}
 		// 后续待完成合计
 		operatingRevenue.set("totalToBeCompletedInTheFuture",
-				NumberUtil.sub(operatingRevenue.getBigDecimal("annualForecastedBookValue"), operatingRevenue.getBigDecimal("asOfTheCurrentMonthTheBookValueHasBeenCompleted")));
+				NumberUtil.sub(operatingRevenue.getBigDecimal("annualForecastAssessmentValue"), operatingRevenue.getBigDecimal("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted")));
 		// 待签合同金额合计
 		operatingRevenue.set("totalAmountOfPendingContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfPendingContractToBeSigned(snapshotDetailList)));
 		// 手持合同金额合计
@@ -187,19 +187,19 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 	// 待签合同金额合计
 	private BigDecimal getTotalAmountOfPendingContractToBeSigned(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> !"3".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
-				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	// 待签：低风险合同金额合计
 	private BigDecimal getTotalAmountOfLowriskContractToBeSigned(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> "1".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
-				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	// 待签：中风险合同金额合计
 	private BigDecimal getTotalAmountOfRiskContractsToBeSigned(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> "2".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
-				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	private Map<String, Integer> getSecOrgOrderMap(Session dbSession) throws Exception {
