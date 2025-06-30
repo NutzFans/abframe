@@ -130,7 +130,7 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 		operatingRevenue
 				.set("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted", this.yuanToTenThousandYuan(this.getAsOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted(snapshotDetailList)));
 		// 考核值完成率
-		if (operatingRevenue.getBigDecimal("expectedValue").equals(BigDecimal.ZERO)) {
+		if (NumberUtil.equals(operatingRevenue.getBigDecimal("expectedValue"), BigDecimal.ZERO)) {
 			operatingRevenue.set("assessmentCompletionRate", "/");
 		} else {
 			operatingRevenue.set(

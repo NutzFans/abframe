@@ -110,6 +110,7 @@ html,body {
 			ajaxCommon({
 				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
 				data : json,
+				async: false,
 				success : function(result) {
 					var data = result.data;
 					nui.get("searchOrgids").setValue(data.ORGID);
@@ -121,6 +122,7 @@ html,body {
 			ajaxCommon({
 				"url" : "com.zhonghe.ame.kaohe.common.getBusSecOrgList.biz.ext",
 				contentType : 'text/json',
+				async: false,
 				success : function(result) {
 					var datas = result.secOrgList;
 					var orgIdSet = new Set(orgids.split(','));

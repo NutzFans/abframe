@@ -126,6 +126,7 @@ html,body {
 			ajaxCommon({
 				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
 				data : json,
+				async: false,
 				success : function(result) {
 					var data = result.data;
 					nui.get("searchOrgids").setValue(data.ORGID);
