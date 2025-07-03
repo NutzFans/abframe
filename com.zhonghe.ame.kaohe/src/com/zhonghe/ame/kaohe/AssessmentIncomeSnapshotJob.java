@@ -71,15 +71,12 @@ public class AssessmentIncomeSnapshotJob {
 			List<Entity> snapshotDetails = this.buildSnapshotDetails(dateMap.get("year"), dateMap.get("month"), null, dbSession);
 			if (snapshotDetails != null && snapshotDetails.size() > 0) {
 				List<Entity> snapshots = this.buildSnapshots(snapshotDetails, null, dateMap.get("year"), dateMap.get("month"), "定时任务");
-				dbSession.beginTransaction();
 				dbSession.execute(delSnapshotByYearMonthSql, dateMap.get("year"), dateMap.get("month"));
 				dbSession.execute(delSnapshotDetaiByYearMonthSql, dateMap.get("year"), dateMap.get("month"));
 				dbSession.insert(snapshotDetails);
 				dbSession.insert(snapshots);
-				dbSession.commit();
 			}
 		} catch (Exception e) {
-			dbSession.quietRollback();
 			e.printStackTrace();
 		}
 	}
@@ -91,15 +88,12 @@ public class AssessmentIncomeSnapshotJob {
 			List<Entity> snapshotDetails = this.buildSnapshotDetails(year, month, secOrg, dbSession);
 			if (snapshotDetails != null && snapshotDetails.size() > 0) {
 				List<Entity> snapshots = this.buildSnapshots(snapshotDetails, secOrg, year, month, createBy);
-				dbSession.beginTransaction();
 				dbSession.execute(delSnapshotByYearMonthSecOrgSql, year, month, secOrg);
 				dbSession.execute(delSnapshotDetaiByYearMonthSecOrgSql, year, month, secOrg);
 				dbSession.insert(snapshotDetails);
 				dbSession.insert(snapshots);
-				dbSession.commit();
 			}
 		} catch (Exception e) {
-			dbSession.quietRollback();
 			e.printStackTrace();
 		}
 	}
@@ -310,7 +304,7 @@ public class AssessmentIncomeSnapshotJob {
 	 * 获取考核系数值
 	 */
 	private BigDecimal getCoefficient(String contractNo, String headquarterGroup, Map<String, BigDecimal> coefficientMap) {
-		if (StrUtil.isBlankIfStr(contractNo)) {
+		if (!StrUtil.isBlankIfStr(contractNo)) {
 			if (coefficientMap.containsKey(contractNo)) {
 				return coefficientMap.get(contractNo);
 			} else {
@@ -357,6 +351,8 @@ public class AssessmentIncomeSnapshotJob {
 				snapshotDetail.set("signatory_name", wrapBasePlanData.getStr("signatory_name"));
 				// 集团内外
 				snapshotDetail.set("headquarter_group", wrapBasePlanData.getStr("headquarter_group"));
+				// 专业类别
+				snapshotDetail.set("major", wrapBasePlanData.getStr("major"));
 				// 风险等级
 				snapshotDetail.set("risk_level", wrapBasePlanData.getStr("risk_level"));
 				// 预计签订日期

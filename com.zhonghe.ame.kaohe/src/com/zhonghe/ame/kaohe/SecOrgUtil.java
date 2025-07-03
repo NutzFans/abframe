@@ -1,11 +1,13 @@
 package com.zhonghe.ame.kaohe;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
@@ -37,6 +39,28 @@ public class SecOrgUtil {
 		}).collect(Collectors.toList());
 
 		return result;
+	}
+
+	@Bizlet("通过快照表获取需要考核的单位并排序显示")
+	public List<Entity> getKaoHeSecOrg(String year, String month) throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		Map<String, Integer> secOrderMap = this.getSecOrgOrderMap(dbSession);
+		String querySql = "SELECT zkss.secondary_org, oo.ORGNAME AS secondary_orgname FROM zh_kaohe_statistics_snapshot AS zkss, OM_ORGANIZATION AS oo WHERE zkss.secondary_org = oo.ORGID AND zkss.years = ? AND zkss.months = ?";
+		List<Entity> secOrgList = dbSession.query(querySql, year, month);
+		secOrgList = secOrgList.stream().filter(entity -> !StrUtil.equals(entity.getStr("secondary_org"), "8") && !StrUtil.equals(entity.getStr("secondary_org"), "102123"))
+				.collect(Collectors.toList());
+		secOrgList.sort(Comparator.comparing(entity -> secOrderMap.getOrDefault(entity.getStr("secondary_org"), 100)));
+		return secOrgList;
+	}
+
+	private Map<String, Integer> getSecOrgOrderMap(Session dbSession) throws Exception {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		String queryDictSql = "SELECT DICTID, SORTNO FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ZH_OPERATION_INCOME_ORG'";
+		List<Entity> dictList = dbSession.query(queryDictSql);
+		for (Entity dict : dictList) {
+			map.put(dict.getStr("DICTID"), dict.getInt("SORTNO"));
+		}
+		return map;
 	}
 
 }

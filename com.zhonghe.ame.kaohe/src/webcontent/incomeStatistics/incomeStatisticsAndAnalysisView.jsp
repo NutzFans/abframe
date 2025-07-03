@@ -215,7 +215,7 @@ html,body {
 		}
 
 		function FONT_COLOR(e) {
-			if (e.value < 0) {
+			if (e.value > 0) {
 				e.cellStyle = "color: red";
 			}
 			return e.value;

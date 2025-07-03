@@ -28,6 +28,8 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 
 	private String queryDictSql = "SELECT DICTID, SORTNO FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ZH_OPERATION_INCOME_ORG'";
 
+	private String queryOrgNameSql = "SELECT ORGNAME FROM OM_ORGANIZATION WHERE ORGCODE = ?";
+
 	@Bizlet("营业收入")
 	public List<Entity> operatingRevenueBySecOrg(String year, String month, String secOrg) {
 		List<Entity> operatingRevenueList = new ArrayList<Entity>();
@@ -38,7 +40,14 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 				List<Entity> snapshotDetailList = dbSession.query(querySnapshotDetailSql, year, month, secOrg);
 				if (snapshotDetailList != null && snapshotDetailList.size() > 0) {
 					Entity thresholdEntity = dbSession.queryOne(queryThresholdSql, secOrg, year);
-					operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity);
+					operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity, false);
+					operatingRevenue.set("secondary_org", secOrg);
+					operatingRevenueList.add(operatingRevenue);
+				} else {
+					Entity orgEntity = dbSession.queryOne(queryOrgNameSql, secOrg);
+					Entity thresholdEntity = dbSession.queryOne(queryThresholdSql, secOrg, year);
+					operatingRevenue.set("secondary_org", secOrg);
+					operatingRevenue = this.buildZeroEntity(operatingRevenue, orgEntity, thresholdEntity);
 					operatingRevenueList.add(operatingRevenue);
 				}
 			} catch (Exception e) {
@@ -55,8 +64,14 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 						List<Entity> snapshotDetailList = dbSession.query(querySnapshotDetailSql, year, month, secOrgEntity.getStr("secondary_org"));
 						if (snapshotDetailList != null && snapshotDetailList.size() > 0) {
 							Entity thresholdEntity = dbSession.queryOne(queryThresholdSql, secOrgEntity.getStr("secondary_org"), year);
-							operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity);
+							operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity, false);
 							operatingRevenue.set("secondary_org", secOrgEntity.getStr("secondary_org"));
+							operatingRevenueList.add(operatingRevenue);
+						} else {
+							Entity orgEntity = dbSession.queryOne(queryOrgNameSql, secOrgEntity.getStr("secondary_org"));
+							Entity thresholdEntity = dbSession.queryOne(queryThresholdSql, secOrgEntity.getStr("secondary_org"), year);
+							operatingRevenue.set("secondary_org", secOrgEntity.getStr("secondary_org"));
+							operatingRevenue = this.buildZeroEntity(operatingRevenue, orgEntity, thresholdEntity);
 							operatingRevenueList.add(operatingRevenue);
 						}
 					}
@@ -80,7 +95,13 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 				List<Entity> snapshotDetailList = dbSession.query(querySnapshotDetailJTWSql, year, month, secOrg);
 				if (snapshotDetailList != null && snapshotDetailList.size() > 0) {
 					Entity thresholdEntity = dbSession.queryOne(queryThresholdJTWSql, secOrg, year);
-					operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity);
+					operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity, true);
+					operatingRevenueList.add(operatingRevenue);
+				} else {
+					Entity orgEntity = dbSession.queryOne(queryOrgNameSql, secOrg);
+					Entity thresholdEntity = dbSession.queryOne(queryThresholdJTWSql, secOrg, year);
+					operatingRevenue.set("secondary_org", secOrg);
+					operatingRevenue = this.buildZeroEntity(operatingRevenue, orgEntity, thresholdEntity);
 					operatingRevenueList.add(operatingRevenue);
 				}
 			} catch (Exception e) {
@@ -97,8 +118,14 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 						List<Entity> snapshotDetailList = dbSession.query(querySnapshotDetailJTWSql, year, month, secOrgEntity.getStr("secondary_org"));
 						if (snapshotDetailList != null && snapshotDetailList.size() > 0) {
 							Entity thresholdEntity = dbSession.queryOne(queryThresholdJTWSql, secOrgEntity.getStr("secondary_org"), year);
-							operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity);
+							operatingRevenue = this.buildEntity(operatingRevenue, snapshotDetailList, thresholdEntity, true);
 							operatingRevenue.set("secondary_org", secOrgEntity.getStr("secondary_org"));
+							operatingRevenueList.add(operatingRevenue);
+						} else {
+							Entity orgEntity = dbSession.queryOne(queryOrgNameSql, secOrgEntity.getStr("secondary_org"));
+							Entity thresholdEntity = dbSession.queryOne(queryThresholdJTWSql, secOrgEntity.getStr("secondary_org"), year);
+							operatingRevenue.set("secondary_org", secOrgEntity.getStr("secondary_org"));
+							operatingRevenue = this.buildZeroEntity(operatingRevenue, orgEntity, thresholdEntity);
 							operatingRevenueList.add(operatingRevenue);
 						}
 					}
@@ -113,22 +140,34 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 	}
 
 	// 构建填充字段值
-	private Entity buildEntity(Entity operatingRevenue, List<Entity> snapshotDetailList, Entity thresholdEntity) {
+	private Entity buildEntity(Entity operatingRevenue, List<Entity> snapshotDetailList, Entity thresholdEntity, Boolean outsideTheGroup) {
 		// 组织机构名称
 		operatingRevenue.set("secondaryOrgname", snapshotDetailList.get(0).getStr("secondary_orgname"));
 		// 期望值
 		operatingRevenue.set("expectedValue", thresholdEntity.getBigDecimal("threshold_value_sum") != null ? thresholdEntity.getBigDecimal("threshold_value_sum") : BigDecimal.ZERO);
 		// 全年预测（账面值）
 		operatingRevenue.set("annualForecastedBookValue", this.yuanToTenThousandYuan(this.getAnnualForecastedBookValue(snapshotDetailList)));
-		// 全年预测（考核值）
-		operatingRevenue.set("annualForecastAssessmentValue", this.yuanToTenThousandYuan(this.getAnnualForecastAssessmentValue(snapshotDetailList)));
+		if (outsideTheGroup) {
+			// 全年预测（考核值）- 集团外计算方法
+			operatingRevenue.set("annualForecastAssessmentValue", this.yuanToTenThousandYuan(this.getAnnualForecastAssessmentValueJTW(snapshotDetailList)));
+		} else {
+			// 全年预测（考核值）
+			operatingRevenue.set("annualForecastAssessmentValue", this.yuanToTenThousandYuan(this.getAnnualForecastAssessmentValue(snapshotDetailList)));
+		}
 		// 考核值缺口
-		operatingRevenue.set("assessmentValueGap", NumberUtil.sub(operatingRevenue.getBigDecimal("annualForecastAssessmentValue"), operatingRevenue.getBigDecimal("expectedValue")));
+		operatingRevenue.set("assessmentValueGap", NumberUtil.sub(operatingRevenue.getBigDecimal("expectedValue"), operatingRevenue.getBigDecimal("annualForecastAssessmentValue")));
 		// 截至当月已完成（账面值）
 		operatingRevenue.set("asOfTheCurrentMonthTheBookValueHasBeenCompleted", this.yuanToTenThousandYuan(this.getAsOfTheCurrentMonthTheBookValueHasBeenCompleted(snapshotDetailList)));
-		// 截至当月已完成（考核值）
-		operatingRevenue
-				.set("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted", this.yuanToTenThousandYuan(this.getAsOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted(snapshotDetailList)));
+		if (outsideTheGroup) {
+			// 截至当月已完成（考核值）- 集团外计算方法
+			operatingRevenue.set("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted",
+					this.yuanToTenThousandYuan(this.getAsOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedJTW(snapshotDetailList)));
+		} else {
+			// 截至当月已完成（考核值）
+			operatingRevenue.set("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted",
+					this.yuanToTenThousandYuan(this.getAsOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted(snapshotDetailList)));
+		}
+
 		// 考核值完成率
 		if (NumberUtil.equals(operatingRevenue.getBigDecimal("expectedValue"), BigDecimal.ZERO)) {
 			operatingRevenue.set("assessmentCompletionRate", "/");
@@ -136,20 +175,68 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 			operatingRevenue.set(
 					"assessmentCompletionRate",
 					NumberUtil.decimalFormat("#.##%",
-							NumberUtil.div(operatingRevenue.getBigDecimal("asOfTheCurrentMonthTheBookValueHasBeenCompleted"), operatingRevenue.getBigDecimal("expectedValue"))));
+							NumberUtil.div(operatingRevenue.getBigDecimal("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted"), operatingRevenue.getBigDecimal("expectedValue"))));
 		}
 		// 后续待完成合计
 		operatingRevenue.set("totalToBeCompletedInTheFuture",
 				NumberUtil.sub(operatingRevenue.getBigDecimal("annualForecastAssessmentValue"), operatingRevenue.getBigDecimal("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted")));
-		// 待签合同金额合计
-		operatingRevenue.set("totalAmountOfPendingContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfPendingContractToBeSigned(snapshotDetailList)));
+		if (outsideTheGroup) {
+			// 待签合同金额合计 - 集团外计算方法
+			operatingRevenue.set("totalAmountOfPendingContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfPendingContractToBeSignedJTW(snapshotDetailList)));
+		} else {
+			// 待签合同金额合计
+			operatingRevenue.set("totalAmountOfPendingContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfPendingContractToBeSigned(snapshotDetailList)));
+		}
+
 		// 手持合同金额合计
 		operatingRevenue.set("totalHandheldContractAmount",
 				NumberUtil.sub(operatingRevenue.getBigDecimal("totalToBeCompletedInTheFuture"), operatingRevenue.getBigDecimal("totalAmountOfPendingContractToBeSigned")));
+		if (outsideTheGroup) {
+			// 待签：低风险合同金额合计 - 集团外计算方法
+			operatingRevenue.set("totalAmountOfLowriskContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfLowriskContractToBeSignedJTW(snapshotDetailList)));
+		} else {
+			// 待签：低风险合同金额合计
+			operatingRevenue.set("totalAmountOfLowriskContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfLowriskContractToBeSigned(snapshotDetailList)));
+		}
+		if (outsideTheGroup) {
+			// 待签：中风险合同金额合计 - 集团外计算方法
+			operatingRevenue.set("totalAmountOfRiskContractsToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfRiskContractsToBeSignedJTW(snapshotDetailList)));
+		} else {
+			// 待签：中风险合同金额合计
+			operatingRevenue.set("totalAmountOfRiskContractsToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfRiskContractsToBeSigned(snapshotDetailList)));
+		}
+
+		return operatingRevenue;
+	}
+
+	// 构建填充字段值(零值数据)
+	private Entity buildZeroEntity(Entity operatingRevenue, Entity orgEntity, Entity thresholdEntity) {
+		// 组织机构名称
+		operatingRevenue.set("secondaryOrgname", orgEntity.getStr("ORGNAME"));
+		// 期望值
+		operatingRevenue.set("expectedValue", thresholdEntity.getBigDecimal("threshold_value_sum") != null ? thresholdEntity.getBigDecimal("threshold_value_sum") : BigDecimal.ZERO);
+		// 全年预测（账面值）
+		operatingRevenue.set("annualForecastedBookValue", BigDecimal.ZERO);
+		// 全年预测（考核值）
+		operatingRevenue.set("annualForecastAssessmentValue", BigDecimal.ZERO);
+		// 考核值缺口
+		operatingRevenue.set("assessmentValueGap", NumberUtil.sub(operatingRevenue.getBigDecimal("expectedValue"), operatingRevenue.getBigDecimal("annualForecastAssessmentValue")));
+		// 截至当月已完成（账面值）
+		operatingRevenue.set("asOfTheCurrentMonthTheBookValueHasBeenCompleted", BigDecimal.ZERO);
+		// 截至当月已完成（考核值）
+		operatingRevenue.set("asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted", BigDecimal.ZERO);
+		// 考核值完成率
+		operatingRevenue.set("assessmentCompletionRate", "/");
+		// 后续待完成合计
+		operatingRevenue.set("totalToBeCompletedInTheFuture", BigDecimal.ZERO);
+		// 待签合同金额合计
+		operatingRevenue.set("totalAmountOfPendingContractToBeSigned", BigDecimal.ZERO);
+		// 手持合同金额合计
+		operatingRevenue.set("totalHandheldContractAmount", BigDecimal.ZERO);
 		// 待签：低风险合同金额合计
-		operatingRevenue.set("totalAmountOfLowriskContractToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfLowriskContractToBeSigned(snapshotDetailList)));
+		operatingRevenue.set("totalAmountOfLowriskContractToBeSigned", BigDecimal.ZERO);
 		// 待签：中风险合同金额合计
-		operatingRevenue.set("totalAmountOfRiskContractsToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfRiskContractsToBeSigned(snapshotDetailList)));
+		operatingRevenue.set("totalAmountOfRiskContractsToBeSigned", BigDecimal.ZERO);
 
 		return operatingRevenue;
 	}
@@ -172,6 +259,12 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
+	// 全年预测（考核值） - 集团外
+	private BigDecimal getAnnualForecastAssessmentValueJTW(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> !"3".equals(snapshotDetail.getStr("risk_level"))).map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax"))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
 	// 截至当月已完成（账面值）
 	private BigDecimal getAsOfTheCurrentMonthTheBookValueHasBeenCompleted(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> !"3".equals(snapshotDetail.getStr("risk_level")) && !"5".equals(snapshotDetail.getStr("contract_stauts")))
@@ -184,10 +277,22 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 				.map(snapshotDetail -> NumberUtil.mul(snapshotDetail.getBigDecimal("sum_total_book_income"), snapshotDetail.getBigDecimal("coefficient"))).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
+	// 截至当月已完成（考核值） - 集团外
+	private BigDecimal getAsOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedJTW(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> !"3".equals(snapshotDetail.getStr("risk_level"))).map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_total_book_income"))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
 	// 待签合同金额合计
 	private BigDecimal getTotalAmountOfPendingContractToBeSigned(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> !"3".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
 				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 待签合同金额合计 - 集团外
+	private BigDecimal getTotalAmountOfPendingContractToBeSignedJTW(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> !"3".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	// 待签：低风险合同金额合计
@@ -196,10 +301,22 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
+	// 待签：低风险合同金额合计 - 集团外
+	private BigDecimal getTotalAmountOfLowriskContractToBeSignedJTW(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> "1".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
 	// 待签：中风险合同金额合计
 	private BigDecimal getTotalAmountOfRiskContractsToBeSigned(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> "2".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
 				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 待签：中风险合同金额合计 - 集团外
+	private BigDecimal getTotalAmountOfRiskContractsToBeSignedJTW(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> "2".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	private Map<String, Integer> getSecOrgOrderMap(Session dbSession) throws Exception {
