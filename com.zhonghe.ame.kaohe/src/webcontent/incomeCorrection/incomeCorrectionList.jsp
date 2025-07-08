@@ -34,7 +34,7 @@ html,body {
 						</td>
 						<td style="width: 60px; text-align: right;">扣减单位:</td>
 						<td>
-							<input id="secondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
+							<input id="secondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" showNullItem="true" />
 						</td>
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>

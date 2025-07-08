@@ -14,12 +14,15 @@
 </head>
 <body class="page-no-scroll">
 
-    <!-- 小球样式 -->
-    <div class="page-loading">
-        <div class="ball-loader">
-            <span></span><span></span><span></span><span></span>
-        </div>
-    </div>
+	<!-- 小球样式 -->
+	<div class="page-loading">
+		<div class="ball-loader">
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 
 	<div class="layui-layout layui-layout-admin">
 		<div class="layui-header">
@@ -30,9 +33,7 @@
 							<img src="../../ame/clipview/assets/images/amelogo.png" height="40px">
 						</div>
 					</div>
-					<div class="layui-col-md10" style="margin-left: -35px; padding-top: 9px; line-height: 60px; font-size: 30px; font-weight: bold; color: #fff;">
-						经营管理系统
-					</div>
+					<div class="layui-col-md10" style="margin-left: -35px; padding-top: 9px; line-height: 60px; font-size: 30px; font-weight: bold; color: #fff;">经营管理系统</div>
 				</div>
 			</div>
 		</div>
@@ -456,20 +457,29 @@
 			</div>
 		</div>
 
+		<div id="completeTodoBtn" class="layui-row layui-col-space15 layui-hide">
+			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+				<button class="layui-btn layui-btn-fluid" style="background-color: #3578f7; font-size: 16px;" lay-on="toBeCompleted">公司生产经营情况统计 - 已阅并完成该项待办</button>
+			</div>
+		</div>
+
 	</div>
 
 	<script src="../../common/layui-v2.11.4/layui.js"></script>
 	<script src="js/main.js"></script>
 
 	<script>
-		layui.use([ 'element', 'utils', 'form', 'table' ], function() {
+		layui.use([ 'element', 'utils', 'form', 'table', 'util', 'layer' ], function() {
 			var $ = layui.jquery;
 			var element = layui.element;
 			var utils = layui.utils;
+			var layUtil = layui.util;
 			var form = layui.form;
 			var table = layui.table;
+			var layer = layui.layer;
 
-			var reqId ='<%=request.getParameter("id")%>';
+			var reqId = '<%=request.getParameter("id")%>';
+			var userId = '<%=request.getParameter("userId")%>';
 			var year, month;
 			var xqhtphGrid, htlyphGrid;
 			var ywzxCompletionValueGrid, qtCompletionValueGrid, ywzxCompletionValueLJGrid, qtCompletionValueLJGrid, ywzxCompletionRateGrid, qtCompletionRateGrid;
@@ -565,6 +575,7 @@
 						renderQnsrfjChart(year, month);
 						renderQkyjChart(year, month);
 						renderDwxqhteGrid(year, month, "0");
+						renderCompleteTodoBtn(reqId, userId);
 						utils.removeLoading();
 						utils.animateNum('#contractAmountHeldAtTheEndOfTheMonth', true);
 						utils.animateNum('#endOfMonthContractAmountHeldOutsideTheGroup', true);
@@ -1153,6 +1164,7 @@
 			
 			// 全年收入分解 - 图表参数配置
 			function buildQnsrfjChartOption(result) {
+				var allSum = result.datas[0].allSum.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元";
 			    var chartOption = {
 				    tooltip: {
 				        trigger: 'item',
@@ -1161,9 +1173,9 @@
 				        },
 				        formatter: function (param) {
 				            if(param.name == '后续待签合同收入'){
-				                return result = param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元<br>占比："+param.data.percentage+"（全年预测收入："+param.data.allSum.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元）<br>其中：低风险："+param.data.dfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元<br>其中：中风险："+param.data.zfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元";
+				                return result = param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元，占比："+param.data.percentage+"<br>其中：低风险："+param.data.dfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元<br>其中：中风险："+param.data.zfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元";
 				            }else{
-				                return result = param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元<br>占比："+param.data.percentage+"（全年预测收入："+param.data.allSum.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元）";
+				                return result = param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元，占比："+param.data.percentage;
 				            } 
 				        }
 				    },
@@ -1203,7 +1215,29 @@
 						    borderWidth: 1
 						},
 						data: result.datas
-					}
+					},
+					graphic: [
+						{
+							type: 'text',
+							left: 'center',
+							top: '50%',
+							style: {
+								text:allSum,
+								fontSize: 18,
+								fill: '#000'
+							}
+						},
+						{
+							type: 'text',
+							left: 'center',
+							top: '45%',
+							style: {
+								text: '全年预测收入',
+								fontSize: 18,
+								fill: '#000'
+							}
+						}
+					]
 			    };
 			    return chartOption;
 			}
@@ -1364,7 +1398,6 @@
 					dataType : "json",
 					success : function(data) {
 						var result = data.result;
-						console.log(result);
 						ywzxThisMonthGrid = table.render({
 							elem : '#ywzxThisMonthGrid',
 							cols : [ [ {
@@ -1468,6 +1501,54 @@
 			// 各单位新签合同额排行 - 单选切换
 			form.on('radio(dwxqhteTab)', function(data) {
 				renderDwxqhteGrid(year, month, data.value);
+			});
+			
+			// 渲染完成待办按钮
+			function renderCompleteTodoBtn(chartId, userId){
+				if(userId != null && userId !='null'){
+					$.ajax({
+						url : "com.zhonghe.ame.kaohe.businessSituation.completeTheTodo.biz.ext",
+						data : {
+							"chartId" : chartId,
+							"userId" : userId
+						},
+						async: false,
+						type : "POST",
+						dataType : "json",
+						success : function(data) {
+							var result = data.result;
+							if(result == "2"){
+								$('#completeTodoBtn').removeClass('layui-hide');
+							}
+						}					
+					});	
+				}
+			}			
+			
+			// 触发待办完成按钮事件
+			layUtil.on({
+				toBeCompleted: function(){
+					var index = layer.load();
+					$.ajax({
+						url : "com.zhonghe.ame.kaohe.businessSituation.sendTodoDone.biz.ext",
+						data : {
+							"chartId" : reqId,
+							"userId" : userId
+						},
+						type : "POST",
+						dataType : "json",
+						success : function(data) {
+							var result = data.result;
+							console.log(result);
+							if(result == "1"){
+								closeOk();
+							}else{
+								layer.close(index);
+								layer.msg('执行待办完成失败！请联系管理员',{time: 5000 });
+							}
+						}					
+					});
+				}
 			});															
 						
 			// 判断是否为负数
@@ -1494,11 +1575,41 @@
 				return arr.map((_, i) => i < index ? arr[i] : '-');
 			}
 			
+			// 虚线部分数组
 			function imaginaryArray(index, arr){
 				var newArr = arr.map((_, i) => i >= index ? arr[i] : '-');
 				newArr[index-1] = arr[index-1];
 				return newArr;
 			}
+			
+		 	//关闭窗口
+		 	function CloseWindow(action) {
+		        if (window.CloseOwnerWindow){
+		        	return window.CloseOwnerWindow(action);
+		        }else{
+		        	window.close();
+		        }
+		    }
+		    
+		    function closeCancel() {
+		        close_window("cancel");
+			}
+			
+			function closeOk() {
+				close_window("ok");
+			}
+			
+			function close_window_directly() {
+		        close_window("cancel");
+			}
+			
+			function close_window(action) {
+		        if (window.CloseOwnerWindow){
+		        	return window.CloseOwnerWindow(action);
+		        }else{
+		        	window.close(); 
+		        }          
+			}			
 			
 		});
 	</script>

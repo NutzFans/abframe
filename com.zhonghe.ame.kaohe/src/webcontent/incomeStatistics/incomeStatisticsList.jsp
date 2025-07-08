@@ -39,7 +39,7 @@ html,body {
 							</td>
 							<td style="width: 60px; text-align: right;">考核单位:</td>
 							<td>
-								<input id="secondaryOrg" name="criteria._expr[3].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
+								<input id="secondaryOrg" name="criteria._expr[3].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" showNullItem="true" />
 							</td>
 							<td>
 								<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
@@ -93,7 +93,7 @@ html,body {
 							</td>
 							<td style="width: 60px; text-align: right;">考核单位:</td>
 							<td>
-								<input id="srzbfxycSecondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
+								<input id="srzbfxycSecondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" showNullItem="true" />
 							</td>
 							<td>
 								<a class="nui-button" id="srzbfxycSearch" iconCls="icon-search" onclick="srzbfxycSearch()">查询</a>
@@ -192,7 +192,7 @@ html,body {
 							</td>
 							<td style="width: 60px; text-align: right;">考核单位:</td>
 							<td>
-								<input id="khsrtjmxSecondaryOrg" name="criteria._expr[3].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" />
+								<input id="khsrtjmxSecondaryOrg" name="criteria._expr[3].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" showNullItem="true" />
 							</td>
 							<td style="width: 60px; text-align: right;">合同状态:</td>
 							<td>

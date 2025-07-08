@@ -53,11 +53,15 @@ public class CompanyLeadershipChartJob {
 	}
 
 	@Bizlet("自动生成")
-	public void automaticGenerate() {
+	public void automaticGenerate() throws Exception {
+		String querySql = "SELECT * FROM zh_kaohe_company_chart WHERE (push_status = '已推送' OR push_status = '已推送(部分成功)') AND  years = ? AND months = ?";
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		try {
-			logger.info("【执行】定时任务 - 公司领导推送统计数据生成 - 自动生成");
-			Map<String, String> dateMap = this.getPreviousMonth();
+		logger.info("【执行】定时任务 - 公司领导推送统计数据生成 - 自动生成");
+		Map<String, String> dateMap = this.getPreviousMonth();
+		Entity entity = dbSession.queryOne(querySql, dateMap.get("year"), dateMap.get("month"));
+		if (entity != null) {
+			logger.warn("【执行】定时任务 - 公司领导推送统计数据生成 - 已有已推送的数据，无法生成");
+		} else {
 			Entity companyChartEntity = this.buildChartData(dateMap.get("year"), dateMap.get("month"), dbSession);
 			List<Entity> incomeTrendsDataEntityList = this.buildChartIncomeTrendsData(dateMap.get("year"), dateMap.get("month"), dbSession);
 			companyChartEntity.set("chart_method", "定时任务生成");
@@ -68,28 +72,30 @@ public class CompanyLeadershipChartJob {
 			dbSession.execute(delSqlIncomeTrends, dateMap.get("year"), dateMap.get("month"));
 			dbSession.insert(companyChartEntity);
 			dbSession.insert(incomeTrendsDataEntityList);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
 	@Bizlet("手动生成")
-	public void artificialGenerateSnapshot(String year, String month, String createBy) {
+	public Boolean artificialGenerate(String year, String month, String createBy) throws Exception {
+		String querySql = "SELECT * FROM zh_kaohe_company_chart WHERE (push_status = '已推送' OR push_status = '已推送(部分成功)') AND  years = ? AND months = ?";
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		try {
+		Entity entity = dbSession.queryOne(querySql, year, month);
+		if (entity != null) {
+			return false;
+		} else {
 			Entity companyChartEntity = this.buildChartData(year, month, dbSession);
+			List<Entity> incomeTrendsDataEntityList = this.buildChartIncomeTrendsData(year, month, dbSession);
 			companyChartEntity.set("chart_method", "人工手动生成");
 			companyChartEntity.set("create_by", createBy);
 			companyChartEntity.set("create_time", DateUtil.date());
 			companyChartEntity.set("push_status", "未推送");
-			dbSession.beginTransaction();
 			dbSession.execute(delSql, year, month);
+			dbSession.execute(delSqlIncomeTrends, year, month);
 			dbSession.insert(companyChartEntity);
-			dbSession.commit();
-		} catch (Exception e) {
-			dbSession.quietRollback();
-			e.printStackTrace();
+			dbSession.insert(incomeTrendsDataEntityList);
+			return true;
 		}
+
 	}
 
 	/**

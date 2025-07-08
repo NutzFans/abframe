@@ -63,38 +63,30 @@ public class AssessmentIncomeSnapshotJob {
 	private String delSnapshotByYearMonthSecOrgSql = "DELETE FROM zh_kaohe_statistics_snapshot WHERE years = ? AND months = ? AND secondary_org = ?";
 
 	@Bizlet("自动生成快照")
-	public void automaticGenerateSnapshot() {
+	public void automaticGenerateSnapshot() throws Exception {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		try {
-			logger.info("【执行】定时任务 - 考核收入统计 - 自动生成快照");
-			Map<String, String> dateMap = this.getPreviousMonth();
-			List<Entity> snapshotDetails = this.buildSnapshotDetails(dateMap.get("year"), dateMap.get("month"), null, dbSession);
-			if (snapshotDetails != null && snapshotDetails.size() > 0) {
-				List<Entity> snapshots = this.buildSnapshots(snapshotDetails, null, dateMap.get("year"), dateMap.get("month"), "定时任务");
-				dbSession.execute(delSnapshotByYearMonthSql, dateMap.get("year"), dateMap.get("month"));
-				dbSession.execute(delSnapshotDetaiByYearMonthSql, dateMap.get("year"), dateMap.get("month"));
-				dbSession.insert(snapshotDetails);
-				dbSession.insert(snapshots);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		logger.info("【执行】定时任务 - 考核收入统计 - 自动生成快照");
+		Map<String, String> dateMap = this.getPreviousMonth();
+		List<Entity> snapshotDetails = this.buildSnapshotDetails(dateMap.get("year"), dateMap.get("month"), null, dbSession);
+		if (snapshotDetails != null && snapshotDetails.size() > 0) {
+			List<Entity> snapshots = this.buildSnapshots(snapshotDetails, null, dateMap.get("year"), dateMap.get("month"), "定时任务");
+			dbSession.execute(delSnapshotByYearMonthSql, dateMap.get("year"), dateMap.get("month"));
+			dbSession.execute(delSnapshotDetaiByYearMonthSql, dateMap.get("year"), dateMap.get("month"));
+			dbSession.insert(snapshotDetails);
+			dbSession.insert(snapshots);
 		}
 	}
 
 	@Bizlet("手动生成快照")
-	public void artificialGenerateSnapshot(String year, String month, String secOrg, String createBy) {
+	public void artificialGenerateSnapshot(String year, String month, String secOrg, String createBy) throws Exception {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		try {
-			List<Entity> snapshotDetails = this.buildSnapshotDetails(year, month, secOrg, dbSession);
-			if (snapshotDetails != null && snapshotDetails.size() > 0) {
-				List<Entity> snapshots = this.buildSnapshots(snapshotDetails, secOrg, year, month, createBy);
-				dbSession.execute(delSnapshotByYearMonthSecOrgSql, year, month, secOrg);
-				dbSession.execute(delSnapshotDetaiByYearMonthSecOrgSql, year, month, secOrg);
-				dbSession.insert(snapshotDetails);
-				dbSession.insert(snapshots);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		List<Entity> snapshotDetails = this.buildSnapshotDetails(year, month, secOrg, dbSession);
+		if (snapshotDetails != null && snapshotDetails.size() > 0) {
+			List<Entity> snapshots = this.buildSnapshots(snapshotDetails, secOrg, year, month, createBy);
+			dbSession.execute(delSnapshotByYearMonthSecOrgSql, year, month, secOrg);
+			dbSession.execute(delSnapshotDetaiByYearMonthSecOrgSql, year, month, secOrg);
+			dbSession.insert(snapshotDetails);
+			dbSession.insert(snapshots);
 		}
 	}
 
