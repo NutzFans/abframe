@@ -49,7 +49,7 @@
 					<!-- 横线 -->
 					<div class="line"></div>
 					<!-- 中间文字 -->
-					<span class="center-text">公司层面（账面）</span>
+					<span class="center-text">公司层面（账面口径）</span>
 				</div>
 			</div>
 		</div>
@@ -285,7 +285,7 @@
 					<!-- 横线 -->
 					<div class="line"></div>
 					<!-- 中间文字 -->
-					<span class="center-text">内部考核层面</span>
+					<span class="center-text">内部各单位层面（考核口径）</span>
 				</div>
 			</div>
 		</div>
@@ -323,7 +323,7 @@
 									<ul class="layui-tabs-header layui-bg-tint">
 										<li class="layui-this">当月完成值排行</li>
 										<li>累计完成值排行</li>
-										<li>完成率排行</li>
+										<li>累计完成率排行</li>
 									</ul>
 									<div class="layui-tabs-body">
 										<div class="layui-tabs-item layui-show">
@@ -934,7 +934,7 @@
 			                fontSize: 18,
 			                color: '#000',
 			                formatter: function (param) {
-			                    return param.value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+			                    return param.value.toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 			                },
 			                position: 'top'
 			            }
@@ -1173,9 +1173,9 @@
 				        },
 				        formatter: function (param) {
 				            if(param.name == '后续待签合同收入'){
-				                return result = param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元，占比："+param.data.percentage+"<br>其中：低风险："+param.data.dfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元<br>其中：中风险："+param.data.zfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元";
+				                return param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元，占比："+param.data.percentage+"<br>其中(低风险)："+param.data.dfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元<br>其中(中风险)："+param.data.zfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元";
 				            }else{
-				                return result = param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元，占比："+param.data.percentage;
+				                return param.name + "："+param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元，占比："+param.data.percentage;
 				            } 
 				        }
 				    },
@@ -1203,11 +1203,17 @@
 						    color: '#000',
 						    overflow: 'break',
 						    formatter: function(param){
-						        if(param.name == '后续待签合同收入'){
-						        	return param.name +"："+ param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元("+param.data.percentage+")\n\n其中：低风险："+param.data.dfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元\n\n其中：中风险："+param.data.zfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元";
-						        }else{
-						        	return param.name +"："+ param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元("+param.data.percentage+")";
-						        }
+								if(param.name == '后续待签合同收入'){
+									return param.name +"："+ param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元("+param.data.percentage+")\n\n"+"{name|其中(低风险)："+param.data.dfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元}\n\n{name|其中(中风险)："+param.data.zfxValue.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元}";
+								}else{
+									return param.name +"："+ param.value.toLocaleString('zh-CN', {minimumFractionDigits : 2,maximumFractionDigits : 2})+"万元("+param.data.percentage+")";
+								}
+						    },
+						    rich: {
+						    	name: {
+						    		fontSize: 18,
+						    		color: '#c0392b'
+						    	}
 						    }			                                
 						},
 						itemStyle: {
@@ -1223,7 +1229,8 @@
 							top: '50%',
 							style: {
 								text:allSum,
-								fontSize: 18,
+								fontSize: 22,
+								fontWeight: 'bold',
 								fill: '#000'
 							}
 						},
@@ -1233,7 +1240,8 @@
 							top: '45%',
 							style: {
 								text: '全年预测收入',
-								fontSize: 18,
+								fontSize: 22,
+								fontWeight: 'bold',
 								fill: '#000'
 							}
 						}
@@ -1354,7 +1362,17 @@
 				                fontSize: 16,
 				                color: '#000',
 				                formatter: function (param) {
-				                    return param.name +"："+ param.value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })+"万元";
+				                	if(param.value > 0){
+				                		return "{name|"+param.name +"："+ param.value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })+"万元}";
+				                	}else{
+				                		return param.name +"："+ param.value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })+"万元";
+				                	}
+				                },
+				                rich: {
+				                	name: {
+				                		fontSize: 16,
+				                		fontWeight: 'bold'
+				                	}
 				                }
 				            },
 				            data: qkyjData.datas

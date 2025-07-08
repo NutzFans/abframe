@@ -233,7 +233,7 @@ public class CompanyLeadershipChartJob {
 
 	// 月末手持合同额
 	private BigDecimal getContractAmountHeldAtTheEndOfTheMonth(String year, String month, Session dbSession) throws Exception {
-		String querySql = "SELECT SUM(contract_balance) AS contract_balance_sum FROM zh_charge_contract WHERE app_status = '2' AND create_time <= ?";
+		String querySql = "SELECT SUM(contract_balance) AS contract_balance_sum FROM zh_charge_contract WHERE app_status = '2' AND signing_date <= ?";
 		String monthEndDate = this.getMonthEndDate(year, month);
 		Entity entity = dbSession.queryOne(querySql, monthEndDate);
 		return entity.getBigDecimal("contract_balance_sum");
@@ -241,7 +241,7 @@ public class CompanyLeadershipChartJob {
 
 	// 月末手持合同额 - 集团外
 	private BigDecimal getEndOfMonthContractAmountHeldOutsideTheGroup(String year, String month, Session dbSession) throws Exception {
-		String querySql = "SELECT SUM(contract_balance) AS contract_balance_sum FROM zh_charge_contract WHERE app_status = '2' AND headquarter_group='1' AND create_time <= ?";
+		String querySql = "SELECT SUM(contract_balance) AS contract_balance_sum FROM zh_charge_contract WHERE app_status = '2' AND headquarter_group='1' AND signing_date <= ?";
 		String monthEndDate = this.getMonthEndDate(year, month);
 		Entity entity = dbSession.queryOne(querySql, monthEndDate);
 		return entity.getBigDecimal("contract_balance_sum");
