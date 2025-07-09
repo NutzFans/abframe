@@ -140,6 +140,7 @@ html,body {
 					<div field="oct" headerAlign="center" align="center" summaryType="sum" dataType="currency">10月(不含税)</div>
 					<div field="nov" headerAlign="center" align="center" summaryType="sum" dataType="currency">11月(不含税)</div>
 					<div field="dec" headerAlign="center" align="center" summaryType="sum" dataType="currency">12月(不含税)</div>
+					<div field="major" headerAlign="center" align="center" renderer="ZH_MAJOR_TYPE">专业类别</div>
 					<div field="headquarterGroup" headerAlign="center" align="center" renderer="ZH_GROUP">集团内外</div>
 					<div field="riskLevel" headerAlign="center" align="center" renderer="RISK_LEVEL">风险等级</div>
 					<div field="estimatedDate" headerAlign="center" align="center">预计签署日期</div>
@@ -208,6 +209,10 @@ html,body {
 
 		function ZH_GROUP(e) {
 			return nui.getDictText("ZH_GROUP", e.value);
+		}
+		
+		function ZH_MAJOR_TYPE(e){
+			return nui.getDictText("ZH_MAJOR_TYPE", e.value);
 		}
 
 		function RISK_LEVEL(e) {
