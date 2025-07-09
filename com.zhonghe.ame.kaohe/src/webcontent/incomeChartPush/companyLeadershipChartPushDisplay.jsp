@@ -5,9 +5,8 @@
 <head>
 <meta charset="utf-8">
 <title>公司生产经营情况统计</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <script src="../../common/echarts/echarts.min.js"></script>
+<meta name="viewport" content="width=1920, initial-scale=0.1, user-scalable=yes">
 <link rel="stylesheet" href="../../common/layui-v2.11.4/css/layui.css" media="all">
 <link rel="stylesheet" href="css/company.css" media="all">
 <link rel="stylesheet" href="css/utils.css" media="all">
@@ -30,7 +29,7 @@
 				<div class="layui-row">
 					<div class="layui-col-md2">
 						<div style="padding-left: 10px; padding-top: 18px">
-							<img src="../../ame/clipview/assets/images/amelogo.png" height="40px">
+							<img src="../../ame/clipview/assets/images/amelogo.png" height="40px" width="220px">
 						</div>
 					</div>
 					<div class="layui-col-md10" style="margin-left: -35px; padding-top: 9px; line-height: 60px; font-size: 30px; font-weight: bold; color: #fff;">经营管理系统</div>
@@ -40,7 +39,7 @@
 	</div>
 	<div class="layui-fluid">
 		<div class="layui-row">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+			<div class="layui-col-md12">
 				<div class="line-container">
 					<!-- 左侧文字 -->
 					<div class="left-text">公司生产经营情况统计</div>
@@ -56,7 +55,7 @@
 
 		<!-- 统计数据 -->
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+			<div class="layui-col-md3">
 				<div class="layui-card">
 					<div class="layui-card-header">
 						<span class="header-text">月末手持合同额（万元）</span>
@@ -84,7 +83,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+			<div class="layui-col-md3">
 				<div class="layui-card">
 					<div class="layui-card-header">
 						<span class="header-text">本年新签合同额（万元）</span>
@@ -126,7 +125,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+			<div class="layui-col-md3">
 				<div class="layui-card">
 					<div class="layui-card-header">
 						<span class="header-text">本年营业收入（万元）</span>
@@ -168,7 +167,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+			<div class="layui-col-md3">
 				<div class="layui-card">
 					<div class="layui-card-header">
 						<span class="header-text">本年项目承揽率</span>
@@ -199,7 +198,7 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">本年新签合同TOP5（万元）</span>
@@ -220,7 +219,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">本年合同履约TOP5（万元）</span>
@@ -244,7 +243,7 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+			<div class="layui-col-md12">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">营业收入全年趋势预测（账面）</span>
@@ -280,7 +279,7 @@
 		</div>
 
 		<div class="layui-row">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+			<div class="layui-col-md12">
 				<div class="line-container">
 					<!-- 横线 -->
 					<div class="line"></div>
@@ -291,7 +290,7 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+			<div class="layui-col-md12">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">营业收入（考核口径）</span>
@@ -309,7 +308,7 @@
 					</div>
 					<div class="layui-card-body" style="padding: 5px">
 						<div class="layui-row">
-							<div class="layui-col-xs12 layui-col-sm12 layui-col-md9">
+							<div class="layui-col-md9">
 								<div class="layui-row">
 									<div id="yysrkhkjChartByYwzx" style="width: 100%; height: 400px"></div>
 								</div>
@@ -318,7 +317,7 @@
 									<div id="yysrkhkjChartByQt" style="width: 100%; height: 400px"></div>
 								</div>
 							</div>
-							<div class="layui-col-xs12 layui-col-sm12 layui-col-md3">
+							<div class="layui-col-md3">
 								<div class="layui-tabs layui-tabs-card">
 									<ul class="layui-tabs-header layui-bg-tint">
 										<li class="layui-this">当月完成值排行</li>
@@ -351,7 +350,7 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md7">
+			<div class="layui-col-md7">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">全年收入分解&风险分析（考核口径）</span>
@@ -375,7 +374,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md5">
+			<div class="layui-col-md5">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">缺口预警（考核口径）</span>
@@ -399,7 +398,7 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">新签合同额排行（万元）</span>
@@ -417,7 +416,7 @@
 					</div>
 					<div class="layui-card-body" style="padding: 5px">
 						<div class="layui-row">
-							<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+							<div class="layui-col-md12">
 								<div class="layui-tabs layui-tabs-card">
 									<ul class="layui-tabs-header layui-bg-tint">
 										<li class="layui-this" lay-on="dyxqhteTab">当月新签合同额</li>
@@ -426,20 +425,20 @@
 									<div class="layui-tabs-body">
 										<div class="layui-tabs-item layui-show">
 											<div class="layui-row layui-col-space5">
-												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+												<div class="layui-col-md6">
 													<table id="ywzxThisMonthGrid" class="layui-hide"></table>
 												</div>
-												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+												<div class="layui-col-md6">
 													<table id="qtThisMonthGrid" class="layui-hide"></table>
 												</div>
 											</div>
 										</div>
 										<div class="layui-tabs-item">
 											<div class="layui-row layui-col-space5">
-												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+												<div class="layui-col-md6">
 													<table id="ywzxCumulativeMonthGrid" class="layui-hide"></table>
 												</div>
-												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+												<div class="layui-col-md6">
 													<table id="qtCumulativeMonthGrid" class="layui-hide"></table>
 												</div>
 											</div>
@@ -452,7 +451,7 @@
 				</div>
 			</div>
 
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">开发中</span>
@@ -467,10 +466,10 @@
 
 
 		<div id="completeTodoBtn" class="layui-row layui-col-space15 layui-hide">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="display: flex; align-items: center; justify-content: center;"">
+			<div class="layui-col-md12" style="display: flex; align-items: center; justify-content: center;"">
 				<button class="layui-btn" style="background-color: #3578f7; font-size: 16px;" lay-on="toBeCompleted">已阅 - 点击该按钮完成待办</button>
 			</div>
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="display: flex; align-items: center; justify-content: center;"">
+			<div class="layui-col-md12" style="display: flex; align-items: center; justify-content: center;"">
 				<span>（后续可在OA - 已办 或 经营管理系统 - 考核管理模块 查看）</span>
 			</div>
 		</div>
