@@ -28,8 +28,8 @@ public class CompanyLeadershipChartSearch {
 
 	@Bizlet("本年新签合同排行（维度：集团内外）")
 	public List<Entity> rankingOfNewlySignedContracts(String year, String month, Boolean outsideTheGroup) throws Exception {
-		String querySql = "SELECT TOP 5 contract_name, signatory_name, contract_sum FROM zh_charge_contract WHERE app_status = '2' AND signing_date >= ? AND signing_date <= ? ORDER BY contract_sum DESC";
-		String querySqlByJTW = "SELECT TOP 5 contract_name, signatory_name, contract_sum FROM zh_charge_contract WHERE app_status = '2'  AND headquarter_group  = '1' AND signing_date >= ? AND signing_date <= ? ORDER BY contract_sum DESC";
+		String querySql = "SELECT TOP 5 contract_name, signatory_name, contract_sum, secondary_orgname FROM zh_charge_contract WHERE app_status = '2' AND signing_date >= ? AND signing_date <= ? ORDER BY contract_sum DESC";
+		String querySqlByJTW = "SELECT TOP 5 contract_name, signatory_name, contract_sum, secondary_orgname FROM zh_charge_contract WHERE app_status = '2'  AND headquarter_group  = '1' AND signing_date >= ? AND signing_date <= ? ORDER BY contract_sum DESC";
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String startDate = StrUtil.format("{}-{}-{}", year, "01", "01");
 		String monthEndDate = this.getMonthEndDate(year, month);
@@ -47,8 +47,8 @@ public class CompanyLeadershipChartSearch {
 
 	@Bizlet("本年合同履约排行（维度：集团内外）")
 	public List<Entity> contractPerformanceRanking(String year, String month, Boolean outsideTheGroup) throws Exception {
-		String querySql = "SELECT TOP 5 contract_name, payer_name, actual_invoice_sum FROM zh_invoice WHERE app_status = '2' AND create_time >= ? AND create_time <= ? ORDER BY actual_invoice_sum DESC";
-		String querySqlByJTW = "SELECT TOP 5 contract_name, payer_name, actual_invoice_sum FROM zh_invoice WHERE app_status = '2' AND headquarter_group = '1' AND create_time >= ? AND create_time <= ? ORDER BY actual_invoice_sum DESC";
+		String querySql = "SELECT TOP 5 contract_name, payer_name, actual_invoice_sum, secondary_orgname FROM zh_invoice WHERE app_status = '2' AND create_time >= ? AND create_time <= ? ORDER BY actual_invoice_sum DESC";
+		String querySqlByJTW = "SELECT TOP 5 contract_name, payer_name, actual_invoice_sum, secondary_orgname FROM zh_invoice WHERE app_status = '2' AND headquarter_group = '1' AND create_time >= ? AND create_time <= ? ORDER BY actual_invoice_sum DESC";
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String startDate = StrUtil.format("{}-{}-{}", year, "01", "01");
 		String monthEndDate = this.getMonthEndDate(year, month);

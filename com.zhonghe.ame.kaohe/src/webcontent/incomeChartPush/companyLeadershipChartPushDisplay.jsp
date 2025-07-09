@@ -399,7 +399,7 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+			<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">新签合同额排行（万元）</span>
@@ -415,37 +415,33 @@
 							</div>
 						</div>
 					</div>
-					<div class="layui-card-body" style="padding: 0px; background-color: #eaeef1">
-						<div class="layui-row layui-col-space1">
-							<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-								<div class="layui-card">
-									<div class="layui-card-header">
-										<span class="header-text-small">当月新签合同额</span>
-									</div>
-									<div class="layui-card-body">
-										<div class="layui-row layui-col-space5">
-											<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-												<table id="ywzxThisMonthGrid" class="layui-hide"></table>
-											</div>
-											<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-												<table id="qtThisMonthGrid" class="layui-hide"></table>
+					<div class="layui-card-body" style="padding: 5px">
+						<div class="layui-row">
+							<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+								<div class="layui-tabs layui-tabs-card">
+									<ul class="layui-tabs-header layui-bg-tint">
+										<li class="layui-this" lay-on="dyxqhteTab">当月新签合同额</li>
+										<li lay-on="bnljxqhteTab">本年累计新签合同额</li>
+									</ul>
+									<div class="layui-tabs-body">
+										<div class="layui-tabs-item layui-show">
+											<div class="layui-row layui-col-space5">
+												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+													<table id="ywzxThisMonthGrid" class="layui-hide"></table>
+												</div>
+												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+													<table id="qtThisMonthGrid" class="layui-hide"></table>
+												</div>
 											</div>
 										</div>
-									</div>
-								</div>
-							</div>
-							<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-								<div class="layui-card">
-									<div class="layui-card-header">
-										<span class="header-text-small">本年累计新签合同额</span>
-									</div>
-									<div class="layui-card-body">
-										<div class="layui-row layui-col-space5">
-											<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-												<table id="ywzxCumulativeMonthGrid" class="layui-hide"></table>
-											</div>
-											<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-												<table id="qtCumulativeMonthGrid" class="layui-hide"></table>
+										<div class="layui-tabs-item">
+											<div class="layui-row layui-col-space5">
+												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+													<table id="ywzxCumulativeMonthGrid" class="layui-hide"></table>
+												</div>
+												<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+													<table id="qtCumulativeMonthGrid" class="layui-hide"></table>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -455,11 +451,27 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
+				<div class="layui-card">
+					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+						<span class="header-text">开发中</span>
+					</div>
+					<div class="layui-card-body" style="padding: 5px; height: 426px; display: flex; align-items: center; justify-content: center;">
+						<span>功能持续开发完善中...</span>
+					</div>
+				</div>
+			</div>
+
 		</div>
 
+
 		<div id="completeTodoBtn" class="layui-row layui-col-space15 layui-hide">
-			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-				<button class="layui-btn layui-btn-fluid" style="background-color: #3578f7; font-size: 16px;" lay-on="toBeCompleted">公司生产经营情况统计 - 已阅并完成该项待办</button>
+			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="display: flex; align-items: center; justify-content: center;"">
+				<button class="layui-btn" style="background-color: #3578f7; font-size: 16px;" lay-on="toBeCompleted">已阅 - 点击该按钮完成待办</button>
+			</div>
+			<div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="display: flex; align-items: center; justify-content: center;"">
+				<span>（后续可在OA - 已办 或 经营管理系统 - 考核管理模块 查看）</span>
 			</div>
 		</div>
 
@@ -477,6 +489,7 @@
 			var form = layui.form;
 			var table = layui.table;
 			var layer = layui.layer;
+			var tabs = layui.tabs;
 
 			var reqId = '<%=request.getParameter("id")%>';
 			var userId = '<%=request.getParameter("userId")%>';
@@ -515,7 +528,7 @@
 						var result = data.result;
 						year = result.years;
 						month = result.months;
-						$('#statisticalPeriod').text('统计期：' + result.years + '年' + result.months + '月');
+						$('#statisticalPeriod').text('统计期：' + result.years + '年1 - ' + result.months + '月');
 						$('#contractAmountHeldAtTheEndOfTheMonth').text(result.contractAmountHeldAtTheEndOfTheMonth);
 						$('#endOfMonthContractAmountHeldOutsideTheGroup').text(result.endOfMonthContractAmountHeldOutsideTheGroup);
 						$('#newContractAmountSignedThisYear').text(result.newContractAmountSignedThisYear);
@@ -602,13 +615,17 @@
 						title : '序号',
 						width : 70,
 						align : 'center'
-					}, {
+					},{
+						field : 'secondary_orgname',
+						title : '承办单位',
+						width : 180
+					},{
 						field : 'contract_name',
 						title : '合同名称'
-					}, {
+					},{
 						field : 'signatory_name',
 						title : '签约方'
-					}, {
+					},{
 						field : 'contract_sum',
 						title : '合同金额',
 						width : 120,
@@ -644,13 +661,17 @@
 						title : '序号',
 						width : 70,
 						align : 'center'
-					}, {
+					},{
+						field : 'secondary_orgname',
+						title : '承办单位',
+						width : 180
+					},{
 						field : 'contract_name',
 						title : '合同名称'
-					}, {
+					},{
 						field : 'payer_name',
 						title : '付款单位'
-					}, {
+					},{
 						field : 'actual_invoice_sum',
 						title : '金额',
 						width : 120,
@@ -931,7 +952,7 @@
 			            data: series.datas,
 			            label: {
 			                show: true,
-			                fontSize: 18,
+			                fontSize: 14,
 			                color: '#000',
 			                formatter: function (param) {
 			                    return param.value.toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -1566,6 +1587,14 @@
 							}
 						}					
 					});
+				},
+				bnljxqhteTab: function(){
+					ywzxCumulativeMonthGrid.resize();
+					qtCumulativeMonthGrid.resize();
+				},
+				dyxqhteTab: function(){
+					ywzxThisMonthGrid.resize();
+					qtThisMonthGrid.resize();
 				}
 			});															
 						
