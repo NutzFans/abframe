@@ -4,10 +4,11 @@
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
       <targetNode>assign1</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link5" name="签约主体为公司" displayName="连接线" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>assign2</targetNode>
+      <targetNode>switch0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
           <process:leftOperand type="query">orgid</process:leftOperand>
@@ -15,13 +16,13 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <location x="60" y="208"/>
+    <location x="61" y="244"/>
     <size height="28" width="28"/>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
     <targetConnections>link2</targetConnections>
-    <location x="794" y="134"/>
+    <location x="795" y="170"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
@@ -29,13 +30,13 @@
     </process:returns>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
-    <location x="62" y="244"/>
-    <figSize height="17" width="25"/>
+    <location x="63" y="280"/>
+    <figSize height="16" width="25"/>
     <node>start0</node>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
-    <location x="796" y="170"/>
-    <figSize height="17" width="25"/>
+    <location x="797" y="206"/>
+    <figSize height="16" width="25"/>
     <node>end0</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="获取分公司对应总部审批人" displayName="queryByNamedSql" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
@@ -45,7 +46,7 @@
     </sourceConnections>
     <targetConnections>link3</targetConnections>
     <targetConnections>link8</targetConnections>
-    <location x="504" y="134"/>
+    <location x="505" y="170"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
@@ -62,8 +63,8 @@
     </process:outputVariables>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
-    <location x="443" y="170"/>
-    <figSize height="17" width="145"/>
+    <location x="444" y="206"/>
+    <figSize height="16" width="145"/>
     <node>invokePojo0</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
@@ -72,7 +73,7 @@
       <targetNode>end0</targetNode>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
-    <location x="646" y="134"/>
+    <location x="647" y="170"/>
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
@@ -81,18 +82,18 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
-    <location x="648" y="170"/>
-    <figSize height="17" width="25"/>
+    <location x="649" y="206"/>
+    <figSize height="16" width="25"/>
     <node>assign0</node>
   </nodes>
-  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign1</sourceNode>
       <targetNode>invokePojo0</targetNode>
     </sourceConnections>
     <targetConnections>link0</targetConnections>
-    <targetConnections>link6</targetConnections>
-    <location x="356" y="208"/>
+    <targetConnections>link7</targetConnections>
+    <location x="357" y="244"/>
     <size height="28" width="28"/>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
@@ -101,48 +102,18 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
-    <location x="355" y="244"/>
-    <figSize height="17" width="30"/>
+    <location x="359" y="280"/>
+    <figSize height="16" width="25"/>
     <node>assign1</node>
   </nodes>
-  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" displayName="赋值" type="assign">
-    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>assign2</sourceNode>
-      <targetNode>assign1</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"/>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="发起人为分公司" displayName="连接线" type="transition">
-      <sourceNode>assign2</sourceNode>
-      <targetNode>assign3</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NE">
-          <process:leftOperand type="query">judge</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <targetConnections>link5</targetConnections>
-    <location x="208" y="124"/>
-    <size height="28" width="28"/>
-    <nodeLabel>assign2label</nodeLabel>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
-    <location x="206" y="160"/>
-    <figSize height="17" width="32"/>
-    <node>assign2</node>
-  </nodes>
-  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值" displayName="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign3</sourceNode>
       <targetNode>invokePojo0</targetNode>
     </sourceConnections>
-    <targetConnections>link7</targetConnections>
-    <location x="356" y="60"/>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="357" y="96"/>
     <size height="28" width="28"/>
     <nodeLabel>assign3label</nodeLabel>
     <process:copy>
@@ -151,9 +122,51 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
-    <location x="354" y="96"/>
-    <figSize height="17" width="32"/>
+    <location x="359" y="132"/>
+    <figSize height="16" width="25"/>
     <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link4" name="发起人组织类型为事业部" displayName="连接线" isDefault="false" type="transition">
+      <bendPoint heightToEnd="-56" heightToStart="-56" widthToEnd="-151" widthToStart="143"/>
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">judge</process:leftOperand>
+          <process:rightOperand type="literal">4</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="发起人组织类型为分公司" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">judge</process:leftOperand>
+          <process:rightOperand type="literal">5</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="63" y="96"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="59" y="132"/>
+    <figSize height="16" width="37"/>
+    <node>switch0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
@@ -161,7 +174,7 @@
   <process:variables/>
   <process:inputs varArgs="false">
     <process:input description="机构id" isArray="false" name="orgid" primitiveType="String"/>
-    <process:input description="是否分公司" isArray="false" name="judge" primitiveType="String"/>
+    <process:input description="是否分公司(调整为使用组织分类orgClass)" isArray="false" name="judge" primitiveType="String"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" modelType="com.eos.workflow.data.WFParticipant" name="wfp"/>
