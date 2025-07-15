@@ -384,6 +384,11 @@ body {
 					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
+				var contractSecretLevel = nui.get("contractSecretLevel").getValue();
+				if(contractSecretLevel == "3"){
+					showTips("如合同密级为内部及以上，请履行线下审批流程。", "danger");
+					return;
+				}
 				if (chargePlans.length > 0) {
 					var chargePlansStr = JSON.stringify(chargePlans);
 					var chargePlansJson = JSON.parse(chargePlansStr);
@@ -424,6 +429,10 @@ body {
 				var contractName = nui.get("contractName").getValue();
 				var cachet = nui.get("cachet").getValue();
 				var contractSecretLevel = nui.get("contractSecretLevel").getValue();
+				if(contractSecretLevel == "3"){
+					showTips("如合同密级为内部及以上，请履行线下审批流程。", "danger");
+					return;
+				}
 				if (isStrEmpty(contractName) || isStrEmpty(cachet) || isStrEmpty(contractSecretLevel)) {
 					showTips("请填写合同名称、是否签订合同、合同文本密级并确保其正确性！", "danger");
 					return;

@@ -97,7 +97,7 @@ body {
 						<tr>
 							<td align="right" style="width: 130px">合同文本密级:</td>
 							<td>
-								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" enabled="false" />
+								<input id="contractSecretLevel" name="contractSecretLevel" class="nui-dictcombobox" dictTypeId="CONTRACT_SECRET_LEVEL" style="width: 200px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">项目密级:</td>
 							<td>
@@ -492,6 +492,11 @@ body {
 				var chargePlans = grid2.getData();
 				if (!form.validate()) {
 					showTips("请检查表单的完整性!", "danger");
+					return;
+				}
+				var contractSecretLevel = nui.get("contractSecretLevel").getValue();
+				if(contractSecretLevel == "3"){
+					showTips("如合同密级为内部及以上，请履行线下审批流程。", "danger");
 					return;
 				}
 				if (chargePlans.length > 0) {

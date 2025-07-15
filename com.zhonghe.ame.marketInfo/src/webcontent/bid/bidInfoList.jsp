@@ -34,7 +34,7 @@ html,body {
 							</td>
 							<td style="width: 60px; text-align: right;">牵头部门:</td>
 							<td style="width: 155px">
-								<input id="dataNotFinshBidOrg" name="criteria._expr[2].bidOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_ORG" showNullItem="true" nullItemText="全部" style="width: 150px" />
+								<input id="dataNotFinshBidOrg" name="criteria._expr[2].bidOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" showNullItem="true" nullItemText="全部" style="width: 150px" />
 							</td>
 							<td style="width: 60px; text-align: right;">内协外联:</td>
 							<td style="width: 155px">
@@ -166,7 +166,7 @@ html,body {
 						<div type="expandcolumn" renderer="expandColumn">+</div>
 						<div field="id" headerAlign="center" visible="false">id</div>
 						<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
-						<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
+						<div field="bidOrgName" headerAlign="center" align="center">牵头部门</div>
 						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" width="80" allowSort="true">备案日期</div>
 						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 						<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
@@ -210,7 +210,7 @@ html,body {
 							</td>
 							<td style="width: 60px; text-align: right;">牵头部门:</td>
 							<td style="width: 155px">
-								<input name="criteria._expr[2].bidOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_ORG" showNullItem="true" nullItemText="全部" style="width: 150px" />
+								<input id="dataFinshBidOrg" name="criteria._expr[2].bidOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" showNullItem="true" nullItemText="全部" style="width: 150px" />
 							</td>
 							<td style="width: 60px; text-align: right;">内协外联:</td>
 							<td style="width: 155px">
@@ -341,7 +341,7 @@ html,body {
 						<div type="expandcolumn" renderer="expandColumn">+</div>
 						<div field="id" headerAlign="center" visible="false">id</div>
 						<div field="bidDataStatus" headerAlign="center" align="center" renderer="ZH_BID_STATUS" width="75">数据完善度</div>
-						<div field="bidOrg" headerAlign="center" align="center" renderer="ZH_BID_ORG">牵头部门</div>
+						<div field="bidOrgName" headerAlign="center" align="center">牵头部门</div>
 						<div field="recordDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" width="80" allowSort="true">备案日期</div>
 						<div field="updateDate" headerAlign="center" align="center" dateFormat="yyyy-MM-dd" allowSort="true">最后更新日期</div>
 						<div field="createUserid" displayField="empname" headerAlign="center" align="center" width="55">填报人</div>
@@ -413,6 +413,7 @@ html,body {
 			}		
 			nui.get("dataNotFinshBidDataStatus").setValue("2");
 			nui.get("dataFinshBidDataStatus").setValue("1");
+			initSecOrgCombobox();
 			var json = nui.encode({
 				'loginUserId' : userId
 			});
@@ -431,6 +432,19 @@ html,body {
 				}
 			});
 		}
+		
+		function initSecOrgCombobox() {
+			ajaxCommon({
+				"url" : "com.zhonghe.ame.kaohe.common.getBusSecOrgList.biz.ext",
+				async: false,
+				contentType : 'text/json',
+				success : function(result) {
+					var datas = result.secOrgList;
+					nui.get("dataNotFinshBidOrg").setData(datas);
+					nui.get("dataFinshBidOrg").setData(datas);
+				}
+			});
+		}		
 
 		function dataNotFinshSearch() {
 			var data = dataNotFinshForm.getData();

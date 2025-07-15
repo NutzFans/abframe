@@ -30,7 +30,7 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 130px">牵头部门：</td>
 							<td>
-								<input name="bidOrg" id="bidOrg" class="nui-dictcombobox" dictTypeId="ZH_BID_ORG" style="width: 250px" required="true" />
+								<input name="bidOrg" id="bidOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 250px" required="true" />
 							</td>
 							<td align="right" style="width: 130px">备案日期：</td>
 							<td>
@@ -239,7 +239,19 @@ body .mini-textboxlist {
 		function init() {
 			nui.get("createUserid").setValue(userId);
 			nui.get("createUser").setValue(userName);
+			initSecOrgCombobox();
 		}
+		
+		function initSecOrgCombobox() {
+			ajaxCommon({
+				"url" : "com.zhonghe.ame.kaohe.common.getBusSecOrgList.biz.ext",
+				contentType : 'text/json',
+				success : function(result) {
+					var datas = result.secOrgList;
+					nui.get("bidOrg").setData(datas);
+				}
+			});
+		}		
 
 		function selectCustInfo() {
 			mini.open({

@@ -3,7 +3,7 @@
   <nodes xsi:type="model:PEntityNode" id="node3" name="MisCustinfo" nodeType="table" displayName="MisCustinfo" author="王维" open="true" table="MIS_CUSTINFO" genStrategy="assigned">
     <location x="60" y="60"/>
     <size height="1182" width="150"/>
-    <figSize height="20" width="168"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property64" name="custid" displayName="custid" columnName="CUSTID" nullAble="false" PK="true" columnType="NUMERIC" eosDataType="Decimal" length="16" dasType="big_decimal" overWriteDefaultColumnType="false" showType="Decimal" update="true" insert="true">
       <comment xsi:nil="true"/>
       <viewField dict="false" displayName="custid" id="custid" label="custid" name="custid" userDefined="true">
@@ -1834,64 +1834,9 @@
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity0" name="ZhBidUnits" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
     <location x="60" y="1302"/>
-    <size height="84" width="150"/>
+    <size height="66" width="150"/>
     <figSize height="20" width="150"/>
-    <columnProperty id="property99" name="dicttypeid" displayName="dicttypeid" columnName="DICTTYPEID" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
-      <viewField dict="false" dictTypeId="" displayName="dicttypeid" entityField="dicttypeid" id="dicttypeid" label="dicttypeid" name="dicttypeid" userDefined="true">
-        <fieldView showAllAttr="false">
-          <type name="write"/>
-          <attr defaultValue="" name="filter"/>
-          <attr defaultValue="" name="maxLengthString"/>
-          <attr defaultValue="" name="iterateId"/>
-          <attr defaultValue="" name="modelField"/>
-          <attr name="srcFormatPattern"/>
-          <attr name="formatPattern"/>
-          <attr defaultValue="" name="propertyType"/>
-          <attr defaultValue="" name="scope"/>
-          <attr defaultValue="" name="property"/>
-          <attr name="ignore"/>
-          <attr name="value"/>
-          <attr name="maxLength"/>
-        </fieldView>
-        <fieldEdit showAllAttr="false">
-          <type name="text"/>
-          <attr defaultValue="" name="onmousemove"/>
-          <attr defaultValue="" name="modelField"/>
-          <attr defaultValue="" name="onfocus"/>
-          <attr defaultValue="" name="onmouseup"/>
-          <attr defaultValue="" name="title"/>
-          <attr defaultValue="" name="styleClass"/>
-          <attr defaultValue="" name="onmouseover"/>
-          <attr defaultValue="" name="validateAttr"/>
-          <attr name="accesskey"/>
-          <attr defaultValue="" name="readonly"/>
-          <attr defaultValue="" name="onselect"/>
-          <attr defaultValue="" name="scope"/>
-          <attr defaultValue="" name="property"/>
-          <attr defaultValue="" name="disabled"/>
-          <attr defaultValue="" name="id"/>
-          <attr defaultValue="" name="onkeydown"/>
-          <attr defaultValue="" name="value"/>
-          <attr defaultValue="" name="onblur"/>
-          <attr defaultValue="" name="indexed"/>
-          <attr defaultValue="" name="maxlength"/>
-          <attr defaultValue="" name="tabindex"/>
-          <attr defaultValue="" name="onclick"/>
-          <attr defaultValue="" name="onkeyup"/>
-          <attr defaultValue="" name="onchange"/>
-          <attr defaultValue="" name="extAttr"/>
-          <attr defaultValue="" name="onkeypress"/>
-          <attr defaultValue="" name="ondblclick"/>
-          <attr defaultValue="" name="iterateId"/>
-          <attr defaultValue="" name="size"/>
-          <attr defaultValue="" name="onmouseout"/>
-          <attr defaultValue="" name="name"/>
-          <attr defaultValue="" name="style"/>
-          <attr defaultValue="" name="onmousedown"/>
-        </fieldEdit>
-      </viewField>
-    </columnProperty>
-    <columnProperty id="property100" name="dictid" displayName="dictid" columnName="DICTID" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
+    <columnProperty id="property99" name="dictid" displayName="dictid" columnName="DICTID" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="dictid" entityField="dictid" id="dictid" label="dictid" name="dictid" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -1946,7 +1891,7 @@
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property101" name="dictname" displayName="dictname" columnName="DICTNAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
+    <columnProperty id="property100" name="dictname" displayName="dictname" columnName="DICTNAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="dictname" entityField="dictname" id="dictname" label="dictname" name="dictname" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -2002,7 +1947,21 @@
       </viewField>
     </columnProperty>
     <spEntitySqlView product="default" view="" useSql="true" schema="" needSave="true">
-      <sql>SELECT DICTTYPEID, DICTID, DICTNAME FROM EOS_DICT_ENTRY</sql>
+      <sql>SELECT&#xD;
+  ORGCODE AS DICTID,&#xD;
+  ORGNAME AS DICTNAME &#xD;
+FROM&#xD;
+  OM_ORGANIZATION &#xD;
+WHERE&#xD;
+  ( ORGLEVEL = '2' AND STATUS = 'running' AND ORGSEQ LIKE '.1.%' ) &#xD;
+  OR ( ORGSEQ = '.1111.' ) EXCEPT&#xD;
+SELECT&#xD;
+  DICTID,&#xD;
+  DICTNAME &#xD;
+FROM&#xD;
+  EOS_DICT_ENTRY &#xD;
+WHERE&#xD;
+  DICTTYPEID = 'ZH_NOT_SEC_ORG'</sql>
     </spEntitySqlView>
     <spEntitySqlView product="DB2 UDB" view="" useSql="true" schema="">
       <sql></sql>
@@ -2036,9 +1995,9 @@
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:PEntityNode" id="node2" name="ZhCompetitor" nodeType="table" displayName="ZhCompetitor" author="王维" open="true" allUseViewModel="true" instanceClass="com.zhonghe.ame.marketInfo.bid.impl.ZhCompetitorImpl" table="ZH_COMPETITOR" genStrategy="assigned">
-    <location x="60" y="1608"/>
+    <location x="60" y="1428"/>
     <size height="120" width="150"/>
-    <figSize height="20" width="152"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property29" name="competId" displayName="competId" columnName="compet_id" nullAble="false" PK="true" columnType="INT" eosDataType="Int" dasType="int" overWriteDefaultColumnType="false" showType="Int" update="true" insert="true">
       <comment xsi:nil="true"/>
       <viewField dict="false" displayName="competId" id="competId" label="competId" name="competId" userDefined="true">
@@ -2188,9 +2147,9 @@
     </columnProperty>
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity1" name="ZhCompetitorEntity" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="1788"/>
+    <location x="60" y="1608"/>
     <size height="174" width="150"/>
-    <figSize height="20" width="152"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property103" name="competId" displayName="competId" columnName="compet_id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" dasType="int" showType="Int">
       <viewField dict="false" dictTypeId="" displayName="competId" entityField="competId" id="competId" label="competId" name="competId" userDefined="true">
         <fieldView showAllAttr="false">
@@ -2682,10 +2641,10 @@ FROM
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity2" name="ZhBidinfoEntity" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="2022"/>
-    <size height="696" width="150"/>
-    <figSize height="20" width="174"/>
-    <columnProperty id="property111" name="id" displayName="id" columnName="id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" queryId="true" dasType="int" showType="Int">
+    <location x="60" y="1842"/>
+    <size height="714" width="150"/>
+    <figSize height="20" width="150"/>
+    <columnProperty id="property101" name="id" displayName="id" columnName="id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" queryId="true" dasType="int" showType="Int">
       <viewField dict="false" dictTypeId="" displayName="id" entityField="id" id="id" label="id" name="id" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -2740,7 +2699,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property112" name="bidOrg" displayName="bidOrg" columnName="bid_org" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property111" name="bidOrg" displayName="bidOrg" columnName="bid_org" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidOrg" entityField="bidOrg" id="bidOrg" label="bidOrg" name="bidOrg" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -2795,7 +2754,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property113" name="recordDate" displayName="recordDate" columnName="record_date" nullAble="false" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
+    <columnProperty id="property112" name="recordDate" displayName="recordDate" columnName="record_date" nullAble="false" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
       <viewField dict="false" dictTypeId="" displayName="recordDate" entityField="recordDate" id="recordDate" label="recordDate" name="recordDate" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -2858,7 +2817,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property114" name="bidNxwl" displayName="bidNxwl" columnName="bid_nxwl" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property113" name="bidNxwl" displayName="bidNxwl" columnName="bid_nxwl" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidNxwl" entityField="bidNxwl" id="bidNxwl" label="bidNxwl" name="bidNxwl" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -2913,7 +2872,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property115" name="custId" displayName="custId" columnName="cust_id" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
+    <columnProperty id="property114" name="custId" displayName="custId" columnName="cust_id" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="custId" entityField="custId" id="custId" label="custId" name="custId" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -2968,7 +2927,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property116" name="projectName" displayName="projectName" columnName="project_name" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
+    <columnProperty id="property115" name="projectName" displayName="projectName" columnName="project_name" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="projectName" entityField="projectName" id="projectName" label="projectName" name="projectName" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3023,7 +2982,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property117" name="investAmount" displayName="investAmount" columnName="invest_amount" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
+    <columnProperty id="property116" name="investAmount" displayName="investAmount" columnName="invest_amount" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="255" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="investAmount" entityField="investAmount" id="investAmount" label="investAmount" name="investAmount" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3078,7 +3037,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property118" name="bidBde" displayName="bidBde" columnName="bid_bde" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String" default="">
+    <columnProperty id="property117" name="bidBde" displayName="bidBde" columnName="bid_bde" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String" default="">
       <viewField dict="false" dictTypeId="" displayName="bidBde" entityField="bidBde" id="bidBde" label="bidBde" name="bidBde" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3133,7 +3092,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property119" name="headquarterGroup" displayName="headquarterGroup" columnName="headquarter_group" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property118" name="headquarterGroup" displayName="headquarterGroup" columnName="headquarter_group" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="headquarterGroup" entityField="headquarterGroup" id="headquarterGroup" label="headquarterGroup" name="headquarterGroup" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3188,7 +3147,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property120" name="projectPlace" displayName="projectPlace" columnName="project_place" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="64" dasType="string" showType="String">
+    <columnProperty id="property119" name="projectPlace" displayName="projectPlace" columnName="project_place" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="64" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="projectPlace" entityField="projectPlace" id="projectPlace" label="projectPlace" name="projectPlace" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3243,7 +3202,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property121" name="bidFeatures" displayName="bidFeatures" columnName="bid_features" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property120" name="bidFeatures" displayName="bidFeatures" columnName="bid_features" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidFeatures" entityField="bidFeatures" id="bidFeatures" label="bidFeatures" name="bidFeatures" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3298,7 +3257,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property122" name="projectType" displayName="projectType" columnName="project_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property121" name="projectType" displayName="projectType" columnName="project_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="projectType" entityField="projectType" id="projectType" label="projectType" name="projectType" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3353,7 +3312,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property123" name="majorType" displayName="majorType" columnName="major_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property122" name="majorType" displayName="majorType" columnName="major_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="majorType" entityField="majorType" id="majorType" label="majorType" name="majorType" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3408,7 +3367,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property124" name="bidService" displayName="bidService" columnName="bid_service" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property123" name="bidService" displayName="bidService" columnName="bid_service" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidService" entityField="bidService" id="bidService" label="bidService" name="bidService" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3463,7 +3422,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property125" name="projectFeatures" displayName="projectFeatures" columnName="project_features" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="1024" dasType="string" showType="String">
+    <columnProperty id="property124" name="projectFeatures" displayName="projectFeatures" columnName="project_features" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="1024" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="projectFeatures" entityField="projectFeatures" id="projectFeatures" label="projectFeatures" name="projectFeatures" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3518,7 +3477,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property126" name="contractType" displayName="contractType" columnName="contract_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property125" name="contractType" displayName="contractType" columnName="contract_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="contractType" entityField="contractType" id="contractType" label="contractType" name="contractType" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3573,7 +3532,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property127" name="procurementType" displayName="procurementType" columnName="procurement_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property126" name="procurementType" displayName="procurementType" columnName="procurement_type" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="procurementType" entityField="procurementType" id="procurementType" label="procurementType" name="procurementType" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3628,7 +3587,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property128" name="bidUnitsCode" displayName="bidUnitsCode" columnName="bid_units_code" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
+    <columnProperty id="property127" name="bidUnitsCode" displayName="bidUnitsCode" columnName="bid_units_code" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidUnitsCode" entityField="bidUnitsCode" id="bidUnitsCode" label="bidUnitsCode" name="bidUnitsCode" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3683,7 +3642,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property129" name="contractPrice" displayName="contractPrice" columnName="contract_price" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="256" dasType="string" showType="String">
+    <columnProperty id="property128" name="contractPrice" displayName="contractPrice" columnName="contract_price" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="256" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="contractPrice" entityField="contractPrice" id="contractPrice" label="contractPrice" name="contractPrice" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3738,7 +3697,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property130" name="contractModel" displayName="contractModel" columnName="contract_model" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property129" name="contractModel" displayName="contractModel" columnName="contract_model" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="contractModel" entityField="contractModel" id="contractModel" label="contractModel" name="contractModel" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3793,7 +3752,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property131" name="bidConvert" displayName="bidConvert" columnName="bid_convert" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property130" name="bidConvert" displayName="bidConvert" columnName="bid_convert" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidConvert" entityField="bidConvert" id="bidConvert" label="bidConvert" name="bidConvert" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3848,7 +3807,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property132" name="remark" displayName="remark" columnName="remark" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="2048" dasType="string" showType="String">
+    <columnProperty id="property131" name="remark" displayName="remark" columnName="remark" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="2048" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="remark" entityField="remark" id="remark" label="remark" name="remark" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3903,7 +3862,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property133" name="bidResult" displayName="bidResult" columnName="bid_result" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property132" name="bidResult" displayName="bidResult" columnName="bid_result" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidResult" entityField="bidResult" id="bidResult" label="bidResult" name="bidResult" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -3958,7 +3917,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property134" name="createUserid" displayName="createUserid" columnName="create_userid" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property133" name="createUserid" displayName="createUserid" columnName="create_userid" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="createUserid" entityField="createUserid" id="createUserid" label="createUserid" name="createUserid" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4013,7 +3972,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property135" name="createDate" displayName="createDate" columnName="create_date" nullAble="false" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
+    <columnProperty id="property134" name="createDate" displayName="createDate" columnName="create_date" nullAble="false" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
       <viewField dict="false" dictTypeId="" displayName="createDate" entityField="createDate" id="createDate" label="createDate" name="createDate" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4076,7 +4035,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property136" name="bidUnitsName" displayName="bidUnitsName" columnName="bid_units_name" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="1024" dasType="string" showType="String">
+    <columnProperty id="property135" name="bidUnitsName" displayName="bidUnitsName" columnName="bid_units_name" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="1024" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidUnitsName" entityField="bidUnitsName" id="bidUnitsName" label="bidUnitsName" name="bidUnitsName" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4131,7 +4090,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property137" name="bidDataStatus" displayName="bidDataStatus" columnName="bid_data_status" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property136" name="bidDataStatus" displayName="bidDataStatus" columnName="bid_data_status" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="bidDataStatus" entityField="bidDataStatus" id="bidDataStatus" label="bidDataStatus" name="bidDataStatus" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4186,7 +4145,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property138" name="empname" displayName="empname" columnName="EMPNAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="50" dasType="string" showType="String">
+    <columnProperty id="property137" name="empname" displayName="empname" columnName="EMPNAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="50" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="empname" entityField="empname" id="empname" label="empname" name="empname" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4241,7 +4200,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property139" name="orgid" displayName="orgid" columnName="ORGID" nullAble="true" PK="false" columnType="numeric" eosDataType="Decimal" length="10" dasType="big_decimal" showType="Decimal">
+    <columnProperty id="property138" name="orgid" displayName="orgid" columnName="ORGID" nullAble="true" PK="false" columnType="numeric" eosDataType="Decimal" length="10" dasType="big_decimal" showType="Decimal">
       <viewField dict="false" dictTypeId="" displayName="orgid" entityField="orgid" id="orgid" label="orgid" name="orgid" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4296,7 +4255,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property140" name="orgname" displayName="orgname" columnName="ORGNAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="64" dasType="string" showType="String">
+    <columnProperty id="property139" name="orgname" displayName="orgname" columnName="ORGNAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="64" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="orgname" entityField="orgname" id="orgname" label="orgname" name="orgname" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4351,7 +4310,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property141" name="updateUserid" displayName="updateUserid" columnName="update_userid" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
+    <columnProperty id="property140" name="updateUserid" displayName="updateUserid" columnName="update_userid" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="32" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="updateUserid" entityField="updateUserid" id="updateUserid" label="updateUserid" name="updateUserid" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4406,7 +4365,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property236" name="updateDate" displayName="updateDate" columnName="update_date" nullAble="true" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
+    <columnProperty id="property141" name="updateDate" displayName="updateDate" columnName="update_date" nullAble="true" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
       <viewField dict="false" dictTypeId="" displayName="updateDate" entityField="updateDate" id="updateDate" label="updateDate" name="updateDate" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4469,7 +4428,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property237" name="updatename" displayName="updatename" columnName="UPDATENAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="50" dasType="string" showType="String">
+    <columnProperty id="property236" name="updatename" displayName="updatename" columnName="UPDATENAME" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="50" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="updatename" entityField="updatename" id="updatename" label="updatename" name="updatename" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4524,7 +4483,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property238" name="custName" displayName="custName" columnName="cust_name" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="1024" dasType="string" showType="String">
+    <columnProperty id="property237" name="custName" displayName="custName" columnName="cust_name" nullAble="false" PK="false" columnType="varchar" eosDataType="String" length="1024" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="custName" entityField="custName" id="custName" label="custName" name="custName" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4579,7 +4538,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property241" name="bidDate" displayName="bidDate" columnName="bid_date" nullAble="true" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
+    <columnProperty id="property238" name="bidDate" displayName="bidDate" columnName="bid_date" nullAble="true" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
       <viewField dict="false" dictTypeId="" displayName="bidDate" entityField="bidDate" id="bidDate" label="bidDate" name="bidDate" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4642,7 +4601,7 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property243" name="twoOrg" displayName="twoOrg" columnName="two_org" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="512" dasType="string" showType="String">
+    <columnProperty id="property241" name="twoOrg" displayName="twoOrg" columnName="two_org" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="512" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="twoOrg" entityField="twoOrg" id="twoOrg" label="twoOrg" name="twoOrg" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
@@ -4697,8 +4656,63 @@ FROM
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property245" name="contractNo" displayName="contractNo" columnName="contract_no" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
+    <columnProperty id="property243" name="contractNo" displayName="contractNo" columnName="contract_no" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="128" dasType="string" showType="String">
       <viewField dict="false" dictTypeId="" displayName="contractNo" entityField="contractNo" id="contractNo" label="contractNo" name="contractNo" userDefined="true">
+        <fieldView showAllAttr="false">
+          <type name="write"/>
+          <attr defaultValue="" name="filter"/>
+          <attr defaultValue="" name="maxLengthString"/>
+          <attr defaultValue="" name="iterateId"/>
+          <attr defaultValue="" name="modelField"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="formatPattern"/>
+          <attr defaultValue="" name="propertyType"/>
+          <attr defaultValue="" name="scope"/>
+          <attr defaultValue="" name="property"/>
+          <attr name="ignore"/>
+          <attr name="value"/>
+          <attr name="maxLength"/>
+        </fieldView>
+        <fieldEdit showAllAttr="false">
+          <type name="text"/>
+          <attr defaultValue="" name="onmousemove"/>
+          <attr defaultValue="" name="modelField"/>
+          <attr defaultValue="" name="onfocus"/>
+          <attr defaultValue="" name="onmouseup"/>
+          <attr defaultValue="" name="title"/>
+          <attr defaultValue="" name="styleClass"/>
+          <attr defaultValue="" name="onmouseover"/>
+          <attr defaultValue="" name="validateAttr"/>
+          <attr name="accesskey"/>
+          <attr defaultValue="" name="readonly"/>
+          <attr defaultValue="" name="onselect"/>
+          <attr defaultValue="" name="scope"/>
+          <attr defaultValue="" name="property"/>
+          <attr defaultValue="" name="disabled"/>
+          <attr defaultValue="" name="id"/>
+          <attr defaultValue="" name="onkeydown"/>
+          <attr defaultValue="" name="value"/>
+          <attr defaultValue="" name="onblur"/>
+          <attr defaultValue="" name="indexed"/>
+          <attr defaultValue="" name="maxlength"/>
+          <attr defaultValue="" name="tabindex"/>
+          <attr defaultValue="" name="onclick"/>
+          <attr defaultValue="" name="onkeyup"/>
+          <attr defaultValue="" name="onchange"/>
+          <attr defaultValue="" name="extAttr"/>
+          <attr defaultValue="" name="onkeypress"/>
+          <attr defaultValue="" name="ondblclick"/>
+          <attr defaultValue="" name="iterateId"/>
+          <attr defaultValue="" name="size"/>
+          <attr defaultValue="" name="onmouseout"/>
+          <attr defaultValue="" name="name"/>
+          <attr defaultValue="" name="style"/>
+          <attr defaultValue="" name="onmousedown"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property245" name="bidOrgName" displayName="bidOrgName" columnName="bid_org_name" nullAble="true" PK="false" columnType="varchar" eosDataType="String" length="64" dasType="string" showType="String">
+      <viewField dict="false" dictTypeId="" displayName="bidOrgName" entityField="bidOrgName" id="bidOrgName" label="bidOrgName" name="bidOrgName" userDefined="true">
         <fieldView showAllAttr="false">
           <type name="write"/>
           <attr defaultValue="" name="filter"/>
@@ -4754,16 +4768,18 @@ FROM
     </columnProperty>
     <spEntitySqlView product="default" view="" useSql="true" schema="" needSave="true">
       <sql>SELECT
-	zb.*,
-	oe.EMPNAME,
-	oem.EMPNAME AS UPDATENAME,
-	oe.ORGID,
-	oo.ORGNAME 
+  zb.*,&#xD;
+  org.ORGNAME AS bid_org_name,
+  oe.EMPNAME,
+  oem.EMPNAME AS UPDATENAME,
+  oe.ORGID,
+  oo.ORGNAME 
 FROM
-	ZH_BIDINFO AS zb
-	LEFT JOIN OM_EMPLOYEE AS oe ON zb.create_userid = oe.EMPCODE
-	LEFT JOIN OM_EMPLOYEE AS oem ON zb.update_userid = oem.EMPCODE
-	LEFT JOIN OM_ORGANIZATION AS oo ON oe.ORGID = oo.ORGID</sql>
+  ZH_BIDINFO AS zb
+  LEFT JOIN OM_EMPLOYEE AS oe ON zb.create_userid = oe.EMPCODE
+  LEFT JOIN OM_EMPLOYEE AS oem ON zb.update_userid = oem.EMPCODE
+  LEFT JOIN OM_ORGANIZATION AS oo ON oe.ORGID = oo.ORGID&#xD;
+  LEFT JOIN OM_ORGANIZATION AS org ON zb.bid_org = org.ORGID</sql>
     </spEntitySqlView>
     <spEntitySqlView product="DB2 UDB" view="" useSql="true" schema="">
       <sql></sql>
@@ -4797,9 +4813,9 @@ FROM
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity3" name="ZhBidinfoCompetitorEntity" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="2724"/>
+    <location x="60" y="2616"/>
     <size height="138" width="150"/>
-    <figSize height="20" width="185"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property142" name="id" displayName="id" columnName="id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" queryId="true" dasType="int" showType="Int">
       <viewField dict="false" dictTypeId="" displayName="id" entityField="id" id="id" label="id" name="id" userDefined="true">
         <fieldView showAllAttr="false">
@@ -5170,9 +5186,9 @@ FROM&#xD;
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity4" name="MisCustinfoEntity" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="2904"/>
+    <location x="60" y="2814"/>
     <size height="1236" width="150"/>
-    <figSize height="20" width="168"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property147" name="custid" displayName="custid" columnName="CUSTID" nullAble="false" PK="false" columnType="numeric" eosDataType="Decimal" length="16" queryId="true" dasType="big_decimal" showType="Decimal">
       <viewField dict="false" dictTypeId="" displayName="custid" entityField="custid" id="custid" label="custid" name="custid" userDefined="true">
         <fieldView showAllAttr="false">
@@ -8944,9 +8960,9 @@ FROM&#xD;
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity5" name="ZhCompetBidEntity" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="4200"/>
+    <location x="60" y="4110"/>
     <size height="192" width="150"/>
-    <figSize height="20" width="152"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property214" name="competId" displayName="competId" columnName="compet_id" nullAble="false" PK="false" columnType="int" eosDataType="Int" length="10" queryId="true" dasType="int" showType="Int">
       <viewField dict="false" dictTypeId="" displayName="competId" entityField="competId" id="competId" label="competId" name="competId" userDefined="true">
         <fieldView showAllAttr="false">
@@ -9508,7 +9524,7 @@ GROUP BY&#xD;
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:SPEntityNode" id="Entity6" name="ZhCompetBidProjectEntity" nodeType="table" displayName="Entity" author="王维" open="true" entType="SPEntity" allUseViewModel="true" instanceClass="" table="">
-    <location x="60" y="4452"/>
+    <location x="60" y="4362"/>
     <size height="246" width="150"/>
     <figSize height="20" width="150"/>
     <columnProperty id="property223" name="recordDate" displayName="recordDate" columnName="record_date" nullAble="false" PK="false" columnType="datetime" eosDataType="Date" dasType="date" showType="Date">
@@ -10230,9 +10246,9 @@ FROM&#xD;
     </spEntitySqlView>
   </nodes>
   <nodes xsi:type="model:PEntityNode" id="node0" name="ZhBidinfo" nodeType="table" displayName="ZhBidinfo" author="王维" open="true" allUseViewModel="true" instanceClass="" table="ZH_BIDINFO" genStrategy="assigned">
-    <location x="60" y="4740"/>
+    <location x="60" y="4668"/>
     <size height="624" width="150"/>
-    <figSize height="20" width="174"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property0" name="id" displayName="id" columnName="id" nullAble="false" PK="true" columnType="INT" eosDataType="Int" dasType="int" overWriteDefaultColumnType="false" showType="Int" update="true" insert="true">
       <comment xsi:nil="true"/>
       <viewField dict="false" dictTypeId="" displayName="id" entityField="id" id="id" label="id" name="id" userDefined="true">
@@ -12115,9 +12131,9 @@ FROM&#xD;
     </columnProperty>
   </nodes>
   <nodes xsi:type="model:PEntityNode" id="node1" name="ZhBidinfoCompetitor" nodeType="table" displayName="ZhBidinfoCompetitor" author="王维" open="true" allUseViewModel="true" table="ZH_BIDINFO_COMPETITOR" genStrategy="assigned">
-    <location x="60" y="1446"/>
+    <location x="60" y="5352"/>
     <size height="124" width="150"/>
-    <figSize height="20" width="185"/>
+    <figSize height="20" width="150"/>
     <columnProperty id="property24" name="id" displayName="id" columnName="id" nullAble="false" PK="true" columnType="INT" eosDataType="Int" dasType="int" overWriteDefaultColumnType="false" showType="Int" update="true" insert="true">
       <comment xsi:nil="true"/>
       <viewField dict="false" displayName="id" id="id" label="id" name="id" userDefined="true">
