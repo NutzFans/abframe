@@ -1,6 +1,9 @@
 package com.primeton.eos.common;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
@@ -167,6 +170,80 @@ public class ZhzxBizUtils {
 		if (zhProAppList != null & zhProAppList.size() > 0) {
 			for (Entity zhProApp : zhProAppList) {
 				dbSession.execute(updateSql, zhProApp.getStr("purchas_mode"), zhProApp.getStr("id"));
+			}
+		}
+	}
+
+	@Bizlet("市场经营 - 参与单位数据刷新")
+	public void scjy_cydw_sjsx() throws Exception {
+		Map<String, String> bidUnitsNameMap = new HashMap<String, String>();
+		Map<String, String> bidUnitsCodeMap = new HashMap<String, String>();
+		bidUnitsNameMap.put("中核咨询核资源", "核资源咨询中心");
+		bidUnitsCodeMap.put("1", "16");
+		bidUnitsNameMap.put("中核咨询核动力", "核动力咨询中心(工程造价咨询中心)");
+		bidUnitsCodeMap.put("2", "17");
+		bidUnitsNameMap.put("中核咨询系统工程", "系统工程事业部");
+		bidUnitsCodeMap.put("3", "18");
+		bidUnitsNameMap.put("中核咨询设备与检测", "设备监理中心");
+		bidUnitsCodeMap.put("4", "19");
+		bidUnitsNameMap.put("中核咨询产研", "产业发展研究中心");
+		bidUnitsCodeMap.put("5", "20");
+		bidUnitsNameMap.put("中核咨询核化工", "核化工咨询中心");
+		bidUnitsCodeMap.put("6", "21");
+		bidUnitsNameMap.put("中核咨询质量信息", "安全质量部（质量支持中心）");
+		bidUnitsCodeMap.put("7", "13");
+		bidUnitsNameMap.put("中核咨询工业安全", "工业安全支持中心");
+		bidUnitsCodeMap.put("8", "102199");
+		bidUnitsNameMap.put("中核咨询采购管理", "采购与供应链管理中心");
+		bidUnitsCodeMap.put("9", "120598");
+		bidUnitsNameMap.put("中核咨询工程项目管理", "工程项目管理支持中心");
+		bidUnitsCodeMap.put("17", "102401");
+		bidUnitsNameMap.put("中核咨询福建分公司", "福建分公司");
+		bidUnitsCodeMap.put("11", "26");
+		bidUnitsNameMap.put("中核咨询海南分公司", "海南分公司");
+		bidUnitsCodeMap.put("12", "193");
+		bidUnitsNameMap.put("中核咨询河北分公司", "河北分公司");
+		bidUnitsCodeMap.put("13", "24");
+		bidUnitsNameMap.put("中核咨询四川分公司", "系统工程事业部");
+		bidUnitsCodeMap.put("14", "18");
+		bidUnitsNameMap.put("中核咨询天津分公司", "天津分公司");
+		bidUnitsCodeMap.put("15", "25");
+		bidUnitsNameMap.put("中核咨询西北分公司", "系统工程事业部");
+		bidUnitsCodeMap.put("16", "18");
+
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String querySql = "SELECT id, bid_units_code, bid_units_name FROM ZH_BIDINFO";
+		String updateSql = "UPDATE ZH_BIDINFO SET bid_units_code = ?, bid_units_name = ? WHERE id = ?";
+
+		List<Entity> bidEntityList = dbSession.query(querySql);
+
+		for (Entity bidEntity : bidEntityList) {
+			String bidUnitsCode = bidEntity.getStr("bid_units_code");
+			String bidUnitsName = bidEntity.getStr("bid_units_name");
+			if (StrUtil.isNotBlank(bidUnitsCode) && StrUtil.isNotBlank(bidUnitsName)) {
+				List<String> codeList = StrUtil.split(bidUnitsCode, ",");
+				List<String> nameList = StrUtil.split(bidUnitsName, ",");
+				codeList = codeList.stream().map(code -> {
+					String result = code;
+					if (bidUnitsCodeMap.containsKey(code)) {
+						result = bidUnitsCodeMap.get(code);
+					}
+					return result;
+				}).collect(Collectors.toList());
+
+				nameList = nameList.stream().map(name -> {
+					String result = name;
+					if (bidUnitsNameMap.containsKey(name)) {
+						result = bidUnitsNameMap.get(name);
+					}
+					return result;
+				}).collect(Collectors.toList());
+
+				String unitsCode = StrUtil.join(",", codeList);
+				String unitsName = StrUtil.join(",", nameList);
+
+				dbSession.execute(updateSql, unitsCode, unitsName, bidEntity.getInt("id"));
+
 			}
 		}
 	}

@@ -138,8 +138,8 @@ body .mini-textboxlist {
 						<tr>
 							<td align="right" style="width: 130px">参与单位：</td>
 							<td colspan="5">
-								<input name="bidUnits" id="bidUnits" class="nui-textboxlist" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnits.biz.ext" valueField="dictid"
-									textField="dictname" inputMode="false" style="width: 710px" />
+								<input name="bidUnits" id="bidUnits" class="nui-combobox" dataField="bidUnits" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryBidUnits.biz.ext" valueField="dictid"
+									textField="dictname" multiSelect="true" style="width: 710px" />
 							</td>
 							<td align="right" style="width: 140px">合同价(万元/%)：</td>
 							<td>

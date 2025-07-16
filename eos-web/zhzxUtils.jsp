@@ -32,6 +32,8 @@ body {
 			<a id="psjg_final_purchas_mode_tc" class="nui-button" iconCls="icon-node" onclick="psjg_final_purchas_mode_tc()">评审结构 - 最终采购方式数据填充</a>
 			<p></p>
 			<a id="cglx_final_purchas_mode_tc" class="nui-button" iconCls="icon-node" onclick="cglx_final_purchas_mode_tc()">采购立项 - 最终采购方式数据填充</a>
+			<p></p>
+			<a id="scjy_cydw_sjsx" class="nui-button" iconCls="icon-node" onclick="scjy_cydw_sjsx()">市场经营 - 参与单位数据刷新</a>
 		</fieldset>
 	</div>
 
@@ -129,7 +131,7 @@ body {
 				});
 			}
 		}
-		
+
 		// 评审结构 - 最终采购方式数据填充
 		function psjg_final_purchas_mode_tc() {
 			nui.get("psjg_final_purchas_mode_tc").disable();
@@ -152,7 +154,7 @@ body {
 				});
 			}
 		}
-		
+
 		// 采购立项 - 最终采购方式数据填充
 		function cglx_final_purchas_mode_tc() {
 			nui.get("cglx_final_purchas_mode_tc").disable();
@@ -174,7 +176,30 @@ body {
 					}
 				});
 			}
-		}				
+		}
+		
+		// 市场经营 - 参与单位数据刷新
+		function scjy_cydw_sjsx() {
+			nui.get("scjy_cydw_sjsx").disable();
+			if (!confirm("是否执行[市场经营 - 参与单位数据刷新]操作？")) {
+				nui.get("scjy_cydw_sjsx").enable();
+			} else {
+				nui.ajax({
+					url : "com.primeton.eos.common.zhzxUtils.scjy_cydw_sjsx.biz.ext",
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(result) {
+						if (result.data == "1") {
+							nui.alert("市场经营 - 参与单位数据刷新 - 执行成功");
+						} else {
+							nui.alert("市场经营 - 参与单位数据刷新 - 执行失败");
+						}
+						nui.get("scjy_cydw_sjsx").enable();
+					}
+				});
+			}
+		}		
 		
 	</script>
 
