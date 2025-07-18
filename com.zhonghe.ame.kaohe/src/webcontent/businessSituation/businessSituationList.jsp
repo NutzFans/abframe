@@ -21,7 +21,7 @@ html,body {
 </head>
 <body>
 	<div style="width: auto; height: 99%; padding: 5px;">
-		<div id=businessSituationForm>
+		<div id="businessSituationForm">
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>

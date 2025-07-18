@@ -22,7 +22,7 @@ html,body {
 <body>
 	<div id="tabs" class="nui-tabs" activeIndex="0" style="width: auto; height: 99%; padding: 5px;" onactivechanged="tabActiveChanged">
 		<div title="考核收入统计快照">
-			<div id=statisticsForm>
+			<div id="statisticsForm">
 				<input name="criteria._expr[0]._property" value="secondaryOrg" class="nui-hidden" />
 				<input name="criteria._expr[0]._op" value="in" class="nui-hidden" />
 				<input id="searchOrgids" name="criteria._expr[0]._value" class="nui-hidden" />
@@ -79,7 +79,7 @@ html,body {
 		</div>
 
 		<div name="srzbfxycDimTab" title="收入指标分析预测" visible="false">
-			<div id=srzbfxycForm>
+			<div id="srzbfxycForm">
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 					<table>
 						<tr>
@@ -178,7 +178,7 @@ html,body {
 		</div>
 
 		<div name="khsrtjmxDimTab" title="考核收入统计明细" visible="false">
-			<div id=khsrtjmxForm>
+			<div id="khsrtjmxForm">
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 					<table>
 						<tr>

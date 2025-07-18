@@ -21,7 +21,7 @@ html,body {
 </head>
 <body>
 	<div style="width: auto; height: 99%; padding: 5px;">
-		<div id=coefficientForm>
+		<div id="coefficientForm">
 			<input name="criteria._expr[0]._property" value="secondaryOrg" class="nui-hidden" />
 			<input name="criteria._expr[0]._op" value="in" class="nui-hidden" />
 			<input id="searchOrgids" name="criteria._expr[0]._value" class="nui-hidden" />

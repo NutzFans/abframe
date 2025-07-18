@@ -19,7 +19,7 @@ body {
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="zhzx-utils-1" style="border: solid 1px #aaa;">
 			<legend>
-				<span style="color: red">经营管理系统 - 业务处理工具 - 按钮</span>
+				<span style="color: red">&nbsp;经营管理系统 - 业务处理工具 - 按钮&nbsp;</span>
 			</legend>
 			<a id="kpgl_sjkpjezdlssjtc" class="nui-button" iconCls="icon-node" onclick="kpgl_sjkpjezdlssjtc()">开票管理 - 实际开票金额字段历史数据填充</a>
 			<p></p>
@@ -34,7 +34,9 @@ body {
 			<a id="cglx_final_purchas_mode_tc" class="nui-button" iconCls="icon-node" onclick="cglx_final_purchas_mode_tc()">采购立项 - 最终采购方式数据填充</a>
 			<p></p>
 			<a id="scjy_cydw_sjsx" class="nui-button" iconCls="icon-node" onclick="scjy_cydw_sjsx()">市场经营 - 参与单位数据刷新</a>
+			<p></p>
 		</fieldset>
+
 	</div>
 
 	<script type="text/javascript">
@@ -177,7 +179,7 @@ body {
 				});
 			}
 		}
-		
+
 		// 市场经营 - 参与单位数据刷新
 		function scjy_cydw_sjsx() {
 			nui.get("scjy_cydw_sjsx").disable();
@@ -199,8 +201,7 @@ body {
 					}
 				});
 			}
-		}		
-		
+		}
 	</script>
 
 </body>
