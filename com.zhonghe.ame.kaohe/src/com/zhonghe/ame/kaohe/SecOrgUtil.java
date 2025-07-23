@@ -41,6 +41,31 @@ public class SecOrgUtil {
 		return result;
 	}
 
+	@Bizlet("获取职能部门")
+	public List<Map<String, String>> getZnSecOrgList() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String queryOrgSql = "SELECT ORGCODE, ORGNAME FROM OM_ORGANIZATION WHERE (ORGLEVEL='2' AND STATUS='running' AND ORGSEQ LIKE '.1.%') OR (ORGSEQ='.1111.')";
+		String queryDictSql = "SELECT DICTID, DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ORG_CLASS_FUNCTIONAL_DEP'";
+		List<Entity> orgEntityList = dbSession.query(queryOrgSql);
+		List<Entity> dictEntityList = dbSession.query(queryDictSql);
+
+		// 提取 DICTID 到 Set
+		Set<String> dictIds = dictEntityList.stream().map(dictEntity -> dictEntity.getStr("DICTID")).collect(Collectors.toSet());
+
+		// 过滤 orgEntityList
+		List<Entity> filteredList = orgEntityList.stream().filter(orgEntity -> dictIds.contains(orgEntity.getStr("ORGCODE"))).collect(Collectors.toList());
+
+		List<Map<String, String>> result = filteredList.stream().map(orgEntity -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("secOrg", orgEntity.getStr("ORGCODE"));
+			map.put("secOrgname", orgEntity.getStr("ORGNAME"));
+			return map;
+		}).collect(Collectors.toList());
+
+		return result;
+
+	}
+
 	@Bizlet("通过快照表获取需要考核的单位并排序显示")
 	public List<Entity> getKaoHeSecOrg(String year, String month) throws Exception {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());

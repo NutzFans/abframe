@@ -25,17 +25,23 @@ body {
 						<tr>
 							<td align="right" style="width: 100px">科目名称：</td>
 							<td>
-								<input name="name" class="nui-textbox" style="width: 200px" required="true" />
+								<input name="name" class="nui-textbox" style="width: 250px" required="true" />
 							</td>
 							<td align="right" style="width: 100px">科目排序：</td>
 							<td>
-								<input name="sorting" class="mini-spinner" style="width: 150px" required="true" minValue="1" />
-							</td>
-							<td align="right" style="width: 100px">科目分类：</td>
-							<td>
-								<input name="category" class="nui-dictcombobox" style="width: 150px" required="true" dictTypeId="CW_KM_CLASS" />
+								<input name="sorting" class="mini-spinner" style="width: 250px" required="true" minValue="1" />
 							</td>
 						<tr>
+						<tr>
+							<td align="right" style="width: 100px">科目分类：</td>
+							<td>
+								<input name="category" class="nui-dictcombobox" style="width: 250px" required="true" dictTypeId="CW_KM_CLASS" />
+							</td>
+							<td align="right" style="width: 100px">归口部门：</td>
+							<td>
+								<input id="centralizedDepartment" name="centralizedDepartment" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 250px" required="true" />
+							</td>
+						</tr>
 					</table>
 				</div>
 			</fieldset>
@@ -98,6 +104,19 @@ body {
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("addForm");
+		
+		initSecOrgCombobox();
+		
+		function initSecOrgCombobox() {
+			ajaxCommon({
+				"url" : "com.zhonghe.ame.finance.common.getZnSecOrgList.biz.ext",
+				contentType : 'text/json',
+				success : function(result) {
+					var datas = result.secOrgList;
+					nui.get("centralizedDepartment").setData(datas);
+				}
+			});
+		}		
 
 		function save() {
 			if (!form.validate()) {

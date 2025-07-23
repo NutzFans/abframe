@@ -17,23 +17,19 @@ html,body {
 }
 </style>
 <head>
-<title>会计科目管理</title>
+<title>预算主体管理</title>
 </head>
 <body>
 	<div style="width: auto; height: 99%; padding: 5px;">
-		<div id="ledgerAccountForm">
+		<div id="budgetAccountForm">
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 80px; text-align: right;">科目名称：</td>
+						<td style="width: 80px; text-align: right;">预算主体：</td>
 						<td>
 							<input name="criteria._expr[1]._value" class="nui-textbox" style="width: 200px" />
 							<input name="criteria._expr[1]._property" value="name" class="nui-hidden" />
 							<input name="criteria._expr[1]._op" value="like" class="nui-hidden" />
-						</td>
-						<td style="width: 80px; text-align: right;">科目分类：</td>
-						<td>
-							<input name="criteria._expr[2].category" class="nui-dictcombobox" dictTypeId="CW_KM_CLASS" showNullItem="true" nullItemText="全部" style="width: 150px" />
 						</td>
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
@@ -48,38 +44,25 @@ html,body {
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<a class="nui-button" id="cwkjkm_add" iconCls="icon-add" onclick="add()">新增</a>
-						<a class="nui-button" id="cwkjkm_edit" iconCls="icon-edit" onclick="edit()">编辑</a>
-						<a class="nui-button" id="cwkjkm_del" iconCls="icon-remove" onclick="del()">删除</a>
-						<a class="nui-button" id="cwkjkm_import" iconCls="icon-upload" onclick="improt()">导入</a>
+						<a class="nui-button" id="cwyszt_add" iconCls="icon-add" onclick="add()">新增</a>
+						<a class="nui-button" id="cwyszt_edit" iconCls="icon-edit" onclick="edit()">编辑</a>
+						<a class="nui-button" id="cwyszt_del" iconCls="icon-remove" onclick="del()">删除</a>
+						<a class="nui-button" id="cwyszt_import" iconCls="icon-upload" onclick="improt()">导入</a>
 					</td>
 				</tr>
 			</table>
 		</div>
 
 		<div class="nui-fit">
-			<div id="ledgerAccountGrid" sizeList="[100,200]" showPager="true" dataField="ledgerAccountList" pageSize="100" class="nui-datagrid" style="width: 100%; height: 100%;" multiSelect="true"
-				url="com.zhonghe.ame.finance.ledgerAccount.queryLedgerAccountList.biz.ext">
+			<div id="budgetAccountGrid" sizeList="[100,200]" showPager="true" dataField="budgetAccountList" pageSize="100" class="nui-datagrid" style="width: 100%; height: 100%;" multiSelect="true"
+				url="com.zhonghe.ame.finance.budgetAccount.queryBudgetAccountList.biz.ext">
 				<div property="columns">
 					<div type="checkcolumn"></div>
-					<div field="name" width="100" align="left" headerAlign="center">科目名称</div>
-					<div field="category" width="100" align="center" headerAlign="center" renderer="CW_KM_CLASS">科目分类</div>
+					<div field="name" width="200" align="center" headerAlign="center">预算主体</div>
+					<div field="code" width="200" align="center" headerAlign="center">代码</div>
 					<div field="sorting" width="50" align="center" headerAlign="center">排序</div>
-					<div field="centralizedDepartmentName" width="100" align="center" headerAlign="center">归口部门</div>
-					<div header="职能部门" headerAlign="center">
-						<div property="columns">
-							<div field="znErpCode" width="100" align="center" headerAlign="center">科目代码</div>
-							<div field="znErpName" width="200" align="left" headerAlign="center">ERP预算及会计科目</div>
-							<div field="znErpRemark" width="250" align="left" headerAlign="center">说明</div>
-						</div>
-					</div>
-					<div header="项目部" headerAlign="center">
-						<div property="columns">
-							<div field="xmErpCode" width="100" align="center" headerAlign="center">科目代码</div>
-							<div field="xmErpName" width="200" align="left" headerAlign="center">ERP预算及会计科目</div>
-							<div field="xmErpRemark" width="250" align="left" headerAlign="center">说明</div>
-						</div>
-					</div>
+					<div field="fillingInOrgName" width="200" align="center" headerAlign="center">预算填报组织</div>
+					<div field="remark" width="300" align="left" headerAlign="center">备注</div>
 				</div>
 			</div>
 		</div>
@@ -88,26 +71,26 @@ html,body {
 
 	<script type="text/javascript">
 		nui.parse();
-		var ledgerAccountForm = new nui.Form("#ledgerAccountForm");
-		var ledgerAccountGrid = nui.get("ledgerAccountGrid");
+		var budgetAccountForm = new nui.Form("#budgetAccountForm");
+		var budgetAccountGrid = nui.get("budgetAccountGrid");
 
 		init();
 
 		function init() {
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				getOpeatorButtonAuth("cwkjkm_add,cwkjkm_edit,cwkjkm_del,cwkjkm_import");
+				getOpeatorButtonAuth("cwyszt_add,cwyszt_edit,cwyszt_del,cwyszt_import");
 			}
 			search();
 		}
 
 		function add() {
 			nui.open({
-				url : "/default/finance/ledgerAccount/addLedgerAccount.jsp",
-				width : '900',
-				height : '460',
+				url : "/default/finance/budgetAccount/addBudgetAccount.jsp",
+				width : "450",
+				height : "380",
 				allowResize : false,
-				title : "会计科目 - 新增",
+				title : "预算主体 - 新增",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 				},
@@ -118,18 +101,18 @@ html,body {
 		}
 
 		function edit() {
-			var rows = ledgerAccountGrid.getSelecteds();
+			var rows = budgetAccountGrid.getSelecteds();
 			if (rows.length > 1 || rows.length == 0) {
 				showTips("只能选中一条记录进行编辑", "danger");
 				return;
 			} else {
 				var data = rows[0];
 				nui.open({
-					url : "/default/finance/ledgerAccount/editLedgerAccount.jsp",
-					width : '900',
-					height : '460',
+					url : "/default/finance/budgetAccount/editBudgetAccount.jsp",
+					width : "450",
+					height : "380",
 					allowResize : false,
-					title : "会计科目 - 编辑",
+					title : "预算主体 - 编辑",
 					onload : function() {
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.setEditData(data);
@@ -142,7 +125,7 @@ html,body {
 		}
 		
 		function del(){
-			var rows = ledgerAccountGrid.getSelecteds();
+			var rows = budgetAccountGrid.getSelecteds();
 			if (rows.length == 0) {
 				showTips("请选中需要删除的数据记录", "danger");
 			}else{
@@ -154,7 +137,7 @@ html,body {
 							'datas' : datas
 					});
 					nui.ajax({
-						url : "com.zhonghe.ame.finance.ledgerAccount.deleteLedgerAccountById.biz.ext",
+						url : "com.zhonghe.ame.finance.budgetAccount.deleteBudgetAccountById.biz.ext",
 						type : 'POST',
 						data : json,
 						contentType : 'text/json',
@@ -173,10 +156,10 @@ html,body {
 		
 		function improt(){
 			nui.open({
-				url : "/default/finance/ledgerAccount/importLedgerAccount.jsp",
+				url : "/default/finance/budgetAccount/importBudgetAccount.jsp",
 				width : '400',
 				height : '180',
-				title : "会计科目 - 导入",
+				title : "预算主体 - 导入",
 				onload : function() {
 					var iframe = this.getIFrameEl();
 				},
@@ -187,17 +170,13 @@ html,body {
 		}		
 
 		function search() {
-			var data = ledgerAccountForm.getData();
-			ledgerAccountGrid.load(data);
+			var data = budgetAccountForm.getData();
+			budgetAccountGrid.load(data);
 		}
-		
-		function reset() {
-			ledgerAccountForm.reset();
-			init();
-		}		
 
-		function CW_KM_CLASS(e) {
-			return nui.getDictText("CW_KM_CLASS", e.value);
+		function reset() {
+			budgetAccountForm.reset();
+			init();
 		}
 	</script>
 
