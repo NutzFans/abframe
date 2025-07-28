@@ -49,7 +49,8 @@ public class CompanyLeadershipChartSearch {
 	public List<Entity> contractPerformanceRanking(String year, String month, Boolean outsideTheGroup) throws Exception {
 		String querySql = "SELECT TOP 5 zkssd.contract_name, zkssd.signatory_name AS payer_name, zkssd.sum_total_book_income AS actual_invoice_sum, org.ORGNAME AS secondary_orgname FROM zh_kaohe_statistics_snapshot_details AS zkssd, OM_ORGANIZATION AS org WHERE zkssd.secondary_org = org.ORGID AND  zkssd.years = ? AND zkssd.months = ? ORDER BY sum_total_book_income DESC";
 		String querySqlByJTW = "SELECT TOP 5 zkssd.contract_name, zkssd.signatory_name AS payer_name, zkssd.sum_total_book_income AS actual_invoice_sum, org.ORGNAME AS secondary_orgname FROM zh_kaohe_statistics_snapshot_details AS zkssd, OM_ORGANIZATION AS org WHERE zkssd.secondary_org = org.ORGID AND zkssd.headquarter_group = '1' AND  zkssd.years = ? AND zkssd.months = ? ORDER BY sum_total_book_income DESC";
-		Session dbSession = new Session(DataSourceHelper.getDataSource());;
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		;
 		List<Entity> entityList = new ArrayList<Entity>();
 		if (outsideTheGroup) {
 			entityList = dbSession.query(querySqlByJTW, year, month);
@@ -195,22 +196,37 @@ public class CompanyLeadershipChartSearch {
 		asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity.set("name", "截至本月已完成");
 		asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity.set("value", asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSum);
 		asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity.set("allSum", allSum);
-		asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity.set("percentage",
-				NumberUtil.decimalFormat("#.##%", NumberUtil.div(asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSum, allSum, 2)));
+		if (!NumberUtil.equals(allSum, BigDecimal.ZERO)) {
+			asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity.set("percentage",
+					NumberUtil.decimalFormat("#.##%", NumberUtil.div(asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSum, allSum, 2)));
+		} else {
+			asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity.set("percentage", "0%");
+		}
+
 		dataEntityList.add(asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompletedSumEntity);
 
 		Entity totalHandheldContractAmountSumEntity = new Entity();
 		totalHandheldContractAmountSumEntity.set("name", "后续手持合同收入");
 		totalHandheldContractAmountSumEntity.set("value", totalHandheldContractAmountSum);
 		totalHandheldContractAmountSumEntity.set("allSum", allSum);
-		totalHandheldContractAmountSumEntity.set("percentage", NumberUtil.decimalFormat("#.##%", NumberUtil.div(totalHandheldContractAmountSum, allSum, 2)));
+		if (!NumberUtil.equals(allSum, BigDecimal.ZERO)) {
+			totalHandheldContractAmountSumEntity.set("percentage", NumberUtil.decimalFormat("#.##%", NumberUtil.div(totalHandheldContractAmountSum, allSum, 2)));
+		} else {
+			totalHandheldContractAmountSumEntity.set("percentage", "0%");
+		}
+
 		dataEntityList.add(totalHandheldContractAmountSumEntity);
 
 		Entity totalAmountOfPendingContractToBeSignedSumEntity = new Entity();
 		totalAmountOfPendingContractToBeSignedSumEntity.set("name", "后续待签合同收入");
 		totalAmountOfPendingContractToBeSignedSumEntity.set("value", totalAmountOfPendingContractToBeSignedSum);
 		totalAmountOfPendingContractToBeSignedSumEntity.set("allSum", allSum);
-		totalAmountOfPendingContractToBeSignedSumEntity.set("percentage", NumberUtil.decimalFormat("#.##%", NumberUtil.div(totalAmountOfPendingContractToBeSignedSum, allSum, 2)));
+		if (!NumberUtil.equals(allSum, BigDecimal.ZERO)) {
+			totalAmountOfPendingContractToBeSignedSumEntity.set("percentage", NumberUtil.decimalFormat("#.##%", NumberUtil.div(totalAmountOfPendingContractToBeSignedSum, allSum, 2)));
+		} else {
+			totalAmountOfPendingContractToBeSignedSumEntity.set("percentage", "0%");
+		}
+
 		totalAmountOfPendingContractToBeSignedSumEntity.set("dfxValue", totalAmountOfLowriskContractToBeSignedSum);
 		totalAmountOfPendingContractToBeSignedSumEntity.set("zfxValue", totalAmountOfRiskContractsToBeSignedSum);
 		if (!NumberUtil.equals(totalAmountOfPendingContractToBeSignedSum, BigDecimal.ZERO)) {

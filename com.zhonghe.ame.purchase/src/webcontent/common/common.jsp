@@ -99,6 +99,7 @@
 	        contentType: 'text/json',
 	        success: function (data) {
 	        	if(data.exception) {
+	        		nui.unmask(document.body);
 	        		showTips(data.exception.message,"danger");
 	        		if(params.success) {
 	        			params.success(data);

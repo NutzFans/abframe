@@ -63,7 +63,7 @@ html,body {
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div field="name" width="100" align="left" headerAlign="center">科目名称</div>
-					<div field="category" width="100" align="center" headerAlign="center" renderer="CW_KM_CLASS">科目分类</div>
+					<div field="category" width="200" align="center" headerAlign="center" renderer="CW_KM_CLASS">科目分类</div>
 					<div field="sorting" width="50" align="center" headerAlign="center">排序</div>
 					<div field="centralizedDepartmentName" width="100" align="center" headerAlign="center">归口部门</div>
 					<div header="职能部门" headerAlign="center">
@@ -197,7 +197,12 @@ html,body {
 		}		
 
 		function CW_KM_CLASS(e) {
-			return nui.getDictText("CW_KM_CLASS", e.value);
+			if(e.value.includes(",")){
+				return e.value.split(',').map(part => nui.getDictText("CW_KM_CLASS", part)).join('，');
+			}else{
+				return nui.getDictText("CW_KM_CLASS", e.value);
+			}
+			
 		}
 	</script>
 

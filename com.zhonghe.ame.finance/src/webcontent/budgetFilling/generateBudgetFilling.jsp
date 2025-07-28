@@ -17,25 +17,29 @@ html,body {
 }
 </style>
 <head>
-<title>考核收入统计 - 生成快照</title>
+<title>生成预算填报 - 年度</title>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa;">
-			<legend>考核收入统计 - 生成快照</legend>
-			<form id="sckzForm" method="post">
+			<legend>生成预算填报 - 年度</legend>
+			<form id="scystbForm" method="post">
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 80px">考核单位：</td>
+							<td align="right" style="width: 80px">预算主体：</td>
 							<td>
-								<input id="secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 300px" required="true" />
+								<div id="budgetAccounts" class="nui-combobox" textField="name" valueField="id" multiSelect="true" style="width: 300px" required="true">
+									<div property="columns">
+										<div header="预算主体" field="name"></div>
+									</div>
+								</div>
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 80px">考核年月：</td>
+							<td align="right" style="width: 80px">预算年份：</td>
 							<td>
-								<input id="yearMonth" class="nui-combobox" style="width: 300px" required="true" />
+								<input id="years" class="nui-combobox" style="width: 300px" required="true" />
 							</td>
 						</tr>
 						<tr>
@@ -43,9 +47,9 @@ html,body {
 								<span style="color: red;">
 									备注：
 									<br>
-									1、建议在次月初生成当月快照，以确保数据准确性。
+									1、若选定的预算单位及年份已存在预算填报数据，新生成的预算填报将自动覆盖原有数据。
 									<br>
-									2、若选定的单位及年月快照已存在，新生成的快照将自动覆盖原有数据。
+									2、因此在生成预算填报时请谨慎操作，防止覆盖已经填报的预算数据。
 								</span>
 							</td>
 						</tr>
@@ -62,37 +66,33 @@ html,body {
 
 	<script type="text/javascript">
 		nui.parse();
-		var form = new nui.Form("#sckzForm");
+		var form = new nui.Form("#scystbForm");
 
-		initSecOrgCombobox();
-		initYearMonth();
+		initBudgetAccountCombobox();
+		initYearCombobox();
 
-		function initSecOrgCombobox() {
+		function initBudgetAccountCombobox() {
 			ajaxCommon({
-				"url" : "com.zhonghe.ame.kaohe.common.getBusSecOrgList.biz.ext",
+				"url" : "com.zhonghe.ame.finance.common.getBudgetAccountList.biz.ext",
 				contentType : 'text/json',
+				async : false,
 				success : function(result) {
-					var datas = result.secOrgList;
-					nui.get("secondaryOrg").setData(datas);
+					var datas = result.budgetAccountList;
+					nui.get("budgetAccounts").setData(datas);
 				}
 			});
 		}
 
-		function initYearMonth() {
-			var currentDate = new Date();
-			var yearMonthIterm = [];
-			for (var i = 0; i < 12; i++) {
-				var date = new Date(currentDate);
-				date.setMonth(date.getMonth() - i);
-				var year = date.getFullYear();
-				var month = date.getMonth() + 1;
-				var monthStr = String(date.getMonth() + 1).padStart(2, '0');
-				yearMonthIterm.push({
-					"id" : year + '-' + month,
-					"text" : year + '年' + monthStr + '月'
+		function initYearCombobox() {
+			var year = new Date().getFullYear();
+			var yeariterm = [];
+			for (var i = -2; i < 5; i++) {
+				yeariterm.push({
+					"id" : year + i,
+					"text" : year + i
 				});
 			}
-			nui.get("yearMonth").setData(yearMonthIterm);
+			nui.get("years").setData(yeariterm);
 		}
 
 		function save() {
@@ -100,32 +100,30 @@ html,body {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
-			nui.confirm("确定生成数据吗？", "系统提示", function(action) {
+			nui.confirm("确定生成预算填报数据吗？", "系统提示", function(action) {
 				if (action == "ok") {
 					nui.get("saveBtn").disable();
 					nui.get("closeBtn").disable();
 					nui.mask({
 						el : document.body,
 						cls : 'mini-mask-loading',
-						html : '快照生成中...'
+						html : '预算填报数据生成中...'
 					});
 					setTimeout(function() {
-						nui.unmask(document.body);
-						var secOrg = nui.get("secondaryOrg").getValue();
-						var yearMonth = nui.get("yearMonth").getValue();
-						var arr = yearMonth.split('-');
+						var budgetAccounts = nui.get("budgetAccounts").getValue();
+						var years = nui.get("years").getValue();
 						var json = nui.encode({
-							"secOrg" : secOrg,
-							"year": arr[0],
-							"month": arr[1]
+							"budgetAccounts" : budgetAccounts,
+							"year" : years
 						});
 						ajaxCommon({
-							"url" : "com.zhonghe.ame.kaohe.incomeStatistics.artificialGenerateSnapshot.biz.ext",
+							"url" : "com.zhonghe.ame.finance.budgetFilling.generateBudgetFilling.biz.ext",
 							data : json,
 							contentType : 'text/json',
 							success : function(text) {
+								nui.unmask(document.body);
 								if (text.result == "1") {
-									showTips("快照生成成功");
+									showTips("预算填报数据生成成功");
 									closeOk();
 								} else {
 									nui.get("saveBtn").enable();
@@ -133,7 +131,7 @@ html,body {
 								}
 							}
 						});
-					}, 3000);
+					}, 2000);
 				}
 			});
 		}

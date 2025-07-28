@@ -35,7 +35,7 @@ body {
 						<tr>
 							<td align="right" style="width: 100px">科目分类：</td>
 							<td>
-								<input name="category" class="nui-dictcombobox" style="width: 250px" required="true" dictTypeId="CW_KM_CLASS" />
+								<input name="category" class="nui-dictcombobox" style="width: 250px" required="true" dictTypeId="CW_KM_CLASS" multiSelect="true" />
 							</td>
 							<td align="right" style="width: 100px">归口部门：</td>
 							<td>
