@@ -181,6 +181,7 @@ html,body {
 					url : "/default/finance/budgetFilling/tbsjBudgetFilling.jsp",
 					width : '100%',
 					height : '100%',
+					allowResize : false,
 					title : "年度预算 - 填报数据",
 					onload : function() {
 						var iframe = this.getIFrameEl();
