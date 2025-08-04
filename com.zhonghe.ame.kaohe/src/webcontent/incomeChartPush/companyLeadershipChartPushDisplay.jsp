@@ -8,7 +8,7 @@
 <script src="../../common/echarts/echarts.min.js"></script>
 <meta name="viewport" content="width=1920, initial-scale=0.1, user-scalable=yes">
 <link rel="stylesheet" href="../../common/layui-v2.11.4/css/layui.css" media="all">
-<link rel="stylesheet" href="css/company.css" media="all">
+<link rel="stylesheet" href="css/company.css?v=1.1" media="all">
 <link rel="stylesheet" href="css/utils.css" media="all">
 </head>
 <body class="page-no-scroll">
