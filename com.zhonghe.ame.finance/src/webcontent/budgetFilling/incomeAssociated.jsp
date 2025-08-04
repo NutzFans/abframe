@@ -25,7 +25,7 @@ html,body {
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px;">
-		<fieldset id="field1" style="border: solid 1px #aaa;">
+		<fieldset id="field1" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>合计信息</legend>
 			<form id="totalForm" method="post">
 				<input id="fillingIncomeId" name="id" class="nui-hidden" />
@@ -102,38 +102,41 @@ html,body {
 			</form>
 		</fieldset>
 
-		<fieldset id="field2" style="border: solid 1px #aaa;">
+		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>关联 - 开票收款计划</legend>
-			<div class="nui-toolbar" style="border-bottom: 0; padding: 0px; width: 1360px">
-				<table style="width: 100%;">
-					<tr>
-						<td style="width: 100%;">
-							<a class="nui-button" iconCls="icon-add" onclick="selectData()">选择</a>
-							<a class="nui-button" iconCls="icon-remove" onclick="removeRow()">删除</a>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div id="incomeAssociatedGrid" multiSelect="true" class="nui-datagrid" style="width: 1361px; height: 420px;" frozenStartColumn="0" frozenEndColumn="3" virtualScroll="true" virtualColumns="true"
-				showPager="false" showSummaryRow="true">
-				<div property="columns">
-					<div type="checkcolumn"></div>
-					<div field="createName" width="60" headerAlign="center" align="center">关联人</div>
-					<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">关联日期</div>
-					<div field="contractName" width="200" headerAlign="center" align="center">合同名称</div>
-					<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
-					<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月</div>
-					<div field="feb" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月</div>
-					<div field="mar" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">3月</div>
-					<div field="apr" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">4月</div>
-					<div field="may" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">5月</div>
-					<div field="jun" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">6月</div>
-					<div field="jul" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">7月</div>
-					<div field="aug" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">8月</div>
-					<div field="sep" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">9月</div>
-					<div field="oct" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">10月</div>
-					<div field="nov" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">11月</div>
-					<div field="dec" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">12月</div>
+			<div style="width: 1370px">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="selectData()">选择</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="removeRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="incomeAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 415px;" frozenStartColumn="0" frozenEndColumn="4" virtualScroll="true" virtualColumns="true" showPager="false"
+					showSummaryRow="true">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div type="indexcolumn"></div>
+						<div field="createName" width="60" headerAlign="center" align="center">关联人</div>
+						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">关联日期</div>
+						<div field="contractName" width="200" headerAlign="center" align="center">合同名称</div>
+						<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
+						<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月</div>
+						<div field="feb" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月</div>
+						<div field="mar" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">3月</div>
+						<div field="apr" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">4月</div>
+						<div field="may" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">5月</div>
+						<div field="jun" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">6月</div>
+						<div field="jul" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">7月</div>
+						<div field="aug" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">8月</div>
+						<div field="sep" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">9月</div>
+						<div field="oct" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">10月</div>
+						<div field="nov" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">11月</div>
+						<div field="dec" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">12月</div>
+					</div>
 				</div>
 			</div>
 		</fieldset>

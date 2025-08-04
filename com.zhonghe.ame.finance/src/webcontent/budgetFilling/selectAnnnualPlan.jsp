@@ -45,10 +45,11 @@ html,body {
 			</div>
 		</div>
 
-		<div id="annualChargeGrid" idField="id" dataField="chargePlanInfos" class="nui-datagrid" style="width: 100%; height: 480px;" url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext"
-			multiSelect="true" virtualScroll="true" virtualColumns="true" frozenStartColumn="0" frozenEndColumn="4" sizeList="[1000]" pageSize="1000">
+		<div id="annualChargeGrid" idField="id" dataField="chargePlanInfos" class="nui-datagrid" style="height: 92%" url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext"
+			multiSelect="true" virtualScroll="true" virtualColumns="true" frozenStartColumn="0" frozenEndColumn="5" sizeList="[1000]" pageSize="1000">
 			<div property="columns">
 				<div type="checkcolumn"></div>
+				<div type="indexcolumn"></div>
 				<div field="contractStauts" headerAlign="center" align="center" renderer="ZH_CONTRACT_STATUS" width="75" allowSort="true">合同状态</div>
 				<div field="years" width="60" align="center" headerAlign="center" allowSort="true">年份</div>
 				<div field="secondaryOrgname" width="150" align="center" headerAlign="center" allowSort="true">合同承办部门</div>
