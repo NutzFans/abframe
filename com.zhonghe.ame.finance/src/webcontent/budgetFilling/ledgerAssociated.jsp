@@ -42,7 +42,7 @@ html,body {
 				<div type="checkcolumn"></div>
 				<div field="createName" width="60" headerAlign="center" align="center">填报人</div>
 				<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">填报日期</div>
-				<div field="xmbName" width="250" headerAlign="center" align="center">项监部名称</div>
+				<div field="xmbName" width="250" headerAlign="center" align="center">部门/项监部名称</div>
 				<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
 				<div field="janAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月</div>
 				<div field="febAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月</div>

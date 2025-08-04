@@ -28,96 +28,96 @@ html,body {
 		<fieldset id="field1" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>
 				合计信息 -
-				<span style="color: red">项监部名称请规范填写</span>
+				<span style="color: red">部门/项监部名称请规范填写</span>
 			</legend>
-			<form id="totalForm" method="post">
-				<input id="tableId" name="id" class="nui-hidden" />
-				<input id="fillingLedgerId" name="main_id" class="nui-hidden" />
-				<div style="padding: 5px;">
+			<div style="width: 1370px">
+				<form id="totalForm" method="post">
+					<input id="tableId" name="id" class="nui-hidden" />
+					<input id="fillingLedgerId" name="main_id" class="nui-hidden" />
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 85px">项监部名称：</td>
+							<td align="right" style="width: 120px">部门/项监部名称：</td>
 							<td colspan="3">
 								<input id="xmbName" name="xmb_name" class="nui-textbox" style="width: 100%" required="true" />
 							</td>
-							<td align="right" style="width: 85px">填报年度：</td>
+							<td align="right" style="width: 110px">填报年度：</td>
 							<td>
 								<input id="tbYear" class="nui-textbox" style="width: 120px" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">填报项：</td>
+							<td align="right" style="width: 110px">填报项：</td>
 							<td colspan="3">
 								<input id="tbName" class="nui-textbox" style="width: 100%" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">合计(不含税)：</td>
+							<td align="right" style="width: 110px">合计(不含税)：</td>
 							<td>
 								<input id="totalAmount" name="total_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 85px">1月(不含税)：</td>
+							<td align="right" style="width: 110px">1月(不含税)：</td>
 							<td>
 								<input id="janAmount" name="jan_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">2月(不含税)：</td>
+							<td align="right" style="width: 110px">2月(不含税)：</td>
 							<td>
 								<input id="febAmount" name="feb_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">3月(不含税)：</td>
+							<td align="right" style="width: 110px">3月(不含税)：</td>
 							<td>
 								<input id="marAmount" name="mar_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">4月(不含税)：</td>
+							<td align="right" style="width: 110px">4月(不含税)：</td>
 							<td>
 								<input id="aprAmount" name="apr_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">5月(不含税)：</td>
+							<td align="right" style="width: 110px">5月(不含税)：</td>
 							<td>
 								<input id="mayAmount" name="may_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">6月(不含税)：</td>
+							<td align="right" style="width: 110px">6月(不含税)：</td>
 							<td>
 								<input id="junAmount" name="jun_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 85px">7月(不含税)：</td>
+							<td align="right" style="width: 110px">7月(不含税)：</td>
 							<td>
 								<input id="julAmount" name="jul_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">8月(不含税)：</td>
+							<td align="right" style="width: 110px">8月(不含税)：</td>
 							<td>
 								<input id="augAmount" name="aug_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">9月(不含税)：</td>
+							<td align="right" style="width: 110px">9月(不含税)：</td>
 							<td>
 								<input id="sepAmount" name="sep_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">10月(不含税)：</td>
+							<td align="right" style="width: 110px">10月(不含税)：</td>
 							<td>
 								<input id="octAmount" name="oct_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">11月(不含税)：</td>
+							<td align="right" style="width: 110px">11月(不含税)：</td>
 							<td>
 								<input id="novAmount" name="nov_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
-							<td align="right" style="width: 85px">12月(不含税)：</td>
+							<td align="right" style="width: 110px">12月(不含税)：</td>
 							<td>
 								<input id="decAmount" name="dec_amount" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 120px" showButton="false" enabled="false" />
 							</td>
 						</tr>
 					</table>
-				</div>
-			</form>
+				</form>
+			</div>
 		</fieldset>
 
 		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>关联 - 付款计划（可选）</legend>
-			<div>功能开发中...</div>
+			<div style="width: 1370px">功能开发中...</div>
 		</fieldset>
 
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>关联 - 采购计划（可选）</legend>
-			<div>功能开发中...</div>
+			<div style="width: 1370px">功能开发中...</div>
 		</fieldset>
 
 		<fieldset id="field4" style="border: solid 1px #aaa; padding: 5px;">
