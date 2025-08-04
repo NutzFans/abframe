@@ -201,7 +201,7 @@
 			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
-						<span class="header-text">本年新签合同TOP5（万元）</span>
+						<span class="header-text">本年新签合同额TOP5（万元）</span>
 						<div class="layui-form">
 							<!-- 选项卡风格单选框 -->
 							<input type="radio" name="xqhtphTab" value="0" lay-skin="none" lay-filter="xqhtphTab" checked>
@@ -222,7 +222,7 @@
 			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
-						<span class="header-text">本年合同履约TOP5（万元）</span>
+						<span class="header-text">本年合同履约收入TOP5（万元）</span>
 						<div class="layui-form">
 							<!-- 选项卡风格单选框 -->
 							<input type="radio" name="htlyphTab" value="0" lay-skin="none" lay-filter="htlyphTab" checked>
