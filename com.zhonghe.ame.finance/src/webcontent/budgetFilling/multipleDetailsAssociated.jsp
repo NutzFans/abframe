@@ -112,7 +112,90 @@ html,body {
 
 		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>关联 - 付款计划（可选）</legend>
-			<div style="width: 1370px">功能开发中...</div>
+			<div style="width: 1370px">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="selectPaymentData()">选择</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="removePaymentRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="paymentPlanAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="4" virtualScroll="true" virtualColumns="true"
+					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="paymentPlanCellEndEdit" oncellvalidation="paymentPlanCellValidation">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div type="indexcolumn"></div>
+						<div field="createName" width="60" headerAlign="center" align="center">关联人</div>
+						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">关联日期</div>
+						<div field="contractName" width="200" headerAlign="center" align="center">合同名称</div>
+						<div field="totalTax" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
+						<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计 - 不含税</div>
+						<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月</div>
+						<div field="janAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							1月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="feb" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月</div>
+						<div field="febAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							2月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="mar" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">3月</div>
+						<div field="marAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							3月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="apr" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">4月</div>
+						<div field="aprAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							4月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="may" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">5月</div>
+						<div field="mayAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							5月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="jun" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">6月</div>
+						<div field="junAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							6月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="jul" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">7月</div>
+						<div field="julAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							7月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="aug" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">8月</div>
+						<div field="augAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							8月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="sep" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">9月</div>
+						<div field="sepAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							9月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="oct" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">10月</div>
+						<div field="octAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							10月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="nov" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">11月</div>
+						<div field="novAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							11月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="dec" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">12月</div>
+						<div field="decAmount" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							12月 - 不含税
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+					</div>
+				</div>
+			</div>
 		</fieldset>
 
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px;">
@@ -133,11 +216,13 @@ html,body {
 						</tr>
 					</table>
 				</div>
-				<div id="penetrateAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="6" virtualScroll="true" virtualColumns="true"
+				<div id="penetrateAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="8" virtualScroll="true" virtualColumns="true"
 					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="penetrateCellEndEdit" oncellvalidation="penetrateCellValidation">
 					<div property="columns">
 						<div type="checkcolumn"></div>
 						<div type="indexcolumn"></div>
+						<div field="createName" width="60" headerAlign="center" align="center">创建人</div>
+						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">创建日期</div>
 						<div field="matterName" width="200" headerAlign="center" align="left" vtype="required">
 							事项名称
 							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
@@ -181,7 +266,7 @@ html,body {
 						</div>
 						<div field="jul" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
 							7月
-							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" style="width: 100%" />
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
 						</div>
 						<div field="aug" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
 							8月
@@ -223,14 +308,18 @@ html,body {
 		nui.parse();
 		var form = new nui.Form("totalForm");
 		var penetrateAssociatedGrid = nui.get("penetrateAssociatedGrid");
-
+		var paymentPlanAssociatedGrid = nui.get("paymentPlanAssociatedGrid");
+		var ledgerInfo;
+		
 		function initData(data) {
+			ledgerInfo = data;
 			nui.get("fillingLedgerId").setValue(data.id);
 			nui.get("tbYear").setValue(data.budgetYear);
 			nui.get("tbName").setValue(data.parent + " - " + data.name);
 		}
 		
 		function editData(budgetInfo, data){
+			ledgerInfo = budgetInfo;
 			nui.get("tbYear").setValue(budgetInfo.budgetYear);
 			nui.get("tbName").setValue(budgetInfo.parent + " - " + budgetInfo.name);
 			nui.get("tableId").setValue(data.id);
@@ -261,11 +350,20 @@ html,body {
 					var datas = result.datas;
 					penetrateAssociatedGrid.setData(datas);
 				}
-			});			
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.finance.budgetFilling.queryAssociatedPaymentPlanEntityByMainIdAndXmbId.biz.ext",
+				data : json,
+				contentType : 'text/json',
+				success : function(result) {
+					var datas = result.datas;
+					paymentPlanAssociatedGrid.setData(datas);
+				}
+			});				
 		}
 
 		function addPenetrateRow() {
-			var newRow = {involvingTotal: 0, unitPrice: 0, totalAmount: 0, jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0};
+			var newRow = {involvingTotal: 0, unitPrice: 0, totalAmount: 0, jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0, createCode: userId, createName: userName, createTime: new Date()};
 			var index = penetrateAssociatedGrid.getData().length;
 			penetrateAssociatedGrid.addRow(newRow, index + 1);
 			penetrateAssociatedGrid.beginEditRow(newRow);
@@ -294,7 +392,9 @@ html,body {
 
 		function updateTotalFormData() {
 			var rows = penetrateAssociatedGrid.data;
+			var paymentPlanRows = paymentPlanAssociatedGrid.data;
 			var datas = Array(13).fill(0);
+			var paymentPlanDatas = Array(13).fill(0);
 			for (var row of rows) {
 				datas[0] += row.totalAmount;
 				datas[1] += row.jan;
@@ -310,19 +410,34 @@ html,body {
 				datas[11] += row.nov;
 				datas[12] += row.dec;
 			}
-			nui.get("totalAmount").setValue(datas[0]);
-			nui.get("janAmount").setValue(datas[1]);
-			nui.get("febAmount").setValue(datas[2]);
-			nui.get("marAmount").setValue(datas[3]);
-			nui.get("aprAmount").setValue(datas[4]);
-			nui.get("mayAmount").setValue(datas[5]);
-			nui.get("junAmount").setValue(datas[6]);
-			nui.get("julAmount").setValue(datas[7]);
-			nui.get("augAmount").setValue(datas[8]);
-			nui.get("sepAmount").setValue(datas[9]);
-			nui.get("octAmount").setValue(datas[10]);
-			nui.get("novAmount").setValue(datas[11]);
-			nui.get("decAmount").setValue(datas[12]);
+			for (var row of paymentPlanRows) {
+				paymentPlanDatas[0] += row.totalAmount;
+				paymentPlanDatas[1] += row.janAmount;
+				paymentPlanDatas[2] += row.febAmount;
+				paymentPlanDatas[3] += row.marAmount;
+				paymentPlanDatas[4] += row.aprAmount;
+				paymentPlanDatas[5] += row.mayAmount;
+				paymentPlanDatas[6] += row.junAmount;
+				paymentPlanDatas[7] += row.julAmount;
+				paymentPlanDatas[8] += row.augAmount;
+				paymentPlanDatas[9] += row.sepAmount;
+				paymentPlanDatas[10] += row.octAmount;
+				paymentPlanDatas[11] += row.novAmount;
+				paymentPlanDatas[12] += row.decAmount;
+			}
+			nui.get("totalAmount").setValue(datas[0] + paymentPlanDatas[0]);
+			nui.get("janAmount").setValue(datas[1] + paymentPlanDatas[1]);
+			nui.get("febAmount").setValue(datas[2] + paymentPlanDatas[2]);
+			nui.get("marAmount").setValue(datas[3] + paymentPlanDatas[3]);
+			nui.get("aprAmount").setValue(datas[4] + paymentPlanDatas[4]);
+			nui.get("mayAmount").setValue(datas[5] + paymentPlanDatas[5]);
+			nui.get("junAmount").setValue(datas[6] + paymentPlanDatas[6]);
+			nui.get("julAmount").setValue(datas[7] + paymentPlanDatas[7]);
+			nui.get("augAmount").setValue(datas[8] + paymentPlanDatas[8]);
+			nui.get("sepAmount").setValue(datas[9] + paymentPlanDatas[9]);
+			nui.get("octAmount").setValue(datas[10] + paymentPlanDatas[10]);
+			nui.get("novAmount").setValue(datas[11] + paymentPlanDatas[11]);
+			nui.get("decAmount").setValue(datas[12] + paymentPlanDatas[12]);
 		}
 		
 		
@@ -337,13 +452,108 @@ html,body {
 					e.errorText = "每条数据中[各月的金额]相加必须等于[总金额-不含税]";
 				}				
 			}
-		}		
+		}
+		
+		function selectPaymentData(){
+			var secOrg = ledgerInfo.fillingInOrg;
+			var years = ledgerInfo.budgetYear;
+			mini.open({
+				url : "/default/finance/budgetFilling/selectPaymentPlan.jsp",
+				title : "付款计划",
+				width : '1200px',
+				height : '610px',
+				allowResize : false,
+				onload : function() {
+					var data = {
+						"secOrg" : secOrg,
+						"years" : years
+					};
+					var iframe = this.getIFrameEl();
+					iframe.contentWindow.initData(data);
+				},
+				ondestroy : function(action) {
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var datas = iframe.contentWindow.getDatas();		
+						datas = mini.clone(datas);
+						if (datas.length > 0) {
+							var rows = paymentPlanAssociatedGrid.data;
+							addOrUpdatePaymentPlanRows(datas, rows);
+						}				
+					}
+				}
+			});
+		}
+		
+		function removePaymentRow(){
+			var rows = paymentPlanAssociatedGrid.getSelecteds();
+			if (rows.length > 0) {
+				paymentPlanAssociatedGrid.removeRows(rows, false);
+			} else {
+				showTips("请至少选中一条记录！", "danger");
+			}
+			updateTotalFormData();
+			
+		}
+		
+		function addOrUpdatePaymentPlanRows(datas, rows) {
+			if (rows.length > 0) {
+				for (var data of datas) {
+					var row = hasPropertyValue(rows, "sourceId", data.sourceId);
+					if(typeof row === 'undefined'){
+						paymentPlanAssociatedGrid.addRow(data);
+					}else{
+						paymentPlanAssociatedGrid.updateRow(row, data);
+					}
+				}
+			} else {
+				paymentPlanAssociatedGrid.addRows(datas);
+			}
+		}
+		
+		function paymentPlanCellEndEdit(e){
+			var record = e.record;
+			if (e.field == "janAmount" || e.field == "febAmount" || e.field == "marAmount" || e.field == "aprAmount" || e.field == "mayAmount" || e.field == "junAmount" || e.field == "julAmount" || e.field == "augAmount" || e.field == "sepAmount" || e.field == "octAmount" || e.field == "novAmount" || e.field == "decAmount") {
+				var totalAmount = record.janAmount + record.febAmount + record.marAmount + record.aprAmount + record.mayAmount + record.junAmount + record.julAmount + record.augAmount + record.sepAmount + record.octAmount + record.novAmount + record.decAmount;
+				paymentPlanAssociatedGrid.updateRow(e.row, {
+					totalAmount : totalAmount
+				});
+			}
+			updateTotalFormData();
+		}
+		
+		function paymentPlanCellValidation(e){
+			if (e.field == "jan" || e.field == "feb" || e.field == "mar" || e.field == "apr" || e.field == "may" || e.field == "jun" || e.field == "jul" || e.field == "aug" || e.field == "sep" || e.field == "oct" || e.field == "nov" || e.field == "dec") {
+				if(e.value != 0){
+					var record = e.record;
+					var amountName = e.field + 'Amount';
+					if(record[amountName] != 0 && record[amountName] < e.value){
+						e.isValid = true;
+					}else{
+						e.isValid = false;
+						e.errorText = "[月份有金额]的情况下对应[不含税月份金额]必填填写且金额不能>=月份金额";
+					}
+				}
+			}
+		}
+		
+		// 返回指定属性值在给定数组中满足条件的元素，如果没有则返回 undefined
+		function hasPropertyValue(arr, key, value) {
+		  	return arr.find(obj => obj[key] === value);
+		}						
 		
 		function save(){
 			if (!form.validate()) {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
+			paymentPlanAssociatedGrid.validate();
+			if (paymentPlanAssociatedGrid.isValid() == false) {
+				var error = paymentPlanAssociatedGrid.getCellErrors()[0];
+				paymentPlanAssociatedGrid.beginEditCell(error.record, error.column);
+				showTips("付款计划数据有错误，请检查!", "danger");
+				return;
+			}			
 			penetrateAssociatedGrid.validate();
 			if (penetrateAssociatedGrid.isValid() == false) {
 				var error = penetrateAssociatedGrid.getCellErrors()[0];
@@ -364,9 +574,11 @@ html,body {
 					formData.create_code = userId;
 					formData.create_name = userName;
 					var gridPenetrateAssociatedData = penetrateAssociatedGrid.getData();
+					var gridPaymentPlanAssociatedData = paymentPlanAssociatedGrid.getData();
 					var json = nui.encode({
 						"multipleDetailsAssociated" : formData,
 						"penetrateAssociatedGrid" : gridPenetrateAssociatedData,
+						"paymentPlanAssociatedGrid" : gridPaymentPlanAssociatedData
 					});
 					ajaxCommon({
 						"url" : "com.zhonghe.ame.finance.budgetFilling.saveMultipleDetailsAssociated.biz.ext",

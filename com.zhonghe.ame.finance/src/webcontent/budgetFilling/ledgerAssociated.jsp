@@ -89,7 +89,7 @@ html,body {
 			nui.open({
 				url : "/default/finance/budgetFilling/multipleDetailsAssociated.jsp",
 				title : budgetInfo.parent + " - " + budgetInfo.name,
-				width : "1400px",
+				width : "1420px",
 				height : "700px",
 				allowResize : false,
 				onload : function() {
@@ -126,7 +126,7 @@ html,body {
 				nui.open({
 					url : "/default/finance/budgetFilling/multipleDetailsAssociated.jsp",
 					title : budgetInfo.parent + " - " + budgetInfo.name,
-					width : "1400px",
+					width : "1420px",
 					height : "700px",
 					allowResize : false,
 					onload : function() {
