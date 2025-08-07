@@ -80,13 +80,14 @@ html,body {
 
 		function onActionRenderer(e) {
 			if (e.record.editable == "1") {
-				return '<a href="javascript:void(0)" onclick="editYstb();">填报</a>';
+				return '<a href="javascript:void(0)" onclick="editYstb(\'' + e.record.id + '\')">填报</a>';
 			} else {
 				return "";
 			}
 		}
 
-		function editYstb() {
+		function editYstb(node) {
+			cwbbTreeGrid.selectNode(node);
 			var row = cwbbTreeGrid.getSelected();
 			row.budgetYear = budgetYear;
 			row.fillingInOrg = fillingInOrg;
@@ -95,7 +96,7 @@ html,body {
 					url : "/default/finance/budgetFilling/incomeAssociated.jsp",
 					title : row.parent + " - " + row.name,
 					width : "1400px",
-					height : "700px",
+					height : "800px",
 					allowResize : false,
 					onload : function() {
 						var iframe = this.getIFrameEl();
@@ -129,9 +130,9 @@ html,body {
 					url : "/default/finance/budgetFilling/ledgerAssociated.jsp",
 					title : row.parent + " - " + row.name,
 					width : "1400px",
-					height : "700px",
+					height : "800px",
 					allowResize : false,
-					showCloseButton: false,
+					showCloseButton : false,
 					onload : function() {
 						var iframe = this.getIFrameEl();
 						iframe.contentWindow.initData(row);

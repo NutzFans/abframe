@@ -110,7 +110,7 @@ html,body {
 			</div>
 		</fieldset>
 
-		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px;">
+		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px; margin-bottom: 10px;">
 			<legend>关联 - 付款计划（可选）</legend>
 			<div style="width: 1370px">
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
@@ -130,7 +130,7 @@ html,body {
 						<div type="indexcolumn"></div>
 						<div field="createName" width="60" headerAlign="center" align="center">关联人</div>
 						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">关联日期</div>
-						<div field="contractName" width="200" headerAlign="center" align="center">合同名称</div>
+						<div field="contractName" width="200" headerAlign="center" align="left">合同名称</div>
 						<div field="totalTax" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
 						<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计 - 不含税</div>
 						<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月</div>
@@ -198,12 +198,84 @@ html,body {
 			</div>
 		</fieldset>
 
-		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px;">
+		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px; margin-bottom: 10px;">
 			<legend>关联 - 采购计划（可选）</legend>
-			<div style="width: 1370px">功能开发中...</div>
+			<div style="width: 1370px">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="selectPurchaseData()">选择</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="removePurchaseRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="purchasePlanAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="5" virtualScroll="true" virtualColumns="true"
+					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="purchasePlanCellEndEdit" oncellvalidation="purchasePlanCellValidation">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div type="indexcolumn"></div>
+						<div field="createName" width="60" headerAlign="center" align="center">关联人</div>
+						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">关联日期</div>
+						<div field="planName" width="200" headerAlign="center" align="left">计划名称</div>
+						<div field="materialName" width="200" headerAlign="center" align="left">物项名称</div>
+						<div field="totalTax" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
+						<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计 - 不含税</div>
+						<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							1月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="feb" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							2月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="mar" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							3月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="apr" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							4月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="may" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							5月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="jun" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							6月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="jul" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							7月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="aug" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							8月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="sep" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							9月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="oct" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							10月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="nov" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							11月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="dec" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							12月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+					</div>
+				</div>
+			</div>
 		</fieldset>
 
-		<fieldset id="field4" style="border: solid 1px #aaa; padding: 5px;">
+		<fieldset id="field4" style="border: solid 1px #aaa; padding: 5px; margin-bottom: 10px;">
 			<legend>无关联 - 费用明细（可选）</legend>
 			<div style="width: 1370px">
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
@@ -297,6 +369,88 @@ html,body {
 			</div>
 		</fieldset>
 
+		<fieldset id="field5" style="border: solid 1px #aaa; padding: 5px;">
+			<legend>无关联 - 涉及分摊的费用（可选）</legend>
+			<div style="width: 1370px">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="addDistributionRow()">新增</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="removeDistributionRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="distributionAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="4" virtualScroll="true" virtualColumns="true"
+					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="distributionCellEndEdit" oncellvalidation="distributionCellValidation">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div type="indexcolumn"></div>
+						<div field="createName" width="60" headerAlign="center" align="center">创建人</div>
+						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">创建日期</div>
+						<div field="matterName" width="200" headerAlign="center" align="left" vtype="required">
+							分摊事项
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+						</div>
+						<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计 - 不含税</div>
+						<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							1月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="feb" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							2月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="mar" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							3月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="apr" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							4月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="may" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							5月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="jun" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							6月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="jul" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							7月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="aug" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							8月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="sep" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							9月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="oct" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							10月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="nov" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							11月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="dec" width="100" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							12月
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="remark" width="200" headerAlign="center" align="left">
+							备注
+							<input property="editor" class="mini-textbox" style="width: 100%" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
 	</div>
 
 	<div style="text-align: center; padding: 5px; margin-bottom: 1px" class="nui-toolbar">
@@ -309,6 +463,8 @@ html,body {
 		var form = new nui.Form("totalForm");
 		var penetrateAssociatedGrid = nui.get("penetrateAssociatedGrid");
 		var paymentPlanAssociatedGrid = nui.get("paymentPlanAssociatedGrid");
+		var purchasePlanAssociatedGrid = nui.get("purchasePlanAssociatedGrid");
+		var distributionAssociatedGrid = nui.get("distributionAssociatedGrid");
 		var ledgerInfo;
 		
 		function initData(data) {
@@ -359,6 +515,24 @@ html,body {
 					var datas = result.datas;
 					paymentPlanAssociatedGrid.setData(datas);
 				}
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.finance.budgetFilling.queryAssociatedPurchasePlanEntityByMainIdAndXmbId.biz.ext",
+				data : json,
+				contentType : 'text/json',
+				success : function(result) {
+					var datas = result.datas;
+					purchasePlanAssociatedGrid.setData(datas);
+				}
+			});	
+			ajaxCommon({
+				url : "com.zhonghe.ame.finance.budgetFilling.queryAssociatedDistributionEntityByMainIdAndXmbId.biz.ext",
+				data : json,
+				contentType : 'text/json',
+				success : function(result) {
+					var datas = result.datas;
+					distributionAssociatedGrid.setData(datas);
+				}
 			});				
 		}
 
@@ -393,8 +567,12 @@ html,body {
 		function updateTotalFormData() {
 			var rows = penetrateAssociatedGrid.data;
 			var paymentPlanRows = paymentPlanAssociatedGrid.data;
+			var purchasePlanRows = purchasePlanAssociatedGrid.data
+			var distributionRows = distributionAssociatedGrid.data;
 			var datas = Array(13).fill(0);
 			var paymentPlanDatas = Array(13).fill(0);
+			var purchasePlanDatas = Array(13).fill(0);
+			var distributionDatas = Array(13).fill(0);
 			for (var row of rows) {
 				datas[0] += row.totalAmount;
 				datas[1] += row.jan;
@@ -425,19 +603,49 @@ html,body {
 				paymentPlanDatas[11] += row.novAmount;
 				paymentPlanDatas[12] += row.decAmount;
 			}
-			nui.get("totalAmount").setValue(datas[0] + paymentPlanDatas[0]);
-			nui.get("janAmount").setValue(datas[1] + paymentPlanDatas[1]);
-			nui.get("febAmount").setValue(datas[2] + paymentPlanDatas[2]);
-			nui.get("marAmount").setValue(datas[3] + paymentPlanDatas[3]);
-			nui.get("aprAmount").setValue(datas[4] + paymentPlanDatas[4]);
-			nui.get("mayAmount").setValue(datas[5] + paymentPlanDatas[5]);
-			nui.get("junAmount").setValue(datas[6] + paymentPlanDatas[6]);
-			nui.get("julAmount").setValue(datas[7] + paymentPlanDatas[7]);
-			nui.get("augAmount").setValue(datas[8] + paymentPlanDatas[8]);
-			nui.get("sepAmount").setValue(datas[9] + paymentPlanDatas[9]);
-			nui.get("octAmount").setValue(datas[10] + paymentPlanDatas[10]);
-			nui.get("novAmount").setValue(datas[11] + paymentPlanDatas[11]);
-			nui.get("decAmount").setValue(datas[12] + paymentPlanDatas[12]);
+			for (var row of purchasePlanRows) {
+				purchasePlanDatas[0] += row.totalAmount;
+				purchasePlanDatas[1] += row.jan;
+				purchasePlanDatas[2] += row.feb;
+				purchasePlanDatas[3] += row.mar;
+				purchasePlanDatas[4] += row.apr;
+				purchasePlanDatas[5] += row.may;
+				purchasePlanDatas[6] += row.jun;
+				purchasePlanDatas[7] += row.jul;
+				purchasePlanDatas[8] += row.aug;
+				purchasePlanDatas[9] += row.sep;
+				purchasePlanDatas[10] += row.oct;
+				purchasePlanDatas[11] += row.nov;
+				purchasePlanDatas[12] += row.dec;
+			}
+			for (var row of distributionRows) {
+				distributionDatas[0] += row.totalAmount;
+				distributionDatas[1] += row.jan;
+				distributionDatas[2] += row.feb;
+				distributionDatas[3] += row.mar;
+				distributionDatas[4] += row.apr;
+				distributionDatas[5] += row.may;
+				distributionDatas[6] += row.jun;
+				distributionDatas[7] += row.jul;
+				distributionDatas[8] += row.aug;
+				distributionDatas[9] += row.sep;
+				distributionDatas[10] += row.oct;
+				distributionDatas[11] += row.nov;
+				distributionDatas[12] += row.dec;
+			}
+			nui.get("totalAmount").setValue(datas[0] + paymentPlanDatas[0] + purchasePlanDatas[0] + distributionDatas[0]);
+			nui.get("janAmount").setValue(datas[1] + paymentPlanDatas[1] + purchasePlanDatas[1] + distributionDatas[1]);
+			nui.get("febAmount").setValue(datas[2] + paymentPlanDatas[2] + purchasePlanDatas[2] + distributionDatas[2]);
+			nui.get("marAmount").setValue(datas[3] + paymentPlanDatas[3] + purchasePlanDatas[3] + distributionDatas[3]);
+			nui.get("aprAmount").setValue(datas[4] + paymentPlanDatas[4] + purchasePlanDatas[4] + distributionDatas[4]);
+			nui.get("mayAmount").setValue(datas[5] + paymentPlanDatas[5] + purchasePlanDatas[5] + distributionDatas[5]);
+			nui.get("junAmount").setValue(datas[6] + paymentPlanDatas[6] + purchasePlanDatas[6] + distributionDatas[6]);
+			nui.get("julAmount").setValue(datas[7] + paymentPlanDatas[7] + purchasePlanDatas[7] + distributionDatas[7]);
+			nui.get("augAmount").setValue(datas[8] + paymentPlanDatas[8] + purchasePlanDatas[8] + distributionDatas[8]);
+			nui.get("sepAmount").setValue(datas[9] + paymentPlanDatas[9] + purchasePlanDatas[9] + distributionDatas[9]);
+			nui.get("octAmount").setValue(datas[10] + paymentPlanDatas[10] + purchasePlanDatas[10] + distributionDatas[10]);
+			nui.get("novAmount").setValue(datas[11] + paymentPlanDatas[11] + purchasePlanDatas[11] + distributionDatas[11]);
+			nui.get("decAmount").setValue(datas[12] + paymentPlanDatas[12] + purchasePlanDatas[12] + distributionDatas[12]);
 		}
 		
 		
@@ -527,12 +735,127 @@ html,body {
 				if(e.value != 0){
 					var record = e.record;
 					var amountName = e.field + 'Amount';
-					if(record[amountName] != 0 && record[amountName] < e.value){
+					if(record[amountName] != 0 && record[amountName] <= e.value){
 						e.isValid = true;
 					}else{
 						e.isValid = false;
-						e.errorText = "[月份有金额]的情况下对应[不含税月份金额]必填填写且金额不能>=月份金额";
+						e.errorText = "[月份有金额]的情况下对应[不含税月份金额]必填填写且金额不能大于[月份金额]";
 					}
+				}
+			}
+		}
+		
+		function selectPurchaseData(){
+			var secOrg = ledgerInfo.fillingInOrg;
+			var years = ledgerInfo.budgetYear;
+			mini.open({
+				url : "/default/finance/budgetFilling/selectPurchasePlan.jsp",
+				title : "采购计划",
+				width : '1200px',
+				height : '610px',
+				allowResize : false,
+				onload : function() {
+					var data = {
+						"secOrg" : secOrg,
+						"years" : years
+					};
+					var iframe = this.getIFrameEl();
+					iframe.contentWindow.initData(data);
+				},
+				ondestroy : function(action) {
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var datas = iframe.contentWindow.getDatas();		
+						datas = mini.clone(datas);
+						if (datas.length > 0) {
+							var rows = purchasePlanAssociatedGrid.data;
+							addOrUpdatePurchasePlanRows(datas, rows);
+						}				
+					}
+				}
+			});			
+		}
+		
+		function removePurchaseRow(){
+			var rows = purchasePlanAssociatedGrid.getSelecteds();
+			if (rows.length > 0) {
+				purchasePlanAssociatedGrid.removeRows(rows, false);
+			} else {
+				showTips("请至少选中一条记录！", "danger");
+			}
+			updateTotalFormData();
+		}
+		
+		function addOrUpdatePurchasePlanRows(datas, rows) {
+			if (rows.length > 0) {
+				for (var data of datas) {
+					var row = hasPropertyValue(rows, "sourceId", data.sourceId);
+					if(typeof row === 'undefined'){
+						purchasePlanAssociatedGrid.addRow(data);
+					}else{
+						purchasePlanAssociatedGrid.updateRow(row, data);
+					}
+				}
+			} else {
+				purchasePlanAssociatedGrid.addRows(datas);
+			}
+		}
+		
+		function purchasePlanCellEndEdit(e){
+			var record = e.record;
+			if (e.field == "jan" || e.field == "feb" || e.field == "mar" || e.field == "apr" || e.field == "may" || e.field == "jun" || e.field == "jul" || e.field == "aug" || e.field == "sep" || e.field == "oct" || e.field == "nov" || e.field == "dec") {
+				var totalAmount = record.jan + record.feb + record.mar + record.apr + record.may + record.jun + record.jul + record.aug + record.sep + record.oct + record.nov + record.dec;
+				purchasePlanAssociatedGrid.updateRow(e.row, {
+					totalAmount : totalAmount
+				});
+			}
+			updateTotalFormData();			
+		}
+		
+		function purchasePlanCellValidation(e){
+			if(e.field == "totalAmount"){
+				if(e.value != 0 && e.value <= e.record.totalTax){
+					e.isValid = true;
+				}else{
+					e.isValid = false;
+					e.errorText = "[合计-不含税]必填且金额不能大于[合计]，该值可通过填写[月份]金额自动汇总";
+				}
+			}
+		}
+		
+		function addDistributionRow(){
+			var newRow = {totalAmount: 0, jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0, createCode: userId, createName: userName, createTime: new Date()};
+			var index = distributionAssociatedGrid.getData().length;
+			distributionAssociatedGrid.addRow(newRow, index + 1);
+			distributionAssociatedGrid.beginEditRow(newRow);		
+		}
+		
+		function removeDistributionRow(){
+			var rows = distributionAssociatedGrid.getSelecteds();
+			if (rows.length > 0) {
+				distributionAssociatedGrid.removeRows(rows, false);
+				updateTotalFormData();
+			}
+		}
+		
+		function distributionCellEndEdit(e){
+			var record = e.record;
+			if (e.field == "jan" || e.field == "feb" || e.field == "mar" || e.field == "apr" || e.field == "may" || e.field == "jun" || e.field == "jul" || e.field == "aug" || e.field == "sep" || e.field == "oct" || e.field == "nov" || e.field == "decA") {
+				var totalAmount = record.jan + record.feb + record.mar + record.apr + record.may + record.jun + record.jul + record.aug + record.sep + record.oct + record.nov + record.dec;
+				distributionAssociatedGrid.updateRow(e.row, {
+					totalAmount : totalAmount
+				});
+			}
+			updateTotalFormData();
+		}
+		
+		function distributionCellValidation(e){
+			if(e.field == "totalAmount"){
+				if(e.value != 0){
+					e.isValid = true;
+				}else{
+					e.isValid = false;
+					e.errorText = "[合计-不含税]必填，该值可通过填写[月份]金额自动汇总";
 				}
 			}
 		}
@@ -553,12 +876,26 @@ html,body {
 				paymentPlanAssociatedGrid.beginEditCell(error.record, error.column);
 				showTips("付款计划数据有错误，请检查!", "danger");
 				return;
+			}
+			purchasePlanAssociatedGrid.validate();
+			if (purchasePlanAssociatedGrid.isValid() == false) {
+				var error = purchasePlanAssociatedGrid.getCellErrors()[0];
+				purchasePlanAssociatedGrid.beginEditCell(error.record, error.column);
+				showTips("采购计划数据有错误，请检查!", "danger");
+				return;
 			}			
 			penetrateAssociatedGrid.validate();
 			if (penetrateAssociatedGrid.isValid() == false) {
 				var error = penetrateAssociatedGrid.getCellErrors()[0];
 				penetrateAssociatedGrid.beginEditCell(error.record, error.column);
 				showTips("费用明细数据有错误，请检查!", "danger");
+				return;
+			}
+			distributionAssociatedGrid.validate();
+			if (distributionAssociatedGrid.isValid() == false) {
+				var error = distributionAssociatedGrid.getCellErrors()[0];
+				distributionAssociatedGrid.beginEditCell(error.record, error.column);
+				showTips("涉及分摊费用数据有错误，请检查!", "danger");
 				return;
 			}
 			nui.confirm("确定保存数据吗？", "系统提示", function(action) {
@@ -575,10 +912,14 @@ html,body {
 					formData.create_name = userName;
 					var gridPenetrateAssociatedData = penetrateAssociatedGrid.getData();
 					var gridPaymentPlanAssociatedData = paymentPlanAssociatedGrid.getData();
+					var gridPurchasePlanAssociatedData = purchasePlanAssociatedGrid.getData();
+					var gridDistributionAssociatedData = distributionAssociatedGrid.getData();
 					var json = nui.encode({
 						"multipleDetailsAssociated" : formData,
 						"penetrateAssociatedGrid" : gridPenetrateAssociatedData,
-						"paymentPlanAssociatedGrid" : gridPaymentPlanAssociatedData
+						"paymentPlanAssociatedGrid" : gridPaymentPlanAssociatedData,
+						"purchasePlanAssociatedGrid" : gridPurchasePlanAssociatedData,
+						"distributionAssociatedGrid" : gridDistributionAssociatedData
 					});
 					ajaxCommon({
 						"url" : "com.zhonghe.ame.finance.budgetFilling.saveMultipleDetailsAssociated.biz.ext",

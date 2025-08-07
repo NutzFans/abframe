@@ -36,7 +36,7 @@ html,body {
 				</tr>
 			</table>
 		</div>
-		<div id="xmbAssociatedGrid" multiSelect="false" class="nui-datagrid" style="height: 580px;" frozenStartColumn="0" frozenEndColumn="3" virtualScroll="true" virtualColumns="true" showPager="false"
+		<div id="xmbAssociatedGrid" multiSelect="false" class="nui-datagrid" style="height: 685px;" frozenStartColumn="0" frozenEndColumn="3" virtualScroll="true" virtualColumns="true" showPager="false"
 			showSummaryRow="true">
 			<div property="columns">
 				<div type="checkcolumn"></div>
@@ -90,7 +90,7 @@ html,body {
 				url : "/default/finance/budgetFilling/multipleDetailsAssociated.jsp",
 				title : budgetInfo.parent + " - " + budgetInfo.name,
 				width : "1420px",
-				height : "700px",
+				height : "800px",
 				allowResize : false,
 				onload : function() {
 					var iframe = this.getIFrameEl();
@@ -127,7 +127,7 @@ html,body {
 					url : "/default/finance/budgetFilling/multipleDetailsAssociated.jsp",
 					title : budgetInfo.parent + " - " + budgetInfo.name,
 					width : "1420px",
-					height : "700px",
+					height : "800px",
 					allowResize : false,
 					onload : function() {
 						var iframe = this.getIFrameEl();

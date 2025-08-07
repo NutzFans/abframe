@@ -17,10 +17,13 @@ import com.eos.system.annotation.Bizlet;
 public class MultipleDetailsAssociatedUtil {
 
 	@Bizlet("填充相关数据")
-	public void fillData(Entity multipleDetailsAssociated, Entity[] penetrateAssociatedGrid, Entity[] paymentPlanAssociatedGrid) throws Exception {
+	public void fillData(Entity multipleDetailsAssociated, Entity[] penetrateAssociatedGrid, Entity[] paymentPlanAssociatedGrid, Entity[] purchasePlanAssociatedGrid,
+			Entity[] distributionAssociatedGrid) throws Exception {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String delPenetrateSql = "DELETE FROM zh_caiwu_budget_filling_associated_penetrate WHERE main_id = ? AND xmb_id = ?";
 		String delPaymentPlanSql = "DELETE FROM zh_caiwu_budget_filling_associated_payment_plans WHERE main_id = ? AND xmb_id = ?";
+		String delPurchasePlanSql = "DELETE FROM zh_caiwu_budget_filling_associated_purchase_plan WHERE main_id = ? AND xmb_id = ?";
+		String delDistributionSql = "DELETE FROM zh_caiwu_budget_filling_associated_distribution WHERE main_id = ? AND xmb_id = ?";
 		String xmbId;
 		if (StrUtil.isNotBlank(multipleDetailsAssociated.getStr("id"))) {
 			// 编辑保存
@@ -109,27 +112,99 @@ public class MultipleDetailsAssociatedUtil {
 			paymentPlanInsertEntitys.add(insert);
 		}
 
+		List<Entity> purchasePlanInsertEntitys = new ArrayList<Entity>();
+		for (int i = 0; i < purchasePlanAssociatedGrid.length; i++) {
+			Entity insert = Entity.create("zh_caiwu_budget_filling_associated_purchase_plan");
+			insert.set("id", IdUtil.objectId());
+			insert.set("main_id", multipleDetailsAssociated.getStr("main_id"));
+			insert.set("xmb_id", xmbId);
+			insert.set("source_id", purchasePlanAssociatedGrid[i].getStr("sourceId"));
+			insert.set("plan_name", purchasePlanAssociatedGrid[i].getStr("planName"));
+			insert.set("material_name", purchasePlanAssociatedGrid[i].getStr("materialName"));
+			insert.set("jan_amount", purchasePlanAssociatedGrid[i].getBigDecimal("jan"));
+			insert.set("feb_amount", purchasePlanAssociatedGrid[i].getBigDecimal("feb"));
+			insert.set("mar_amount", purchasePlanAssociatedGrid[i].getBigDecimal("mar"));
+			insert.set("apr_amount", purchasePlanAssociatedGrid[i].getBigDecimal("apr"));
+			insert.set("may_amount", purchasePlanAssociatedGrid[i].getBigDecimal("may"));
+			insert.set("jun_amount", purchasePlanAssociatedGrid[i].getBigDecimal("jun"));
+			insert.set("jul_amount", purchasePlanAssociatedGrid[i].getBigDecimal("jul"));
+			insert.set("aug_amount", purchasePlanAssociatedGrid[i].getBigDecimal("aug"));
+			insert.set("sep_amount", purchasePlanAssociatedGrid[i].getBigDecimal("sep"));
+			insert.set("oct_amount", purchasePlanAssociatedGrid[i].getBigDecimal("oct"));
+			insert.set("nov_amount", purchasePlanAssociatedGrid[i].getBigDecimal("nov"));
+			insert.set("dec_amount", purchasePlanAssociatedGrid[i].getBigDecimal("dec"));
+			insert.set("total_amount", purchasePlanAssociatedGrid[i].getBigDecimal("totalAmount"));
+			insert.set("total_tax", purchasePlanAssociatedGrid[i].getBigDecimal("totalTax"));
+			insert.set("create_code", purchasePlanAssociatedGrid[i].getStr("createCode"));
+			insert.set("create_name", purchasePlanAssociatedGrid[i].getStr("createName"));
+			insert.set("create_time", DateUtil.parse(purchasePlanAssociatedGrid[i].getStr("createTime")));
+			purchasePlanInsertEntitys.add(insert);
+		}
+
+		List<Entity> distributionInsertEntitys = new ArrayList<Entity>();
+		for (int i = 0; i < distributionAssociatedGrid.length; i++) {
+			Entity insert = Entity.create("zh_caiwu_budget_filling_associated_distribution");
+			insert.set("id", IdUtil.objectId());
+			insert.set("main_id", multipleDetailsAssociated.getStr("main_id"));
+			insert.set("xmb_id", xmbId);
+			insert.set("matter_name", distributionAssociatedGrid[i].getStr("matterName"));
+			insert.set("remark", distributionAssociatedGrid[i].getStr("remark"));
+			insert.set("jan_amount", distributionAssociatedGrid[i].getBigDecimal("jan"));
+			insert.set("feb_amount", distributionAssociatedGrid[i].getBigDecimal("feb"));
+			insert.set("mar_amount", distributionAssociatedGrid[i].getBigDecimal("mar"));
+			insert.set("apr_amount", distributionAssociatedGrid[i].getBigDecimal("apr"));
+			insert.set("may_amount", distributionAssociatedGrid[i].getBigDecimal("may"));
+			insert.set("jun_amount", distributionAssociatedGrid[i].getBigDecimal("jun"));
+			insert.set("jul_amount", distributionAssociatedGrid[i].getBigDecimal("jul"));
+			insert.set("aug_amount", distributionAssociatedGrid[i].getBigDecimal("aug"));
+			insert.set("sep_amount", distributionAssociatedGrid[i].getBigDecimal("sep"));
+			insert.set("oct_amount", distributionAssociatedGrid[i].getBigDecimal("oct"));
+			insert.set("nov_amount", distributionAssociatedGrid[i].getBigDecimal("nov"));
+			insert.set("dec_amount", distributionAssociatedGrid[i].getBigDecimal("dec"));
+			insert.set("total_amount", distributionAssociatedGrid[i].getBigDecimal("totalAmount"));
+			insert.set("create_code", distributionAssociatedGrid[i].getStr("createCode"));
+			insert.set("create_name", distributionAssociatedGrid[i].getStr("createName"));
+			insert.set("create_time", DateUtil.parse(distributionAssociatedGrid[i].getStr("createTime")));
+			distributionInsertEntitys.add(insert);
+		}
+
 		if (StrUtil.isNotBlank(multipleDetailsAssociated.getStr("id"))) {
 			// 编辑保存
 			Entity updateWhere = Entity.create("zh_caiwu_budget_filling_associated_xmb").set("id", xmbId);
 			dbSession.execute(delPenetrateSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
 			dbSession.execute(delPaymentPlanSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
+			dbSession.execute(delPurchasePlanSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
+			dbSession.execute(delDistributionSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
 			if (penetrateInsertEntitys.size() > 0) {
 				dbSession.insert(penetrateInsertEntitys);
 			}
 			if (paymentPlanInsertEntitys.size() > 0) {
 				dbSession.insert(paymentPlanInsertEntitys);
+			}
+			if (purchasePlanInsertEntitys.size() > 0) {
+				dbSession.insert(purchasePlanInsertEntitys);
+			}
+			if (distributionInsertEntitys.size() > 0) {
+				dbSession.insert(distributionInsertEntitys);
 			}
 			dbSession.update(xmbEntity, updateWhere);
 		} else {
 			// 新增保存
 			dbSession.execute(delPenetrateSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
 			dbSession.execute(delPaymentPlanSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
+			dbSession.execute(delPurchasePlanSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
+			dbSession.execute(delDistributionSql, multipleDetailsAssociated.getStr("main_id"), xmbId);
 			if (penetrateInsertEntitys.size() > 0) {
 				dbSession.insert(penetrateInsertEntitys);
 			}
 			if (paymentPlanInsertEntitys.size() > 0) {
 				dbSession.insert(paymentPlanInsertEntitys);
+			}
+			if (purchasePlanInsertEntitys.size() > 0) {
+				dbSession.insert(purchasePlanInsertEntitys);
+			}
+			if (distributionInsertEntitys.size() > 0) {
+				dbSession.insert(distributionInsertEntitys);
 			}
 			dbSession.insert(xmbEntity);
 		}
