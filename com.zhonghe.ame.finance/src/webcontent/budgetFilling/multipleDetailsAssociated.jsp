@@ -113,7 +113,7 @@ html,body {
 		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px; margin-bottom: 10px;">
 			<legend>关联 - 付款计划（可选）</legend>
 			<div style="width: 1370px">
-				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+				<div id="toolbarPaymentDiv" class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table>
 						<tr>
 							<td>
@@ -123,7 +123,7 @@ html,body {
 						</tr>
 					</table>
 				</div>
-				<div id="paymentPlanAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="4" virtualScroll="true" virtualColumns="true"
+				<div id="paymentPlanAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="6" virtualScroll="true" virtualColumns="true"
 					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="paymentPlanCellEndEdit" oncellvalidation="paymentPlanCellValidation">
 					<div property="columns">
 						<div type="checkcolumn"></div>
@@ -201,7 +201,7 @@ html,body {
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px; margin-bottom: 10px;">
 			<legend>关联 - 采购计划（可选）</legend>
 			<div style="width: 1370px">
-				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+				<div id="toolbarPurchaseDiv" class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table>
 						<tr>
 							<td>
@@ -211,7 +211,7 @@ html,body {
 						</tr>
 					</table>
 				</div>
-				<div id="purchasePlanAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="5" virtualScroll="true" virtualColumns="true"
+				<div id="purchasePlanAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="7" virtualScroll="true" virtualColumns="true"
 					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="purchasePlanCellEndEdit" oncellvalidation="purchasePlanCellValidation">
 					<div property="columns">
 						<div type="checkcolumn"></div>
@@ -278,7 +278,7 @@ html,body {
 		<fieldset id="field4" style="border: solid 1px #aaa; padding: 5px; margin-bottom: 10px;">
 			<legend>无关联 - 费用明细（可选）</legend>
 			<div style="width: 1370px">
-				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+				<div id="toolbarPenetrateDiv" class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table>
 						<tr>
 							<td>
@@ -372,7 +372,7 @@ html,body {
 		<fieldset id="field5" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>无关联 - 涉及分摊的费用（可选）</legend>
 			<div style="width: 1370px">
-				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+				<div id="toolbarDistributionDiv" class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table>
 						<tr>
 							<td>
@@ -382,7 +382,7 @@ html,body {
 						</tr>
 					</table>
 				</div>
-				<div id="distributionAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="4" virtualScroll="true" virtualColumns="true"
+				<div id="distributionAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 300px;" frozenStartColumn="0" frozenEndColumn="5" virtualScroll="true" virtualColumns="true"
 					showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="distributionCellEndEdit" oncellvalidation="distributionCellValidation">
 					<div property="columns">
 						<div type="checkcolumn"></div>
@@ -475,6 +475,14 @@ html,body {
 		}
 		
 		function editData(budgetInfo, data){
+			if(budgetInfo.viewStatus){
+				nui.get("xmbName").setEnabled(false);
+				$("#toolbarPaymentDiv").hide();
+				$("#toolbarPurchaseDiv").hide();
+				$("#toolbarPenetrateDiv").hide();
+				$("#toolbarDistributionDiv").hide();
+				$("#saveBtn").hide();
+			}
 			ledgerInfo = budgetInfo;
 			nui.get("tbYear").setValue(budgetInfo.budgetYear);
 			nui.get("tbName").setValue(budgetInfo.parent + " - " + budgetInfo.name);

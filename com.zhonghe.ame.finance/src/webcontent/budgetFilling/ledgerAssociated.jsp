@@ -29,9 +29,10 @@ html,body {
 			<table>
 				<tr>
 					<td>
-						<a class="nui-button" iconCls="icon-add" onclick="addXmb()">新增</a>
-						<a class="nui-button" iconCls="icon-edit" onclick="editXmb()">编辑</a>
-						<a class="nui-button" iconCls="icon-remove" onclick="delXmb()">删除</a>
+						<a id="addXmbBtn" class="nui-button" iconCls="icon-add" onclick="addXmb()">新增</a>
+						<a id="editXmbBtn" class="nui-button" iconCls="icon-edit" onclick="editXmb()">编辑</a>
+						<a id="delXmbBtn" class="nui-button" iconCls="icon-remove" onclick="delXmb()">删除</a>
+						<a id="viewXmbBtn" class="nui-button" iconCls="icon-node" onclick="viewXmb()" style="display: none">查看</a>
 					</td>
 				</tr>
 			</table>
@@ -62,6 +63,7 @@ html,body {
 
 	<div style="text-align: center; padding: 5px; margin-bottom: 1px" class="nui-toolbar">
 		<a id="saveBtn" class="nui-button" onclick="save()" style="width: 60px; margin-right: 20px;" iconCls="icon-close">关闭</a>
+		<a id="closeBtn" class="nui-button" onclick="closeCancel()" style="width: 60px; display: none;" iconCls="icon-close">关闭</a>
 	</div>
 
 	<script type="text/javascript">
@@ -70,6 +72,14 @@ html,body {
 		var budgetInfo;
 
 		function initData(data) {
+			if (data.viewStatus) {
+				$("#addXmbBtn").hide();
+				$("#editXmbBtn").hide();
+				$("#delXmbBtn").hide();
+				$("#saveBtn").hide();
+				$("#viewXmbBtn").show();
+				$("#closeBtn").show();
+			}
 			budgetInfo = data;
 			var json = nui.encode({
 				"id" : data.id,
@@ -153,6 +163,42 @@ html,body {
 			} else {
 				showTips("只有填报人可以对选中记录进行编辑！", "danger");
 			}
+		}
+
+		function viewXmb() {
+			var row = xmbAssociatedGrid.getSelecteds();
+			if (row.length > 1 || row.length == 0) {
+				showTips("选中一条记录进行查看！", "danger");
+				return;
+			}
+			var data = row[0];
+			nui.open({
+				url : "/default/finance/budgetFilling/multipleDetailsAssociated.jsp",
+				title : budgetInfo.parent + " - " + budgetInfo.name,
+				width : "1420px",
+				height : "800px",
+				allowResize : false,
+				onload : function() {
+					var iframe = this.getIFrameEl();
+					iframe.contentWindow.editData(budgetInfo, data);
+				},
+				ondestroy : function(action) {
+					if (action == "ok") {
+						var json = nui.encode({
+							'id' : budgetInfo.id
+						});
+						ajaxCommon({
+							url : "com.zhonghe.ame.finance.budgetFilling.queryAssociatedXmbEntityByMainId.biz.ext",
+							data : json,
+							contentType : 'text/json',
+							success : function(result) {
+								var datas = result.datas;
+								xmbAssociatedGrid.setData(datas);
+							}
+						});
+					}
+				}
+			});
 		}
 
 		function delXmb() {

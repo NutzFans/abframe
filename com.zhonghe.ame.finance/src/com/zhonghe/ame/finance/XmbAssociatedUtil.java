@@ -51,8 +51,14 @@ public class XmbAssociatedUtil {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String delSql = "DELETE FROM zh_caiwu_budget_filling_associated_xmb WHERE id = ?";
 		String delAssociatedPenetrateSql = "DELETE FROM zh_caiwu_budget_filling_associated_penetrate WHERE main_id = ? AND xmb_id = ?";
+		String delPaymentPlanSql = "DELETE FROM zh_caiwu_budget_filling_associated_payment_plans WHERE main_id = ? AND xmb_id = ?";
+		String delPurchasePlanSql = "DELETE FROM zh_caiwu_budget_filling_associated_purchase_plan WHERE main_id = ? AND xmb_id = ?";
+		String delDistributionSql = "DELETE FROM zh_caiwu_budget_filling_associated_distribution WHERE main_id = ? AND xmb_id = ?";
 		dbSession.execute(delSql, id);
 		dbSession.execute(delAssociatedPenetrateSql, mainId, id);
+		dbSession.execute(delPaymentPlanSql, mainId, id);
+		dbSession.execute(delPurchasePlanSql, mainId, id);
+		dbSession.execute(delDistributionSql, mainId, id);
 	}
 
 }

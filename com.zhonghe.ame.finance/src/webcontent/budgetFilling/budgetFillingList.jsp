@@ -65,7 +65,7 @@ html,body {
 						<div type="checkcolumn"></div>
 						<div field="budgetAccountName" width="200" headerAlign="center" align="center">预算主体</div>
 						<div field="budgetYear" width="80" headerAlign="center" align="center">预算年份</div>
-						<div width="100" headerAlign="center" align="center">填报明细</div>
+						<div width="100" headerAlign="center" align="center" renderer="fillInDetails">填报明细</div>
 						<div field="fillingStage" width="100" headerAlign="center" align="center">填报阶段</div>
 					</div>
 				</div>
@@ -181,6 +181,7 @@ html,body {
 					url : "/default/finance/budgetFilling/tbsjBudgetFilling.jsp",
 					width : '100%',
 					height : '100%',
+					showCloseButton : false,
 					allowResize : false,
 					title : "年度预算 - 填报数据",
 					onload : function() {
@@ -233,6 +234,18 @@ html,body {
 			budgetFillingForm.reset();
 			init();
 		}
+		
+		function fillInDetails(e){
+			var s = "<a  href='javascript:void(0)' onclick='fillInDetailsView();' >查看</a>";
+			return s
+		}
+		
+		function fillInDetailsView(){
+			var row = budgetFillingGrid.getSelected();
+			executeUrl = "/default/finance/budgetFilling/tbsjBudgetFilling.jsp?id=" + row.id;
+			window.open(executeUrl);
+		}		
+		
 	</script>
 
 </body>

@@ -22,12 +22,12 @@ html,body {
 <body>
 	<div class="nui-fit" style="padding: 5px;">
 		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px; background: #f1f2f6;">
-			<span id="ysnd" style="font-size: 14px; margin-left: 10px; font-weight: bold;">预算年度：2025</span>
-			<span id="yszt" style="font-size: 14px; margin-left: 20px; font-weight: bold;">预算主体：系统工程事业部</span>
+			<span id="ysnd" style="font-size: 14px; margin-left: 10px; font-weight: bold;"></span>
+			<span id="yszt" style="font-size: 14px; margin-left: 20px; font-weight: bold;"></span>
 		</div>
-		<div class="mini-panel" title="第一部分：财务报表" showCollapseButton="true" expanded="true" style="width: 100%; height: 680px;">
+		<div class="mini-panel" title="第一部分：财务报表" showCollapseButton="true" expanded="true" style="width: 100%; height: 650px;">
 			<div id="cwbbTreeGrid" class="mini-treegrid" showTreeIcon="false" treeColumn="name" idField="id" parentField="parent" resultAsTree="false" allowMoveColumn="false" allowResizeColumn="false"
-				allowResize="false" style="width: 100%; height: 630px">
+				allowResize="false" style="width: 100%; height: 600px">
 				<div property="columns">
 					<div name="name" field="name" width="140" headerAlign="center" align="left">填报项</div>
 					<div field="total_amount" width="80" headerAlign="center" align="center" dataType="currency">合计</div>
@@ -47,15 +47,42 @@ html,body {
 				</div>
 			</div>
 		</div>
-		<div class="mini-panel" title="第二部分：人员及人均情况" showCollapseButton="true" expanded="false" style="width: 100%; height: 350px;"></div>
-		<div class="mini-panel" title="第三部分：劳动生产率" showCollapseButton="true" expanded="false" style="width: 100%; height: 350px;"></div>
-		<div class="mini-panel" title="第四部分：人工成本-全口径" showCollapseButton="true" expanded="false" style="width: 100%; height: 350px;"></div>
+		<div class="mini-panel" title="第二部分：人员及人均情况" showCollapseButton="true" expanded="true" style="width: 100%; height: 350px;"></div>
+		<div class="mini-panel" title="第三部分：劳动生产率" showCollapseButton="true" expanded="true" style="width: 100%; height: 350px;"></div>
+		<div class="mini-panel" title="第四部分：人工成本-全口径" showCollapseButton="true" expanded="true" style="width: 100%; height: 350px;"></div>
+	</div>
+
+	<div id="closeBtnDiv" style="text-align: center; padding: 5px; margin-bottom: 1px" class="nui-toolbar">
+		<a id="closeBtn" class="nui-button" onclick="closeCancel()" style="width: 60px; margin-right: 20px;" iconCls="icon-close">关闭</a>
 	</div>
 
 	<script type="text/javascript">
+		var reqId ='<%=request.getParameter("id")%>';
 		nui.parse();
 		var cwbbTreeGrid = nui.get("#cwbbTreeGrid");
 		var budgetId, budgetYear, fillingInOrg;
+		var viewStatus = false;
+
+		init();
+
+		function init() {
+			if (reqId != 'null' && reqId != null && reqId != "") {
+				viewStatus = true;
+				$("#closeBtnDiv").hide();
+				var json = nui.encode({
+					'id' : reqId
+				});
+				ajaxCommon({
+					url : "com.zhonghe.ame.finance.budgetFilling.queryBudgetFillingById.biz.ext",
+					contentType : 'text/json',
+					async : false,
+					data : json,
+					success : function(result) {
+						setEditData(result.data);
+					}
+				});
+			}
+		}
 
 		function setEditData(data) {
 			$("#ysnd").text("预算年度：" + data.budgetYear);
@@ -79,8 +106,9 @@ html,body {
 		}
 
 		function onActionRenderer(e) {
+			var text = viewStatus ? "查看" : "填报";
 			if (e.record.editable == "1") {
-				return '<a href="javascript:void(0)" onclick="editYstb(\'' + e.record.id + '\')">填报</a>';
+				return '<a href="javascript:void(0)" onclick="editYstb(\'' + e.record.id + '\')">' + text + '</a>';
 			} else {
 				return "";
 			}
@@ -91,6 +119,7 @@ html,body {
 			var row = cwbbTreeGrid.getSelected();
 			row.budgetYear = budgetYear;
 			row.fillingInOrg = fillingInOrg;
+			row.viewStatus = viewStatus;
 			if (row.parent == "总收入") {
 				nui.open({
 					url : "/default/finance/budgetFilling/incomeAssociated.jsp",
@@ -125,6 +154,38 @@ html,body {
 				});
 			} else if (row.name == "四、总部管理费分摊") {
 
+			} else if (row.name == "五、其他") {
+				nui.open({
+					url : "/default/finance/budgetFilling/otherAssociated.jsp",
+					title : row.name,
+					width : "1400px",
+					height : "800px",
+					allowResize : false,
+					onload : function() {
+						var iframe = this.getIFrameEl();
+						iframe.contentWindow.initData(row);
+					},
+					ondestroy : function(action) {
+						if (action == "ok") {
+							var json = nui.encode({
+								'id' : budgetId
+							});
+							ajaxCommon({
+								url : "com.zhonghe.ame.finance.budgetFilling.queryFillingDatas.biz.ext",
+								contentType : 'text/json',
+								async : false,
+								data : json,
+								success : function(result) {
+									var datas = result.fillingDatas;
+									var node = cwbbTreeGrid.getSelectedNode();
+									cwbbTreeGrid.loadList(datas, "id", "parent");
+									cwbbTreeGrid.selectNode(node.id);
+									cwbbTreeGrid.expandPath(node.id);
+								}
+							});
+						}
+					}
+				});
 			} else {
 				nui.open({
 					url : "/default/finance/budgetFilling/ledgerAssociated.jsp",
