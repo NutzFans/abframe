@@ -487,7 +487,7 @@ html,body {
 				return;
 			}
 			var data = row[0];
-			if (data.status == "2") {
+			if (data.status == "2" || userId == "0051") {
 				nui.open({
 					url : "/default/purchase/project/updateProApp.jsp",
 					width : '100%',

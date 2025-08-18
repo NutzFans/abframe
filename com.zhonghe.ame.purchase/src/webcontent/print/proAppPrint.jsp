@@ -213,14 +213,6 @@
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-xs12">
-						<label class="layui-form-label">采购方式理由</label>
-						<div class="layui-input-block">
-							<textarea autoHeight="true" name="wayReason" disabled="disabled" class="layui-textarea"></textarea>
-						</div>
-					</div>
-				</div>
-				<div class="layui-row">
-					<div class="layui-col-xs12">
 						<label class="layui-form-label">相关情况说明</label>
 						<div class="layui-input-block">
 							<textarea autoHeight="true" name="remark" disabled="disabled" class="layui-textarea"></textarea>
