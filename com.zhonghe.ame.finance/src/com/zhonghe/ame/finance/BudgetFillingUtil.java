@@ -64,6 +64,8 @@ public class BudgetFillingUtil {
 
 			Entity budgetFillingProductivitySCSJE = this.buildBudgetFillingProductivity(budgetFillingMain, "生产税净额", createName);
 			budgetFillingProductivityList.add(budgetFillingProductivitySCSJE);
+			Entity budgetFillingProductivityGSSCSJEZS = this.buildBudgetFillingProductivity(budgetFillingMain, "公司生产税净额总数", createName);
+			budgetFillingProductivityList.add(budgetFillingProductivityGSSCSJEZS);
 		}
 		this.deleteData(dbSession, budgetAccounts, year);
 		dbSession.insert(budgetFillingMainList);
@@ -137,6 +139,7 @@ public class BudgetFillingUtil {
 		budgetFillingMargin.set("create_time", DateTime.now());
 		budgetFillingMargin.set("update_name", createName);
 		budgetFillingMargin.set("update_time", DateTime.now());
+		budgetFillingMargin.set("share_proportion", BigDecimal.ZERO);
 		return budgetFillingMargin;
 	}
 
@@ -173,19 +176,19 @@ public class BudgetFillingUtil {
 		budgetFillingPersonnel.set("id", IdUtil.objectId());
 		budgetFillingPersonnel.set("budget_main_id", budgetFillingMain.getStr("id"));
 		budgetFillingPersonnel.set("situation_name", situationName);
-		budgetFillingPersonnel.set("jan", Integer.valueOf(0));
-		budgetFillingPersonnel.set("feb", Integer.valueOf(0));
-		budgetFillingPersonnel.set("mar", Integer.valueOf(0));
-		budgetFillingPersonnel.set("apr", Integer.valueOf(0));
-		budgetFillingPersonnel.set("may", Integer.valueOf(0));
-		budgetFillingPersonnel.set("jun", Integer.valueOf(0));
-		budgetFillingPersonnel.set("jul", Integer.valueOf(0));
-		budgetFillingPersonnel.set("aug", Integer.valueOf(0));
-		budgetFillingPersonnel.set("sep", Integer.valueOf(0));
-		budgetFillingPersonnel.set("oct", Integer.valueOf(0));
-		budgetFillingPersonnel.set("nov", Integer.valueOf(0));
-		budgetFillingPersonnel.set("dec", Integer.valueOf(0));
-		budgetFillingPersonnel.set("average_actual", Integer.valueOf(0));
+		budgetFillingPersonnel.set("jan", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("feb", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("mar", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("apr", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("may", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("jun", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("jul", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("aug", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("sep", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("oct", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("nov", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("dec", BigDecimal.ZERO);
+		budgetFillingPersonnel.set("average_actual", BigDecimal.ZERO);
 		budgetFillingPersonnel.set("create_name", createName);
 		budgetFillingPersonnel.set("create_time", DateTime.now());
 		budgetFillingPersonnel.set("update_name", createName);
@@ -259,6 +262,7 @@ public class BudgetFillingUtil {
 		String delAssociatedPenetrateSql = "DELETE FROM zh_caiwu_budget_filling_associated_penetrate WHERE main_id IN (" + distributionPaymentPlansPenetratePurchasePlanXmbMainIds + ")";
 		String delAssociatedPurchasePlanSql = "DELETE FROM zh_caiwu_budget_filling_associated_purchase_plan WHERE main_id IN (" + distributionPaymentPlansPenetratePurchasePlanXmbMainIds + ")";
 		String delAssociatedXmbSql = "DELETE FROM zh_caiwu_budget_filling_associated_xmb WHERE main_id IN (" + distributionPaymentPlansPenetratePurchasePlanXmbMainIds + ")";
+		String delAssetAssociatedSql = "DELETE FROM zh_caiwu_budget_filling_ledger_assets WHERE main_id IN (" + distributionPaymentPlansPenetratePurchasePlanXmbMainIds + ")";
 
 		String queryFillingMarginSql = "SELECT id FROM zh_caiwu_budget_filling_margin WHERE budget_main_id IN (" + ids + ")";
 		List<Entity> fillingMargins = dbSession.query(queryFillingMarginSql);
@@ -278,6 +282,7 @@ public class BudgetFillingUtil {
 		dbSession.execute(delAssociatedPenetrateSql);
 		dbSession.execute(delAssociatedPurchasePlanSql);
 		dbSession.execute(delAssociatedXmbSql);
+		dbSession.execute(delAssetAssociatedSql);
 		dbSession.execute(delAssociatedOtherSql);
 		dbSession.execute(delFillingMainSql);
 		dbSession.execute(delFillingIncomeSql);

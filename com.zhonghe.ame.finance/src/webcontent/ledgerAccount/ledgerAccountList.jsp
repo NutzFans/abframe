@@ -33,7 +33,9 @@ html,body {
 						</td>
 						<td style="width: 80px; text-align: right;">科目分类：</td>
 						<td>
-							<input name="criteria._expr[2].category" class="nui-dictcombobox" dictTypeId="CW_KM_CLASS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[2]._value" class="nui-dictcombobox" dictTypeId="CW_KM_CLASS" showNullItem="true" nullItemText="全部" style="width: 150px" />
+							<input name="criteria._expr[2]._property" value="category" class="nui-hidden" />
+							<input name="criteria._expr[2]._op" value="like" class="nui-hidden" />
 						</td>
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
@@ -62,7 +64,7 @@ html,body {
 				url="com.zhonghe.ame.finance.ledgerAccount.queryLedgerAccountList.biz.ext">
 				<div property="columns">
 					<div type="checkcolumn"></div>
-					<div field="name" width="100" align="left" headerAlign="center">科目名称</div>
+					<div field="name" width="200" align="left" headerAlign="center">科目名称</div>
 					<div field="category" width="200" align="center" headerAlign="center" renderer="CW_KM_CLASS">科目分类</div>
 					<div field="sorting" width="50" align="center" headerAlign="center">排序</div>
 					<div field="centralizedDepartmentName" width="100" align="center" headerAlign="center">归口部门</div>

@@ -21,14 +21,14 @@ html,body {
 }
 </style>
 <head>
-<title>填报数据 - 关联开票收款计划</title>
+<title>填报数据 - 关联固定资产</title>
 </head>
 <body>
 	<div class="nui-fit" style="padding: 5px;">
 		<fieldset id="field1" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>合计信息</legend>
 			<form id="totalForm" method="post">
-				<input id="fillingIncomeId" name="id" class="nui-hidden" />
+				<input id="fillingAssetsId" name="id" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -103,7 +103,7 @@ html,body {
 		</fieldset>
 
 		<fieldset id="field2" style="border: solid 1px #aaa; padding: 5px;">
-			<legend>关联 - 开票收款计划</legend>
+			<legend>关联 - 长期资产</legend>
 			<div style="width: 1370px">
 				<div id="toolbarBtnDiv" class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
 					<table>
@@ -115,15 +115,17 @@ html,body {
 						</tr>
 					</table>
 				</div>
-				<div id="incomeAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 515px;" frozenStartColumn="0" frozenEndColumn="5" virtualScroll="true" virtualColumns="true" showPager="false"
+				<div id="assetsAssociatedGrid" multiSelect="true" class="nui-datagrid" style="height: 515px;" frozenStartColumn="0" frozenEndColumn="6" virtualScroll="true" virtualColumns="true" showPager="false"
 					showSummaryRow="true">
 					<div property="columns">
 						<div type="checkcolumn"></div>
 						<div type="indexcolumn"></div>
 						<div field="createName" width="60" headerAlign="center" align="center">关联人</div>
 						<div field="createTime" width="90" dateFormat="yyyy-MM-dd" headerAlign="center" align="center">关联日期</div>
-						<div field="contractName" width="200" headerAlign="center" align="center">合同名称</div>
-						<div field="totalAmount" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
+						<div field="department" width="150" headerAlign="center" align="center">资产所属部门</div>
+						<div field="assetsName" width="200" headerAlign="center" align="center">资产名称</div>
+						<div field="clazz" headerAlign="center" align="center">资产分类</div>
+						<div field="total" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计</div>
 						<div field="jan" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">1月</div>
 						<div field="feb" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">2月</div>
 						<div field="mar" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">3月</div>
@@ -140,7 +142,6 @@ html,body {
 				</div>
 			</div>
 		</fieldset>
-
 	</div>
 
 	<div style="text-align: center; padding: 5px; margin-bottom: 1px" class="nui-toolbar">
@@ -151,23 +152,23 @@ html,body {
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("totalForm");
-		var incomeAssociatedGrid = nui.get("incomeAssociatedGrid");
+		var assetsAssociatedGrid = nui.get("assetsAssociatedGrid");
 		var budgetInfo;
 
 		function initData(data) {
-			if(data.viewStatus){
+			if (data.viewStatus) {
 				$("#toolbarBtnDiv").hide();
 				$("#saveBtn").hide();
 			}
 			budgetInfo = data;
-			nui.get("fillingIncomeId").setValue(data.id);
+			nui.get("fillingAssetsId").setValue(data.id);
 			nui.get("tbYear").setValue(data.budgetYear);
 			nui.get("tbName").setValue(data.parent + " - " + data.name);
 			var json = nui.encode({
 				"id" : data.id,
 			});
 			ajaxCommon({
-				url : "com.zhonghe.ame.finance.budgetFilling.queryZhCaiwuBudgetFillingLedgerById.biz.ext",
+				url : "com.zhonghe.ame.finance.budgetFilling.queryZhCaiwuBudgetFillingIncomeById.biz.ext",
 				data : json,
 				contentType : 'text/json',
 				success : function(result) {
@@ -188,35 +189,35 @@ html,body {
 				}
 			});
 			ajaxCommon({
-				url : "com.zhonghe.ame.finance.budgetFilling.queryAssociatedAnnnualPlanEntityByMainId.biz.ext",
+				url : "com.zhonghe.ame.finance.budgetFilling.queryAssociatedLedgetAssetsEntityByMainId.biz.ext",
 				data : json,
 				contentType : 'text/json',
 				success : function(result) {
 					var datas = result.datas;
-					incomeAssociatedGrid.setData(datas);
+					assetsAssociatedGrid.setData(datas);
 				}
 			});
 		}
 
 		function selectData() {
-			var headquarterGroup;
-			if (budgetInfo.name == "集团内") {
-				headquarterGroup = "0,3,4";
+			var clazz;
+			if (budgetInfo.name == "折旧") {
+				clazz = "固定资产";
 			}
-			if (budgetInfo.name == "集团外") {
-				headquarterGroup = "1";
+			if (budgetInfo.name == "长期待摊") {
+				clazz = "大额装修,无形资产";
 			}
 			var secOrg = budgetInfo.fillingInOrg;
 			var years = budgetInfo.budgetYear;
 			mini.open({
-				url : "/default/finance/budgetFilling/selectAnnnualPlan.jsp",
-				title : "开票收款计划",
+				url : "/default/finance/budgetFilling/selectLongAssets.jsp",
+				title : "长期资产管理",
 				width : '1200px',
 				height : '610px',
 				allowResize : false,
 				onload : function() {
 					var data = {
-						"headquarterGroup" : headquarterGroup,
+						"clazz" : clazz,
 						"secOrg" : secOrg,
 						"years" : years
 					};
@@ -229,7 +230,7 @@ html,body {
 						var datas = iframe.contentWindow.getDatas();
 						datas = mini.clone(datas);
 						if (datas.length > 0) {
-							var rows = incomeAssociatedGrid.data;
+							var rows = assetsAssociatedGrid.data;
 							addOrUpdateRows(datas, rows);
 							updateTotalFormData();
 						}
@@ -239,37 +240,37 @@ html,body {
 		}
 		
 		function removeRow() {
-			var rows = incomeAssociatedGrid.getSelecteds();
+			var rows = assetsAssociatedGrid.getSelecteds();
 			if (rows.length > 0) {
-				incomeAssociatedGrid.removeRows(rows, false);
+				assetsAssociatedGrid.removeRows(rows, false);
 			} else {
 				showTips("请至少选中一条记录！", "danger");
 			}
 			updateTotalFormData();
 		}
-
+		
 		// 新增或更新行
 		function addOrUpdateRows(datas, rows) {
 			if (rows.length > 0) {
 				for (var data of datas) {
 					var row = hasPropertyValue(rows, "sourceId", data.sourceId);
 					if(typeof row === 'undefined'){
-						incomeAssociatedGrid.addRow(data);
+						assetsAssociatedGrid.addRow(data);
 					}else{
-						incomeAssociatedGrid.updateRow(row, data);
+						assetsAssociatedGrid.updateRow(row, data);
 					}
 				}
 			} else {
-				incomeAssociatedGrid.addRows(datas);
+				assetsAssociatedGrid.addRows(datas);
 			}
 		}
 		
 		// 更新totalForm表单中的数据
 		function updateTotalFormData(){
-			var rows = incomeAssociatedGrid.data;
+			var rows = assetsAssociatedGrid.data;
 			var datas = Array(13).fill(0);
 			for (var row of rows) {
-				datas[0] += row.totalAmount;
+				datas[0] += row.total;
 				datas[1] += row.jan;
 				datas[2] += row.feb;
 				datas[3] += row.mar;
@@ -283,25 +284,25 @@ html,body {
 				datas[11] += row.nov;
 				datas[12] += row.dec;
 			}
-			nui.get("totalAmount").setValue(divFloat(datas[0], 1.06));
-			nui.get("janAmount").setValue(divFloat(datas[1], 1.06));
-			nui.get("febAmount").setValue(divFloat(datas[2], 1.06));
-			nui.get("marAmount").setValue(divFloat(datas[3], 1.06));
-			nui.get("aprAmount").setValue(divFloat(datas[4], 1.06));
-			nui.get("mayAmount").setValue(divFloat(datas[5], 1.06));
-			nui.get("junAmount").setValue(divFloat(datas[6], 1.06));
-			nui.get("julAmount").setValue(divFloat(datas[7], 1.06));
-			nui.get("augAmount").setValue(divFloat(datas[8], 1.06));
-			nui.get("sepAmount").setValue(divFloat(datas[9], 1.06));
-			nui.get("octAmount").setValue(divFloat(datas[10], 1.06));
-			nui.get("novAmount").setValue(divFloat(datas[11], 1.06));
-			nui.get("decAmount").setValue(divFloat(datas[12], 1.06));
+			nui.get("totalAmount").setValue(datas[0]);
+			nui.get("janAmount").setValue(datas[1]);
+			nui.get("febAmount").setValue(datas[2]);
+			nui.get("marAmount").setValue(datas[3]);
+			nui.get("aprAmount").setValue(datas[4]);
+			nui.get("mayAmount").setValue(datas[5]);
+			nui.get("junAmount").setValue(datas[6]);
+			nui.get("julAmount").setValue(datas[7]);
+			nui.get("augAmount").setValue(datas[8]);
+			nui.get("sepAmount").setValue(datas[9]);
+			nui.get("octAmount").setValue(datas[10]);
+			nui.get("novAmount").setValue(datas[11]);
+			nui.get("decAmount").setValue(datas[12]);
 		}
 		
 		// 返回指定属性值在给定数组中满足条件的元素，如果没有则返回 undefined
 		function hasPropertyValue(arr, key, value) {
 		  	return arr.find(obj => obj[key] === value);
-		}		
+		}
 		
 		function save(){
 			nui.confirm("确定保存数据吗？", "系统提示", function(action) {
@@ -315,13 +316,13 @@ html,body {
 					});
 					var formData = form.getData();
 					formData.update_name = userName;
-					var gridData = incomeAssociatedGrid.getData();
+					var gridData = assetsAssociatedGrid.getData();
 					var json = nui.encode({
-						"incomeAssociated" : formData,
-						"incomeAssociatedGrid" : gridData,
+						"assetAssociated" : formData,
+						"assetsAssociatedGrid" : gridData,
 					});
 					ajaxCommon({
-						"url" : "com.zhonghe.ame.finance.budgetFilling.saveIncomeAssociated.biz.ext",
+						"url" : "com.zhonghe.ame.finance.budgetFilling.saveAssetsAssociated.biz.ext",
 						data : json,
 						contentType : 'text/json',
 						success : function(text) {
@@ -337,7 +338,7 @@ html,body {
 					});
 				}
 			});
-		}
+		}									
 		
 	</script>
 

@@ -27,7 +27,7 @@ public class IncomeAssociatedUtil {
 				.set("aug_amount", incomeAssociated.getBigDecimal("aug_amount")).set("sep_amount", incomeAssociated.getBigDecimal("sep_amount"))
 				.set("oct_amount", incomeAssociated.getBigDecimal("oct_amount")).set("nov_amount", incomeAssociated.getBigDecimal("nov_amount"))
 				.set("dec_amount", incomeAssociated.getBigDecimal("dec_amount")).set("total_amount", incomeAssociated.getBigDecimal("total_amount"))
-				.set("update_time", incomeAssociated.getStr("update_name")).set("update_time", DateTime.now());
+				.set("update_name", incomeAssociated.getStr("update_name")).set("update_time", DateTime.now());
 		Entity updateWhere = Entity.create("zh_caiwu_budget_filling_income").set("id", incomeAssociated.getStr("id"));
 
 		List<Entity> insertEntitys = new ArrayList<Entity>();
@@ -57,6 +57,15 @@ public class IncomeAssociatedUtil {
 
 		dbSession.execute(delSql, incomeAssociated.getStr("id"));
 		dbSession.insert(insertEntitys);
+		dbSession.update(updateEntity, updateWhere);
+	}
+
+	@Bizlet("填充四、总部管理费分摊入库")
+	public void fillAllocationData(Entity feeAllocation) throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		Entity updateEntity = Entity.create("zh_caiwu_budget_filling_margin").set("share_proportion", feeAllocation.getBigDecimal("share_proportion"))
+				.set("update_name", feeAllocation.getStr("update_name")).set("update_time", DateTime.now());
+		Entity updateWhere = Entity.create("zh_caiwu_budget_filling_margin").set("id", feeAllocation.getStr("id"));
 		dbSession.update(updateEntity, updateWhere);
 	}
 
