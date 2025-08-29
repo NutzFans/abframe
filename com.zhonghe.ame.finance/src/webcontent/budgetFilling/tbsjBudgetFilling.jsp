@@ -329,7 +329,7 @@ html,body {
 						}
 					}
 				});
-			} else if (row.name == "折旧" || row.name == "长期待摊") {
+			} else if (row.name == "折旧" || row.name == "长期待摊" || row.name == "无形资产摊销") {
 				nui.open({
 					url : "/default/finance/budgetFilling/assetsAssociated.jsp",
 					title : row.name,

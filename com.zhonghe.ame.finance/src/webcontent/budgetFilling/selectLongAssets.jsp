@@ -91,7 +91,7 @@ html,body {
 		function init() {
 			nui.get("years").setValue(baseInfo.years);
 			nui.get("secOrg").setValue(baseInfo.secOrg);
-			nui.get("clazz").setValue(baseInfo.clazz);
+			// nui.get("clazz").setValue(baseInfo.clazz);
 			search();
 		}
 
