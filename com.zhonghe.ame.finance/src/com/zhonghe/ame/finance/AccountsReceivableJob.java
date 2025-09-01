@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
@@ -22,9 +24,21 @@ public class AccountsReceivableJob {
 
 	@Bizlet("自动生成快照")
 	public void automaticGenerateSnapshot() throws Exception {
-		List<Entity> insertList = new ArrayList<Entity>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		Map<String, String> dateMap = this.buildDateMap();
+		Map<String, String> dateMap = this.buildDateMap(null);
+		this.fillData(dbSession, dateMap);
+	}
+
+	@Bizlet("手动生成快照")
+	public void generateSnapshot(String yearMonth) throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		Map<String, String> dateMap = this.buildDateMap(yearMonth);
+		this.fillData(dbSession, dateMap);
+	}
+
+	// 填充数据入库
+	private void fillData(Session dbSession, Map<String, String> dateMap) throws Exception {
+		List<Entity> insertList = new ArrayList<Entity>();
 		List<Entity> secOrgList = this.getSecOrgList(dbSession);
 		for (Entity secOrgEntity : secOrgList) {
 			String secOrg = secOrgEntity.getStr("secondary_org");
@@ -224,9 +238,14 @@ public class AccountsReceivableJob {
 	}
 
 	// 构建查询涉及到的日期数据
-	private Map<String, String> buildDateMap() {
+	private Map<String, String> buildDateMap(String yearMonth) {
 		Map<String, String> map = new HashMap();
-		Date today = new Date();
+		Date today;
+		if (StrUtil.isNotBlank(yearMonth)) {
+			today = DateUtil.offsetMonth(DateUtil.parse(yearMonth, "yyyy-MM"), 1);
+		} else {
+			today = new Date();
+		}
 		int year = DateUtil.year(DateUtil.offsetMonth(today, -1));
 		map.put("year", "" + year);
 		int month = DateUtil.month(DateUtil.offsetMonth(today, -1)) + 1;

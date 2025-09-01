@@ -26,6 +26,16 @@ import com.eos.system.annotation.Bizlet;
 @Bizlet("应收账款工具类")
 public class AccountsReceivableUtil {
 
+	@Bizlet("应收账款统计数据 - 图表")
+	public List<Entity> queryTjByChartDatas(String year, String month, Boolean outsideTheGroup) throws Exception {
+		if (StrUtil.isNotBlank(month) && month.length() == 1) {
+			month = "0" + month;
+		}
+		String tjYearMonth = year + "-" + month;
+		String tjHeadquarterGroup = outsideTheGroup ? "1" : null;
+		return this.queryTjDatas(null, tjYearMonth, null, tjHeadquarterGroup);
+	}
+
 	@Bizlet("应收账款统计数据")
 	public List<Entity> queryTjDatas(String tjSec, String tjYearMonth, String tjSecondaryOrg, String tjHeadquarterGroup) throws Exception {
 		List<Entity> entityList = new ArrayList<Entity>();

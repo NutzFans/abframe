@@ -6,6 +6,8 @@
 <meta charset="utf-8">
 <title>公司生产经营情况统计</title>
 <script src="../../common/echarts/echarts.min.js"></script>
+<script src="../../common/d3/d3.v7.min.js"></script>
+<script src="js/D3ComboChart.js"></script>
 <meta name="viewport" content="width=1920, initial-scale=0.1, user-scalable=yes">
 <link rel="stylesheet" href="../../common/layui-v2.11.4/css/layui.css" media="all">
 <link rel="stylesheet" href="css/company.css?v=1.1" media="all">
@@ -398,7 +400,42 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-md6">
+			<div class="layui-col-md9">
+				<div class="layui-card">
+					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+						<span class="header-text">回款&应收账款（万元）</span>
+						<div class="layui-form">
+							<input type="radio" name="yszkTab" value="0" lay-skin="none" lay-filter="yszkTab" checked>
+							<div lay-radio class="tab-radio">
+								<span>全部</span>
+							</div>
+							<input type="radio" name="yszkTab" value="1" lay-skin="none" lay-filter="yszkTab">
+							<div lay-radio class="tab-radio">
+								<span>集团外</span>
+							</div>
+						</div>
+					</div>
+					<div class="layui-card-body" style="padding: 5px">
+						<div class="layui-row">
+							<div class="layui-col-md8">
+								<div class="layui-row">
+									<div id="yszkChartByYwzx" style="width: 100%; height: 400px"></div>
+								</div>
+								<div class="layui-row">
+									<div id="yszkChartByQt" style="width: 100%; height: 400px"></div>
+								</div>
+							</div>
+							<div class="layui-col-md4">
+								<div class="layui-row">
+									<div id="yszkChartByZb" style="width: 100%; height: 800px"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-col-md3">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">新签合同额排行（万元）</span>
@@ -414,35 +451,23 @@
 							</div>
 						</div>
 					</div>
-					<div class="layui-card-body" style="padding: 5px">
+					<div class="layui-card-body" style="padding: 5px; height: 800px">
 						<div class="layui-row">
-							<div class="layui-col-md12">
-								<div class="layui-tabs layui-tabs-card">
-									<ul class="layui-tabs-header layui-bg-tint">
-										<li class="layui-this" lay-on="dyxqhteTab">当月新签合同额</li>
-										<li lay-on="bnljxqhteTab">本年累计新签合同额</li>
-									</ul>
-									<div class="layui-tabs-body">
-										<div class="layui-tabs-item layui-show">
-											<div class="layui-row layui-col-space5">
-												<div class="layui-col-md6">
-													<table id="ywzxThisMonthGrid" class="layui-hide"></table>
-												</div>
-												<div class="layui-col-md6">
-													<table id="qtThisMonthGrid" class="layui-hide"></table>
-												</div>
-											</div>
-										</div>
-										<div class="layui-tabs-item">
-											<div class="layui-row layui-col-space5">
-												<div class="layui-col-md6">
-													<table id="ywzxCumulativeMonthGrid" class="layui-hide"></table>
-												</div>
-												<div class="layui-col-md6">
-													<table id="qtCumulativeMonthGrid" class="layui-hide"></table>
-												</div>
-											</div>
-										</div>
+							<div class="layui-tabs layui-tabs-card">
+								<ul class="layui-tabs-header layui-bg-tint">
+									<li class="layui-this" lay-on="dyxqhteTab">当月新签合同额</li>
+									<li lay-on="bnljxqhteTab">本年累计新签合同额</li>
+								</ul>
+								<div class="layui-tabs-body">
+									<div class="layui-tabs-item layui-show">
+										<table id="ywzxThisMonthGrid" class="layui-hide"></table>
+										<div style="margin-top: 20px"></div>
+										<table id="qtThisMonthGrid" class="layui-hide"></table>
+									</div>
+									<div class="layui-tabs-item">
+										<table id="ywzxCumulativeMonthGrid" class="layui-hide"></table>
+										<div style="margin-top: 20px"></div>
+										<table id="qtCumulativeMonthGrid" class="layui-hide"></table>
 									</div>
 								</div>
 							</div>
@@ -450,18 +475,19 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="layui-col-md6">
+		<div class="layui-row layui-col-space20">
+			<div class="layui-col-md12">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">开发中</span>
 					</div>
-					<div class="layui-card-body" style="padding: 5px; height: 426px; display: flex; align-items: center; justify-content: center;">
+					<div class="layui-card-body" style="padding: 5px; height: 50px; display: flex; align-items: center; justify-content: center;">
 						<span>功能持续开发完善中...</span>
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 
@@ -510,7 +536,16 @@
 			var qnsrfjChart = echarts.init(qnsrfjChartDom);	
 			
 			var qkyjChartDom = document.getElementById('qkyjChart');
-			var qkyjChart = echarts.init(qkyjChartDom);							
+			var qkyjChart = echarts.init(qkyjChartDom);
+			
+			var yszkChartByYwzxDom = document.getElementById('yszkChartByYwzx');
+			var yszkChartByYwzx = new D3ComboChart(yszkChartByYwzxDom);
+			
+			var yszkChartByQtDom = document.getElementById('yszkChartByQt');
+			var yszkChartByQt = new D3ComboChart(yszkChartByQtDom);
+			
+			var yszkChartByZbDom = document.getElementById('yszkChartByZb');
+			var yszkChartByZb = echarts.init(yszkChartByZbDom);						
 
 			getData();
 
@@ -588,6 +623,7 @@
 						renderQkyjChart(year, month);
 						renderDwxqhteGrid(year, month, "0");
 						renderCompleteTodoBtn(reqId, userId);
+						renderYszkChart(year, month);
 						utils.removeLoading();
 						utils.animateNum('#contractAmountHeldAtTheEndOfTheMonth', true);
 						utils.animateNum('#endOfMonthContractAmountHeldOutsideTheGroup', true);
@@ -1540,6 +1576,139 @@
 			form.on('radio(dwxqhteTab)', function(data) {
 				renderDwxqhteGrid(year, month, data.value);
 			});
+			
+			// 应收账款图表渲染
+			function renderYszkChart(year, month){
+				var tjTitle = year + '年1 - ' + month + '月';
+				$.ajax({
+					url : "com.zhonghe.ame.kaohe.incomeChartPush.accountsReceivable.biz.ext",
+					data : {
+						"year" : year,
+						"month" : month
+					},
+					type : "POST",
+					async: false,
+					dataType : "json",
+					success : function(data) {
+						var result = data.result;
+						var ywzxData = result.ywzx;
+						ywzxData.tjTitle = tjTitle;
+						var qtData = result.qt;
+						qtData.tjTitle = tjTitle;
+						var zbData = result.zb;
+						zbData.tjTitle = tjTitle;
+						yszkChartByYwzx.render(ywzxData);
+						yszkChartByQt.render(qtData);
+						var zbCharOption = buildYszkChartByZbOption(zbData);
+						yszkChartByZb.setOption(zbCharOption);
+					}
+				});
+			}
+			
+			function buildYszkChartByZbOption(zbData) {
+				var titleText = zbData.tjTitle +'应收账款【'+zbData.monthlyAccountsReceivableTotalSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+' 万元】占比情况'
+				var yszkZbChartOption = {
+	               title: {
+	                   top: '20',
+	                   left: 'center',
+	                   text: titleText
+	               },
+	               tooltip: {
+	               		formatter: function (info) {
+	                        return [
+	                            '<div class="tooltip-title">' +
+	                            echarts.format.encodeHTML(info.data.name) +
+	                            '</div>',
+	                            '应收账款：' + info.data.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '万元<br>',
+	                            '应收占比：' + info.data.proportionText + '<br>'
+	                        ].join('');
+	               		},
+			            textStyle: {
+			                fontSize: 18
+			            }		
+	               },
+	               series: [{
+	               		type: 'treemap',
+	               		left: '0',
+	               		top: '50',
+	               		width: '98%',
+	               		height: '725',
+	               		roam: false,
+	               		nodeClick: false,
+	               		breadcrumb: {
+	               			show: false
+	               		},
+	                    itemStyle: {
+	                        borderWidth: 1,
+	                        borderColor: '#fff',
+	                    },
+	               	 	label: {
+	               	 		position: 'insideTopLeft',
+	               	 		formatter: function (params) {
+	               	 			let arr = ['{name|' + params.data.name + '}',
+	               	 				'{hr|}',
+	               	 				'{yszk|应收账款：'+ params.data.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '万元}',
+	               	 				'{yszb|应收占比：'+ params.data.proportionText + '}'];
+	               	 			return arr.join('\n');
+	               	 		},
+		               	 	rich: {
+		                        name: {
+		                            fontSize: 14,
+		                            color: '#fff'
+		                        },
+		                        hr: {
+		                            width: '100%',
+		                            borderColor: 'rgba(255,255,255,0.2)',
+		                            borderWidth: 1,
+		                            height: 0,
+		                            lineHeight: 10
+		                        },
+		                        yszk: {
+		                        	fontSize: 14,
+		                        	lineHeight: 30,
+		                        	color: '#fff'
+		                        },
+		                        yszb: {
+		                        	fontSize: 14,
+		                        	lineHeight: 30,
+		                        	color: '#fff'
+		                        }	               	 		
+		               	 	}
+	               	 	},
+	               		data: zbData.datas			
+	               }]
+				};
+				return yszkZbChartOption;
+			}
+			
+			// 应收账款 - 单选切换
+			form.on('radio(yszkTab)', function(data) {
+				var tjTitle = year + '年1 - ' + month + '月';
+				$.ajax({
+					url : "com.zhonghe.ame.kaohe.incomeChartPush.accountsReceivable.biz.ext",
+					data : {
+						"year" : year,
+						"month" : month,
+						"yszkTab": data.value
+					},
+					async: false,
+					type : "POST",
+					dataType : "json",
+					success : function(data) {
+						var result = data.result;
+						var ywzxData = result.ywzx;
+						ywzxData.tjTitle = tjTitle;
+						var qtData = result.qt;
+						qtData.tjTitle = tjTitle;
+						var zbData = result.zb;
+						zbData.tjTitle = tjTitle;
+						yszkChartByYwzx.update(ywzxData);
+						yszkChartByQt.update(qtData);
+						var zbCharOption = buildYszkChartByZbOption(zbData);
+						yszkChartByZb.setOption(zbCharOption);
+					}
+				});
+			});			
 			
 			// 渲染完成待办按钮
 			function renderCompleteTodoBtn(chartId, userId){

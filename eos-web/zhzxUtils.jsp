@@ -35,6 +35,8 @@ body {
 			<p></p>
 			<a id="scjy_cydw_sjsx" class="nui-button" iconCls="icon-node" onclick="scjy_cydw_sjsx()">市场经营 - 参与单位数据刷新</a>
 			<p></p>
+			<input id="yearMonth" class="nui-monthpicker" style="width: 110px" />
+			<a id="cwgl_yszk_kz" class="nui-button" iconCls="icon-node" onclick="cwgl_yszk_kz()">财务管理 - 应收账款快照生成</a>
 		</fieldset>
 
 	</div>
@@ -198,6 +200,34 @@ body {
 							nui.alert("市场经营 - 参与单位数据刷新 - 执行失败");
 						}
 						nui.get("scjy_cydw_sjsx").enable();
+					}
+				});
+			}
+		}
+
+		// 财务管理 - 应收账款快照
+		function cwgl_yszk_kz() {
+			var yearMonth = nui.get("yearMonth").getValue();
+			nui.get("cwgl_yszk_kz").disable();
+			if (!confirm("是否执行[财务管理 - 应收账款快照生成]操作？")) {
+				nui.get("cwgl_yszk_kz").enable();
+			} else {
+				var json = nui.encode({
+					"yearMonth": yearMonth
+				});
+				nui.ajax({
+					url : "com.primeton.eos.common.zhzxUtils.cwgl_yszk_kz.biz.ext",
+					data : json,
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(result) {
+						if (result.data == "1") {
+							nui.alert("财务管理 - 应收账款快照生成 - 执行成功");
+						} else {
+							nui.alert("财务管理 - 应收账款快照生成 - 执行失败");
+						}
+						nui.get("cwgl_yszk_kz").enable();
 					}
 				});
 			}

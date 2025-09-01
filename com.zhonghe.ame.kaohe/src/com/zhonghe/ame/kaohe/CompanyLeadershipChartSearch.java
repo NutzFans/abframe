@@ -443,6 +443,65 @@ public class CompanyLeadershipChartSearch {
 		return resultMap;
 	}
 
+	@Bizlet("应收账款，维度：集团内外")
+	public Map<String, Entity> accountsReceivable(List<Entity> tjEntityList) throws Exception {
+		Map<String, Entity> resultMap = new HashMap<String, Entity>();
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		String queryYwzxSqlByDict = "SELECT DICTID FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ORG_CLASS_SERVICE_CENTER' OR DICTTYPEID='ORG_CLASS_FUNCTIONAL_DEP'";
+		String queryQtSqlByDict = "SELECT DICTID FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ORG_CLASS_DIVISION_DEP' OR DICTTYPEID='ORG_CLASS_BRANCH_OFFICE' OR DICTTYPEID='ORG_CLASS_SUPERVISION_CENTER'";
+		String queryZxSqlByDict = "SELECT DICTID FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ORG_CLASS_SERVICE_CENTER'";
+		List<Entity> ywzxEntityList = dbSession.query(queryYwzxSqlByDict);
+		List<Entity> qtEntityList = dbSession.query(queryQtSqlByDict);
+		List<Entity> zxEntityList = dbSession.query(queryZxSqlByDict);
+		Map<String, Entity> ywzxSecMap = ywzxEntityList.stream().collect(Collectors.toMap(entity -> entity.getStr("DICTID"), entity -> entity));
+		Map<String, Entity> qtSecMap = qtEntityList.stream().collect(Collectors.toMap(entity -> entity.getStr("DICTID"), entity -> entity));
+		Map<String, Entity> zxSecMap = zxEntityList.stream().collect(Collectors.toMap(entity -> entity.getStr("DICTID"), entity -> entity));
+		tjEntityList = tjEntityList.stream().filter(entity -> entity.getBigDecimal("invoiceSumTotal").compareTo(BigDecimal.ZERO) != 0 || zxSecMap.containsKey(entity.getStr("secOrg")) || qtSecMap.containsKey(entity.getStr("secOrg"))).collect(Collectors.toList());
+		Map<Boolean, List<Entity>> ywzxDatasMap = tjEntityList.stream().collect(Collectors.partitioningBy(entity -> ywzxSecMap.containsKey(entity.getStr("secOrg"))));
+		Map<Boolean, List<Entity>> qtDatasMap = tjEntityList.stream().collect(Collectors.partitioningBy(entity -> qtSecMap.containsKey(entity.getStr("secOrg"))));
+		Map<Boolean, List<Entity>> zbDatasMap = tjEntityList.stream().collect(
+				Collectors.partitioningBy(entity -> ywzxSecMap.containsKey(entity.getStr("secOrg")) || qtSecMap.containsKey(entity.getStr("secOrg"))));
+		Entity ywzxData = new Entity();
+		String[] ywzxSecOrgNames = ywzxDatasMap.get(true).stream().map(entity -> entity.getStr("secOrgname")).toArray(String[]::new);
+		ywzxData.set("categories", ywzxSecOrgNames);
+		BigDecimal[] ywzxInvoiceSumTotals = ywzxDatasMap.get(true).stream().map(entity -> entity.getBigDecimal("invoiceSumTotal")).toArray(BigDecimal[]::new);
+		ywzxData.set("outsideData", ywzxInvoiceSumTotals);
+		BigDecimal[] ywzxReceivableSumTotals = ywzxDatasMap.get(true).stream().map(entity -> entity.getBigDecimal("receivableSumTotal")).toArray(BigDecimal[]::new);
+		ywzxData.set("insideData", ywzxReceivableSumTotals);
+		BigDecimal[] ywzxCollectionRates = ywzxDatasMap.get(true).stream().map(entity -> NumberUtil.mul(entity.getBigDecimal("collectionRate"), 100)).toArray(BigDecimal[]::new);
+		ywzxData.set("rateData", ywzxCollectionRates);
+		resultMap.put("ywzx", ywzxData);
+		Entity qtData = new Entity();
+		String[] qtSecOrgNames = qtDatasMap.get(true).stream().map(entity -> entity.getStr("secOrgname")).toArray(String[]::new);
+		qtData.set("categories", qtSecOrgNames);
+		BigDecimal[] qtInvoiceSumTotals = qtDatasMap.get(true).stream().map(entity -> entity.getBigDecimal("invoiceSumTotal")).toArray(BigDecimal[]::new);
+		qtData.set("outsideData", qtInvoiceSumTotals);
+		BigDecimal[] qtReceivableSumTotals = qtDatasMap.get(true).stream().map(entity -> entity.getBigDecimal("receivableSumTotal")).toArray(BigDecimal[]::new);
+		qtData.set("insideData", qtReceivableSumTotals);
+		BigDecimal[] qtCollectionRates = qtDatasMap.get(true).stream().map(entity -> NumberUtil.mul(entity.getBigDecimal("collectionRate"), 100)).toArray(BigDecimal[]::new);
+		qtData.set("rateData", qtCollectionRates);
+		resultMap.put("qt", qtData);
+		Entity zbData = new Entity();
+		BigDecimal monthlyAccountsReceivableTotalSum = zbDatasMap.get(true).stream().map(entity -> entity.getBigDecimal("monthlyAccountsReceivableTotal"))
+				.filter(monthlyAccountsReceivableTotal -> monthlyAccountsReceivableTotal != null).reduce(BigDecimal.ZERO, BigDecimal::add);
+		zbData.set("monthlyAccountsReceivableTotalSum", monthlyAccountsReceivableTotalSum);
+		List<Entity> zbEntityList = zbDatasMap.get(true).stream().map(entity -> {
+			Entity zb = new Entity();
+			zb.set("name", entity.getStr("secOrgname"));
+			zb.set("value", entity.getBigDecimal("monthlyAccountsReceivableTotal"));
+			if (monthlyAccountsReceivableTotalSum.compareTo(BigDecimal.ZERO) == 0) {
+				zb.set("proportionText", NumberUtil.decimalFormat("#.##%", BigDecimal.ZERO));
+			} else {
+				BigDecimal proportion = NumberUtil.div(entity.getBigDecimal("monthlyAccountsReceivableTotal"), monthlyAccountsReceivableTotalSum, 2);
+				zb.set("proportionText", NumberUtil.decimalFormat("#.##%", proportion));
+			}
+			return zb;
+		}).collect(Collectors.toList());
+		zbData.set("datas", zbEntityList);
+		resultMap.put("zb", zbData);
+		return resultMap;
+	}
+
 	/**
 	 * 填充营业收入全年趋势预测数据
 	 */
