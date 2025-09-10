@@ -109,10 +109,10 @@ html,body {
 						</td>
 					</tr>
 					<tr>
-						<td style="width: 60px; text-align: right;">项目密级:</td>
+<!-- 						<td style="width: 60px; text-align: right;">项目密级:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[26].projectSecretLevel" class="nui-dictcombobox" dictTypeId="PROJECT_SECRET_LEVEL" showNullItem="true" nullItemText="全部" style="width: 150px" />
-						</td>
+						</td> -->
 						<td style="width: 90px; text-align: right;">计划对外分包:</td>
 						<td style="width: 155px">
 							<input name="critria._expr[27].isfb" class="nui-dictcombobox" dictTypeId="ABF_YESORNO" showNullItem="true" nullItemText="全部" style="width: 150px" />
@@ -223,7 +223,7 @@ html,body {
 					<div field="payee" width="80" align="center" headerAlign="center" allowSort="true" renderer="PAYER">收款方</div>
 					<div field="signingDate" dateFormat="yyyy-MM-dd" width="90" headerAlign="center" align="center">签订日期</div>
 					<div field="contractSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="CONTRACT_SECRET_LEVEL">合同密级</div>
-					<div field="projectSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div>
+					<!-- <div field="projectSecretLevel" width="80" align="center" headerAlign="center" allowSort="true" renderer="PROJECT_SECRET_LEVEL">项目密级</div> -->
 					<div field="isfb" width="120" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否计划对外分包</div>
 					<div field="issupagreement" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否协议变更</div>
 					<div field="cachet" align="center" headerAlign="center" allowSort="true" renderer="ABF_YESORNO">是否签订合同</div>
