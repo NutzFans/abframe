@@ -89,7 +89,7 @@ public class BudgetAccountUtil {
 	@Bizlet("获取预算主体列表(排除掉没有设置填报组织的)")
 	public List<Map<String, String>> getBudgetAccountList() throws Exception {
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		String querySql = "SELECT id, name, filling_in_org FROM zh_caiwu_budget_account WHERE filling_in_org IS NOT NULL ORDER BY sorting ASC";
+		String querySql = "SELECT id, name, filling_in_org, code FROM zh_caiwu_budget_account WHERE filling_in_org IS NOT NULL ORDER BY sorting ASC";
 		List<Entity> budgetAccountList = dbSession.query(querySql);
 
 		List<Map<String, String>> result = budgetAccountList.stream().map(budgetAccount -> {
@@ -97,6 +97,7 @@ public class BudgetAccountUtil {
 			map.put("id", budgetAccount.getStr("id"));
 			map.put("name", budgetAccount.getStr("name"));
 			map.put("fillingInOrg", budgetAccount.getStr("filling_in_org"));
+			map.put("code", budgetAccount.getStr("code"));
 			return map;
 		}).collect(Collectors.toList());
 

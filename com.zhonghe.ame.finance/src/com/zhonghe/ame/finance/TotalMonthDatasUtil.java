@@ -3,11 +3,12 @@ package com.zhonghe.ame.finance;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,76 +18,121 @@ import cn.hutool.db.Session;
 import com.eos.common.connection.DataSourceHelper;
 import com.eos.system.annotation.Bizlet;
 
-@Bizlet("填报数据工具类")
-public class FillingDataUtil {
+@Bizlet("合计 - 月度 工具类")
+public class TotalMonthDatasUtil {
 
-	@Bizlet("获取需要填报的数据")
-	public HashMap<String, List<Entity>> getFillingDatas(String budgetMainId) throws Exception {
+	@Bizlet("合计 - 月度 数据")
+	public HashMap<String, List<Entity>> getTotalMonthDatas(String budgetYear) throws Exception {
 		HashMap<String, List<Entity>> result = new HashMap<String, List<Entity>>();
 		List<Entity> financialStatements = new ArrayList<Entity>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
-		List<Entity> totalRevenueList = this.buildFillingIncome(dbSession, budgetMainId);
-		List<Entity> totalCostList = this.buildFillingLedger(dbSession, budgetMainId);
-		Entity grossProfitMargin = this.buildGrossProfitMargin(totalRevenueList, totalCostList);
-		List<Entity> apportionmentAndOtherList = this.buildApportionmentAndOther(totalCostList, dbSession, budgetMainId);
-		Entity totalProfit = this.buildTotalProfit(grossProfitMargin, apportionmentAndOtherList);
-		financialStatements.addAll(totalRevenueList);
-		financialStatements.addAll(totalCostList);
-		financialStatements.add(grossProfitMargin);
-		financialStatements.addAll(apportionmentAndOtherList);
-		financialStatements.add(totalProfit);
-		result.put("cwbb", financialStatements);
-		List<Entity> personnelAndPerCapitaSituation = this.buildPersonnelAndPerCapitaSituation(dbSession, budgetMainId);
-		result.put("ryjrjqk", personnelAndPerCapitaSituation);
-		List<Entity> fullAperture = this.buildFullAperture(financialStatements, personnelAndPerCapitaSituation);
-		result.put("rgcbqkj", fullAperture);
-		List<Entity> laborProductivityList = this.buildLaborProductivity(financialStatements, fullAperture, personnelAndPerCapitaSituation, dbSession, budgetMainId);
-		result.put("ldscl", laborProductivityList);
-
+		String querySql = "SELECT * FROM zh_caiwu_budget_filling_main WHERE budget_year = ?";
+		List<Entity> budgetFillingMainList = dbSession.query(querySql, budgetYear);
+		if (budgetFillingMainList != null && budgetFillingMainList.size() > 0) {
+			String budgetMainIds = budgetFillingMainList.stream().map(budgetFillingMain -> "'" + budgetFillingMain.getStr("id") + "'").collect(Collectors.joining(","));
+			List<Entity> totalRevenueList = this.buildFillingIncome(dbSession, budgetMainIds);
+			List<Entity> totalCostList = this.buildFillingLedger(dbSession, budgetMainIds);
+			Entity grossProfitMargin = this.buildGrossProfitMargin(totalRevenueList, totalCostList);
+			List<Entity> apportionmentAndOtherList = this.buildApportionmentAndOther(dbSession, budgetMainIds);
+			Entity totalProfit = this.buildTotalProfit(grossProfitMargin, apportionmentAndOtherList);
+			financialStatements.addAll(totalRevenueList);
+			financialStatements.addAll(totalCostList);
+			financialStatements.add(grossProfitMargin);
+			financialStatements.addAll(apportionmentAndOtherList);
+			financialStatements.add(totalProfit);
+			result.put("cwbb", financialStatements);
+			List<Entity> personnelAndPerCapitaSituation = this.buildPersonnelAndPerCapitaSituation(dbSession, budgetMainIds);
+			result.put("ryjrjqk", personnelAndPerCapitaSituation);
+			List<Entity> fullAperture = this.buildFullAperture(financialStatements, personnelAndPerCapitaSituation);
+			result.put("rgcbqkj", fullAperture);
+			List<Entity> laborProductivityList = this.buildLaborProductivity(financialStatements, fullAperture, personnelAndPerCapitaSituation, dbSession, budgetMainIds);
+			result.put("ldscl", laborProductivityList);
+		}
 		return result;
 	}
 
 	// 报表总收入部分数据构建
-	private List<Entity> buildFillingIncome(Session dbSession, String budgetMainId) throws Exception {
+	private List<Entity> buildFillingIncome(Session dbSession, String budgetMainIds) throws Exception {
 		List<Entity> totalRevenueList = new ArrayList<Entity>();
-		String querySql = "SELECT *, income_name AS name, '总收入' AS parent, '1' AS editable FROM zh_caiwu_budget_filling_income WHERE budget_main_id = ?";
-		Entity totalRevenue = new Entity();
-		totalRevenue.set("serial_number", "1").set("id", "总收入").set("name", "一、总收入").set("parent", "-1").set("editable", "0").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+		Entity withinTheGroup = new Entity();
+		withinTheGroup.set("serial_number", "1.1").set("id", "1.1").set("name", "集团内").set("parent", "总收入").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
 				.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO)
 				.set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO)
 				.set("total_amount", BigDecimal.ZERO);
-		List<Entity> incomeList = dbSession.query(querySql, budgetMainId);
-		for (int i = 0; i < incomeList.size(); i++) {
-			incomeList.get(i).set("serial_number", StrUtil.format("1.{}", i + 1));
+		Entity outsideTheGroup = new Entity();
+		outsideTheGroup.set("serial_number", "1.2").set("id", "1.2").set("name", "集团外").set("parent", "总收入").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+				.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO)
+				.set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO)
+				.set("total_amount", BigDecimal.ZERO);
+
+		String queryWithinTheGroupSql = "SELECT * FROM zh_caiwu_budget_filling_income WHERE income_name = '集团内' AND budget_main_id IN  (" + budgetMainIds + ")";
+		String queryOutsideTheGroupSql = "SELECT * FROM zh_caiwu_budget_filling_income WHERE income_name = '集团外' AND budget_main_id IN  (" + budgetMainIds + ")";
+
+		List<Entity> withinTheGroupList = dbSession.query(queryWithinTheGroupSql);
+		List<Entity> outsideTheGroupList = dbSession.query(queryOutsideTheGroupSql);
+
+		for (Entity income : withinTheGroupList) {
+			withinTheGroup.set("jan_amount", NumberUtil.add(withinTheGroup.getBigDecimal("jan_amount"), income.getBigDecimal("jan_amount")));
+			withinTheGroup.set("feb_amount", NumberUtil.add(withinTheGroup.getBigDecimal("feb_amount"), income.getBigDecimal("feb_amount")));
+			withinTheGroup.set("mar_amount", NumberUtil.add(withinTheGroup.getBigDecimal("mar_amount"), income.getBigDecimal("mar_amount")));
+			withinTheGroup.set("apr_amount", NumberUtil.add(withinTheGroup.getBigDecimal("apr_amount"), income.getBigDecimal("apr_amount")));
+			withinTheGroup.set("may_amount", NumberUtil.add(withinTheGroup.getBigDecimal("may_amount"), income.getBigDecimal("may_amount")));
+			withinTheGroup.set("jun_amount", NumberUtil.add(withinTheGroup.getBigDecimal("jun_amount"), income.getBigDecimal("jun_amount")));
+			withinTheGroup.set("jul_amount", NumberUtil.add(withinTheGroup.getBigDecimal("jul_amount"), income.getBigDecimal("jul_amount")));
+			withinTheGroup.set("aug_amount", NumberUtil.add(withinTheGroup.getBigDecimal("aug_amount"), income.getBigDecimal("aug_amount")));
+			withinTheGroup.set("sep_amount", NumberUtil.add(withinTheGroup.getBigDecimal("sep_amount"), income.getBigDecimal("sep_amount")));
+			withinTheGroup.set("oct_amount", NumberUtil.add(withinTheGroup.getBigDecimal("oct_amount"), income.getBigDecimal("oct_amount")));
+			withinTheGroup.set("nov_amount", NumberUtil.add(withinTheGroup.getBigDecimal("nov_amount"), income.getBigDecimal("nov_amount")));
+			withinTheGroup.set("dec_amount", NumberUtil.add(withinTheGroup.getBigDecimal("dec_amount"), income.getBigDecimal("dec_amount")));
+			withinTheGroup.set("total_amount", NumberUtil.add(withinTheGroup.getBigDecimal("total_amount"), income.getBigDecimal("total_amount")));
 		}
-		for (Entity income : incomeList) {
-			totalRevenue.set("jan_amount", NumberUtil.add(totalRevenue.getBigDecimal("jan_amount"), income.getBigDecimal("jan_amount")));
-			totalRevenue.set("feb_amount", NumberUtil.add(totalRevenue.getBigDecimal("feb_amount"), income.getBigDecimal("feb_amount")));
-			totalRevenue.set("mar_amount", NumberUtil.add(totalRevenue.getBigDecimal("mar_amount"), income.getBigDecimal("mar_amount")));
-			totalRevenue.set("apr_amount", NumberUtil.add(totalRevenue.getBigDecimal("apr_amount"), income.getBigDecimal("apr_amount")));
-			totalRevenue.set("may_amount", NumberUtil.add(totalRevenue.getBigDecimal("may_amount"), income.getBigDecimal("may_amount")));
-			totalRevenue.set("jun_amount", NumberUtil.add(totalRevenue.getBigDecimal("jun_amount"), income.getBigDecimal("jun_amount")));
-			totalRevenue.set("jul_amount", NumberUtil.add(totalRevenue.getBigDecimal("jul_amount"), income.getBigDecimal("jul_amount")));
-			totalRevenue.set("aug_amount", NumberUtil.add(totalRevenue.getBigDecimal("aug_amount"), income.getBigDecimal("aug_amount")));
-			totalRevenue.set("sep_amount", NumberUtil.add(totalRevenue.getBigDecimal("sep_amount"), income.getBigDecimal("sep_amount")));
-			totalRevenue.set("oct_amount", NumberUtil.add(totalRevenue.getBigDecimal("oct_amount"), income.getBigDecimal("oct_amount")));
-			totalRevenue.set("nov_amount", NumberUtil.add(totalRevenue.getBigDecimal("nov_amount"), income.getBigDecimal("nov_amount")));
-			totalRevenue.set("dec_amount", NumberUtil.add(totalRevenue.getBigDecimal("dec_amount"), income.getBigDecimal("dec_amount")));
-			totalRevenue.set("total_amount", NumberUtil.add(totalRevenue.getBigDecimal("total_amount"), income.getBigDecimal("total_amount")));
+		for (Entity income : outsideTheGroupList) {
+			outsideTheGroup.set("jan_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("jan_amount"), income.getBigDecimal("jan_amount")));
+			outsideTheGroup.set("feb_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("feb_amount"), income.getBigDecimal("feb_amount")));
+			outsideTheGroup.set("mar_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("mar_amount"), income.getBigDecimal("mar_amount")));
+			outsideTheGroup.set("apr_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("apr_amount"), income.getBigDecimal("apr_amount")));
+			outsideTheGroup.set("may_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("may_amount"), income.getBigDecimal("may_amount")));
+			outsideTheGroup.set("jun_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("jun_amount"), income.getBigDecimal("jun_amount")));
+			outsideTheGroup.set("jul_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("jul_amount"), income.getBigDecimal("jul_amount")));
+			outsideTheGroup.set("aug_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("aug_amount"), income.getBigDecimal("aug_amount")));
+			outsideTheGroup.set("sep_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("sep_amount"), income.getBigDecimal("sep_amount")));
+			outsideTheGroup.set("oct_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("oct_amount"), income.getBigDecimal("oct_amount")));
+			outsideTheGroup.set("nov_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("nov_amount"), income.getBigDecimal("nov_amount")));
+			outsideTheGroup.set("dec_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("dec_amount"), income.getBigDecimal("dec_amount")));
+			outsideTheGroup.set("total_amount", NumberUtil.add(outsideTheGroup.getBigDecimal("total_amount"), income.getBigDecimal("total_amount")));
 		}
+
+		Entity totalRevenue = new Entity();
+		totalRevenue.set("serial_number", "1").set("id", "总收入").set("name", "一、总收入").set("parent", "-1")
+				.set("jan_amount", NumberUtil.add(withinTheGroup.getBigDecimal("jan_amount"), outsideTheGroup.getBigDecimal("jan_amount")))
+				.set("feb_amount", NumberUtil.add(withinTheGroup.getBigDecimal("feb_amount"), outsideTheGroup.getBigDecimal("feb_amount")))
+				.set("mar_amount", NumberUtil.add(withinTheGroup.getBigDecimal("mar_amount"), outsideTheGroup.getBigDecimal("mar_amount")))
+				.set("apr_amount", NumberUtil.add(withinTheGroup.getBigDecimal("apr_amount"), outsideTheGroup.getBigDecimal("apr_amount")))
+				.set("may_amount", NumberUtil.add(withinTheGroup.getBigDecimal("may_amount"), outsideTheGroup.getBigDecimal("may_amount")))
+				.set("jun_amount", NumberUtil.add(withinTheGroup.getBigDecimal("jun_amount"), outsideTheGroup.getBigDecimal("jun_amount")))
+				.set("jul_amount", NumberUtil.add(withinTheGroup.getBigDecimal("jul_amount"), outsideTheGroup.getBigDecimal("jul_amount")))
+				.set("aug_amount", NumberUtil.add(withinTheGroup.getBigDecimal("aug_amount"), outsideTheGroup.getBigDecimal("aug_amount")))
+				.set("sep_amount", NumberUtil.add(withinTheGroup.getBigDecimal("sep_amount"), outsideTheGroup.getBigDecimal("sep_amount")))
+				.set("oct_amount", NumberUtil.add(withinTheGroup.getBigDecimal("oct_amount"), outsideTheGroup.getBigDecimal("oct_amount")))
+				.set("nov_amount", NumberUtil.add(withinTheGroup.getBigDecimal("nov_amount"), outsideTheGroup.getBigDecimal("nov_amount")))
+				.set("dec_amount", NumberUtil.add(withinTheGroup.getBigDecimal("dec_amount"), outsideTheGroup.getBigDecimal("dec_amount")))
+				.set("total_amount", NumberUtil.add(withinTheGroup.getBigDecimal("total_amount"), outsideTheGroup.getBigDecimal("total_amount")));
+
 		totalRevenueList.add(totalRevenue);
-		totalRevenueList.addAll(incomeList);
+		totalRevenueList.add(withinTheGroup);
+		totalRevenueList.add(outsideTheGroup);
+
 		return totalRevenueList;
 	}
 
 	// 报表总成本部分数据构建
-	public List<Entity> buildFillingLedger(Session dbSession, String budgetMainId) throws Exception {
+	public List<Entity> buildFillingLedger(Session dbSession, String budgetMainIds) throws Exception {
 		List<Entity> totalCostList = new ArrayList<Entity>();
 		String queryKmClassSql = "SELECT DICTID, DICTNAME FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'CW_KM_CLASS' ORDER BY SORTNO ASC";
 		List<Entity> kmClassList = dbSession.query(queryKmClassSql);
 
 		Entity totalCost = new Entity();
-		totalCost.set("serial_number", "2").set("id", "totalCost").set("name", "二、总成本").set("parent", "-1").set("editable", "0").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+		totalCost.set("serial_number", "2").set("id", "totalCost").set("name", "二、总成本").set("parent", "-1").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
 				.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO)
 				.set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO)
 				.set("total_amount", BigDecimal.ZERO);
@@ -97,144 +143,143 @@ public class FillingDataUtil {
 			Entity kmClass = kmClassList.get(i);
 			Entity kmClassRevenue = new Entity();
 			kmClassRevenue.set("serial_number", StrUtil.format("2.{}", i + 1)).set("id", kmClass.getStr("DICTNAME")).set("name", kmClass.getStr("DICTNAME")).set("parent", "totalCost")
-					.set("editable", "0").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO).set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO)
-					.set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO).set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO)
-					.set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO).set("total_amount", BigDecimal.ZERO);
+					.set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO).set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO)
+					.set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO).set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO)
+					.set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO).set("total_amount", BigDecimal.ZERO);
 
-			String parentStr = StrUtil.format("'{}' AS parent", kmClass.getStr("DICTNAME"));
-			String querySql = "SELECT zcbfl.*, zcla.name, '1' AS editable, "
-					+ parentStr
-					+ " FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.budget_category = ? AND zcbfl.ledger_account_id = zcla.id ORDER BY zcla.sorting ASC";
-			List<Entity> ledgerList = dbSession.query(querySql, budgetMainId, kmClass.getStr("DICTID"));
+			String querySql = "SELECT zcbfl.*, zcla.name, zcla.sorting FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_category = ? AND zcbfl.ledger_account_id = zcla.id AND zcbfl.budget_main_id IN ("
+					+ budgetMainIds + ") ORDER BY zcla.sorting ASC";
+
+			List<Entity> ledgerAllList = dbSession.query(querySql, kmClass.getStr("DICTID"));
+			List<Entity> ledgerGroupList = this.groupAndSum(ledgerAllList, "ledger_account_id", kmClass.getStr("DICTNAME"), kmClass.getStr("DICTID"));
 
 			if ("人工和用工成本（不含研发）".equals(kmClass.getStr("DICTNAME"))) {
 				// 插入部分统计科目项
-				for (int j = ledgerList.size() - 1; j >= 0; j--) {
-					if (ledgerList.get(j).getStr("name").equals("合作单位费用-成本（不含内部交易）")) {
-						ledgerList.add(
+				for (int j = ledgerGroupList.size() - 1; j >= 0; j--) {
+					if (ledgerGroupList.get(j).getStr("name").equals("合作单位费用-成本（不含内部交易）")) {
+						ledgerGroupList.add(
 								j,
-								new Entity().set("id", "合作单位费用（无内部交易）").set("name", "合作单位费用（无内部交易）").set("parent", kmClass.getStr("DICTNAME")).set("editable", "0").set("jan_amount", BigDecimal.ZERO)
+								new Entity().set("id", "合作单位费用（无内部交易）").set("name", "合作单位费用（无内部交易）").set("parent", kmClass.getStr("DICTNAME")).set("jan_amount", BigDecimal.ZERO)
 										.set("feb_amount", BigDecimal.ZERO).set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO)
 										.set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO).set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO)
 										.set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO).set("total_amount", BigDecimal.ZERO));
-					} else if (ledgerList.get(j).getStr("name").equals("意外伤害保险-成本")) {
-						ledgerList.add(
+					} else if (ledgerGroupList.get(j).getStr("name").equals("意外伤害保险-成本")) {
+						ledgerGroupList.add(
 								j,
-								new Entity().set("id", "意外伤害保险").set("name", "意外伤害保险").set("parent", kmClass.getStr("DICTNAME")).set("editable", "0").set("jan_amount", BigDecimal.ZERO)
-										.set("feb_amount", BigDecimal.ZERO).set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO)
-										.set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO).set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO)
-										.set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO).set("total_amount", BigDecimal.ZERO));
+								new Entity().set("id", "意外伤害保险").set("name", "意外伤害保险").set("parent", kmClass.getStr("DICTNAME")).set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+										.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO)
+										.set("jul_amount", BigDecimal.ZERO).set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO)
+										.set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO).set("total_amount", BigDecimal.ZERO));
 					}
 				}
 				// 生成科目序号及部分科目字段汇总计算
 				int stepNum = 0;
-				for (int k = 0; k < ledgerList.size(); k++) {
-					if (ledgerList.get(k).getStr("name").equals("工资总额（不含研发）")) {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1));
-						ledgerList.get(k).set("editable", "0");
-						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '工资总额（含研发）'";
-						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '研发-工资'";
-						Entity oneEntity = dbSession.queryOne(querySqlOne, budgetMainId);
-						Entity twoEntity = dbSession.queryOne(querySqlTwo, budgetMainId);
-						ledgerList.get(k).set("jan_amount", NumberUtil.sub(oneEntity.getBigDecimal("jan_amount"), twoEntity.getBigDecimal("jan_amount")))
-								.set("feb_amount", NumberUtil.sub(oneEntity.getBigDecimal("feb_amount"), twoEntity.getBigDecimal("feb_amount")))
-								.set("mar_amount", NumberUtil.sub(oneEntity.getBigDecimal("mar_amount"), twoEntity.getBigDecimal("mar_amount")))
-								.set("apr_amount", NumberUtil.sub(oneEntity.getBigDecimal("apr_amount"), twoEntity.getBigDecimal("apr_amount")))
-								.set("may_amount", NumberUtil.sub(oneEntity.getBigDecimal("may_amount"), twoEntity.getBigDecimal("may_amount")))
-								.set("jun_amount", NumberUtil.sub(oneEntity.getBigDecimal("jun_amount"), twoEntity.getBigDecimal("jun_amount")))
-								.set("jul_amount", NumberUtil.sub(oneEntity.getBigDecimal("jul_amount"), twoEntity.getBigDecimal("jul_amount")))
-								.set("aug_amount", NumberUtil.sub(oneEntity.getBigDecimal("aug_amount"), twoEntity.getBigDecimal("aug_amount")))
-								.set("sep_amount", NumberUtil.sub(oneEntity.getBigDecimal("sep_amount"), twoEntity.getBigDecimal("sep_amount")))
-								.set("oct_amount", NumberUtil.sub(oneEntity.getBigDecimal("oct_amount"), twoEntity.getBigDecimal("oct_amount")))
-								.set("nov_amount", NumberUtil.sub(oneEntity.getBigDecimal("nov_amount"), twoEntity.getBigDecimal("nov_amount")))
-								.set("dec_amount", NumberUtil.sub(oneEntity.getBigDecimal("dec_amount"), twoEntity.getBigDecimal("dec_amount")))
-								.set("total_amount", NumberUtil.sub(oneEntity.getBigDecimal("total_amount"), twoEntity.getBigDecimal("total_amount")));
-
-					} else if (ledgerList.get(k).getStr("name").equals("养老保险（不含研发）")) {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1));
-						ledgerList.get(k).set("editable", "0");
-						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '养老保险（含研发）'";
-						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '研发-社保'";
-						Entity oneEntity = dbSession.queryOne(querySqlOne, budgetMainId);
-						Entity twoEntity = dbSession.queryOne(querySqlTwo, budgetMainId);
-						ledgerList.get(k).set("jan_amount", NumberUtil.sub(oneEntity.getBigDecimal("jan_amount"), twoEntity.getBigDecimal("jan_amount")))
-								.set("feb_amount", NumberUtil.sub(oneEntity.getBigDecimal("feb_amount"), twoEntity.getBigDecimal("feb_amount")))
-								.set("mar_amount", NumberUtil.sub(oneEntity.getBigDecimal("mar_amount"), twoEntity.getBigDecimal("mar_amount")))
-								.set("apr_amount", NumberUtil.sub(oneEntity.getBigDecimal("apr_amount"), twoEntity.getBigDecimal("apr_amount")))
-								.set("may_amount", NumberUtil.sub(oneEntity.getBigDecimal("may_amount"), twoEntity.getBigDecimal("may_amount")))
-								.set("jun_amount", NumberUtil.sub(oneEntity.getBigDecimal("jun_amount"), twoEntity.getBigDecimal("jun_amount")))
-								.set("jul_amount", NumberUtil.sub(oneEntity.getBigDecimal("jul_amount"), twoEntity.getBigDecimal("jul_amount")))
-								.set("aug_amount", NumberUtil.sub(oneEntity.getBigDecimal("aug_amount"), twoEntity.getBigDecimal("aug_amount")))
-								.set("sep_amount", NumberUtil.sub(oneEntity.getBigDecimal("sep_amount"), twoEntity.getBigDecimal("sep_amount")))
-								.set("oct_amount", NumberUtil.sub(oneEntity.getBigDecimal("oct_amount"), twoEntity.getBigDecimal("oct_amount")))
-								.set("nov_amount", NumberUtil.sub(oneEntity.getBigDecimal("nov_amount"), twoEntity.getBigDecimal("nov_amount")))
-								.set("dec_amount", NumberUtil.sub(oneEntity.getBigDecimal("dec_amount"), twoEntity.getBigDecimal("dec_amount")))
-								.set("total_amount", NumberUtil.sub(oneEntity.getBigDecimal("total_amount"), twoEntity.getBigDecimal("total_amount")));
-
-					} else if (ledgerList.get(k).getStr("name").equals("意外伤害保险-成本")) {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k, 1));
-						ledgerList.get(k).set("parent", "意外伤害保险");
+				for (int k = 0; k < ledgerGroupList.size(); k++) {
+					if (ledgerGroupList.get(k).getStr("name").equals("工资总额（不含研发）")) {
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1));
+						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '工资总额（含研发）' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '研发-工资' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						List<Entity> oneList = dbSession.query(querySqlOne);
+						List<Entity> twoList = dbSession.query(querySqlTwo);
+						ledgerGroupList.get(k).set("jan_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jan_amount"), sumBigDecimalAmount(twoList, "jan_amount")))
+								.set("feb_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "feb_amount"), sumBigDecimalAmount(twoList, "feb_amount")))
+								.set("mar_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "mar_amount"), sumBigDecimalAmount(twoList, "mar_amount")))
+								.set("apr_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "apr_amount"), sumBigDecimalAmount(twoList, "apr_amount")))
+								.set("may_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "may_amount"), sumBigDecimalAmount(twoList, "may_amount")))
+								.set("jun_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jun_amount"), sumBigDecimalAmount(twoList, "jun_amount")))
+								.set("jul_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jul_amount"), sumBigDecimalAmount(twoList, "jul_amount")))
+								.set("aug_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "aug_amount"), sumBigDecimalAmount(twoList, "aug_amount")))
+								.set("sep_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "sep_amount"), sumBigDecimalAmount(twoList, "sep_amount")))
+								.set("oct_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "oct_amount"), sumBigDecimalAmount(twoList, "oct_amount")))
+								.set("nov_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "nov_amount"), sumBigDecimalAmount(twoList, "nov_amount")))
+								.set("dec_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "dec_amount"), sumBigDecimalAmount(twoList, "dec_amount")))
+								.set("total_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "total_amount"), sumBigDecimalAmount(twoList, "total_amount")));
+					} else if (ledgerGroupList.get(k).getStr("name").equals("养老保险（不含研发）")) {
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1));
+						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '养老保险（含研发）' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '研发-社保' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						List<Entity> oneList = dbSession.query(querySqlOne);
+						List<Entity> twoList = dbSession.query(querySqlTwo);
+						ledgerGroupList.get(k).set("jan_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jan_amount"), sumBigDecimalAmount(twoList, "jan_amount")))
+								.set("feb_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "feb_amount"), sumBigDecimalAmount(twoList, "feb_amount")))
+								.set("mar_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "mar_amount"), sumBigDecimalAmount(twoList, "mar_amount")))
+								.set("apr_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "apr_amount"), sumBigDecimalAmount(twoList, "apr_amount")))
+								.set("may_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "may_amount"), sumBigDecimalAmount(twoList, "may_amount")))
+								.set("jun_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jun_amount"), sumBigDecimalAmount(twoList, "jun_amount")))
+								.set("jul_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jul_amount"), sumBigDecimalAmount(twoList, "jul_amount")))
+								.set("aug_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "aug_amount"), sumBigDecimalAmount(twoList, "aug_amount")))
+								.set("sep_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "sep_amount"), sumBigDecimalAmount(twoList, "sep_amount")))
+								.set("oct_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "oct_amount"), sumBigDecimalAmount(twoList, "oct_amount")))
+								.set("nov_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "nov_amount"), sumBigDecimalAmount(twoList, "nov_amount")))
+								.set("dec_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "dec_amount"), sumBigDecimalAmount(twoList, "dec_amount")))
+								.set("total_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "total_amount"), sumBigDecimalAmount(twoList, "total_amount")));
+					} else if (ledgerGroupList.get(k).getStr("name").equals("意外伤害保险-成本")) {
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k, 1));
+						ledgerGroupList.get(k).set("parent", "意外伤害保险");
 						stepNum = 1;
-
-					} else if (ledgerList.get(k).getStr("name").equals("意外伤害保险-管理")) {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k - stepNum, 2));
-						ledgerList.get(k).set("parent", "意外伤害保险");
+					} else if (ledgerGroupList.get(k).getStr("name").equals("意外伤害保险-管理")) {
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k - stepNum, 2));
+						ledgerGroupList.get(k).set("parent", "意外伤害保险");
 						stepNum = 2;
-
-					} else if (ledgerList.get(k).getStr("name").equals("合作单位费用-成本（不含内部交易）")) {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k - stepNum, 1));
-						ledgerList.get(k).set("parent", "合作单位费用（无内部交易）");
+					} else if (ledgerGroupList.get(k).getStr("name").equals("合作单位费用-成本（不含内部交易）")) {
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k - stepNum, 1));
+						ledgerGroupList.get(k).set("parent", "合作单位费用（无内部交易）");
 						stepNum = 3;
-
-					} else if (ledgerList.get(k).getStr("name").equals("合作单位费用-管理")) {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k - stepNum, 2));
-						ledgerList.get(k).set("parent", "合作单位费用（无内部交易）");
+					} else if (ledgerGroupList.get(k).getStr("name").equals("合作单位费用-管理")) {
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}.{}", i + 1, k - stepNum, 2));
+						ledgerGroupList.get(k).set("parent", "合作单位费用（无内部交易）");
 						stepNum = 4;
-					} else if (ledgerList.get(k).getStr("name").equals("意外伤害保险")) {
-						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '意外伤害保险-成本'";
-						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '意外伤害保险-管理'";
-						Entity oneEntity = dbSession.queryOne(querySqlOne, budgetMainId);
-						Entity twoEntity = dbSession.queryOne(querySqlTwo, budgetMainId);
-						ledgerList.get(k).set("jan_amount", NumberUtil.add(oneEntity.getBigDecimal("jan_amount"), twoEntity.getBigDecimal("jan_amount")))
-								.set("feb_amount", NumberUtil.add(oneEntity.getBigDecimal("feb_amount"), twoEntity.getBigDecimal("feb_amount")))
-								.set("mar_amount", NumberUtil.add(oneEntity.getBigDecimal("mar_amount"), twoEntity.getBigDecimal("mar_amount")))
-								.set("apr_amount", NumberUtil.add(oneEntity.getBigDecimal("apr_amount"), twoEntity.getBigDecimal("apr_amount")))
-								.set("may_amount", NumberUtil.add(oneEntity.getBigDecimal("may_amount"), twoEntity.getBigDecimal("may_amount")))
-								.set("jun_amount", NumberUtil.add(oneEntity.getBigDecimal("jun_amount"), twoEntity.getBigDecimal("jun_amount")))
-								.set("jul_amount", NumberUtil.add(oneEntity.getBigDecimal("jul_amount"), twoEntity.getBigDecimal("jul_amount")))
-								.set("aug_amount", NumberUtil.add(oneEntity.getBigDecimal("aug_amount"), twoEntity.getBigDecimal("aug_amount")))
-								.set("sep_amount", NumberUtil.add(oneEntity.getBigDecimal("sep_amount"), twoEntity.getBigDecimal("sep_amount")))
-								.set("oct_amount", NumberUtil.add(oneEntity.getBigDecimal("oct_amount"), twoEntity.getBigDecimal("oct_amount")))
-								.set("nov_amount", NumberUtil.add(oneEntity.getBigDecimal("nov_amount"), twoEntity.getBigDecimal("nov_amount")))
-								.set("dec_amount", NumberUtil.add(oneEntity.getBigDecimal("dec_amount"), twoEntity.getBigDecimal("dec_amount")))
-								.set("total_amount", NumberUtil.add(oneEntity.getBigDecimal("total_amount"), twoEntity.getBigDecimal("total_amount")))
+					} else if (ledgerGroupList.get(k).getStr("name").equals("意外伤害保险")) {
+						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '意外伤害保险-成本' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '意外伤害保险-管理' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						List<Entity> oneList = dbSession.query(querySqlOne);
+						List<Entity> twoList = dbSession.query(querySqlTwo);
+						ledgerGroupList.get(k).set("jan_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jan_amount"), sumBigDecimalAmount(twoList, "jan_amount")))
+								.set("feb_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "feb_amount"), sumBigDecimalAmount(twoList, "feb_amount")))
+								.set("mar_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "mar_amount"), sumBigDecimalAmount(twoList, "mar_amount")))
+								.set("apr_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "apr_amount"), sumBigDecimalAmount(twoList, "apr_amount")))
+								.set("may_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "may_amount"), sumBigDecimalAmount(twoList, "may_amount")))
+								.set("jun_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jun_amount"), sumBigDecimalAmount(twoList, "jun_amount")))
+								.set("jul_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jul_amount"), sumBigDecimalAmount(twoList, "jul_amount")))
+								.set("aug_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "aug_amount"), sumBigDecimalAmount(twoList, "aug_amount")))
+								.set("sep_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "sep_amount"), sumBigDecimalAmount(twoList, "sep_amount")))
+								.set("oct_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "oct_amount"), sumBigDecimalAmount(twoList, "oct_amount")))
+								.set("nov_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "nov_amount"), sumBigDecimalAmount(twoList, "nov_amount")))
+								.set("dec_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "dec_amount"), sumBigDecimalAmount(twoList, "dec_amount")))
+								.set("total_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "total_amount"), sumBigDecimalAmount(twoList, "total_amount")))
 								.set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1 - stepNum));
-
-					} else if (ledgerList.get(k).getStr("name").equals("合作单位费用（无内部交易）")) {
-						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '合作单位费用-成本（不含内部交易）'";
-						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.budget_main_id = ? AND zcbfl.ledger_account_id = zcla.id AND zcla.name = '合作单位费用-管理'";
-						Entity oneEntity = dbSession.queryOne(querySqlOne, budgetMainId);
-						Entity twoEntity = dbSession.queryOne(querySqlTwo, budgetMainId);
-						ledgerList.get(k).set("jan_amount", NumberUtil.add(oneEntity.getBigDecimal("jan_amount"), twoEntity.getBigDecimal("jan_amount")))
-								.set("feb_amount", NumberUtil.add(oneEntity.getBigDecimal("feb_amount"), twoEntity.getBigDecimal("feb_amount")))
-								.set("mar_amount", NumberUtil.add(oneEntity.getBigDecimal("mar_amount"), twoEntity.getBigDecimal("mar_amount")))
-								.set("apr_amount", NumberUtil.add(oneEntity.getBigDecimal("apr_amount"), twoEntity.getBigDecimal("apr_amount")))
-								.set("may_amount", NumberUtil.add(oneEntity.getBigDecimal("may_amount"), twoEntity.getBigDecimal("may_amount")))
-								.set("jun_amount", NumberUtil.add(oneEntity.getBigDecimal("jun_amount"), twoEntity.getBigDecimal("jun_amount")))
-								.set("jul_amount", NumberUtil.add(oneEntity.getBigDecimal("jul_amount"), twoEntity.getBigDecimal("jul_amount")))
-								.set("aug_amount", NumberUtil.add(oneEntity.getBigDecimal("aug_amount"), twoEntity.getBigDecimal("aug_amount")))
-								.set("sep_amount", NumberUtil.add(oneEntity.getBigDecimal("sep_amount"), twoEntity.getBigDecimal("sep_amount")))
-								.set("oct_amount", NumberUtil.add(oneEntity.getBigDecimal("oct_amount"), twoEntity.getBigDecimal("oct_amount")))
-								.set("nov_amount", NumberUtil.add(oneEntity.getBigDecimal("nov_amount"), twoEntity.getBigDecimal("nov_amount")))
-								.set("dec_amount", NumberUtil.add(oneEntity.getBigDecimal("dec_amount"), twoEntity.getBigDecimal("dec_amount")))
-								.set("total_amount", NumberUtil.add(oneEntity.getBigDecimal("total_amount"), twoEntity.getBigDecimal("total_amount")))
+					} else if (ledgerGroupList.get(k).getStr("name").equals("合作单位费用（无内部交易）")) {
+						String querySqlOne = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '合作单位费用-成本（不含内部交易）' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						String querySqlTwo = "SELECT zcbfl.* FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_ledger_account AS zcla WHERE zcbfl.ledger_account_id = zcla.id AND zcla.name = '合作单位费用-管理' AND zcbfl.budget_main_id IN  ("
+								+ budgetMainIds + ")";
+						List<Entity> oneList = dbSession.query(querySqlOne);
+						List<Entity> twoList = dbSession.query(querySqlTwo);
+						ledgerGroupList.get(k).set("jan_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jan_amount"), sumBigDecimalAmount(twoList, "jan_amount")))
+								.set("feb_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "feb_amount"), sumBigDecimalAmount(twoList, "feb_amount")))
+								.set("mar_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "mar_amount"), sumBigDecimalAmount(twoList, "mar_amount")))
+								.set("apr_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "apr_amount"), sumBigDecimalAmount(twoList, "apr_amount")))
+								.set("may_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "may_amount"), sumBigDecimalAmount(twoList, "may_amount")))
+								.set("jun_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jun_amount"), sumBigDecimalAmount(twoList, "jun_amount")))
+								.set("jul_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "jul_amount"), sumBigDecimalAmount(twoList, "jul_amount")))
+								.set("aug_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "aug_amount"), sumBigDecimalAmount(twoList, "aug_amount")))
+								.set("sep_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "sep_amount"), sumBigDecimalAmount(twoList, "sep_amount")))
+								.set("oct_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "oct_amount"), sumBigDecimalAmount(twoList, "oct_amount")))
+								.set("nov_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "nov_amount"), sumBigDecimalAmount(twoList, "nov_amount")))
+								.set("dec_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "dec_amount"), sumBigDecimalAmount(twoList, "dec_amount")))
+								.set("total_amount", NumberUtil.sub(sumBigDecimalAmount(oneList, "total_amount"), sumBigDecimalAmount(twoList, "total_amount")))
 								.set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1 - stepNum));
-
 					} else {
-						ledgerList.get(k).set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1 - stepNum));
+						ledgerGroupList.get(k).set("serial_number", StrUtil.format("2.{}.{}", i + 1, k + 1 - stepNum));
 					}
 				}
-				for (Entity ledger : ledgerList) {
+				for (Entity ledger : ledgerGroupList) {
 					String name = ledger.getStr("name");
 					if (!"工资总额（含研发）".equals(name) && !"养老保险（含研发）".equals(name) && !"意外伤害保险".equals(name) && !"合作单位费用（无内部交易）".equals(name)) {
 						kmClassRevenue.set("jan_amount", NumberUtil.add(kmClassRevenue.getBigDecimal("jan_amount"), ledger.getBigDecimal("jan_amount")));
@@ -251,13 +296,12 @@ public class FillingDataUtil {
 						kmClassRevenue.set("dec_amount", NumberUtil.add(kmClassRevenue.getBigDecimal("dec_amount"), ledger.getBigDecimal("dec_amount")));
 						kmClassRevenue.set("total_amount", NumberUtil.add(kmClassRevenue.getBigDecimal("total_amount"), ledger.getBigDecimal("total_amount")));
 					}
-
 				}
 			} else {
-				for (int j = 0; j < ledgerList.size(); j++) {
-					ledgerList.get(j).set("serial_number", StrUtil.format("2.{}.{}", i + 1, j + 1));
+				for (int j = 0; j < ledgerGroupList.size(); j++) {
+					ledgerGroupList.get(j).set("serial_number", StrUtil.format("2.{}.{}", i + 1, j + 1));
 				}
-				for (Entity ledger : ledgerList) {
+				for (Entity ledger : ledgerGroupList) {
 					kmClassRevenue.set("jan_amount", NumberUtil.add(kmClassRevenue.getBigDecimal("jan_amount"), ledger.getBigDecimal("jan_amount")));
 					kmClassRevenue.set("feb_amount", NumberUtil.add(kmClassRevenue.getBigDecimal("feb_amount"), ledger.getBigDecimal("feb_amount")));
 					kmClassRevenue.set("mar_amount", NumberUtil.add(kmClassRevenue.getBigDecimal("mar_amount"), ledger.getBigDecimal("mar_amount")));
@@ -275,7 +319,7 @@ public class FillingDataUtil {
 			}
 
 			totalCostList.add(kmClassRevenue);
-			totalCostList.addAll(ledgerList);
+			totalCostList.addAll(ledgerGroupList);
 			kmClassRevenueList.add(kmClassRevenue);
 		}
 
@@ -321,44 +365,127 @@ public class FillingDataUtil {
 	}
 
 	// 报表总部管理费分摊和其他数据构建
-	private List<Entity> buildApportionmentAndOther(List<Entity> totalCostList, Session dbSession, String budgetMainId) throws Exception {
-		Map<String, Entity> totalCostMap = totalCostList.stream().collect(
-				Collectors.toMap(entity -> entity.getStr("parent") + "_" + entity.getStr("name"), Function.identity(), (existing, replacement) -> existing));
-
-		String querySql = "SELECT *, margin_name AS name, '-1' AS parent, '1' AS editable FROM zh_caiwu_budget_filling_margin WHERE budget_main_id = ?";
-		List<Entity> apportionmentAndOtherList = dbSession.query(querySql, budgetMainId);
-		for (int i = 0; i < apportionmentAndOtherList.size(); i++) {
-			if (apportionmentAndOtherList.get(i).getStr("margin_name").equals("四、总部管理费分摊")) {
-				apportionmentAndOtherList.get(i).set("jan_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("jan_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("feb_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("feb_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("mar_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("mar_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("apr_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("apr_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("may_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("may_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("jun_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("jun_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("jul_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("jul_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("aug_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("aug_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("sep_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("sep_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("oct_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("oct_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("nov_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("nov_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("dec_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("dec_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-				apportionmentAndOtherList.get(i).set("total_amount",
-						NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("total_amount"), NumberUtil.div(apportionmentAndOtherList.get(i).getBigDecimal("share_proportion"), 100)));
-			}
-			apportionmentAndOtherList.get(i).set("serial_number", i + 4);
+	private List<Entity> buildApportionmentAndOther(Session dbSession, String budgetMainIds) throws Exception {
+		List<Entity> resultList = new ArrayList<Entity>();
+		List<String> budgetMainIdList = StrUtil.split(budgetMainIds, ",");
+		String queryApportionmentSql = "SELECT *, margin_name AS name FROM zh_caiwu_budget_filling_margin WHERE margin_name = '四、总部管理费分摊' AND budget_main_id IN (" + budgetMainIds + ")";
+		List<Entity> apportionmentList = dbSession.query(queryApportionmentSql);
+		Map<String, Entity> apportionmentMap = apportionmentList.stream()
+				.collect(Collectors.toMap(entity -> entity.getStr("budget_main_id"), Function.identity(), (existing, replacement) -> existing));
+		Entity apportionmentEntity = new Entity();
+		apportionmentEntity.set("id", "总部管理费分摊");
+		apportionmentEntity.set("name", "四、总部管理费分摊");
+		apportionmentEntity.set("parent", "-1");
+		apportionmentEntity.set("serial_number", "4");
+		apportionmentEntity.set("jan_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("feb_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("mar_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("apr_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("may_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("jun_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("jul_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("aug_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("sep_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("oct_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("nov_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("dec_amount", BigDecimal.ZERO);
+		apportionmentEntity.set("total_amount", BigDecimal.ZERO);
+		for (String budgetMainId : budgetMainIdList) {
+			List<Entity> totalCostList = this.buildFillingLedger(dbSession, budgetMainId);
+			Map<String, Entity> totalCostMap = totalCostList.stream().collect(
+					Collectors.toMap(entity -> entity.getStr("parent") + "_" + entity.getStr("name"), Function.identity(), (existing, replacement) -> existing));
+			String searchMainId = StrUtil.removeSuffix(StrUtil.removePrefix(budgetMainId, "'"), "'");
+			apportionmentEntity.set(
+					"jan_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("jan_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("jan_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"feb_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("feb_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("feb_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"mar_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("mar_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("mar_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"apr_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("apr_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("apr_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"may_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("may_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("may_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"jun_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("jun_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("jun_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"jul_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("jul_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("jul_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"aug_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("aug_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("aug_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"sep_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("sep_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("sep_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"oct_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("oct_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("oct_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"nov_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("nov_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("nov_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"dec_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("dec_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("dec_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
+			apportionmentEntity.set(
+					"total_amount",
+					NumberUtil.add(apportionmentEntity.getBigDecimal("total_amount"),
+							NumberUtil.mul(totalCostMap.get("-1_二、总成本").getBigDecimal("total_amount"), NumberUtil.div(apportionmentMap.get(searchMainId).getBigDecimal("share_proportion"), 100))));
 		}
-		return apportionmentAndOtherList;
+		resultList.add(apportionmentEntity);
+		String queryOtherSql = "SELECT *, margin_name AS name FROM zh_caiwu_budget_filling_margin WHERE margin_name = '五、其他' AND budget_main_id IN (" + budgetMainIds + ")";
+		List<Entity> otherList = dbSession.query(queryOtherSql);
+		Entity otherEntity = new Entity();
+		otherEntity.set("id", "其他");
+		otherEntity.set("name", "五、其他");
+		otherEntity.set("parent", "-1");
+		otherEntity.set("serial_number", "5");
+		otherEntity.set("jan_amount", BigDecimal.ZERO);
+		otherEntity.set("feb_amount", BigDecimal.ZERO);
+		otherEntity.set("mar_amount", BigDecimal.ZERO);
+		otherEntity.set("apr_amount", BigDecimal.ZERO);
+		otherEntity.set("may_amount", BigDecimal.ZERO);
+		otherEntity.set("jun_amount", BigDecimal.ZERO);
+		otherEntity.set("jul_amount", BigDecimal.ZERO);
+		otherEntity.set("aug_amount", BigDecimal.ZERO);
+		otherEntity.set("sep_amount", BigDecimal.ZERO);
+		otherEntity.set("oct_amount", BigDecimal.ZERO);
+		otherEntity.set("nov_amount", BigDecimal.ZERO);
+		otherEntity.set("dec_amount", BigDecimal.ZERO);
+		otherEntity.set("total_amount", BigDecimal.ZERO);
+		for (Entity entity : otherList) {
+			otherEntity.set("jan_amount", NumberUtil.add(otherEntity.getBigDecimal("jan_amount"), entity.getBigDecimal("jan_amount")));
+			otherEntity.set("feb_amount", NumberUtil.add(otherEntity.getBigDecimal("feb_amount"), entity.getBigDecimal("feb_amount")));
+			otherEntity.set("mar_amount", NumberUtil.add(otherEntity.getBigDecimal("mar_amount"), entity.getBigDecimal("mar_amount")));
+			otherEntity.set("apr_amount", NumberUtil.add(otherEntity.getBigDecimal("apr_amount"), entity.getBigDecimal("apr_amount")));
+			otherEntity.set("may_amount", NumberUtil.add(otherEntity.getBigDecimal("may_amount"), entity.getBigDecimal("may_amount")));
+			otherEntity.set("jun_amount", NumberUtil.add(otherEntity.getBigDecimal("jun_amount"), entity.getBigDecimal("jun_amount")));
+			otherEntity.set("jul_amount", NumberUtil.add(otherEntity.getBigDecimal("jul_amount"), entity.getBigDecimal("jul_amount")));
+			otherEntity.set("aug_amount", NumberUtil.add(otherEntity.getBigDecimal("aug_amount"), entity.getBigDecimal("aug_amount")));
+			otherEntity.set("sep_amount", NumberUtil.add(otherEntity.getBigDecimal("sep_amount"), entity.getBigDecimal("sep_amount")));
+			otherEntity.set("oct_amount", NumberUtil.add(otherEntity.getBigDecimal("oct_amount"), entity.getBigDecimal("oct_amount")));
+			otherEntity.set("nov_amount", NumberUtil.add(otherEntity.getBigDecimal("nov_amount"), entity.getBigDecimal("nov_amount")));
+			otherEntity.set("dec_amount", NumberUtil.add(otherEntity.getBigDecimal("dec_amount"), entity.getBigDecimal("dec_amount")));
+			otherEntity.set("total_amount", NumberUtil.add(otherEntity.getBigDecimal("total_amount"), entity.getBigDecimal("total_amount")));
+		}
+		resultList.add(otherEntity);
+		return resultList;
 	}
 
 	// 报表利润总额数据构建
@@ -366,7 +493,7 @@ public class FillingDataUtil {
 		Entity apportionment = apportionmentAndOtherList.get(0);
 		Entity other = apportionmentAndOtherList.get(1);
 		Entity totalProfit = new Entity();
-		totalProfit.set("serial_number", "6").set("id", "利润总额").set("name", "六、利润总额").set("parent", "-1").set("editable", "0")
+		totalProfit.set("serial_number", "6").set("id", "利润总额").set("name", "六、利润总额").set("parent", "-1")
 				.set("jan_amount", NumberUtil.sub(grossProfitMargin.getBigDecimal("jan_amount"), apportionment.getBigDecimal("jan_amount"), other.getBigDecimal("jan_amount")))
 				.set("feb_amount", NumberUtil.sub(grossProfitMargin.getBigDecimal("feb_amount"), apportionment.getBigDecimal("feb_amount"), other.getBigDecimal("feb_amount")))
 				.set("mar_amount", NumberUtil.sub(grossProfitMargin.getBigDecimal("mar_amount"), apportionment.getBigDecimal("mar_amount"), other.getBigDecimal("mar_amount")))
@@ -384,47 +511,73 @@ public class FillingDataUtil {
 	}
 
 	// 报表人员及人均情况数据构建
-	private List<Entity> buildPersonnelAndPerCapitaSituation(Session dbSession, String budgetMainId) throws Exception {
+	private List<Entity> buildPersonnelAndPerCapitaSituation(Session dbSession, String budgetMainIds) throws Exception {
 		List<Entity> personnelAndPerCapitaSituationList = new ArrayList<Entity>();
-		String querySql = "SELECT *, situation_name AS name, '平均从业人员人数' AS parent, '1' AS editable FROM zh_caiwu_budget_filling_personnel WHERE budget_main_id = ?";
+
+		String querySql = "SELECT *, situation_name AS name, '平均从业人员人数' AS parent FROM zh_caiwu_budget_filling_personnel WHERE budget_main_id IN (" + budgetMainIds + ")";
+		List<Entity> personnelList = dbSession.query(querySql);
+		Map<String, List<Entity>> groupedMap = personnelList.stream().collect(Collectors.groupingBy(entity -> entity.getStr("situation_name"))).entrySet().stream().sorted((entry1, entry2) -> {
+			String id1 = entry1.getValue().get(0).getStr("id");
+			String id2 = entry2.getValue().get(0).getStr("id");
+			return id1.compareTo(id2);
+		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
+		List<Entity> groupList = groupedMap.entrySet().stream().map(entry -> {
+			String key = entry.getKey();
+			List<Entity> groupEntities = entry.getValue();
+			Entity entity = new Entity();
+			entity.set("id", "平均从业人员人数_" + key);
+			entity.set("name", key);
+			entity.set("parent", "平均从业人员人数");
+			entity.set("jan", sumBigDecimalAmount(groupEntities, "jan"));
+			entity.set("feb", sumBigDecimalAmount(groupEntities, "feb"));
+			entity.set("mar", sumBigDecimalAmount(groupEntities, "mar"));
+			entity.set("apr", sumBigDecimalAmount(groupEntities, "apr"));
+			entity.set("may", sumBigDecimalAmount(groupEntities, "may"));
+			entity.set("jun", sumBigDecimalAmount(groupEntities, "jun"));
+			entity.set("jul", sumBigDecimalAmount(groupEntities, "jul"));
+			entity.set("aug", sumBigDecimalAmount(groupEntities, "aug"));
+			entity.set("sep", sumBigDecimalAmount(groupEntities, "sep"));
+			entity.set("oct", sumBigDecimalAmount(groupEntities, "oct"));
+			entity.set("nov", sumBigDecimalAmount(groupEntities, "nov"));
+			entity.set("dec", sumBigDecimalAmount(groupEntities, "dec"));
+			entity.set("average_actual", sumBigDecimalAmount(groupEntities, "average_actual"));
+			return entity;
+		}).collect(Collectors.toList());
+
 		Entity averageNumberOfEmployees = new Entity();
 		averageNumberOfEmployees.set("serial_number", "1").set("id", "平均从业人员人数").set("name", "一、平均从业人员人数").set("parent", "-1").set("editable", "0").set("jan", BigDecimal.ZERO)
 				.set("feb", BigDecimal.ZERO).set("mar", BigDecimal.ZERO).set("apr", BigDecimal.ZERO).set("may", BigDecimal.ZERO).set("jun", BigDecimal.ZERO).set("jul", BigDecimal.ZERO)
 				.set("aug", BigDecimal.ZERO).set("sep", BigDecimal.ZERO).set("oct", BigDecimal.ZERO).set("nov", BigDecimal.ZERO).set("dec", BigDecimal.ZERO).set("average_actual", BigDecimal.ZERO);
-		List<Entity> personnelList = dbSession.query(querySql, budgetMainId);
 		Entity averageNumberOfEmployedPersonnel = new Entity();
 		averageNumberOfEmployedPersonnel.set("serial_number", "2").set("id", "平均用工人员人数").set("name", "二、平均用工人员人数").set("parent", "-1").set("editable", "0").set("jan", BigDecimal.ZERO)
 				.set("feb", BigDecimal.ZERO).set("mar", BigDecimal.ZERO).set("apr", BigDecimal.ZERO).set("may", BigDecimal.ZERO).set("jun", BigDecimal.ZERO).set("jul", BigDecimal.ZERO)
 				.set("aug", BigDecimal.ZERO).set("sep", BigDecimal.ZERO).set("oct", BigDecimal.ZERO).set("nov", BigDecimal.ZERO).set("dec", BigDecimal.ZERO).set("average_actual", BigDecimal.ZERO);
 		personnelAndPerCapitaSituationList.add(averageNumberOfEmployees);
-		personnelAndPerCapitaSituationList.addAll(personnelList);
+		personnelAndPerCapitaSituationList.addAll(groupList);
 		personnelAndPerCapitaSituationList.add(averageNumberOfEmployedPersonnel);
 
 		for (int i = 0; i < personnelAndPerCapitaSituationList.size(); i++) {
 			if (personnelAndPerCapitaSituationList.get(i).getStr("id").equals("平均从业人员人数")) {
-				String queryDataSql = "SELECT * FROM zh_caiwu_budget_filling_personnel WHERE budget_main_id = ? AND (situation_name = '平均在职人数' OR situation_name = '平均返聘人数' OR situation_name = '平均劳务派遣')";
-				List<Entity> entityList = dbSession.query(queryDataSql, budgetMainId);
-				for (Entity entity : entityList) {
-					personnelAndPerCapitaSituationList.get(i).set("jan", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jan"), entity.getBigDecimal("jan")));
-					personnelAndPerCapitaSituationList.get(i).set("feb", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("feb"), entity.getBigDecimal("feb")));
-					personnelAndPerCapitaSituationList.get(i).set("mar", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("mar"), entity.getBigDecimal("mar")));
-					personnelAndPerCapitaSituationList.get(i).set("apr", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("apr"), entity.getBigDecimal("apr")));
-					personnelAndPerCapitaSituationList.get(i).set("may", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("may"), entity.getBigDecimal("may")));
-					personnelAndPerCapitaSituationList.get(i).set("jun", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jun"), entity.getBigDecimal("jun")));
-					personnelAndPerCapitaSituationList.get(i).set("jul", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jul"), entity.getBigDecimal("jul")));
-					personnelAndPerCapitaSituationList.get(i).set("aug", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("aug"), entity.getBigDecimal("aug")));
-					personnelAndPerCapitaSituationList.get(i).set("sep", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("sep"), entity.getBigDecimal("sep")));
-					personnelAndPerCapitaSituationList.get(i).set("oct", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("oct"), entity.getBigDecimal("oct")));
-					personnelAndPerCapitaSituationList.get(i).set("nov", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("nov"), entity.getBigDecimal("nov")));
-					personnelAndPerCapitaSituationList.get(i).set("dec", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("dec"), entity.getBigDecimal("dec")));
-					personnelAndPerCapitaSituationList.get(i).set("average_actual",
-							NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("average_actual"), entity.getBigDecimal("average_actual")));
+				for (Entity entity : groupList) {
+					if ("平均在职人数".equals(entity.getStr("name")) || "平均返聘人数".equals(entity.getStr("name")) || "平均劳务派遣".equals(entity.getStr("name"))) {
+						personnelAndPerCapitaSituationList.get(i).set("jan", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jan"), entity.getBigDecimal("jan")));
+						personnelAndPerCapitaSituationList.get(i).set("feb", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("feb"), entity.getBigDecimal("feb")));
+						personnelAndPerCapitaSituationList.get(i).set("mar", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("mar"), entity.getBigDecimal("mar")));
+						personnelAndPerCapitaSituationList.get(i).set("apr", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("apr"), entity.getBigDecimal("apr")));
+						personnelAndPerCapitaSituationList.get(i).set("may", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("may"), entity.getBigDecimal("may")));
+						personnelAndPerCapitaSituationList.get(i).set("jun", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jun"), entity.getBigDecimal("jun")));
+						personnelAndPerCapitaSituationList.get(i).set("jul", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jul"), entity.getBigDecimal("jul")));
+						personnelAndPerCapitaSituationList.get(i).set("aug", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("aug"), entity.getBigDecimal("aug")));
+						personnelAndPerCapitaSituationList.get(i).set("sep", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("sep"), entity.getBigDecimal("sep")));
+						personnelAndPerCapitaSituationList.get(i).set("oct", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("oct"), entity.getBigDecimal("oct")));
+						personnelAndPerCapitaSituationList.get(i).set("nov", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("nov"), entity.getBigDecimal("nov")));
+						personnelAndPerCapitaSituationList.get(i).set("dec", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("dec"), entity.getBigDecimal("dec")));
+						personnelAndPerCapitaSituationList.get(i).set("average_actual",
+								NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("average_actual"), entity.getBigDecimal("average_actual")));
+					}
 				}
-
 			} else if (personnelAndPerCapitaSituationList.get(i).getStr("id").equals("平均用工人员人数")) {
-				String queryDataSql = "SELECT * FROM zh_caiwu_budget_filling_personnel WHERE budget_main_id = ?";
-				List<Entity> entityList = dbSession.query(queryDataSql, budgetMainId);
-				for (Entity entity : entityList) {
+				for (Entity entity : groupList) {
 					personnelAndPerCapitaSituationList.get(i).set("jan", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("jan"), entity.getBigDecimal("jan")));
 					personnelAndPerCapitaSituationList.get(i).set("feb", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("feb"), entity.getBigDecimal("feb")));
 					personnelAndPerCapitaSituationList.get(i).set("mar", NumberUtil.add(personnelAndPerCapitaSituationList.get(i).getBigDecimal("mar"), entity.getBigDecimal("mar")));
@@ -463,7 +616,6 @@ public class FillingDataUtil {
 				.set("id", "工资总额（含研发）")
 				.set("name", "工资总额（含研发）")
 				.set("parent", "在职人员人工成本")
-				.set("editable", "0")
 				.set("jan_amount",
 						NumberUtil.add(financialStatementsMap.get("人工和用工成本（不含研发）_工资总额（不含研发）").getBigDecimal("jan_amount"), financialStatementsMap.get("研发费_研发-工资").getBigDecimal("jan_amount")))
 				.set("feb_amount",
@@ -498,7 +650,6 @@ public class FillingDataUtil {
 				.set("id", "福利费")
 				.set("name", "福利费")
 				.set("parent", "在职人员人工成本")
-				.set("editable", "0")
 				.set("jan_amount",
 						NumberUtil.add(financialStatementsMap.get("人工和用工成本（不含研发）_体检费").getBigDecimal("jan_amount"), financialStatementsMap.get("人工和用工成本（不含研发）_防暑降温费").getBigDecimal("jan_amount"),
 								financialStatementsMap.get("人工和用工成本（不含研发）_食堂经费").getBigDecimal("jan_amount"), financialStatementsMap.get("人工和用工成本（不含研发）_独生子女费").getBigDecimal("jan_amount"),
@@ -586,7 +737,6 @@ public class FillingDataUtil {
 				.set("id", "社会保险（含研发）")
 				.set("name", "社会保险（含研发）")
 				.set("parent", "在职人员人工成本")
-				.set("editable", "0")
 				.set("jan_amount",
 						NumberUtil.add(financialStatementsMap.get("人工和用工成本（不含研发）_养老保险（不含研发）").getBigDecimal("jan_amount"),
 								financialStatementsMap.get("人工和用工成本（不含研发）_医疗保险").getBigDecimal("jan_amount"), financialStatementsMap.get("人工和用工成本（不含研发）_失业保险").getBigDecimal("jan_amount"),
@@ -655,7 +805,7 @@ public class FillingDataUtil {
 
 		// 企业年金
 		Entity qynjEntity = new Entity();
-		qynjEntity.set("serial_number", "1.4").set("id", "企业年金").set("name", "企业年金").set("parent", "在职人员人工成本").set("editable", "0")
+		qynjEntity.set("serial_number", "1.4").set("id", "企业年金").set("name", "企业年金").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_企业年金").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_企业年金").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_企业年金").getBigDecimal("mar_amount"))
@@ -672,7 +822,7 @@ public class FillingDataUtil {
 
 		// 补充医疗
 		Entity bcylEntity = new Entity();
-		bcylEntity.set("serial_number", "1.5").set("id", "补充医疗").set("name", "补充医疗").set("parent", "在职人员人工成本").set("editable", "0")
+		bcylEntity.set("serial_number", "1.5").set("id", "补充医疗").set("name", "补充医疗").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_补充医疗").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_补充医疗").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_补充医疗").getBigDecimal("mar_amount"))
@@ -689,7 +839,7 @@ public class FillingDataUtil {
 
 		// 意外伤害保险
 		Entity ywshbxEntity = new Entity();
-		ywshbxEntity.set("serial_number", "1.6").set("id", "意外伤害保险").set("name", "意外伤害保险").set("parent", "在职人员人工成本").set("editable", "0")
+		ywshbxEntity.set("serial_number", "1.6").set("id", "意外伤害保险").set("name", "意外伤害保险").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_意外伤害保险").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_意外伤害保险").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_意外伤害保险").getBigDecimal("mar_amount"))
@@ -706,7 +856,7 @@ public class FillingDataUtil {
 
 		// 住房公积金
 		Entity zfgjjEntity = new Entity();
-		zfgjjEntity.set("serial_number", "1.7").set("id", "住房公积金").set("name", "住房公积金").set("parent", "在职人员人工成本").set("editable", "0")
+		zfgjjEntity.set("serial_number", "1.7").set("id", "住房公积金").set("name", "住房公积金").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_住房公积金").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_住房公积金").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_住房公积金").getBigDecimal("mar_amount"))
@@ -723,7 +873,7 @@ public class FillingDataUtil {
 
 		// 工会经费
 		Entity ghjfEntity = new Entity();
-		ghjfEntity.set("serial_number", "1.8").set("id", "工会经费").set("name", "工会经费").set("parent", "在职人员人工成本").set("editable", "0")
+		ghjfEntity.set("serial_number", "1.8").set("id", "工会经费").set("name", "工会经费").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_工会经费").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_工会经费").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_工会经费").getBigDecimal("mar_amount"))
@@ -740,7 +890,7 @@ public class FillingDataUtil {
 
 		// 职工教育经费
 		Entity zgjyjfEntity = new Entity();
-		zgjyjfEntity.set("serial_number", "1.9").set("id", "职工教育经费").set("name", "职工教育经费").set("parent", "在职人员人工成本").set("editable", "0")
+		zgjyjfEntity.set("serial_number", "1.9").set("id", "职工教育经费").set("name", "职工教育经费").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_职工教育经费").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_职工教育经费").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_职工教育经费").getBigDecimal("mar_amount"))
@@ -757,7 +907,7 @@ public class FillingDataUtil {
 
 		// 残保金
 		Entity cbjEntity = new Entity();
-		cbjEntity.set("serial_number", "1.10").set("id", "残保金").set("name", "残保金").set("parent", "在职人员人工成本").set("editable", "0")
+		cbjEntity.set("serial_number", "1.10").set("id", "残保金").set("name", "残保金").set("parent", "在职人员人工成本")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_残保金").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_残保金").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_残保金").getBigDecimal("mar_amount"))
@@ -779,7 +929,6 @@ public class FillingDataUtil {
 				.set("id", "在职人员人工成本")
 				.set("name", "一、在职人员人工成本")
 				.set("parent", "-1")
-				.set("editable", "0")
 				.set("jan_amount",
 						NumberUtil.add(zzzehyfEntity.getBigDecimal("jan_amount"), flfEntity.getBigDecimal("jan_amount"), shbxhyfEntity.getBigDecimal("jan_amount"),
 								qynjEntity.getBigDecimal("jan_amount"), bcylEntity.getBigDecimal("jan_amount"), ywshbxEntity.getBigDecimal("jan_amount"), zfgjjEntity.getBigDecimal("jan_amount"),
@@ -836,7 +985,7 @@ public class FillingDataUtil {
 
 		// 退休返聘实习人员费用
 		Entity txfpsxryfyEntity = new Entity();
-		txfpsxryfyEntity.set("serial_number", "2").set("id", "退休返聘实习人员费用").set("name", "二、退休返聘实习人员费用").set("parent", "-1").set("editable", "0")
+		txfpsxryfyEntity.set("serial_number", "2").set("id", "退休返聘实习人员费用").set("name", "二、退休返聘实习人员费用").set("parent", "-1")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_退休返聘实习人员费用").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_退休返聘实习人员费用").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_退休返聘实习人员费用").getBigDecimal("mar_amount"))
@@ -853,7 +1002,7 @@ public class FillingDataUtil {
 
 		// 派遣人员薪酬
 		Entity pqryxcEntity = new Entity();
-		pqryxcEntity.set("serial_number", "3").set("id", "派遣人员薪酬").set("name", "三、派遣人员薪酬").set("parent", "-1").set("editable", "0")
+		pqryxcEntity.set("serial_number", "3").set("id", "派遣人员薪酬").set("name", "三、派遣人员薪酬").set("parent", "-1")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_派遣人员薪酬").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_派遣人员薪酬").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_派遣人员薪酬").getBigDecimal("mar_amount"))
@@ -870,7 +1019,7 @@ public class FillingDataUtil {
 
 		// 合作单位费用（无内部交易）
 		Entity hzdwfyEntity = new Entity();
-		hzdwfyEntity.set("serial_number", "4").set("id", "合作单位费用（无内部交易）").set("name", "四、合作单位费用（无内部交易）").set("parent", "-1").set("editable", "0")
+		hzdwfyEntity.set("serial_number", "4").set("id", "合作单位费用（无内部交易）").set("name", "四、合作单位费用（无内部交易）").set("parent", "-1")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_合作单位费用（无内部交易）").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_合作单位费用（无内部交易）").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_合作单位费用（无内部交易）").getBigDecimal("mar_amount"))
@@ -887,7 +1036,7 @@ public class FillingDataUtil {
 
 		// 海工爆破等合作费用
 		Entity hgbpdhzfyEntity = new Entity();
-		hgbpdhzfyEntity.set("serial_number", "5").set("id", "海工爆破等合作费用").set("name", "五、海工爆破等合作费用").set("parent", "-1").set("editable", "0")
+		hgbpdhzfyEntity.set("serial_number", "5").set("id", "海工爆破等合作费用").set("name", "五、海工爆破等合作费用").set("parent", "-1")
 				.set("jan_amount", financialStatementsMap.get("人工和用工成本（不含研发）_海工爆破等合作费用").getBigDecimal("jan_amount"))
 				.set("feb_amount", financialStatementsMap.get("人工和用工成本（不含研发）_海工爆破等合作费用").getBigDecimal("feb_amount"))
 				.set("mar_amount", financialStatementsMap.get("人工和用工成本（不含研发）_海工爆破等合作费用").getBigDecimal("mar_amount"))
@@ -904,7 +1053,7 @@ public class FillingDataUtil {
 
 		// 平均人工成本：在职
 		Entity pjrgcbzzEntity = new Entity();
-		pjrgcbzzEntity.set("serial_number", "6").set("id", "平均人工成本：在职").set("name", "六、平均人工成本：在职").set("parent", "-1").set("editable", "0");
+		pjrgcbzzEntity.set("serial_number", "6").set("id", "平均人工成本：在职").set("name", "六、平均人工成本：在职").set("parent", "-1");
 		if (personnelAndPerCapitaSituationMap.get("平均从业人员人数_平均在职人数").getBigDecimal("jan").compareTo(BigDecimal.ZERO) == 0) {
 			pjrgcbzzEntity.set("jan_amount", BigDecimal.ZERO);
 		} else {
@@ -974,7 +1123,7 @@ public class FillingDataUtil {
 
 		// 平均人工成本：退休返聘
 		Entity pjrgcbtxfpEntity = new Entity();
-		pjrgcbtxfpEntity.set("serial_number", "7").set("id", "平均人工成本：退休返聘").set("name", "七、平均人工成本：退休返聘").set("parent", "-1").set("editable", "0");
+		pjrgcbtxfpEntity.set("serial_number", "7").set("id", "平均人工成本：退休返聘").set("name", "七、平均人工成本：退休返聘").set("parent", "-1");
 		if (personnelAndPerCapitaSituationMap.get("平均从业人员人数_平均返聘人数").getBigDecimal("jan").compareTo(BigDecimal.ZERO) == 0) {
 			pjrgcbtxfpEntity.set("jan_amount", BigDecimal.ZERO);
 		} else {
@@ -1113,7 +1262,7 @@ public class FillingDataUtil {
 
 		// 平均人工成本：合作
 		Entity pjrgcbhzEntity = new Entity();
-		pjrgcbhzEntity.set("serial_number", "9").set("id", "平均人工成本：合作").set("name", "九、平均人工成本：合作").set("parent", "-1").set("editable", "0");
+		pjrgcbhzEntity.set("serial_number", "9").set("id", "平均人工成本：合作").set("name", "九、平均人工成本：合作").set("parent", "-1");
 		if (personnelAndPerCapitaSituationMap.get("平均从业人员人数_平均合作人数").getBigDecimal("jan").compareTo(BigDecimal.ZERO) == 0) {
 			pjrgcbhzEntity.set("jan_amount", BigDecimal.ZERO);
 		} else {
@@ -1275,7 +1424,7 @@ public class FillingDataUtil {
 	}
 
 	// 报表劳动生产率部分数据构建
-	private List<Entity> buildLaborProductivity(List<Entity> financialStatements, List<Entity> fullAperture, List<Entity> personnelAndPerCapitaSituation, Session dbSession, String budgetMainId)
+	private List<Entity> buildLaborProductivity(List<Entity> financialStatements, List<Entity> fullAperture, List<Entity> personnelAndPerCapitaSituation, Session dbSession, String budgetMainIds)
 			throws Exception {
 		List<Entity> laborProductivityList = new ArrayList<Entity>();
 		Map<String, Entity> financialStatementsMap = financialStatements.stream().collect(
@@ -1287,7 +1436,7 @@ public class FillingDataUtil {
 
 		// 折旧
 		Entity zjEntity = new Entity();
-		zjEntity.set("serial_number", "2.1").set("id", "折旧").set("name", "折旧").set("parent", "劳动生产总值（增加值）").set("editable", "0")
+		zjEntity.set("serial_number", "2.1").set("id", "折旧").set("name", "折旧").set("parent", "劳动生产总值（增加值）")
 				.set("jan_amount", NumberUtil.add(financialStatementsMap.get("生产运营-费用_折旧").getBigDecimal("jan_amount"), financialStatementsMap.get("生产运营-成本_折旧").getBigDecimal("jan_amount")))
 				.set("feb_amount", NumberUtil.add(financialStatementsMap.get("生产运营-费用_折旧").getBigDecimal("feb_amount"), financialStatementsMap.get("生产运营-成本_折旧").getBigDecimal("feb_amount")))
 				.set("mar_amount", NumberUtil.add(financialStatementsMap.get("生产运营-费用_折旧").getBigDecimal("mar_amount"), financialStatementsMap.get("生产运营-成本_折旧").getBigDecimal("mar_amount")))
@@ -1309,7 +1458,6 @@ public class FillingDataUtil {
 				.set("id", "劳动者报酬")
 				.set("name", "劳动者报酬")
 				.set("parent", "劳动生产总值（增加值）")
-				.set("editable", "0")
 				.set("jan_amount",
 						NumberUtil.add(fullApertureMap.get("-1_一、在职人员人工成本").getBigDecimal("jan_amount"), fullApertureMap.get("-1_二、退休返聘实习人员费用").getBigDecimal("jan_amount"),
 								fullApertureMap.get("-1_三、派遣人员薪酬").getBigDecimal("jan_amount")))
@@ -1352,19 +1500,37 @@ public class FillingDataUtil {
 
 		// 盈余
 		Entity yyEntity = new Entity();
-		yyEntity.set("serial_number", "2.3").set("id", "盈余").set("name", "盈余").set("parent", "劳动生产总值（增加值）").set("editable", "0")
-				.set("jan_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("jan_amount")).set("feb_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("feb_amount"))
-				.set("mar_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("mar_amount")).set("apr_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("apr_amount"))
-				.set("may_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("may_amount")).set("jun_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("jun_amount"))
-				.set("jul_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("jul_amount")).set("aug_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("aug_amount"))
-				.set("sep_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("sep_amount")).set("oct_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("oct_amount"))
-				.set("nov_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("nov_amount")).set("dec_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("dec_amount"))
-				.set("total_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("total_amount"));
+		yyEntity.set("serial_number", "2.3").set("id", "盈余").set("name", "盈余").set("parent", "劳动生产总值（增加值）").set("jan_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("jan_amount"))
+				.set("feb_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("feb_amount")).set("mar_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("mar_amount"))
+				.set("apr_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("apr_amount")).set("may_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("may_amount"))
+				.set("jun_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("jun_amount")).set("jul_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("jul_amount"))
+				.set("aug_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("aug_amount")).set("sep_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("sep_amount"))
+				.set("oct_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("oct_amount")).set("nov_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("nov_amount"))
+				.set("dec_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("dec_amount")).set("total_amount", financialStatementsMap.get("-1_六、利润总额").getBigDecimal("total_amount"));
 
 		// 生产税净额
-		String queryScsjeSql = "SELECT *, labor_name AS name, '劳动生产总值（增加值）' AS parent, '1' AS editable FROM zh_caiwu_budget_filling_productivity WHERE budget_main_id = ? AND labor_name = '生产税净额'";
-		Entity scsjeEntity = dbSession.queryOne(queryScsjeSql, budgetMainId);
-		scsjeEntity.set("serial_number", "2.4");
+		String queryScsjeSql = "SELECT * FROM zh_caiwu_budget_filling_productivity WHERE labor_name = '生产税净额' AND budget_main_id IN  (" + budgetMainIds + ")";
+		List<Entity> scsjeDataList = dbSession.query(queryScsjeSql);
+		Entity scsjeEntity = new Entity();
+		scsjeEntity.set("serial_number", "2.4").set("id", "生产税净额").set("name", "生产税净额").set("parent", "劳动生产总值（增加值）").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+				.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO)
+				.set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO)
+				.set("total_amount", BigDecimal.ZERO);
+		for (Entity entity : scsjeDataList) {
+			scsjeEntity.set("jan_amount", NumberUtil.add(scsjeEntity.getBigDecimal("jan_amount"), entity.getBigDecimal("jan_amount")));
+			scsjeEntity.set("feb_amount", NumberUtil.add(scsjeEntity.getBigDecimal("feb_amount"), entity.getBigDecimal("feb_amount")));
+			scsjeEntity.set("mar_amount", NumberUtil.add(scsjeEntity.getBigDecimal("mar_amount"), entity.getBigDecimal("mar_amount")));
+			scsjeEntity.set("apr_amount", NumberUtil.add(scsjeEntity.getBigDecimal("apr_amount"), entity.getBigDecimal("apr_amount")));
+			scsjeEntity.set("may_amount", NumberUtil.add(scsjeEntity.getBigDecimal("may_amount"), entity.getBigDecimal("may_amount")));
+			scsjeEntity.set("jun_amount", NumberUtil.add(scsjeEntity.getBigDecimal("jun_amount"), entity.getBigDecimal("jun_amount")));
+			scsjeEntity.set("jul_amount", NumberUtil.add(scsjeEntity.getBigDecimal("jul_amount"), entity.getBigDecimal("jul_amount")));
+			scsjeEntity.set("aug_amount", NumberUtil.add(scsjeEntity.getBigDecimal("aug_amount"), entity.getBigDecimal("aug_amount")));
+			scsjeEntity.set("sep_amount", NumberUtil.add(scsjeEntity.getBigDecimal("sep_amount"), entity.getBigDecimal("sep_amount")));
+			scsjeEntity.set("oct_amount", NumberUtil.add(scsjeEntity.getBigDecimal("oct_amount"), entity.getBigDecimal("oct_amount")));
+			scsjeEntity.set("nov_amount", NumberUtil.add(scsjeEntity.getBigDecimal("nov_amount"), entity.getBigDecimal("nov_amount")));
+			scsjeEntity.set("dec_amount", NumberUtil.add(scsjeEntity.getBigDecimal("dec_amount"), entity.getBigDecimal("dec_amount")));
+			scsjeEntity.set("total_amount", NumberUtil.add(scsjeEntity.getBigDecimal("total_amount"), entity.getBigDecimal("total_amount")));
+		}
 
 		// 劳动生产总值（增加值）
 		Entity ldsczzEntity = new Entity();
@@ -1373,17 +1539,16 @@ public class FillingDataUtil {
 				.set("id", "劳动生产总值（增加值）")
 				.set("name", "二、劳动生产总值（增加值）")
 				.set("parent", "-1")
-				.set("editable", "0")
 				.set("jan_amount",
 						NumberUtil.add(zjEntity.getBigDecimal("jan_amount"), ldzbcEntity.getBigDecimal("jan_amount"), yyEntity.getBigDecimal("jan_amount"), scsjeEntity.getBigDecimal("jan_amount")))
 				.set("feb_amount",
 						NumberUtil.add(zjEntity.getBigDecimal("feb_amount"), ldzbcEntity.getBigDecimal("feb_amount"), yyEntity.getBigDecimal("feb_amount"), scsjeEntity.getBigDecimal("feb_amount")))
 				.set("mar_amount",
-						NumberUtil.add(zjEntity.getBigDecimal("mar_amount"), ldzbcEntity.getBigDecimal("mar_amount"), yyEntity.getBigDecimal("mar_amount"), scsjeEntity.getBigDecimal("mar_amount")))
+						NumberUtil.add(zjEntity.getBigDecimal("jan_amount"), ldzbcEntity.getBigDecimal("mar_amount"), yyEntity.getBigDecimal("mar_amount"), scsjeEntity.getBigDecimal("mar_amount")))
 				.set("apr_amount",
 						NumberUtil.add(zjEntity.getBigDecimal("apr_amount"), ldzbcEntity.getBigDecimal("apr_amount"), yyEntity.getBigDecimal("apr_amount"), scsjeEntity.getBigDecimal("apr_amount")))
 				.set("may_amount",
-						NumberUtil.add(zjEntity.getBigDecimal("may_amount"), ldzbcEntity.getBigDecimal("may_amount"), yyEntity.getBigDecimal("may_amount"), scsjeEntity.getBigDecimal("may_amount")))
+						NumberUtil.add(zjEntity.getBigDecimal("jan_amount"), ldzbcEntity.getBigDecimal("may_amount"), yyEntity.getBigDecimal("jan_amount"), scsjeEntity.getBigDecimal("may_amount")))
 				.set("jun_amount",
 						NumberUtil.add(zjEntity.getBigDecimal("jun_amount"), ldzbcEntity.getBigDecimal("jun_amount"), yyEntity.getBigDecimal("jun_amount"), scsjeEntity.getBigDecimal("jun_amount")))
 				.set("jul_amount",
@@ -1403,17 +1568,35 @@ public class FillingDataUtil {
 								scsjeEntity.getBigDecimal("total_amount")));
 
 		// 公司生产税净额总数
-		String queryGsscsjezsSql = "SELECT *, labor_name AS name, '生产税净额' AS parent, '1' AS editable FROM zh_caiwu_budget_filling_productivity WHERE budget_main_id = ? AND labor_name = '公司生产税净额总数'";
-		Entity gsscsjezsEntity = dbSession.queryOne(queryGsscsjezsSql, budgetMainId);
-		gsscsjezsEntity.set("serial_number", "2.4.1");
-		gsscsjezsEntity.set("parent", scsjeEntity.getStr("id"));
+		String queryGsscsjezsSql = "SELECT * FROM zh_caiwu_budget_filling_productivity WHERE labor_name = '公司生产税净额总数' AND budget_main_id IN  (" + budgetMainIds + ")";
+		List<Entity> gsscsjezsDataList = dbSession.query(queryGsscsjezsSql);
+		Entity gsscsjezsEntity = new Entity();
+		gsscsjezsEntity.set("serial_number", "2.4.1").set("id", "公司生产税净额总数").set("name", "公司生产税净额总数").set("parent", "生产税净额").set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+				.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO)
+				.set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO)
+				.set("total_amount", BigDecimal.ZERO);
+		for (Entity entity : gsscsjezsDataList) {
+			gsscsjezsEntity.set("jan_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("jan_amount"), entity.getBigDecimal("jan_amount")));
+			gsscsjezsEntity.set("feb_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("feb_amount"), entity.getBigDecimal("feb_amount")));
+			gsscsjezsEntity.set("mar_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("mar_amount"), entity.getBigDecimal("mar_amount")));
+			gsscsjezsEntity.set("apr_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("apr_amount"), entity.getBigDecimal("apr_amount")));
+			gsscsjezsEntity.set("may_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("may_amount"), entity.getBigDecimal("may_amount")));
+			gsscsjezsEntity.set("jun_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("jun_amount"), entity.getBigDecimal("jun_amount")));
+			gsscsjezsEntity.set("jul_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("jul_amount"), entity.getBigDecimal("jul_amount")));
+			gsscsjezsEntity.set("aug_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("aug_amount"), entity.getBigDecimal("aug_amount")));
+			gsscsjezsEntity.set("sep_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("sep_amount"), entity.getBigDecimal("sep_amount")));
+			gsscsjezsEntity.set("oct_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("oct_amount"), entity.getBigDecimal("oct_amount")));
+			gsscsjezsEntity.set("nov_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("nov_amount"), entity.getBigDecimal("nov_amount")));
+			gsscsjezsEntity.set("dec_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("dec_amount"), entity.getBigDecimal("dec_amount")));
+			gsscsjezsEntity.set("total_amount", NumberUtil.add(gsscsjezsEntity.getBigDecimal("total_amount"), entity.getBigDecimal("total_amount")));
+		}
 
 		// 收入占比
 		Entity srzbEntity = new Entity();
-		srzbEntity.set("serial_number", "2.4.2").set("id", "收入占比").set("name", "收入占比").set("parent", scsjeEntity.getStr("id")).set("editable", "0").set("jan_amount", BigDecimal.ZERO)
-				.set("feb_amount", BigDecimal.ZERO).set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO)
-				.set("jul_amount", BigDecimal.ZERO).set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO)
-				.set("dec_amount", BigDecimal.ZERO).set("total_amount", BigDecimal.ZERO);
+		srzbEntity.set("serial_number", "2.4.2").set("id", "收入占比").set("name", "收入占比").set("parent", scsjeEntity.getStr("id")).set("jan_amount", BigDecimal.ZERO).set("feb_amount", BigDecimal.ZERO)
+				.set("mar_amount", BigDecimal.ZERO).set("apr_amount", BigDecimal.ZERO).set("may_amount", BigDecimal.ZERO).set("jun_amount", BigDecimal.ZERO).set("jul_amount", BigDecimal.ZERO)
+				.set("aug_amount", BigDecimal.ZERO).set("sep_amount", BigDecimal.ZERO).set("oct_amount", BigDecimal.ZERO).set("nov_amount", BigDecimal.ZERO).set("dec_amount", BigDecimal.ZERO)
+				.set("total_amount", BigDecimal.ZERO);
 		if (financialStatementsMap.get("-1_一、总收入").getBigDecimal("total_amount").compareTo(BigDecimal.ZERO) != 0) {
 			srzbEntity.set("jan_amount", NumberUtil.div(financialStatementsMap.get("-1_一、总收入").getBigDecimal("jan_amount"), financialStatementsMap.get("-1_一、总收入").getBigDecimal("total_amount"), 2))
 					.set("feb_amount", NumberUtil.div(financialStatementsMap.get("-1_一、总收入").getBigDecimal("feb_amount"), financialStatementsMap.get("-1_一、总收入").getBigDecimal("total_amount"), 2))
@@ -1432,7 +1615,7 @@ public class FillingDataUtil {
 
 		// 平均从业人员人数
 		Entity pjryryrsEntity = new Entity();
-		pjryryrsEntity.set("serial_number", "3").set("id", "平均从业人员人数").set("name", "三、平均从业人员人数").set("parent", "-1").set("editable", "0")
+		pjryryrsEntity.set("serial_number", "3").set("id", "平均从业人员人数").set("name", "三、平均从业人员人数").set("parent", "-1")
 				.set("jan_amount", personnelAndPerCapitaSituationMap.get("-1_一、平均从业人员人数").getBigDecimal("jan"))
 				.set("feb_amount", personnelAndPerCapitaSituationMap.get("-1_一、平均从业人员人数").getBigDecimal("feb"))
 				.set("mar_amount", personnelAndPerCapitaSituationMap.get("-1_一、平均从业人员人数").getBigDecimal("mar"))
@@ -1449,7 +1632,7 @@ public class FillingDataUtil {
 
 		// 劳动生产率
 		Entity ldsclEntity = new Entity();
-		ldsclEntity.set("serial_number", "1").set("id", "劳动生产率").set("name", "一、劳动生产率").set("parent", "-1").set("editable", "0");
+		ldsclEntity.set("serial_number", "1").set("id", "劳动生产率").set("name", "一、劳动生产率").set("parent", "-1");
 		if (pjryryrsEntity.getBigDecimal("jan_amount").compareTo(BigDecimal.ZERO) == 0) {
 			ldsclEntity.set("jan_amount", BigDecimal.ZERO);
 		} else {
@@ -1528,4 +1711,51 @@ public class FillingDataUtil {
 
 		return laborProductivityList;
 	}
+
+	// 分组并汇总
+	private List<Entity> groupAndSum(List<Entity> entities, String groupField, String parent, String category) {
+		Map<String, List<Entity>> groupedMap = entities.stream().collect(Collectors.groupingBy(entity -> entity.getStr(groupField), Collectors.toList()));
+		Map<String, List<Entity>> sortMap = this.sortMapByFirstEntitySorting(groupedMap);
+		return sortMap.entrySet().stream().map(entry -> {
+			String ledgerAccountId = entry.getKey();
+			List<Entity> groupEntities = entry.getValue();
+			Entity result = new Entity();
+			result.set("id", category + "_" + ledgerAccountId);
+			result.set("name", groupEntities.get(0).getStr("name"));
+			result.set("parent", parent);
+			result.set("jan_amount", sumBigDecimalAmount(groupEntities, "jan_amount"));
+			result.set("feb_amount", sumBigDecimalAmount(groupEntities, "feb_amount"));
+			result.set("mar_amount", sumBigDecimalAmount(groupEntities, "mar_amount"));
+			result.set("apr_amount", sumBigDecimalAmount(groupEntities, "apr_amount"));
+			result.set("may_amount", sumBigDecimalAmount(groupEntities, "may_amount"));
+			result.set("jun_amount", sumBigDecimalAmount(groupEntities, "jun_amount"));
+			result.set("jul_amount", sumBigDecimalAmount(groupEntities, "jul_amount"));
+			result.set("aug_amount", sumBigDecimalAmount(groupEntities, "aug_amount"));
+			result.set("sep_amount", sumBigDecimalAmount(groupEntities, "sep_amount"));
+			result.set("oct_amount", sumBigDecimalAmount(groupEntities, "oct_amount"));
+			result.set("nov_amount", sumBigDecimalAmount(groupEntities, "nov_amount"));
+			result.set("dec_amount", sumBigDecimalAmount(groupEntities, "dec_amount"));
+			result.set("total_amount", sumBigDecimalAmount(groupEntities, "total_amount"));
+			return result;
+		}).collect(Collectors.toList());
+	}
+
+	// 重新排序
+	private Map<String, List<Entity>> sortMapByFirstEntitySorting(Map<String, List<Entity>> groupedMap) {
+		if (groupedMap == null || groupedMap.isEmpty()) {
+			return new LinkedHashMap<>();
+		}
+		// 对原Map的entry进行排序，然后收集到LinkedHashMap中
+		return groupedMap.entrySet().stream().sorted((entry1, entry2) -> {
+			int sorting1 = entry1.getValue().get(0).getInt("sorting");
+			int sorting2 = entry2.getValue().get(0).getInt("sorting");
+			return Integer.compare(sorting1, sorting2);
+		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+	}
+
+	// 汇总指定字段
+	private BigDecimal sumBigDecimalAmount(List<Entity> entities, String fieldName) {
+		return entities.stream().map(entity -> entity.getBigDecimal(fieldName)).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
 }

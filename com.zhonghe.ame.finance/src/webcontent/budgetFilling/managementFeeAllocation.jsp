@@ -45,7 +45,6 @@ body {
 		var form = new nui.Form("configForm");
 
 		function initData(data) {
-			console.log(data);
 			if (data.viewStatus) {
 				nui.get("shareProportion").setEnabled(false);
 				$("#saveBtn").hide();

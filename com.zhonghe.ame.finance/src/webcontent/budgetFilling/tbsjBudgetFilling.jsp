@@ -54,7 +54,7 @@ html,body {
 				<div property="columns">
 					<div field="serial_number" width="50" headerAlign="center" align="center">序号</div>
 					<div name="name" field="name" width="220" headerAlign="center" align="left">填报项</div>
-					<div field="average_actual" width="80" headerAlign="center" align="center" dataType="currency">合计/平均</div>
+					<div field="average_actual" width="80" headerAlign="center" align="center" dataType="currency">平均实际</div>
 					<div field="jan" width="80" headerAlign="center" align="center" dataType="currency">
 						1月
 						<input property="editor" class="mini-spinner" allowLimitValue="false" value="0" style="width: 100%;" showButton="false" format="n2" />
