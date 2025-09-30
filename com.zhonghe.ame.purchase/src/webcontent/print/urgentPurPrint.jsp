@@ -62,7 +62,7 @@
 	    <div class="layui-col-xs6">
 		    <label class="layui-form-label">申请人</label>
 		    <div class="layui-input-block">
-		      <input type="text" name="proAppName" disabled="disabled" class="layui-input">
+		      <input type="text" name="empname" disabled="disabled" class="layui-input">
 		    </div>
 	    </div>
 	    <div class="layui-col-xs6">
