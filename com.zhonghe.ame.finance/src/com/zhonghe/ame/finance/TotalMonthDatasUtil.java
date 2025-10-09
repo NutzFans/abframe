@@ -1757,5 +1757,5 @@ public class TotalMonthDatasUtil {
 	private BigDecimal sumBigDecimalAmount(List<Entity> entities, String fieldName) {
 		return entities.stream().map(entity -> entity.getBigDecimal(fieldName)).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
-
+	
 }

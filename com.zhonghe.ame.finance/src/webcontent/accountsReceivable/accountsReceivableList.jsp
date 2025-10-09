@@ -38,6 +38,10 @@ html,body {
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 					<table>
 						<tr>
+							<td style="width: 60px; text-align: right;">年份:</td>
+							<td>
+								<input name="critria._expr[10].invoiceYear" class="nui-textbox" style="width: 110px" />
+							</td>
 							<td style="width: 70px; text-align: right;">合同编号：</td>
 							<td>
 								<input name="critria._expr[1]._value" class="nui-textbox" style="width: 200px" />
@@ -61,6 +65,12 @@ html,body {
 							</td>
 						</tr>
 						<tr>
+							<td style="width: 80px; text-align: right;">集团内/外：</td>
+							<td>
+								<input id="headquarterGroup" name="critria._expr[5]._value" class="nui-combobox" textField="dictName" valueField="dictID" showNullItem="true" style="width: 110px" />
+								<input name="critria._expr[5]._property" value="headquarterGroup" class="nui-hidden" />
+								<input name="critria._expr[5]._op" value="in" class="nui-hidden" />
+							</td>
 							<td style="width: 90px; text-align: right;">合同承办单位：</td>
 							<td>
 								<input id="secondaryOrg" name="critria._expr[6].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" showNullItem="true" />
@@ -71,11 +81,7 @@ html,body {
 								<input class="nui-hidden" name="critria._expr[4]._property" value="payerName" />
 								<input class="nui-hidden" name="critria._expr[4]._op" value="like" />
 							</td>
-							<td style="width: 80px; text-align: right;">集团内/外：</td>
-							<td>
-								<input id="headquarterGroup" name="critria._expr[5]._value" class="nui-combobox" textField="dictName" valueField="dictID" showNullItem="true" style="width: 110px" />
-								<input name="critria._expr[5]._property" value="headquarterGroup" class="nui-hidden" />
-								<input name="critria._expr[5]._op" value="in" class="nui-hidden" />
+							<td colspan="2">
 								<a class="nui-button" id="tzSearch" iconCls="icon-search" onclick="tzSearch()">查询</a>
 								<a class="nui-button" id="tzReset" iconCls="icon-reload" onclick="tzReset()">重置</a>
 								<a class="nui-button" id="tzExport" iconCls="icon-download" onclick="tzExport()">导出</a>

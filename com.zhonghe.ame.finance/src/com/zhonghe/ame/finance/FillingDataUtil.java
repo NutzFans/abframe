@@ -1528,4 +1528,5 @@ public class FillingDataUtil {
 
 		return laborProductivityList;
 	}
+
 }

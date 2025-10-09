@@ -108,6 +108,7 @@ html,body {
 					<input name="criteria._expr[4].contractName" class="nui-textbox" width="200" emptyText="合同名称(回车查询)" onvaluechanged="statisticsSnapshotDetailSearch" />
 					<input name="criteria._expr[5].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" emptyText="集团内外" width="75" onvaluechanged="statisticsSnapshotDetailSearch" />
 					<input name="criteria._expr[6].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" emptyText="风险等级" width="75" onvaluechanged="statisticsSnapshotDetailSearch" />
+					<a class="nui-button" id="srtjmxExport" iconCls="icon-download" onclick="srtjmxExport()">导出</a>
 				</div>
 				<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
 					<span style="font-size: 14px; font-weight: bold;">考核收入统计明细</span>
@@ -148,6 +149,12 @@ html,body {
 			</div>
 		</div>
 	</div>
+	
+	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		var reqId ='<%=request.getParameter("id")%>';
@@ -231,6 +238,17 @@ html,body {
 			statisticsSnapshotDetailGrid.sortBy("contractStauts", "asc");
 			statisticsSnapshotDetailGrid.load(searchData);
 		}
+		
+		function srtjmxExport(){
+			var data = statisticsSnapshotDetailForm.getData();
+			console.log(data);
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.kaohe.incomeStatistics.exportStatisticsSnapshotDetailExcelSec.biz.ext",
+				"fileName" : "考核收入统计明细"
+			})
+		}			
+		
 	</script>
 
 </body>
