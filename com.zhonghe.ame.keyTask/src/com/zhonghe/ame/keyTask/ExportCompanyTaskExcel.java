@@ -1,0 +1,230 @@
+package com.zhonghe.ame.keyTask;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import cn.hutool.core.lang.Console;
+import cn.hutool.db.Entity;
+import cn.hutool.db.Session;
+
+import com.eos.common.connection.DataSourceHelper;
+import com.eos.system.annotation.Bizlet;
+
+import commonj.sdo.DataObject;
+
+@Bizlet("公司重点任务导出")
+public class ExportCompanyTaskExcel {
+
+	@Bizlet("导出Excel")
+	public String export(DataObject[] companyTasks) throws Exception {
+		if (companyTasks.length > 0) {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			Workbook workbook = new XSSFWorkbook();
+			// 创建单元格样式
+			CellStyle headerStyle = this.createHeaderStyle(workbook);
+			CellStyle cellStyle = this.createCellStyle(workbook);
+
+			String queryTaskItemSql = "SELECT zktci.*, zkcip.* FROM zh_key_task_company_item AS zktci LEFT JOIN zh_key_task_company_item_process AS zkcip ON zktci.id = zkcip.item_id WHERE zktci.main_id = ?";
+			for (int i = 0; i < companyTasks.length; i++) {
+				String mainId = companyTasks[i].getString("id");
+				String secOrgName = companyTasks[i].getString("secondaryOrgname");
+				List<Entity> taskItemList = dbSession.query(queryTaskItemSql, mainId);
+				Sheet sheet = workbook.createSheet(secOrgName);
+
+				// 设置单元格宽度
+				this.setColumnWidths(sheet);
+
+				// 冻结前3列（参数含义：冻结列数，冻结行数，右侧滚动区域起始列，下方滚动区域起始行）
+				sheet.createFreezePane(3, 0, 3, 0);
+
+				// 创建表头行
+				Row headerRow = sheet.createRow(0);
+				this.createHeaderRow(headerRow, headerStyle);
+
+				// 按“行动计划编号+任务名称+年度目标”分组
+				Map<String, List<Entity>> groupTaskItem = taskItemList.stream().collect(
+						Collectors.groupingBy(taskItem -> taskItem.getStr("action_plan_number") + "|" + taskItem.getStr("task_name") + "|" + taskItem.getStr("annual_target")));
+
+				// 遍历分组，每组内部按“时间节点”升序排序
+				int rowIndex = 1; // 从第1行开始（跳过表头）
+				for (Map.Entry<String, List<Entity>> entry : groupTaskItem.entrySet()) {
+					List<Entity> group = entry.getValue();
+					// 核心：对当前分组按“时间节点”升序排序
+					Collections.sort(group, new Comparator<Entity>() {
+						@Override
+						public int compare(Entity o1, Entity o2) {
+							return Integer.compare(o1.getInt("task_month"), o2.getInt("task_month")); // 升序（小→大）
+						}
+					});
+					int groupSize = group.size(); // 排序后的数据量
+					// 合并单元格（仅当分组记录数>1时）
+					if (groupSize > 1) {
+						// 合并“行动计划编号”列（第0列）
+						sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + groupSize - 1, 0, 0));
+						// 合并“任务名称”列（第1列）
+						sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + groupSize - 1, 1, 1));
+						// 合并“年度目标”列（第2列）
+						sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + groupSize - 1, 2, 2));
+					}
+					// 填充分组内数据（已按时间节点排序）
+					for (int j = 0; j < groupSize; j++) {
+						Entity taskItem = group.get(j);
+						Row row = sheet.createRow(rowIndex + j);
+						// 合并列（0、1、2列）：无论是否为第1行，都创建单元格并应用样式（确保边框完整）
+						// 行动计划编号（第0列）
+						Cell cell0 = row.createCell(0);
+						if (j == 0) { // 仅第1行填充内容
+							cell0.setCellValue(taskItem.getStr("action_plan_number"));
+						}
+						cell0.setCellStyle(cellStyle); // 所有行的该列都应用边框样式
+
+						// 任务名称（第1列）
+						Cell cell1 = row.createCell(1);
+						if (j == 0) {
+							cell1.setCellValue(taskItem.getStr("task_name"));
+						}
+						cell1.setCellStyle(cellStyle);
+
+						// 年度目标（第2列）
+						Cell cell2 = row.createCell(2);
+						if (j == 0) {
+							cell2.setCellValue(taskItem.getStr("annual_target"));
+						}
+						cell2.setCellStyle(cellStyle);
+						// 非合并列每行填充
+						// 时间节点（第3列）
+						Cell cell3 = row.createCell(3);
+						cell3.setCellValue(taskItem.getStr("task_month") + "月");
+						cell3.setCellStyle(cellStyle);
+						// 分解计划（第4列）
+						Cell cell4 = row.createCell(4);
+						cell4.setCellValue(taskItem.getStr("task_plan_name"));
+						cell4.setCellStyle(cellStyle);
+						// 任务状态（第5列）
+						Cell cell5 = row.createCell(5);
+						cell5.setCellValue(taskItem.getStr("task_status"));
+						cell5.setCellStyle(cellStyle);
+						// 风险状态（第6列）
+						Cell cell6 = row.createCell(6);
+						cell6.setCellValue(taskItem.getStr("risk_status"));
+						cell6.setCellStyle(cellStyle);
+						// 进展情况（第7列）
+						Cell cell7 = row.createCell(7);
+						cell7.setCellValue(taskItem.getStr("task_progress"));
+						cell7.setCellStyle(cellStyle);
+						// 风险及措施（第8列）
+						Cell cell8 = row.createCell(8);
+						cell8.setCellValue(taskItem.getStr("risk_measures"));
+						cell8.setCellStyle(cellStyle);
+					}
+					rowIndex += groupSize; // 移动到下一分组起始行
+				}
+
+			}
+			// 保存文件
+			String filePath = saveWorkbook(workbook);
+			Console.log("Excel导出成功，路径：{}", filePath);
+			return filePath;
+		} else {
+			return null;
+		}
+	}
+
+	// 创建表头样式
+	private CellStyle createHeaderStyle(Workbook workbook) {
+		CellStyle style = workbook.createCellStyle();
+		Font font = workbook.createFont();
+		font.setBold(true);
+		style.setFont(font);
+		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		style.setAlignment(HorizontalAlignment.CENTER);
+		style.setVerticalAlignment(VerticalAlignment.CENTER);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);
+		return style;
+	}
+
+	// 创建单元格样式
+	private CellStyle createCellStyle(Workbook workbook) {
+		CellStyle style = workbook.createCellStyle();
+		style.setAlignment(HorizontalAlignment.LEFT);
+		style.setVerticalAlignment(VerticalAlignment.CENTER);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);
+		// 开启自动换行
+		style.setWrapText(true);
+		return style;
+	}
+
+	// 设置所有列的宽度
+	private void setColumnWidths(Sheet sheet) {
+		// 列索引从0开始，宽度值 = 字符数 * 256（1/256个字符宽度）
+		// 0: 行动计划编号
+		sheet.setColumnWidth(0, 30 * 256);
+		// 1: 任务名称
+		sheet.setColumnWidth(1, 50 * 256);
+		// 2: 年度目标
+		sheet.setColumnWidth(2, 50 * 256);
+		// 3：时间节点
+		sheet.setColumnWidth(3, 10 * 256);
+		// 4：分解计划
+		sheet.setColumnWidth(4, 50 * 256);
+		// 5：任务状态
+		sheet.setColumnWidth(5, 10 * 256);
+		// 6：风险状态
+		sheet.setColumnWidth(6, 10 * 256);
+		// 7：进展情况
+		sheet.setColumnWidth(7, 50 * 256);
+		// 8：风险及措施
+		sheet.setColumnWidth(8, 50 * 256);
+	}
+
+	// 创建表头行
+	private void createHeaderRow(Row headerRow, CellStyle headerStyle) {
+		String[] headers = { "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施" };
+		for (int i = 0; i < headers.length; i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(headers[i]);
+			cell.setCellStyle(headerStyle);
+		}
+	}
+
+	// 保存Workbook到文件
+	private String saveWorkbook(Workbook workbook) throws Exception {
+		// 创建临时文件
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String datetimeString = format.format(new Date());
+		File tempFile = File.createTempFile("公司重点任务导出_" + datetimeString, ".xlsx");
+		try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+			workbook.write(fos);
+		}
+		return tempFile.getAbsolutePath();
+	}
+
+}

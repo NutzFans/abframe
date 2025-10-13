@@ -39,7 +39,7 @@ html,body {
 			</div>
 		</fieldset>
 		<p>
-		<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 93%;" showPager="false" url="com.zhonghe.ame.keyTask.company.queryItemListByMainId.biz.ext" dataField="itemDatas"
+		<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 92%;" showPager="false" url="com.zhonghe.ame.keyTask.company.queryItemListByMainId.biz.ext" dataField="itemDatas"
 			allowCellSelect="true" enableHotTrack="false" allowRowSelect="false" allowCellWrap="true" frozenStartColumn="0" frozenEndColumn="2">
 			<div property="columns">
 				<div field="actionPlanNumber" name="actionPlanNumber" width="200" align="center" headerAlign="center">行动计划编号</div>

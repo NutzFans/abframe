@@ -34,17 +34,28 @@ html,body {
 					<tr>
 						<td style="width: 100px; text-align: right;">资产所属单位：</td>
 						<td>
-							<input id="secondaryOrg" name="criteria._expr[1].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 220px" showNullItem="true" />
+							<input id="secondaryOrg" name="criteria._expr[1].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 240px" showNullItem="true" />
+						</td>
+						<td style="width: 70px; text-align: right;">资产名称：</td>
+						<td>
+							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 240px" />
+							<input class="nui-hidden" name="criteria._expr[3]._property" value="name" />
+							<input class="nui-hidden" name="criteria._expr[3]._op" value="like" />
 						</td>
 						<td style="width: 70px; text-align: right;">资产分类：</td>
 						<td>
 							<input name="criteria._expr[2].clazz" class="nui-dictcombobox" dictTypeId="ZH_CW_CQZCFL" showNullItem="true" nullItemText="全部" style="width: 100px" />
 						</td>
-						<td style="width: 70px; text-align: right;">资产名称：</td>
-						<td>
-							<input name="criteria._expr[3]._value" class="nui-textbox" style="width: 220px" />
-							<input class="nui-hidden" name="criteria._expr[3]._property" value="name" />
-							<input class="nui-hidden" name="criteria._expr[3]._op" value="like" />
+					</tr>
+					<tr>
+						<td style="width: 90px; text-align: right;">创建日期：</td>
+						<td style="width: 245px">
+							<input class="nui-hidden" name="criteria._expr[5]._op" value="between" />
+							<input class="nui-hidden" name="criteria._expr[5]._pattern" value="yyyy-MM-dd" />
+							<input class="nui-hidden" name="criteria._expr[5]._property" value="createTime" />
+							<input class="nui-datepicker" name="criteria._expr[5]._min" style="width: 110px" />
+							<span>至</span>
+							<input class="nui-datepicker" name="criteria._expr[5]._max" style="width: 110px" />
 						</td>
 						<td style="width: 90px; text-align: right;">采购/装修日期:</td>
 						<td style="width: 245px">
@@ -55,7 +66,7 @@ html,body {
 							<span>至</span>
 							<input class="nui-datepicker" name="criteria._expr[4]._max" style="width: 110px" />
 						</td>
-						<td>
+						<td colspan="2">
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
 						</td>
@@ -81,6 +92,7 @@ html,body {
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
+					<div field="createTime" width="80" headerAlign="center" allowSort="true" align="center">创建时间</div>
 					<div field="createUsername" width="60" headerAlign="center" allowSort="true" align="center">创建人</div>
 					<div field="secondaryOrgname" width="190" headerAlign="center" allowSort="true" align="center">资产所属单位</div>
 					<div field="department" width="190" headerAlign="center" allowSort="true" align="center">资产所属部门</div>
@@ -90,7 +102,7 @@ html,body {
 					<div field="quantity" width="80" headerAlign="center" allowSort="true" align="center">数量</div>
 					<div field="price" width="100" headerAlign="center" allowSort="true" align="center" dataType="currency">单价(元)</div>
 					<div field="total" width="100" headerAlign="center" allowSort="true" align="center" dataType="currency">总价预算</div>
-					<div field="taxRate" width="100" headerAlign="center" allowSort="true" align="center" renderer="ZH_CW_CQZCSL">税率</div>
+					<div field="taxRate" width="60" headerAlign="center" allowSort="true" align="center" renderer="ZH_CW_CQZCSL">税率</div>
 					<div field="amountTax" width="100" headerAlign="center" allowSort="true" align="center" dataType="currency">不含税金额</div>
 					<div field="depreciationMonth" width="100" headerAlign="center" allowSort="true" align="center">总折旧(月)</div>
 					<div field="depreciationRate" width="100" headerAlign="center" allowSort="true" align="center">月折旧/摊销率</div>
