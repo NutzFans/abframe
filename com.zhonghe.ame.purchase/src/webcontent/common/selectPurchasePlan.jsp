@@ -122,8 +122,8 @@
 		function onOk() {
 			var row = grid.getSelecteds();
 			for (var i = 0; i < row.length; i++) {
-				if (row[i].sumamount <= 0) {
-					showTips("存在可立项金额为0的计划，请重新选择", "danger");
+				if (row[i].sumamount < 0) {
+					showTips("存在可立项金额小于0的计划，请重新选择", "danger");
 					return;
 				}
 			}
