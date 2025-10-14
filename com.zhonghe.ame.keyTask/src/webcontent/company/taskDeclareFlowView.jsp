@@ -11,6 +11,12 @@ html,body {
 	height: 100%;
 	overflow: hidden;
 }
+
+/* 强制长单词/字符自动断行 */
+.mini-grid-cell-inner {
+    word-wrap: break-word !important; /* 英文单词内断行 */
+    word-break: break-all !important; /* 中文/英文强制断行 */
+}
 </style>
 <head>
 <title>任务申报流程 - 流程查看</title>
@@ -43,7 +49,7 @@ html,body {
 			<legend>任务及分解计划</legend>
 			<div style="width: 99%; margin: 0 auto;">
 				<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 650px;" showPager="false" url="com.zhonghe.ame.keyTask.company.queryItemListByMainId.biz.ext" dataField="itemDatas"
-					allowCellSelect="true" enableHotTrack="false" allowRowSelect="false" allowCellWrap="true" frozenStartColumn="0" frozenEndColumn="2">
+					allowCellSelect="true" enableHotTrack="false" allowRowSelect="false" allowCellWrap="true">
 					<div property="columns">
 						<div field="actionPlanNumber" name="actionPlanNumber" width="150" align="center" headerAlign="center">行动计划编号</div>
 						<div field="taskName" name="taskName" width="250" align="center" headerAlign="center">任务名称</div>

@@ -12,8 +12,10 @@ html,body {
 	overflow: hidden;
 }
 
-.mini-grid-cell-nowrap {
-	white-space: nowrap;
+/* 强制长单词/字符自动断行 */
+.mini-grid-cell-inner {
+    word-wrap: break-word !important; /* 英文单词内断行 */
+    word-break: break-all !important; /* 中文/英文强制断行 */
 }
 </style>
 <head>
