@@ -16,7 +16,7 @@ body {
 </style>
 </head>
 <body>
-	<div class="nui-fit" style="padding: 5px;">
+	<div class="nui-fit" style="padding: 5px;"> 
 		<fieldset id="field1" style="border: solid 1px #aaa;">
 			<legend>原 - 采购计划</legend>
 			<form>
@@ -225,7 +225,7 @@ body {
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
-					var bgBudget = subFloat(o.purPlan.newBudgetAmount, o.purPlan.extend4);
+					var bgBudget = subFloat(o.purPlan.newBudgetAmount, o.purPlan.extend4, 5);
 					nui.get("bgBudget").setValue(bgBudget);
 					if(o.purPlan.budgetAmount == o.purPlan.extend4){
 						nui.get("shangCiBudgetAmount").setValue("/");

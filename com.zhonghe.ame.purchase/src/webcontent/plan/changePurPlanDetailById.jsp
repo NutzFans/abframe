@@ -172,7 +172,7 @@
 						formData.extend2 = nui.getDictText('CG_PLAN_TYPE', formData.extend2);
 						formData.type = nui.getDictText('ZH_PURCHASE_NEW', formData.type);
 						formData.shangCiBudgetAmount = formData.budgetAmount == formData.extend4 ? "/" : formData.extend4;
-						var bgBudget = subFloat(formData.newBudgetAmount, formData.extend4);
+						var bgBudget = subFloat(formData.newBudgetAmount, formData.extend4, 5);
 					    formData.bgBudget = bgBudget;
 						form.val("dataFrm", formData);
 

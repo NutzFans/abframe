@@ -248,7 +248,7 @@ body {
 				"data" : json,
 				"success" : function(o) {
 					form.setData(o.data);
-					var bgBudget = subFloat(o.data.newBudgetAmount, o.data.extend4);
+					var bgBudget = subFloat(o.data.newBudgetAmount, o.data.extend4, 5);
 					nui.get("bgBudget").setValue(bgBudget);
 					if(o.data.budgetAmount == o.data.extend4){
 						nui.get("shangCiBudgetAmount").setValue("/");
@@ -391,15 +391,15 @@ body {
 					c = addFloat(c, x);
 				}
 			}
-			var y = subFloat(b, c);
+			var y = subFloat(b, c, 5);
 			var shangCiBudgetAmount = nui.get("shangCiBudgetAmount").getValue();
 			var historyBudgetAmount = nui.get("historyBudgetAmount").getValue();
 			if(shangCiBudgetAmount != "/"){
 				var newBudgetAmount = addFloat(shangCiBudgetAmount, y);
-				var bgBudget = subFloat(newBudgetAmount, shangCiBudgetAmount);
+				var bgBudget = subFloat(newBudgetAmount, shangCiBudgetAmount, 5);
 			}else{
 				var newBudgetAmount = addFloat(historyBudgetAmount, y);
-				var bgBudget = subFloat(newBudgetAmount, historyBudgetAmount);
+				var bgBudget = subFloat(newBudgetAmount, historyBudgetAmount, 5);
 			}
 			nui.get("newBudgetAmount").setValue(newBudgetAmount);
 			nui.get("bgBudget").setValue(bgBudget);

@@ -238,7 +238,7 @@ body {
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
-					var bgBudget = subFloat(o.purPlan.newBudgetAmount, o.purPlan.extend4);
+					var bgBudget = subFloat(o.purPlan.newBudgetAmount, o.purPlan.extend4, 5);
 					nui.get("bgBudget").setValue(bgBudget);
 					if(o.purPlan.budgetAmount == o.purPlan.extend4){
 						nui.get("shangCiBudgetAmount").setValue("/");
