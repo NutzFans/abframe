@@ -276,6 +276,15 @@
 		return parseFloat(num1 - num2).toFixed(2);
 	}
 	
+	function subFloat(num1, num2, fixed) {
+		if(!num1) num1 = 0;
+		if(!num2) num2 = 0;
+		num1 = parseFloat(num1);
+		num2 = parseFloat(num2);
+		
+		return parseFloat(num1 - num2).toFixed(fixed);
+	}	
+	
 	function mulFloat(num1, num2) {
 		if(!num1) num1 = 0;
 		if(!num2) num2 = 0;
