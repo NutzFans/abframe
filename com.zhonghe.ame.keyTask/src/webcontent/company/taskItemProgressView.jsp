@@ -52,6 +52,7 @@ html,body {
 								<input id="taskStatus" name="taskStatus" class="nui-combobox" style="width: 100px" readonly="readonly" />
 								<div style="display: inline-table; padding: 1px; margin-left: 10px">风险状态：</div>
 								<input id="riskStatus" name="riskStatus" class="nui-combobox" style="width: 100px" readonly="readonly" />
+								<div style="display: inline-block; color: red;">（指整个任务可能存在的风险，并非该分解计划的风险）</div>
 							</td>
 						</tr>
 						<tr>
@@ -60,7 +61,7 @@ html,body {
 								<input name="taskProgress" class="nui-textarea" style="width: 1020px; height: 65px" readonly="readonly" />
 							</td>
 						</tr>
-						<tr id="riskMeasuresTr" style="display: none">
+						<tr id="riskMeasuresTr">
 							<td align="right" style="width: 100px">风险及措施：</td>
 							<td>
 								<input id="riskMeasures" name="riskMeasures" class="nui-textarea" style="width: 1020px; height: 65px" readonly="readonly" />
@@ -98,9 +99,6 @@ html,body {
 				data : json,
 				success : function(result) {
 					var taskItemData = result.taskItem;
-					if (taskItemData.riskStatus == "有风险") {
-						$("#riskMeasuresTr").show();
-					}
 					baseForm.setData(taskItemData);
 					tianBaoForm.setData(taskItemData);
 					var grid_0 = nui.get("grid_0");
@@ -163,8 +161,11 @@ html,body {
 			id : "无风险",
 			text : '无风险'
 		}, {
-			id : "有风险",
-			text : '有风险'
+			id : "低风险",
+			text : '低风险'
+		}, {
+			id : "高风险",
+			text : '高风险'
 		} ];
 	</script>
 </body>

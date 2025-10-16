@@ -52,6 +52,7 @@ html,body {
 								<input id="taskStatus" name="taskStatus" class="nui-combobox" style="width: 100px" required="true" />
 								<div style="display: inline-table; padding: 1px; margin-left: 10px">风险状态：</div>
 								<input id="riskStatus" name="riskStatus" class="nui-combobox" style="width: 100px" required="true" onvaluechanged="riskStatusChange" />
+								<div style="display: inline-block; color: red;">（指整个任务可能存在的风险，并非该分解计划的风险）</div>
 							</td>
 						</tr>
 						<tr>
@@ -60,7 +61,7 @@ html,body {
 								<input name="taskProgress" class="nui-textarea" style="width: 1020px; height: 65px" required="true" />
 							</td>
 						</tr>
-						<tr id="riskMeasuresTr" style="display: none">
+						<tr id="riskMeasuresTr">
 							<td align="right" style="width: 100px">风险及措施：</td>
 							<td>
 								<input id="riskMeasures" name="riskMeasures" class="nui-textarea" style="width: 1020px; height: 65px" />
@@ -99,8 +100,7 @@ html,body {
 				data : json,
 				success : function(result) {
 					var taskItemData = result.taskItem;
-					if (taskItemData.riskStatus == "有风险") {
-						$("#riskMeasuresTr").show();
+					if (taskItemData.riskStatus == "低风险" || taskItemData.riskStatus == "高风险") {
 						nui.get("riskMeasures").setRequired(true);
 					}
 					baseForm.setData(taskItemData);
@@ -118,11 +118,8 @@ html,body {
 		function riskStatusChange() {
 			var riskStatus = nui.get("riskStatus").getValue();
 			if (riskStatus == "无风险") {
-				$("#riskMeasuresTr").hide();
-				nui.get("riskMeasures").setValue(null);
 				nui.get("riskMeasures").setRequired(false);
 			} else {
-				$("#riskMeasuresTr").show();
 				nui.get("riskMeasures").setRequired(true);
 			}
 		}
@@ -215,8 +212,11 @@ html,body {
 			id : "无风险",
 			text : '无风险'
 		}, {
-			id : "有风险",
-			text : '有风险'
+			id : "低风险",
+			text : '低风险'
+		}, {
+			id : "高风险",
+			text : '高风险'
 		} ];
 	</script>
 

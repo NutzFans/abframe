@@ -56,7 +56,7 @@ html,body {
 						<div field="taskMonth" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
 						<div field="taskPlanName" width="500" headeralign="center" align="left">分解计划</div>
 						<div field="taskStatus" width="50" headeralign="center" align="center" renderer="renderTaskStatus">任务状态</div>
-						<div field="riskStatus" width="70" headeralign="center" align="center">是否存在风险</div>
+						<div field="riskStatus" width="70" headeralign="center" align="center" renderer="setRiskBackColor">是否存在风险</div>
 						<div width="40" headeralign="center" align="center" renderer="renderOperate">操作</div>
 					</div>
 				</div>
@@ -157,6 +157,11 @@ html,body {
 		
 		function renderTaskStatus(e) {
 			var row = e.record;
+			if (e.value == "已完成") {
+				e.cellStyle = "background-color: #f6ffed";
+			} else if (e.value == "未完成") {
+				e.cellStyle = "background-color: #ffffb8";
+			}			
 			return '<a href="javascript:void(0)" onclick="progressDetails(\'' + row.id + '\')">'+e.value+'</a>';
 		}
 		
@@ -261,7 +266,18 @@ html,body {
 					}
 				}
 			});
-		}																			
+		}
+		
+		function setRiskBackColor(e) {
+			if (e.value == "无风险") {
+				e.cellStyle = "background-color: #f6ffed";
+			} else if (e.value == "低风险") {
+				e.cellStyle = "background-color: #ffffb8";
+			} else if (e.value == "高风险") {
+				e.cellStyle = "background-color: #ffccc7";
+			}
+			return e.value;
+		}																					
 		
 	</script>
 

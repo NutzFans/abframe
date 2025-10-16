@@ -14,10 +14,9 @@ html,body {
 
 /* 强制长单词/字符自动断行 */
 .mini-grid-cell-inner {
-    word-wrap: break-word !important; /* 英文单词内断行 */
-    word-break: break-all !important; /* 中文/英文强制断行 */
+	word-wrap: break-word !important; /* 英文单词内断行 */
+	word-break: break-all !important; /* 中文/英文强制断行 */
 }
-
 </style>
 <head>
 <title>任务详情</title>
@@ -54,8 +53,8 @@ html,body {
 				<div field="annualTarget" name="annualTarget" width="300" align="left" headerAlign="center">年度目标</div>
 				<div field="taskMonth" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
 				<div field="taskPlanName" width="500" headeralign="center" align="left">分解计划</div>
-				<div field="taskStatus" width="50" headeralign="center" align="center">任务状态</div>
-				<div field="riskStatus" width="70" headeralign="center" align="center">是否存在风险</div>
+				<div field="taskStatus" width="50" headeralign="center" align="center" renderer="setTaskBackColor">任务状态</div>
+				<div field="riskStatus" width="70" headeralign="center" align="center" renderer="setRiskBackColor">是否存在风险</div>
 				<div width="40" headeralign="center" align="center" renderer="renderOperate">操作</div>
 				<div field="appStatus" width="50" headeralign="center" align="center" renderer="renderTBStatus">填报状态</div>
 			</div>
@@ -152,6 +151,26 @@ html,body {
 				}
 			});
 		}
+
+		function setRiskBackColor(e) {
+			if (e.value == "无风险") {
+				e.cellStyle = "background-color: #f6ffed";
+			} else if (e.value == "低风险") {
+				e.cellStyle = "background-color: #ffffb8";
+			} else if (e.value == "高风险") {
+				e.cellStyle = "background-color: #ffccc7";
+			}
+			return e.value;
+		}
+		
+		function setTaskBackColor(e) {
+			if (e.value == "已完成") {
+				e.cellStyle = "background-color: #f6ffed";
+			} else if (e.value == "未完成") {
+				e.cellStyle = "background-color: #ffffb8";
+			}
+			return e.value;
+		}		
 		
 	</script>
 
