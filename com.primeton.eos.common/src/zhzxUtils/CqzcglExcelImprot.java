@@ -25,7 +25,7 @@ import cn.hutool.db.Session;
 import com.eos.common.connection.DataSourceHelper;
 import com.eos.system.annotation.Bizlet;
 
-@Bizlet("公司重点任务数据导入")
+@Bizlet("长期资产数据导入")
 public class CqzcglExcelImprot {
 
 	@Bizlet("Excel数据导入")

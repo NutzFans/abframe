@@ -862,5 +862,4 @@ public class TotalZTDatasUtil {
 		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 	}
 
-	
 }

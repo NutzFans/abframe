@@ -50,7 +50,22 @@ body {
 					<input id="cqzcgl_import_excel_path" class="nui-htmlfile" name="filePath" style="width: 250px" />
 					<input id="cqzcgl_import_excel" class="nui-button" iconCls="icon-upload" style="margin-left: 10px" onclick="cqzcgl_import_excel()" text="长期资产管理 - 导入Excel数据" />
 				</div>
-			</form>			
+			</form>
+			<p></p>
+			<form id="ndystb_import_excel_form" enctype="multipart/form-data" method="post" class="form-horizontal">
+				<div>
+					<input id="ndystb_import_excel_path" class="nui-htmlfile" name="filePath" style="width: 250px" />
+					<input class="nui-textbox" name="budgetYear" style="width: 100px" />
+					<input id="ndystb_import_excel" class="nui-button" iconCls="icon-upload" style="margin-left: 10px" onclick="ndystb_import_excel()" text="年度预算填报 - 导入Excel数据" />
+				</div>
+			</form>
+			<p></p>
+			<form id="gszdrw_import_excel_form_update" enctype="multipart/form-data" method="post" class="form-horizontal">
+				<div>
+					<input id="gszdrw_import_excel_path_update" class="nui-htmlfile" name="filePath" style="width: 250px" />
+					<input id="gszdrw_import_excel_update" class="nui-button" iconCls="icon-upload" style="margin-left: 10px" onclick="gszdrw_import_excel_update()" text="公司重点任务 - 导入Excel数据 - 更新数据" />
+				</div>
+			</form>								
 		</fieldset>
 
 	</div>
@@ -289,7 +304,52 @@ body {
 					document.getElementById('cqzcgl_import_excel_form').submit();
 				}
 			}
-		}		
+		}
+		
+		// 年度预算填报 - 导入Excel数据
+		function ndystb_import_excel() {
+			nui.get("ndystb_import_excel").disable();
+			if (!confirm("是否执行[年度预算填报 - 导入Excel数据]操作？")) {
+				nui.get("ndystb_import_excel").enable();
+			} else {
+				var uploadEventFile = nui.get("ndystb_import_excel_path").getValue();
+				if (uploadEventFile == '' || uploadEventFile == null) {
+					nui.alert("请选择excel,再上传", "");
+					nui.get("ndystb_import_excel").enable();
+					return;
+				} else if (uploadEventFile.lastIndexOf(".xls") < 0) {
+					nui.alert("只能上传Excel文件", "");
+					nui.get("ndystb_import_excel").enable();
+					return;
+				} else {
+					document.getElementById('ndystb_import_excel_form').action ='default/zhzxUtils.importNdystb.flow';
+					document.getElementById('ndystb_import_excel_form').submit();
+				}
+			}
+		}
+		
+		// 公司重点任务 - 导入Excel数据 - 更新数据
+		function gszdrw_import_excel_update() {
+			nui.get("gszdrw_import_excel_update").disable();
+			if (!confirm("是否执行[公司重点任务 - 导入Excel数据 - 更新数据]操作？")) {
+				nui.get("gszdrw_import_excel_update").enable();
+			} else {
+				var uploadEventFile = nui.get("gszdrw_import_excel_path_update").getValue();
+				if (uploadEventFile == '' || uploadEventFile == null) {
+					nui.alert("请选择excel,再上传", "");
+					nui.get("gszdrw_import_excel_update").enable();
+					return;
+				} else if (uploadEventFile.lastIndexOf(".xls") < 0) {
+					nui.alert("只能上传Excel文件", "");
+					nui.get("gszdrw_import_excel_update").enable();
+					return;
+				} else {
+					document.getElementById('gszdrw_import_excel_form_update').action ='default/zhzxUtils.importGszdrwUpdate.flow';
+					document.getElementById('gszdrw_import_excel_form_update').submit();
+				}
+			}
+		}				
+				
 	</script>
 
 </body>

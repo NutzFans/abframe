@@ -56,6 +56,8 @@ html,body {
 						<a class="nui-button" id="gszdrw_rwjz" iconCls="icon-edit" onclick="rwjz()">填报 - 任务进展</a>
 						<a class="nui-button" id="gszdrw_fqjzsh" iconCls="icon-downgrade" onclick="fqjzsh()">审批 - 发起进展审核流程</a>
 						<a class="nui-button" id="gszdrw_del" iconCls="icon-remove" onclick="delDatas()">删除</a>
+						<a class="nui-button" id="gszdrw_rwjhfj_wh" iconCls="icon-edit" onclick="rwjhfj_wh()">维护 - 任务及计划分解</a>
+						<a class="nui-button" id="gszdrw_rwjz_wh" iconCls="icon-edit" onclick="rwjz_wh()">维护 - 任务进展</a>
 					</td>
 				</tr>
 			</table>
@@ -74,12 +76,12 @@ html,body {
 			</div>
 		</div>
 	</div>
-	
+
 	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
 		<input type="hidden" name="downloadFile" filter="false" />
 		<input type="hidden" name="fileName" filter="false" />
-	</form>	
+	</form>
 
 	<script type="text/javascript">
 		nui.parse();
@@ -95,7 +97,7 @@ html,body {
 			nui.get("taskYear").setValue(year);
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				getOpeatorButtonAuth("gszdrw_rwzrdw,gszdrw_fqrwsb,gszdrw_fqjzsh,gszdrw_del");
+				getOpeatorButtonAuth("gszdrw_rwzrdw,gszdrw_fqrwsb,gszdrw_fqjzsh,gszdrw_del,gszdrw_rwjhfj_wh,gszdrw_rwjz_wh");
 			}
 			var json = nui.encode({
 				'loginUserId' : userId,
@@ -202,6 +204,25 @@ html,body {
 			}			
 		}
 		
+		function rwjhfj_wh(){
+			var row = companyGrid.getSelected();
+			if (row == undefined) {
+				showTips("请选中一条数据后再操作！", "danger");
+			}else{
+				nui.open({
+					url : "/default/keyTask/company/configTaskItem.jsp",
+					width : "100%",
+					height : "100%",
+					allowResize : false,
+					title : "维护 - 任务及计划分解",
+					onload : function() {
+						var iframe = this.getIFrameEl();
+						iframe.contentWindow.initData(row); 
+					}
+				});
+			}			
+		}		
+		
 		function fqrwsb(){
 			var row = companyGrid.getSelected();
 			if (row == undefined) {
@@ -300,6 +321,29 @@ html,body {
 				}
 			}			
 		}
+		
+		function rwjz_wh(){
+			var row = companyGrid.getSelected();
+			if (row == undefined) {
+				showTips("请选中一条数据后再操作！", "danger");
+			}else{
+				if(row.appStatus == 2){
+					nui.open({
+						url : "/default/keyTask/company/whTaskItemProgress.jsp",
+						width : "100%",
+						height : "100%",
+						allowResize : false,
+						title : "维护 - 任务进展",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							 iframe.contentWindow.initData(row); 
+						}
+					});	
+				}else{
+					showTips("只有【申报状态】为【审批通过】时，才可以执行该操作！", "danger");
+				}
+			}			
+		}		
 		
 		function fqjzsh(){
 			var row = companyGrid.getSelected();

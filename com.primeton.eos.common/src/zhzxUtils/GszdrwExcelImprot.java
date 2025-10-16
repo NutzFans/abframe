@@ -83,6 +83,46 @@ public class GszdrwExcelImprot {
 		}
 	}
 
+	@Bizlet("Excel数据导入(更新)")
+	public String excelInUpdate(String filePath) {
+		try {
+			Session dbSession = new Session(DataSourceHelper.getDataSource());
+			Map<String, String> secOrgMap = this.getSecOrgMap();
+			ExcelReader reader = ExcelReader.read(Paths.get(filePath));
+			Sheet[] sheets = reader.all();
+			String querySql = "SELECT * FROM zh_key_task_company WHERE task_year = ? AND secondary_org = ?";
+
+			for (int i = 0; i < sheets.length; i++) {
+				FullSheet sheet = sheets[i].load().asFullSheet();
+				String secOrgCode = secOrgMap.get(sheet.getName());
+				if (StrUtil.isNotBlank(secOrgCode)) {
+					Entity companyTask = dbSession.queryOne(querySql, "2025", secOrgCode);
+					Stream<Map<String, Object>> dataMapStream = sheet.copyOnMerged().header(1).rows().map(row -> row.toMap());
+					dataMapStream.forEach(dataMap -> {
+						if (StrUtil.isAllNotBlank(Convert.toStr(dataMap.get("任务名称")), Convert.toStr(dataMap.get("时间节点")))) {
+							int taskMonth = Convert.toInt(StrUtil.removeSuffix(Convert.toStr(dataMap.get("时间节点")), "月"));
+							if (taskMonth >= 7 && taskMonth <= 10) {
+								Entity taskItem = this.getTaskItem(dbSession, companyTask.getStr("id"), Convert.toStr(dataMap.get("任务名称")), taskMonth);
+								if (taskItem != null) {
+									String taskStatus = Convert.toStr(dataMap.get("状态"), "已完成");
+									String riskStatus = "无风险";
+									String taskProgress = Convert.toStr(dataMap.get("完成情况"), "/");
+									String riskMeasures = "/";
+									this.updateTaskItemAndProcess(dbSession, taskStatus, riskStatus, taskProgress, riskMeasures, taskItem.getStr("id"));
+								}
+							}
+						}
+					});
+				}
+			}
+
+			return "数据导入成功";
+		} catch (Exception e) {
+			Console.error(e);
+			return "数据导入失败，请检查！";
+		}
+	}
+
 	private Map<String, String> getSecOrgMap() {
 		Map<String, String> secOrgMap = new HashMap<String, String>();
 		secOrgMap.put("党群", "102542");
@@ -110,6 +150,27 @@ public class GszdrwExcelImprot {
 		secOrgMap.put("中核供应链", "1111");
 		secOrgMap.put("采购与供应链管理中心", "120598");
 		return secOrgMap;
+	}
+
+	private Entity getTaskItem(Session dbSession, String mainId, String taskName, int taskMonth) {
+		try {
+			String queryTaskItemSql = "SELECT * FROM zh_key_task_company_item WHERE main_id = ? AND task_name = ? AND task_month = ?";
+			return dbSession.queryOne(queryTaskItemSql, mainId, taskName, taskMonth);
+		} catch (Exception e) {
+			Console.log(e);
+			return null;
+		}
+	}
+
+	private void updateTaskItemAndProcess(Session dbSession, String taskStatus, String riskStatus, String taskProgress, String riskMeasures, String id) {
+		String updateTaskItemSql = "UPDATE zh_key_task_company_item SET task_status=?, risk_status=?, task_progress=?, risk_measures=? WHERE id=?";
+		try {
+			Entity itemProcess = Entity.create("zh_key_task_company_item_process").set("item_id", id).set("app_status", 2);
+			dbSession.execute(updateTaskItemSql, taskStatus, riskStatus, taskProgress, riskMeasures, id);
+			dbSession.insert(itemProcess);
+		} catch (Exception e) {
+			Console.log(e);
+		}
 	}
 
 }
