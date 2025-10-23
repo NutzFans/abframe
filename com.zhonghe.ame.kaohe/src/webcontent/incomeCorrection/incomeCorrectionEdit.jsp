@@ -28,31 +28,37 @@ html,body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 120px">扣减年份：</td>
+							<td align="right" style="width: 100px">扣减年份：</td>
 							<td>
 								<input id="years" name="years" class="nui-combobox" style="width: 260px" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 120px">扣减单位：</td>
+							<td align="right" style="width: 100px">扣减单位：</td>
 							<td>
 								<input id="secondaryOrg" name="secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 260px" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 120px">集团内修正金额(元)：</td>
+							<td align="right" style="width: 100px">修正类型：</td>
 							<td>
-								<input id="amountWithinGroup" name="amountWithinGroup" class="nui-textbox" style="width: 260px" required="true" />
+								<input name="correctionType" class="nui-dictcombobox" dictTypeId="correction_type" style="width: 260px" required="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 120px">集团外修正金额(元)：</td>
+							<td align="right" style="width: 100px">集团内外：</td>
 							<td>
-								<input id="amountOutsideGroup" name="amountOutsideGroup" class="nui-textbox" style="width: 260px" required="true" />
+								<input name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 260px" required="true" />
+							</td>
+						</tr>						
+						<tr>
+							<td align="right" style="width: 100px">修正金额(元)：</td>
+							<td>
+								<input name="amount" class="nui-textbox" style="width: 260px" required="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 120px">备注：</td>
+							<td align="right" style="width: 100px">备注：</td>
 							<td>
 								<input id="remark" name="remark" class="nui-textarea" style="width: 260px; height: 50px" />
 							</td>

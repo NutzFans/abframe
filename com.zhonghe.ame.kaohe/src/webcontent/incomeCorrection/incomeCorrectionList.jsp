@@ -64,9 +64,10 @@ html,body {
 					<div type="checkcolumn"></div>
 					<div field="secondaryOrgname" width="200" headerAlign="center" allowSort="true" align="center">扣减单位</div>
 					<div field="years" width="80" headerAlign="center" allowSort="true" align="center">扣减年份</div>
-					<div field="amountWithinGroup" width="100" headerAlign="center" allowSort="true" align="center">集团内修正金额(元)</div>
-					<div field="amountOutsideGroup" width="100" headerAlign="center" allowSort="true" align="center">集团外修正金额(元)</div>
-					<div field="remark" width="200" headerAlign="center" allowSort="true" align="center">备注</div>
+					<div field="amount" width="100" headerAlign="center" allowSort="true" align="center" dataType="currency">修正金额(元)</div>
+					<div field="correctionType" width="100" headerAlign="center" allowSort="true" align="center" renderer="CORRECTION_TYPE">修正类型</div>
+					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>
+					<div field="remark" width="200" headerAlign="center" allowSort="true" align="left">备注</div>
 				</div>
 			</div>
 		</div>
@@ -148,7 +149,7 @@ html,body {
 			nui.open({
 				url : "/default/kaohe/incomeCorrection/incomeCorrectionAdd.jsp",
 				width : "450",
-				height : "300",
+				height : "350",
 				allowResize : false,
 				title : "考核收入修正 - 新增",
 				onload : function() {
@@ -170,7 +171,7 @@ html,body {
 				nui.open({
 					url : "/default/kaohe/incomeCorrection/incomeCorrectionEdit.jsp",
 					width : '450',
-					height : '300',
+					height : '350',
 					title : "考核收入修正 - 编辑",
 					onload : function() {
 						var iframe = this.getIFrameEl();
@@ -212,6 +213,14 @@ html,body {
 				}
 			}
 		}				
+		
+		function CORRECTION_TYPE(e){
+			return nui.getDictText("correction_type", e.value);
+		}
+		
+		function ZH_GROUP(e){
+			return nui.getDictText("ZH_GROUP", e.value);
+		}
 		
 	</script>
 

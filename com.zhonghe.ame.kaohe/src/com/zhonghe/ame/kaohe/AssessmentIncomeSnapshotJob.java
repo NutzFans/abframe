@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -494,45 +495,47 @@ public class AssessmentIncomeSnapshotJob {
 		}
 
 		if (correctionList.size() > 0) {
-			for (Entity correction : correctionList) {
-				Entity correctionPlanOutside = new Entity("zh_kaohe_statistics_snapshot_details");
-				Entity correnctionPlanWithin = new Entity("zh_kaohe_statistics_snapshot_details");
-				// 主键
-				correnctionPlanWithin.set("id", IdUtil.objectId());
-				correctionPlanOutside.set("id", IdUtil.objectId());
-				// 考核单位(中心/分公司)
-				correnctionPlanWithin.set("secondary_org", correction.getStr("secondary_org"));
-				correctionPlanOutside.set("secondary_org", correction.getStr("secondary_org"));
-				// 考核年份
-				correnctionPlanWithin.set("years", correction.getStr("years"));
-				correctionPlanOutside.set("years", correction.getStr("years"));
-				// 考核月份
-				correnctionPlanWithin.set("months", month);
-				correctionPlanOutside.set("months", month);
-				// 合同状态
-				correnctionPlanWithin.set("contract_stauts", "5");
-				correctionPlanOutside.set("contract_stauts", "5");
-				// 合同名称
-				correnctionPlanWithin.set("contract_name", "修正上一年度集团内");
-				correctionPlanOutside.set("contract_name", "修正上一年度集团外");
-				// 集团内外
-				correnctionPlanWithin.set("headquarter_group", "0");
-				correctionPlanOutside.set("headquarter_group", "1");
-				// 计划收入金额（元）
-				correnctionPlanWithin.set("sum_exclude_tax", correction.getBigDecimal("amount_within_group"));
-				correctionPlanOutside.set("sum_exclude_tax", correction.getBigDecimal("amount_outside_group"));
-				// 截至当月已完成收入（元）
-				correnctionPlanWithin.set("sum_total_book_income", correction.getBigDecimal("amount_within_group"));
-				correctionPlanOutside.set("sum_total_book_income", correction.getBigDecimal("amount_outside_group"));
-				// 考核系数
-				correnctionPlanWithin.set("coefficient", coefficientMap.get("0"));
-				correctionPlanOutside.set("coefficient", coefficientMap.get("1"));
-				// 营业收入考核值（元）
-				correnctionPlanWithin.set("coefficient_sum", NumberUtil.mul(correction.getBigDecimal("amount_within_group"), coefficientMap.get("0")));
-				correctionPlanOutside.set("coefficient_sum", NumberUtil.mul(correction.getBigDecimal("amount_outside_group"), coefficientMap.get("1")));
+			Map<String, Map<String, Map<String, BigDecimal>>> statistics = correctionList.stream().collect(
+					Collectors.groupingBy(
+							data -> ((Entity) data).getStr("secondary_org"),
+							Collectors.groupingBy(
+									data -> ((Entity) data).getStr("correction_type"),
+									Collectors.groupingBy(data -> ((Entity) data).getStr("headquarter_group"),
+											Collectors.reducing(BigDecimal.ZERO, data -> ((Entity) data).getBigDecimal("amount"), BigDecimal::add)))));
+			for (String secondaryOrg : statistics.keySet()) {
+				Map<String, Map<String, BigDecimal>> corrTypeMap = statistics.get(secondaryOrg);
+				for (String corrType : corrTypeMap.keySet()) {
+					Map<String, BigDecimal> hqGroupMap = corrTypeMap.get(corrType);
+					for (String hqGroup : hqGroupMap.keySet()) {
+						Entity correnction = new Entity("zh_kaohe_statistics_snapshot_details");
+						// 主键
+						correnction.set("id", IdUtil.objectId());
+						// 考核单位(中心/分公司)
+						correnction.set("secondary_org", secondaryOrg);
+						// 考核年份
+						correnction.set("years", year);
+						// 考核月份
+						correnction.set("months", month);
+						// 合同状态
+						correnction.set("contract_stauts", "5");
+						// 合同名称
+						String contractName = "0".equals(hqGroup) ? "修正上一年度集团内" : "修正上一年度集团外";
+						correnction.set("contract_name", StrUtil.format("{}({})", contractName, corrType));
+						// 集团内外
+						correnction.set("headquarter_group", hqGroup);
+						// 计划收入金额（元）
+						correnction.set("sum_exclude_tax", hqGroupMap.get(hqGroup));
+						// 截至当月已完成收入（元）
+						correnction.set("sum_total_book_income", hqGroupMap.get(hqGroup));
+						// 考核系数
+						BigDecimal coefficient = "0".equals(hqGroup) ? coefficientMap.get("0") : coefficientMap.get("1");
+						correnction.set("coefficient", coefficient);
+						// 营业收入考核值（元）
+						correnction.set("coefficient_sum", NumberUtil.mul(hqGroupMap.get(hqGroup), coefficient));
 
-				snapshotDetails.add(correnctionPlanWithin);
-				snapshotDetails.add(correctionPlanOutside);
+						snapshotDetails.add(correnction);
+					}
+				}
 			}
 		}
 		return snapshotDetails;
