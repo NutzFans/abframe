@@ -308,6 +308,12 @@
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
+			var contractNo = nui.get("contractNo").getValue();
+			var contractNoStr = contractNo.trim();
+			if (checkContractNo(contractNoStr) == false) {
+				showTips("您录入的【合同编号】已被使用，请检查！", "danger");
+				return;
+			}
 			var filePaths = document.getElementsByName("uploadfile1").length;
 			if (filePaths == 0) {
 				showTips("请上传'签字盖章版合同'", "danger");
@@ -358,6 +364,8 @@
 			var contractBalance = (historyContractBalance + contractSum).toFixed(2);
 			data.finContractSum = finContractSum;
 			data.contractBalance = contractBalance;
+			var contractNoStr = data.contractNo.trim();
+			data.contractNo = contractNoStr;
 			var json = {
 				"cpData" : data,
 				"misOpinion" : misOpinion,
@@ -376,7 +384,23 @@
 					}
 				}
 			})
-		}								
+		}
+		
+		function checkContractNo(contractNo) {
+			var result = true;
+			var json = nui.encode({
+				'contractNo' : contractNo
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.chargeContract.chargeContract.queryContractNoOnly.biz.ext",
+				data : json,
+				async : false,
+				success : function(data) {
+					result = data.result;
+				}
+			});
+			return result;
+		}										
 		
 	</script>
 </body>

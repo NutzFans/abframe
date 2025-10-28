@@ -265,20 +265,25 @@ body {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
-						data = mini.clone(data); //必须
-						if (data) {
-							btnEdit.setValue(data.contractNo);
-							btnEdit.setText(data.contractNo);
-							nui.get("contractName").setValue(data.contractName);
-							nui.get("major").setValue(data.major);
-							nui.get("projectType").setValue(data.projectType);
-							nui.get("headquarterGroup").setValue(data.headquarterGroup);
-							nui.get("payerName").setValue(data.signatoryName);
-							nui.get("invoiceNameType").setValue(data.payee);
-							nui.get("invoiceSumCapital").setValue(data.contractSum);
-							nui.get("bidService").setValue(data.bidService);
-							nui.get("chargeId").setValue(data.id);
-							btnEdit.doValueChanged();
+						if(data.executeStatus == "2"){
+							showTips("该合同【执行状态】为【已完成】，无法使用该合同发起开票！", "danger");
+							return;
+						}else{
+							data = mini.clone(data); //必须
+							if (data) {
+								btnEdit.setValue(data.contractNo);
+								btnEdit.setText(data.contractNo);
+								nui.get("contractName").setValue(data.contractName);
+								nui.get("major").setValue(data.major);
+								nui.get("projectType").setValue(data.projectType);
+								nui.get("headquarterGroup").setValue(data.headquarterGroup);
+								nui.get("payerName").setValue(data.signatoryName);
+								nui.get("invoiceNameType").setValue(data.payee);
+								nui.get("invoiceSumCapital").setValue(data.contractSum);
+								nui.get("bidService").setValue(data.bidService);
+								nui.get("chargeId").setValue(data.id);
+								btnEdit.doValueChanged();
+							}						
 						}
 					}
 				}

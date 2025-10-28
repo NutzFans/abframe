@@ -185,22 +185,26 @@ body {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
-						data = mini.clone(data); //必须
-						if (data) {
-							btnEdit.setValue(data.contractNo);
-							btnEdit.setText(data.contractNo);
-							nui.get("contractName").setValue(data.contractName);
-							nui.get("contractSum").setValue(data.finalSum);
-							nui.get("signatory").setValue(data.signatory);
-							nui.get("contractType").setValue(data.contractType);
-							nui.get("contractNature").setValue(data.contractNature);
-							nui.get("payer").setValue(data.payer);
-							nui.get("payId").setValue(data.id);
-							setPaidContractSum(data.finalSum, data.contractBalance);
-							btnEdit.doValueChanged();
+						if(data.executeStatus == "2"){
+							showTips("该合同【执行状态】为【已完成】，无法使用该合同发起付款！", "danger");
+							return;
+						}else{
+							data = mini.clone(data); //必须
+							if (data) {
+								btnEdit.setValue(data.contractNo);
+								btnEdit.setText(data.contractNo);
+								nui.get("contractName").setValue(data.contractName);
+								nui.get("contractSum").setValue(data.finalSum);
+								nui.get("signatory").setValue(data.signatory);
+								nui.get("contractType").setValue(data.contractType);
+								nui.get("contractNature").setValue(data.contractNature);
+								nui.get("payer").setValue(data.payer);
+								nui.get("payId").setValue(data.id);
+								setPaidContractSum(data.finalSum, data.contractBalance);
+								btnEdit.doValueChanged();
+							}
 						}
 					}
-
 				}
 			});
 		}

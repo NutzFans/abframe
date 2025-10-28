@@ -92,8 +92,7 @@ body {
 										valueField="custid" textField="custname" allowInput="false" enabled="false" />
 									<span class="mini-buttonedit-buttons">
 										<span class="mini-buttonedit-close"></span>
-										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');"
-											onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
+										<span class="mini-buttonedit-button" onmouseover="mini.addClass(this, 'mini-buttonedit-button-hover');" onmouseout="mini.removeClass(this, 'mini-buttonedit-button-hover');">
 											<span class="mini-buttonedit-icon"></span>
 										</span>
 									</span>
@@ -153,11 +152,11 @@ body {
 							</td>
 							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
 							<td>
-								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
+								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
 							</td>
 							<td align="right" style="width: 120px">定标金额(元):</td>
 							<td>
-								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
+								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
 							</td>
 						</tr>
 						<tr>
@@ -187,7 +186,7 @@ body {
 				</fieldset>
 			</form>
 		</fieldset>
-		<fieldset id="field3"style="border: solid 1px #aaa;">
+		<fieldset id="field3" style="border: solid 1px #aaa;">
 			<legend>未来年度付款计划</legend>
 			<div id="datagrid2" class="nui-datagrid" style="width: 100%; height: 200px;" allowResize="true" showSummaryRow="true" datafield="data" allowCellEdit="true" allowCellSelect="true" multiSelect="true"
 				allowSortColumn="false" showPager="false">
@@ -268,7 +267,7 @@ body {
 		<a class="nui-button" onclick="submit()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel()" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 0px;">关闭</a>
 	</div>
-	
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("form1");
@@ -276,15 +275,15 @@ body {
 		var workItemID = <%=request.getParameter("workItemID")%>;
 		var opioionform = new nui.Form("opioionform");
 		var payContractId = "";
-		isViewDelete=false;
+		isViewDelete = false;
 		var grid2 = nui.get("datagrid2");
-		
+
 		$("input[name='custInfo']").parent("td").attr("style", "border: 0px; background: #f0f0f0;")
-		
+
 		init();
-		
+
 		function init() {
-			var data = {workitemid:<%=workitemid%>};
+			var data = {workitemid : <%=workitemid%>};
 			var json = nui.encode(data);
 			nui.ajax({
 				url : "com.zhonghe.ame.payContract.payContract.queryPayContractInfo.biz.ext",
@@ -292,7 +291,7 @@ body {
 				data : json,
 				contentType : 'text/json',
 				success : function(o) {
-					if(o.data.budgetSum==0){
+					if (o.data.budgetSum == 0) {
 						o.data.budgetSum = "";
 					}
 					form.setData(o.data);
@@ -327,11 +326,17 @@ body {
 				}
 			});
 		}
-		
+
 		function submit() {
 			form.validate();
 			if (form.isValid() == false) {
 				showTips("请检查表单的完整性!", "danger");
+				return;
+			}
+			var contractNo = nui.get("contractNo").getValue();
+			var contractNoStr = contractNo.trim();
+			if (checkContractNo(contractNoStr) == false) {
+				showTips("您录入的【合同编号】已被使用，请检查！", "danger");
 				return;
 			}
 			var filePaths = document.getElementsByName("uploadfile1").length;
@@ -364,7 +369,7 @@ body {
 				submitProcess("提交");
 			}
 		}
-		
+
 		function submitProcess(title) {
 			nui.confirm("确定" + title + "流程吗？", "操作提示", function(action) {
 				if (action == "ok") {
@@ -373,14 +378,16 @@ body {
 				}
 			});
 		}
-		
+
 		function SaveData1() {
 			var misOpinion = opioionform.getData().misOpinion;//审核意见
 			var data = form.getData();
+			var contractNoStr = data.contractNo.trim();
+			data.contractNo = contractNoStr;
 			var json = {
 				"cpData" : data,
 				"misOpinion" : misOpinion,
-				"workItemID" : <%=workitemid%>
+				"workItemID" :<%=workitemid%>
 			};
 			ajaxCommon({
 				url : "com.zhonghe.ame.payContract.payContract.payContractReview.biz.ext",
@@ -396,7 +403,7 @@ body {
 				}
 			})
 		}
-		
+
 		function saveRow() {
 			var contractNo = nui.get("contractNo").value;
 			var startTime = nui.get("startTime").value;
@@ -422,7 +429,7 @@ body {
 				}
 			});
 		}
-		
+
 		function queryPlan(str) {
 			nui.ajax({
 				url : "com.zhonghe.ame.chargeContract.chargeContract.queryPlan.biz.ext",
@@ -436,10 +443,26 @@ body {
 				}
 			})
 		}
-		
+
 		grid2.on("cellbeginedit", function(e) {
 			e.cancel = "true";
 		})
+
+		function checkContractNo(contractNo) {
+			var result = true;
+			var json = nui.encode({
+				'contractNo' : contractNo
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.payContract.payContract.queryContractNoOnly.biz.ext",
+				data : json,
+				async : false,
+				success : function(data) {
+					result = data.result;
+				}
+			});
+			return result;
+		}
 	</script>
 </body>
 </html>
