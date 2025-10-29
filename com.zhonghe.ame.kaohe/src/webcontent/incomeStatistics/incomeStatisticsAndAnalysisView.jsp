@@ -45,8 +45,8 @@ html,body {
 					</div>
 					<div header="已完成情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（账面值）</div>
-							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（考核值）</div>
+							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（账面值）</div>
+							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（考核值）</div>
 							<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 						</div>
 					</div>
@@ -57,6 +57,14 @@ html,body {
 							<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" dataType="currency">（2）待签合同</div>
 							<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" dataType="currency">待签：低风险</div>
 							<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" dataType="currency">待签：中风险</div>
+						</div>
+					</div>
+					<div header="本年考核运用（年底考核期使用）" headerAlign="center" align="center" headerStyle="background-color: #e6f7ff">
+						<div property="columns">
+							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency" renderer="FONT_COLOR_ALL" headerStyle="background-color: #e6f7ff">营业收入考核值</div>
+							<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
+							<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
+							<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 						</div>
 					</div>
 				</div>
@@ -79,8 +87,8 @@ html,body {
 					</div>
 					<div header="已完成情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（账面值）</div>
-							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency">截至当月已完成（考核值）</div>
+							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（账面值）</div>
+							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（考核值）</div>
 							<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 						</div>
 					</div>
@@ -91,6 +99,14 @@ html,body {
 							<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" dataType="currency">（2）待签合同</div>
 							<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" dataType="currency">待签：低风险</div>
 							<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" dataType="currency">待签：中风险</div>
+						</div>
+					</div>
+					<div header="本年考核运用（年底考核期使用）" headerAlign="center" align="center" headerStyle="background-color: #e6f7ff">
+						<div property="columns">
+							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency" renderer="FONT_COLOR_ALL" headerStyle="background-color: #e6f7ff">营业收入考核值</div>
+							<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
+							<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
+							<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 						</div>
 					</div>
 				</div>
@@ -232,6 +248,11 @@ html,body {
 			}
 			return e.value;
 		}
+		
+		function FONT_COLOR_ALL(e) {
+			e.cellStyle = "color: red; font-weight: bold;";
+			return e.value;
+		}			
 
 		function statisticsSnapshotDetailSearch() {
 			var searchData = statisticsSnapshotDetailForm.getData();

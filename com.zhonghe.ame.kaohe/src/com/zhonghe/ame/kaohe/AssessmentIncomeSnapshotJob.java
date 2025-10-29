@@ -519,8 +519,8 @@ public class AssessmentIncomeSnapshotJob {
 						// 合同状态
 						correnction.set("contract_stauts", "5");
 						// 合同名称
-						String contractName = "0".equals(hqGroup) ? "修正上一年度集团内" : "修正上一年度集团外";
-						correnction.set("contract_name", StrUtil.format("{}({})", contractName, corrType));
+						String contractName = "0".equals(hqGroup) ? "集团内" : "集团外";
+						correnction.set("contract_name", StrUtil.format("{} - {}", corrType, contractName));
 						// 集团内外
 						correnction.set("headquarter_group", hqGroup);
 						// 计划收入金额（元）

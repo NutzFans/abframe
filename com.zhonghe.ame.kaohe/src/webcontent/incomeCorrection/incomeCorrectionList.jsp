@@ -28,13 +28,21 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 60px; text-align: right;">扣减年份:</td>
+						<td style="width: 50px; text-align: right;">年份：</td>
 						<td>
 							<input id="years" name="criteria._expr[1].years" class="nui-textbox" style="width: 100px" />
 						</td>
-						<td style="width: 60px; text-align: right;">扣减单位:</td>
+						<td style="width: 50px; text-align: right;">单位：</td>
 						<td>
 							<input id="secondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 200px" showNullItem="true" />
+						</td>
+						<td style="width: 70px; text-align: right;">修正类型：</td>
+						<td>
+							<input name="criteria._expr[3].correctionType" class="nui-dictcombobox" dictTypeId="correction_type" showNullItem="true" nullItemText="全部" style="width: 120px" />
+						</td>
+						<td style="width: 70px; text-align: right;">集团内外：</td>
+						<td>
+							<input name="criteria._expr[4].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" nullItemText="全部" style="width: 120px" />
 						</td>
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>

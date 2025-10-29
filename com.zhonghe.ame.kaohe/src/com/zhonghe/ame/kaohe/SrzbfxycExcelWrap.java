@@ -38,6 +38,11 @@ public class SrzbfxycExcelWrap {
 				dataObject.setBigDecimal("totalAmountOfPendingContractToBeSigned", operatingRevenue.getBigDecimal("totalAmountOfPendingContractToBeSigned"));
 				dataObject.setBigDecimal("totalAmountOfLowriskContractToBeSigned", operatingRevenue.getBigDecimal("totalAmountOfLowriskContractToBeSigned"));
 				dataObject.setBigDecimal("totalAmountOfRiskContractsToBeSigned", operatingRevenue.getBigDecimal("totalAmountOfRiskContractsToBeSigned"));
+				dataObject.setBigDecimal("totalAmountOfAssessmentDeductionRegulation", operatingRevenue.getBigDecimal("totalAmountOfAssessmentDeductionRegulation"));
+				dataObject.setBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation", operatingRevenue.getBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation"));
+				dataObject.setBigDecimal("totalAmountOfAssessingVirtualOutputValue", operatingRevenue.getBigDecimal("totalAmountOfAssessingVirtualOutputValue"));
+				dataObject.setBigDecimal("totalAmountOfAssessmentIncomeCorrection", operatingRevenue.getBigDecimal("totalAmountOfAssessmentIncomeCorrection"));
+				dataObject.setBigDecimal("totalAmountOfAssessOthers", operatingRevenue.getBigDecimal("totalAmountOfAssessOthers"));
 				dataObjectList.add(dataObject);
 			}
 			excelMap.put("营业收入", dataObjectList);
@@ -59,6 +64,11 @@ public class SrzbfxycExcelWrap {
 				dataObject.setBigDecimal("totalAmountOfPendingContractToBeSigned", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfPendingContractToBeSigned"));
 				dataObject.setBigDecimal("totalAmountOfLowriskContractToBeSigned", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfLowriskContractToBeSigned"));
 				dataObject.setBigDecimal("totalAmountOfRiskContractsToBeSigned", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfRiskContractsToBeSigned"));
+				dataObject.setBigDecimal("totalAmountOfAssessmentDeductionRegulation", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessmentDeductionRegulation"));
+				dataObject.setBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation"));
+				dataObject.setBigDecimal("totalAmountOfAssessingVirtualOutputValue", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessingVirtualOutputValue"));
+				dataObject.setBigDecimal("totalAmountOfAssessmentIncomeCorrection", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessmentIncomeCorrection"));
+				dataObject.setBigDecimal("totalAmountOfAssessOthers", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessOthers"));
 				dataObjectList.add(dataObject);
 			}
 			excelMap.put("集团外收入", dataObjectList);
@@ -77,13 +87,13 @@ public class SrzbfxycExcelWrap {
 		}
 		return ArrayUtil.toArray(dataObjectList, DataObject.class);
 	}
-	
+
 	@Bizlet("其他参数包装")
-	public DataObject exportInfo(String year, String month){
+	public DataObject exportInfo(String year, String month) {
 		DataObject dataObject = DataObjectUtil.createDataObject("com.zhonghe.ame.kaohe.incomeStatistics.ExportInfoExcelEntity");
 		String yearMonth = year + "年" + month + "月";
 		dataObject.setString("yearMonth", yearMonth);
 		return dataObject;
 	}
-	
+
 }

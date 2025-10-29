@@ -15,6 +15,10 @@ html,body {
 .mini-grid-cell-nowrap {
 	white-space: nowrap;
 }
+
+.mini-grid-summaryCell {
+	text-align: center;
+}
 </style>
 <head>
 <title>考核收入统计</title>
@@ -110,21 +114,21 @@ html,body {
 			</div>
 			<div>
 				<div id="operatingRevenueGrid" class="nui-datagrid" showPager="false" showSummaryRow="true" style="width: 100%;" url="com.zhonghe.ame.kaohe.incomeStatistics.queryOperatingRevenue.biz.ext"
-					dataField="operatingRevenueList">
+					dataField="operatingRevenueList" frozenStartColumn="0" frozenEndColumn="1">
 					<div property="columns">
-						<div field="secondaryOrgname" headerAlign="center" align="center" width="110">考核单位</div>
-						<div field="expectedValue" headerAlign="center" align="center" width="60" summaryType="sum" dataType="currency">期望值</div>
+						<div field="secondaryOrgname" headerAlign="center" align="center" width="150">考核单位</div>
+						<div field="expectedValue" headerAlign="center" align="center" width="100" summaryType="sum" dataType="currency">期望值</div>
 						<div header="全年预测及缺口情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="annualForecastedBookValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（账面值）</div>
-								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（考核值）</div>
+								<div field="annualForecastedBookValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" width="120">全年预测（账面值）</div>
+								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" width="120">全年预测（考核值）</div>
 								<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" summaryType="sum" dataType="currency">考核值缺口</div>
 							</div>
 						</div>
 						<div header="已完成情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（账面值）</div>
-								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（考核值）</div>
+								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="150" summaryType="sum" dataType="currency">截至当月已完成（账面值）</div>
+								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="150" summaryType="sum" dataType="currency">截至当月已完成（考核值）</div>
 								<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 							</div>
 						</div>
@@ -135,6 +139,16 @@ html,body {
 								<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">（2）待签合同</div>
 								<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：低风险</div>
 								<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：中风险</div>
+							</div>
+						</div>
+						<div header="本年考核运用（年底考核期使用）" headerAlign="center" align="center" headerStyle="background-color: #e6f7ff">
+							<div property="columns">
+								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" renderer="FONT_COLOR_ALL" headerStyle="background-color: #e6f7ff">营业收入考核值</div>
+								<div field="totalAmountOfAssessmentDeductionRegulation" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：扣减调控</div>
+								<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
+								<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
+								<div field="totalAmountOfAssessmentIncomeCorrection" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：收入纠偏</div>
+								<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 							</div>
 						</div>
 					</div>
@@ -145,21 +159,21 @@ html,body {
 			</div>
 			<div>
 				<div id="externalIncomeOfTheGroupGrid" class="nui-datagrid" showPager="false" showSummaryRow="true" style="width: 100%;"
-					url="com.zhonghe.ame.kaohe.incomeStatistics.queryExternalIncomeOfTheGroup.biz.ext" dataField="externalIncomeOfTheGroupList">
+					url="com.zhonghe.ame.kaohe.incomeStatistics.queryExternalIncomeOfTheGroup.biz.ext" dataField="externalIncomeOfTheGroupList" frozenStartColumn="0" frozenEndColumn="1">
 					<div property="columns">
-						<div field="secondaryOrgname" headerAlign="center" align="center" width="110">考核单位</div>
-						<div field="expectedValue" headerAlign="center" align="center" width="60" summaryType="sum" dataType="currency">期望值</div>
+						<div field="secondaryOrgname" headerAlign="center" align="center" width="150">考核单位</div>
+						<div field="expectedValue" headerAlign="center" align="center" width="100" summaryType="sum" dataType="currency">期望值</div>
 						<div header="全年预测及缺口情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="annualForecastedBookValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（账面值）</div>
-								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency">全年预测（考核值）</div>
+								<div field="annualForecastedBookValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" width="120">全年预测（账面值）</div>
+								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" width="120">全年预测（考核值）</div>
 								<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" summaryType="sum" dataType="currency">考核值缺口</div>
 							</div>
 						</div>
 						<div header="已完成情况" headerAlign="center" align="center">
 							<div property="columns">
-								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（账面值）</div>
-								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="110" summaryType="sum" dataType="currency">截至当月已完成（考核值）</div>
+								<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" width="150" summaryType="sum" dataType="currency">截至当月已完成（账面值）</div>
+								<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" width="150" summaryType="sum" dataType="currency">截至当月已完成（考核值）</div>
 								<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 							</div>
 						</div>
@@ -170,6 +184,16 @@ html,body {
 								<div field="totalAmountOfPendingContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">（2）待签合同</div>
 								<div field="totalAmountOfLowriskContractToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：低风险</div>
 								<div field="totalAmountOfRiskContractsToBeSigned" headerAlign="center" align="center" summaryType="sum" dataType="currency">待签：中风险</div>
+							</div>
+						</div>
+						<div header="本年考核运用（年底考核期使用）" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="annualForecastAssessmentValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" renderer="FONT_COLOR_ALL" headerStyle="background-color: #e6f7ff">营业收入考核值</div>
+								<div field="totalAmountOfAssessmentDeductionRegulation" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：扣减调控</div>
+								<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
+								<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
+								<div field="totalAmountOfAssessmentIncomeCorrection" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：收入纠偏</div>
+								<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 							</div>
 						</div>
 					</div>
@@ -196,20 +220,20 @@ html,body {
 							</td>
 							<td style="width: 60px; text-align: right;">合同状态:</td>
 							<td>
-								<input name="criteria._expr[4].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_KAOHE" showNullItem="true" style="width: 100px"/>
+								<input name="criteria._expr[4].contractStauts" class="nui-dictcombobox" dictTypeId="ZH_CONTRACT_STATUS_KAOHE" showNullItem="true" style="width: 100px" />
 							</td>
 							<td style="width: 60px; text-align: right;">合同名称 :</td>
 							<td>
-								<input name="criteria._expr[5].contractName" class="nui-textbox" style="width: 200px"/>
-								<input name="criteria._expr[5]._op" value="like" class="nui-hidden"/>
+								<input name="criteria._expr[5].contractName" class="nui-textbox" style="width: 200px" />
+								<input name="criteria._expr[5]._op" value="like" class="nui-hidden" />
 							</td>
 							<td style="width: 60px; text-align: right;">集团内外:</td>
 							<td>
-								<input name="criteria._expr[6].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" style="width: 100px"/>
+								<input name="criteria._expr[6].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" style="width: 100px" />
 							</td>
 							<td style="width: 60px; text-align: right;">风险等级:</td>
 							<td>
-								<input name="criteria._expr[7].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" style="width: 100px"/>
+								<input name="criteria._expr[7].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" style="width: 100px" />
 							</td>
 							<td>
 								<a class="nui-button" id="khsrtjmxSearch" iconCls="icon-search" onclick="khsrtjmxSearch()">查询</a>
@@ -394,7 +418,7 @@ html,body {
 			nui.open({
 				url : "/default/kaohe/incomeStatistics/artificialGenerateSnapshot.jsp",
 				width : "450",
-				height : "276",
+				height : "300",
 				allowResize: false,
 				title : "考核收入统计 - 生成快照",
 				onload : function() {
@@ -506,6 +530,11 @@ html,body {
 			}
 			return e.value;
 		}
+		
+		function FONT_COLOR_ALL(e) {
+			e.cellStyle = "color: red; font-weight: bold;";
+			return e.value;
+		}		
 		
 		function khsrtj_del(){
 			var rows = statisticsGrid.getSelecteds();

@@ -205,6 +205,16 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 			// 待签：中风险合同金额合计
 			operatingRevenue.set("totalAmountOfRiskContractsToBeSigned", this.yuanToTenThousandYuan(this.getTotalAmountOfRiskContractsToBeSigned(snapshotDetailList)));
 		}
+		// 考核运用：扣减调控
+		operatingRevenue.set("totalAmountOfAssessmentDeductionRegulation", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessmentDeductionRegulation(snapshotDetailList)));
+		// 考核运用：本年调控
+		operatingRevenue.set("totalAmountOfAssessmentOfThisYearSRegulation", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessmentOfThisYearSRegulation(snapshotDetailList)));
+		// 考核运用：虚拟产值
+		operatingRevenue.set("totalAmountOfAssessingVirtualOutputValue", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessingVirtualOutputValue(snapshotDetailList)));
+		// 考核运用：收入纠偏
+		operatingRevenue.set("totalAmountOfAssessmentIncomeCorrection", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessmentIncomeCorrection(snapshotDetailList)));
+		// 考核运用：其他
+		operatingRevenue.set("totalAmountOfAssessOthers", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessOthers(snapshotDetailList)));
 
 		return operatingRevenue;
 	}
@@ -237,6 +247,16 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 		operatingRevenue.set("totalAmountOfLowriskContractToBeSigned", BigDecimal.ZERO);
 		// 待签：中风险合同金额合计
 		operatingRevenue.set("totalAmountOfRiskContractsToBeSigned", BigDecimal.ZERO);
+		// 考核运用：扣减调控
+		operatingRevenue.set("totalAmountOfAssessmentDeductionRegulation", BigDecimal.ZERO);
+		// 考核运用：本年调控
+		operatingRevenue.set("totalAmountOfAssessmentOfThisYearSRegulation", BigDecimal.ZERO);
+		// 考核运用：虚拟产值
+		operatingRevenue.set("totalAmountOfAssessingVirtualOutputValue", BigDecimal.ZERO);
+		// 考核运用：收入纠偏
+		operatingRevenue.set("totalAmountOfAssessmentIncomeCorrection", BigDecimal.ZERO);
+		// 考核运用：其他
+		operatingRevenue.set("totalAmountOfAssessOthers", BigDecimal.ZERO);
 
 		return operatingRevenue;
 	}
@@ -317,6 +337,36 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 	private BigDecimal getTotalAmountOfRiskContractsToBeSignedJTW(List<Entity> snapshotDetailList) {
 		return snapshotDetailList.stream().filter(snapshotDetail -> "2".equals(snapshotDetail.getStr("risk_level")) && "2".equals(snapshotDetail.getStr("contract_stauts")))
 				.map(snapshotDetail -> snapshotDetail.getBigDecimal("sum_exclude_tax")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 考核运用：扣减调控
+	private BigDecimal getTotalAmountOfAssessmentDeductionRegulation(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "扣减调控 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 考核运用：本年调控
+	private BigDecimal getTotalAmountOfAssessmentOfThisYearSRegulation(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "本年调控 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 考核运用：虚拟产值
+	private BigDecimal getTotalAmountOfAssessingVirtualOutputValue(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "虚拟产值 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 考核运用：收入纠偏
+	private BigDecimal getTotalAmountOfAssessmentIncomeCorrection(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "收入纠偏 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	// 考核运用：其他
+	private BigDecimal getTotalAmountOfAssessOthers(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "其他 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	private Map<String, Integer> getSecOrgOrderMap(Session dbSession) throws Exception {

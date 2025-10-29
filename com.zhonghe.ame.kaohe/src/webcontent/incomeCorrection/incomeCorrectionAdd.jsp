@@ -27,13 +27,13 @@ html,body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 100px">扣减年份：</td>
+							<td align="right" style="width: 100px">年份：</td>
 							<td>
 								<input id="years" name="years" class="nui-combobox" style="width: 260px" required="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">扣减单位：</td>
+							<td align="right" style="width: 100px">单位：</td>
 							<td>
 								<input id="secondaryOrg" name="secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 260px" required="true" />
 							</td>
