@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../../common/layuimini/lib/layui-v2.6.3/css/layui.css" media="all">
 </head>
 <body>
-	<div style="background-image: url('/default/common/flow/zeroPurchaseFlow.png'); width: 1463px; height: 1155px; position: relative;">
+	<div style="background-image: url('/default/common/flow/zeroPurchaseFlow.png'); width: 1463px; height: 1039px; position: relative;">
 
 		<!-- 分公司部门负责人审核 -->
 		<div id="div1" style="position: absolute; left: 163px; top: 198px; width: 75px; height: 50px; cursor: pointer;"></div>
