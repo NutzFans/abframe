@@ -28,7 +28,7 @@ html,body {
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
 				<table>
 					<tr>
-						<td style="width: 50px; text-align: right;">年份：</td>
+						<td style="width: 70px; text-align: right;">运用年份：</td>
 						<td>
 							<input id="years" name="criteria._expr[1].years" class="nui-textbox" style="width: 100px" />
 						</td>
@@ -70,8 +70,8 @@ html,body {
 				url="com.zhonghe.ame.kaohe.incomeCorrection.queryIncomeCorrectionList.biz.ext">
 				<div property="columns">
 					<div type="checkcolumn"></div>
-					<div field="secondaryOrgname" width="200" headerAlign="center" allowSort="true" align="center">扣减单位</div>
-					<div field="years" width="80" headerAlign="center" allowSort="true" align="center">扣减年份</div>
+					<div field="secondaryOrgname" width="200" headerAlign="center" allowSort="true" align="center">单位</div>
+					<div field="years" width="80" headerAlign="center" allowSort="true" align="center">运用年份</div>
 					<div field="amount" width="100" headerAlign="center" allowSort="true" align="center" dataType="currency">修正金额(元)</div>
 					<div field="correctionType" width="100" headerAlign="center" allowSort="true" align="center" renderer="CORRECTION_TYPE">修正类型</div>
 					<div field="headquarterGroup" width="80" align="center" headerAlign="center" allowSort="true" renderer="ZH_GROUP">集团内外</div>

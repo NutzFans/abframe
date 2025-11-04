@@ -27,7 +27,7 @@ html,body {
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
-							<td align="right" style="width: 100px">年份：</td>
+							<td align="right" style="width: 100px">运用年份：</td>
 							<td>
 								<input id="years" name="years" class="nui-combobox" style="width: 260px" required="true" />
 							</td>
