@@ -87,7 +87,6 @@ html,body {
 						<a class="nui-button" iconCls="icon-add" onclick="add()">新增</a>
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="xejgqr_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
-						<a class="nui-button" id="xejgqr_export" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="checkview" iconCls="icon-print" onclick="print()">打印</a>
 						<a class="nui-button" id="xejgqr_help" iconCls="icon-help" onclick="help()">帮助</a>
 					</td>
@@ -362,7 +361,7 @@ html,body {
 		}		
 		
 		function help() {
-			executeUrl = "<%= request.getContextPath() %>/purchase/plan/purZeroDesgin.jsp";
+			executeUrl = "<%= request.getContextPath() %>/purchase/small/smallResultDesgin.jsp";
 			window.open(executeUrl);
 		}					
 				
