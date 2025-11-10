@@ -96,15 +96,15 @@
 			</div>
 			<div class="layui-row">
 				<div class="layui-col-xs6">
-					<label class="layui-form-label" style="width: 170px">总金额(万元)</label>
+					<label class="layui-form-label" style="width: 170px">立项金额(万元)</label>
 					<div class="layui-input-block" style="margin-left: 170px">
 						<input type="text" name="totalAmount" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs6">
-					<label class="layui-form-label" style="width: 170px">是否为科研项目</label>
+					<label class="layui-form-label" style="width: 170px">最终成交金额(万元)</label>
 					<div class="layui-input-block" style="margin-left: 170px">
-						<input type="text" name="keYanProject" disabled="disabled" class="layui-input">
+						<input type="text" name="finalAmount" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -139,13 +139,13 @@
 		</form>
 		<fieldset class="layui-elem-field layui-field-title" id="fieldsetFileGrid" style="margin-top: 20px;">
 			<blockquote class="layui-elem-quote">
-				附件信息&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href='javascript:void(0)' onclick='downloadZipFile();' style='color: #1b3fba'>打包下载</a>
+				附件信息
 			</blockquote>
 			<table class="layui-hide" id="fileGrid"></table>
+			<table class="layui-hide" id="fileGridExtend"></table>
 		</fieldset>
 		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-			<blockquote class="layui-elem-quote">计划明细(单位万元)</blockquote>
+			<blockquote class="layui-elem-quote">立项明细(单位万元)</blockquote>
 			<table class="layui-hide" id="grid"></table>
 		</fieldset>
 		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -264,7 +264,7 @@
 		    ,where: {"groupid": "purchaseZero","relationid":zeroId,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
   			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
 		    ,cols: [[
-		      {field:'fileName',width:690, title: '附件名称' ,templet: "<div>{{getdetail(d)}}</div>"}
+		      {field:'fileName',width:690, title: '附件名称 - 立项相关' ,templet: "<div>{{getdetail(d)}}</div>"}
 		      ,{field:'fileSize', width:200, title: '文件大小',templet: "<div>{{getFileSize(d.fileSize)}}</div>"}
 		    ]]
 		    ,parseData: function(res){ //res 即为原始返回的数据
@@ -281,6 +281,32 @@
 				   }
 				  }
 		  });
+		  
+		  
+		  var fileGridIntExtend =  table.render({
+		    elem: '#fileGridExtend'
+		    ,url: 'com.primeton.eos.ame_common.file.getFiles.biz.ext'
+		    ,where: {"groupid": "smallResult","relationid":id,"sortField":"fileTime","sortOrder":"desc"}//如果无需传递额外参数，可不加该参数
+  			,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+		    ,cols: [[
+		      {field:'fileName',width:690, title: '附件名称 - 结果确认相关' ,templet: "<div>{{getdetail(d)}}</div>"}
+		      ,{field:'fileSize', width:200, title: '文件大小',templet: "<div>{{getFileSize(d.fileSize)}}</div>"}
+		    ]]
+		    ,parseData: function(res){ //res 即为原始返回的数据
+			    return {
+			      "code": "0", //解析接口状态
+			      "data": res.files //解析数据列表
+			    };
+			  }
+			   ,done: function(res, curr, count){
+				   var data =  res.data
+				   if(data.length == 0){
+				   		var audio_enable = document.getElementById('fieldsetFileGrid');		//通过表格ID获取元素
+							audio_enable.style.display = 'none';		
+				   }
+				  }
+		  });		  
+		  
  });
 		  //附件下载
 	    function getdetail(e){

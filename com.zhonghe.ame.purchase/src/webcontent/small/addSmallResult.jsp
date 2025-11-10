@@ -21,6 +21,7 @@ body {
 			<legend>小额采购 - 结果确认申请</legend>
 			<form id="form1" method="post">
 				<input name="zeroId" id="zeroId" class="nui-hidden" />
+				<input name="files" id="fileids" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -40,7 +41,7 @@ body {
 							<td colspan="2">
 								<input name="purchaseName" id="purchaseName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td align="right" style="width: 140px">总金额(万元)：</td>
+							<td align="right" style="width: 140px">立项金额(万元)：</td>
 							<td>
 								<input name="totalAmount" id="totalAmount" style="width: 100%" class="nui-textbox" readonly="readonly" />
 							</td>
@@ -69,28 +70,32 @@ body {
 							<td align="right" style="width: 140px">一体化平台计划编码：</td>
 							<td colspan="2">
 								<input name="ydhptXqjhCode" id="ydhptXqjhCode" class="nui-textbox" style="width: 100%;" readonly="readonly" />
-							</td>							
+							</td>
+							<td align="right" style="width: 140px">最终成交金额(万元)：</td>
+							<td>
+								<input name="finalAmount" id="finalAmount" style="width: 100%" class="nui-textbox" required="true"/>
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">申请原因、市场调研情况或比价情况：</td>
 							<td colspan="5">
 								<input style="width: 100%; height: 120px;" id="applyReason" name="applyReason" class="nui-textarea" id="remark" readonly="readonly" />
 							</td>
-						</tr>												
+						</tr>
 					</table>
 				</div>
 			</form>
 		</fieldset>
-		
+
 		<fieldset id="field3" style="border: solid 1px #aaa;">
-			<legend>明细</legend>
+			<legend>立项明细</legend>
 			<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="false" multiSelect="true" dataField="purZeroItem"
 				url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext">
 				<div property="columns">
 					<div field="ythptWlCode" width="130" align="center" headerAlign="center" vtype="required">
 						物料编码
-						<input id="ythptWlCode" name="ythptWlCode" property="editor" class="nui-textbox" enabled="false"/>
-					</div>				
+						<input id="ythptWlCode" name="ythptWlCode" property="editor" class="nui-textbox" enabled="false" />
+					</div>
 					<div field="itemName" width="130" align="center" headerAlign="center" vtype="required">
 						采购物项名称
 						<input id="itemName" name="itemName" property="editor" class="nui-textbox" enabled="false" />
@@ -118,26 +123,31 @@ body {
 				</div>
 			</div>
 		</fieldset>
-		
+
 		<fieldset id="field2" style="border: solid 1px #aaa;">
-			<legend>附件</legend>
+			<legend>立项附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
-		</fieldset>				
+		</fieldset>
 		
+		<fieldset id="field4" style="border: solid 1px #aaa;">
+			<legend>结果确认 - 上传附件</legend>
+			<jsp:include page="/ame_common/inputFileExpand.jsp" />
+		</fieldset>
+
 	</div>
-	
+
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
 		<a class="nui-button" onclick="onOk()" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
 		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
-	</div>	
-	
+	</div>
+
 	<script type="text/javascript">
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var grid_traveldetail = nui.get("grid_traveldetail");
-		
+
 		init();
-		
+
 		function init() {
 			getSecOrg(userOrgId);
 		}
@@ -156,7 +166,7 @@ body {
 				}
 			});
 		}
-		
+
 		function onButtonEdit(e) {
 			var btnEdit = this;
 			mini.open({
@@ -169,7 +179,7 @@ body {
 						var iframe = this.getIFrameEl();
 						var data = iframe.contentWindow.GetData();
 						data = mini.clone(data); //必须
-						if(data){
+						if (data) {
 							btnEdit.setValue(data.purchaseCode);
 							btnEdit.setText(data.purchaseCode);
 							nui.get("zeroId").setValue(data.id);
@@ -184,7 +194,7 @@ body {
 							var jsonData = {
 								"zeroId" : data.id
 							}
-							grid_traveldetail.load(jsonData);							
+							grid_traveldetail.load(jsonData);
 							// 查询附件
 							var grid_0 = nui.get("grid_0");
 							grid_0.load({
@@ -197,12 +207,22 @@ body {
 				}
 			});
 		}
-		
+
 		function onOk(e) {
 			if (!form.validate()) {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("inputFileExpandGrid").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}			
 			nui.confirm("确定提交流程表单？", "系统提示", function(action) {
 				if (action == "ok") {
 					nui.get("creatReimbProcess").disable();
@@ -211,7 +231,15 @@ body {
 						cls : 'mini-mask-loading',
 						html : '表单提交中...'
 					});
+					document.getElementById("fileCatalog").value = "smallResult";
+					inputFileExpandForm.submit();
+				}
+			});
+		}
+		
+		function SaveData() {
 					var formData = form.getData();
+					formData.files = nui.get("fileids").getValue();
 					var json = nui.encode({
 						"smallResult" : formData
 					});
@@ -229,12 +257,9 @@ body {
 							}
 						}
 					});
-				}
-			});			
-		}				
-		
+		}		
 		
 	</script>
-	
+
 </body>
 </html>

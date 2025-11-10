@@ -26,6 +26,7 @@ body {
 				<input name="id" class="nui-hidden" />
 				<input name="zeroId" id="zeroId" class="nui-hidden" />
 				<input name="processId" class="nui-hidden" />
+				<input name="files" id="fileids" class="nui-hidden" />
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
 						<tr>
@@ -45,7 +46,7 @@ body {
 							<td colspan="2">
 								<input name="purchaseName" id="purchaseName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td align="right" style="width: 140px">总金额(万元)：</td>
+							<td align="right" style="width: 140px">立项金额(万元)：</td>
 							<td>
 								<input name="totalAmount" id="totalAmount" style="width: 100%" class="nui-textbox" readonly="readonly" />
 							</td>
@@ -74,6 +75,10 @@ body {
 							<td align="right" style="width: 140px">一体化平台计划编码：</td>
 							<td colspan="2">
 								<input name="ydhptXqjhCode" id="ydhptXqjhCode" class="nui-textbox" style="width: 100%;" readonly="readonly" />
+							</td>
+							<td align="right" style="width: 140px">最终成交金额(万元)：</td>
+							<td>
+								<input name="finalAmount" id="finalAmount" style="width: 100%" class="nui-textbox" required="true"/>
 							</td>
 						</tr>
 						<tr>
@@ -127,6 +132,11 @@ body {
 		<fieldset id="field2" style="border: solid 1px #aaa;">
 			<legend>附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
+		</fieldset>
+
+		<fieldset id="field4" style="border: solid 1px #aaa;">
+			<legend>结果确认 - 上传附件</legend>
+			<jsp:include page="/ame_common/inputFileExpand.jsp" />
 		</fieldset>
 
 		<jsp:include page="/ame_common/misOpinion.jsp" />
@@ -189,6 +199,13 @@ body {
 						"relationid" : o.smallResult.zeroId
 					});
 					grid_0.sortBy("fileTime", "desc");
+					// 查询附件
+					var inputFileExpandGrid = nui.get("inputFileExpandGrid");
+					inputFileExpandGrid.load({
+						"groupid" : "smallResult",
+						"relationid" : o.smallResult.id
+					});
+					inputFileExpandGrid.sortBy("fileTime", "desc");
 				}
 			});
 		}
@@ -243,6 +260,16 @@ body {
 					showTips("请检查表单的完整性!", "danger");
 					return;
 				}
+				// 已上传的文件数量
+				var gridFileCount = nui.get("inputFileExpandGrid").getData().length;
+				if(gridFileCount == 0){
+					// 刚新增(未上传)的文件数量
+					var newFileCount = document.getElementsByName("uploadfile").length;
+					if(newFileCount == 0){
+						showTips("请上传相关附件", "danger");
+						return;
+					}
+				}
 				info = "提交流程表单？"
 			}else{
 				nui.get("auditstatus").setValue(2);
@@ -257,8 +284,16 @@ body {
 						cls : 'mini-mask-loading',
 						html : '表单提交中...'
 					});
+					document.getElementById("fileCatalog").value = "smallResult";
+					inputFileExpandForm.submit();				
+				}
+			});			
+		}
+		
+		function SaveData() {
 					var formData = form.getData();
 					formData.type = type;
+					formData.files = nui.get("fileids").getValue();
 					var data_opioion = opioionform.getData();
 					var json = nui.encode({
 						"smallResult" : formData,
@@ -278,9 +313,7 @@ body {
 								nui.get("zzFeame").enable();
 							}
 						}
-					});					
-				}
-			});			
+					});	
 		}		
 		
 	</script>

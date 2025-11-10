@@ -44,7 +44,7 @@ body {
 							<td colspan="2">
 								<input name="purchaseName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
-							<td align="right" style="width: 140px">总金额(万元)：</td>
+							<td align="right" style="width: 140px">立项金额(万元)：</td>
 							<td>
 								<input name="totalAmount" style="width: 100%" class="nui-textbox" readonly="readonly" />
 							</td>
@@ -74,6 +74,10 @@ body {
 							<td colspan="2">
 								<input name="ydhptXqjhCode" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
+							<td align="right" style="width: 140px">最终成交金额(万元)：</td>
+							<td>
+								<input name="finalAmount" style="width: 100%" class="nui-textbox" readonly="readonly"/>
+							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 140px">申请原因、市场调研情况或比价情况：</td>
@@ -87,7 +91,7 @@ body {
 		</fieldset>
 
 		<fieldset id="field3" style="border: solid 1px #aaa;">
-			<legend>明细</legend>
+			<legend>立项明细</legend>
 			<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="false" multiSelect="true" dataField="purZeroItem"
 				url="com.zhonghe.ame.purchase.purchaseItems.queryPurZeroItem.biz.ext">
 				<div property="columns">
@@ -124,9 +128,14 @@ body {
 		</fieldset>
 
 		<fieldset id="field2" style="border: solid 1px #aaa;">
-			<legend>附件</legend>
+			<legend>立项附件</legend>
 			<jsp:include page="/ame_common/detailFile.jsp" />
 		</fieldset>
+		
+		<fieldset id="field4" style="border: solid 1px #aaa;">
+			<legend>结果确认 - 附件</legend>
+			<jsp:include page="/ame_common/detailFileExpand.jsp" />
+		</fieldset>		
 
 		<jsp:include page="/ame_common/misOpinion_Freeflow.jsp" />
 
@@ -184,6 +193,13 @@ body {
 						"relationid" : o.smallResult.zeroId
 					});
 					grid_0.sortBy("fileTime", "desc");
+					// 查询附件
+					var detailFileExpandGrid = nui.get("detailFileExpandGrid");
+					detailFileExpandGrid.load({
+						"groupid" : "smallResult",
+						"relationid" : o.smallResult.id
+					});
+					detailFileExpandGrid.sortBy("fileTime", "desc");
 				}
 			});
 		}
