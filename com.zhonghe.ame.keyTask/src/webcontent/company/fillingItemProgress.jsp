@@ -201,6 +201,9 @@ html,body {
 		} ];
 
 		var taskStatusDict = [ {
+			id : "/",
+			text : '/'
+		}, {
 			id : "已完成",
 			text : '已完成'
 		}, {

@@ -20,61 +20,102 @@ html,body {
 <title>公司重点任务管理</title>
 </head>
 <body>
-	<div style="width: auto; height: 99%; padding: 5px;">
-		<div id="searchForm">
-			<input name="criteria._expr[0]._property" value="secondaryOrg" class="nui-hidden" />
-			<input name="criteria._expr[0]._op" value="in" class="nui-hidden" />
-			<input id="searchOrgids" name="criteria._expr[0]._value" class="nui-hidden" />
+	<div id="tabs" class="nui-tabs" activeIndex="0" style="width: auto; height: 99%; padding: 5px;" onactivechanged="tabActiveChanged">
+		<div title="公司重点任务 - 列表">
+			<div id="searchForm">
+				<input name="criteria._expr[0]._property" value="secondaryOrg" class="nui-hidden" />
+				<input name="criteria._expr[0]._op" value="in" class="nui-hidden" />
+				<input id="searchOrgids" name="criteria._expr[0]._value" class="nui-hidden" />
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+					<table>
+						<tr>
+							<td style="width: 70px; text-align: right;">任务年份：</td>
+							<td>
+								<input id="taskYear" name="criteria._expr[1].taskYear" class="nui-textbox" style="width: 100px" />
+							</td>
+							<td style="width: 100px; text-align: right;">任务责任单位：</td>
+							<td>
+								<input id="secondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 220px" showNullItem="true" />
+							</td>
+							<td>
+								<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
+								<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+								<a class="nui-button" id="zdrwExport" iconCls="icon-download" onclick="zdrwExport()">导出</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
 			<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
-				<table>
+				<table style="width: 100%;">
 					<tr>
-						<td style="width: 70px; text-align: right;">任务年份：</td>
 						<td>
-							<input id="taskYear" name="criteria._expr[1].taskYear" class="nui-textbox" style="width: 100px" />
-						</td>
-						<td style="width: 100px; text-align: right;">任务责任单位：</td>
-						<td>
-							<input id="secondaryOrg" name="criteria._expr[2].secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 220px" showNullItem="true" />
-						</td>
-						<td>
-							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
-							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
-							<a class="nui-button" id="zdrwExport" iconCls="icon-download" onclick="zdrwExport()">导出</a>
+							<a class="nui-button" id="gszdrw_rwzrdw" iconCls="icon-add" onclick="rwzrdw()">创建 - 任务责任单位</a>
+							<a class="nui-button" id="gszdrw_rwjhfj" iconCls="icon-edit" onclick="rwjhfj()">设置 - 任务及计划分解</a>
+							<a class="nui-button" id="gszdrw_fqrwsb" iconCls="icon-downgrade" onclick="fqrwsb()">审批 - 发起任务申报流程</a>
+							<a class="nui-button" id="gszdrw_rwjz" iconCls="icon-edit" onclick="rwjz()">填报 - 任务进展</a>
+							<a class="nui-button" id="gszdrw_fqjzsh" iconCls="icon-downgrade" onclick="fqjzsh()">审批 - 发起进展审核流程</a>
+							<a class="nui-button" id="gszdrw_del" iconCls="icon-remove" onclick="delDatas()">删除</a>
+							<a class="nui-button" id="gszdrw_rwjhfj_wh" iconCls="icon-edit" onclick="rwjhfj_wh()">维护 - 任务及计划分解</a>
+							<a class="nui-button" id="gszdrw_rwjz_wh" iconCls="icon-edit" onclick="rwjz_wh()">维护 - 任务进展</a>
 						</td>
 					</tr>
 				</table>
 			</div>
-		</div>
 
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
-			<table style="width: 100%;">
-				<tr>
-					<td>
-						<a class="nui-button" id="gszdrw_rwzrdw" iconCls="icon-add" onclick="rwzrdw()">创建 - 任务责任单位</a>
-						<a class="nui-button" id="gszdrw_rwjhfj" iconCls="icon-edit" onclick="rwjhfj()">设置 - 任务及计划分解</a>
-						<a class="nui-button" id="gszdrw_fqrwsb" iconCls="icon-downgrade" onclick="fqrwsb()">审批 - 发起任务申报流程</a>
-						<a class="nui-button" id="gszdrw_rwjz" iconCls="icon-edit" onclick="rwjz()">填报 - 任务进展</a>
-						<a class="nui-button" id="gszdrw_fqjzsh" iconCls="icon-downgrade" onclick="fqjzsh()">审批 - 发起进展审核流程</a>
-						<a class="nui-button" id="gszdrw_del" iconCls="icon-remove" onclick="delDatas()">删除</a>
-						<a class="nui-button" id="gszdrw_rwjhfj_wh" iconCls="icon-edit" onclick="rwjhfj_wh()">维护 - 任务及计划分解</a>
-						<a class="nui-button" id="gszdrw_rwjz_wh" iconCls="icon-edit" onclick="rwjz_wh()">维护 - 任务进展</a>
-					</td>
-				</tr>
-			</table>
-		</div>
-
-		<div class="nui-fit">
-			<div id="companyGrid" sizeList="[50,100]" showPager="true" pageSize="50" align="center" class="nui-datagrid" style="width: 100%; height: 100%;"
-				url="com.zhonghe.ame.keyTask.company.queryCompanyTaskList.biz.ext" dataField="companyList">
-				<div property="columns">
-					<div type="checkcolumn"></div>
-					<div field="secondaryOrgname" width="200" align="center" headerAlign="center">任务责任单位</div>
-					<div field="taskYear" width="80" align="center" headerAlign="center">任务年份</div>
-					<div width="100" headerAlign="center" align="center" renderer="renderTask">任务明细</div>
-					<div field="appStatus" width="100" align="center" headerAlign="center" renderer="onActionRenderer">申报状态</div>
+			<div class="nui-fit">
+				<div id="companyGrid" sizeList="[50,100]" showPager="true" pageSize="50" align="center" class="nui-datagrid" style="width: 100%; height: 100%;"
+					url="com.zhonghe.ame.keyTask.company.queryCompanyTaskList.biz.ext" dataField="companyList">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div field="secondaryOrgname" width="200" align="center" headerAlign="center">任务责任单位</div>
+						<div field="taskYear" width="80" align="center" headerAlign="center">任务年份</div>
+						<div width="100" headerAlign="center" align="center" renderer="renderTask">任务明细</div>
+						<div field="appStatus" width="100" align="center" headerAlign="center" renderer="onActionRenderer">申报状态</div>
+					</div>
 				</div>
 			</div>
 		</div>
+
+		<div name="jdtjDimTab" title="公司重点任务 - 季度统计" visible="false">
+			<div id="jdtjForm">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+					<table>
+						<tr>
+							<td style="width: 70px; text-align: right;">任务年份：</td>
+							<td>
+								<input id="jdtjTaskYear" name="taskYear" class="nui-textbox" style="width: 100px" />
+							</td>
+							<td style="width: 70px; text-align: right;">任务月份：</td>
+							<td>
+								<input id="jdtjTaskMonth" name="taskMonth" class="nui-combobox" style="width: 100px" />
+							</td>
+							<td>
+								<a class="nui-button" id="jdtjSearch" iconCls="icon-search" onclick="jdtjSearch()">查询</a>
+								<a class="nui-button" id="jdtjReset" iconCls="icon-reload" onclick="jdtjReset()">重置</a>
+								<a class="nui-button" id="jdtjExport" iconCls="icon-download" onclick="jdtjExport()">导出</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div class="nui-fit">
+				<div id="jdtjGrid" showPager="false" align="center" class="nui-datagrid" style="width: 100%; height: 100%;" url="com.zhonghe.ame.keyTask.company.queryJdtjDatas.biz.ext" dataField="jdtjDatas">
+					<div property="columns">
+						<div field="secOrgName" width="200" align="center" headerAlign="center">任务责任单位</div>
+						<div field="taskCount" width="200" align="center" headerAlign="center">任务总数</div>
+						<div field="normalProgressCount" width="200" align="center" headerAlign="center">其中：正常推进</div>
+						<div field="certainRiskCount" width="200" align="center" headerAlign="center" renderer="renderCertainRisk">其中：一定风险</div>
+						<div field="greatRiskCount" width="200" align="center" headerAlign="center" renderer="renderGreatRisk">其中：极大风险</div>
+						<div field="normalPropulsionRate" width="200" align="center" headerAlign="center">正常推进率</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
 	</div>
 
 	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
@@ -86,14 +127,61 @@ html,body {
 	<script type="text/javascript">
 		nui.parse();
 		var searchForm = new nui.Form("#searchForm");
+		var jdtjForm = new nui.Form("#jdtjForm");
 		var companyGrid = nui.get("companyGrid");
-
-		init();
+		var jdtjGrid = nui.get("jdtjGrid");
+		var tabs = nui.get("tabs");
+		
+		var monthDict = [ {
+			id : "1",
+			text : '1月'
+		}, {
+			id : "2",
+			text : '2月'
+		}, {
+			id : "3",
+			text : '3月'
+		}, {
+			id : "4",
+			text : '4月'
+		}, {
+			id : "5",
+			text : '5月'
+		}, {
+			id : "6",
+			text : '6月'
+		}, {
+			id : "7",
+			text : '7月'
+		}, {
+			id : "8",
+			text : '8月'
+		}, {
+			id : "9",
+			text : '9月'
+		}, {
+			id : "10",
+			text : '10月'
+		}, {
+			id : "11",
+			text : '11月'
+		}, {
+			id : "12",
+			text : '12月'
+		} ];
+		
+		function tabActiveChanged(e) {
+			if (e.tab.title == "公司重点任务 - 列表") {
+				init();				
+			}else if(e.tab.title == "公司重点任务 - 季度统计"){
+				jdtjInit();
+			}
+		}					
 
 		function init() {
 			var date = new Date();
-			date.setMonth(date.getMonth() - 1);
 			var year = date.getFullYear();
+			var month = date.getMonth() + 1;
 			nui.get("taskYear").setValue(year);
 			// 按钮权限
 			if (userId != 'sysadmin') {
@@ -111,6 +199,10 @@ html,body {
 				success : function(o) {
 					if (o.result == "1") {
 						initSecOrgCombobox(null);
+						var jdtjDimTab = tabs.getTab("jdtjDimTab");
+						tabs.updateTab(jdtjDimTab, {
+							visible : true
+						});						
 					} else {
 						setSecOrg(userOrgId);
 						initSecOrgCombobox(secOrgId);
@@ -164,6 +256,28 @@ html,body {
 			searchForm.reset();
 			init();
 		}
+		
+		function jdtjInit(){
+			nui.get("jdtjTaskMonth").setData(monthDict);
+			var date = new Date();
+			var year = date.getFullYear();
+			var month = date.getMonth() + 1;
+			nui.get("jdtjTaskYear").setValue(year);
+			nui.get("jdtjTaskMonth").setValue(month);
+			jdtjSearch();				
+		}
+		
+		function jdtjSearch(){
+			jdtjGrid.load({
+				'taskYear' : nui.get("jdtjTaskYear").getValue(),
+				'taskMonth' : nui.get("jdtjTaskMonth").getValue()
+			});
+		}
+		
+		function jdtjReset() {
+			jdtjForm.reset();
+			jdtjInit();
+		}		
 		
 		function rwzrdw(){
 			nui.open({
@@ -412,6 +526,43 @@ html,body {
 				"fileName" : "公司重点任务"
 			})
 		}
+		
+		function renderCertainRisk(e){
+			if(e.value > 0){
+				e.cellStyle = "background-color: #feffe6";
+				var row = e.record;
+				return '<a href="javascript:void(0)" onclick="jdtjCertainRiskDetails(\'' + row.id + '\','+row.taskYear+','+row.taskMonth+')">'+e.value+'</a>';
+			}
+			return e.value;
+		}
+		
+		function renderGreatRisk(e){
+			if(e.value > 0){
+				e.cellStyle = "background-color: #fff1f0";
+				var row = e.record;
+				return '<a href="javascript:void(0)" onclick="jdtjGreatRiskDetails(\'' + row.id + '\','+row.taskYear+','+row.taskMonth+')">'+e.value+'</a>';
+			}
+			return e.value;			
+		}
+		
+		function jdtjCertainRiskDetails(id,taskYear,taskMonth){
+			var executeUrl = "<%=request.getContextPath()%>/keyTask/company/jdtjDetailsView.jsp?id="+id+"&taskYear="+taskYear+"&taskMonth="+taskMonth+"&type=certainRisk";
+			window.open(executeUrl);
+		}
+		
+		function jdtjGreatRiskDetails(id,taskYear,taskMonth){
+			var executeUrl = "<%=request.getContextPath()%>/keyTask/company/jdtjDetailsView.jsp?id="+id+"&taskYear="+taskYear+"&taskMonth="+taskMonth+"&type=greatRisk";
+			window.open(executeUrl);
+		}
+		
+		function jdtjExport(){
+			var data = jdtjForm.getData();
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.keyTask.company.exportJdtjExcel.biz.ext",
+				"fileName" : "公司重点任务-季度统计"
+			})
+		}						
 		
 	</script>
 
