@@ -211,7 +211,7 @@ html,body {
 		
 		function search() {
 			var data = assetsForm.getData();
-			assetsGrid.sortBy("procTime", "desc");
+			assetsGrid.sortBy("createTime", "desc");
 			assetsGrid.load(data);
 		}
 		
