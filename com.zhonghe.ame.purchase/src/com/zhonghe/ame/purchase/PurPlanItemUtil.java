@@ -52,15 +52,15 @@ public class PurPlanItemUtil {
 			}
 			if (StrUtil.isNotBlank(dataObjects[i].getString("budgetAccount"))) {
 				String budgetAccount = dataObjects[i].getString("budgetAccount");
-				dataObjects[i].setString("budgetAccount", budgetAccountMap.get(budgetAccount));
+				dataObjects[i].setString("budgetAccountValue", budgetAccountMap.get(budgetAccount));
 			}
 			if (StrUtil.isNotBlank(dataObjects[i].getString("ledgerCategory"))) {
 				String ledgerCategory = dataObjects[i].getString("ledgerCategory");
-				dataObjects[i].setString("ledgerCategory", ledgerCategoryMap.get(ledgerCategory));
+				dataObjects[i].setString("ledgerCategoryValue", ledgerCategoryMap.get(ledgerCategory));
 			}
 			if (StrUtil.isNotBlank(dataObjects[i].getString("ledgerName"))) {
 				String ledgerName = dataObjects[i].getString("ledgerName");
-				dataObjects[i].setString("ledgerName", ledgerNameMap.get(ledgerName));
+				dataObjects[i].setString("ledgerNameValue", ledgerNameMap.get(ledgerName));
 			}
 			
 			dataObjects[i].setBigDecimal("sumamount", sumamount);
