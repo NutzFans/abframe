@@ -234,10 +234,15 @@ html,body {
 							<div field="purchaseTwoName" width="130" align="center" headerAlign="center">物项中类</div>
 							<div field="centralizedDept" width="150" align="center" headerAlign="center" renderer="ZH_PUTUNDER">物项归口部门</div>
 							<div field="budgetAmount" width="100" align="center" headerAlign="center">计划金额（万元）</div>
+							<div field="yearBudgetAmount" width="140" align="center" headerAlign="center">本年预计使用金额(万元)</div>
 							<div field="newBudgetAmount" width="140" align="center" headerAlign="center" renderer="changeBudgetRenderer">变更后计划金额（万元）</div>
 							<div field="sumamount" width="130" align="center" headerAlign="center">已立项金额(万元)</div>
 							<div field="sumamountRate" width="100" align="center" headerAlign="center" renderer="sumamountRateRenderer">计划执行情况(%)</div>
 							<div field="updatedTime" width="80" align="center" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">申请时间</div>
+							<div field="budgetAccount" width="100" align="center" headerAlign="center">财务预算主体</div>
+							<div field="ledgerCategory" width="100" align="center" headerAlign="center">财务科目分类</div>
+							<div field="ledgerName" width="100" align="center" headerAlign="center">财务科目名称</div>
+							<div field="itemPlanType" width="100" align="center" headerAlign="center" renderer="ITEM_PLAN_TYPE">计划类型</div>
 						</div>
 					</div>
 				</div>
@@ -579,6 +584,10 @@ html,body {
 		function ZH_PURCHASE_NEW(e) {
 			return nui.getDictText('ZH_PURCHASE_NEW', e.value);
 		}
+		
+		function ITEM_PLAN_TYPE(e) {
+			return nui.getDictText("ITEM_PLAN_TYPE", e.value);
+		}		
 
 		function CG_PLAN_CHANGE(e) {
 			if(e.value == "1"){

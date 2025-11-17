@@ -137,12 +137,29 @@
 			var table = layui.table;
 			var extend2;
 			id = <%=request.getParameter("id")%>;
+			
+			var budgetAccountDatas, ledgerCategoryDatas, ledgerNameDatas;
+			var needOrgId = ""; // 新增：存储needOrgId，用于判断是否隐藏列
 
 			form.render();
 
 			getData();
 
 			function getData() {
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerCategoryList.biz.ext",
+					async : false,
+					success : function(result) {
+						ledgerCategoryDatas = result.ledgerCategoryList;			
+					}
+				});
+				ajaxCommon({
+					url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerNameList.biz.ext",
+					async : false,
+					success : function(result) {
+						ledgerNameDatas = result.ledgerNameList;			
+					}
+				});			
 				$.ajax({
 					url : "purchase/plan/com.zhonghe.ame.purchase.purchaseItems.queryPurPlanDetailById.biz.ext",
 					data : {
@@ -152,6 +169,16 @@
 					dataType : "json",
 					success : function(data) {
 						var formData = data.purPlan;
+						needOrgId = formData.needOrgId || ""; // 关键：获取needOrgId并赋值
+						var json = nui.encode({'secOrg' : data.purPlan.needOrgId});
+						ajaxCommon({
+							url : "com.zhonghe.ame.purchase.purchaseplan.findBudgetAccountList.biz.ext",
+							data : json,
+							async : false,
+							success : function(result) {
+								budgetAccountDatas = result.budgetAccountList;
+							}
+						});							
 						document.getElementById("name").innerHTML = formData.name;
 						renderStatus(formData.status);
 						formData.createdTime = layui.util.toDateString(formData.createdTime, 'yyyy-MM-dd');
@@ -177,6 +204,9 @@
 							}
 							$('textarea[autoHeight]').autoHeight();
 						})
+						
+						// 关键：获取数据后渲染表格（确保needOrgId已确定）
+						renderPlanGrid();
 					}
 				});
 			}
@@ -192,6 +222,18 @@
 					document.getElementById("status").setAttribute("style", "color:red;font-size: 15px;float:right;");
 				}
 			}
+			
+	        function getTextByValue(data, value, defaultValue, idField, textField) {
+	            if (!idField) idField = "id";
+	            if (!textField) textField = "text";
+	            for (var i = 0, l = data.length; i < l; i++) {
+	                var o = data[i];
+	                if (o[idField] == value) {
+	                    return o[textField];
+	                }
+	            }
+	            return defaultValue;
+	        }			
 
 			var fileGridInt = table.render({
 				elem : '#fileGrid',
@@ -222,15 +264,10 @@
 				}
 			});
 
-			var gridInt = table.render({
-				elem : '#grid',
-				url : 'com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext',
-				where : {
-					"planId" : id
-				},
-				cellMinWidth : 90,
-				method : 'post',
-				cols : [ [ {
+			// 渲染计划明细表（动态控制列显示）
+			function renderPlanGrid() {
+				// 定义完整列配置（包含所有列）
+				var colsConfig = [ [ {
 					field : 'code',
 					width : 200,
 					title : '计划编号'
@@ -250,6 +287,9 @@
 					field : 'oldBudgetAmount',
 					title : '预算金额'
 				}, {
+					field : 'yearBudgetAmount',
+					title : '本年预计使用金额'
+				}, {
 					field : 'newBudgetAmount',
 					title : '变更后金额',
 					templet : function(d) {
@@ -262,6 +302,27 @@
 						return extend2 == "变更计划" ? "/" : d.sumamount;
 					}
 				}, {
+					field : 'budgetAccount',
+					title : '财务预算主体',
+					templet : function(d) {
+						return getTextByValue(budgetAccountDatas, d.budgetAccount, null, "id", "name");
+					}
+				}, {
+					field : 'ledgerCategory',
+					title : '财务科目分类',
+					templet : function(d) {
+						return getTextByValue(ledgerCategoryDatas, d.ledgerCategory, null, "id", "name");
+					}
+				}, {
+					field : 'ledgerName',
+					title : '财务科目名称',
+					templet : function(d) {
+						return getTextByValue(ledgerNameDatas, d.ledgerName, null, "id", "name");
+					}
+				}, {
+					field : 'itemPlanType',
+					title : '计划类型'
+				}, {
 					field : 'sumamountRate',
 					title : '计划执行情况',
 					templet : function(d) {
@@ -271,14 +332,32 @@
 					field : 'remark',
 					width : 300,
 					title : '备注'
-				} ] ],
-				parseData : function(res) {
-					return {
-						"code" : "0",
-						"data" : res.purPlanItem
-					};
+				} ] ];
+
+				// 关键判断：当needOrgId为"1111"时，移除财务相关三列
+				if (needOrgId == "1111") {
+					// 财务预算主体、财务科目分类、财务科目名称对应索引为9、10、11（从0开始）
+					colsConfig[0].splice(9, 3); // 从索引9开始，删除3列
 				}
-			});
+
+				// 渲染表格
+				table.render({
+					elem : '#grid',
+					url : 'com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext',
+					where : {
+						"planId" : id
+					},
+					cellMinWidth : 90,
+					method : 'post',
+					cols : colsConfig, // 使用动态处理后的列配置
+					parseData : function(res) {
+						return {
+							"code" : "0",
+							"data" : res.purPlanItem
+						};
+					}
+				});
+			}
 
 		});	
 

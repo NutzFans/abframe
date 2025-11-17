@@ -5,9 +5,12 @@ import static com.eos.system.annotation.ParamType.CONSTANT;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
@@ -25,6 +28,9 @@ public class PurPlanItemUtil {
 	public DataObject[] wrap(DataObject[] dataObjects) throws Exception {
 		List<DataObject> warpDatas = new ArrayList<DataObject>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		Map<String, String> budgetAccountMap = this.getBudgetAccount(dbSession);
+		Map<String, String> ledgerCategoryMap = this.getLedgerCategory(dbSession);
+		Map<String, String> ledgerNameMap = this.getLedgerName(dbSession);
 		for (int i = 0; i < dataObjects.length; i++) {
 			String id = dataObjects[i].getString("id");
 			BigDecimal newBudgetAmount = dataObjects[i].getBigDecimal("newBudgetAmount");
@@ -44,6 +50,19 @@ public class PurPlanItemUtil {
 				}
 
 			}
+			if (StrUtil.isNotBlank(dataObjects[i].getString("budgetAccount"))) {
+				String budgetAccount = dataObjects[i].getString("budgetAccount");
+				dataObjects[i].setString("budgetAccount", budgetAccountMap.get(budgetAccount));
+			}
+			if (StrUtil.isNotBlank(dataObjects[i].getString("ledgerCategory"))) {
+				String ledgerCategory = dataObjects[i].getString("ledgerCategory");
+				dataObjects[i].setString("ledgerCategory", ledgerCategoryMap.get(ledgerCategory));
+			}
+			if (StrUtil.isNotBlank(dataObjects[i].getString("ledgerName"))) {
+				String ledgerName = dataObjects[i].getString("ledgerName");
+				dataObjects[i].setString("ledgerName", ledgerNameMap.get(ledgerName));
+			}
+			
 			dataObjects[i].setBigDecimal("sumamount", sumamount);
 			dataObjects[i].setString("sumamountRate", sumamountRate);
 			warpDatas.add(dataObjects[i]);
@@ -87,6 +106,34 @@ public class PurPlanItemUtil {
 		}
 
 		return ArrayUtil.toArray(resultDatas, DataObject.class);
+	}
+
+	// 获取预算主体Map
+	private Map<String, String> getBudgetAccount(Session dbSession) throws Exception {
+		String querySql = "SELECT id, name FROM zh_caiwu_budget_account";
+		List<Entity> entityList = dbSession.query(querySql);
+		return entityList.stream().collect(Collectors.toMap(entity -> entity.getStr("id"), entity -> entity.getStr("name")));
+	}
+
+	// 获取科目分类
+	private Map<String, String> getLedgerCategory(Session dbSession) throws Exception {
+		String querySql = "SELECT DICTID AS id, DICTNAME AS name FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'CW_KM_CLASS'";
+		List<Entity> entityList = dbSession.query(querySql);
+		Entity entity = new Entity();
+		entity.set("id", "10");
+		entity.set("name", "长期资产");
+		entityList.add(entity);
+		return entityList.stream().collect(Collectors.toMap(item -> item.getStr("id"), item -> item.getStr("name")));
+	}
+
+	// 获取科目
+	private Map<String, String> getLedgerName(Session dbSession) throws Exception {
+		String querySql = "SELECT id,name FROM zh_caiwu_ledger_account";
+		List<Entity> entityList = dbSession.query(querySql);
+		String querySqlTwo = "SELECT DICTID AS id, DICTNAME AS name FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'ZH_CW_CQZCFL'";
+		List<Entity> entityListTwo = dbSession.query(querySqlTwo);
+		entityList.addAll(entityListTwo);
+		return entityList.stream().collect(Collectors.toMap(item -> item.getStr("id"), item -> item.getStr("name")));
 	}
 
 }

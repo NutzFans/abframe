@@ -5,7 +5,7 @@
 <head>
 <title>采购 - 年度计划</title>
 <style type="text/css">
-html,body {
+body {
 	font-size: 12px;
 	padding: 0;
 	margin: 0;
@@ -14,6 +14,13 @@ html,body {
 	overflow: hidden;
 	width: 100%;
 }
+
+/* 强制长单词/字符自动断行 */
+.mini-grid-cell-inner {
+	word-wrap: break-word !important; /* 英文单词内断行 */
+	word-break: break-all !important; /* 中文/英文强制断行 */
+}
+
 </style>
 </head>
 <body>
@@ -43,6 +50,7 @@ html,body {
 							<td align="right" style="width: 100px;">采购单位：</td>
 							<td colspan="3">
 								<input id="needOrgName" name="needOrgName" class="nui-textbox" style="width: 100%;" readonly="readonly" />
+								<input id="needOrgId" name="needOrgId" class="nui-hidden" style="width: 100%;" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
@@ -63,10 +71,6 @@ html,body {
 							<td align="right" style="width: 160px;">本年度预计使用金额(万元)：</td>
 							<td>
 								<input id="yearBudgetAmount" name="yearBudgetAmount" class="nui-textbox" readonly="readonly" style="width: 100%;" />
-							</td>
-							<td align="right" style="width: 120px;">财务年度预算科目：</td>
-							<td>
-								<input id="subject" name="subject" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
@@ -89,16 +93,16 @@ html,body {
 		<fieldset style="border: solid 1px #aaa;">
 			<legend>计划明细</legend>
 			<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="false" multiSelect="true" dataField="purPlanItem"
-				url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext">
+				url="com.zhonghe.ame.purchase.purchaseItems.queryPurPlanItem.biz.ext" allowCellWrap="true">
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-					<div field="code" width="110" align="center" headerAlign="center">计划编号</div>
-					<div field="purchaseFirstCode" width="110" align="center" headerAlign="center" visible="false">物项大类编码</div>
-					<div field=purchaseFirstName width="100" align="center" headerAlign="center">物项大类名称</div>
-					<div field="purchaseTwoCode" width="110" align="center" headerAlign="center" visible="false">中类编码</div>
-					<div field="purchaseTwoName" width="110" align="center" headerAlign="center">中类名称</div>
-					<div field="materialName" width="110" align="center" headerAlign="center" vtype="required" headerStyle="color:red">
+					<div field="code" width="110" align="left" headerAlign="center">计划编号</div>
+					<div field="purchaseFirstCode" width="110" align="left" headerAlign="center" visible="false">物项大类编码</div>
+					<div field=purchaseFirstName width="100" align="left" headerAlign="center">物项大类名称</div>
+					<div field="purchaseTwoCode" width="110" align="left" headerAlign="center" visible="false">中类编码</div>
+					<div field="purchaseTwoName" width="110" align="left" headerAlign="center">中类名称</div>
+					<div field="materialName" width="110" align="left" headerAlign="center" vtype="required" headerStyle="color:red">
 						采购物项名称
 						<input property="editor" class="nui-textbox" name="materialName" width="100%" height="100%" required="true" />
 					</div>
@@ -116,8 +120,28 @@ html,body {
 					</div>
 					<div field="budgetAmount" width="100" align="center" headerAlign="center" headerStyle="color:red" vtype="required">
 						预算金额(万元)
-						<input property="editor" class="nui-spinner" minValue="0" width="100%" maxValue="999999999" name="budgetAmount" readonly="readonly" visible="true" />
+						<input property="editor" class="nui-spinner" minValue="0" width="100%" maxValue="999999999" name="budgetAmount" readonly="readonly" />
 					</div>
+					<div field="yearBudgetAmount" width="125" align="center" headerAlign="center" headerStyle="color:red" vtype="required">
+						本年预计使用金额(万元)
+						<input name="yearBudgetAmount" property="editor" width="100%" class="nui-spinner" minValue="0" maxValue="999999999" readonly="readonly" />
+					</div>
+					<div field="budgetAccount" name="budgetAccount" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务预算主体
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" readonly="readonly" />
+					</div>
+					<div field="ledgerCategory" name="ledgerCategory" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务科目分类
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" readonly="readonly" />
+					</div>
+					<div field="ledgerName" name="ledgerName" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务科目名称
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" readonly="readonly" />
+					</div>
+					<div field="itemPlanType" width="100" align="left" headerAlign="center" headerStyle="color:red" vtype="required" renderer="ITEM_PLAN_TYPE">
+						计划类型
+						<input property="editor" class="nui-dictcombobox" width="100%" dictTypeId="ITEM_PLAN_TYPE" required="true" />
+					</div>						
 					<div field="remark" width="100" align="center" headerAlign="center">
 						备注
 						<input property="editor" class="nui-textarea" name="remark" width="100%" />
@@ -150,24 +174,47 @@ html,body {
 		var purType, orgid;
 		var istype, titleText;
 		var countersignUsers;
+		var budgetAccountDatas, ledgerCategoryDatas, ledgerNameDatas;
 		
 		init();
 		
 		function init() {
 			var data = {workitemid :<%=workitemid%>};
 			var json = nui.encode(data);
+			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerCategoryList.biz.ext",
+				async : false,
+				success : function(result) {
+					ledgerCategoryDatas = result.ledgerCategoryList;			
+				}
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerNameList.biz.ext",
+				async : false,
+				success : function(result) {
+					ledgerNameDatas = result.ledgerNameList;			
+				}
+			});
 			nui.ajax({
 				url : "com.zhonghe.ame.purchase.purchaseItems.queryPurPlanDetail.biz.ext",
 				type : 'POST',
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
-					if (o.purPlan.type != 2) {
-						grid.hideColumns([ 13, 14 ])
+					if(o.purPlan.needOrgId == "1111"){
+						grid.hideColumn("budgetAccount");
+						grid.hideColumn("ledgerCategory");
+						grid.hideColumn("ledgerName");
 					}
-					if (o.purPlan.type == 3) {
-						grid.hideColumns([ 4, 6 ])
-					}
+					var json = nui.encode({'secOrg' : o.purPlan.needOrgId});
+					ajaxCommon({
+						url : "com.zhonghe.ame.purchase.purchaseplan.findBudgetAccountList.biz.ext",
+						data : json,
+						async : false,
+						success : function(result) {
+							budgetAccountDatas = result.budgetAccountList;
+						}
+					});
 					nui.get("backTo").setData(o.purPlan.backList);
 
 					var grid_0 = nui.get("grid_0");
@@ -248,6 +295,10 @@ html,body {
 			return nui.getDictText('ZH_PUTUNDER', e.value);
 		}
 		
+		function ITEM_PLAN_TYPE(e) {
+			return nui.getDictText("ITEM_PLAN_TYPE", e.value);
+		}		
+		
 		function submit() {
 			var auditstatus = nui.get("auditstatus").getValue();
 			if (auditstatus == "2") { //终止流程
@@ -303,6 +354,31 @@ html,body {
 				});				
 			}, 2000);
 		}
+		
+        function getTextByValue(data, value, defaultValue, idField, textField) {
+            if (!idField) idField = "id";
+            if (!textField) textField = "text";
+            for (var i = 0, l = data.length; i < l; i++) {
+                var o = data[i];
+                if (o[idField] == value) {
+                    return o[textField];
+                }
+            }
+            return defaultValue;
+        }
+        
+        grid.on("drawcell", function (e) {
+            if (e.field == "budgetAccount") {
+                e.cellHtml = getTextByValue(budgetAccountDatas, e.value, null, "id", "name");
+            }
+            if (e.field == "ledgerCategory") {
+                e.cellHtml = getTextByValue(ledgerCategoryDatas, e.value, null, "id", "name");
+            }
+            if (e.field == "ledgerName") {
+                e.cellHtml = getTextByValue(ledgerNameDatas, e.value, null, "id", "name");
+            }                         
+        });        		
+		
 	</script>
 
 </body>

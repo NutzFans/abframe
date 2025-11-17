@@ -5,7 +5,7 @@
 <head>
 <title>采购 - 年度计划</title>
 <style type="text/css">
-html,body {
+body {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -13,6 +13,13 @@ html,body {
 	height: 100%;
 	overflow: hidden;
 }
+
+/* 强制长单词/字符自动断行 */
+.mini-grid-cell-inner {
+	word-wrap: break-word !important; /* 英文单词内断行 */
+	word-break: break-all !important; /* 中文/英文强制断行 */
+}
+
 </style>
 </head>
 <body>
@@ -59,11 +66,7 @@ html,body {
 						<tr>
 							<td align="right" style="width: 160px;">本年度预计使用金额(万元)：</td>
 							<td>
-								<input id="yearBudgetAmount" name="yearBudgetAmount" class="nui-textbox" required="true" style="width: 100%;" />
-							</td>
-							<td align="right" style="width: 120px;">财务年度预算科目：</td>
-							<td>
-								<input id="subject" name="subject" class="nui-textbox" style="width: 100%;" />
+								<input id="yearBudgetAmount" name="yearBudgetAmount" class="nui-textbox" required="true" readOnly="readOnly" style="width: 100%;" />
 							</td>
 						</tr>
 						<tr>
@@ -103,16 +106,16 @@ html,body {
 					</table>
 				</div>
 			</div>
-			<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="true" multiSelect="true" oncellendedit="getHTZQ">
+			<div id="grid_traveldetail" class="nui-datagrid" style="width: 100%; height: auto;" allowCellSelect="true" showPager="false" allowCellEdit="true" multiSelect="true" allowCellWrap="true" oncellendedit="getHTZQ">
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div type="indexcolumn" align="center" headerAlign="center">序号</div>
-					<div field="code" width="110" align="center" headerAlign="center">计划编号</div>
-					<div field="purchaseFirstCode" width="100" align="center" headerAlign="center" visible="false">物项大类编码</div>
-					<div field=purchaseFirstName width="100" align="center" headerAlign="center">物项大类名称</div>
-					<div field="purchaseTwoCode" width="100" align="center" headerAlign="center" visible="false">中类编码</div>
-					<div field="purchaseTwoName" width="100" align="center" headerAlign="center" renderer="onViewL">中类名称</div>
-					<div field="materialName" width="100" align="center" headerAlign="center" vtype="required" headerStyle="color:red">
+					<div field="code" width="110" align="left" headerAlign="center">计划编号</div>
+					<div field="purchaseFirstCode" width="100" align="left" headerAlign="center" visible="false">物项大类编码</div>
+					<div field=purchaseFirstName width="100" align="left" headerAlign="center">物项大类名称</div>
+					<div field="purchaseTwoCode" width="100" align="left" headerAlign="center" visible="false">中类编码</div>
+					<div field="purchaseTwoName" width="100" align="left" headerAlign="center" renderer="onViewL">中类名称</div>
+					<div field="materialName" width="100" align="left" headerAlign="center" vtype="required" headerStyle="color:red">
 						采购物项名称
 						<input property="editor" class="nui-textbox" name="materialName" width="100%" height="100%" required="true" />
 					</div>
@@ -122,18 +125,38 @@ html,body {
 					</div>
 					<div field="onePrice" width="100" align="center" headerAlign="center" vtype="required" headerStyle="color:red">
 						单价(万元)
-						<input name="onePrice" property="editor" width="100%" class="nui-spinner" minValue="0" maxValue="999999999" />
+						<input name="onePrice" property="editor" width="100%" class="nui-spinner" minValue="0" maxValue="999999999" required="true"/>
 					</div>
 					<div field="number" width="100" align="center" headerAlign="center" vtype="int" headerStyle="color:red">
 						数量(整数)
-						<input name="number" property="editor" width="100%" class="nui-spinner" decimalPlaces="0" minValue="0" maxValue="999999999" />
+						<input name="number" property="editor" width="100%" class="nui-spinner" decimalPlaces="0" minValue="0" maxValue="999999999" required="true" />
 					</div>
 					<div field="budgetAmount" width="100" align="center" headerAlign="center" headerStyle="color:red" vtype="required">预算金额(万元)</div>
-					<div field="remark" width="150" align="center" headerAlign="center">
+					<div field="yearBudgetAmount" width="125" align="center" headerAlign="center" headerStyle="color:red" vtype="required">
+						本年预计使用金额(万元)
+						<input name="yearBudgetAmount" property="editor" width="100%" class="nui-spinner" minValue="0" maxValue="999999999" required="true" />
+					</div>
+					<div field="budgetAccount" name="budgetAccount" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务预算主体
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" required="true" />
+					</div>
+					<div field="ledgerCategory" name="ledgerCategory" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务科目分类
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" required="true" />
+					</div>
+					<div field="ledgerName" name="ledgerName" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务科目名称
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" required="true" />
+					</div>
+					<div field="itemPlanType" width="100" align="left" headerAlign="center" headerStyle="color:red" vtype="required" renderer="ITEM_PLAN_TYPE">
+						计划类型
+						<input property="editor" class="nui-dictcombobox" width="100%" dictTypeId="ITEM_PLAN_TYPE" required="true" />
+					</div>					
+					<div field="remark" width="150" align="left" headerAlign="center">
 						备注
 						<input property="editor" class="nui-textarea" name="remark" width="100%" />
 					</div>
-					<div field="centralizedDept" width="100" align="center" headerAlign="center" renderer="zhPutUnder">物项归口部门</div>
+					<div field="centralizedDept" width="100" align="left" headerAlign="center" renderer="zhPutUnder">物项归口部门</div>
 				</div>
 			</div>
 		</fieldset>
@@ -163,6 +186,7 @@ html,body {
 		var istype;
 		var year = new Date().getFullYear();
 		var yeariterm = [];
+		var budgetAccountDatas, ledgerCategoryDatas, ledgerNameDatas;
 		for (var i = 0; i < 5; i++) {
 			yeariterm.push({
 				"id" : year + i,
@@ -177,10 +201,38 @@ html,body {
 			var data = {workItemID :<%=workItemID%>};
 			var json = nui.encode(data);
 			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerCategoryList.biz.ext",
+				async : false,
+				success : function(result) {
+					ledgerCategoryDatas = result.ledgerCategoryList;			
+				}
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerNameList.biz.ext",
+				async : false,
+				success : function(result) {
+					ledgerNameDatas = result.ledgerNameList;			
+				}
+			});
+			ajaxCommon({
 				"url" : "com.zhonghe.ame.purchase.purchaseplan.getPurPlanByWorkitemId.biz.ext",
 				"data" : json,
 				"success" : function(o) {
 					form.setData(o.data)
+					if(o.data.needOrgId == "1111"){
+						grid.hideColumn("budgetAccount");
+						grid.hideColumn("ledgerCategory");
+						grid.hideColumn("ledgerName");
+					}					
+					var json = nui.encode({'secOrg' : o.data.needOrgId});
+					ajaxCommon({
+						url : "com.zhonghe.ame.purchase.purchaseplan.findBudgetAccountList.biz.ext",
+						data : json,
+						async : false,
+						success : function(result) {
+							budgetAccountDatas = result.budgetAccountList;
+						}
+					});
 					if (o.data.type == 1 || o.data.type == 2) {
 						nui.get("putunder").set({
 							required : true
@@ -191,13 +243,6 @@ html,body {
 						});
 					}
 					grid.setData(o.datas)
-					grid.showColumns([ 4, 6, 13 ])
-					if (o.data.type != 2) {
-						grid.showColumns([ 4, 6, 13 ])
-					}
-					if (o.data.type == 3) {
-						grid.hideColumns([ 4, 6, 13 ])
-					}
 					//设置审核意见基本信息
 					nui.get("processinstid").setValue(o.workitem.processInstID);
 					nui.get("processinstname").setValue(o.workitem.processInstName);
@@ -358,6 +403,7 @@ html,body {
 				nui.alert("请至少选中一条记录！");
 			}
 			totalAmount();
+			totalYearAmount();
 		}
 
 		function getHTZQ(e) {
@@ -375,6 +421,9 @@ html,body {
 					});
 				}
 			}
+			if(e.field == "yearBudgetAmount"){
+				totalYearAmount();
+			}
 		}
 
 		function totalAmount() {
@@ -391,6 +440,21 @@ html,body {
 			}
 			nui.get("budgetAmount").setValue(b)
 		}
+		
+		function totalYearAmount() {
+			var tempData = grid.data;
+			var a = tempData.length;
+			var b = 0;
+			for (var i = 0; i < a; i++) {
+				if (!!tempData[i].yearBudgetAmount && tempData[i].yearBudgetAmount > 0) {
+					b = addFloat(b, tempData[i].yearBudgetAmount)
+				} else {
+					var x = 0;
+					b = addFloat(b, x)
+				}
+			}
+			nui.get("yearBudgetAmount").setValue(b)
+		}		
 
 		function zhPutUnder(e) {
 			return nui.getDictText('ZH_PUTUNDER', e.value);//设置业务字典值
@@ -403,6 +467,10 @@ html,body {
 		function onYn(e) {
 			return nui.getDictText("MIS_YN", e.value);
 		}
+		
+		function ITEM_PLAN_TYPE(e) {
+			return nui.getDictText("ITEM_PLAN_TYPE", e.value);
+		}		
 
 		function isStrEmpty(obj) {
 			if (typeof obj == "undefined" || obj == null || obj == "") {
@@ -468,7 +536,6 @@ html,body {
 
 		function SaveData() {
 			setTimeout(function() {
-				nui.unmask(document.body);
 				var formData = form.getData();
 				var gridData = grid.getChanges();
 				var data_opioion = opioionform.getData();
@@ -479,28 +546,123 @@ html,body {
 					"purPlanItem" : gridData,
 					"misOpinion" : data_opioion.misOpinion
 				});
-				ajaxCommon({
-					"url" : "com.zhonghe.ame.purchase.purchaseplan.editPurPlan.biz.ext",
-					data : json,
-					contentType : 'text/json',
-					success : function(text) {
-						if (text.result == "1") {
-							showTips("操作成功");
-							closeOk();
-						} else {
-							nui.get("saveReimb").enable();
-							nui.get("creatReimbProcess").enable();
-							nui.get("zzFeame").enable();
-						}
-					}
+				var validateJson = nui.encode({
+					"purPlan" : formData,
+					"purPlanItem" : grid.getData()
 				});
+				if(istype == 1 && formData.needOrgId !="1111"){
+					ajaxCommon({
+						"url" : "com.zhonghe.ame.purchase.purchaseplan.budgetValidation.biz.ext",
+						data : validateJson,
+						contentType : 'text/json',
+						success : function(text) {
+							nui.unmask(document.body);
+							if(text.errorMsg==""){
+								ajaxCommon({
+									"url" : "com.zhonghe.ame.purchase.purchaseplan.editPurPlan.biz.ext",
+									data : json,
+									contentType : 'text/json',
+									success : function(text) {
+										if (text.result == "1") {
+											showTips("操作成功");
+											closeOk();
+										} else {
+											nui.get("saveReimb").enable();
+											nui.get("creatReimbProcess").enable();
+											nui.get("zzFeame").enable();
+										}
+									}
+								});							
+							}else{
+								nui.alert(text.errorMsg);
+								nui.get("saveReimb").enable();
+								nui.get("creatReimbProcess").enable();
+								nui.get("zzFeame").enable();
+							}
+						}
+					});					
+				}else if (istype == 0 || istype == 2 || formData.needOrgId =="1111") {
+					ajaxCommon({
+						"url" : "com.zhonghe.ame.purchase.purchaseplan.editPurPlan.biz.ext",
+						data : json,
+						contentType : 'text/json',
+						success : function(text) {
+							nui.unmask(document.body);
+							if (text.result == "1") {
+								showTips("操作成功");
+								closeOk();
+							} else {
+								nui.get("saveReimb").enable();
+								nui.get("creatReimbProcess").enable();
+								nui.get("zzFeame").enable();
+							}
+						}
+					});	
+				}
 			}, 2000);		
 		}
 		
 		function getUniqueValuesString(arr, key) {
 			const uniqueValues = [...new Set(arr.map(obj => obj[key]))];
 			return uniqueValues.join(',');
-		}		
+		}
+
+        function getTextByValue(data, value, defaultValue, idField, textField) {
+            if (!idField) idField = "id";
+            if (!textField) textField = "text";
+            for (var i = 0, l = data.length; i < l; i++) {
+                var o = data[i];
+                if (o[idField] == value) {
+                    return o[textField];
+                }
+            }
+            return defaultValue;
+        }
+        
+        function getChildData(data, id) {
+            var childData = [];
+            for (var i = 0, l = data.length; i < l; i++) {
+                var o = data[i];
+                if (o.category == id) {
+                    childData.push(o);
+                }
+            }
+            return childData;
+        }
+        
+        grid.on("drawcell", function (e) {
+            if (e.field == "budgetAccount") {
+                e.cellHtml = getTextByValue(budgetAccountDatas, e.value, null, "id", "name");
+            }
+            if (e.field == "ledgerCategory") {
+                e.cellHtml = getTextByValue(ledgerCategoryDatas, e.value, null, "id", "name");
+            }
+            if (e.field == "ledgerName") {
+                e.cellHtml = getTextByValue(ledgerNameDatas, e.value, null, "id", "name");
+            }                         
+        });                		
+		
+		//单元格编辑前，找到对应的下拉数据进行填充
+		grid.on("cellbeginedit", function (e) {
+			if (e.field == "budgetAccount") {
+				e.editor.setData(budgetAccountDatas);
+			}
+			if (e.field == "ledgerCategory") {
+				e.editor.setData(ledgerCategoryDatas);
+			}
+			if (e.field == "ledgerName") {
+				var data = getChildData(ledgerNameDatas, e.record.ledgerCategory);
+				e.editor.setData(data);
+			}
+		})
+		
+        //在前面列编辑后，清理后面列的数据
+        grid.on("cellcommitedit", function (e) {
+            var grid = e.sender,record = e.record;
+            if (e.field == "ledgerCategory") {
+                grid.updateRow(record, { ledgerName: ""});
+            }
+        });				
 		
 	</script>
 

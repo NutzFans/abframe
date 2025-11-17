@@ -5,7 +5,7 @@
 <head>
 <title>采购 - 年度计划</title>
 <style type="text/css">
-html,body {
+body {
 	font-size: 12px;
 	padding: 0;
 	margin: 0;
@@ -13,6 +13,12 @@ html,body {
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
+}
+
+/* 强制长单词/字符自动断行 */
+.mini-grid-cell-inner {
+	word-wrap: break-word !important; /* 英文单词内断行 */
+	word-break: break-all !important; /* 中文/英文强制断行 */
 }
 </style>
 </head>
@@ -60,10 +66,6 @@ html,body {
 							<td align="right" style="width: 160px;">本年度预计使用金额(万元)：</td>
 							<td>
 								<input id="yearBudgetAmount" name="yearBudgetAmount" class="nui-textbox" readonly="readonly" style="width: 100%;" />
-							</td>
-							<td align="right" style="width: 120px;">财务年度预算科目：</td>
-							<td>
-								<input id="subject" name="subject" class="nui-textbox" style="width: 100%;" readonly="readonly" />
 							</td>
 						</tr>
 						<tr>
@@ -115,6 +117,26 @@ html,body {
 						预算金额(万元)
 						<input property="editor" class="nui-spinner" minValue="0" width="100%" maxValue="999999999" name="budgetAmount" readonly="readonly" visible="true" />
 					</div>
+					<div field="yearBudgetAmount" width="125" align="center" headerAlign="center" headerStyle="color:red" vtype="required">
+						本年预计使用金额(万元)
+						<input name="yearBudgetAmount" property="editor" width="100%" class="nui-spinner" minValue="0" maxValue="999999999" readonly="readonly" />
+					</div>
+					<div field="budgetAccount" name="budgetAccount" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务预算主体
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" readonly="readonly" />
+					</div>
+					<div field="ledgerCategory" name="ledgerCategory" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务科目分类
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" readonly="readonly" />
+					</div>
+					<div field="ledgerName" name="ledgerName" width="100" align="left" headerAlign="center" headerStyle="color:red">
+						财务科目名称
+						<input property="editor" class="mini-combobox" style="width: 100%;" valueField="id" textField="name" readonly="readonly" />
+					</div>
+					<div field="itemPlanType" width="100" align="left" headerAlign="center" headerStyle="color:red" vtype="required" renderer="ITEM_PLAN_TYPE">
+						计划类型
+						<input property="editor" class="nui-dictcombobox" width="100%" dictTypeId="ITEM_PLAN_TYPE" required="true" />
+					</div>
 					<div field="remark" width="100" align="center" headerAlign="center">
 						备注
 						<input property="editor" class="nui-textarea" name="remark" width="100%" />
@@ -135,18 +157,47 @@ html,body {
 		var processid = <%=request.getParameter("processInstID")%> ;
 		var form = new nui.Form("#form1");
 		var grid = nui.get("grid_traveldetail");
+		var budgetAccountDatas, ledgerCategoryDatas, ledgerNameDatas;
 		
 		init();
 		
 		function init() {
 			var data = {"processid" : processid};
 			var json = nui.encode(data);
+			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerCategoryList.biz.ext",
+				async : false,
+				success : function(result) {
+					ledgerCategoryDatas = result.ledgerCategoryList;			
+				}
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.purchase.purchaseplan.findLedgerNameList.biz.ext",
+				async : false,
+				success : function(result) {
+					ledgerNameDatas = result.ledgerNameList;			
+				}
+			});			
 			nui.ajax({
 				url : "com.zhonghe.ame.purchase.purchaseItems.queryPurPlanDetail.biz.ext",
 				type : 'POST',
 				data : json,
 				success : function(o) {
 					form.setData(o.purPlan);
+					if(o.purPlan.needOrgId == "1111"){
+						grid.hideColumn("budgetAccount");
+						grid.hideColumn("ledgerCategory");
+						grid.hideColumn("ledgerName");
+					}
+					var json = nui.encode({'secOrg' : o.purPlan.needOrgId});
+					ajaxCommon({
+						url : "com.zhonghe.ame.purchase.purchaseplan.findBudgetAccountList.biz.ext",
+						data : json,
+						async : false,
+						success : function(result) {
+							budgetAccountDatas = result.budgetAccountList;
+						}
+					});					
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "PurchasePlan",
@@ -171,6 +222,35 @@ html,body {
 		function zhPutUnder(e) {
 			return nui.getDictText('ZH_PUTUNDER', e.value);
 		}
+	
+		function ITEM_PLAN_TYPE(e) {
+			return nui.getDictText("ITEM_PLAN_TYPE", e.value);
+		}
+		
+        function getTextByValue(data, value, defaultValue, idField, textField) {
+            if (!idField) idField = "id";
+            if (!textField) textField = "text";
+            for (var i = 0, l = data.length; i < l; i++) {
+                var o = data[i];
+                if (o[idField] == value) {
+                    return o[textField];
+                }
+            }
+            return defaultValue;
+        }
+        
+        grid.on("drawcell", function (e) {
+            if (e.field == "budgetAccount") {
+                e.cellHtml = getTextByValue(budgetAccountDatas, e.value, null, "id", "name");
+            }
+            if (e.field == "ledgerCategory") {
+                e.cellHtml = getTextByValue(ledgerCategoryDatas, e.value, null, "id", "name");
+            }
+            if (e.field == "ledgerName") {
+                e.cellHtml = getTextByValue(ledgerNameDatas, e.value, null, "id", "name");
+            }                         
+        });				
+		
 	</script>
 
 </body>
