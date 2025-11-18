@@ -155,6 +155,7 @@ public class InvoiceUtil {
 			dataObject.set("invoiceSum", invoice.getString("invoiceSum"));
 			dataObject.set("bookIncome", invoice.getString("bookIncome"));
 			dataObject.set("invoiceTax", invoice.getString("invoiceTax"));
+			dataObject.set("allotFlag", "1");
 			if (CharSequenceUtil.isNotBlank(invoice.getString("receivableSum"))) {
 				dataObject.set("receivableSum", invoice.getString("receivableSum"));
 			}
@@ -167,6 +168,8 @@ public class InvoiceUtil {
 
 			newDataObject.set("id", null);
 			DatabaseExt.getPrimaryKey(newDataObject);
+			newDataObject.set("actualInvoiceSum", BigDecimal.ZERO);
+			newDataObject.set("allotFlag", "1");
 			newDataObject.set("createUserid", newInvoice.getString("newCreateUserid"));
 			newDataObject.set("createUsername", newInvoice.getString("newCreateUsername"));
 			newDataObject.set("implementOrg", newInvoice.getString("newImplementOrg"));
