@@ -26,10 +26,13 @@ public class BudgetValidationUtil {
 
 	private String queryCaiwuSql = "SELECT total_amount FROM zh_caiwu_budget_filling_ledger AS zcbfl, zh_caiwu_budget_filling_main AS zcbfm WHERE zcbfl.budget_main_id = zcbfm.id AND zcbfm.budget_year = ? AND zcbfm.budget_account_id = ? AND zcbfl.budget_category = ? AND zcbfl.ledger_account_id = ?";
 
+	private String queryTaxRateSql = "SELECT id, tax_rate FROM zh_caiwu_ledger_account";
+
 	@Bizlet("核算并返回结果")
 	public String budgetValidation(Entity purPlan, Entity[] purPlanItem) throws Exception {
 		String resultStr = "";
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		Map<String, BigDecimal> taxRateMapData = this.gettaxRateMap(dbSession);
 		Map<String, BigDecimal> validateMapData = this.groupItem(purPlanItem);
 		Map<String, BigDecimal> alreadyMapData = this.thereIsAlsoDataInTheDatabase(purPlan.getStr("id"), purPlan.getStr("year"), purPlan.getStr("needOrgId"), dbSession);
 		Map<String, BigDecimal> validateAssetsMapData = this.groupItemLongTermAssets(purPlanItem);
@@ -43,7 +46,7 @@ public class BudgetValidationUtil {
 				b2 = alreadyMapData.get(key);
 			}
 			BigDecimal sourceBigDecimal = NumberUtil.mul(NumberUtil.add(b1, b2), 10000);
-			String str = this.compare(key, purPlan.getStr("year"), sourceBigDecimal, dbSession);
+			String str = this.compare(key, purPlan.getStr("year"), sourceBigDecimal, dbSession, taxRateMapData);
 			if (StrUtil.isNotBlank(str)) {
 				resultStr = resultStr + str + "<br>";
 			}
@@ -56,7 +59,7 @@ public class BudgetValidationUtil {
 				b2 = alreadyMapData.get(key);
 			}
 			BigDecimal sourceBigDecimal = NumberUtil.mul(NumberUtil.add(b1, b2), 10000);
-			String str = this.compareAssets(key, sourceBigDecimal, assetsMapData);
+			String str = this.compareAssets(key, sourceBigDecimal, assetsMapData, taxRateMapData);
 			if (StrUtil.isNotBlank(str)) {
 				resultStr = resultStr + str + "<br>";
 			}
@@ -142,35 +145,47 @@ public class BudgetValidationUtil {
 	}
 
 	// 比较是否超过预算
-	private String compare(String key, String year, BigDecimal sourceBigDecimal, Session dbSession) throws Exception {
+	private String compare(String key, String year, BigDecimal sourceBigDecimal, Session dbSession, Map<String, BigDecimal> taxRateMapData) throws Exception {
 		List<String> strList = StrUtil.split(key, "_");
 		Entity entity = new Entity().set("total_amount", BigDecimal.ZERO);
 		entity = dbSession.queryOne(queryCaiwuSql, year, strList.get(0), strList.get(1), strList.get(2));
-		if (NumberUtil.isGreater(sourceBigDecimal, entity.getBigDecimal("total_amount"))) {
+		BigDecimal taxIncludedTotalAmount = NumberUtil.mul(NumberUtil.add(1, taxRateMapData.get(strList.get(2))), entity.getBigDecimal("total_amount"));
+		if (NumberUtil.isGreater(sourceBigDecimal, taxIncludedTotalAmount)) {
 			String querySqlOne = "SELECT name FROM zh_caiwu_budget_account WHERE id = ?";
 			String querySqlTwo = "SELECT DICTNAME AS name FROM EOS_DICT_ENTRY WHERE DICTTYPEID = 'CW_KM_CLASS' AND DICTID = ?";
 			String querySqlThree = "SELECT name FROM zh_caiwu_ledger_account WHERE id = ?";
 			Entity budgetAccount = dbSession.queryOne(querySqlOne, strList.get(0));
 			Entity ledgerCategory = dbSession.queryOne(querySqlTwo, strList.get(1));
 			Entity ledgerName = dbSession.queryOne(querySqlThree, strList.get(2));
-			return StrUtil.format("【{}】-【{}】-【{}】的总金额【{}元】超过了财务预算金额【{}元】", budgetAccount.getStr("name"), ledgerCategory.getStr("name"), ledgerName.getStr("name"),
-					NumberUtil.decimalFormat(",###", sourceBigDecimal), NumberUtil.decimalFormat(",###", entity.getBigDecimal("total_amount")));
+			return StrUtil.format("【{}】-【{}】-【{}】的总金额【{}元】超过了财务预算金额(含税)【{}元】", budgetAccount.getStr("name"), ledgerCategory.getStr("name"), ledgerName.getStr("name"),
+					NumberUtil.decimalFormat(",###", sourceBigDecimal), NumberUtil.decimalFormat(",###", taxIncludedTotalAmount));
 		} else {
 			return "";
 		}
 	}
 
 	// 比较是否超过预算
-	private String compareAssets(String key, BigDecimal sourceBigDecimal, Map<String, BigDecimal> assetsMapData) throws Exception {
+	private String compareAssets(String key, BigDecimal sourceBigDecimal, Map<String, BigDecimal> assetsMapData, Map<String, BigDecimal> taxRateMapData) throws Exception {
 		BigDecimal targetBigDecimal = BigDecimal.ZERO;
 		if (assetsMapData.containsKey(key)) {
 			targetBigDecimal = assetsMapData.get(key);
+			targetBigDecimal = NumberUtil.mul(NumberUtil.add(1, taxRateMapData.get(key)), targetBigDecimal);
 		}
 		if (NumberUtil.isGreater(sourceBigDecimal, targetBigDecimal)) {
-			return StrUtil.format("【{}】的总金额【{}元】超过了长期资产【{}】的总预算金额【{}元】", key, NumberUtil.decimalFormat(",###", sourceBigDecimal), key, NumberUtil.decimalFormat(",###", targetBigDecimal));
+			return StrUtil.format("【{}】的总金额【{}元】超过了长期资产【{}】的总预算金额(含税)【{}元】", key, NumberUtil.decimalFormat(",###", sourceBigDecimal), key, NumberUtil.decimalFormat(",###", targetBigDecimal));
 		} else {
 			return "";
 		}
+	}
+
+	// 获取财务科目税率
+	private Map<String, BigDecimal> gettaxRateMap(Session dbSession) throws Exception {
+		List<Entity> entityList = dbSession.query(queryTaxRateSql);
+		Map<String, BigDecimal> mapData = entityList.stream().collect(Collectors.toMap(entity -> entity.getStr("id"), entity -> entity.getBigDecimal("tax_rate")));
+		mapData.put("固定资产", new BigDecimal(0.13));
+		mapData.put("大额装修", new BigDecimal(0.09));
+		mapData.put("无形资产", new BigDecimal(0.13));
+		return mapData;
 	}
 
 }
