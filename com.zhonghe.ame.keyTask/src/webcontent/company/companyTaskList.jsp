@@ -113,7 +113,45 @@ html,body {
 					</div>
 				</div>
 			</div>
+		</div>
 
+		<div name="ndtjDimTab" title="公司重点任务 - 年度统计" visible="false">
+			<div id="ndtjForm">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
+					<table>
+						<tr>
+							<td style="width: 70px; text-align: right;">任务年份：</td>
+							<td>
+								<input id="ndtjTaskYear" name="taskYear" class="nui-textbox" style="width: 100px" />
+							</td>
+							<td>
+								<a class="nui-button" id="ndtjSearch" iconCls="icon-search" onclick="ndtjSearch()">查询</a>
+								<a class="nui-button" id="ndtjReset" iconCls="icon-reload" onclick="ndtjReset()">重置</a>
+								<a class="nui-button" id="ndtjExport" iconCls="icon-download" onclick="ndtjExport()">导出</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div class="nui-fit">
+				<div id="ndtjGrid" showPager="false" align="center" class="nui-datagrid" style="width: 100%; height: 100%;" allowCellSelect="true" enableHotTrack="false" allowRowSelect="false">
+					<div property="columns">
+						<div field="secOrgName" width="200" align="center" headerAlign="center">任务责任单位</div>
+						<div field="taskCount" width="150" align="center" headerAlign="center">重点任务数</div>
+						<div field="taskCountCompletedOnTime" width="150" align="center" headerAlign="center">按时完成任务数</div>
+						<div field="taskCountNotCompletedOnTime" width="150" align="center" headerAlign="center" renderer="renderTaskCountNotCompletedOnTime">未按时完成任务数</div>
+						<div header="未完成任务情况" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="numberOfDecompositionPlans" width="150" align="center" headerAlign="center">分解计划数</div>
+								<div field="numberOfUnfinishedPlans" width="150" align="center" headerAlign="center">未完成计划数</div>
+								<div field="toCompleteTheProportionOfThePlan" width="150" align="center" headerAlign="center">未完成比例</div>
+							</div>
+						</div>
+						<div field="totalProportion" width="150" align="center" headerAlign="center">总比例</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 	</div>
@@ -128,9 +166,12 @@ html,body {
 		nui.parse();
 		var searchForm = new nui.Form("#searchForm");
 		var jdtjForm = new nui.Form("#jdtjForm");
+		var ndtjForm = new nui.Form("#ndtjForm");
 		var companyGrid = nui.get("companyGrid");
 		var jdtjGrid = nui.get("jdtjGrid");
+		var ndtjGrid = nui.get("ndtjGrid");
 		var tabs = nui.get("tabs");
+		var mergeConfig;
 		
 		var monthDict = [ {
 			id : "1",
@@ -175,6 +216,8 @@ html,body {
 				init();				
 			}else if(e.tab.title == "公司重点任务 - 季度统计"){
 				jdtjInit();
+			}else if(e.tab.title == "公司重点任务 - 年度统计"){
+				ndtjInit();
 			}
 		}					
 
@@ -202,7 +245,11 @@ html,body {
 						var jdtjDimTab = tabs.getTab("jdtjDimTab");
 						tabs.updateTab(jdtjDimTab, {
 							visible : true
-						});						
+						});
+						var ndtjDimTab = tabs.getTab("ndtjDimTab");
+						tabs.updateTab(ndtjDimTab, {
+							visible : true
+						});												
 					} else {
 						setSecOrg(userOrgId);
 						initSecOrgCombobox(secOrgId);
@@ -277,7 +324,33 @@ html,body {
 		function jdtjReset() {
 			jdtjForm.reset();
 			jdtjInit();
-		}		
+		}
+		
+		function ndtjInit(){
+			var date = new Date();
+			var year = date.getFullYear();
+			nui.get("ndtjTaskYear").setValue(year);
+			ndtjSearch();			
+		}
+		
+		function ndtjSearch(){
+			var json = nui.encode({
+				'taskYear' : nui.get("ndtjTaskYear").getValue()
+			});
+			ajaxCommon({
+				"url" : "com.zhonghe.ame.keyTask.company.queryNdtjDatas.biz.ext",
+				data : json,
+				success : function(data) {
+					ndtjGrid.setData(data.mapData.ndtjDatas);
+					ndtjGrid.mergeCells(data.mapData.mergeConfig);
+				}
+			});						
+		}
+		
+		function ndtjReset(){
+			ndtjForm.reset();
+			ndtjInit();			
+		}				
 		
 		function rwzrdw(){
 			nui.open({
@@ -545,6 +618,15 @@ html,body {
 			return e.value;			
 		}
 		
+		function renderTaskCountNotCompletedOnTime(e){
+			if(e.value > 0){
+				e.cellStyle = "background-color: #fff1f0";
+				var row = e.record;
+				return '<a href="javascript:void(0)" onclick="ndtjTaskCountNotCompletedOnTimeDetails(\'' + row.mainId + '\')">'+e.value+'</a>';
+			}
+			return e.value;			
+		}		
+		
 		function jdtjCertainRiskDetails(id,taskYear,taskMonth){
 			var executeUrl = "<%=request.getContextPath()%>/keyTask/company/jdtjDetailsView.jsp?id="+id+"&taskYear="+taskYear+"&taskMonth="+taskMonth+"&type=certainRisk";
 			window.open(executeUrl);
@@ -555,6 +637,11 @@ html,body {
 			window.open(executeUrl);
 		}
 		
+		function ndtjTaskCountNotCompletedOnTimeDetails(mainId){
+			var executeUrl = "<%=request.getContextPath()%>/keyTask/company/ndtjDetailsView.jsp?mainId="+mainId;
+			window.open(executeUrl);
+		}
+		
 		function jdtjExport(){
 			var data = jdtjForm.getData();
 			exportExcel({
@@ -562,7 +649,16 @@ html,body {
 				"url" : "com.zhonghe.ame.keyTask.company.exportJdtjExcel.biz.ext",
 				"fileName" : "公司重点任务-季度统计"
 			})
-		}						
+		}
+		
+		function ndtjExport(){
+			var data = ndtjForm.getData();
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.keyTask.company.exportNdtjExcel.biz.ext",
+				"fileName" : "公司重点任务-年度统计"
+			})
+		}								
 		
 	</script>
 

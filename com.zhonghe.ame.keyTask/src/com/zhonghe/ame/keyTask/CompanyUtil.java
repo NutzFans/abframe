@@ -70,17 +70,19 @@ public class CompanyUtil {
 
 	// 获取指定部门的任务总数
 	private Integer taskCount(String mainId, Session dbSession) throws Exception {
-		String querySql = "SELECT COUNT(DISTINCT task_name) AS task_count FROM zh_key_task_company_item WHERE main_id = ?";
-		Entity entity = dbSession.queryOne(querySql, mainId);
-		return entity.getInt("task_count");
+		String querySql = "SELECT * FROM zh_key_task_company_item WHERE main_id = ?";
+		List<Entity> itemDatas = dbSession.query(querySql, mainId);
+		Map<String, List<Entity>> map = itemDatas.stream().collect(Collectors.groupingBy(item -> item.getStr("task_name") + item.getStr("annual_target")));
+		return map.size();
 	}
 
 	// 其中正常推进
 	private Integer normalProgressCount(List<Entity> itemDatas) {
 		if (itemDatas != null && itemDatas.size() > 0) {
-			// 1. 按task_name分组，每组保留task_month最大的那条数据
+			// 1. 按task_name+annual_target分组，每组保留task_month最大的那条数据
 			Map<String, Optional<Entity>> maxMonthTasksByGroup = itemDatas.stream().collect(
-					Collectors.groupingBy(item -> item.getStr("task_name"), Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
+					Collectors.groupingBy(item -> item.getStr("task_name") + item.getStr("annual_target"),
+							Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
 			// 2. 统计每组最大月份数据中risk_status为“无风险”的数量
 			int count = (int) maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "无风险".equals(task.getStr("risk_status"))).count();
 			return count;
@@ -92,9 +94,10 @@ public class CompanyUtil {
 	// 其中一定风险
 	private Integer certainRiskCount(List<Entity> itemDatas) {
 		if (itemDatas != null && itemDatas.size() > 0) {
-			// 1. 按task_name分组，每组保留task_month最大的那条数据
+			// 1. 按task_name+annual_target分组，每组保留task_month最大的那条数据
 			Map<String, Optional<Entity>> maxMonthTasksByGroup = itemDatas.stream().collect(
-					Collectors.groupingBy(item -> item.getStr("task_name"), Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
+					Collectors.groupingBy(item -> item.getStr("task_name") + item.getStr("annual_target"),
+							Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
 			// 2. 统计每组最大月份数据中risk_status为“低风险”的数量
 			int count = (int) maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "低风险".equals(task.getStr("risk_status"))).count();
 			return count;
@@ -106,9 +109,10 @@ public class CompanyUtil {
 	// 其中极大风险
 	private Integer greatRiskCount(List<Entity> itemDatas) {
 		if (itemDatas != null && itemDatas.size() > 0) {
-			// 1. 按task_name分组，每组保留task_month最大的那条数据
+			// 1. 按task_name+annual_target分组，每组保留task_month最大的那条数据
 			Map<String, Optional<Entity>> maxMonthTasksByGroup = itemDatas.stream().collect(
-					Collectors.groupingBy(item -> item.getStr("task_name"), Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
+					Collectors.groupingBy(item -> item.getStr("task_name") + item.getStr("annual_target"),
+							Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
 			// 2. 统计每组最大月份数据中risk_status为“高风险”的数量
 			int count = (int) maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "高风险".equals(task.getStr("risk_status"))).count();
 			return count;
@@ -120,16 +124,23 @@ public class CompanyUtil {
 	@Bizlet("获取季度统计有问题数据")
 	public List<Entity> queryJdtjDetails(String mainId, String taskYear, int taskMonth, String type) throws Exception {
 		List<Entity> resultList = new ArrayList<Entity>();
+		List<Entity> tempList = new ArrayList<Entity>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
 		String querySql = "SELECT zktci.*, zktcip.app_status, zktcip.process_id FROM zh_key_task_company_item AS zktci, zh_key_task_company_item_process AS zktcip WHERE zktci.id = zktcip.item_id AND zktcip.app_status = 2 AND zktci.main_id = ? AND zktci.task_month <= ?";
 		List<Entity> itemDatas = dbSession.query(querySql, mainId, taskMonth);
 		Map<String, Optional<Entity>> maxMonthTasksByGroup = itemDatas.stream().collect(
-				Collectors.groupingBy(item -> item.getStr("task_name"), Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
+				Collectors.groupingBy(item -> item.getStr("task_name") + item.getStr("annual_target"),
+						Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
 		if ("certainRisk".equals(type)) {
-			resultList = maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "低风险".equals(task.getStr("risk_status"))).collect(Collectors.toList());
+			tempList = maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "低风险".equals(task.getStr("risk_status"))).collect(Collectors.toList());
 		}
 		if ("greatRisk".equals(type)) {
-			resultList = maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "高风险".equals(task.getStr("risk_status"))).collect(Collectors.toList());
+			tempList = maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "高风险".equals(task.getStr("risk_status"))).collect(Collectors.toList());
+		}
+		String queryResultSql = "SELECT zktci.*, zkcip.* FROM zh_key_task_company_item AS zktci LEFT JOIN zh_key_task_company_item_process AS zkcip ON zktci.id = zkcip.item_id WHERE zktci.main_id = ? AND zktci.task_name = ? AND zktci.annual_target = ? ORDER BY zktci.task_month ASC";
+		for (Entity temp : tempList) {
+			List<Entity> datas = dbSession.query(queryResultSql, temp.getStr("main_id"), temp.getStr("task_name"), temp.getStr("annual_target"));
+			resultList.addAll(datas);
 		}
 		return resultList;
 	}
