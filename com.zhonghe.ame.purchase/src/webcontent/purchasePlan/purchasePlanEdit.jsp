@@ -20,6 +20,13 @@ body {
 	word-break: break-all !important; /* 中文/英文强制断行 */
 }
 
+.mini-messagebox-content-text{
+	text-align: left !important;
+	white-space: normal !important;
+	word-wrap: break-word !important; /* 英文单词内断行 */
+	word-break: break-all !important; /* 中文/英文强制断行 */
+}
+
 </style>
 </head>
 <body>

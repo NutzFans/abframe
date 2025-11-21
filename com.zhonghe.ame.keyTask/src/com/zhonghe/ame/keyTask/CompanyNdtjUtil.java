@@ -166,10 +166,10 @@ public class CompanyNdtjUtil {
 				// 未完成计划数
 				int numberOfUnfinishedPlans = (int) entry.getValue().stream().filter(entity -> !"已完成".equals(entity.getStr("task_status"))).count();
 				item.set("numberOfUnfinishedPlans", numberOfUnfinishedPlans);
-				// 未完成计划占比
+				// 已完成计划占比
 				double toCompleteTheProportionOfThePlan = 0;
 				if (numberOfUnfinishedPlans != entry.getValue().size()) {
-					toCompleteTheProportionOfThePlan = NumberUtil.div(numberOfUnfinishedPlans, entry.getValue().size(), 2);
+					toCompleteTheProportionOfThePlan = NumberUtil.sub(1, NumberUtil.div(numberOfUnfinishedPlans, entry.getValue().size(), 2));
 				}
 				item.set("toCompleteTheProportionOfThePlan", toCompleteTheProportionOfThePlan);
 				resultList.add(item);
@@ -177,7 +177,7 @@ public class CompanyNdtjUtil {
 			double toCompleteTheProportionOfThePlanSum = resultList.stream().mapToDouble(entity -> entity.getDouble("toCompleteTheProportionOfThePlan")).sum();
 			double totalProportion = NumberUtil.add(taskCountCompletedOnTime, toCompleteTheProportionOfThePlanSum);
 			resultList = resultList.stream().map(entity -> {
-				entity.set("totalProportion", totalProportion);
+				entity.set("totalProportion", NumberUtil.round(totalProportion, 2));
 				return entity;
 			}).collect(Collectors.toList());
 		}
@@ -346,13 +346,13 @@ public class CompanyNdtjUtil {
 		sheet.setColumnWidth(3, 20 * 256); // 3: 未按时完成任务数
 		sheet.setColumnWidth(4, 15 * 256); // 4: 分解计划数
 		sheet.setColumnWidth(5, 15 * 256); // 5: 未完成计划数
-		sheet.setColumnWidth(6, 15 * 256); // 6: 未完成比例
-		sheet.setColumnWidth(7, 15 * 256); // 7: 总比例
+		sheet.setColumnWidth(6, 20 * 256); // 6: 已完成计划比例
+		sheet.setColumnWidth(7, 20 * 256); // 7: 已完成任务总比例
 	}
 
 	// 总数据sheet表头创建（第0列为任务责任单位）
 	private void createAllDataHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "任务责任单位", "重点任务数", "按时完成任务数", "未按时完成任务数", "分解计划数", "未完成计划数", "未完成比例", "总比例" };
+		String[] headers = { "任务责任单位", "重点任务数", "按时完成任务数", "未按时完成任务数", "分解计划数", "未完成计划数", "已完成计划比例", "已完成任务总比例" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);

@@ -145,10 +145,10 @@ html,body {
 							<div property="columns">
 								<div field="numberOfDecompositionPlans" width="150" align="center" headerAlign="center">分解计划数</div>
 								<div field="numberOfUnfinishedPlans" width="150" align="center" headerAlign="center">未完成计划数</div>
-								<div field="toCompleteTheProportionOfThePlan" width="150" align="center" headerAlign="center">未完成比例</div>
+								<div field="toCompleteTheProportionOfThePlan" width="150" align="center" headerAlign="center">已完成计划比例</div>
 							</div>
 						</div>
-						<div field="totalProportion" width="150" align="center" headerAlign="center">总比例</div>
+						<div field="totalProportion" width="150" align="center" headerAlign="center">已完成任务总比例</div>
 					</div>
 				</div>
 			</div>

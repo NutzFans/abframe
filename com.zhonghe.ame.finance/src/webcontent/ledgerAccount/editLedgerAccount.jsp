@@ -43,6 +43,12 @@ body {
 								<input id="centralizedDepartment" name="centralizedDepartment" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 250px" required="true" />
 							</td>
 						</tr>
+						<tr>
+							<td align="right" style="width: 100px">税率：</td>
+							<td>
+								<input name="taxRate" class="nui-dictcombobox" style="width: 250px" required="true" dictTypeId="ZH_CW_CQZCSL" />
+							</td>
+						</tr>
 					</table>
 				</div>
 			</fieldset>

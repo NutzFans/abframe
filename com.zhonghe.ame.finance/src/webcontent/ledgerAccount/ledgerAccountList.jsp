@@ -68,18 +68,19 @@ html,body {
 					<div field="category" width="200" align="center" headerAlign="center" renderer="CW_KM_CLASS">科目分类</div>
 					<div field="sorting" width="50" align="center" headerAlign="center">排序</div>
 					<div field="centralizedDepartmentName" width="100" align="center" headerAlign="center">归口部门</div>
+					<div field="taxRate" width="50" align="center" headerAlign="center" renderer="ZH_CW_CQZCSL">税率</div>
 					<div header="职能部门" headerAlign="center">
 						<div property="columns">
 							<div field="znErpCode" width="100" align="center" headerAlign="center">科目代码</div>
 							<div field="znErpName" width="200" align="left" headerAlign="center">ERP预算及会计科目</div>
-							<div field="znErpRemark" width="250" align="left" headerAlign="center">说明</div>
+							<div field="znErpRemark" width="200" align="left" headerAlign="center">说明</div>
 						</div>
 					</div>
 					<div header="项目部" headerAlign="center">
 						<div property="columns">
 							<div field="xmErpCode" width="100" align="center" headerAlign="center">科目代码</div>
 							<div field="xmErpName" width="200" align="left" headerAlign="center">ERP预算及会计科目</div>
-							<div field="xmErpRemark" width="250" align="left" headerAlign="center">说明</div>
+							<div field="xmErpRemark" width="200" align="left" headerAlign="center">说明</div>
 						</div>
 					</div>
 				</div>
@@ -107,7 +108,7 @@ html,body {
 			nui.open({
 				url : "/default/finance/ledgerAccount/addLedgerAccount.jsp",
 				width : '900',
-				height : '460',
+				height : '480',
 				allowResize : false,
 				title : "会计科目 - 新增",
 				onload : function() {
@@ -129,7 +130,7 @@ html,body {
 				nui.open({
 					url : "/default/finance/ledgerAccount/editLedgerAccount.jsp",
 					width : '900',
-					height : '460',
+					height : '480',
 					allowResize : false,
 					title : "会计科目 - 编辑",
 					onload : function() {
@@ -206,6 +207,11 @@ html,body {
 			}
 			
 		}
+		
+		function ZH_CW_CQZCSL(e){
+			return nui.getDictText("ZH_CW_CQZCSL", e.value);
+		}
+		
 	</script>
 
 </body>
