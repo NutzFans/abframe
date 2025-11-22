@@ -182,9 +182,9 @@ public class BudgetValidationUtil {
 	private Map<String, BigDecimal> gettaxRateMap(Session dbSession) throws Exception {
 		List<Entity> entityList = dbSession.query(queryTaxRateSql);
 		Map<String, BigDecimal> mapData = entityList.stream().collect(Collectors.toMap(entity -> entity.getStr("id"), entity -> entity.getBigDecimal("tax_rate")));
-		mapData.put("固定资产", new BigDecimal(0.13));
-		mapData.put("大额装修", new BigDecimal(0.09));
-		mapData.put("无形资产", new BigDecimal(0.13));
+		mapData.put("固定资产", BigDecimal.ZERO);
+		mapData.put("大额装修", BigDecimal.ZERO);
+		mapData.put("无形资产", BigDecimal.ZERO);
 		return mapData;
 	}
 
