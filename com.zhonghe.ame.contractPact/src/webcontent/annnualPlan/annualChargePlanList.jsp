@@ -15,6 +15,10 @@ html,body {
 .mini-grid-cell-nowrap {
 	white-space: nowrap;
 }
+
+.mini-grid-summaryCell {
+	text-align: center;
+}
 </style>
 <head>
 <title>开票计划跟踪</title>
@@ -138,7 +142,7 @@ html,body {
 		<div class="nui-fit">
 			<div id="annualChargeGrid" sizeList="[2000]" dataField="chargePlanInfos" pageSize="2000" class="nui-datagrid" style="width: 100%; height: 100%;"
 				url="com.zhonghe.ame.annualPlan.annualPlan.queryAnnualChargePlan.biz.ext" idField="id" frozenStartColumn="0" frozenEndColumn="8" showSummaryRow="true" virtualScroll="true" virtualColumns="true"
-				multiSelect="true" onshowrowdetail="onShowRowDetail" onupdate="setHeaderBackColor">
+				multiSelect="true" onshowrowdetail="onShowRowDetail" onupdate="setHeaderBackColor" ondrawsummarycell="onDrawSummaryCell">
 				<div property="columns">
 					<div type="checkcolumn"></div>
 					<div type="expandcolumn" renderer="expandColumn">+</div>
@@ -213,6 +217,7 @@ html,body {
 	</form>
 
 	<script type="text/javascript">
+		var headerColumnObj = {};
 		nui.parse();
 		var form = new nui.Form("#form1");
 		var annualChargeGrid = nui.get("annualChargeGrid");
@@ -221,7 +226,6 @@ html,body {
 		var now = new Date();
 		var currentYear = now.getFullYear();
 		var currentMonth = now.getMonth() + 1;
-		var headerColumnObj = {};
 
 		init();
 
@@ -303,7 +307,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.jan = "1";
 				}
 			}
 			if (field == 'janActual' && isColorRender(currentYear, currentMonth, dataYear, 1)) {
@@ -312,7 +315,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.janActual = "1";
 				}
 			}
 			if (field == 'feb' && isColorRender(currentYear, currentMonth, dataYear, 2)) {
@@ -321,7 +323,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.feb = "1";
 				}
 			}
 			if (field == 'febActual' && isColorRender(currentYear, currentMonth, dataYear, 2)) {
@@ -330,7 +331,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.febActual = "1";
 				}
 			}
 			if (field == 'mar' && isColorRender(currentYear, currentMonth, dataYear, 3)) {
@@ -339,7 +339,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.mar = "1";
 				}
 			}
 			if (field == 'marActual' && isColorRender(currentYear, currentMonth, dataYear, 3)) {
@@ -348,7 +347,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.marActual = "1";
 				}
 			}
 			if (field == 'apr' && isColorRender(currentYear, currentMonth, dataYear, 4)) {
@@ -357,7 +355,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.apr = "1";
 				}
 			}
 			if (field == 'aprActual' && isColorRender(currentYear, currentMonth, dataYear, 4)) {
@@ -366,7 +363,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.aprActual = "1";
 				}
 			}
 			if (field == 'may' && isColorRender(currentYear, currentMonth, dataYear, 5)) {
@@ -375,7 +371,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.may = "1";
 				}
 			}
 			if (field == 'mayActual' && isColorRender(currentYear, currentMonth, dataYear, 5)) {
@@ -384,7 +379,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.mayActual = "1";
 				}
 			}
 			if (field == 'jun' && isColorRender(currentYear, currentMonth, dataYear, 6)) {
@@ -393,7 +387,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.jun = "1";
 				}
 			}
 			if (field == 'junActual' && isColorRender(currentYear, currentMonth, dataYear, 6)) {
@@ -402,7 +395,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.junActual = "1";
 				}
 			}
 			if (field == 'jul' && isColorRender(currentYear, currentMonth, dataYear, 7)) {
@@ -411,7 +403,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.jul = "1";
 				}
 			}
 			if (field == 'julActual' && isColorRender(currentYear, currentMonth, dataYear, 7)) {
@@ -420,7 +411,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.julActual = "1";
 				}
 			}
 			if (field == 'aug' && isColorRender(currentYear, currentMonth, dataYear, 8)) {
@@ -429,7 +419,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.aug = "1";
 				}
 			}
 			if (field == 'augActual' && isColorRender(currentYear, currentMonth, dataYear, 8)) {
@@ -438,7 +427,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.augActual = "1";
 				}
 			}
 			if (field == 'sep' && isColorRender(currentYear, currentMonth, dataYear, 9)) {
@@ -447,7 +435,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.sep = "1";
 				}
 			}
 			if (field == 'sepActual' && isColorRender(currentYear, currentMonth, dataYear, 9)) {
@@ -456,7 +443,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.sepActual = "1";
 				}
 			}
 			if (field == 'oct' && isColorRender(currentYear, currentMonth, dataYear, 10)) {
@@ -465,7 +451,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.oct = "1";
 				}
 			}
 			if (field == 'octActual' && isColorRender(currentYear, currentMonth, dataYear, 10)) {
@@ -474,7 +459,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.octActual = "1";
 				}
 			}
 			if (field == 'nov' && isColorRender(currentYear, currentMonth, dataYear, 11)) {
@@ -483,7 +467,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.nov = "1";
 				}
 			}
 			if (field == 'novActual' && isColorRender(currentYear, currentMonth, dataYear, 11)) {
@@ -492,7 +475,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.novActual = "1";
 				}
 			}
 			if (field == 'dec' && isColorRender(currentYear, currentMonth, dataYear, 12)) {
@@ -501,7 +483,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.dec = "1";
 				}
 			}
 			if (field == 'decActual' && isColorRender(currentYear, currentMonth, dataYear, 12)) {
@@ -510,7 +491,6 @@ html,body {
 					e.cellStyle = "background-color: #f6ffed";
 				} else {
 					e.cellStyle = "background-color: #ffccc7";
-					headerColumnObj.decActual = "1";
 				}
 			}
 			return e.value;
@@ -813,127 +793,264 @@ html,body {
 			}
 		}
 		
+		function onDrawSummaryCell(e){
+			if(e.field == "jan"){
+				headerColumnObj.jan = e.column.summaryValue
+			}else if(e.field == "janActual"){
+				headerColumnObj.janActual = e.column.summaryValue
+			}else if(e.field == "feb"){
+				headerColumnObj.feb = e.column.summaryValue
+			}else if(e.field == "febActual"){
+				headerColumnObj.febActual = e.column.summaryValue
+			}else if(e.field == "mar"){
+				headerColumnObj.mar = e.column.summaryValue
+			}else if(e.field == "marActual"){
+				headerColumnObj.marActual = e.column.summaryValue
+			}else if(e.field == "apr"){
+				headerColumnObj.apr = e.column.summaryValue
+			}else if(e.field == "aprActual"){
+				headerColumnObj.aprActual = e.column.summaryValue
+			}else if(e.field == "may"){
+				headerColumnObj.may = e.column.summaryValue
+			}else if(e.field == "mayActual"){
+				headerColumnObj.mayActual = e.column.summaryValue
+			}else if(e.field == "jun"){
+				headerColumnObj.jun = e.column.summaryValue
+			}else if(e.field == "junActual"){
+				headerColumnObj.junActual = e.column.summaryValue
+			}else if(e.field == "jul"){
+				headerColumnObj.jul = e.column.summaryValue
+			}else if(e.field == "julActual"){
+				headerColumnObj.julActual = e.column.summaryValue
+			}else if(e.field == "aug"){
+				headerColumnObj.aug = e.column.summaryValue
+			}else if(e.field == "augActual"){
+				headerColumnObj.augActual = e.column.summaryValue
+			}else if(e.field == "sep"){
+				headerColumnObj.sep = e.column.summaryValue
+			}else if(e.field == "sepActual"){
+				headerColumnObj.sepActual = e.column.summaryValue
+			}else if(e.field == "oct"){
+				headerColumnObj.oct = e.column.summaryValue
+			}else if(e.field == "octActual"){
+				headerColumnObj.octActual = e.column.summaryValue
+			}else if(e.field == "nov"){
+				headerColumnObj.nov = e.column.summaryValue
+			}else if(e.field == "novActual"){
+				headerColumnObj.novActual = e.column.summaryValue
+			}else if(e.field == "dec"){
+				headerColumnObj.dec = e.column.summaryValue
+			}else if(e.field == "decActual"){
+				headerColumnObj.decActual = e.column.summaryValue
+			}
+		}
+		
 		function setHeaderBackColor(){
-			if(headerColumnObj.jan == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '1月计划';
-				}).parent('div').css('background-color', '#ffccc7');
+			var dataYear = nui.get("years").getValue();
+			if(isColorRender(currentYear, currentMonth, dataYear, 1)){
+				if (areBigDecimalsEqual(headerColumnObj.jan, headerColumnObj.janActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '1月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '1月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '1月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '1月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.janActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '1月实际';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 2)){
+				if (areBigDecimalsEqual(headerColumnObj.feb, headerColumnObj.febActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '2月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '2月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '2月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '2月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.feb == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '2月计划';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 3)){
+				if (areBigDecimalsEqual(headerColumnObj.mar, headerColumnObj.marActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '3月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '3月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '3月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '3月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.febActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '2月实际';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 4)){
+				if (areBigDecimalsEqual(headerColumnObj.apr, headerColumnObj.aprActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '4月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '4月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '4月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '4月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.mar == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '3月计划';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 5)){
+				if (areBigDecimalsEqual(headerColumnObj.may, headerColumnObj.mayActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '5月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '5月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '5月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '5月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.marActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '3月实际';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 6)){
+				if (areBigDecimalsEqual(headerColumnObj.jun, headerColumnObj.junActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '6月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '6月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '6月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '6月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.apr == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '4月计划';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 7)){
+				if (areBigDecimalsEqual(headerColumnObj.jul, headerColumnObj.julActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '7月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '7月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '7月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '7月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.aprActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '4月实际';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 8)){
+				if (areBigDecimalsEqual(headerColumnObj.aug, headerColumnObj.augActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '8月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '8月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '8月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '8月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.may == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '5月计划';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 9)){
+				if (areBigDecimalsEqual(headerColumnObj.sep, headerColumnObj.sepActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '9月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '9月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '9月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '9月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.mayActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '5月实际';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 10)){
+				if (areBigDecimalsEqual(headerColumnObj.oct, headerColumnObj.octActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '10月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '10月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '10月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '10月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.jun == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '6月计划';
-				}).parent('div').css('background-color', '#ffccc7');
+			if(isColorRender(currentYear, currentMonth, dataYear, 11)){
+				if (areBigDecimalsEqual(headerColumnObj.nov, headerColumnObj.novActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '11月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '11月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '11月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '11月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
 			}
-			if(headerColumnObj.junActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '6月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.jul == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '7月计划';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.julActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '7月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.aug == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '8月计划';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.augActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '8月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.sep == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '9月计划';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.sepActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '9月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.oct == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '10月计划';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.octActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '10月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.nov == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '11月计划';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.novActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '11月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.dec == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '12月计划';
-				}).parent('div').css('background-color', '#ffccc7');
-			}
-			if(headerColumnObj.decActual == "1"){
-				$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
-					return $(this).text().trim() === '12月实际';
-				}).parent('div').css('background-color', '#ffccc7');
-			}																																	
+			if(isColorRender(currentYear, currentMonth, dataYear, 12)){
+				if (areBigDecimalsEqual(headerColumnObj.dec, headerColumnObj.decActual)) {
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '12月计划';
+					}).parent('div').css('background-color', '#f6ffed');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '12月实际';
+					}).parent('div').css('background-color', '#f6ffed');
+				}else{
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '12月计划';
+					}).parent('div').css('background-color', '#ffccc7');
+					$('.mini-grid-headerCell-inner.mini-grid-headerCell-nowrap').filter(function(){
+						return $(this).text().trim() === '12月实际';
+					}).parent('div').css('background-color', '#ffccc7');
+				}
+			}																																																												
 		}
 		
 	</script>
