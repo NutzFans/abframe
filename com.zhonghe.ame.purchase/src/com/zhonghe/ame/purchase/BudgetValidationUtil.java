@@ -157,7 +157,7 @@ public class BudgetValidationUtil {
 			Entity budgetAccount = dbSession.queryOne(querySqlOne, strList.get(0));
 			Entity ledgerCategory = dbSession.queryOne(querySqlTwo, strList.get(1));
 			Entity ledgerName = dbSession.queryOne(querySqlThree, strList.get(2));
-			return StrUtil.format("【{}】-【{}】-【{}】的总金额【{}元】超过了财务预算金额(含税)【{}元】", budgetAccount.getStr("name"), ledgerCategory.getStr("name"), ledgerName.getStr("name"),
+			return StrUtil.format("【{}】-【{}】-【{}】的总金额【{}元】不能大于对应财务科目的预算总金额(含税)【{}元】", budgetAccount.getStr("name"), ledgerCategory.getStr("name"), ledgerName.getStr("name"),
 					NumberUtil.decimalFormat(",###", sourceBigDecimal), NumberUtil.decimalFormat(",###", taxIncludedTotalAmount));
 		} else {
 			return "";
@@ -172,7 +172,7 @@ public class BudgetValidationUtil {
 			targetBigDecimal = NumberUtil.mul(NumberUtil.add(1, taxRateMapData.get(key)), targetBigDecimal);
 		}
 		if (NumberUtil.isGreater(sourceBigDecimal, targetBigDecimal)) {
-			return StrUtil.format("【{}】的总金额【{}元】超过了长期资产【{}】的总预算金额(含税)【{}元】", key, NumberUtil.decimalFormat(",###", sourceBigDecimal), key, NumberUtil.decimalFormat(",###", targetBigDecimal));
+			return StrUtil.format("【{}】的总金额【{}元】不能大于对应财务长期资产【{}】的预算总金额(含税)【{}元】", key, NumberUtil.decimalFormat(",###", sourceBigDecimal), key, NumberUtil.decimalFormat(",###", targetBigDecimal));
 		} else {
 			return "";
 		}
