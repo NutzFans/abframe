@@ -140,24 +140,30 @@ body {
 							<td>
 								<input name="purchasePlan" id="purchasePlan" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
 							</td>
+							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
+							<td>
+								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px" id="purchasePlanLable">评审结果编号:</td>
+							<td>
+								<input name="reviewReportCode" id="reviewReportCode" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
+							</td>
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="false" />
+							</td>
+							<td align="right" style="width: 120px">定标金额(元):</td>
+							<td>
+								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
-							</td>
-							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
-							<td>
-								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
-							</td>
-							<td align="right" style="width: 120px">定标金额(元):</td>
-							<td>
-								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false" />
-							</td>
+							</td>						
 						</tr>
 						<tr>
 							<td align="right" style="width: 120px">备注:</td>

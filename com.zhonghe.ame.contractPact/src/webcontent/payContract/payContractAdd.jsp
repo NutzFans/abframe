@@ -18,6 +18,7 @@
 				<input name="files" id="fileids" class="nui-hidden" />
 				<input class="nui-hidden" name="id" />
 				<input name="proAppId" id="proAppId" class="nui-hidden" />
+				<input name="reviewReportId" id="reviewReportId" class="nui-hidden" />
 				<input name="organizer" id="organizer" class="nui-hidden" value="0">
 				<div style="padding: 5px;">
 					<table style="table-layout: fixed;">
@@ -134,24 +135,30 @@
 							<td>
 								<input name="purchasePlan" id="purchasePlan" class="nui-buttonedit" onbuttonclick="onButtonEdit" style="width: 100%" onvaluechanged="onvaluechanged1" required="false" enabled="false" allowInput="false" />
 							</td>
+							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
+							<td>
+								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" style="width: 100px">评审结果编号:</td>
+							<td>
+								<input id="reviewReportCode" name="reviewReportCode" class="mini-combobox" valueField="code" textField="code" style="width: 100%" required="false" enabled="false" onvaluechanged="reviewReportCodeChange" />
+							</td>						
 							<td align="right" style="width: 100px">采购方式:</td>
 							<td>
 								<input id="procurementType" name="procurementType" class="nui-dictcombobox" dictTypeId="ZH_CGFS" style="width: 100%" required="false" enabled="false" />
+							</td>						
+							<td align="right" style="width: 120px">定标金额(元):</td>
+							<td>
+								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">采购计划年份:</td>
 							<td>
 								<input id="planYear" name="planYear" class="nui-textbox" style="width: 100%" vtype="int" emptyText="数字格式年份，格式：YYYY" required="false" enabled="false" />
-							</td>
-							<td align="right" style="width: 120px" id="budgetSumLable">立项金额(元):</td>
-							<td>
-								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
-							</td>
-							<td align="right" style="width: 120px">定标金额(元):</td>
-							<td>
-								<input name="scalingSum" id="scalingSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
-							</td>
+							</td>							
 						</tr>
 						<tr>
 							<td align="right" style="width: 120px">备注:</td>
@@ -340,7 +347,7 @@
 				if (nui.get("contractNature").getValue() == 1) {
 					var procurementType = nui.get("procurementType").getValue();
 					if (procurementType == null || procurementType == "") {
-						alert(" '采购方式' 字段为必填项，数据来源于对应的采购立项");
+						alert(" '采购方式' 字段为必填项，数据来源于对应的采购立项评审结果");
 						return;
 					} else {
 						var budgetSum = nui.get("budgetSum").getValue();
@@ -515,8 +522,6 @@
 									nui.get("budgetSum").setValue(abs(budgetSum * 10000));
 								}
 								nui.get("proAppId").setValue(data.id);
-								nui.get("procurementType").setValue("");
-								nui.get("procurementType").setValue(data.finalPurchasMode);
 								btnEdit.doValueChanged();
 								var json = {
 									"critria" : {
@@ -531,15 +536,12 @@
 									"url" : "com.zhonghe.ame.purchase.purchaseReviewReport.queryReviewReport.biz.ext",
 									"data" : json,
 									"success" : function(data) {
-										if (data.reviewReport.length != 0) {
-											var awardAmount = data.reviewReport[0].awardAmount;
-											nui.get("scalingSum").setValue("");
-											if (awardAmount != null && awardAmount != "") {
-												nui.get("scalingSum").setValue(abs(awardAmount * 10000));
-											}
-										} else {
-											nui.get("scalingSum").setValue(null);
-										}
+										nui.get("reviewReportCode").setValue("");
+										nui.get("reviewReportCode").setText("");
+										nui.get("reviewReportId").setValue("");
+										nui.get("procurementType").setValue("");
+										nui.get("scalingSum").setValue("");
+										nui.get("reviewReportCode").setData(data.reviewReport);
 									}
 								});
 							}
@@ -699,6 +701,11 @@
 				nui.get("purchasePlan").setValue("");
 				nui.get("purchasePlan").setText("");
 				nui.get("proAppId").setValue("");
+				nui.get("reviewReportCode").setRequired(true);
+				nui.get("reviewReportCode").enable();
+				nui.get("reviewReportCode").setValue("");
+				nui.get("reviewReportCode").setText("");
+				nui.get("reviewReportId").setValue("");
 				nui.get("procurementType").setRequired(true);
 				nui.get("procurementType").setValue("");
 				nui.get("planYear").setRequired(true);
@@ -716,6 +723,11 @@
 				nui.get("purchasePlan").setValue("");
 				nui.get("purchasePlan").setText("");
 				nui.get("proAppId").setValue("");
+				nui.get("reviewReportCode").setRequired(false);
+				nui.get("reviewReportCode").disable();
+				nui.get("reviewReportCode").setValue("");
+				nui.get("reviewReportCode").setText("");
+				nui.get("reviewReportId").setValue("");
 				nui.get("procurementType").setRequired(false);
 				nui.get("procurementType").setValue("");
 				nui.get("planYear").setRequired(false);
@@ -733,6 +745,11 @@
 				nui.get("purchasePlan").setValue("");
 				nui.get("purchasePlan").setText("");
 				nui.get("proAppId").setValue("");
+				nui.get("reviewReportCode").setRequired(false);
+				nui.get("reviewReportCode").disable();
+				nui.get("reviewReportCode").setValue("");
+				nui.get("reviewReportCode").setText("");
+				nui.get("reviewReportId").setValue("");
 				nui.get("procurementType").setRequired(true);
 				nui.get("procurementType").setValue("");
 				nui.get("planYear").setRequired(false);
@@ -750,6 +767,11 @@
 				nui.get("purchasePlan").setValue("");
 				nui.get("purchasePlan").setText("");
 				nui.get("proAppId").setValue("");
+				nui.get("reviewReportCode").setRequired(false);
+				nui.get("reviewReportCode").disable();
+				nui.get("reviewReportCode").setValue("");
+				nui.get("reviewReportCode").setText("");
+				nui.get("reviewReportId").setValue("");
 				nui.get("procurementType").setRequired(true);
 				nui.get("procurementType").setValue("");
 				nui.get("planYear").setRequired(true);
@@ -810,6 +832,18 @@
 				}
 			});
 		}				
+		
+		function reviewReportCodeChange(e){
+			nui.get("reviewReportId").setValue("");
+			nui.get("reviewReportId").setValue(e.selected.id);
+			nui.get("procurementType").setValue("");
+			nui.get("procurementType").setValue(e.selected.finalPurchasMode);
+			var awardAmount = e.selected.awardAmount;
+			nui.get("scalingSum").setValue("");
+			if (awardAmount != null && awardAmount != "") {
+				nui.get("scalingSum").setValue(abs(awardAmount * 10000));
+			}
+		}
 		
 	</script>
 </body>

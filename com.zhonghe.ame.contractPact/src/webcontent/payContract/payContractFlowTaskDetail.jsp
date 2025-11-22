@@ -134,6 +134,10 @@
 							</td>
 						</tr>
 						<tr>
+							<td align="right" style="width: 100px" id="purchasePlanLable">评审结果编号:</td>
+							<td>
+								<input name="reviewReportCode" id="reviewReportCode" class="nui-textbox" style="width: 100%" required="false" enabled="false" />
+							</td>						
 							<td align="right" style="width: 120px">立项金额(元):</td>
 							<td>
 								<input name="budgetSum" id="budgetSum" class="nui-textbox" vtype="float" style="width: 100%" required="false" enabled="false"/>
