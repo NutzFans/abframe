@@ -55,8 +55,9 @@ html,body {
 		var itemGrid = nui.get("itemGrid");
 
 		function initData(data) {
+			console.log(data);
 			itemGrid.load({
-				"mainId" : data.mainId,
+				"mainId" : data.id,
 				"toBeReviewed" : "true"
 			});
 		}
