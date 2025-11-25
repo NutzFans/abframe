@@ -39,6 +39,7 @@ html,body {
 						<div field="taskPlanName" width="500" headeralign="center" align="left">分解计划</div>
 						<div field="taskStatus" width="50" headeralign="center" align="center">任务状态</div>
 						<div field="riskStatus" width="70" headeralign="center" align="center">是否存在风险</div>
+						<div width="40" headeralign="center" align="center" renderer="renderOperate">操作</div>
 					</div>
 				</div>
 			</div>
@@ -67,6 +68,25 @@ html,body {
 				return e.value + "月";
 			}
 		}
+		
+		function renderOperate(e) {
+			var row = e.record;
+			return '<a href="javascript:void(0)" onclick="progressDetails(\'' + row.id + '\')">详情</a>';
+		}
+		
+		function progressDetails(id) {
+			nui.open({
+				url : "/default/keyTask/company/taskItemProgressView.jsp",
+				title : "任务 - 进展情况 - 详情",
+				width : "1200",
+				height : "800",
+				allowResize : false,
+				onload : function() {
+					var iframe = this.getIFrameEl();
+					iframe.contentWindow.initData(id);
+				}
+			});
+		}				
 
 		function save() {
 			var rows = itemGrid.getSelecteds();
