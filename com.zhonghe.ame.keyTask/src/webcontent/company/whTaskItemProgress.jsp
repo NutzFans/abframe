@@ -14,10 +14,9 @@ html,body {
 
 /* 强制长单词/字符自动断行 */
 .mini-grid-cell-inner {
-    word-wrap: break-word !important; /* 英文单词内断行 */
-    word-break: break-all !important; /* 中文/英文强制断行 */
+	word-wrap: break-word !important; /* 英文单词内断行 */
+	word-break: break-all !important; /* 中文/英文强制断行 */
 }
-
 </style>
 <head>
 <title>填报 - 任务进展</title>
@@ -99,8 +98,8 @@ html,body {
 			var row = e.record;
 			return '<a href="javascript:void(0)" onclick="operationTianBao(\'' + row.id + '\')">维护</a>';
 		}
-		
-		function progressDetails(id){
+
+		function progressDetails(id) {
 			nui.open({
 				url : "/default/keyTask/company/taskItemProgressView.jsp",
 				title : "任务 - 进展情况 - 详情",
@@ -112,7 +111,7 @@ html,body {
 					iframe.contentWindow.initData(id);
 				}
 			});
-		}		
+		}
 
 		function renderTBStatus(e) {
 			var row = e.record;
@@ -157,7 +156,7 @@ html,body {
 				allowResize : false,
 				onload : function() {
 					var iframe = this.getIFrameEl();
-					iframe.contentWindow.initData(id);
+					iframe.contentWindow.initData(id, true);
 				},
 				ondestroy : function(action) {
 					itemGrid.load({
@@ -166,7 +165,7 @@ html,body {
 				}
 			});
 		}
-		
+
 		function setRiskBackColor(e) {
 			if (e.value == "无风险") {
 				e.cellStyle = "background-color: #f6ffed";
@@ -177,7 +176,7 @@ html,body {
 			}
 			return e.value;
 		}
-		
+
 		function setTaskBackColor(e) {
 			if (e.value == "已完成") {
 				e.cellStyle = "background-color: #f6ffed";
@@ -185,8 +184,7 @@ html,body {
 				e.cellStyle = "background-color: #ffffb8";
 			}
 			return e.value;
-		}		
-		
+		}
 	</script>
 
 </body>

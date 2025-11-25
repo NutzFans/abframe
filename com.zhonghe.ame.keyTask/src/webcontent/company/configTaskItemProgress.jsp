@@ -161,7 +161,7 @@ html,body {
 				allowResize : false,
 				onload : function() {
 					var iframe = this.getIFrameEl();
-					iframe.contentWindow.initData(id);
+					iframe.contentWindow.initData(id,false);
 				},
 				ondestroy : function(action) {
 					itemGrid.load({

@@ -1,40 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="exportStatisticsSnapshotDetailExcelSec" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
-    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>assign0</targetNode>
+      <targetNode>subprocess0</targetNode>
     </sourceConnections>
     <location x="60" y="60"/>
     <size height="28" width="28"/>
     <nodeLabel>start0label</nodeLabel>
-  </nodes>
-  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
-    <targetConnections>link9</targetConnections>
-    <location x="810" y="60"/>
-    <size height="28" width="28"/>
-    <nodeLabel>end0label</nodeLabel>
-    <process:returns>
-      <process:return id="0" language="String" name="downloadFile" type="query" valueType="Primitive">downloadFile</process:return>
-    </process:returns>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
     <location x="62" y="96"/>
     <figSize height="16" width="25"/>
     <node>start0</node>
   </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
-    <location x="812" y="96"/>
-    <figSize height="16" width="25"/>
-    <node>end0</node>
-  </nodes>
-  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>assign0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="this.queryOperatingRevenue" displayName="queryOperatingRevenue" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>subprocess1</targetNode>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
-    <location x="165" y="60"/>
+    <targetConnections>link0</targetConnections>
+    <location x="180" y="60"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.queryOperatingRevenue</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="1" name="month" type="query" value="String" valueType="Primitive" pattern="reference">month</process:inputVariable>
+        <process:inputVariable id="2" name="secOrg" type="query" value="String" valueType="Primitive" pattern="reference">secOrg</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="operatingRevenueList" type="query" value="java.util.List" valueType="Java">operatingRevenueList</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="115" y="95"/>
+    <figSize height="16" width="156"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="this.queryExternalIncomeOfTheGroup" displayName="queryExternalIncomeOfTheGroup" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="390" y="60"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.queryExternalIncomeOfTheGroup</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="year" type="query" value="String" valueType="Primitive" pattern="reference">year</process:inputVariable>
+        <process:inputVariable id="1" name="month" type="query" value="String" valueType="Primitive" pattern="reference">month</process:inputVariable>
+        <process:inputVariable id="2" name="secOrg" type="query" value="String" valueType="Primitive" pattern="reference">secOrg</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="externalIncomeOfTheGroupList" type="query" value="java.util.List" valueType="Java">externalIncomeOfTheGroupList</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="300" y="95"/>
+    <figSize height="16" width="207"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="SrzbfxycExcelWrap.excelWrap" displayName="SrzbfxycExcelWrap.excelWrap" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="600" y="60"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.kaohe.SrzbfxycExcelWrap.excelWrap</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="operatingRevenueList" type="query" value="java.util.List&lt;cn.hutool.db.Entity>" valueType="Java" pattern="reference">operatingRevenueList</process:inputVariable>
+      <process:inputVariable id="1" name="externalIncomeOfTheGroupList" type="query" value="java.util.List&lt;cn.hutool.db.Entity>" valueType="Java" pattern="reference">externalIncomeOfTheGroupList</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.util.Map&lt;java.lang.String,java.util.List&lt;commonj.sdo.DataObject>>" valueType="Java">excelMap</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="529" y="96"/>
+    <figSize height="16" width="165"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="link5" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="780" y="60"/>
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
@@ -43,19 +108,20 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
-    <location x="167" y="96"/>
+    <location x="782" y="96"/>
     <figSize height="16" width="25"/>
     <node>assign0</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="查询" displayName="查询" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>invokePojo0</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="查询" displayName="查询" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="link6" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <targetConnections>link5</targetConnections>
-    <location x="270" y="60"/>
+    <location x="784" y="156"/>
     <size height="28" width="22"/>
-    <nodeLabel>invokePojo0label</nodeLabel>
+    <nodeLabel>invokePojo2label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.queryEntitiesByCriteriaEntity</process:partner>
       <process:instance instanceName=""/>
@@ -65,30 +131,29 @@
       <process:inputVariable id="1" name="criteriaEntity" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">criteria</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>
-      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">excelDatas</process:outputVariable>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">detailsList</process:outputVariable>
     </process:outputVariables>
   </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
-    <location x="269" y="96"/>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="783" y="192"/>
     <figSize height="16" width="25"/>
-    <node>invokePojo0</node>
+    <node>invokePojo2</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="业务字典取值" displayName="业务字典取值" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="业务字典取值" displayName="业务字典取值" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
     <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>invokePojo1</sourceNode>
-      <targetNode>invokePojo2</targetNode>
-      <process:transitionCondition/>
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>invokePojo4</targetNode>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
-    <location x="375" y="60"/>
+    <targetConnections>link4</targetConnections>
+    <location x="785" y="252"/>
     <size height="28" width="22"/>
-    <nodeLabel>invokePojo1label</nodeLabel>
+    <nodeLabel>invokePojo3label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.eoscommon.BusinessDictUtil.fillEntitiesWithDictValues</process:partner>
       <process:instance instanceName=""/>
     </process:pojo>
     <process:inputVariables>
-      <process:inputVariable id="0" name="dataObjects" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">excelDatas</process:inputVariable>
+      <process:inputVariable id="0" name="dataObjects" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">detailsList</process:inputVariable>
       <process:inputVariable id="1" name="params" type="literal" value="java.lang.String" valueType="Java" pattern="reference">contractStauts</process:inputVariable>
       <process:inputVariable id="2" name="param1" type="literal" value="java.lang.String" valueType="Java" pattern="reference">ZH_CONTRACT_STATUS_KAOHE</process:inputVariable>
       <process:inputVariable id="3" name="param2" type="literal" value="java.lang.String" valueType="Java" pattern="reference">contractStautsVal</process:inputVariable>
@@ -104,72 +169,149 @@
     </process:inputVariables>
     <process:outputVariables/>
   </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
-    <location x="350" y="96"/>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="760" y="288"/>
     <figSize height="16" width="73"/>
-    <node>invokePojo1</node>
+    <node>invokePojo3</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="SrzbfxycExcelWrap.exportInfo" displayName="" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo4" name="SrzbfxycExcelWrap.excelWrapDetails" displayName="" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>invokePojo2</sourceNode>
-      <targetNode>invokePojo3</targetNode>
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>assign1</targetNode>
     </sourceConnections>
     <targetConnections>link7</targetConnections>
-    <location x="510" y="60"/>
+    <location x="786" y="332"/>
     <size height="28" width="22"/>
-    <nodeLabel>invokePojo2label</nodeLabel>
+    <nodeLabel>invokePojo4label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
-      <process:partner type="literal">com.zhonghe.ame.kaohe.SrzbfxycExcelWrap.exportInfo</process:partner>
+      <process:partner type="literal">com.zhonghe.ame.kaohe.SrzbfxycExcelWrap.excelWrapDetails</process:partner>
       <process:instance instanceName=""/>
     </process:pojo>
     <process:inputVariables>
-      <process:inputVariable id="0" name="year" type="query" value="java.lang.String" valueType="Java" pattern="reference">criteria/_expr[1]/years</process:inputVariable>
-      <process:inputVariable id="1" name="month" type="query" value="java.lang.String" valueType="Java" pattern="reference">criteria/_expr[2]/months</process:inputVariable>
+      <process:inputVariable id="0" name="excelMap" type="query" value="java.util.Map&lt;java.lang.String,java.util.List&lt;commonj.sdo.DataObject>>" valueType="Java" pattern="reference">excelMap</process:inputVariable>
+      <process:inputVariable id="1" name="detailsList" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">detailsList</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>
-      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject" valueType="Java">exportInfo</process:outputVariable>
+      <process:outputVariable id="0" name="out0" type="query" value="java.util.Map&lt;java.lang.String,java.util.List&lt;commonj.sdo.DataObject>>" valueType="Java">excelMap</process:outputVariable>
     </process:outputVariables>
   </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
-    <location x="439" y="96"/>
-    <figSize height="16" width="164"/>
-    <node>invokePojo2</node>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <location x="696" y="368"/>
+    <figSize height="16" width="202"/>
+    <node>invokePojo4</node>
   </nodes>
-  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="导出excel" displayName="导出excel" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
-      <sourceNode>invokePojo3</sourceNode>
-      <targetNode>end0</targetNode>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokePojo1</targetNode>
     </sourceConnections>
     <targetConnections>link8</targetConnections>
-    <location x="660" y="60"/>
+    <location x="783" y="428"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">营业收入</process:from>
+      <process:to type="query">sheetNames[1]</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">集团外收入</process:from>
+      <process:to type="query">sheetNames[2]</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">收入统计明细</process:from>
+      <process:to type="query">sheetNames[3]</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="785" y="464"/>
+    <figSize height="16" width="25"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="SrzbfxycExcelWrap.exportInfoWarpThree" displayName="" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>invokePojo5</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="787" y="512"/>
     <size height="28" width="22"/>
-    <nodeLabel>invokePojo3label</nodeLabel>
+    <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
-      <process:partner type="literal">org.gocom.abframe.tools.ExcelUtil.exportExcel</process:partner>
+      <process:partner type="literal">com.zhonghe.ame.kaohe.SrzbfxycExcelWrap.exportInfoWarpThree</process:partner>
       <process:instance instanceName=""/>
     </process:pojo>
     <process:inputVariables>
-      <process:inputVariable id="0" name="exportObjects" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">excelDatas</process:inputVariable>
-      <process:inputVariable id="1" name="exportInfo" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">exportInfo</process:inputVariable>
-      <process:inputVariable id="2" name="templateFilename" type="literal" value="java.lang.String" valueType="Java" pattern="reference">KaoHeStatisticsExcelTemplate</process:inputVariable>
+      <process:inputVariable id="0" name="year" type="query" value="java.lang.String" valueType="Java" pattern="reference">year</process:inputVariable>
+      <process:inputVariable id="1" name="month" type="query" value="java.lang.String" valueType="Java" pattern="reference">month</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">exportInfos</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="686" y="548"/>
+    <figSize height="16" width="224"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo5" name="SheetExcelUtil.exportExcelWithSheet" displayName="SheetExcelUtil.exportExcelWithSheet" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo5</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="787" y="608"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo5label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.kaohe.SheetExcelUtil.exportExcelWithSheet</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="excelMap" type="query" value="java.util.Map&lt;java.lang.String,java.util.List&lt;commonj.sdo.DataObject>>" valueType="Java" pattern="reference">excelMap</process:inputVariable>
+      <process:inputVariable id="1" name="exportInfo" type="query" value="commonj.sdo.DataObject[]" valueType="Java" pattern="reference">exportInfos</process:inputVariable>
+      <process:inputVariable id="2" name="sheetNames" type="query" value="java.lang.String[]" valueType="Java" pattern="reference">sheetNames</process:inputVariable>
+      <process:inputVariable id="3" name="templateFilename" type="literal" value="java.lang.String" valueType="Java" pattern="reference">KaoHeZDDWExcelTemplate</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>
       <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">downloadFile</process:outputVariable>
     </process:outputVariables>
   </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
-    <location x="645" y="96"/>
-    <figSize height="16" width="52"/>
-    <node>invokePojo3</node>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo5label" name="label" nodeType="label">
+    <location x="700" y="644"/>
+    <figSize height="16" width="197"/>
+    <node>invokePojo5</node>
   </nodes>
-  <topRuler/>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" type="end">
+    <targetConnections>link12</targetConnections>
+    <location x="786" y="704"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="downloadFile" type="query" valueType="Primitive">downloadFile</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <location x="788" y="740"/>
+    <figSize height="16" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <topRuler>
+    <guides position="621" horizontal="true"/>
+  </topRuler>
   <leftRuler/>
   <process:info author="王维" createTime="2025-06-12 14:29:24" date="2025-06-12Z" description="" name="queryStatisticsSnapshotList" version="7.0.0.0"/>
   <process:variables>
-    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.zhonghe.ame.kaohe.incomeStatistics.ZhKaoheStatisticsSnapshotDetailsEntity" name="excelDatas"/>
-    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="false" name="exportInfo"/>
+    <process:variable anyType="java.util.List" description="" historyStateLocation="client" isArray="false" name="operatingRevenueList"/>
+    <process:variable anyType="java.util.List" description="" historyStateLocation="client" isArray="false" name="externalIncomeOfTheGroupList"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" modelType="com.zhonghe.ame.kaohe.incomeStatistics.ZhKaoheStatisticsSnapshotDetailsEntity" name="detailsList"/>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="excelMap"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" name="sheetNames" primitiveType="String"/>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="exportInfos"/>
   </process:variables>
   <process:inputs varArgs="false">
+    <process:input description="" isArray="false" name="year" primitiveType="String"/>
+    <process:input description="" isArray="false" name="month" primitiveType="String"/>
+    <process:input description="" isArray="false" name="secOrg" primitiveType="String"/>
     <process:input description="" isArray="false" modelType="com.primeton.das.criteria.criteriaType" name="criteria"/>
   </process:inputs>
   <process:outputs>

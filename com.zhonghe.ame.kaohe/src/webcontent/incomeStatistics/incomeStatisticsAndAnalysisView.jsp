@@ -24,6 +24,7 @@ html,body {
 		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px; background: #f1f2f6;">
 			<span id="khny" style="font-size: 14px; margin-left: 10px; font-weight: bold;"></span>
 			<span id="khdw" style="font-size: 14px; margin-left: 20px; font-weight: bold;"></span>
+			<span style="font-size: 14px; margin-left: 20px; font-weight: bold;"><a class="nui-button" id="srtjmxExport" iconCls="icon-download" onclick="srtjmxExport()">导出</a></span>
 		</div>
 		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px; text-align: center; background: #f1f2f6;">
 			<span style="font-size: 14px; font-weight: bold;">收入指标分析预测</span>
@@ -124,7 +125,6 @@ html,body {
 					<input name="criteria._expr[4].contractName" class="nui-textbox" width="200" emptyText="合同名称(回车查询)" onvaluechanged="statisticsSnapshotDetailSearch" />
 					<input name="criteria._expr[5].headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" showNullItem="true" emptyText="集团内外" width="75" onvaluechanged="statisticsSnapshotDetailSearch" />
 					<input name="criteria._expr[6].riskLevel" class="nui-dictcombobox" dictTypeId="RISK_LEVEL" showNullItem="true" emptyText="风险等级" width="75" onvaluechanged="statisticsSnapshotDetailSearch" />
-					<a class="nui-button" id="srtjmxExport" iconCls="icon-download" onclick="srtjmxExport()">导出</a>
 				</div>
 				<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
 					<span style="font-size: 14px; font-weight: bold;">考核收入统计明细</span>
@@ -180,6 +180,7 @@ html,body {
 		var operatingRevenueGrid = nui.get("operatingRevenueGrid");
 		var externalIncomeOfTheGroupGrid = nui.get("externalIncomeOfTheGroupGrid");
 		var statisticsSnapshotDetailGrid = nui.get("statisticsSnapshotDetailGrid");
+		var conditionData;
 
 		init();
 
@@ -198,6 +199,7 @@ html,body {
 				contentType : 'text/json',
 				success : function(result) {
 					var data = result.statisticsSnapshot;
+					conditionData = data;
 					$("#khny").text("考核年月：" + data.years + "年" + data.months + "月");
 					$("#khdw").text("考核单位：" + data.secondaryOrgname);
 					operatingRevenueGrid.load({
@@ -261,12 +263,17 @@ html,body {
 		}
 		
 		function srtjmxExport(){
-			var data = statisticsSnapshotDetailForm.getData();
-			console.log(data);
+			var formData = statisticsSnapshotDetailForm.getData();
+			var data = {
+				"year" :  conditionData.years,
+				"month" : conditionData.months,
+				"secOrg" : conditionData.secondaryOrg,
+				"criteria" : formData.criteria
+			};		
 			exportExcel({
 				"data" : data,
 				"url" : "com.zhonghe.ame.kaohe.incomeStatistics.exportStatisticsSnapshotDetailExcelSec.biz.ext",
-				"fileName" : "考核收入统计明细"
+				"fileName" : "收入指标分析预测及统计明细"
 			})
 		}			
 		

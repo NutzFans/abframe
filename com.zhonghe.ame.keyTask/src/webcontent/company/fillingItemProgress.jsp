@@ -44,6 +44,7 @@ html,body {
 			<div style="width: 99%">
 				<form id=tianBaoForm " method="post">
 					<input name="id" class="nui-hidden" />
+					<input id="historyAppStatus" name="historyAppStatus" class="nui-hidden" />
 					<input name="files" id="fileids" class="nui-hidden" />
 					<table style="table-layout: fixed;">
 						<tr>
@@ -67,6 +68,12 @@ html,body {
 								<input id="riskMeasures" name="riskMeasures" class="nui-textarea" style="width: 1020px; height: 65px" />
 							</td>
 						</tr>
+						<tr id="isWh" style="display: none;">
+							<td align="right" style="width: 100px">审批状态：</td>
+							<td>
+								<input id="appStatus" name="appStatus" class="nui-combobox" style="width: 100px" showNullItem="true" />
+							</td>
+						</tr>						
 					</table>
 				</form>
 			</div>
@@ -88,12 +95,13 @@ html,body {
 		var baseForm = new nui.Form("#baseForm");
 		var tianBaoForm = new nui.Form("#tianBaoForm");
 
-		function initData(data) {
+		function initData(id,isWh) {
 			nui.get("taskMonth").setData(monthDict);
 			nui.get("taskStatus").setData(taskStatusDict);
 			nui.get("riskStatus").setData(riskStatusDict);
+			nui.get("appStatus").setData(appStatusDict);
 			var json = nui.encode({
-				"id" : data
+				"id" : id
 			});
 			ajaxCommon({
 				url : "com.zhonghe.ame.keyTask.company.queryItemById.biz.ext",
@@ -105,6 +113,10 @@ html,body {
 					}
 					baseForm.setData(taskItemData);
 					tianBaoForm.setData(taskItemData);
+					if(isWh && taskItemData.appStatus == '4'){
+						nui.get("historyAppStatus").setValue('4');
+						$('#isWh').show();
+					}
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "companyTaskItem",
@@ -221,6 +233,9 @@ html,body {
 			id : "高风险",
 			text : '高风险'
 		} ];
+		
+		var appStatusDict = [ {id : "4",text : '作废'} ];		
+		
 	</script>
 
 </body>

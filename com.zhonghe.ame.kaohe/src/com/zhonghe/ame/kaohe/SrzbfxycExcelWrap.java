@@ -14,6 +14,7 @@ import com.esproc.jdbc.Array;
 import com.primeton.data.sdo.impl.types.DayType;
 
 import commonj.sdo.DataObject;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Bizlet("收入指标分析预测导出Excel数据包装")
 public class SrzbfxycExcelWrap {
@@ -96,4 +97,23 @@ public class SrzbfxycExcelWrap {
 		return dataObject;
 	}
 
+	@Bizlet("包装明细数据")
+	public Map<String, List<DataObject>> excelWrapDetails(Map<String, List<DataObject>> excelMap, DataObject[] detailsList) {
+		List<DataObject> dataObjectList = Arrays.asList(detailsList);
+		excelMap.put("收入统计明细", dataObjectList);
+		return excelMap;
+	}
+	
+	@Bizlet("其他参数包装")
+	public DataObject[] exportInfoWarpThree(String year, String month) {
+		List<DataObject> dataObjectList = new ArrayList<DataObject>();
+		String yearMonth = year + "年" + month + "月";
+		for (int i = 0; i < 3; i++) {
+			DataObject dataObject = DataObjectUtil.createDataObject("com.zhonghe.ame.kaohe.incomeStatistics.ExportInfoExcelEntity");
+			dataObject.setString("yearMonth", yearMonth);
+			dataObjectList.add(dataObject);
+		}
+		return ArrayUtil.toArray(dataObjectList, DataObject.class);
+	}	
+	
 }
