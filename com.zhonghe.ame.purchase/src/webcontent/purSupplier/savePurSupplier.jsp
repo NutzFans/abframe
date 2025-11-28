@@ -77,12 +77,12 @@
     	var addURL = "com.zhonghe.ame.purchase.purSupplier.addPurSupplier.biz.ext";
     	var saveURL = "";  
     	var dataAction=""; 
-    	var custnum="";     
+    	var custnum="";
+    	nui.alert("不纳入采购管理规定适用范围的相关供应商，请务必选择【非采购类供应商】");     
 	    function SetData(data){
 	    	data = nui.clone(data);
 	    	dataAction = data.action;
 	    	if(data.action == "edit"){
-	    		nui.get("custname").setReadOnly(true);
 	    		//编辑进来将 供应商类型 置为不可编辑状态
 	    		nui.get("custtype").setReadOnly(true);
 	    		var json = nui.encode({purSupplier:data}); 
