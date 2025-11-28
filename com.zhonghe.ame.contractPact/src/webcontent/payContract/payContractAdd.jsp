@@ -371,10 +371,10 @@
 						var contractSumAbs = abs(contractSum * 1);
 						var scalingSumAbs = abs(scalingSum * 1);
 						if (procurementType == "公开招标") {
-							if (contractSumAbs != scalingSumAbs) {
+/* 							if (contractSumAbs != scalingSumAbs) {
 								alert("采购方式是招标，合同金额等于定标金额才能提交");
 								return;
-							}
+							} */
 						} else {
 							if (parseInt(contractSumAbs) > parseInt(scalingSumAbs)) {
 								alert("采购方式是招标以外的，合同金额应小于等于定标金额才能提交");
