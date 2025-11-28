@@ -478,7 +478,56 @@
 		</div>
 
 		<div class="layui-row layui-col-space20">
-			<div class="layui-col-md12">
+			<div class="layui-col-md6">
+				<div class="layui-card">
+					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+						<span class="header-text">公司级重点任务</span>
+					</div>
+					<div class="layui-card-body" style="padding: 5px">
+						<div class="layui-row" style="position: relative;">
+							<div class="layui-col-md3">
+								<div class="keytask-data-item">
+									<div class="keytask-data-title">任务总数</div>
+									<div>
+										<span id="totalNumberOfCompanyLevelKeyTasks" class="keytask-data-value">23</span>
+									</div>
+								</div>
+							</div>
+							<div class="keytask-middle-divider" style="left: 25%;"></div>
+							<div class="layui-col-md3">
+								<div class="keytask-data-item">
+									<div class="keytask-data-title">正常推进</div>
+									<div>
+										<span id="normalProgressOfCompanyLevelKeyTasks" class="keytask-data-value">16</span>
+									</div>
+								</div>
+							</div>
+							<div class="keytask-middle-divider" style="left: 50%;"></div>
+							<div class="layui-col-md3">
+								<div class="keytask-data-item">
+									<div class="keytask-data-title">一定风险</div>
+									<div>
+										<span id="certainRisksOfCompanyLevelKeyTasks" class="keytask-data-value">5</span>
+									</div>
+								</div>
+							</div>
+							<div class="keytask-middle-divider" style="left: 75%;"></div>
+							<div class="layui-col-md3">
+								<div class="keytask-data-item">
+									<div class="keytask-data-title">极大风险</div>
+									<div>
+										<span id="significantRisksOfCompanyLevelKeyTasks" class="keytask-data-value">5</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-row">
+							<table id="companyLevelKeyTasksGrid" class="layui-hide"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
 						<span class="header-text">开发中</span>
@@ -624,6 +673,7 @@
 						renderDwxqhteGrid(year, month, "0");
 						renderCompleteTodoBtn(reqId, userId);
 						renderYszkChart(year, month);
+						renderCompanyKeyTask(year, month);
 						utils.removeLoading();
 						utils.animateNum('#contractAmountHeldAtTheEndOfTheMonth', true);
 						utils.animateNum('#endOfMonthContractAmountHeldOutsideTheGroup', true);
@@ -1708,7 +1758,111 @@
 						yszkChartByZb.setOption(zbCharOption);
 					}
 				});
-			});			
+			});
+			
+			// 公司级重点任务
+			function renderCompanyKeyTask(year, month){
+				$.ajax({
+					url : "com.zhonghe.ame.kaohe.incomeChartPush.statisticsOfCompanyLevelKeyTasks.biz.ext",
+					data : {
+						"year" : year,
+						"month" : month
+					},
+					async: false,
+					type : "POST",
+					dataType : "json",
+					success : function(data) {
+						var dataMap = data.dataMap;
+						console.log(dataMap);
+						$('#totalNumberOfCompanyLevelKeyTasks').text(dataMap.totalNumberOfCompanyLevelKeyTasks);
+						$('#normalProgressOfCompanyLevelKeyTasks').text(dataMap.normalProgressOfCompanyLevelKeyTasks);
+						$('#certainRisksOfCompanyLevelKeyTasks').text(dataMap.certainRisksOfCompanyLevelKeyTasks);
+						$('#significantRisksOfCompanyLevelKeyTasks').text(dataMap.significantRisksOfCompanyLevelKeyTasks);
+						if(dataMap.keyTaskList.length > 0){
+							 table.render({
+							 	elem: '#companyLevelKeyTasksGrid',
+							 	data: dataMap.keyTaskList,
+							 	cols: [[
+							 		{type : 'numbers', title : '序号', align : 'center', width : 70},
+							 		{field : 'riskStatus', title : '风险等级', align : 'center', width : 140},
+							 		{field : 'taskName', title : '任务名称'},
+							 		{field : 'secOrgName', title : '责任单位', width : 250}
+							 	]],
+							 	done: function(res, curr, count){
+							 		mergeRow(res);
+							 	}
+							 })
+						}
+					}
+				});				
+			}
+			
+			function mergeRow(res) {
+			    var data = res.data;
+			    var mergeIndex = 0; //需要进行合并的初始行数
+			    var nextMergeIndex = 1; //进行比较的那一行
+			    var mark = 1; //mark是计算每次需要合并的格子数
+			    var flag = true; //每一次重新开始比较的标识
+			    var columsName = ["riskStatus"]; //需要合并的列名称
+			    var columsIndex = [1]; //需要合并的列索引值
+			    var trArr = $("[lay-table-id='companyLevelKeyTasksGrid'] .layui-table-body>.layui-table").find("tr"); //所有行，有多个表格存在时，必须指定lay-id
+			    do {
+			        var markFlag = true; //是否进行判断合并
+			        do {
+			            //循环判断是否可以合并，只有不能合并时才跳出
+			            for (var k = 0; k < columsName.length; k++) {
+			                if (
+			                    data[mergeIndex][columsName[k]] === data[nextMergeIndex][columsName[k]]
+			                ) {
+			                    //后一行的值与前一行的值做比较，相同就需要合并
+			                    markFlag = true;
+			                } else {
+			                    markFlag = false;
+			                    break;
+			                }
+			            }
+			            if (markFlag) {
+			                mark += 1; //需要覆盖的行数加1
+			                nextMergeIndex += 1; //比较的行数加1
+			                //判断是否到最后一条数据
+			                if (nextMergeIndex >= data.length) {
+			                    markFlag = false;
+			                } else {
+			                    markFlag = true;
+			                }
+			            }
+			        } while (markFlag);
+			        if (mark > 1) {
+			            //只有存在合并操作时才合并
+			            for (var j = 0; j < columsIndex.length; j++) {
+			                //这里循环所有要合并的列
+			                var tdPreArr = trArr.eq(mergeIndex).find("td").eq(columsIndex[j]); //获取默认行的列
+			                tdPreArr.each(function () {
+			                    //相同列的第一列增加rowspan属性
+			                    $(this).attr("rowspan", mark); //合并等于 mark 数值的行
+			                });
+			                //存在多条要隐藏的行单元格，每条都要隐藏
+			                for (var x = mergeIndex + 1; x < nextMergeIndex; x++) {
+			                    //这里循环所有要隐藏的列
+			                    var tdCurArr = trArr.eq(x).find("td").eq(columsIndex[j]); //获取下一行的当前列
+			                    tdCurArr.each(function () {
+			                        //当前行隐藏
+			                        $(this).css("display", "none");
+			                    });
+			                }
+			            }
+			        }
+			        mergeIndex = nextMergeIndex;
+			        mark = 1;
+			        nextMergeIndex += 1;
+			        if (nextMergeIndex <= data.length) {
+			            flag = true;
+			        } else {
+			            flag = false;
+			        }
+			    } while (flag);
+			}
+		
 			
 			// 渲染完成待办按钮
 			function renderCompleteTodoBtn(chartId, userId){

@@ -135,8 +135,8 @@ public class BusinessSituationPush {
 					+ "</modelId>\n"
 					+ "            <modelName>企业经营管理系统</modelName>\n"
 					+ "            <subject>"
+					+ "企业发展部戈乔发起的"
 					+ chartName
-					+ "-PC端"
 					+ "</subject>\n"
 					+ "            <targets>{\"LoginName\":\""
 					+ userCode
