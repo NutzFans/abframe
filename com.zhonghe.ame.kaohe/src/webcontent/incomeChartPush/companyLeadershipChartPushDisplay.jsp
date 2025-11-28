@@ -10,7 +10,7 @@
 <script src="js/D3ComboChart.js"></script>
 <meta name="viewport" content="width=1920, initial-scale=0.1, user-scalable=yes">
 <link rel="stylesheet" href="../../common/layui-v2.11.4/css/layui.css" media="all">
-<link rel="stylesheet" href="css/company.css?v=1.1" media="all">
+<link rel="stylesheet" href="css/company.css?v=1.2" media="all">
 <link rel="stylesheet" href="css/utils.css" media="all">
 </head>
 <body class="page-no-scroll">
@@ -496,7 +496,10 @@
 							<div class="keytask-middle-divider" style="left: 25%;"></div>
 							<div class="layui-col-md3">
 								<div class="keytask-data-item">
-									<div class="keytask-data-title">正常推进</div>
+									<div class="risk-label">
+										<div class="glow-shape green" style="width: 16px; height: 16px; margin-top: -2px"></div>
+										<span class="risk-name">正常推进</span>
+									</div>
 									<div>
 										<span id="normalProgressOfCompanyLevelKeyTasks" class="keytask-data-value">16</span>
 									</div>
@@ -505,7 +508,10 @@
 							<div class="keytask-middle-divider" style="left: 50%;"></div>
 							<div class="layui-col-md3">
 								<div class="keytask-data-item">
-									<div class="keytask-data-title">一定风险</div>
+									<div class="risk-label">
+										<div class="glow-shape yellow" style="width: 16px; height: 16px; margin-top: -2px"></div>
+										<span class="risk-name">一定风险</span>
+									</div>
 									<div>
 										<span id="certainRisksOfCompanyLevelKeyTasks" class="keytask-data-value">5</span>
 									</div>
@@ -514,7 +520,10 @@
 							<div class="keytask-middle-divider" style="left: 75%;"></div>
 							<div class="layui-col-md3">
 								<div class="keytask-data-item">
-									<div class="keytask-data-title">极大风险</div>
+									<div class="risk-label">
+										<div class="glow-shape red" style="width: 16px; height: 16px; margin-top: -2px"></div>
+										<span class="risk-name">极大风险</span>
+									</div>
 									<div>
 										<span id="significantRisksOfCompanyLevelKeyTasks" class="keytask-data-value">5</span>
 									</div>
@@ -1773,9 +1782,8 @@
 					dataType : "json",
 					success : function(data) {
 						var dataMap = data.dataMap;
-						console.log(dataMap);
 						$('#totalNumberOfCompanyLevelKeyTasks').text(dataMap.totalNumberOfCompanyLevelKeyTasks);
-						$('#normalProgressOfCompanyLevelKeyTasks').text(dataMap.normalProgressOfCompanyLevelKeyTasks);
+						$('#normalProgressOfCompanyLevelKeyTasks').text(dataMap.totalNumberOfCompanyLevelKeyTasks - dataMap.certainRisksOfCompanyLevelKeyTasks - dataMap.significantRisksOfCompanyLevelKeyTasks);
 						$('#certainRisksOfCompanyLevelKeyTasks').text(dataMap.certainRisksOfCompanyLevelKeyTasks);
 						$('#significantRisksOfCompanyLevelKeyTasks').text(dataMap.significantRisksOfCompanyLevelKeyTasks);
 						if(dataMap.keyTaskList.length > 0){
@@ -1784,7 +1792,15 @@
 							 	data: dataMap.keyTaskList,
 							 	cols: [[
 							 		{type : 'numbers', title : '序号', align : 'center', width : 70},
-							 		{field : 'riskStatus', title : '风险等级', align : 'center', width : 140},
+							 		{field : 'riskStatus', title : '风险等级', align : 'center', width : 140, templet: function(d) {
+							 			let html = '';
+							 			if (d.riskStatus === '一定风险') {
+							 				html = '<div class="glow-shape yellow" style="width: 20px; height: 20px;"></div>'
+							 			} else if (d.riskStatus === '极大风险') {
+							 				html = '<div class="glow-shape red" style="width: 20px; height: 20px;"></div>'
+							 			}
+							 			return html;
+							 		}},
 							 		{field : 'taskName', title : '任务名称'},
 							 		{field : 'secOrgName', title : '责任单位', width : 250}
 							 	]],
