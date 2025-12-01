@@ -26,6 +26,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
@@ -170,6 +171,13 @@ public class ExportCompanyTaskExcel {
 							Cell cell9 = row.createCell(9);
 							cell9.setCellValue(taskItem.getStr("risk_measures"));
 							cell9.setCellStyle(cellStyle);
+
+							// 10：审批状态（每行填充）
+							Cell cell10 = row.createCell(10);
+							String appStatusStr = this.getAppStatusStr(taskItem.getStr("app_status"), taskItem.getStr("task_status"), taskItem.getStr("task_progress"));
+							cell10.setCellValue(appStatusStr);
+							cell10.setCellStyle(cellStyle);
+
 						}
 
 						// 移动到下一个子组的起始行
@@ -269,6 +277,11 @@ public class ExportCompanyTaskExcel {
 						Cell cell8 = row.createCell(8);
 						cell8.setCellValue(taskItem.getStr("risk_measures"));
 						cell8.setCellStyle(cellStyle);
+						// 审批状态（第9列）
+						Cell cell9 = row.createCell(9);
+						String appStatusStr = this.getAppStatusStr(taskItem.getStr("app_status"), taskItem.getStr("task_status"), taskItem.getStr("task_progress"));
+						cell9.setCellValue(appStatusStr);
+						cell9.setCellStyle(cellStyle);
 					}
 					rowIndex += groupSize; // 移动到下一分组起始行
 				}
@@ -335,6 +348,8 @@ public class ExportCompanyTaskExcel {
 		sheet.setColumnWidth(7, 50 * 256);
 		// 8：风险及措施
 		sheet.setColumnWidth(8, 50 * 256);
+		// 9: 审批状态
+		sheet.setColumnWidth(10, 10 * 256); 
 	}
 
 	// 总数据sheet列宽设置（按新列顺序调整）
@@ -349,11 +364,12 @@ public class ExportCompanyTaskExcel {
 		sheet.setColumnWidth(7, 10 * 256); // 7: 风险状态（新第7列）
 		sheet.setColumnWidth(8, 50 * 256); // 8: 进展情况（新第8列）
 		sheet.setColumnWidth(9, 50 * 256); // 9: 风险及措施（新第9列）
+		sheet.setColumnWidth(10, 10 * 256); // 10: 审批状态（新第10列）
 	}
 
 	// 创建表头行
 	private void createHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施" };
+		String[] headers = { "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施", "审批状态" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
@@ -363,7 +379,7 @@ public class ExportCompanyTaskExcel {
 
 	// 总数据sheet表头创建（第0列为任务责任单位）
 	private void createAllDataHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "任务责任单位", "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施" };
+		String[] headers = { "任务责任单位", "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施", "审批状态" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
@@ -383,4 +399,19 @@ public class ExportCompanyTaskExcel {
 		return tempFile.getAbsolutePath();
 	}
 
+	private String getAppStatusStr(String appStatus, String taskStatus, String taskProgress) {
+		if (StrUtil.isAllBlank(appStatus, taskStatus, taskProgress)) {
+			return "未填报";
+		} else if (StrUtil.isAllNotBlank(taskStatus, taskProgress) && StrUtil.isBlank(appStatus)) {
+			return "待审核";
+		} else if ("2".equals(appStatus)) {
+			return "审批通过";
+		} else if ("1".equals(appStatus)) {
+			return "审批中";
+		} else if ("4".equals(appStatus)) {
+			return "作废";
+		} else {
+			return "";
+		}
+	}
 }
