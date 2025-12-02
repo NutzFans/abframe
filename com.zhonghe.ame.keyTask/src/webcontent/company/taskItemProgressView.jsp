@@ -74,18 +74,27 @@ html,body {
 		<p>
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>相关支撑材料</legend>
-			<jsp:include page="/ame_common/detailFile.jsp" />
+			<jsp:include page="/ame_common/detailFile.jsp">
+				<jsp:param name="downloadZip" value="true"/>
+			</jsp:include>
 		</fieldset>
 	</div>
 
 	<div style="text-align: center; padding-top: 5px; padding-bottom: 10px; margin-bottom: 1px" class="nui-toolbar">
 		<a id="closeBtn" class="nui-button" onclick="closeCancel()" style="width: 60px;" iconCls="icon-close">关闭</a>
 	</div>
+	
+	<form name="exprotZipFileFlow" id="exprotZipFileFlow" action="com.primeton.eos.ame_common.ameExportZip.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		nui.parse();
 		var baseForm = new nui.Form("#baseForm");
 		var tianBaoForm = new nui.Form("#tianBaoForm");
+		var itemId;
 
 		function initData(data) {
 			nui.get("taskMonth").setData(monthDict);
@@ -101,6 +110,7 @@ html,body {
 					var taskItemData = result.taskItem;
 					baseForm.setData(taskItemData);
 					tianBaoForm.setData(taskItemData);
+					itemId = taskItemData.id;
 					var grid_0 = nui.get("grid_0");
 					grid_0.load({
 						"groupid" : "companyTaskItem",
@@ -167,6 +177,36 @@ html,body {
 			id : "高风险",
 			text : '高风险'
 		} ];
+		
+		function downloadZipFile() {
+			if (!confirm("是否确认打包下载？")) {
+				return;
+			}
+			var relationId = itemId;
+			var fileCatalog = 'companyTaskItem';
+			var json = nui.encode({
+				'relationId' : relationId,
+				'fileCatalog' : fileCatalog
+			});
+			nui.ajax({
+				url : "com.primeton.eos.ame_common.file_zip.fileZip.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					if (filePath != null && filePath != "") {
+						var fileName = "重点任务_支撑材料附件.zip";
+						var frm = document.getElementById("exprotZipFileFlow");
+						frm.elements["downloadFile"].value = filePath;
+						frm.elements["fileName"].value = fileName;
+						frm.submit();
+					}
+				}
+			})
+		}		
+		
 	</script>
 </body>
 </html>
