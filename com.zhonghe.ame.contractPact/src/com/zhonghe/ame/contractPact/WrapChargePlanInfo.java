@@ -110,9 +110,14 @@ public class WrapChargePlanInfo {
 
 				// 获取合同编号及二级组织都相同的开票数据集合
 				List<Entity> invoiceBySecList = dbSession.query(queryInvoiceBySecSql, contractNo, startDate, endDate, secOrg);
-
-				dataObject = this.fetchFillData(dataObject, invoiceBySecList);
-				warpDatas.add(dataObject);
+				if (invoiceBySecList != null && invoiceBySecList.size() > 0) {
+					dataObject = this.fetchFillData(dataObject, invoiceBySecList);
+					warpDatas.add(dataObject);
+				} else {
+					DataObject annualChargePlan = DataObjectUtil.createDataObject("com.zhonghe.ame.annualPlan.annualPlan.AnnualChargePlan");
+					annualChargePlan.set("id", dataObject.get("id"));
+					DatabaseUtil.deleteEntity("default", annualChargePlan);
+				}
 			}
 
 			if ("1".equals(orderMap.get("isOrder"))) {
