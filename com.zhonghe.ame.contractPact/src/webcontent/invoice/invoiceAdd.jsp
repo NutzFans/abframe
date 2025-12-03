@@ -488,7 +488,12 @@ body {
 				var allotFlag = nui.get("allotFlag").getValue();
 				if (allotFlag == "1") {
 					var rows = allotDataGrid.getData();
-					var sum = rows.reduce((acc, curr) => acc + Number(curr.invoiceSum), 0);
+					// 方案2：整数计算（无精度损失）
+					var sum = rows.reduce((acc, curr) => {
+					  // 先转成Number，再乘100转成分（避免浮点数误差）
+					  const cent = Math.round(Number(curr.invoiceSum) * 100); 
+					  return acc + cent;
+					}, 0) / 100; // 最后转回元					
 					var invoiceSum = Number(nui.get("invoiceSum").getValue());
 					if(sum != invoiceSum){
 						showTips("产值分配的开票金额之和,需要等于表单中开票金额字段的值", "danger");
