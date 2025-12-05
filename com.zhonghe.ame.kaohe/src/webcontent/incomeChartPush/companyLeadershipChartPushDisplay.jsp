@@ -481,7 +481,7 @@
 			<div class="layui-col-md6">
 				<div class="layui-card">
 					<div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
-						<span class="header-text">公司级重点任务</span>
+						<span id="gsjZdrwTitle" class="header-text">公司级重点任务</span>
 					</div>
 					<div class="layui-card-body" style="padding: 5px">
 						<div class="layui-row" style="position: relative;">
@@ -621,6 +621,7 @@
 						year = result.years;
 						month = result.months;
 						$('#statisticalPeriod').text('统计期：' + result.years + '年1 - ' + result.months + '月');
+						$('#gsjZdrwTitle').text('公司级重点任务（截至'+ result.months + '月）');
 						$('#contractAmountHeldAtTheEndOfTheMonth').text(result.contractAmountHeldAtTheEndOfTheMonth);
 						$('#endOfMonthContractAmountHeldOutsideTheGroup').text(result.endOfMonthContractAmountHeldOutsideTheGroup);
 						$('#newContractAmountSignedThisYear').text(result.newContractAmountSignedThisYear);
