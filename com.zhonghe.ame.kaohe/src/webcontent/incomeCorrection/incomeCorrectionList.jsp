@@ -47,6 +47,7 @@ html,body {
 						<td>
 							<a class="nui-button" id="search" iconCls="icon-search" onclick="search()">查询</a>
 							<a class="nui-button" id="reset" iconCls="icon-reload" onclick="reset()">重置</a>
+							<a class="nui-button" id="srxzExport" iconCls="icon-download" onclick="srxzExport()">导出</a>
 						</td>
 					</tr>
 				</table>
@@ -81,6 +82,12 @@ html,body {
 		</div>
 
 	</div>
+	
+	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		nui.parse();
@@ -229,6 +236,15 @@ html,body {
 		function ZH_GROUP(e){
 			return nui.getDictText("ZH_GROUP", e.value);
 		}
+		
+		function srxzExport(){
+			var data = correctionForm.getData();
+			exportExcel({
+				"data" : data,
+				"url" : "com.zhonghe.ame.kaohe.incomeCorrection.exportIncomeCorrectionExcel.biz.ext",
+				"fileName" : "考核收入修正"
+			})			
+		}		
 		
 	</script>
 

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
@@ -246,6 +248,209 @@ public class ZhzxBizUtils {
 
 			}
 		}
+	}
+
+	@Bizlet("合同编号 - 刷新合同编号符合规范")
+	public void htbh_sxhtbhfhgf() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		// 付费合同
+		Console.log("【开始】处理付费合同(zh_pay_contract)的合同编号调整");
+		String queryZhPayContractSql = "SELECT id, contract_no FROM zh_pay_contract";
+		String updateZhPayContractSql = "UPDATE zh_pay_contract SET contract_no = ? WHERE id = ?";
+		List<Entity> payContractList = dbSession.query(queryZhPayContractSql);
+		for (Entity payContract : payContractList) {
+			String contractNo = payContract.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhPayContractSql, fixContractNo, payContract.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理付费合同(zh_pay_contract)的合同编号调整");
+
+		// annual_charge_plan
+		Console.log("【开始】处理annual_charge_plan的合同编号调整");
+		String queryAnnualChargePlanSql = "SELECT id, contract_no FROM annual_charge_plan";
+		String updateAnnualChargePlanSql = "UPDATE annual_charge_plan SET contract_no = ? WHERE id = ?";
+		List<Entity> annualChargePlanList = dbSession.query(queryAnnualChargePlanSql);
+		for (Entity annualChargePlan : annualChargePlanList) {
+			String contractNo = annualChargePlan.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateAnnualChargePlanSql, fixContractNo, annualChargePlan.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理annual_charge_plan的合同编号调整");
+
+		// annual_payment_plan
+		Console.log("【开始】处理annual_payment_plan的合同编号调整");
+		String queryAnnualPaymentPlanSql = "SELECT id, contract_no FROM annual_payment_plan";
+		String updateAnnualPaymentPlanSql = "UPDATE annual_payment_plan SET contract_no = ? WHERE id = ?";
+		List<Entity> annualPaymentPlanList = dbSession.query(queryAnnualPaymentPlanSql);
+		for (Entity annualPaymentPlan : annualPaymentPlanList) {
+			String contractNo = annualPaymentPlan.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateAnnualPaymentPlanSql, fixContractNo, annualPaymentPlan.getStr("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理annual_payment_plan的合同编号调整");
+
+		// annual_plan_year
+		Console.log("【开始】处理annual_plan_year的合同编号调整");
+		String queryAnnualPlanYearSql = "SELECT id, contract_no FROM annual_plan_year";
+		String updateAnnualPlanYearSql = "UPDATE annual_plan_year SET contract_no = ? WHERE id = ?";
+		List<Entity> annualPlanYearList = dbSession.query(queryAnnualPlanYearSql);
+		for (Entity annualPlanYear : annualPlanYearList) {
+			String contractNo = annualPlanYear.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateAnnualPlanYearSql, fixContractNo, annualPlanYear.getStr("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理annual_plan_year的合同编号调整");
+
+		// zh_agreement
+		Console.log("【开始】处理框架协议(zh_agreement)的合同编号调整");
+		String queryZhAgreementSql = "SELECT id, contract_no FROM zh_agreement";
+		String updateZhAgreementSql = "UPDATE zh_agreement SET contract_no = ? WHERE id = ?";
+		List<Entity> zhAgreementList = dbSession.query(queryZhAgreementSql);
+		for (Entity zhAgreement : zhAgreementList) {
+			String contractNo = zhAgreement.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhAgreementSql, fixContractNo, zhAgreement.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理框架协议(zh_agreement)的合同编号调整");
+
+		// ZH_BIDINFO
+		Console.log("【开始】处理市场经营信息(ZH_BIDINFO)的合同编号调整");
+		String queryZhBidinfoSql = "SELECT id, contract_no FROM ZH_BIDINFO";
+		String updateZhBidinfoSql = "UPDATE ZH_BIDINFO SET contract_no = ? WHERE id = ?";
+		List<Entity> zhBidinfoList = dbSession.query(queryZhBidinfoSql);
+		for (Entity zhBidinfo : zhBidinfoList) {
+			String contractNo = zhBidinfo.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhBidinfoSql, fixContractNo, zhBidinfo.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理市场经营信息(ZH_BIDINFO)的合同编号调整");
+
+		// zh_charge_contract
+		Console.log("【开始】处理收费合同(zh_charge_contract)的合同编号调整");
+		String queryZhChargeContractSql = "SELECT id, contract_no FROM zh_charge_contract";
+		String updateZhChargeContractSql = "UPDATE zh_charge_contract SET contract_no = ? WHERE id = ?";
+		List<Entity> zhChargeContractList = dbSession.query(queryZhChargeContractSql);
+		for (Entity zhChargeContract : zhChargeContractList) {
+			String contractNo = zhChargeContract.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhChargeContractSql, fixContractNo, zhChargeContract.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理收费合同(zh_charge_contract)的合同编号调整");
+
+		// zh_kaohe_statistics_snapshot_details
+		Console.log("【开始】处理考核收入统计快照明细(zh_kaohe_statistics_snapshot_details)的合同编号调整");
+		String queryZhKaoheStatisticsSnapshotDetailsSql = "SELECT id, contract_no FROM zh_kaohe_statistics_snapshot_details";
+		String updateZhKaoheStatisticsSnapshotDetailsSql = "UPDATE zh_kaohe_statistics_snapshot_details SET contract_no = ? WHERE id = ?";
+		List<Entity> zhKaoheStatisticsSnapshotDetailsList = dbSession.query(queryZhKaoheStatisticsSnapshotDetailsSql);
+		for (Entity zhKaoheStatisticsSnapshotDetails : zhKaoheStatisticsSnapshotDetailsList) {
+			String contractNo = zhKaoheStatisticsSnapshotDetails.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhKaoheStatisticsSnapshotDetailsSql, fixContractNo, zhKaoheStatisticsSnapshotDetails.getStr("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理考核收入统计快照明细(zh_kaohe_statistics_snapshot_details)的合同编号调整");
+
+		// zh_payment
+		Console.log("【开始】处理付款管理(zh_payment)的合同编号调整");
+		String queryZhPaymentSql = "SELECT id, contract_id FROM zh_payment";
+		String updateZhPaymentSql = "UPDATE zh_payment SET contract_id = ? WHERE id = ?";
+		List<Entity> zhPaymentList = dbSession.query(queryZhPaymentSql);
+		for (Entity zhPayment : zhPaymentList) {
+			String contractNo = zhPayment.getStr("contract_id");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhPaymentSql, fixContractNo, zhPayment.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理付款管理(zh_payment)的合同编号调整");
+
+		// zh_invoice
+		Console.log("【开始】处理开票管理(zh_invoice)的合同编号调整");
+		String queryZhInvoiceSql = "SELECT id, contract_no FROM zh_invoice";
+		String updateZhInvoiceSql = "UPDATE zh_invoice SET contract_no = ? WHERE id = ?";
+		List<Entity> zhInvoiceList = dbSession.query(queryZhInvoiceSql);
+		for (Entity zhInvoice : zhInvoiceList) {
+			String contractNo = zhInvoice.getStr("contract_no");
+			if (StrUtil.isNotBlank(contractNo)) {
+				String fixContractNo = this.fixContractNo(contractNo);
+				if (!contractNo.equals(fixContractNo)) {
+					Console.log(StrUtil.format("原先合同编号：{}，修改后合同编号：{}", contractNo, fixContractNo));
+					dbSession.execute(updateZhInvoiceSql, fixContractNo, zhInvoice.getInt("id"));
+				}
+			}
+		}
+		Console.log("【结束】处理开票管理(zh_invoice)的合同编号调整");
+
+	}
+
+	// 修复合同编号
+	private String fixContractNo(String originalNo) {
+		// 1. 空值/纯空白处理
+		if (StrUtil.isBlank(originalNo)) {
+			return null;
+		}
+		// 2. 移除所有空格（首尾+中间）
+		StringBuilder noWithoutSpace = new StringBuilder();
+		for (int i = 0; i < originalNo.length(); i++) {
+			char c = originalNo.charAt(i);
+			// 排除所有空格类型：半角空格(32)、全角空格(12288)、制表符(9)、换行符(10)等
+			if (!CharUtil.isBlankChar(c)) {
+				noWithoutSpace.append(c);
+			}
+		}
+		if (StrUtil.isBlank(noWithoutSpace)) {
+			return null;
+		}
+		// 3. 替换中文全角横线（－）为英文半角横线（-），同时替换全角括号为半角括号
+		String noWithHalfSymbol = StrUtil.replace(StrUtil.replace(noWithoutSpace, "－", "-"), "（", "(");
+		noWithHalfSymbol = StrUtil.replace(noWithHalfSymbol, "）", ")");
+		// 4. 小写字母转大写（Hutool工具）
+		String upperNo = noWithHalfSymbol.toUpperCase();
+		// 5. 最终空值兜底
+		return StrUtil.isBlank(upperNo) ? null : upperNo;
+
 	}
 
 }

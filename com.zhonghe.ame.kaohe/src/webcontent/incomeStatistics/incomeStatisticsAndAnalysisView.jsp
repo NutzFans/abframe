@@ -39,15 +39,15 @@ html,body {
 					<div field="expectedValue" headerAlign="center" align="center" dataType="currency">期望值</div>
 					<div header="全年预测及缺口情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="annualForecastedBookValue" headerAlign="center" align="center" dataType="currency">全年预测（账面值）</div>
-							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency">全年预测（考核值）</div>
+							<div field="annualForecastedBookValue" headerAlign="center" align="center" dataType="currency" width="105">全年预测（账面值）</div>
+							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency" width="105">全年预测（考核值）</div>
 							<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" dataType="currency">考核值缺口</div>
 						</div>
 					</div>
 					<div header="已完成情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（账面值）</div>
-							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（考核值）</div>
+							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency" width="140">截至当月已完成（账面值）</div>
+							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency" width="140">截至当月已完成（考核值）</div>
 							<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 						</div>
 					</div>
@@ -65,6 +65,7 @@ html,body {
 							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency" renderer="FONT_COLOR_ALL" headerStyle="background-color: #e6f7ff">营业收入考核值</div>
 							<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
 							<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
+							<div field="totalAmountOfOperatingLoans" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：经营借款</div>
 							<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 						</div>
 					</div>
@@ -81,15 +82,15 @@ html,body {
 					<div field="expectedValue" headerAlign="center" align="center" dataType="currency">期望值</div>
 					<div header="全年预测及缺口情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="annualForecastedBookValue" headerAlign="center" align="center" dataType="currency">全年预测（账面值）</div>
-							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency">全年预测（考核值）</div>
+							<div field="annualForecastedBookValue" headerAlign="center" align="center" dataType="currency" width="105">全年预测（账面值）</div>
+							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency" width="105">全年预测（考核值）</div>
 							<div field="assessmentValueGap" headerAlign="center" align="center" renderer="FONT_COLOR" dataType="currency">考核值缺口</div>
 						</div>
 					</div>
 					<div header="已完成情况" headerAlign="center" align="center">
 						<div property="columns">
-							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（账面值）</div>
-							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency" width="130">截至当月已完成（考核值）</div>
+							<div field="asOfTheCurrentMonthTheBookValueHasBeenCompleted" headerAlign="center" align="center" dataType="currency" width="140">截至当月已完成（账面值）</div>
+							<div field="asOfTheCurrentMonthTheAssessmentValuesHaveBeenCompleted" headerAlign="center" align="center" dataType="currency" width="140">截至当月已完成（考核值）</div>
 							<div field="assessmentCompletionRate" headerAlign="center" align="center">考核值完成率</div>
 						</div>
 					</div>
@@ -107,6 +108,7 @@ html,body {
 							<div field="annualForecastAssessmentValue" headerAlign="center" align="center" dataType="currency" renderer="FONT_COLOR_ALL" headerStyle="background-color: #e6f7ff">营业收入考核值</div>
 							<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
 							<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
+							<div field="totalAmountOfOperatingLoans" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：经营借款</div>
 							<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 						</div>
 					</div>

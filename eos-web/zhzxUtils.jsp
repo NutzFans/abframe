@@ -65,7 +65,9 @@ body {
 					<input id="gszdrw_import_excel_path_update" class="nui-htmlfile" name="filePath" style="width: 250px" />
 					<input id="gszdrw_import_excel_update" class="nui-button" iconCls="icon-upload" style="margin-left: 10px" onclick="gszdrw_import_excel_update()" text="公司重点任务 - 导入Excel数据 - 更新数据" />
 				</div>
-			</form>								
+			</form>
+			<p></p>
+			<a id="htbh_sxhtbhfhgf" class="nui-button" iconCls="icon-node" onclick="htbh_sxhtbhfhgf()">合同编号 - 刷新合同编号符合规范</a>								
 		</fieldset>
 
 	</div>
@@ -348,6 +350,29 @@ body {
 					document.getElementById('gszdrw_import_excel_form_update').submit();
 				}
 			}
+		}
+		
+		// 合同编号 - 刷新合同编号符合规范
+		function htbh_sxhtbhfhgf(){
+			nui.get("htbh_sxhtbhfhgf").disable();
+			if (!confirm("是否执行[合同编号 - 刷新合同编号符合规范]操作？")) {
+				nui.get("htbh_sxhtbhfhgf").enable();
+			} else {
+				nui.ajax({
+					url : "com.primeton.eos.common.zhzxUtils.htbh_sxhtbhfhgf.biz.ext",
+					type : 'POST',
+					cache : false,
+					contentType : 'text/json',
+					success : function(result) {
+						if (result.data == "1") {
+							nui.alert("合同编号 - 刷新合同编号符合规范 - 执行成功");
+						} else {
+							nui.alert("合同编号 - 刷新合同编号符合规范 - 执行失败");
+						}
+						nui.get("htbh_sxhtbhfhgf").enable();
+					}
+				});
+			}			
 		}				
 				
 	</script>

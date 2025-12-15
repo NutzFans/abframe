@@ -148,6 +148,7 @@ html,body {
 								<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
 								<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
 								<div field="totalAmountOfAssessmentIncomeCorrection" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：收入纠偏</div>
+								<div field="totalAmountOfOperatingLoans" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：经营借款</div>
 								<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 							</div>
 						</div>
@@ -193,6 +194,7 @@ html,body {
 								<div field="totalAmountOfAssessmentOfThisYearSRegulation" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：本年调控</div>
 								<div field="totalAmountOfAssessingVirtualOutputValue" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：虚拟产值</div>
 								<div field="totalAmountOfAssessmentIncomeCorrection" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：收入纠偏</div>
+								<div field="totalAmountOfOperatingLoans" headerAlign="center" summaryType="sum" align="center" dataType="currency" headerStyle="background-color: #e6f7ff">其中：经营借款</div>
 								<div field="totalAmountOfAssessOthers" headerAlign="center" align="center" summaryType="sum" dataType="currency" headerStyle="background-color: #e6f7ff">其中：其他</div>
 							</div>
 						</div>

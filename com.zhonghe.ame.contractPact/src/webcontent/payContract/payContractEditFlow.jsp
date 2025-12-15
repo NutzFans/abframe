@@ -340,8 +340,15 @@ body {
 				return;
 			}
 			var contractNo = nui.get("contractNo").getValue();
-			var contractNoStr = contractNo.trim();
-			if (checkContractNo(contractNoStr) == false) {
+			
+			var result = validateContractNo(contractNo);
+			
+			if(result.valid == false){
+				showTips(result.message, "danger");
+				return;
+			}
+			
+			if (checkContractNo(contractNo) == false) {
 				showTips("您录入的【合同编号】已被使用，请检查！", "danger");
 				return;
 			}
@@ -469,6 +476,32 @@ body {
 			});
 			return result;
 		}
+		
+		function validateContractNo(contractNo) {
+		    // 空值校验
+		    if (!contractNo) {
+		        return { valid: false, message: '合同编号不能为空' };
+		    }
+		
+		    // 去除首尾空格（兜底，即使输入首尾空格也判定为无效）
+		    const trimmedNo = contractNo.trim();
+		    if (trimmedNo !== contractNo) {
+		        return { valid: false, message: '合同编号不允许包含空格' };
+		    }
+		
+		    // 核心正则：仅允许大写字母、数字、横线，无空格，长度至少1位
+		    const reg = /^[A-Z0-9-()]+$/;
+		    if (!reg.test(contractNo)) {
+		        return {
+		            valid: false,
+		            message: '合同编号格式错误，仅允许包含大写字母、数字、横线、英文圆括号()，且不允许有空格'
+		        };
+		    }
+		
+		    // 验证通过
+		    return { valid: true, message: '合同编号格式正确' };
+		}		
+		
 	</script>
 </body>
 </html>

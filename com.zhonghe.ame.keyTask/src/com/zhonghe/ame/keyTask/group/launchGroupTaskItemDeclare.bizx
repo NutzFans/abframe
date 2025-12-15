@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="launchGroupTaskItemDeclare" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="7.0.0.0">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>transactionbegin0</targetNode>
+    </sourceConnections>
+    <location x="15" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="17" y="116"/>
+    <figSize height="16" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" displayName="事务开始" collapsed="false" type="transactionbegin">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactionbegin0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="90" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactionbegin0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionbegin0label" name="label" nodeType="label">
+    <location x="80" y="116"/>
+    <figSize height="16" width="49"/>
+    <node>transactionbegin0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link28" name="link28" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="165" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">taskItems[1]/main_id</process:from>
+      <process:to type="query">mainData/id</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="167" y="116"/>
+    <figSize height="16" width="25"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="expandEntity" displayName="expandEntity" collapsed="false" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link46" name="link46" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link28</targetConnections>
+    <location x="240" y="80"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">mainData</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"/>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="215" y="116"/>
+    <figSize height="16" width="72"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="FlowInsNameUtil.getGroupTaskItemFlowName" displayName="" collapsed="false" type="invoke" index="0" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link30" name="link30" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link47" name="link47" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <location x="420" y="80"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zhonghe.ame.keyTask.FlowInsNameUtil.getGroupTaskItemFlowName</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="userName" type="query" value="java.lang.String" valueType="Java" pattern="reference">m:userObject/userName</process:inputVariable>
+      <process:inputVariable id="1" name="secOrgname" type="query" value="java.lang.String" valueType="Java" pattern="reference">mainData/secondaryOrgname</process:inputVariable>
+      <process:inputVariable id="2" name="taskYear" type="query" value="java.lang.String" valueType="Java" pattern="reference">mainData/taskYear</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">flowInsName</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="304" y="116"/>
+    <figSize height="16" width="255"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokeService0</targetNode>
+    </sourceConnections>
+    <targetConnections>link30</targetConnections>
+    <location x="585" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">appStatus</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="587" y="116"/>
+    <figSize height="16" width="25"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService0" name="创建流程" displayName="ProcessInstManagerService.createProcessInstance" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link32" name="link32" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>loopstart0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link48" name="link48" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link31</targetConnections>
+    <location x="675" y="83"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService0label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.createProcessInstance</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processDefName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.zhonghe.ame.keyTask.GroupTaskItemDeclareFlow</process:inputVariable>
+      <process:inputVariable id="1" name="processInstName" type="query" value="java.lang.String" valueType="Java" pattern="reference">flowInsName</process:inputVariable>
+      <process:inputVariable id="2" name="processInstDesc" type="query" value="java.lang.String" valueType="Java" pattern="reference">flowInsName</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="long" valueType="Java">processId</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService0label" name="label" nodeType="label">
+    <location x="665" y="113"/>
+    <figSize height="16" width="49"/>
+    <node>invokeService0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopStart" description="" id="loopstart0" name="循环" displayName="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link33" name="link33" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link32</targetConnections>
+    <location x="765" y="81"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
+    <process:iterate iterable="taskItems" iterableElement="taskItemTemp"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <location x="765" y="113"/>
+    <figSize height="16" width="25"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" displayName="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <targetConnections>link36</targetConnections>
+    <location x="1087" y="81"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <location x="1075" y="113"/>
+    <figSize height="16" width="49"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <location x="765" y="29"/>
+    <size height="129" width="346"/>
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>invokePojo2</chidren>
+    <chidren>assign1</chidren>
+    <chidren>invokePojo3</chidren>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="expandEntity" displayName="expandEntity" grouped="true" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link49" name="link49" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link33</targetConnections>
+    <location x="840" y="80"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.expandEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">taskItemTemp</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="int" valueType="Java"></process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="815" y="116"/>
+    <figSize height="16" width="72"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link35" name="link35" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <location x="930" y="79"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">processId</process:from>
+      <process:to type="query">taskItemTemp/processId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appStatus</process:from>
+      <process:to type="query">taskItemTemp/appStatus</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="932" y="115"/>
+    <figSize height="16" width="25"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo3" name="updateEntity" displayName="updateEntity" grouped="true" type="invoke" index="2" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link36" name="link36" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link50" name="link50" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link35</targetConnections>
+    <location x="1020" y="80"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.updateEntity</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="dataObject" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">taskItemTemp</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <location x="996" y="116"/>
+    <figSize height="16" width="70"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign8" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link38" name="link38" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign8</sourceNode>
+      <targetNode>invokeService1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link37</targetConnections>
+    <location x="1170" y="80"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign8label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">mainData/secondaryOrg</process:from>
+      <process:to type="query">flowParamMap/secOrg</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">processId</process:from>
+      <process:to type="query">flowParamMap/processId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
+    <location x="1172" y="116"/>
+    <figSize height="16" width="25"/>
+    <node>assign8</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService1" name="设置流程数据" displayName="设置流程数据" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>invokeService2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link51" name="link51" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService1</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link38</targetConnections>
+    <location x="1171" y="176"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService1label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.client.RelativeDataComponent/RelativeDataManagerService.setRelativeDataBatch</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">processId</process:inputVariable>
+      <process:inputVariable id="1" name="relaDatas" type="query" value="java.util.Map&lt;java.lang.String,java.lang.Object>" valueType="Java" pattern="reference">flowParamMap</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService1label" name="label" nodeType="label">
+    <location x="1149" y="206"/>
+    <figSize height="16" width="73"/>
+    <node>invokeService1</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeService2" name="开始并完成第一个流程" displayName="ProcessInstManagerService.startProcessInstAndFinishFirstWorkItem" collapsed="false" type="invoke" index="0" invokeType="invoke_service" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeService2</sourceNode>
+      <targetNode>assign15</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link52" name="link52" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>invokeService2</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <location x="1172" y="256"/>
+    <size height="22" width="28"/>
+    <nodeLabel>invokeService2label</nodeLabel>
+    <process:service synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.workflow.component.instance.ProcessInstManagerComponent/ProcessInstManagerService.startProcessInstAndFinishFirstWorkItem</process:partner>
+    </process:service>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="processInstID" type="query" value="long" valueType="Java" pattern="reference">processId</process:inputVariable>
+      <process:inputVariable id="1" name="isTransactionSplit" type="literal" value="boolean" valueType="Java" pattern="reference">false</process:inputVariable>
+      <process:inputVariable id="2" name="params" type="expression" value="java.lang.Object[]" valueType="Java" pattern="reference">null</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeService2label" name="label" nodeType="label">
+    <location x="1126" y="286"/>
+    <figSize height="16" width="121"/>
+    <node>invokeService2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign15" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link41" name="link41" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign15</sourceNode>
+      <targetNode>subprocess5</targetNode>
+    </sourceConnections>
+    <targetConnections>link40</targetConnections>
+    <location x="1041" y="253"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign15label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">任务进度发起人</process:from>
+      <process:to type="query">misOpinion/workitemname</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">processId</process:from>
+      <process:to type="query">misOpinion/processinstid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">3</process:from>
+      <process:to type="query">misOpinion/auditstatus</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">发起申请</process:from>
+      <process:to type="query">misOpinion/auditopinion</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign15label" name="label" nodeType="label">
+    <location x="1043" y="289"/>
+    <figSize height="16" width="25"/>
+    <node>assign15</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess5" name="approvalOp" displayName="approvalOp" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link44" name="link44" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link53" name="link53" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>subprocess5</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link41</targetConnections>
+    <location x="931" y="253"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess5label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zhonghe.ame.keyTask.utils.approvalOp</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="misOpinion" type="query" value="com.zhonghe.ame.keyTask.common.MisOpinion" valueType="DataObject" pattern="reference">misOpinion</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess5label" name="label" nodeType="label">
+    <location x="912" y="288"/>
+    <figSize height="16" width="65"/>
+    <node>subprocess5</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" displayName="事务提交" collapsed="false" type="transactioncommit">
+    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" displayName="link16" isDefault="true" type="transition">
+      <sourceNode>transactioncommit0</sourceNode>
+      <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <targetConnections>link44</targetConnections>
+    <location x="823" y="253"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactioncommit0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactioncommit0label" name="label" nodeType="label">
+    <location x="813" y="289"/>
+    <figSize height="16" width="49"/>
+    <node>transactioncommit0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link43" name="link43" displayName="link17" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link42</targetConnections>
+    <location x="702" y="253"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="704" y="289"/>
+    <figSize height="16" width="25"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="结束" displayName="结束" collapsed="false" type="end">
+    <targetConnections>link43</targetConnections>
+    <location x="583" y="253"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="result" type="query" valueType="Primitive">result</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="585" y="289"/>
+    <figSize height="16" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionRollback" id="transactionrollback0" name="事务回滚" displayName="事务回滚" collapsed="false" type="transactionrollback">
+    <sourceConnections xsi:type="process:tLink" id="link45" name="link45" displayName="link20" isDefault="true" type="transition">
+      <sourceNode>transactionrollback0</sourceNode>
+      <targetNode>throw0</targetNode>
+    </sourceConnections>
+    <targetConnections>link46</targetConnections>
+    <targetConnections>link47</targetConnections>
+    <targetConnections>link48</targetConnections>
+    <targetConnections>link49</targetConnections>
+    <targetConnections>link50</targetConnections>
+    <targetConnections>link51</targetConnections>
+    <targetConnections>link52</targetConnections>
+    <targetConnections>link53</targetConnections>
+    <location x="472" y="176"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactionrollback0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionrollback0label" name="label" nodeType="label">
+    <location x="462" y="212"/>
+    <figSize height="16" width="49"/>
+    <node>transactionrollback0</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" description="" id="throw0" name="异常抛出" displayName="异常抛出" collapsed="false" type="throw">
+    <targetConnections>link45</targetConnections>
+    <location x="360" y="176"/>
+    <size height="28" width="28"/>
+    <nodeLabel>throw0label</nodeLabel>
+    <process:exception code="JTZDRW-10007" message="集团重点任务进度审核提交失败，请联系管理员" type="com.eos.system.exception.EOSException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw0label" name="label" nodeType="label">
+    <location x="350" y="212"/>
+    <figSize height="16" width="49"/>
+    <node>throw0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="王维" createTime="2025-10-06 22:35:26" date="2025-10-06Z" description="" name="launchTaskItemDeclare" version="7.0.0.0"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.keyTask.group.ZhKeyTaskGroup" name="mainData"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="appStatus" primitiveType="Int"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="processId" primitiveType="Int"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.keyTask.group.ZhKeyTaskGroupProgress" name="taskItemTemp"/>
+    <process:variable anyType="java.util.HashMap" description="流程相关数据" historyStateLocation="client" isArray="false" name="flowParamMap"/>
+    <process:variable description="审批意见对象" historyStateLocation="client" isArray="false" modelType="com.zhonghe.ame.keyTask.common.MisOpinion" name="misOpinion"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="flowInsName" primitiveType="String"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="true" modelType="com.zhonghe.ame.keyTask.group.ZhKeyTaskGroupProgress" name="taskItems"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" name="result" primitiveType="String"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

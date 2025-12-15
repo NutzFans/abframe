@@ -68,7 +68,7 @@ html,body {
 		var companyId,taskYear,taskMonth,type;
 		
 		itemGrid.on("load", function() {
-			itemGrid.mergeColumns([ "checkcolumn", "actionPlanNumber", "taskName", "annualTarget" ]);
+			itemGrid.mergeColumns(["actionPlanNumber", "taskName", "annualTarget" ]);
 		});		
 
 		setData();

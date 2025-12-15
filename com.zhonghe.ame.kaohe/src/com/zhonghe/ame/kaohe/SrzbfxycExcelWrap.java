@@ -43,6 +43,7 @@ public class SrzbfxycExcelWrap {
 				dataObject.setBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation", operatingRevenue.getBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation"));
 				dataObject.setBigDecimal("totalAmountOfAssessingVirtualOutputValue", operatingRevenue.getBigDecimal("totalAmountOfAssessingVirtualOutputValue"));
 				dataObject.setBigDecimal("totalAmountOfAssessmentIncomeCorrection", operatingRevenue.getBigDecimal("totalAmountOfAssessmentIncomeCorrection"));
+				dataObject.setBigDecimal("totalAmountOfOperatingLoans", operatingRevenue.getBigDecimal("totalAmountOfOperatingLoans"));
 				dataObject.setBigDecimal("totalAmountOfAssessOthers", operatingRevenue.getBigDecimal("totalAmountOfAssessOthers"));
 				dataObjectList.add(dataObject);
 			}
@@ -69,6 +70,7 @@ public class SrzbfxycExcelWrap {
 				dataObject.setBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessmentOfThisYearSRegulation"));
 				dataObject.setBigDecimal("totalAmountOfAssessingVirtualOutputValue", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessingVirtualOutputValue"));
 				dataObject.setBigDecimal("totalAmountOfAssessmentIncomeCorrection", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessmentIncomeCorrection"));
+				dataObject.setBigDecimal("totalAmountOfOperatingLoans", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfOperatingLoans"));
 				dataObject.setBigDecimal("totalAmountOfAssessOthers", externalIncomeOfTheGroup.getBigDecimal("totalAmountOfAssessOthers"));
 				dataObjectList.add(dataObject);
 			}

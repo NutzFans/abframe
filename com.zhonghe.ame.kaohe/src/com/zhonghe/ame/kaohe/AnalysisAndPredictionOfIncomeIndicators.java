@@ -213,6 +213,8 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 		operatingRevenue.set("totalAmountOfAssessingVirtualOutputValue", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessingVirtualOutputValue(snapshotDetailList)));
 		// 考核运用：收入纠偏
 		operatingRevenue.set("totalAmountOfAssessmentIncomeCorrection", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessmentIncomeCorrection(snapshotDetailList)));
+		// 考核运用：经营借款
+		operatingRevenue.set("totalAmountOfOperatingLoans", this.yuanToTenThousandYuan(this.getTotalAmountOfOperatingLoans(snapshotDetailList)));
 		// 考核运用：其他
 		operatingRevenue.set("totalAmountOfAssessOthers", this.yuanToTenThousandYuan(this.getTotalAmountOfAssessOthers(snapshotDetailList)));
 
@@ -255,6 +257,8 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 		operatingRevenue.set("totalAmountOfAssessingVirtualOutputValue", BigDecimal.ZERO);
 		// 考核运用：收入纠偏
 		operatingRevenue.set("totalAmountOfAssessmentIncomeCorrection", BigDecimal.ZERO);
+		// 考核运用：经营借款
+		operatingRevenue.set("totalAmountOfOperatingLoans", BigDecimal.ZERO);		
 		// 考核运用：其他
 		operatingRevenue.set("totalAmountOfAssessOthers", BigDecimal.ZERO);
 
@@ -362,6 +366,12 @@ public class AnalysisAndPredictionOfIncomeIndicators {
 		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "收入纠偏 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
 				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
+	
+	// 考核运用：经营借款
+	private BigDecimal getTotalAmountOfOperatingLoans(List<Entity> snapshotDetailList) {
+		return snapshotDetailList.stream().filter(snapshotDetail -> StrUtil.contains(snapshotDetail.getStr("contract_name"), "经营借款 - ") && "5".equals(snapshotDetail.getStr("contract_stauts")))
+				.map(snapshotDetail -> snapshotDetail.getBigDecimal("coefficient_sum")).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}	
 
 	// 考核运用：其他
 	private BigDecimal getTotalAmountOfAssessOthers(List<Entity> snapshotDetailList) {
