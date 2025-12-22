@@ -67,10 +67,18 @@ body {
 				</div>
 			</form>
 			<p></p>
-			<a id="htbh_sxhtbhfhgf" class="nui-button" iconCls="icon-node" onclick="htbh_sxhtbhfhgf()">合同编号 - 刷新合同编号符合规范</a>								
+			<a id="htbh_sxhtbhfhgf" class="nui-button" iconCls="icon-node" onclick="htbh_sxhtbhfhgf()">合同编号 - 刷新合同编号符合规范</a>
+			<p></p>
+			<a id="khxt_sfhtkpglscjy" class="nui-button" iconCls="icon-node" onclick="khxt_sfhtkpglscjy()">客户信息导出 - 已关联收费合同、开票管理、市场经营</a>
 		</fieldset>
 
 	</div>
+	
+	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>		
 
 	<script type="text/javascript">
 		nui.parse();
@@ -280,12 +288,12 @@ body {
 					nui.get("gszdrw_import_excel").enable();
 					return;
 				} else {
-					document.getElementById('gszdrw_import_excel_form').action ='default/zhzxUtils.importGszdrw.flow';
+					document.getElementById('gszdrw_import_excel_form').action = 'default/zhzxUtils.importGszdrw.flow';
 					document.getElementById('gszdrw_import_excel_form').submit();
 				}
 			}
 		}
-		
+
 		// 长期资产管理 - 导入Excel数据
 		function cqzcgl_import_excel() {
 			nui.get("cqzcgl_import_excel").disable();
@@ -302,12 +310,12 @@ body {
 					nui.get("cqzcgl_import_excel").enable();
 					return;
 				} else {
-					document.getElementById('cqzcgl_import_excel_form').action ='default/zhzxUtils.importCqzcgl.flow';
+					document.getElementById('cqzcgl_import_excel_form').action = 'default/zhzxUtils.importCqzcgl.flow';
 					document.getElementById('cqzcgl_import_excel_form').submit();
 				}
 			}
 		}
-		
+
 		// 年度预算填报 - 导入Excel数据
 		function ndystb_import_excel() {
 			nui.get("ndystb_import_excel").disable();
@@ -324,12 +332,12 @@ body {
 					nui.get("ndystb_import_excel").enable();
 					return;
 				} else {
-					document.getElementById('ndystb_import_excel_form').action ='default/zhzxUtils.importNdystb.flow';
+					document.getElementById('ndystb_import_excel_form').action = 'default/zhzxUtils.importNdystb.flow';
 					document.getElementById('ndystb_import_excel_form').submit();
 				}
 			}
 		}
-		
+
 		// 公司重点任务 - 导入Excel数据 - 更新数据
 		function gszdrw_import_excel_update() {
 			nui.get("gszdrw_import_excel_update").disable();
@@ -346,14 +354,14 @@ body {
 					nui.get("gszdrw_import_excel_update").enable();
 					return;
 				} else {
-					document.getElementById('gszdrw_import_excel_form_update').action ='default/zhzxUtils.importGszdrwUpdate.flow';
+					document.getElementById('gszdrw_import_excel_form_update').action = 'default/zhzxUtils.importGszdrwUpdate.flow';
 					document.getElementById('gszdrw_import_excel_form_update').submit();
 				}
 			}
 		}
-		
+
 		// 合同编号 - 刷新合同编号符合规范
-		function htbh_sxhtbhfhgf(){
+		function htbh_sxhtbhfhgf() {
 			nui.get("htbh_sxhtbhfhgf").disable();
 			if (!confirm("是否执行[合同编号 - 刷新合同编号符合规范]操作？")) {
 				nui.get("htbh_sxhtbhfhgf").enable();
@@ -372,9 +380,24 @@ body {
 						nui.get("htbh_sxhtbhfhgf").enable();
 					}
 				});
-			}			
-		}				
-				
+			}
+		}
+
+		// 客户信息导出 - 已关联收费合同、开票管理、市场经营
+		function khxt_sfhtkpglscjy() {
+			nui.get("khxt_sfhtkpglscjy").disable();
+			if (!confirm("是否执行[客户信息导出 - 已关联收费合同、开票管理、市场经营]操作？")) {
+				nui.get("khxt_sfhtkpglscjy").enable();
+			} else {
+				var data = {};
+				exportExcel({
+					"data" : data,
+					"url" : "com.primeton.eos.common.zhzxUtils.khxt_sfhtkpglscjy.biz.ext",
+					"fileName" : "客户信息"
+				})
+				nui.get("khxt_sfhtkpglscjy").enable();
+			}
+		}
 	</script>
 
 </body>

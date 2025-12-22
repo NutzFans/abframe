@@ -1,9 +1,19 @@
 package com.primeton.eos.common;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.ttzero.excel.entity.SimpleSheet;
+import org.ttzero.excel.entity.Workbook;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharUtil;
@@ -13,6 +23,8 @@ import cn.hutool.db.Session;
 
 import com.eos.common.connection.DataSourceHelper;
 import com.eos.system.annotation.Bizlet;
+
+import commonj.sdo.DataObject;
 
 @Bizlet("经营管理系统 - 业务处理工具")
 public class ZhzxBizUtils {
@@ -453,4 +465,67 @@ public class ZhzxBizUtils {
 
 	}
 
+	@Bizlet("客户信息导出 - 已关联收费合同、开票管理、市场经营")
+	public String khxt_sfhtkpglscjy() throws Exception {
+		Session dbSession = new Session(DataSourceHelper.getDataSource());
+		// 收费合同
+		String queryZhChargeContractSql = "SELECT signatory, signatory_name FROM zh_charge_contract";
+		// 框架协议
+		String queryZhAgreementSql = "SELECT signatory FROM zh_agreement";
+		// 市场经营
+		String queryZhBidinfoSql = "SELECT cust_id FROM ZH_BIDINFO";
+
+		Set<String> custSet = new HashSet<String>();
+		
+		List<Entity> zhChargeContractList = dbSession.query(queryZhChargeContractSql);
+		Set<String> custOne = zhChargeContractList.stream().map(entity -> entity.getStr("signatory")).filter(s -> s != null && !s.isEmpty()).flatMap(s -> Arrays.stream(s.split(","))).filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+		custSet.addAll(custOne);
+
+		List<Entity> zhAgreementList = dbSession.query(queryZhAgreementSql);
+		Set<String> custTwo = zhAgreementList.stream().map(entity -> entity.getStr("signatory")).filter(s -> s != null && !s.isEmpty()).flatMap(s -> Arrays.stream(s.split(",")))
+				.filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+		custSet.addAll(custTwo);
+
+		List<Entity> zhBidinfoList = dbSession.query(queryZhBidinfoSql);
+		Set<String> custThree = zhBidinfoList.stream().map(entity -> entity.getStr("cust_id")).filter(s -> s != null && !s.isEmpty()).flatMap(s -> Arrays.stream(s.split(",")))
+				.filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+		custSet.addAll(custThree);
+
+		String custInIDs = StrUtil.join(",", custSet);
+		Console.log(custInIDs);
+
+		String queryCustSql = "SELECT CUSTID, CUSTNAME FROM MIS_CUSTINFO WHERE CUSTID IN (" + custInIDs + ")";
+
+		List<Entity> custList = dbSession.query(queryCustSql);
+
+		String queryVisitSql = "SELECT custinfo_id FROM MIS_CUSTINFO_VISIT";
+
+		List<Entity> visitList = dbSession.query(queryVisitSql);
+		Set<String> custVisit = visitList.stream().map(entity -> entity.getStr("custinfo_id")).filter(s -> s != null && !s.isEmpty()).flatMap(s -> Arrays.stream(s.split(",")))
+				.filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+
+		String custNewInIDs = StrUtil.join(",", custVisit);
+
+		String queryCustNewSql = "SELECT CUSTID, CUSTNAME FROM MIS_CUSTINFO_NEW WHERE CUSTID IN (" + custNewInIDs + ")";
+
+		List<Entity> custNewList = dbSession.query(queryCustNewSql);
+
+		List<Object> rows = new ArrayList<>();
+		rows.add(new String[] { "主键", "企业名称" });
+		for (Entity entity : custList) {
+			rows.add(new Object[] { entity.getInt("CUSTID"), StrUtil.trimToEmpty(entity.getStr("CUSTNAME")) });
+		}
+
+		List<Object> rowNews = new ArrayList<>();
+		rowNews.add(new String[] { "主键", "企业名称" });
+		for (Entity entity : custNewList) {
+			rowNews.add(new Object[] { entity.getInt("CUSTID"), StrUtil.trimToEmpty(entity.getStr("CUSTNAME")) });
+		}
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String datetimeString = format.format(new Date());
+		File tempFile = File.createTempFile("客户信息_" + datetimeString, ".xlsx");
+		new Workbook().addSheet(new SimpleSheet<>("客户信息").setData(rows)).addSheet(new SimpleSheet<>("交流拜访").setData(rowNews)).writeTo(tempFile);
+		return tempFile.getAbsolutePath();
+	}
 }
