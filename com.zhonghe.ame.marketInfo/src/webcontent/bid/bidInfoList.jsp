@@ -20,7 +20,7 @@ html,body {
 <title>市场经营信息</title>
 </head>
 <body>
-	<div id="tabs" class="nui-tabs" activeIndex="0" style="width: auto; height: 99%; padding: 5px;">
+	<div id="tabs" class="nui-tabs" activeIndex="0" style="width: auto; height: 99%; padding: 5px;" onactivechanged="tabActiveChanged">
 		<div title="市场经营信息 - 未完善">
 			<div id="dataNotFinshForm">
 				<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.marketInfo.bid.ZhBidinfoEntity" />
@@ -197,7 +197,7 @@ html,body {
 			</div>
 		</div>
 
-		<div title="市场经营信息 - 已完善">
+		<div name="scjyxxywsDimTab" title="市场经营信息 - 已完善" visible="false">
 			<div id="dataFinshForm">
 				<input class="nui-hidden" name="criteria._entity" value="com.zhonghe.ame.marketInfo.bid.ZhBidinfoEntity" />
 				<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
@@ -402,8 +402,28 @@ html,body {
 		var dataFinshDataGrid = nui.get("dataFinshDataGrid");
 		var bidCompetGrid = nui.get("bidCompetGrid");
 		var bidCompetInfo = document.getElementById("bidCompetInfo");
+		var tabs = nui.get("tabs");
 		
-		init();
+		function tabActiveChanged(e) {
+			var json = nui.encode({
+				'loginUserId' : userId
+			});
+			nui.ajax({
+				url : "com.zhonghe.ame.marketInfo.marketinfo.khxx.auth.analyzeBidAuthTab.biz.ext",
+				type : 'POST',
+				data : json,
+				contentType : 'text/json',
+				success : function(o) {
+					if(o.result == "ALL"){
+						var scjyxxywsDimTab = tabs.getTab("scjyxxywsDimTab");
+						tabs.updateTab(scjyxxywsDimTab, {
+							visible : true
+						});
+					}
+					init();
+				}
+			});			
+		}
 		
 		function init() {
 			// 按钮权限
