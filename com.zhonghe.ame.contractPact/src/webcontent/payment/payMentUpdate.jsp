@@ -160,30 +160,6 @@ body {
 				showTips("请检查表单的完整性!", "danger");
 				return;
 			}
-			var checkPayPaid = "";
-			ajaxCommon({
-				"async" : false,
-				"url" : "com.zhonghe.ame.payment.payMent.checkPayPaid.biz.ext",
-				"data" : nui.encode({
-					"payId" : nui.get("payId").getValue(),
-					"applyPayContractSum" : nui.get("applyPayContractSum").getValue()
-				}),
-				"success" : function(data) {
-					checkPayPaid = data.result;
-				}
-			});
-			if (checkPayPaid == "2") {
-				alert("当前付款金额已【超过】关联付费合同付款计划里对应本季度应付款总额！");
-				return;
-			}
-			if (checkPayPaid == "3") {
-				alert("关联的付费合同中未设置付款计划，无法提交付款流程！");
-				return;
-			}
-			if (checkPayPaid == "4") {
-				alert("检查本次支付金额合法性异常，请联系管理员！");
-				return;
-			}
 			document.getElementById("fileCatalog").value = "payContractinfo";
 			form2.submit();
 		}
