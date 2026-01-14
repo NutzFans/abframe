@@ -67,6 +67,7 @@ html,body {
 							<a class="nui-button" id="jtzdrw_del" iconCls="icon-remove" onclick="delDatas()">删除</a>
 							<a class="nui-button" id="jtzdrw_rwjhfj_wh" iconCls="icon-edit" onclick="rwjhfj_wh()">维护 - 任务及计划分解</a>
 							<a class="nui-button" id="jtzdrw_rwjz_wh" iconCls="icon-edit" onclick="rwjz_wh()">维护 - 任务进展</a>
+							<a class="nui-button" id="jtzdrw_cz_sbzt" iconCls="icon-edit" onclick="cz_sbzt()">重置 - 申报状态</a>
 						</td>
 					</tr>
 				</table>
@@ -193,13 +194,12 @@ html,body {
 		}
 
 		function init() {
-			var date = new Date();
-			date.setMonth(date.getMonth() - 1);
+			var date = new Date();;
 			var year = date.getFullYear();
 			nui.get("taskYear").setValue(year);
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				getOpeatorButtonAuth("jtzdrw_cjrw,jtzdrw_fqrwfjsb,jtzdrw_fqjzsh,jtzdrw_del,jtzdrw_rwjhfj_wh,jtzdrw_rwjz_wh");
+				getOpeatorButtonAuth("jtzdrw_cjrw,jtzdrw_fqrwfjsb,jtzdrw_fqjzsh,jtzdrw_del,jtzdrw_rwjhfj_wh,jtzdrw_rwjz_wh,jtzdrw_cz_sbzt");
 			}
 			var json = nui.encode({
 				'loginUserId' : userId,
@@ -548,6 +548,53 @@ html,body {
 				}
 			});						
 		}
+		
+		function cz_sbzt(){
+			var cellData = groupGrid.getCurrentCell();
+			if (cellData == null) {
+				showTips("请选中【任务责任单位】列对应的单元格后执行操作！", "danger");
+				return;
+			} else if (cellData[1].field != "secondaryOrgname") {
+				showTips("请选中【任务责任单位】列对应的单元格后执行操作！", "danger");
+				return;
+			}
+			if(cellData[0].appStatus == 2 || cellData[0].appStatus == 4){
+				var json = nui.encode({
+					'mainId' : cellData[0].id
+				});
+				ajaxCommon({
+					url : "com.zhonghe.ame.keyTask.group.countGroupTaskItemAppStatusFinish.biz.ext",
+					data : json,
+					async : false,
+					success : function(data) {
+						if(data.count > 0){
+							showTips("已经存在有任务进展执行了审核流程，因此无法执行该操作", "danger");
+						}else{
+							if (confirm("确定要重置选中数据的申报状态吗？")) {
+								ajaxCommon({
+									url : "com.zhonghe.ame.keyTask.group.resetGroupTaskAppStatus.biz.ext",
+									data : json,
+									async : false,
+									success : function(data) {
+										if(data.result){
+											showTips("重置申报状态成功");
+											search();
+										}else{
+											showTips("重置申报状态成功失败，请联系管理员！", "danger");
+										}
+									}
+								});					
+							}else{
+								return;
+							}								
+						}
+					}
+				});
+			}else{
+				showTips("只有【申报状态】为【审批通过】或【作废】时，才可以执行该操作！", "danger");
+			}
+									
+		}		
 		
 		function zdrwExport(){
 			var data = searchForm.getData();

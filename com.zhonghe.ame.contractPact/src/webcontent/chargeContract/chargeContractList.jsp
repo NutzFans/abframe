@@ -287,7 +287,7 @@ html,body {
 			// 按钮权限
 			if (userId != 'sysadmin') {
 				// 维护按钮 - sfhtlist_wh，导入按钮 - sfhtlist_import，变更经办人按钮 - sfhtlist_bgjbr，作废按钮 - sfhtlist_zf
-				getOpeatorButtonAuth("sfhtlist_wh,sfhtlist_import,sfhtlist_bgjbr,sfhtlist_zf,sfhtlist_help");
+				getOpeatorButtonAuth("sfhtlist_wh,sfhtlist_import,sfhtlist_bgjbr,sfhtlist_zf,sfhtlist_help,sfhtlist_ljyrz");
 			}
 
 			//code:对应功能编码，map：对于机构的查询条件

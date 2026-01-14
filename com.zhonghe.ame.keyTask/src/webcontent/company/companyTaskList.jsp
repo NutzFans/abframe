@@ -59,6 +59,7 @@ html,body {
 							<a class="nui-button" id="gszdrw_del" iconCls="icon-remove" onclick="delDatas()">删除</a>
 							<a class="nui-button" id="gszdrw_rwjhfj_wh" iconCls="icon-edit" onclick="rwjhfj_wh()">维护 - 任务及计划分解</a>
 							<a class="nui-button" id="gszdrw_rwjz_wh" iconCls="icon-edit" onclick="rwjz_wh()">维护 - 任务进展</a>
+							<a class="nui-button" id="gszdrw_cz_sbzt" iconCls="icon-edit" onclick="cz_sbzt()">重置 - 申报状态</a>
 						</td>
 					</tr>
 				</table>
@@ -228,7 +229,7 @@ html,body {
 			nui.get("taskYear").setValue(year);
 			// 按钮权限
 			if (userId != 'sysadmin') {
-				getOpeatorButtonAuth("gszdrw_rwzrdw,gszdrw_fqrwsb,gszdrw_fqjzsh,gszdrw_del,gszdrw_rwjhfj_wh,gszdrw_rwjz_wh");
+				getOpeatorButtonAuth("gszdrw_rwzrdw,gszdrw_fqrwsb,gszdrw_fqjzsh,gszdrw_del,gszdrw_rwjhfj_wh,gszdrw_rwjz_wh,gszdrw_cz_sbzt");
 			}
 			var json = nui.encode({
 				'loginUserId' : userId,
@@ -529,6 +530,49 @@ html,body {
 				}else{
 					showTips("只有【申报状态】为【审批通过】时，才可以执行该操作！", "danger");
 				}
+			}			
+		}
+		
+		function cz_sbzt(){
+			var row = companyGrid.getSelected();
+			if (row == undefined) {
+				showTips("请选中一条数据后再操作！", "danger");
+			}else{
+				if(row.appStatus == 2 || row.appStatus == 4){
+					var json = nui.encode({
+						'mainId' : row.id
+					});
+					ajaxCommon({
+						url : "com.zhonghe.ame.keyTask.company.countTaskItemAppStatusFinish.biz.ext",
+						data : json,
+						async : false,
+						success : function(data) {
+							if(data.count > 0){
+								showTips("已经存在有任务进展执行了审核流程，因此无法执行该操作", "danger");
+							}else{
+								if (confirm("确定要重置选中数据的申报状态吗？")) {
+									ajaxCommon({
+										url : "com.zhonghe.ame.keyTask.company.resetTaskAppStatus.biz.ext",
+										data : json,
+										async : false,
+										success : function(data) {
+											if(data.result){
+												showTips("重置申报状态成功");
+												search();
+											}else{
+												showTips("重置申报状态成功失败，请联系管理员！", "danger");
+											}
+										}
+									});					
+								}else{
+									return;
+								}								
+							}
+						}
+					});						
+				}else{
+					showTips("只有【申报状态】为【审批通过】或【作废】时，才可以执行该操作！", "danger");
+				}				
 			}			
 		}		
 		
