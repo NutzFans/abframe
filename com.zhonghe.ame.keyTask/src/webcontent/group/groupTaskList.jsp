@@ -515,7 +515,7 @@ html,body {
 				return;
 			}
 			nui.open({
-				url : "/default/keyTask/group/configTaskItem.jsp",
+				url : "/default/keyTask/group/whConfigTaskItem.jsp",
 				width : "1200px",
 				height : "750px",
 				allowResize : false,
@@ -523,6 +523,11 @@ html,body {
 				onload : function() {
 					var iframe = this.getIFrameEl();
 					iframe.contentWindow.initData(cellData[0]);
+				},
+				ondestroy : function(action) {
+					if (action == "ok") {
+						search();
+					}
 				}
 			});							
 		}
