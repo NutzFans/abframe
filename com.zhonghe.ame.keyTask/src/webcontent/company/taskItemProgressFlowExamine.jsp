@@ -52,9 +52,10 @@ html,body {
 			<div style="width: 99%; margin: 0 auto;">
 				<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 550px;" showPager="false" onlyCheckSelection="true">
 					<div property="columns">
-						<div field="taskName" name="taskName" width="250" align="center" headerAlign="center">任务名称</div>
+						<div field="taskName" name="taskName" width="250" align="center" headerAlign="center">行动计划</div>
 						<div field="taskMonth" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
 						<div field="taskPlanName" width="500" headeralign="center" align="left">分解计划</div>
+						<div field="responsiblePerson" width="100" headeralign="center" align="left">责任人</div>
 						<div field="taskStatus" width="50" headeralign="center" align="center" renderer="renderTaskStatus">任务状态</div>
 						<div field="riskStatus" width="70" headeralign="center" align="center" renderer="setRiskBackColor">是否存在风险</div>
 						<div width="40" headeralign="center" align="center" renderer="renderOperate">操作</div>

@@ -28,18 +28,18 @@ html,body {
 							<td>
 								<input name="createUser" class="nui-hidden" />
 								<input name="createName" class="nui-textbox" style="width: 100px" readonly="readonly" />
-								<div style="display: inline-table; padding: 1px; margin-left: 10px">行动计划编号：</div>
+								<div style="display: inline-table; padding: 1px; margin-left: 10px">任务名称：</div>
 								<input name="actionPlanNumber" class="nui-textbox" style="width: 600px" required="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">任务名称：</td>
+							<td align="right" style="width: 100px">行动计划：</td>
 							<td>
 								<input name="taskName" class="nui-textarea" style="width: 100%; height: 100px" required="true" />
 							</td>
 						</tr>
 						<tr>
-							<td align="right" style="width: 100px">年度目标：</td>
+							<td align="right" style="width: 100px">衡量标准：</td>
 							<td>
 								<input name="annualTarget" class="nui-textarea" style="width: 100%; height: 100px" required="true" />
 							</td>
@@ -73,6 +73,10 @@ html,body {
 						<div field="taskPlanName" width="800" headerAlign="center" align="left" vtype="required">
 							分解计划
 							<input property="editor" class="nui-textarea" style="width: 100%; height: 65px" required="true" />
+						</div>
+						<div field="responsiblePerson" width="100" headerAlign="center" align="left" vtype="required">
+							责任人
+							<input property="editor" class="nui-textbox" style="width: 100%" required="true" />
 						</div>
 					</div>
 				</div>

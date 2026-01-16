@@ -65,11 +65,12 @@ html,body {
 				<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 650px;" showPager="false" url="com.zhonghe.ame.keyTask.company.queryItemListByMainId.biz.ext" dataField="itemDatas"
 					allowCellSelect="true" enableHotTrack="false" allowRowSelect="false" allowCellWrap="true">
 					<div property="columns">
-						<div field="actionPlanNumber" name="actionPlanNumber" width="150" align="center" headerAlign="center">行动计划编号</div>
-						<div field="taskName" name="taskName" width="250" align="center" headerAlign="center">任务名称</div>
-						<div field="annualTarget" name="annualTarget" width="300" align="left" headerAlign="center">年度目标</div>
-						<div field="taskMonth" width="40" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
+						<div field="actionPlanNumber" name="actionPlanNumber" width="150" align="center" headerAlign="center">任务名称</div>
+						<div field="taskName" name="taskName" width="250" align="center" headerAlign="center">行动计划</div>
+						<div field="annualTarget" name="annualTarget" width="300" align="left" headerAlign="center">衡量目标</div>
+						<div field="taskMonth" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
 						<div field="taskPlanName" width="450" headeralign="center" align="left">分解计划</div>
+						<div field="responsiblePerson" width="100" headeralign="center" align="left">责任人</div>
 					</div>
 				</div>
 			</div>

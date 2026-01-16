@@ -121,21 +121,21 @@ public class ExportCompanyTaskExcel {
 							}
 							cell0.setCellStyle(cellStyle);
 
-							// 1: 行动计划编号（子组内第1行填充）
+							// 1: 任务名称
 							Cell cell1 = row.createCell(1);
 							if (j == 0) {
 								cell1.setCellValue(taskItem.getStr("action_plan_number"));
 							}
 							cell1.setCellStyle(cellStyle);
 
-							// 2: 任务名称（子组内第1行填充）
+							// 2: 行动计划
 							Cell cell2 = row.createCell(2);
 							if (j == 0) {
 								cell2.setCellValue(taskItem.getStr("task_name"));
 							}
 							cell2.setCellStyle(cellStyle);
 
-							// 3: 年度目标（子组内第1行填充）
+							// 3: 衡量标准
 							Cell cell3 = row.createCell(3);
 							if (j == 0) {
 								cell3.setCellValue(taskItem.getStr("annual_target"));
@@ -151,32 +151,37 @@ public class ExportCompanyTaskExcel {
 							Cell cell5 = row.createCell(5);
 							cell5.setCellValue(taskItem.getStr("task_plan_name"));
 							cell5.setCellStyle(cellStyle);
-
-							// 6: 任务状态（每行填充）
+							
+							// 6: 责任人（每行填充）
 							Cell cell6 = row.createCell(6);
-							cell6.setCellValue(taskItem.getStr("task_status"));
+							cell6.setCellValue(taskItem.getStr("responsible_person"));
 							cell6.setCellStyle(cellStyle);
 
-							// 7: 风险状态（每行填充）
+							// 7: 任务状态（每行填充）
 							Cell cell7 = row.createCell(7);
-							cell7.setCellValue(taskItem.getStr("risk_status"));
+							cell7.setCellValue(taskItem.getStr("task_status"));
 							cell7.setCellStyle(cellStyle);
 
-							// 8: 进展情况（每行填充）
+							// 8: 风险状态（每行填充）
 							Cell cell8 = row.createCell(8);
-							cell8.setCellValue(taskItem.getStr("task_progress"));
+							cell8.setCellValue(taskItem.getStr("risk_status"));
 							cell8.setCellStyle(cellStyle);
 
-							// 9: 风险及措施（每行填充）
+							// 9: 进展情况（每行填充）
 							Cell cell9 = row.createCell(9);
-							cell9.setCellValue(taskItem.getStr("risk_measures"));
+							cell9.setCellValue(taskItem.getStr("task_progress"));
 							cell9.setCellStyle(cellStyle);
 
-							// 10：审批状态（每行填充）
+							// 10: 风险及措施（每行填充）
 							Cell cell10 = row.createCell(10);
-							String appStatusStr = this.getAppStatusStr(taskItem.getStr("app_status"), taskItem.getStr("task_status"), taskItem.getStr("task_progress"));
-							cell10.setCellValue(appStatusStr);
+							cell10.setCellValue(taskItem.getStr("risk_measures"));
 							cell10.setCellStyle(cellStyle);
+
+							// 11：审批状态（每行填充）
+							Cell cell11 = row.createCell(11);
+							String appStatusStr = this.getAppStatusStr(taskItem.getStr("app_status"), taskItem.getStr("task_status"), taskItem.getStr("task_progress"));
+							cell11.setCellValue(appStatusStr);
+							cell11.setCellStyle(cellStyle);
 
 						}
 
@@ -232,21 +237,21 @@ public class ExportCompanyTaskExcel {
 						Entity taskItem = group.get(j);
 						Row row = sheet.createRow(rowIndex + j);
 						// 合并列（0、1、2列）：无论是否为第1行，都创建单元格并应用样式（确保边框完整）
-						// 行动计划编号（第0列）
+						// 任务名称（第0列）
 						Cell cell0 = row.createCell(0);
 						if (j == 0) { // 仅第1行填充内容
 							cell0.setCellValue(taskItem.getStr("action_plan_number"));
 						}
 						cell0.setCellStyle(cellStyle); // 所有行的该列都应用边框样式
 
-						// 任务名称（第1列）
+						// 行动计划（第1列）
 						Cell cell1 = row.createCell(1);
 						if (j == 0) {
 							cell1.setCellValue(taskItem.getStr("task_name"));
 						}
 						cell1.setCellStyle(cellStyle);
 
-						// 年度目标（第2列）
+						// 衡量标准（第2列）
 						Cell cell2 = row.createCell(2);
 						if (j == 0) {
 							cell2.setCellValue(taskItem.getStr("annual_target"));
@@ -261,27 +266,31 @@ public class ExportCompanyTaskExcel {
 						Cell cell4 = row.createCell(4);
 						cell4.setCellValue(taskItem.getStr("task_plan_name"));
 						cell4.setCellStyle(cellStyle);
-						// 任务状态（第5列）
+						// 责任人（第5列）
 						Cell cell5 = row.createCell(5);
-						cell5.setCellValue(taskItem.getStr("task_status"));
+						cell5.setCellValue(taskItem.getStr("responsible_person"));
 						cell5.setCellStyle(cellStyle);
-						// 风险状态（第6列）
+						// 任务状态（第5列）
 						Cell cell6 = row.createCell(6);
-						cell6.setCellValue(taskItem.getStr("risk_status"));
+						cell6.setCellValue(taskItem.getStr("task_status"));
 						cell6.setCellStyle(cellStyle);
-						// 进展情况（第7列）
+						// 风险状态（第6列）
 						Cell cell7 = row.createCell(7);
-						cell7.setCellValue(taskItem.getStr("task_progress"));
+						cell7.setCellValue(taskItem.getStr("risk_status"));
 						cell7.setCellStyle(cellStyle);
-						// 风险及措施（第8列）
+						// 进展情况（第7列）
 						Cell cell8 = row.createCell(8);
-						cell8.setCellValue(taskItem.getStr("risk_measures"));
+						cell8.setCellValue(taskItem.getStr("task_progress"));
 						cell8.setCellStyle(cellStyle);
-						// 审批状态（第9列）
+						// 风险及措施（第8列）
 						Cell cell9 = row.createCell(9);
-						String appStatusStr = this.getAppStatusStr(taskItem.getStr("app_status"), taskItem.getStr("task_status"), taskItem.getStr("task_progress"));
-						cell9.setCellValue(appStatusStr);
+						cell9.setCellValue(taskItem.getStr("risk_measures"));
 						cell9.setCellStyle(cellStyle);
+						// 审批状态（第9列）
+						Cell cell10 = row.createCell(10);
+						String appStatusStr = this.getAppStatusStr(taskItem.getStr("app_status"), taskItem.getStr("task_status"), taskItem.getStr("task_progress"));
+						cell10.setCellValue(appStatusStr);
+						cell10.setCellStyle(cellStyle);
 					}
 					rowIndex += groupSize; // 移动到下一分组起始行
 				}
@@ -330,46 +339,49 @@ public class ExportCompanyTaskExcel {
 	// 设置所有列的宽度
 	private void setColumnWidths(Sheet sheet) {
 		// 列索引从0开始，宽度值 = 字符数 * 256（1/256个字符宽度）
-		// 0: 行动计划编号
+		// 0: 任务名称
 		sheet.setColumnWidth(0, 30 * 256);
-		// 1: 任务名称
+		// 1: 行动计划
 		sheet.setColumnWidth(1, 50 * 256);
-		// 2: 年度目标
+		// 2: 衡量标准
 		sheet.setColumnWidth(2, 50 * 256);
 		// 3：时间节点
 		sheet.setColumnWidth(3, 10 * 256);
 		// 4：分解计划
 		sheet.setColumnWidth(4, 50 * 256);
-		// 5：任务状态
+		// 5：责任人
 		sheet.setColumnWidth(5, 10 * 256);
-		// 6：风险状态
+		// 6：任务状态
 		sheet.setColumnWidth(6, 10 * 256);
-		// 7：进展情况
-		sheet.setColumnWidth(7, 50 * 256);
-		// 8：风险及措施
+		// 7：风险状态
+		sheet.setColumnWidth(7, 10 * 256);
+		// 8：进展情况
 		sheet.setColumnWidth(8, 50 * 256);
-		// 9: 审批状态
-		sheet.setColumnWidth(10, 10 * 256); 
+		// 9：风险及措施
+		sheet.setColumnWidth(9, 50 * 256);
+		// 10: 审批状态
+		sheet.setColumnWidth(10, 10 * 256);
 	}
 
 	// 总数据sheet列宽设置（按新列顺序调整）
 	private void setAllDataColumnWidths(Sheet sheet) {
 		sheet.setColumnWidth(0, 30 * 256); // 0: 任务责任单位（新第0列）
-		sheet.setColumnWidth(1, 30 * 256); // 1: 行动计划编号（新第1列）
-		sheet.setColumnWidth(2, 50 * 256); // 2: 任务名称（新第2列）
-		sheet.setColumnWidth(3, 50 * 256); // 3: 年度目标（新第3列）
+		sheet.setColumnWidth(1, 30 * 256); // 1: 任务名称（新第1列）
+		sheet.setColumnWidth(2, 50 * 256); // 2: 行动计划（新第2列）
+		sheet.setColumnWidth(3, 50 * 256); // 3: 衡量标准（新第3列）
 		sheet.setColumnWidth(4, 10 * 256); // 4: 时间节点（新第4列）
 		sheet.setColumnWidth(5, 50 * 256); // 5: 分解计划（新第5列）
-		sheet.setColumnWidth(6, 10 * 256); // 6: 任务状态（新第6列）
-		sheet.setColumnWidth(7, 10 * 256); // 7: 风险状态（新第7列）
-		sheet.setColumnWidth(8, 50 * 256); // 8: 进展情况（新第8列）
-		sheet.setColumnWidth(9, 50 * 256); // 9: 风险及措施（新第9列）
-		sheet.setColumnWidth(10, 10 * 256); // 10: 审批状态（新第10列）
+		sheet.setColumnWidth(6, 10 * 256); // 6: 责任人（新第6列）
+		sheet.setColumnWidth(7, 10 * 256); // 6: 任务状态（新第6列）
+		sheet.setColumnWidth(8, 10 * 256); // 7: 风险状态（新第7列）
+		sheet.setColumnWidth(9, 50 * 256); // 8: 进展情况（新第8列）
+		sheet.setColumnWidth(10, 50 * 256); // 9: 风险及措施（新第9列）
+		sheet.setColumnWidth(11, 10 * 256); // 10: 审批状态（新第10列）
 	}
 
 	// 创建表头行
 	private void createHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施", "审批状态" };
+		String[] headers = { "任务名称", "行动计划", "衡量目标", "时间节点", "分解计划", "责任人", "任务状态", "风险状态", "进展情况", "风险及措施", "审批状态" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
@@ -379,7 +391,7 @@ public class ExportCompanyTaskExcel {
 
 	// 总数据sheet表头创建（第0列为任务责任单位）
 	private void createAllDataHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "任务责任单位", "行动计划编号", "任务名称", "年度目标", "时间节点", "分解计划", "任务状态", "风险状态", "进展情况", "风险及措施", "审批状态" };
+		String[] headers = { "任务责任单位", "任务名称", "行动计划", "衡量目标", "时间节点", "分解计划", "责任人", "任务状态", "风险状态", "进展情况", "风险及措施", "审批状态" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
