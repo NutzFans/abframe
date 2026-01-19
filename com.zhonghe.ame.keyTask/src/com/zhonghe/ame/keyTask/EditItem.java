@@ -24,16 +24,17 @@ public class EditItem {
 				dbSession.execute(delItemProcessSql, entity.getStr("id"));
 			}
 		}
-		String updateItemSql = "UPDATE zh_key_task_company_item SET action_plan_number = ?, task_name = ?, annual_target = ?, task_month = ?, task_plan_name = ?, responsible_person = ? WHERE id = ?";
+		String updateItemSql = "UPDATE zh_key_task_company_item SET action_plan_number = ?, task_name = ?, annual_target = ?, task_month = ?, task_plan_name = ?, responsible_person = ?, task_source = ? WHERE id = ?";
 		for (int i = 0; i < itemDatas.length; i++) {
 			Entity item = itemDatas[i];
 			if (StrUtil.isNotBlank(item.getStr("id"))) {
 				dbSession.execute(updateItemSql, mainData.getStr("actionPlanNumber"), mainData.getStr("taskName"), mainData.getStr("annualTarget"), item.getInt("taskMonth"),
-						item.getStr("taskPlanName"), item.getStr("responsiblePerson"), item.getStr("id"));
+						item.getStr("taskPlanName"), item.getStr("responsiblePerson"), mainData.getStr("taskSource"), item.getStr("id"));
 			} else {
 				Entity insert = Entity.create("zh_key_task_company_item");
 				insert.set("id", IdUtil.objectId());
 				insert.set("main_id", mainData.getStr("mainId"));
+				insert.set("task_source", mainData.getStr("taskSource"));
 				insert.set("action_plan_number", mainData.getStr("actionPlanNumber"));
 				insert.set("task_name", mainData.getStr("taskName"));
 				insert.set("annual_target", mainData.getStr("annualTarget"));

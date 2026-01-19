@@ -162,12 +162,14 @@ public class ExportGroupTaskExcel {
 									List<Entity> monthEntityList = taskMonthEntry.getValue();
 									String taskMonth = taskMonthEntry.getKey();
 									String taskPlanName = monthEntityList.get(0).getStr("task_plan_name"); // 同时间节点的分解计划一致
-									// 计算当前“时间节点”的总数据行数（用于合并“时间节点、分解计划”列）
+									String responsiblePerson = monthEntityList.get(0).getStr("responsible_person"); // 同时间节点的责任人一致
+									// 计算当前“时间节点”的总数据行数（用于合并【时间节点、分解计划、责任人】列）
 									int taskMonthRows = taskMonthEntry.getValue().size();
-									// 合并“时间节点、分解计划”列（第5、6列）
+									// 合并【时间节点、分解计划、责任人】列 同步合并，规则完全一致
 									if (taskMonthRows > 1) {
 										allDataSheet.addMergedRegion(new CellRangeAddress(allRowIndex, allRowIndex + taskMonthRows - 1, 5, 5)); // 第5列：时间节点
 										allDataSheet.addMergedRegion(new CellRangeAddress(allRowIndex, allRowIndex + taskMonthRows - 1, 6, 6)); // 第6列：分解计划
+										allDataSheet.addMergedRegion(new CellRangeAddress(allRowIndex, allRowIndex + taskMonthRows - 1, 7, 7)); // 第7列：责任人
 										// 合并单元格赋值
 										Row firstRow = allDataSheet.getRow(allRowIndex);
 										if (firstRow == null)
@@ -183,6 +185,10 @@ public class ExportGroupTaskExcel {
 										Cell planCell = firstRow.createCell(6);
 										planCell.setCellValue(taskPlanName);
 										planCell.setCellStyle(cellStyle);
+										// 责任人单元格
+										Cell personCell = firstRow.createCell(7);
+										personCell.setCellValue(responsiblePerson);
+										personCell.setCellStyle(cellStyle);
 									}
 
 									// 填充当前分组的所有数据行
@@ -214,24 +220,26 @@ public class ExportGroupTaskExcel {
 										setCellValue(row, 5, task_onth, cellStyle);
 										// 6: 分解计划（合并列首行已赋值）
 										setCellValue(row, 6, getStrValue(taskItem, "task_plan_name"), cellStyle);
-										// 7: 填报月份
+										// 7: 责任人
+										setCellValue(row, 7, getStrValue(taskItem, "responsible_person"), cellStyle);
+										// 8: 填报月份 【原7列→顺延为8列】
 										String fill_month = getStrValue(taskItem, "fill_month");
 										if (StrUtil.isNotBlank(fill_month)) {
 											fill_month = fill_month + "月";
 										}
-										setCellValue(row, 7, fill_month, cellStyle);
-										// 8: 任务状态
-										setCellValue(row, 8, getStrValue(taskItem, "task_status"), cellStyle);
-										// 9: 风险状态
-										setCellValue(row, 9, getStrValue(taskItem, "risk_status"), cellStyle);
-										// 10: 进展情况
-										setCellValue(row, 10, getStrValue(taskItem, "task_progress"), cellStyle);
-										// 11: 截至本月完成情况
-										setCellValue(row, 11, getStrValue(taskItem, "task_month_comple"), cellStyle);
-										// 12: 风险及措施
-										setCellValue(row, 12, getStrValue(taskItem, "risk_measures"), cellStyle);
-										// 13: 审批状态
-										setCellValue(row, 13, getStrValue(taskItem, "app_status"), cellStyle);
+										setCellValue(row, 8, fill_month, cellStyle);
+										// 9: 任务状态 【原8列→顺延为9列】
+										setCellValue(row, 9, getStrValue(taskItem, "task_status"), cellStyle);
+										// 10: 风险状态 【原9列→顺延为10列】
+										setCellValue(row, 10, getStrValue(taskItem, "risk_status"), cellStyle);
+										// 11: 进展情况 【原10列→顺延为11列】
+										setCellValue(row, 11, getStrValue(taskItem, "task_progress"), cellStyle);
+										// 12: 截至本月完成情况 【原11列→顺延为12列】
+										setCellValue(row, 12, getStrValue(taskItem, "task_month_comple"), cellStyle);
+										// 13: 风险及措施 【原12列→顺延为13列】
+										setCellValue(row, 13, getStrValue(taskItem, "risk_measures"), cellStyle);
+										// 14: 审批状态 【原13列→顺延为14列】
+										setCellValue(row, 14, getStrValue(taskItem, "app_status"), cellStyle);
 									}
 									// 更新行索引：当前分组处理完成，行索引+=行数
 									allRowIndex += taskMonthRows;
@@ -255,7 +263,7 @@ public class ExportGroupTaskExcel {
 				// 第一步：按“领域”分组
 				Map<String, List<Entity>> taskDomainMap = secOrgEntry.getValue().stream().collect(Collectors.groupingBy(taskItem -> taskItem.getStr("task_domain")));
 
-				int rowIndex = 1; // 从第1行开始（跳过表头）
+				int rowIndex = 1; // 从第1行开sheet始（跳过表头）
 
 				for (Map.Entry<String, List<Entity>> taskDomainEntry : taskDomainMap.entrySet()) {
 					// 计算当前领域的总数据行数（用于合并“领域”列）
@@ -335,12 +343,14 @@ public class ExportGroupTaskExcel {
 								List<Entity> monthEntityList = taskMonthEntry.getValue();
 								String taskMonth = taskMonthEntry.getKey();
 								String taskPlanName = monthEntityList.get(0).getStr("task_plan_name"); // 同时间节点的分解计划一致
-								// 计算当前“时间节点”的总数据行数（用于合并“时间节点、分解计划”列）
+								String responsiblePerson = monthEntityList.get(0).getStr("responsible_person"); // 同时间节点的责任人一致
+								// 计算当前“时间节点”的总数据行数（用于合并【时间节点、分解计划、责任人】列）
 								int taskMonthRows = taskMonthEntry.getValue().size();
-								// 合并“时间节点、分解计划”列（第4、5列）
+								// 合并【时间节点、分解计划、责任人】列 同步合并，规则完全一致
 								if (taskMonthRows > 1) {
 									sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + taskMonthRows - 1, 4, 4)); // 第4列：时间节点
 									sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + taskMonthRows - 1, 5, 5)); // 第5列：分解计划
+									sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + taskMonthRows - 1, 6, 6)); // 第6列：责任人
 									// 合并单元格赋值
 									Row firstRow = sheet.getRow(rowIndex);
 									if (firstRow == null)
@@ -356,6 +366,10 @@ public class ExportGroupTaskExcel {
 									Cell planCell = firstRow.createCell(5);
 									planCell.setCellValue(taskPlanName);
 									planCell.setCellStyle(cellStyle);
+									// 责任人单元格
+									Cell personCell = firstRow.createCell(6);
+									personCell.setCellValue(responsiblePerson);
+									personCell.setCellStyle(cellStyle);
 								}
 
 								// 填充当前分组的所有数据行
@@ -385,24 +399,26 @@ public class ExportGroupTaskExcel {
 									setCellValue(row, 4, task_onth, cellStyle);
 									// 5: 分解计划（合并列首行已赋值）
 									setCellValue(row, 5, getStrValue(taskItem, "task_plan_name"), cellStyle);
-									// 6: 填报月份
+									// 6: 责任人
+									setCellValue(row, 6, getStrValue(taskItem, "responsible_person"), cellStyle);
+									// 7: 填报月份 【原6列→顺延为7列】
 									String fill_month = getStrValue(taskItem, "fill_month");
 									if (StrUtil.isNotBlank(fill_month)) {
 										fill_month = fill_month + "月";
 									}
-									setCellValue(row, 6, fill_month, cellStyle);
-									// 7: 任务状态
-									setCellValue(row, 7, getStrValue(taskItem, "task_status"), cellStyle);
-									// 8: 风险状态
-									setCellValue(row, 8, getStrValue(taskItem, "risk_status"), cellStyle);
-									// 9: 进展情况
-									setCellValue(row, 9, getStrValue(taskItem, "task_progress"), cellStyle);
-									// 10: 截至本月完成情况
-									setCellValue(row, 10, getStrValue(taskItem, "task_month_comple"), cellStyle);
-									// 11: 风险及措施
-									setCellValue(row, 11, getStrValue(taskItem, "risk_measures"), cellStyle);
-									// 12: 审批状态
-									setCellValue(row, 12, getStrValue(taskItem, "app_status"), cellStyle);
+									setCellValue(row, 7, fill_month, cellStyle);
+									// 8: 任务状态 【原7列→顺延为8列】
+									setCellValue(row, 8, getStrValue(taskItem, "task_status"), cellStyle);
+									// 9: 风险状态 【原8列→顺延为9列】
+									setCellValue(row, 9, getStrValue(taskItem, "risk_status"), cellStyle);
+									// 10: 进展情况 【原9列→顺延为10列】
+									setCellValue(row, 10, getStrValue(taskItem, "task_progress"), cellStyle);
+									// 11: 截至本月完成情况 【原10列→顺延为11列】
+									setCellValue(row, 11, getStrValue(taskItem, "task_month_comple"), cellStyle);
+									// 12: 风险及措施 【原11列→顺延为12列】
+									setCellValue(row, 12, getStrValue(taskItem, "risk_measures"), cellStyle);
+									// 13: 审批状态 【原12列→顺延为13列】
+									setCellValue(row, 13, getStrValue(taskItem, "app_status"), cellStyle);
 								}
 								// 更新行索引：当前分组处理完成，行索引+=行数
 								rowIndex += taskMonthRows;
@@ -479,9 +495,10 @@ public class ExportGroupTaskExcel {
 								Entity entity = Entity.create().set("task_domain", groupTask.getString("taskDomain")).set("task_name", groupTask.getString("taskName"))
 										.set("action_plan", groupTask.getString("actionPlan")).set("measure_standard", groupTask.getString("measureStandard"))
 										.set("secondary_orgname", groupTask.getString("secondaryOrgname")).set("task_month", groupItemList.get(i).getInt("task_month"))
-										.set("task_plan_name", groupItemList.get(i).getStr("task_plan_name")).set("fill_month", temp.getInt("fill_month"))
-										.set("task_status", temp.getStr("task_status")).set("risk_status", temp.getStr("risk_status")).set("task_progress", temp.getStr("task_progress"))
-										.set("task_month_comple", temp.getStr("task_month_comple")).set("risk_measures", temp.getStr("risk_measures"))
+										.set("task_plan_name", groupItemList.get(i).getStr("task_plan_name")).set("responsible_person", groupItemList.get(i).getStr("responsible_person"))
+										.set("fill_month", temp.getInt("fill_month")).set("task_status", temp.getStr("task_status")).set("risk_status", temp.getStr("risk_status"))
+										.set("task_progress", temp.getStr("task_progress")).set("task_month_comple", temp.getStr("task_month_comple"))
+										.set("risk_measures", temp.getStr("risk_measures"))
 										.set("app_status", this.getAppStatusStr(temp.getStr("app_status"), temp.getStr("task_status"), temp.getStr("task_progress")));
 								allDatas.add(entity);
 							}
@@ -489,8 +506,9 @@ public class ExportGroupTaskExcel {
 							Entity entity = Entity.create().set("task_domain", groupTask.getString("taskDomain")).set("task_name", groupTask.getString("taskName"))
 									.set("action_plan", groupTask.getString("actionPlan")).set("measure_standard", groupTask.getString("measureStandard"))
 									.set("secondary_orgname", groupTask.getString("secondaryOrgname")).set("task_month", groupItemList.get(i).getInt("task_month"))
-									.set("task_plan_name", groupItemList.get(i).getStr("task_plan_name")).set("fill_month", "").set("task_status", "").set("risk_status", "").set("task_progress", "")
-									.set("task_month_comple", "").set("risk_measures", "").set("app_status", "");
+									.set("task_plan_name", groupItemList.get(i).getStr("task_plan_name")).set("responsible_person", groupItemList.get(i).getStr("responsible_person"))
+									.set("fill_month", "").set("task_status", "").set("risk_status", "").set("task_progress", "").set("task_month_comple", "").set("risk_measures", "")
+									.set("app_status", "");
 							allDatas.add(entity);
 						}
 					}
@@ -499,16 +517,17 @@ public class ExportGroupTaskExcel {
 						Entity entity = Entity.create().set("task_domain", groupTask.getString("taskDomain")).set("task_name", groupTask.getString("taskName"))
 								.set("action_plan", groupTask.getString("actionPlan")).set("measure_standard", groupTask.getString("measureStandard"))
 								.set("secondary_orgname", groupTask.getString("secondaryOrgname")).set("task_month", groupItemList.get(i).getInt("task_month"))
-								.set("task_plan_name", groupItemList.get(i).getStr("task_plan_name")).set("fill_month", "").set("task_status", "").set("risk_status", "").set("task_progress", "")
-								.set("task_month_comple", "").set("risk_measures", "").set("app_status", "");
+								.set("task_plan_name", groupItemList.get(i).getStr("task_plan_name")).set("responsible_person", groupItemList.get(i).getStr("responsible_person"))
+								.set("fill_month", "").set("task_status", "").set("risk_status", "").set("task_progress", "").set("task_month_comple", "").set("risk_measures", "")
+								.set("app_status", "");
 						allDatas.add(entity);
 					}
 				}
 			} else {
 				Entity entity = Entity.create().set("task_domain", groupTask.getString("taskDomain")).set("task_name", groupTask.getString("taskName"))
 						.set("action_plan", groupTask.getString("actionPlan")).set("measure_standard", groupTask.getString("measureStandard"))
-						.set("secondary_orgname", groupTask.getString("secondaryOrgname")).set("task_month", "").set("task_plan_name", "").set("fill_month", "").set("task_status", "")
-						.set("risk_status", "").set("task_progress", "").set("task_month_comple", "").set("risk_measures", "").set("app_status", "");
+						.set("secondary_orgname", groupTask.getString("secondaryOrgname")).set("task_month", "").set("task_plan_name", "").set("responsible_person", "").set("fill_month", "")
+						.set("task_status", "").set("risk_status", "").set("task_progress", "").set("task_month_comple", "").set("risk_measures", "").set("app_status", "");
 				allDatas.add(entity);
 			}
 		}
@@ -533,42 +552,44 @@ public class ExportGroupTaskExcel {
 
 	// 设置所有列的宽度
 	private void setColumnWidths(Sheet sheet) {
-		sheet.setColumnWidth(0, 10 * 256); // 0: 领域（新第0列）
-		sheet.setColumnWidth(1, 50 * 256); // 1: 任务名称（新第1列）
-		sheet.setColumnWidth(2, 50 * 256); // 2: 行动计划（新第2列）
-		sheet.setColumnWidth(3, 50 * 256); // 3: 衡量标准（新第3列）
-		sheet.setColumnWidth(4, 10 * 256); // 4: 时间节点（新第4列）
-		sheet.setColumnWidth(5, 50 * 256); // 5: 分解计划（新第6列）
-		sheet.setColumnWidth(6, 10 * 256); // 6: 填报月份（新第7列）
-		sheet.setColumnWidth(7, 10 * 256); // 7: 任务状态（新第8列）
-		sheet.setColumnWidth(8, 10 * 256); // 8: 风险状态（新第9列）
-		sheet.setColumnWidth(9, 50 * 256); // 9: 进展情况（新第10列）
-		sheet.setColumnWidth(10, 50 * 256); // 10: 截至本月完成情况（新第11列）
-		sheet.setColumnWidth(11, 50 * 256); // 11: 风险及措施（新第12列）
-		sheet.setColumnWidth(12, 10 * 256); // 12: 审批状态（新第13列）
+		sheet.setColumnWidth(0, 10 * 256); // 0: 领域
+		sheet.setColumnWidth(1, 50 * 256); // 1: 任务名称
+		sheet.setColumnWidth(2, 50 * 256); // 2: 行动计划
+		sheet.setColumnWidth(3, 50 * 256); // 3: 衡量标准
+		sheet.setColumnWidth(4, 10 * 256); // 4: 时间节点
+		sheet.setColumnWidth(5, 50 * 256); // 5: 分解计划
+		sheet.setColumnWidth(6, 10 * 256); // 6: 责任人
+		sheet.setColumnWidth(7, 10 * 256); // 7: 填报月份
+		sheet.setColumnWidth(8, 10 * 256); // 8: 任务状态
+		sheet.setColumnWidth(9, 10 * 256); // 9: 风险状态
+		sheet.setColumnWidth(10, 50 * 256); // 10: 进展情况
+		sheet.setColumnWidth(11, 50 * 256); // 11: 截至本月完成情况
+		sheet.setColumnWidth(12, 50 * 256); // 12: 风险及措施
+		sheet.setColumnWidth(13, 10 * 256); // 13: 审批状态
 	}
 
-	// 总数据sheet列宽设置（按新列顺序调整）
+	// 总数据sheet列宽设置 ✅修改：新增责任人列宽+后续列顺延
 	private void setAllDataColumnWidths(Sheet sheet) {
-		sheet.setColumnWidth(0, 10 * 256); // 0: 领域（新第0列）
-		sheet.setColumnWidth(1, 50 * 256); // 1: 任务名称（新第1列）
-		sheet.setColumnWidth(2, 50 * 256); // 2: 行动计划（新第2列）
-		sheet.setColumnWidth(3, 50 * 256); // 3: 衡量标准（新第3列）
-		sheet.setColumnWidth(4, 30 * 256); // 4: 任务责任单位（新第4列）
-		sheet.setColumnWidth(5, 10 * 256); // 5: 时间节点（新第5列）
-		sheet.setColumnWidth(6, 50 * 256); // 6: 分解计划（新第6列）
-		sheet.setColumnWidth(7, 10 * 256); // 7: 填报月份（新第7列）
-		sheet.setColumnWidth(8, 10 * 256); // 8: 任务状态（新第8列）
-		sheet.setColumnWidth(9, 10 * 256); // 9: 风险状态（新第9列）
-		sheet.setColumnWidth(10, 50 * 256); // 10: 进展情况（新第10列）
-		sheet.setColumnWidth(11, 50 * 256); // 11: 截至本月完成情况（新第11列）
-		sheet.setColumnWidth(12, 50 * 256); // 12: 风险及措施（新第12列）
-		sheet.setColumnWidth(13, 10 * 256); // 13: 审批状态（新第13列）
+		sheet.setColumnWidth(0, 10 * 256); // 0: 领域
+		sheet.setColumnWidth(1, 50 * 256); // 1: 任务名称
+		sheet.setColumnWidth(2, 50 * 256); // 2: 行动计划
+		sheet.setColumnWidth(3, 50 * 256); // 3: 衡量标准
+		sheet.setColumnWidth(4, 30 * 256); // 4: 任务责任单位
+		sheet.setColumnWidth(5, 10 * 256); // 5: 时间节点
+		sheet.setColumnWidth(6, 50 * 256); // 6: 分解计划
+		sheet.setColumnWidth(7, 10 * 256); // 7: 责任人
+		sheet.setColumnWidth(8, 10 * 256); // 8: 填报月份
+		sheet.setColumnWidth(9, 10 * 256); // 9: 任务状态
+		sheet.setColumnWidth(10, 10 * 256); // 10: 风险状态
+		sheet.setColumnWidth(11, 50 * 256); // 11: 进展情况
+		sheet.setColumnWidth(12, 50 * 256); // 12: 截至本月完成情况
+		sheet.setColumnWidth(13, 50 * 256); // 13: 风险及措施
+		sheet.setColumnWidth(14, 10 * 256); // 14: 审批状态
 	}
 
 	// 创建表头行
 	private void createHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "领域", "任务名称", "行动计划", "衡量标准", "时间节点", "分解计划", "填报月份", "任务状态", "风险状态", "进展情况", "截至本月完成情况", "风险及措施", "审批状态" };
+		String[] headers = { "领域", "任务名称", "行动计划", "衡量标准", "时间节点", "分解计划", "责任人", "填报月份", "任务状态", "风险状态", "进展情况", "截至本月完成情况", "风险及措施", "审批状态" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);
@@ -576,9 +597,9 @@ public class ExportGroupTaskExcel {
 		}
 	}
 
-	// 总数据sheet表头创建（第0列为任务责任单位）
+	// 总数据sheet表头创建
 	private void createAllDataHeaderRow(Row headerRow, CellStyle headerStyle) {
-		String[] headers = { "领域", "任务名称", "行动计划", "衡量标准", "任务责任单位", "时间节点", "分解计划", "填报月份", "任务状态", "风险状态", "进展情况", "截至本月完成情况", "风险及措施", "审批状态" };
+		String[] headers = { "领域", "任务名称", "行动计划", "衡量标准", "任务责任单位", "时间节点", "分解计划", "责任人", "填报月份", "任务状态", "风险状态", "进展情况", "截至本月完成情况", "风险及措施", "审批状态" };
 		for (int i = 0; i < headers.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(headers[i]);

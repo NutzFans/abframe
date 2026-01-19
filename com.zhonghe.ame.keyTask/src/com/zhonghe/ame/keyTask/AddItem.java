@@ -22,6 +22,7 @@ public class AddItem {
 			Entity insert = Entity.create("zh_key_task_company_item");
 			insert.set("id", IdUtil.objectId());
 			insert.set("main_id", mainData.getStr("mainId"));
+			insert.set("task_source", mainData.getStr("taskSource"));
 			insert.set("action_plan_number", mainData.getStr("actionPlanNumber"));
 			insert.set("task_name", mainData.getStr("taskName"));
 			insert.set("annual_target", mainData.getStr("annualTarget"));

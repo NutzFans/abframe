@@ -34,7 +34,7 @@ html,body {
 					url="com.zhonghe.ame.keyTask.company.queryItemListByMainId.biz.ext" dataField="itemDatas">
 					<div property="columns">
 						<div type="checkcolumn"></div>
-						<div field="taskName" width="250" align="center" headerAlign="center">任务名称</div>
+						<div field="taskName" width="250" align="center" headerAlign="center">行动计划</div>
 						<div field="taskMonth" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
 						<div field="taskPlanName" width="500" headeralign="center" align="left">分解计划</div>
 						<div field="taskStatus" width="50" headeralign="center" align="center">任务状态</div>

@@ -17,7 +17,6 @@ html,body {
 	word-wrap: break-word !important; /* 英文单词内断行 */
 	word-break: break-all !important; /* 中文/英文强制断行 */
 }
-
 </style>
 <head>
 <title>设置 - 任务分解计划</title>
@@ -95,6 +94,10 @@ html,body {
 							分解计划
 							<input property="editor" class="nui-textarea" style="width: 100%; height: 65px" required="true" />
 						</div>
+						<div field="responsiblePerson" width="100" headerAlign="center" align="left" vtype="required">
+							责任人
+							<input property="editor" class="nui-textbox" style="width: 100%" required="true" />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -137,7 +140,7 @@ html,body {
 				success : function(res) {
 					taskDecGrid.setData(res.itemList);
 				}
-			});			
+			});
 		}
 
 		function addRow() {

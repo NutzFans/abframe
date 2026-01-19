@@ -96,6 +96,10 @@ html,body {
 							分解计划
 							<input property="editor" class="nui-textarea" style="width: 100%; height: 65px" required="true" />
 						</div>
+						<div field="responsiblePerson" width="100" headerAlign="center" align="left" vtype="required">
+							责任人
+							<input property="editor" class="nui-textbox" style="width: 100%" required="true" />
+						</div>
 					</div>
 				</div>
 			</div>

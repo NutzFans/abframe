@@ -33,6 +33,7 @@ html,body {
 					<div property="columns">
 						<div field="taskMonth" width="50" headerAlign="center" align="center" renderer="renderMonth">时间节点</div>
 						<div field="taskPlanName" width="800" headerAlign="center" align="left">分解计划</div>
+						<div field="responsiblePerson" width="100" headerAlign="center" align="left">责任人</div>
 					</div>
 				</div>
 			</div>

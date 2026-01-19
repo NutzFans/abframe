@@ -28,6 +28,8 @@ html,body {
 							<td>
 								<input name="createUser" class="nui-hidden" />
 								<input name="createName" class="nui-textbox" style="width: 100px" readonly="readonly" />
+								<div style="display: inline-table; padding: 1px; margin-left: 10px">任务来源：</div>
+								<input name="taskSource" class="nui-dictcombobox" dictTypeId="C_KEYTASK_SOURCE" style="width: 120px" required="true" />
 								<div style="display: inline-table; padding: 1px; margin-left: 10px">任务名称：</div>
 								<input name="actionPlanNumber" class="nui-textbox" style="width: 600px" required="true" />
 							</td>

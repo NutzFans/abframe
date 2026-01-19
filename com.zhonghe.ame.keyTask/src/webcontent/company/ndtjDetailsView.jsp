@@ -48,6 +48,7 @@ html,body {
 		<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 92%;" showPager="false" url="com.zhonghe.ame.keyTask.company.queryNdtjDetails.biz.ext" dataField="itemDatas"
 			allowCellSelect="true" enableHotTrack="false" allowRowSelect="false" allowCellWrap="true">
 			<div property="columns">
+				<div field="task_source" name="taskSource" width="200" align="center" headerAlign="center">任务来源</div>
 				<div field="action_plan_number" name="actionPlanNumber" width="200" align="center" headerAlign="center">任务名称</div>
 				<div field="task_name" name="taskName" width="250" align="center" headerAlign="center">行动计划</div>
 				<div field="annual_target" name="annualTarget" width="300" align="left" headerAlign="center">衡量标准</div>
@@ -69,7 +70,7 @@ html,body {
 		var companyId;
 		
 		itemGrid.on("load", function() {
-			itemGrid.mergeColumns([ "checkcolumn", "actionPlanNumber", "taskName", "annualTarget" ]);
+			itemGrid.mergeColumns(["taskSource","actionPlanNumber", "taskName", "annualTarget" ]);
 		});		
 
 		setData();

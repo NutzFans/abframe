@@ -129,7 +129,7 @@ public class CompanyUtil {
 		String querySql = "SELECT zktci.*, zktcip.app_status, zktcip.process_id FROM zh_key_task_company_item AS zktci, zh_key_task_company_item_process AS zktcip WHERE zktci.id = zktcip.item_id AND zktcip.app_status = 2 AND zktci.main_id = ? AND zktci.task_month <= ?";
 		List<Entity> itemDatas = dbSession.query(querySql, mainId, taskMonth);
 		Map<String, Optional<Entity>> maxMonthTasksByGroup = itemDatas.stream().collect(
-				Collectors.groupingBy(item -> item.getStr("task_name") + item.getStr("annual_target"),
+				Collectors.groupingBy(item ->item.getStr("task_name") + item.getStr("annual_target"),
 						Collectors.maxBy((t1, t2) -> ((Entity) t1).getInt("task_month").compareTo(((Entity) t2).getInt("task_month")))));
 		if ("certainRisk".equals(type)) {
 			tempList = maxMonthTasksByGroup.values().stream().map(Optional::get).filter(task -> "低风险".equals(task.getStr("risk_status"))).collect(Collectors.toList());

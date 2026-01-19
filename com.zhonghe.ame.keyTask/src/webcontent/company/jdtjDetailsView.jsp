@@ -48,16 +48,17 @@ html,body {
 		<div id="itemGrid" class="nui-datagrid" style="width: 100%; height: 92%;" showPager="false" url="com.zhonghe.ame.keyTask.company.queryJdtjDetails.biz.ext" dataField="itemDatas"
 			allowCellSelect="true" enableHotTrack="false" allowRowSelect="false" allowCellWrap="true">
 			<div property="columns">
+				<div field="task_source" name="taskSource" width="200" align="center" headerAlign="center">任务来源</div>
 				<div field="action_plan_number" name="actionPlanNumber" width="200" align="center" headerAlign="center">任务名称</div>
 				<div field="task_name" name="taskName" width="250" align="center" headerAlign="center">行动计划</div>
-				<div field="annual_target" name="annualTarget" width="300" align="left" headerAlign="center">衡量标准</div>
-				<div field="task_month" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
-				<div field="task_plan_name" width="500" headeralign="center" align="left">分解计划</div>
+				<div field="annual_target" name="annualTarget" width="250" align="left" headerAlign="center">衡量标准</div>
+				<div field="task_month" width="60" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
+				<div field="task_plan_name" width="450" headeralign="center" align="left">分解计划</div>
 				<div field="responsible_person" width="100" headeralign="center" align="left">责任人</div>
-				<div field="task_status" width="50" headeralign="center" align="center" renderer="setTaskBackColor">任务状态</div>
-				<div field="risk_status" width="70" headeralign="center" align="center" renderer="setRiskBackColor">是否存在风险</div>
+				<div field="task_status" width="60" headeralign="center" align="center" renderer="setTaskBackColor">任务状态</div>
+				<div field="risk_status" width="80" headeralign="center" align="center" renderer="setRiskBackColor">是否存在风险</div>
 				<div width="40" headeralign="center" align="center" renderer="renderOperate">操作</div>
-				<div field="app_status" width="50" headeralign="center" align="center" renderer="renderTBStatus">填报状态</div>
+				<div field="app_status" width="60" headeralign="center" align="center" renderer="renderTBStatus">填报状态</div>
 			</div>
 		</div>
 	</div>
@@ -69,7 +70,7 @@ html,body {
 		var companyId,taskYear,taskMonth,type;
 		
 		itemGrid.on("load", function() {
-			itemGrid.mergeColumns(["actionPlanNumber", "taskName", "annualTarget" ]);
+			itemGrid.mergeColumns(["taskSource","actionPlanNumber", "taskName", "annualTarget" ]);
 		});		
 
 		setData();

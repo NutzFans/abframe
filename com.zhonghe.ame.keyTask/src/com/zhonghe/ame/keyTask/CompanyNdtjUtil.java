@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -213,24 +214,51 @@ public class CompanyNdtjUtil {
 	public List<Entity> queryNdtjDetails(String mainId) throws Exception {
 		List<Entity> resultList = new ArrayList<Entity>();
 		Session dbSession = new Session(DataSourceHelper.getDataSource());
+
+		// 步骤1：查询主表关联的全量任务子项
 		String querySqlByMainId = "SELECT * FROM zh_key_task_company_item WHERE main_id = ?";
 		List<Entity> allItemDatas = dbSession.query(querySqlByMainId, mainId);
-		Map<String, List<Entity>> mapData = allItemDatas.stream().filter(item -> !"/".equals(item.getStr("task_plan_name")))
+
+		// 步骤2：过滤无效数据 + 按【任务名称+衡量标准】分组
+		Map<String, List<Entity>> mapData = allItemDatas.stream()
+				// 优化：增加NULL值过滤，避免脏数据
+				.filter(item -> StrUtil.isNotBlank(item.getStr("task_plan_name")) && !"/".equals(item.getStr("task_plan_name")))
 				.collect(Collectors.groupingBy(item -> item.getStr("task_name") + "〓" + item.getStr("annual_target")));
+
+		// 步骤3：筛选“有问题的任务组”
 		List<Entity> tempList = new ArrayList<Entity>();
-		for (Entry<String, List<Entity>> entry : mapData.entrySet()) {
-			boolean bool = entry.getValue().stream().allMatch(entity -> "已完成".equals(entity.getStr("task_status")));
-			if (!bool) {
+		for (Map.Entry<String, List<Entity>> entry : mapData.entrySet()) {
+			// 判断：组内是否存在未完成任务
+			boolean allCompleted = entry.getValue().stream().allMatch(entity -> "已完成".equals(entity.getStr("task_status")));
+			if (!allCompleted) {
 				List<String> keyList = StrUtil.split(entry.getKey(), "〓");
-				Entity temp = new Entity().set("main_id", mainId).set("task_name", keyList.get(0)).set("annual_target", keyList.get(1));
+				Entity temp = new Entity().set("task_name", keyList.get(0)).set("annual_target", keyList.get(1));
 				tempList.add(temp);
 			}
 		}
-		String queryResultSql = "SELECT zktci.*, zkcip.* FROM zh_key_task_company_item AS zktci LEFT JOIN zh_key_task_company_item_process AS zkcip ON zktci.id = zkcip.item_id WHERE zktci.main_id = ? AND zktci.task_name = ? AND zktci.annual_target = ? ORDER BY zktci.task_month ASC";
-		for (Entity temp : tempList) {
-			List<Entity> datas = dbSession.query(queryResultSql, temp.getStr("main_id"), temp.getStr("task_name"), temp.getStr("annual_target"));
-			resultList.addAll(datas);
+
+		// 步骤4：一次性查询所有异常组数据（解决N+1+排序碎片化问题）
+		if (!tempList.isEmpty()) {
+			// 提取所有需要查询的 task_name 和 annual_target（去重）
+			List<String> taskNames = tempList.stream().map(temp -> temp.getStr("task_name")).distinct().collect(Collectors.toList());
+			List<String> annualTargets = tempList.stream().map(temp -> temp.getStr("annual_target")).distinct().collect(Collectors.toList());
+
+			// 构造IN条件的SQL（全局排序，确保四个维度连续）
+			String queryResultSql = "SELECT zktci.*, zkcip.* " + "FROM zh_key_task_company_item AS zktci " + "LEFT JOIN zh_key_task_company_item_process AS zkcip ON zktci.id = zkcip.item_id "
+					+ "WHERE zktci.main_id = ? " + "AND zktci.task_name IN (" + StrUtil.join(",", Collections.nCopies(taskNames.size(), "?")) + ") " + "AND zktci.annual_target IN ("
+					+ StrUtil.join(",", Collections.nCopies(annualTargets.size(), "?")) + ") "
+					+ "ORDER BY zktci.task_source, zktci.action_plan_number, zktci.task_name, zktci.annual_target, zktci.task_month ASC";
+
+			// 组装参数
+			List<Object> params = new ArrayList<>();
+			params.add(mainId);
+			params.addAll(taskNames);
+			params.addAll(annualTargets);
+
+			// 一次性查询所有数据（全局排序生效）
+			resultList = dbSession.query(queryResultSql, params.toArray());
 		}
+
 		return resultList;
 	}
 
