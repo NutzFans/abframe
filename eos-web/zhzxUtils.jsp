@@ -70,15 +70,17 @@ body {
 			<a id="htbh_sxhtbhfhgf" class="nui-button" iconCls="icon-node" onclick="htbh_sxhtbhfhgf()">合同编号 - 刷新合同编号符合规范</a>
 			<p></p>
 			<a id="khxt_sfhtkpglscjy" class="nui-button" iconCls="icon-node" onclick="khxt_sfhtkpglscjy()">客户信息导出 - 已关联收费合同、开票管理、市场经营</a>
+			<p></p>
+			<a id="khxt_fxkhjtycsj" class="nui-button" iconCls="icon-node" onclick="khxt_fxkhjtycsj()">客户信息导出 - 分析客户及天眼查数据</a>
 		</fieldset>
 
 	</div>
-	
+
 	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
 		<input type="hidden" name="downloadFile" filter="false" />
 		<input type="hidden" name="fileName" filter="false" />
-	</form>		
+	</form>
 
 	<script type="text/javascript">
 		nui.parse();
@@ -393,6 +395,22 @@ body {
 				exportExcel({
 					"data" : data,
 					"url" : "com.primeton.eos.common.zhzxUtils.khxt_sfhtkpglscjy.biz.ext",
+					"fileName" : "客户信息"
+				})
+				nui.get("khxt_sfhtkpglscjy").enable();
+			}
+		}
+
+		// 客户信息导出 - 分析客户及天眼查数据
+		function khxt_fxkhjtycsj() {
+			nui.get("khxt_fxkhjtycsj").disable();
+			if (!confirm("是否执行[客户信息导出 - 分析客户及天眼查数据]操作？")) {
+				nui.get("khxt_fxkhjtycsj").enable();
+			} else {
+				var data = {};
+				exportExcel({
+					"data" : data,
+					"url" : "com.primeton.eos.common.zhzxUtils.khxt_fxkhjtycsj.biz.ext",
 					"fileName" : "客户信息"
 				})
 				nui.get("khxt_sfhtkpglscjy").enable();

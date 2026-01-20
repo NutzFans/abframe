@@ -1,6 +1,7 @@
 package com.primeton.eos.common;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.ttzero.excel.entity.SimpleSheet;
 import org.ttzero.excel.entity.Workbook;
+import org.ttzero.excel.reader.ExcelReader;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharUtil;
@@ -476,9 +478,10 @@ public class ZhzxBizUtils {
 		String queryZhBidinfoSql = "SELECT cust_id FROM ZH_BIDINFO";
 
 		Set<String> custSet = new HashSet<String>();
-		
+
 		List<Entity> zhChargeContractList = dbSession.query(queryZhChargeContractSql);
-		Set<String> custOne = zhChargeContractList.stream().map(entity -> entity.getStr("signatory")).filter(s -> s != null && !s.isEmpty()).flatMap(s -> Arrays.stream(s.split(","))).filter(s -> !s.isEmpty()).collect(Collectors.toSet());
+		Set<String> custOne = zhChargeContractList.stream().map(entity -> entity.getStr("signatory")).filter(s -> s != null && !s.isEmpty()).flatMap(s -> Arrays.stream(s.split(",")))
+				.filter(s -> !s.isEmpty()).collect(Collectors.toSet());
 		custSet.addAll(custOne);
 
 		List<Entity> zhAgreementList = dbSession.query(queryZhAgreementSql);
@@ -528,4 +531,161 @@ public class ZhzxBizUtils {
 		new Workbook().addSheet(new SimpleSheet<>("客户信息").setData(rows)).addSheet(new SimpleSheet<>("交流拜访").setData(rowNews)).writeTo(tempFile);
 		return tempFile.getAbsolutePath();
 	}
+
+	@Bizlet("客户信息导出 - 分析客户及天眼查数据")
+	public String khxt_fxkhjtycsj() throws Exception {
+		ExcelReader allReader = ExcelReader.read(Paths.get("F:/所有客户及拜访客户数据.xlsx"));
+		// 所有客户集合
+		List<Entity> allCustList = allReader.sheet(0).header(1).rows().map(row -> {
+			Entity entity = new Entity();
+			entity.set("id", row.getString(0));
+			entity.set("customerName", this.fixCustName(row.getString(1)));
+			return entity;
+		}).collect(Collectors.toList());
+
+		// 所有交流拜访客户集合
+		List<Entity> allVisitList = allReader.sheet(1).header(1).rows().map(row -> {
+			Entity entity = new Entity();
+			entity.set("id", row.getString(0));
+			entity.set("customerName", this.fixCustName(row.getString(1)));
+			return entity;
+		}).collect(Collectors.toList());
+
+		ExcelReader custReader = ExcelReader.read(Paths.get("F:/客户数据 - 信用代码.xlsx"));
+		Map<String, String> custMap = custReader.sheet(0).header(1).rows().filter(row -> !"-".equals(row.getString(1)))
+				.collect(Collectors.toMap(row -> this.fixCustName(row.getString(0)), row -> row.getString(1), (oldRow, newRow) -> oldRow));
+
+		ExcelReader visitReader = ExcelReader.read(Paths.get("F:/拜访客户 - 信用代码.xlsx"));
+		Map<String, String> visitMap = visitReader.sheet(0).header(1).rows().filter(row -> !"-".equals(row.getString(1)))
+				.collect(Collectors.toMap(row -> this.fixCustName(row.getString(0)), row -> row.getString(1), (oldRow, newRow) -> oldRow));
+
+		List<Entity> havaCodeCustList = new ArrayList<Entity>();
+		List<Entity> noHavaCodeCustList = new ArrayList<Entity>();
+		for (Entity cust : allCustList) {
+			if (custMap.containsKey(cust.getStr("customerName"))) {
+				cust.set("unifiedSocialCreditCode", custMap.get(cust.getStr("customerName")));
+				havaCodeCustList.add(cust);
+			} else {
+				cust.set("unifiedSocialCreditCode", null);
+				noHavaCodeCustList.add(cust);
+			}
+		}
+
+		List<Entity> uniqueHavaCodeCustList = new ArrayList<>();
+		List<Entity> duplicateHavaCustList = new ArrayList<>();
+
+		Map<String, List<Entity>> groupByCustCode = havaCodeCustList.stream().collect(
+				Collectors.groupingBy(entity -> entity.getStr("unifiedSocialCreditCode"),
+						Collectors.collectingAndThen(Collectors.toList(), list -> list.stream().sorted((e1, e2) -> Integer.compare(e1.getInt("id"), e2.getInt("id"))).collect(Collectors.toList()))));
+
+		for (Map.Entry<String, List<Entity>> entry : groupByCustCode.entrySet()) {
+			List<Entity> custGroup = entry.getValue();
+			if (custGroup.size() > 1) {
+				uniqueHavaCodeCustList.add(custGroup.get(0));
+				duplicateHavaCustList.addAll(custGroup.subList(1, custGroup.size()));
+			} else {
+				uniqueHavaCodeCustList.addAll(custGroup);
+			}
+		}
+
+		List<Entity> normalNoHavaCodeCustList = new ArrayList<Entity>();
+		List<Entity> abnormalNoHavaCodeCustList = new ArrayList<Entity>();
+
+		for (Entity cust : noHavaCodeCustList) {
+			String customerName = cust.getStr("customerName");
+			if (StrUtil.containsAny(customerName, "/", "、", "；")) {
+				abnormalNoHavaCodeCustList.add(cust);
+			} else {
+				normalNoHavaCodeCustList.add(cust);
+			}
+		}
+
+		List<Entity> havaCodeVisitList = new ArrayList<Entity>();
+		List<Entity> noHavaCodeVisitList = new ArrayList<Entity>();
+		for (Entity visit : allVisitList) {
+			if (visitMap.containsKey(visit.getStr("customerName"))) {
+				visit.set("unifiedSocialCreditCode", custMap.get(visit.getStr("customerName")));
+				havaCodeVisitList.add(visit);
+			} else {
+				visit.set("unifiedSocialCreditCode", null);
+				noHavaCodeVisitList.add(visit);
+			}
+		}
+
+		// 客户信息 - 整理好的
+		List<Object> uniqueHavaCodeCustRows = new ArrayList<>();
+		uniqueHavaCodeCustRows.add(new String[] { "主键", "企业名称", "统一社会信用代码" });
+		for (Entity entity : uniqueHavaCodeCustList) {
+			uniqueHavaCodeCustRows.add(new Object[] { entity.getInt("id"), entity.getStr("customerName"), entity.getStr("unifiedSocialCreditCode") });
+		}
+
+		// 客户信息 - 重复的
+		List<Object> duplicateHavaCustRows = new ArrayList<>();
+		duplicateHavaCustRows.add(new String[] { "主键", "企业名称", "统一社会信用代码" });
+		for (Entity entity : duplicateHavaCustList) {
+			duplicateHavaCustRows.add(new Object[] { entity.getInt("id"), entity.getStr("customerName"), entity.getStr("unifiedSocialCreditCode") });
+		}
+
+		// 客户信息 - 无效的
+		List<Object> normalNoHavaCodeCustRows = new ArrayList<>();
+		normalNoHavaCodeCustRows.add(new String[] { "主键", "企业名称" });
+		for (Entity entity : normalNoHavaCodeCustList) {
+			normalNoHavaCodeCustRows.add(new Object[] { entity.getInt("id"), entity.getStr("customerName") });
+		}
+
+		// 客户信息 - 异常的
+		List<Object> abnormalNoHavaCodeCustRows = new ArrayList<>();
+		abnormalNoHavaCodeCustRows.add(new String[] { "主键", "企业名称" });
+		for (Entity entity : abnormalNoHavaCodeCustList) {
+			abnormalNoHavaCodeCustRows.add(new Object[] { entity.getInt("id"), entity.getStr("customerName") });
+		}
+
+		// 拜访客户 - 整理好的
+		List<Object> havaCodeVisitRows = new ArrayList<>();
+		havaCodeVisitRows.add(new String[] { "主键", "企业名称", "统一社会信用代码" });
+		for (Entity entity : havaCodeVisitList) {
+			havaCodeVisitRows.add(new Object[] { entity.getInt("id"), entity.getStr("customerName"), entity.getStr("unifiedSocialCreditCode") });
+		}
+
+		// 拜访客户 - 无效的
+		List<Object> noHavaCodeVisitRows = new ArrayList<>();
+		noHavaCodeVisitRows.add(new String[] { "主键", "企业名称" });
+		for (Entity entity : noHavaCodeVisitList) {
+			noHavaCodeVisitRows.add(new Object[] { entity.getInt("id"), entity.getStr("customerName") });
+		}
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String datetimeString = format.format(new Date());
+		File tempFile = File.createTempFile("客户信息_" + datetimeString, ".xlsx");
+		new Workbook().addSheet(new SimpleSheet<>("客户信息 - 整理好的").setData(uniqueHavaCodeCustRows)).addSheet(new SimpleSheet<>("客户信息 - 重复的").setData(duplicateHavaCustRows))
+				.addSheet(new SimpleSheet<>("客户信息 - 无效的").setData(normalNoHavaCodeCustRows)).addSheet(new SimpleSheet<>("客户信息 - 异常的").setData(abnormalNoHavaCodeCustRows))
+				.addSheet(new SimpleSheet<>("拜访客户 - 整理好的").setData(havaCodeVisitRows)).addSheet(new SimpleSheet<>("拜访客户 - 无效的").setData(noHavaCodeVisitRows)).writeTo(tempFile);
+		return tempFile.getAbsolutePath();
+	}
+
+	// 修复合同编号
+	private String fixCustName(String fixCustName) {
+		// 1. 空值/纯空白处理
+		if (StrUtil.isBlank(fixCustName)) {
+			return null;
+		}
+		// 2. 移除所有空格（首尾+中间）
+		StringBuilder noWithoutSpace = new StringBuilder();
+		for (int i = 0; i < fixCustName.length(); i++) {
+			char c = fixCustName.charAt(i);
+			// 排除所有空格类型：半角空格(32)、全角空格(12288)、制表符(9)、换行符(10)等
+			if (!CharUtil.isBlankChar(c)) {
+				noWithoutSpace.append(c);
+			}
+		}
+		if (StrUtil.isBlank(noWithoutSpace)) {
+			return null;
+		}
+		// 3. 替换替换半角括号为全角括号
+		String noWithHalfSymbol = StrUtil.replace(noWithoutSpace, "(", "（");
+		noWithHalfSymbol = StrUtil.replace(noWithHalfSymbol, ")", "）");
+		// 4. 最终空值兜底
+		return StrUtil.isBlank(noWithHalfSymbol) ? null : noWithHalfSymbol;
+	}
+
 }

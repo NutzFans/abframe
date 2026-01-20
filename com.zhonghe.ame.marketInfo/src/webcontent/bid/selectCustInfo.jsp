@@ -34,18 +34,6 @@
 			</div>
 		</div>
 
-		<div class="nui-toolbar" style="border-bottom: 0; padding: 5px;">
-			<table>
-				<tr>
-					<td>
-						<a class="nui-button" id="add" iconCls="icon-add" onclick="add()">新增</a>
-						<a class="nui-button" id="edit" iconCls="icon-edit" onclick="edit()">编辑</a>
-						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
-					</td>
-				</tr>
-			</table>
-		</div>
-
 		<div class="nui-fit">
 			<div id="datagrid1" class="nui-datagrid" style="width: 100%; height: 340px;" url="com.zhonghe.ame.marketInfo.marketinfo.khxx.bid.queryCustInfo.biz.ext" dataField="custinfos"
 				sizeList="[10,30,50,100]" pageSize="10" allowAlternating="true" onrowdblclick="onRowDblClick">

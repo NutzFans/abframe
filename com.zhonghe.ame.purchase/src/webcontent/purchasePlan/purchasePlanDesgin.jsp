@@ -102,7 +102,7 @@
 			$('#div7').click(function() {
 				layer.open({
 					title : '公司总经理办公会审批、企业发展部发布 - 调整审批人',
-					content : '通过【角色管理】模块修改角色编号为【cg_plan_qf】的角色数据',
+					content : '通过【角色管理】模块修改角色编号为【purchaseFz】的角色数据',
 					btn : []
 				});
 			});

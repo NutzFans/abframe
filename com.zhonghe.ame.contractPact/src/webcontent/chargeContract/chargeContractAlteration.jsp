@@ -271,10 +271,11 @@
 		
 		function selectCustInfo() {
 			mini.open({
-				url : "/default/marketInfo/bid/selectCustInfo.jsp",
-				title : "选择签约方（请先查找客户，如不存在再新增）",
-				width : '500',
-				height : '530',
+				url : "/default/marketInfo/newCustomers/selectCustomers.jsp",
+				title : "选择签约方 - 如不存在请通过【市场信息管理 - 公司客户信息】模块新增",
+				width : '760',
+				height : '540',
+				allowResize : false,
 				ondestroy : function(action) {
 					if (action == "ok") {
 						var iframe = this.getIFrameEl();
