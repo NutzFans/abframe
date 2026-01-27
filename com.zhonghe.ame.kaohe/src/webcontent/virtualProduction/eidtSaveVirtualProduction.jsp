@@ -29,6 +29,7 @@ html,body {
 			<legend>基本信息</legend>
 			<div style="width: 99%">
 				<form id="addForm" method="post">
+					<input name="id" class="nui-hidden" />
 					<input name="files" id="fileids" class="nui-hidden" />
 					<table style="table-layout: fixed;">
 						<tr>
@@ -85,10 +86,7 @@ html,body {
 						<tr>
 							<td align="right" style="width: 110px">申报背景及原因：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 986px; height: 100px;" required="true" emptyText="参考格式如下
-1. 工作背景及内容：
-2. 申报原因：
-3. ..." />
+								<input name="remark" class="nui-textarea" style="width: 986px; height: 100px;" required="true" />
 							</td>
 						</tr>
 					</table>
@@ -273,6 +271,202 @@ html,body {
 		<br>
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px;">
 			<legend>
+				<span style="color: red">&nbsp;&nbsp;最终确认 - 确认最终的【申报金额计算方式】及【申报金额】，默认自动填充【基本信息】中填写的值&nbsp;&nbsp;</span>
+			</legend>
+			<div style="width: 99%">
+				<form id="endForm" method="post">
+					<table style="table-layout: fixed;">
+						<tr>
+							<td align="right" style="width: 110px">申报金额计算方式：</td>
+							<td style="width: 260px">
+								<input id="confirmCalcMethod" name="confirmCalcMethod" class="nui-dictcombobox" dictTypeId="ZH_SBJE_JSFS" style="width: 250px" required="true" onvaluechanged="changeConfirmCalcMethod" />
+							</td>
+							<td align="right" style="width: 100px">确认金额(元)：</td>
+							<td style="width: 260px">
+								<input id="confirmAmount" name="confirmAmount" class="nui-textbox" style="width: 250px" required="true" readonly="readonly" emptyText="无需填写，根据明细自动计算" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</fieldset>
+		<br>
+		<fieldset id="field4" style="border: solid 1px #aaa; padding: 5px;">
+			<legend>
+				<span style="color: red">&nbsp;&nbsp;最终申报金额及计算过程 - 默认自动填充【拟申报金额及计算过程】中填写的值&nbsp;&nbsp;</span>
+			</legend>
+			<div id="rydjDivQR" style="width: 99%; margin: 0 auto; display: none;">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="rydjQRAddRow()">新增</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="rydjQRRemoveRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="rydjGridQR" class="nui-datagrid" style="height: 250px;" showPager="false" showSummaryRow="true" frozenStartColumn="0" frozenEndColumn="2" allowCellEdit="true" allowCellSelect="true"
+					oncellendedit="rydjGridQRCellEndEdit" oncellvalidation="rydjGridQRCellValidation">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div header="按人员单价计算" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="itemName" width="300" headerAlign="center" align="left" vtype="required">
+									事项名称
+									<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+								</div>
+							</div>
+						</div>
+						<div header="(A+B) × (1+C) × (1+D)" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="declaredTotal" width="150" headerAlign="center" align="center" summaryType="sum" dataType="currency">拟申报金额（元）</div>
+							</div>
+						</div>
+						<div header="A - 人工成本" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="personDay" width="120" headerAlign="center" align="center" dataType="float" numberFormat="n1">
+									拟投入人天（人天）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n1" showButton="false" style="width: 100%" />
+								</div>
+								<div field="personDayPrice" width="120" headerAlign="center" align="center" dataType="currency">
+									人员单价（元/人天）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="personDayTotal" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">小计（元）</div>
+							</div>
+						</div>
+						<div header="B - 直接费用" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="conferenceRoomCost" width="120" headerAlign="center" align="center" dataType="currency">
+									会议室租赁费（元）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="expertConsultationCost" width="120" headerAlign="center" align="center" dataType="currency">
+									专家咨询费（元）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="expertTravelCost" width="120" headerAlign="center" align="center" dataType="currency">
+									专家差旅费（元）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="expertStayCost" width="120" headerAlign="center" align="center" dataType="currency">
+									专家住宿费（元）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="foodCost" width="120" headerAlign="center" align="center" dataType="currency">
+									餐费（元）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="otherCost" width="120" headerAlign="center" align="center" dataType="currency">
+									其他费用（元）
+									<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+								</div>
+								<div field="costTotal" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">小计（元）</div>
+							</div>
+						</div>
+						<div header="C - 管理费" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="manageRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
+									管理费比率
+									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
+								</div>
+							</div>
+						</div>
+						<div header="D - 利润" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="profitRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
+									利润比率
+									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
+								</div>
+							</div>
+						</div>
+						<div field="remark" width="300" headerAlign="center" align="left" vtype="required">
+							备注
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="xmdjDivQR" style="width: 99%; margin: 0 auto; display: none;">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="xmdjQRAddRow()">新增</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="xmdjQRRemoveRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="xmdjGridQR" class="nui-datagrid" style="height: 250px;" showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="xmdjGridQRCellEndEdit"
+					oncellvalidation="xmdjGridQRCellValidation">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div header="按项目单价计算" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="itemName" width="400" headerAlign="center" align="left" vtype="required">
+									事项名称
+									<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+								</div>
+							</div>
+						</div>
+						<div field="projectNum" width="120" headerAlign="center" align="center" dataType="int" numberFormat="n0">
+							项目数量
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n0" showButton="false" style="width: 100%" />
+						</div>
+						<div field="projectPrice" width="120" headerAlign="center" align="center" dataType="currency">
+							项目单价（元）
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="declaredTotal" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计（元）</div>
+						<div field="remark" width="800" headerAlign="center" align="left" vtype="required">
+							备注（投资额/规模/取费依据等）
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="gdzjDivQR" style="width: 99%; margin: 0 auto; display: none;">
+				<div class="nui-toolbar" style="border-bottom: 0; padding: 0px;">
+					<table>
+						<tr>
+							<td>
+								<a class="nui-button" iconCls="icon-add" onclick="gdzjQRAddRow()">新增</a>
+								<a class="nui-button" iconCls="icon-remove" onclick="gdzjQRRemoveRow()">删除</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id="gdzjGridQR" class="nui-datagrid" style="height: 250px;" showPager="false" showSummaryRow="true" allowCellEdit="true" allowCellSelect="true" oncellendedit="gdzjGridQRCellEndEdit"
+					oncellvalidation="gdzjGridQRCellValidation">
+					<div property="columns">
+						<div type="checkcolumn"></div>
+						<div header="按固定总价计算" headerAlign="center" align="center">
+							<div property="columns">
+								<div field="itemName" width="400" headerAlign="center" align="left" vtype="required">
+									事项名称
+									<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+								</div>
+							</div>
+						</div>
+						<div field="declaredTotal" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">
+							金额（元）
+							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
+						</div>
+						<div field="remark" width="800" headerAlign="center" align="left" vtype="required">
+							备注
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<br>
+		<fieldset id="field5" style="border: solid 1px #aaa; padding: 5px;">
+			<legend>
 				上传附件 -
 				<span style="color: red">相关证明材料</span>
 			</legend>
@@ -283,43 +477,37 @@ html,body {
 	</div>
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">暂存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
+		<a class="nui-button" onclick="onOk()" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
 
 	<script type="text/javascript">
 		nui.parse();
 		var addForm = new nui.Form("#addForm");
+		var endForm = new nui.Form("#endForm");
 		var rydjGrid = nui.get("rydjGrid");
 		var xmdjGrid = nui.get("xmdjGrid");
 		var gdzjGrid = nui.get("gdzjGrid");
-		var istype, info;
-		
-		init();
+		var rydjGridQR = nui.get("rydjGridQR");
+		var xmdjGridQR = nui.get("xmdjGridQR");
+		var gdzjGridQR = nui.get("gdzjGridQR");
 
-		function init() {
-			getSecOrg(userOrgId);
-			nui.get("createUserid").setValue(userId);
-			nui.get("createUsername").setValue(userName);
+		function setData(data) {
 			initSecOrgCombobox();
+			addForm.setData(data);
+			endForm.setData(data);
+			nui.get("declareMatter").setValue(data.declareMatter);
+			nui.get("declareMatter").setText(data.declareMatter);
+			nui.get("custName").setValue(data.custName);
+			nui.get("custName").setText(data.custName);
+			nui.get("entrustDept").setValue(data.entrustDept);
+			nui.get("entrustDept").setText(data.entrustDept);
+			setUI(data);
+			setPlanGridData(data);
+			setResultGridData(data);
+			setFileData(data);
 		}
-
-		function getSecOrg(userOrgId) {
-			var json = nui.encode({
-				'userOrgId' : userOrgId
-			});
-			ajaxCommon({
-				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
-				data : json,
-				success : function(result) {
-					var data = result.data;
-					nui.get("secondaryOrg").setValue(data.ORGID);
-					nui.get("secondaryOrgname").setValue(data.ORGNAME);
-				}
-			});
-		}
-
+		
 		function initSecOrgCombobox() {
 			ajaxCommon({
 				"url" : "com.zhonghe.ame.kaohe.common.getBusSecOrgList.biz.ext",
@@ -330,7 +518,100 @@ html,body {
 				}
 			});
 		}
-
+		
+		function setUI(mainData){
+			if (mainData.taskSource != "1") {
+				nui.get("declareMatter").setAllowInput(true);
+			} else {
+				nui.get("declareMatter").setAllowInput(false);
+			}
+			if (mainData.taskSource == "3") {
+				nui.get("entrustDept").setRequired(true);				
+			}						
+		}
+		
+		function setPlanGridData(mainData) {
+			var json = nui.encode({
+				"virtualProductionId" : mainData.id
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.kaohe.virtualProduction.queryPlanGridDataList.biz.ext",
+				data : json,
+				success : function(result) {
+					var planGridData = result.planGridData;
+					var calcMethod = mainData.calcMethod;
+					if (calcMethod == "1") {
+						$("#rydjDiv").css("display", "block");
+						nui.parse();
+						rydjGrid.setFrozenStartColumn(0);
+						rydjGrid.setFrozenEndColumn(1);
+						rydjGrid.setData(planGridData);
+					} else if (calcMethod == "2") {
+						$("#xmdjDiv").css("display", "block");
+						nui.parse();
+						xmdjGrid.setData(planGridData);
+					} else if (calcMethod == "3") {
+						$("#gdzjDiv").css("display", "block");
+						nui.parse();
+						gdzjGrid.setData(planGridData);
+					}
+				}
+			});
+		}
+		
+		function setResultGridData(mainData) {
+			var json = nui.encode({
+				"virtualProductionId" : mainData.id
+			});
+			ajaxCommon({
+				url : "com.zhonghe.ame.kaohe.virtualProduction.queryResultGridDataList.biz.ext",
+				data : json,
+				success : function(result) {
+					var resultGridData = result.resultGridData;
+					var confirmCalcMethod = mainData.confirmCalcMethod;
+					if (isStrEmpty(confirmCalcMethod)) {
+						confirmCalcMethod = mainData.calcMethod;
+					}
+					if (confirmCalcMethod == "1") {
+						$("#rydjDivQR").css("display", "block");
+						nui.parse();
+						rydjGridQR.setFrozenStartColumn(0);
+						rydjGridQR.setFrozenEndColumn(1);
+						if (resultGridData != null && resultGridData.length > 0) {
+							rydjGridQR.setData(resultGridData);
+						} else {
+							rydjGridQR.setData(rydjGrid.getData());
+						}
+					} else if (confirmCalcMethod == "2") {
+						$("#xmdjDivQR").css("display", "block");
+						nui.parse();
+						if (resultGridData != null && resultGridData.length > 0) {
+							xmdjGridQR.setData(resultGridData);
+						} else {
+							xmdjGridQR.setData(xmdjGrid.getData());
+						}
+					} else if (confirmCalcMethod == "3") {
+						$("#gdzjDivQR").css("display", "block");
+						nui.parse();
+						if (resultGridData != null && resultGridData.length > 0) {
+							gdzjGridQR.setData(resultGridData);
+						} else {
+							gdzjGridQR.setData(gdzjGrid.getData());
+						}
+					}
+				}
+			});
+		}
+		
+		function setFileData(mainData) {
+			var fileGrid = nui.get("grid_0");
+			fileGrid.load({
+				"groupid" : "virtualProduction",
+				"relationid" : mainData.id
+			});
+			fileGrid.sortBy("fileTime", "desc");
+		}								
+		
 		function changeTaskSource() {
 			nui.get("entrustDept").setRequired(false);
 			nui.get("declareMatter").setValue(null);
@@ -379,7 +660,7 @@ html,body {
 				nui.parse();				
 			}
 		}
-		
+				
 		function rydjAddRow() {
 			var newRow = {};
 			var index = rydjGrid.getData().length;
@@ -494,7 +775,148 @@ html,body {
 					e.errorText = "[金额（元）]必填，该值可通过填写其他数据自动汇总";
 				}
 			}
-		}				
+		}
+		
+		function changeConfirmCalcMethod(){
+			var confirmCalcMethod = nui.get("confirmCalcMethod").getValue();
+			if(confirmCalcMethod == "1"){
+				rydjGridQR.setData(null);
+				$("#rydjDivQR").css("display", "block");
+				$("#xmdjDivQR").css("display", "none");
+				$("#gdzjDivQR").css("display", "none");
+				nui.parse();
+				rydjGridQR.setFrozenStartColumn(0);
+				rydjGridQR.setFrozenEndColumn(2);
+			}else if(confirmCalcMethod == "2"){
+				xmdjGridQR.setData(null);
+				$("#rydjDivQR").css("display", "none");
+				$("#xmdjDivQR").css("display", "block");
+				$("#gdzjDivQR").css("display", "none");
+				nui.parse();				
+			}else if(confirmCalcMethod == "3"){
+				gdzjGridQR.setData(null);
+				$("#rydjDivQR").css("display", "none");
+				$("#xmdjDivQR").css("display", "none");
+				$("#gdzjDivQR").css("display", "block");
+				nui.parse();				
+			}
+		}
+		
+		function rydjQRAddRow() {
+			var newRow = {};
+			var index = rydjGridQR.getData().length;
+			rydjGridQR.addRow(newRow, index + 1);
+			rydjGridQR.beginEditRow(newRow);
+		}
+
+		function rydjQRRemoveRow() {
+			var rows = rydjGridQR.getSelecteds();
+			if (rows.length > 0) {
+				rydjGridQR.removeRows(rows, false);
+				updateConfirmAmountFormData(rydjGridQR);
+			}
+		}
+
+		function rydjGridQRCellEndEdit(e) {
+			var record = e.record;
+			var personDayTotal = multiplyMoney(record.personDay, record.personDayPrice);
+			var costTotal = sumMoney(record.conferenceRoomCost,record.expertConsultationCost,record.expertTravelCost,record.expertStayCost,record.foodCost,record.otherCost);
+			var manageRatioSum = addMoney(1, record.manageRatio);
+			var profitRatioSum = addMoney(1, record.profitRatio);
+			var personDayAndCostTotal = addMoney(personDayTotal, costTotal);
+			var declaredTotal = multiplyMoneyBatch(personDayAndCostTotal,manageRatioSum,profitRatioSum);
+			rydjGridQR.updateRow(e.row, {
+				'personDayTotal' : personDayTotal,
+				'costTotal' : costTotal,
+				'declaredTotal' : declaredTotal
+			});
+			updateConfirmAmountFormData(rydjGridQR);	
+		}
+		
+		function xmdjQRAddRow() {
+			var newRow = {};
+			var index = xmdjGridQR.getData().length;
+			xmdjGridQR.addRow(newRow, index + 1);
+			xmdjGridQR.beginEditRow(newRow);
+		}
+
+		function xmdjQRRemoveRow() {
+			var rows = xmdjGridQR.getSelecteds();
+			if (rows.length > 0) {
+				xmdjGridQR.removeRows(rows, false);
+				updateConfirmAmountFormData(xmdjGridQR);
+			}
+		}
+		
+		function xmdjGridQRCellEndEdit(e) {
+			var record = e.record;
+			var declaredTotal = multiplyMoney(record.projectNum,record.projectPrice);
+			xmdjGridQR.updateRow(e.row, {
+				'declaredTotal' : declaredTotal
+			});
+			updateConfirmAmountFormData(xmdjGridQR);	
+		}
+		
+		function gdzjQRAddRow() {
+			var newRow = {};
+			var index = gdzjGridQR.getData().length;
+			gdzjGridQR.addRow(newRow, index + 1);
+			gdzjGridQR.beginEditRow(newRow);
+		}
+
+		function gdzjQRRemoveRow() {
+			var rows = gdzjGridQR.getSelecteds();
+			if (rows.length > 0) {
+				gdzjGridQR.removeRows(rows, false);
+				updateConfirmAmountFormData(gdzjGridQR);
+			}
+		}
+		
+		function gdzjGridQRCellEndEdit(e) {
+			updateConfirmAmountFormData(gdzjGridQR);	
+		}								
+		
+		function updateConfirmAmountFormData(grid){
+			var rows = grid.getData();
+			var declareAmount = 0;
+			for (var row of rows) {
+				declareAmount = addMoney(declareAmount,row.declaredTotal);
+			}
+			nui.get("confirmAmount").setValue(declareAmount);
+		}
+		
+		function rydjGridQRCellValidation(e){
+			if(e.field == "declaredTotal"){
+				if(e.value != 0){
+					e.isValid = true;
+				}else{
+					e.isValid = false;
+					e.errorText = "[拟申报金额（元）]必填，该值可通过填写其他数据自动汇总";
+				}
+			}
+		}
+		
+		function xmdjGridQRCellValidation(e){
+			if(e.field == "declaredTotal"){
+				if(e.value != 0){
+					e.isValid = true;
+				}else{
+					e.isValid = false;
+					e.errorText = "[合计（元）]必填，该值可通过填写其他数据自动汇总";
+				}
+			}
+		}
+		
+		function gdzjGridQRCellValidation(e){
+			if(e.field == "declaredTotal"){
+				if(e.value != 0){
+					e.isValid = true;
+				}else{
+					e.isValid = false;
+					e.errorText = "[金额（元）]必填，该值可通过填写其他数据自动汇总";
+				}
+			}
+		}								
 		
 		function selectChargeContrac() {
 			nui.open({
@@ -540,87 +962,99 @@ html,body {
 			});
 		}
 		
-		function onOk(e) {
-			istype = e;
-			if (istype == 0) {
-				var declareMatter = nui.get("declareMatter").getValue();
-				if (isStrEmpty(declareMatter)) {
-					showTips("暂存时，请确保填写申报事项字段！", "danger");
-					return;
-				}
-				info = "暂存流程表单？"
-			} else if (istype == 1) {
-				addForm.validate();
-				if (addForm.isValid() == false) {
-					showTips("请检查表单的完整性!", "danger");
-					return;
-				}
-				var calcMethod = nui.get("calcMethod").getValue();
-				if(calcMethod == "1"){
-					rydjGrid.validate();
-					if (rydjGrid.isValid() == false) {
-						var error = rydjGrid.getCellErrors()[0];
-						rydjGrid.beginEditCell(error.record, error.column);
-						showTips("按人员单价计算数据有错误，请检查!", "danger");
-						return;
-					}
-				}
-				if(calcMethod == "2"){
-					xmdjGrid.validate();
-					if (xmdjGrid.isValid() == false) {
-						var error = xmdjGrid.getCellErrors()[0];
-						xmdjGrid.beginEditCell(error.record, error.column);
-						showTips("按项目单价计算数据有错误，请检查!", "danger");
-						return;
-					}
-				}
-				if(calcMethod == "3"){
-					gdzjGrid.validate();
-					if (gdzjGrid.isValid() == false) {
-						var error = gdzjGrid.getCellErrors()[0];
-						gdzjGrid.beginEditCell(error.record, error.column);
-						showTips("按固定总价计算数据有错误，请检查!", "danger");
-						return;
-					}
-				}
-				// 已上传的文件数量
-				var gridFileCount = nui.get("grid_0").getData().length;
-				if (gridFileCount == 0) {
-					// 刚新增(未上传)的文件数量
-					var newFileCount = document.getElementsByName("uploadfile").length;
-					if (newFileCount == 0) {
-						showTips("请上传相关附件", "danger");
-						return;
-					}
-				}
-				info = "提交流程表单？"												
+		function onOk() {
+			addForm.validate();
+			if (addForm.isValid() == false) {
+				showTips("请检查表单的完整性!", "danger");
+				return;
 			}
-			
+			endForm.validate();
+			if (endForm.isValid() == false) {
+				showTips("请检查表单的完整性!", "danger");
+				return;
+			}
+			var calcMethod = nui.get("calcMethod").getValue();
+			if (calcMethod == "1") {
+			    rydjGrid.validate();
+			    if (rydjGrid.isValid() == false) {
+			        var error = rydjGrid.getCellErrors()[0];
+			        rydjGrid.beginEditCell(error.record, error.column);
+			        showTips("按人员单价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			if (calcMethod == "2") {
+			    xmdjGrid.validate();
+			    if (xmdjGrid.isValid() == false) {
+			        var error = xmdjGrid.getCellErrors()[0];
+			        xmdjGrid.beginEditCell(error.record, error.column);
+			        showTips("按项目单价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			if (calcMethod == "3") {
+			    gdzjGrid.validate();
+			    if (gdzjGrid.isValid() == false) {
+			        var error = gdzjGrid.getCellErrors()[0];
+			        gdzjGrid.beginEditCell(error.record, error.column);
+			        showTips("按固定总价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			var confirmCalcMethod = nui.get("confirmCalcMethod").getValue();
+			if (confirmCalcMethod == "1") {
+			    rydjGridQR.validate();
+			    if (rydjGridQR.isValid() == false) {
+			        var error = rydjGridQR.getCellErrors()[0];
+			        rydjGridQR.beginEditCell(error.record, error.column);
+			        showTips("按人员单价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			if (confirmCalcMethod == "2") {
+			    xmdjGridQR.validate();
+			    if (xmdjGridQR.isValid() == false) {
+			        var error = xmdjGridQR.getCellErrors()[0];
+			        xmdjGridQR.beginEditCell(error.record, error.column);
+			        showTips("按项目单价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			if (confirmCalcMethod == "3") {
+			    gdzjGridQR.validate();
+			    if (gdzjGridQR.isValid() == false) {
+			        var error = gdzjGridQR.getCellErrors()[0];
+			        gdzjGridQR.beginEditCell(error.record, error.column);
+			        showTips("按固定总价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			// 已上传的文件数量
+			var gridFileCount = nui.get("grid_0").getData().length;
+			if (gridFileCount == 0) {
+			    // 刚新增(未上传)的文件数量
+			    var newFileCount = document.getElementsByName("uploadfile").length;
+			    if (newFileCount == 0) {
+			        showTips("请上传相关附件", "danger");
+			        return;
+			    }
+			}
 			document.getElementById("fileCatalog").value = "virtualProduction";
-			
-			nui.confirm("确定" + info, "系统提示", function(action) {
-				if (action == "ok") {
-					nui.get("saveReimb").disable();
-					nui.get("creatReimbProcess").disable();
-					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
-					form2.submit();
-				}
-			});			
-						
+			nui.confirm("确定保存数据吗?", "系统提示", function (action) {
+			    if (action == "ok") {
+			        nui.get("saveReimb").disable();
+			        nui.mask({ el: document.body, cls: 'mini-mask-loading', html: '表单提交中...' });
+			        form2.submit();
+			    }
+			});																
 		}
 		
 		function SaveData() {
+			var endData = endForm.getData();
 			var data = addForm.getData();
-			data.istype = istype;
 			data.files = nui.get("fileids").getValue();
-			if(isStrEmpty(data.entrustDept)){
-				data.isEntrustDept = "0"
-			}else{
-				data.isEntrustDept = "1"
-			}
-			var now = new Date();
-			data.createTime = now;
-			data.createYear = now.getFullYear();
+			data.confirmCalcMethod = endData.confirmCalcMethod;
+			data.confirmAmount = endData.confirmAmount;
 			var calcMethod = nui.get("calcMethod").getValue();
 			var planDataGrid;
 			if(calcMethod == "1"){
@@ -632,26 +1066,37 @@ html,body {
 			if(calcMethod == "3"){
 				planDataGrid = gdzjGrid.getData();
 			}
-			var json = nui.encode({
-				"virtualProduction" : data,
-				"planDataGrid" : planDataGrid
-			});
-			ajaxCommon({
-				"url" : "com.zhonghe.ame.kaohe.virtualProduction.addVirtualProduction.biz.ext",
-				data : json,
-				contentType : 'text/json',
-				success : function(text) {
-					nui.unmask(document.body);
-					if (text.result == "1") {
-						showTips("操作成功");
-						closeOk();
-					} else {
-						nui.get("saveReimb").enable();
-						nui.get("creatReimbProcess").enable();
-					}
-				}
-			});						
-		}								
+			var confirmCalcMethod = nui.get("confirmCalcMethod").getValue();
+			var resultDataGrid;
+			if(confirmCalcMethod == "1"){
+				resultDataGrid = rydjGridQR.getData();
+			}
+			if(confirmCalcMethod == "2"){
+				resultDataGrid = xmdjGridQR.getData();
+			}
+			if(confirmCalcMethod == "3"){
+				resultDataGrid = gdzjGridQR.getData();
+			}
+		    var json = nui.encode({
+		        "virtualProduction": data,
+		        "planDataGrid": planDataGrid,
+		        "resultDataGrid": resultDataGrid
+		    });
+		    ajaxCommon({
+		        "url": "com.zhonghe.ame.kaohe.virtualProduction.editSaveVirtualProduction.biz.ext",
+		        data: json,
+		        contentType: 'text/json',
+		        success: function (text) {
+		            nui.unmask(document.body);
+		            if (text.result == "1") {
+		                showTips("操作成功");
+		                closeOk();
+		            } else {
+		                nui.get("saveReimb").enable();
+		            }
+		        }
+		    });										    		    			
+		}		
 		
 		function addMoney(num1, num2) {
 			// 1. 参数校验：非数字转0
@@ -702,7 +1147,7 @@ html,body {
 			} else {
 				return false;
 			}
-		}				
+		}
 		
 	</script>
 

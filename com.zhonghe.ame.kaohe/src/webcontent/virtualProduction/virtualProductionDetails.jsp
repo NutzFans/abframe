@@ -160,7 +160,7 @@ html,body {
 						<div header="C - 管理费" headerAlign="center" align="center">
 							<div property="columns">
 								<div field="manageRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
-									管理费比率（%）
+									管理费比率
 									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
 								</div>
 							</div>
@@ -168,7 +168,7 @@ html,body {
 						<div header="D - 利润" headerAlign="center" align="center">
 							<div property="columns">
 								<div field="profitRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
-									利润比率（%）
+									利润比率
 									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
 								</div>
 							</div>
@@ -320,7 +320,7 @@ html,body {
 						<div header="C - 管理费" headerAlign="center" align="center">
 							<div property="columns">
 								<div field="manageRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
-									管理费比率（%）
+									管理费比率
 									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
 								</div>
 							</div>
@@ -328,7 +328,7 @@ html,body {
 						<div header="D - 利润" headerAlign="center" align="center">
 							<div property="columns">
 								<div field="profitRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
-									利润比率（%）
+									利润比率
 									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
 								</div>
 							</div>
@@ -394,7 +394,10 @@ html,body {
 		</fieldset>
 		<br>
 		<fieldset id="field5" style="border: solid 1px #aaa; padding: 5px;">
-			<legend>支撑材料</legend>
+			<legend>
+				支撑材料 -
+				<span style="color: red">相关证明材料</span>
+			</legend>
 			<div style="width: 99%; margin: 0 auto;">
 				<jsp:include page="/ame_common/detailFile.jsp" />
 			</div>
@@ -403,9 +406,7 @@ html,body {
 	</div>
 
 	<script type="text/javascript">
-		var reqId =
-	<%=request.getParameter("id")%>
-		;
+		var reqId = <%=request.getParameter("id")%>;
 		nui.parse();
 		var addForm = new nui.Form("#addForm");
 		var endForm = new nui.Form("#endForm");

@@ -176,7 +176,7 @@ html,body {
 						<div header="C - 管理费" headerAlign="center" align="center">
 							<div property="columns">
 								<div field="manageRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
-									管理费比率（%）
+									管理费比率
 									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
 								</div>
 							</div>
@@ -184,14 +184,14 @@ html,body {
 						<div header="D - 利润" headerAlign="center" align="center">
 							<div property="columns">
 								<div field="profitRatio" width="120" headerAlign="center" align="center" dataType="float" numberFormat="p0">
-									利润比率（%）
+									利润比率
 									<input property="editor" class="mini-spinner" increment="0.01" minValue="0" maxValue="1" format="p0" style="width: 100%" />
 								</div>
 							</div>
 						</div>
-						<div field="remark" width="300" headerAlign="center" align="left">
+						<div field="remark" width="300" headerAlign="center" align="left" vtype="required">
 							备注
-							<input property="editor" class="mini-textbox" style="width: 100%" />
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
 						</div>
 					</div>
 				</div>
@@ -229,9 +229,9 @@ html,body {
 							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
 						</div>
 						<div field="declaredTotal" width="120" headerAlign="center" align="center" summaryType="sum" dataType="currency">合计（元）</div>
-						<div field="remark" width="800" headerAlign="center" align="left">
+						<div field="remark" width="800" headerAlign="center" align="left" vtype="required">
 							备注（投资额/规模/取费依据等）
-							<input property="editor" class="mini-textbox" style="width: 100%" />
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
 						</div>
 					</div>
 				</div>
@@ -264,9 +264,9 @@ html,body {
 							金额（元）
 							<input property="editor" class="mini-spinner" allowLimitValue="false" format="n2" showButton="false" style="width: 100%" />
 						</div>
-						<div field="remark" width="800" headerAlign="center" align="left">
+						<div field="remark" width="800" headerAlign="center" align="left" vtype="required">
 							备注
-							<input property="editor" class="mini-textbox" style="width: 100%" />
+							<input property="editor" class="mini-textbox" style="width: 100%" required="true" />
 						</div>
 					</div>
 				</div>
@@ -274,7 +274,10 @@ html,body {
 		</fieldset>
 		<br>
 		<fieldset id="field3" style="border: solid 1px #aaa; padding: 5px;">
-			<legend>上传附件</legend>
+			<legend>
+				上传附件 -
+				<span style="color: red">相关证明材料</span>
+			</legend>
 			<div style="width: 99%; margin: 0 auto;">
 				<jsp:include page="/ame_common/inputFile.jsp" />
 			</div>

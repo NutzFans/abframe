@@ -34,13 +34,13 @@ html,body {
 						<tr>
 							<td align="right" style="width: 60px">申请人：</td>
 							<td style="width: 260px">
-								<input id="createUserid" name="createUserid" class="nui-hidden" />
-								<input id="createUsername" name="createUsername" class="nui-textbox" style="width: 250px" required="true" readonly="readonly" />
+								<input id="createUsername" name="createUsername" class="nui-hidden" />
+								<input id="createUserid" name="createUserid" class="nui-buttonedit" style="width: 250px" onbuttonclick="selectOmEmployee" required="true" allowInput="false" />
 							</td>
 							<td align="right" style="width: 60px">申请单位：</td>
 							<td style="width: 260px">
-								<input id="secondaryOrg" name="secondaryOrg" class="nui-hidden" />
-								<input id="secondaryOrgname" name="secondaryOrgname" class="nui-textbox" style="width: 250px" required="true" readonly="readonly" />
+								<input id="secondaryOrgname" name="secondaryOrgname" class="nui-hidden" />
+								<input id="secondaryOrg" name="secondaryOrg" class="nui-combobox" textField="secOrgname" valueField="secOrg" style="width: 250px" required="true" />
 							</td>
 							<td align="right" style="width: 60px">任务来源：</td>
 							<td style="width: 260px">
@@ -85,10 +85,7 @@ html,body {
 						<tr>
 							<td align="right" style="width: 110px">申报背景及原因：</td>
 							<td colspan="5">
-								<input name="remark" class="nui-textarea" style="width: 986px; height: 100px;" required="true" emptyText="参考格式如下
-1. 工作背景及内容：
-2. 申报原因：
-3. ..." />
+								<input name="remark" class="nui-textarea" style="width: 986px; height: 100px;" required="true" />
 							</td>
 						</tr>
 					</table>
@@ -283,8 +280,7 @@ html,body {
 	</div>
 
 	<div style="text-align: center; position: relative; bottom: 10px" class="nui-toolbar">
-		<a class="nui-button" onclick="onOk(0)" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">暂存</a>
-		<a class="nui-button" onclick="onOk(1)" id="creatReimbProcess" iconCls="icon-ok" style="width: 80px; margin-right: 20px;">提交</a>
+		<a class="nui-button" onclick="onOk()" id="saveReimb" iconCls="icon-save" style="width: 80px; margin-right: 20px;">保存</a>
 		<a class="nui-button" onclick="closeCancel" id="saveReimbProcess" iconCls="icon-close" style="width: 80px; margin-right: 140px;">关闭</a>
 	</div>
 
@@ -294,30 +290,11 @@ html,body {
 		var rydjGrid = nui.get("rydjGrid");
 		var xmdjGrid = nui.get("xmdjGrid");
 		var gdzjGrid = nui.get("gdzjGrid");
-		var istype, info;
-		
+
 		init();
 
 		function init() {
-			getSecOrg(userOrgId);
-			nui.get("createUserid").setValue(userId);
-			nui.get("createUsername").setValue(userName);
 			initSecOrgCombobox();
-		}
-
-		function getSecOrg(userOrgId) {
-			var json = nui.encode({
-				'userOrgId' : userOrgId
-			});
-			ajaxCommon({
-				url : "com.primeton.eos.common.orgUtils.getSecOrg.biz.ext",
-				data : json,
-				success : function(result) {
-					var data = result.data;
-					nui.get("secondaryOrg").setValue(data.ORGID);
-					nui.get("secondaryOrgname").setValue(data.ORGNAME);
-				}
-			});
 		}
 
 		function initSecOrgCombobox() {
@@ -327,6 +304,7 @@ html,body {
 				success : function(result) {
 					var datas = result.secOrgList;
 					nui.get("entrustDept").setData(datas);
+					nui.get("secondaryOrg").setData(datas);
 				}
 			});
 		}
@@ -351,13 +329,13 @@ html,body {
 				nui.get("custName").setValue("中核工程咨询有限公司");
 				nui.get("custName").setText("中核工程咨询有限公司");
 				nui.get("headquarterGroup").setValue("0");
-				nui.get("entrustDept").setRequired(true);				
+				nui.get("entrustDept").setRequired(true);
 			}
 		}
-		
-		function changeCalcMethod(){
+
+		function changeCalcMethod() {
 			var calcMethod = nui.get("calcMethod").getValue();
-			if(calcMethod == "1"){
+			if (calcMethod == "1") {
 				rydjGrid.setData(null);
 				$("#rydjDiv").css("display", "block");
 				$("#xmdjDiv").css("display", "none");
@@ -365,18 +343,18 @@ html,body {
 				nui.parse();
 				rydjGrid.setFrozenStartColumn(0);
 				rydjGrid.setFrozenEndColumn(2);
-			}else if(calcMethod == "2"){
+			} else if (calcMethod == "2") {
 				xmdjGrid.setData(null);
 				$("#rydjDiv").css("display", "none");
 				$("#xmdjDiv").css("display", "block");
 				$("#gdzjDiv").css("display", "none");
-				nui.parse();				
-			}else if(calcMethod == "3"){
+				nui.parse();
+			} else if (calcMethod == "3") {
 				gdzjGrid.setData(null);
 				$("#rydjDiv").css("display", "none");
 				$("#xmdjDiv").css("display", "none");
 				$("#gdzjDiv").css("display", "block");
-				nui.parse();				
+				nui.parse();
 			}
 		}
 		
@@ -394,7 +372,7 @@ html,body {
 				updateDeclareAmountFormData(rydjGrid);
 			}
 		}
-
+		
 		function rydjGridCellEndEdit(e) {
 			var record = e.record;
 			var personDayTotal = multiplyMoney(record.personDay, record.personDayPrice);
@@ -540,119 +518,128 @@ html,body {
 			});
 		}
 		
-		function onOk(e) {
-			istype = e;
-			if (istype == 0) {
-				var declareMatter = nui.get("declareMatter").getValue();
-				if (isStrEmpty(declareMatter)) {
-					showTips("暂存时，请确保填写申报事项字段！", "danger");
-					return;
-				}
-				info = "暂存流程表单？"
-			} else if (istype == 1) {
-				addForm.validate();
-				if (addForm.isValid() == false) {
-					showTips("请检查表单的完整性!", "danger");
-					return;
-				}
-				var calcMethod = nui.get("calcMethod").getValue();
-				if(calcMethod == "1"){
-					rydjGrid.validate();
-					if (rydjGrid.isValid() == false) {
-						var error = rydjGrid.getCellErrors()[0];
-						rydjGrid.beginEditCell(error.record, error.column);
-						showTips("按人员单价计算数据有错误，请检查!", "danger");
-						return;
+		function selectOmEmployee() {
+			nui.open({
+				url : "/default/contractPact/selectUsers.jsp",
+				title : "选择用户",
+				width : '430',
+				height : '400',
+				allowResize : false,
+				ondestroy : function(action) {
+					if (action == "ok") {
+						var iframe = this.getIFrameEl();
+						var data = iframe.contentWindow.GetData();
+						data = mini.clone(data); //必须
+						console.log(data);
+						nui.get("createUserid").setValue(data[0].userid);
+						nui.get("createUserid").setText(data[0].empname);
+						nui.get("createUsername").setValue(data[0].empname);				
 					}
-				}
-				if(calcMethod == "2"){
-					xmdjGrid.validate();
-					if (xmdjGrid.isValid() == false) {
-						var error = xmdjGrid.getCellErrors()[0];
-						xmdjGrid.beginEditCell(error.record, error.column);
-						showTips("按项目单价计算数据有错误，请检查!", "danger");
-						return;
-					}
-				}
-				if(calcMethod == "3"){
-					gdzjGrid.validate();
-					if (gdzjGrid.isValid() == false) {
-						var error = gdzjGrid.getCellErrors()[0];
-						gdzjGrid.beginEditCell(error.record, error.column);
-						showTips("按固定总价计算数据有错误，请检查!", "danger");
-						return;
-					}
-				}
-				// 已上传的文件数量
-				var gridFileCount = nui.get("grid_0").getData().length;
-				if (gridFileCount == 0) {
-					// 刚新增(未上传)的文件数量
-					var newFileCount = document.getElementsByName("uploadfile").length;
-					if (newFileCount == 0) {
-						showTips("请上传相关附件", "danger");
-						return;
-					}
-				}
-				info = "提交流程表单？"												
-			}
-			
-			document.getElementById("fileCatalog").value = "virtualProduction";
-			
-			nui.confirm("确定" + info, "系统提示", function(action) {
-				if (action == "ok") {
-					nui.get("saveReimb").disable();
-					nui.get("creatReimbProcess").disable();
-					nui.mask({el: document.body,cls: 'mini-mask-loading',html: '表单提交中...'});
-					form2.submit();
 				}
 			});			
-						
+		}
+		
+		function onOk() {		
+			addForm.validate();
+			if (addForm.isValid() == false) {
+				showTips("请检查表单的完整性!", "danger");
+				return;
+			}
+			var calcMethod = nui.get("calcMethod").getValue();
+			if (calcMethod == "1") {
+			    rydjGrid.validate();
+			    if (rydjGrid.isValid() == false) {
+			        var error = rydjGrid.getCellErrors()[0];
+			        rydjGrid.beginEditCell(error.record, error.column);
+			        showTips("按人员单价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			if (calcMethod == "2") {
+			    xmdjGrid.validate();
+			    if (xmdjGrid.isValid() == false) {
+			        var error = xmdjGrid.getCellErrors()[0];
+			        xmdjGrid.beginEditCell(error.record, error.column);
+			        showTips("按项目单价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}
+			if (calcMethod == "3") {
+			    gdzjGrid.validate();
+			    if (gdzjGrid.isValid() == false) {
+			        var error = gdzjGrid.getCellErrors()[0];
+			        gdzjGrid.beginEditCell(error.record, error.column);
+			        showTips("按固定总价计算数据有错误，请检查!", "danger");
+			        return;
+			    }
+			}			
+			// 已上传的文件数量
+			var gridFileCount = nui.get("grid_0").getData().length;
+			if (gridFileCount == 0) {
+			    // 刚新增(未上传)的文件数量
+			    var newFileCount = document.getElementsByName("uploadfile").length;
+			    if (newFileCount == 0) {
+			        showTips("请上传相关附件", "danger");
+			        return;
+			    }
+			}
+			document.getElementById("fileCatalog").value = "virtualProduction";
+			nui.confirm("确定通过录入方式保存数据吗?", "系统提示", function (action) {
+			    if (action == "ok") {
+			        nui.get("saveReimb").disable();
+			        nui.mask({ el: document.body, cls: 'mini-mask-loading', html: '表单提交中...' });
+			        form2.submit();
+			    }
+			});			
 		}
 		
 		function SaveData() {
 			var data = addForm.getData();
-			data.istype = istype;
 			data.files = nui.get("fileids").getValue();
-			if(isStrEmpty(data.entrustDept)){
-				data.isEntrustDept = "0"
-			}else{
-				data.isEntrustDept = "1"
-			}
-			var now = new Date();
-			data.createTime = now;
-			data.createYear = now.getFullYear();
-			var calcMethod = nui.get("calcMethod").getValue();
-			var planDataGrid;
-			if(calcMethod == "1"){
-				planDataGrid = rydjGrid.getData();
-			}
-			if(calcMethod == "2"){
-				planDataGrid = xmdjGrid.getData();
-			}
-			if(calcMethod == "3"){
-				planDataGrid = gdzjGrid.getData();
-			}
-			var json = nui.encode({
-				"virtualProduction" : data,
-				"planDataGrid" : planDataGrid
-			});
-			ajaxCommon({
-				"url" : "com.zhonghe.ame.kaohe.virtualProduction.addVirtualProduction.biz.ext",
-				data : json,
-				contentType : 'text/json',
-				success : function(text) {
-					nui.unmask(document.body);
-					if (text.result == "1") {
-						showTips("操作成功");
-						closeOk();
-					} else {
-						nui.get("saveReimb").enable();
-						nui.get("creatReimbProcess").enable();
-					}
-				}
-			});						
-		}								
-		
+			data.createUsername = nui.get("createUserid").getText();
+			data.secondaryOrgname = nui.get("secondaryOrg").getText();
+			data.confirmCalcMethod = nui.get("calcMethod").getValue();
+			data.confirmAmount = nui.get("declareAmount").getValue();
+		    var now = new Date();
+		    data.createTime = now;
+		    data.finishTime = now;
+		    data.createYear = now.getFullYear();
+		    var calcMethod = nui.get("calcMethod").getValue();
+		    var planDataGrid;
+		    var resultDataGrid;
+		    if (calcMethod == "1") {
+		        planDataGrid = rydjGrid.getData();
+		        resultDataGrid = rydjGrid.getData();
+		    }
+		    if (calcMethod == "2") {
+		        planDataGrid = xmdjGrid.getData();
+		        resultDataGrid = xmdjGrid.getData();
+		    }
+		    if (calcMethod == "3") {
+		        planDataGrid = gdzjGrid.getData();
+		        resultDataGrid = gdzjGrid.getData();
+		    }
+		    var json = nui.encode({
+		        "virtualProduction": data,
+		        "planDataGrid": planDataGrid,
+		        "resultDataGrid": resultDataGrid
+		    });
+		    ajaxCommon({
+		        "url": "com.zhonghe.ame.kaohe.virtualProduction.saveVirtualProduction.biz.ext",
+		        data: json,
+		        contentType: 'text/json',
+		        success: function (text) {
+		            nui.unmask(document.body);
+		            if (text.result == "1") {
+		                showTips("操作成功");
+		                closeOk();
+		            } else {
+		                nui.get("saveReimb").enable();
+		            }
+		        }
+		    });		    		    			
+		}				
+								
 		function addMoney(num1, num2) {
 			// 1. 参数校验：非数字转0
 			var n1 = isNaN(Number(num1)) ? 0 : Number(num1);
@@ -702,8 +689,7 @@ html,body {
 			} else {
 				return false;
 			}
-		}				
-		
+		}	
 	</script>
 
 </body>

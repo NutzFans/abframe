@@ -129,7 +129,7 @@ html,body {
 						<a class="nui-button" id="del" iconCls="icon-remove" onclick="deleteInfo()">删除</a>
 						<a class="nui-button" id="xnczsb_wh" iconCls="icon-edit" onclick="wh_edit()">维护</a>
 						<a class="nui-button" id="xnczsb_zf" iconCls="icon-edit" onclick="zf_edit()">作废</a>
-						<a class="nui-button" id="export" iconCls="icon-download" onclick="exportExcel()">导出</a>
+						<a class="nui-button" id="export" iconCls="icon-download" onclick="onExportExcel()">导出</a>
 						<a class="nui-button" id="xnczsb_lr" iconCls="icon-edit" onclick="lr_add()">录入</a>
 					</td>
 				</tr>
@@ -156,6 +156,12 @@ html,body {
 			</div>
 		</div>
 	</div>
+	
+	<form name="exprotExcelFlow" id="exprotExcelFlow" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
+		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
+		<input type="hidden" name="downloadFile" filter="false" />
+		<input type="hidden" name="fileName" filter="false" />
+	</form>	
 
 	<script type="text/javascript">
 		nui.parse();
@@ -235,6 +241,7 @@ html,body {
 				url : "/default/kaohe/virtualProduction/addVirtualProduction.jsp",
 				width : '100%',
 				height : '100%',
+				allowResize : false,
 				title : "虚拟产值申报",
 				onload : function() {
 					var iframe = this.getIFrameEl();
@@ -277,6 +284,205 @@ html,body {
 				showTips("只能编辑审批状态为【草稿】的数据", "danger");
 			}
 		}
+		
+		function lr_add() {
+			nui.open({
+				url : "/default/kaohe/virtualProduction/saveVirtualProduction.jsp",
+				width : '100%',
+				height : '100%',
+				allowResize : false,
+				title : "虚拟产值申报录入",
+				onload : function() {
+					var iframe = this.getIFrameEl();
+				},
+				ondestroy : function(action) {
+					search();
+				}
+			})
+		}
+		
+		function deleteInfo(){
+			var rows = xnzcDataGrid.getSelecteds();
+		    if (rows.length == 0) {
+		        showTips("请选中需要删除的数据记录", "danger");
+		    } else {
+		    	var status = rows.every(item => item.appStatus == '4');
+		        if (status) {
+		            if (!confirm("是否删除？")) {
+		                return;
+		            } else {
+		                var datas = rows.map(row => ({ id: row.id }));
+		                var json = nui.encode({
+		                    'datas': datas
+		                });
+		                nui.ajax({
+		                    url: "com.zhonghe.ame.kaohe.virtualProduction.deleteVirtualProduction.biz.ext",
+		                    type: 'POST',
+		                    data: json,
+		                    contentType: 'text/json',
+		                    success: function (o) {
+		                        if (o.result == 1) {
+		                            showTips("删除成功");
+		                            xnzcDataGrid.reload();
+		                        } else {
+		                            showTips("删除失败，请联系信息技术部人员！", "danger");
+		                        }
+		                    }
+		                });
+		            }
+		        } else {
+		            showTips("只能删除审批状态为【作废】的数据", "danger");
+		        }		    	
+		    }			
+		}
+		
+		function zf_edit(){
+			var row = xnzcDataGrid.getSelecteds();
+		    if (row.length > 1 || row.length == 0) {
+		        showTips("只能选中一条项目记录进行作废", "danger");
+		        return;
+		    } else {
+		        var row = row[0];
+		        if (row.appStatus == '2') {
+		            if (!confirm("是否作废？")) {
+		                return;
+		            } else {
+		                if (row) {
+		                    var json = nui.encode({
+		                        'data': row
+		                    });
+		                    nui.ajax({
+		                        url: "com.zhonghe.ame.kaohe.virtualProduction.zfVirtualProduction.biz.ext",
+		                        type: 'POST',
+		                        data: json,
+		                        contentType: 'text/json',
+		                        success: function (o) {
+		                            if (o.result == 1) {
+		                                showTips("作废成功");
+		                                xnzcDataGrid.reload();
+		                            } else {
+		                                showTips("作废失败，请联系信息技术部人员！", "danger");
+		                            }
+		                        }
+		                    });
+		                } else {
+		                    showTips("只能选中一条记录进行作废", "danger");
+		                }
+		            }
+		        } else {
+		            showTips("只能作废审批状态为【审批通过】的数据", "danger");
+		        }		    	
+		    }			
+		}
+		
+		function wh_edit(){
+			var row = xnzcDataGrid.getSelecteds();
+		    if (row.length > 1 || row.length == 0) {
+		        showTips("只能选中一条数据记录进行维护", "danger");
+		        return;
+		    }
+		    var data = row[0];
+		    if (data.appStatus == "2") {
+		        nui.open({
+		            url: "/default/kaohe/virtualProduction/eidtSaveVirtualProduction.jsp",
+		            width: '100%',
+		            height: '100%',
+		            title: "虚拟产值申报维护",
+		            allowResize : false,
+		            onload: function () {
+		                var iframe = this.getIFrameEl();
+		                iframe.contentWindow.setData(data);
+		            },
+		            ondestroy: function (action) {
+		                if (action == "ok") {
+		                    xnzcDataGrid.reload();
+		                }
+		                search();
+		            }
+		        });
+		    } else {
+		        showTips("只能维护审批状态为【审批通过】的数据", "danger");
+		    }		    
+		}
+		
+		function onExportExcel(){
+			var rows = xnzcDataGrid.getSelecteds();
+			var json;
+			if(rows.length == 0){
+				if (!confirm("是否确认导出？")) {
+					return;
+				}
+				var data = searchForm.getData(); //获取表单JS对象数据
+				json = nui.encode(data);				
+			}else{
+				if (!confirm("确定要导出选中数据(如需导出查询结果数据，请取消选中)？")) {
+					return;
+				}
+				var ids = rows.map(row => row.custid).join(',');
+				json = nui.encode({
+						"criteria":{
+							"_expr": [{
+								"_property": "custid",
+								"_op": "in",
+								"_value": ids
+							}]
+						}
+					}
+				);								
+			}
+			nui.ajax({
+				url : "com.zhonghe.ame.kaohe.virtualProduction.exportVirtualProduction.biz.ext",
+				type : "post",
+				data : json,
+				cache : false,
+				contentType : 'text/json',
+				success : function(o) {
+					var filePath = o.downloadFile;
+					var fileName = "虚拟产值申报";
+					var myDate = new Date();
+					var year = myDate.getFullYear();
+					var month = myDate.getMonth() + 1;
+					var day = myDate.getDate();
+					var hours = myDate.getHours();
+					var minutes = myDate.getMinutes();
+					var seconds = myDate.getSeconds();
+					var curDateTime = year;
+					if (month > 9) {
+						curDateTime = curDateTime + "" + month;
+					} else {
+						curDateTime = curDateTime + "0" + month;
+					}
+					if (day > 9) {
+						curDateTime = curDateTime + day;
+					} else {
+						curDateTime = curDateTime + "0" + day;
+					}
+					if (hours > 9) {
+						curDateTime = curDateTime + hours;
+					} else {
+						curDateTime = curDateTime + "0" + hours;
+					}
+					if (minutes > 9) {
+						curDateTime = curDateTime + minutes;
+					} else {
+						curDateTime = curDateTime + "0" + minutes;
+					}
+					if (seconds > 9) {
+						curDateTime = curDateTime + seconds;
+					} else {
+						curDateTime = curDateTime + "0" + seconds;
+					}
+					fileName = fileName + "_" + curDateTime + ".xls";
+					var frm = document.getElementById("exprotExcelFlow");
+					frm.elements["downloadFile"].value = filePath;
+					frm.elements["fileName"].value = fileName;
+					frm.submit();
+				},
+				error : function() {
+					showTips("导出数据异常，请联系管理员！", "danger");
+				}
+			});		
+		}				
 		
 		function onActionRenderer(e) {
 			var record = e.record;
