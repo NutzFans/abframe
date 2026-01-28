@@ -88,19 +88,20 @@ html,body {
 
 		<div class="nui-fit">
 			<div id="dataGrid" sizeList="[25,50,100]" showPager="true" dataField="dataList" pageSize="25" class="nui-datagrid" style="width: 100%; height: 100%;" multiSelect="true"
-				url="com.zhonghe.ame.marketInfo.marketinfo.khxx.newCustomers.queryNewCustomersList.biz.ext">
+				url="com.zhonghe.ame.marketInfo.marketinfo.khxx.newCustomers.queryNewCustomersList.biz.ext" frozenStartColumn="0" frozenEndColumn="3">
 				<div property="columns">
 					<div type="checkcolumn"></div>
-					<div field="custname" width="250" headerAlign="center" allowSort="true" align="left">客户名称</div>
-					<div field="custnum" width="100" headerAlign="center" allowSort="true" align="left">统一社会信用代码</div>
-					<div field="custtype" width="100" headerAlign="center" allowSort="true" align="center" renderer="CUSTOMER_TYPE">客户类型</div>
-					<div field="provinces" width="100" headerAlign="center" allowSort="true" align="center" renderer="AME_PROVINCE">所属省份</div>
+					<div field="custname" width="300" headerAlign="center" allowSort="true" align="left">客户名称</div>
+					<div field="custnum" width="200" headerAlign="center" allowSort="true" align="left">统一社会信用代码</div>
+					<div field="custtype" width="200" headerAlign="center" allowSort="true" align="center" renderer="CUSTOMER_TYPE">客户类型</div>
+					<div field="provinces" width="150" headerAlign="center" allowSort="true" align="center" renderer="AME_PROVINCE">所属省份</div>
 					<div field="outsideGroup" width="100" headerAlign="center" allowSort="true" align="center" renderer="ZH_GROUP_NEW">集团内/外</div>
 					<div field="overseasCustomer" width="100" headerAlign="center" allowSort="true" align="center" renderer="ZH_OVERSEAS">境内/外</div>
 					<div field="custmanager" width="100" headerAlign="center" allowSort="true" align="center">创建人</div>
 					<div field="createDate" width="100" headerAlign="center" allowSort="true" align="center">创建时间</div>
 					<div field="accoutname" width="100" headerAlign="center" allowSort="true" align="center">创建单位</div>
 					<div field="appStatus" width="100" headerAlign="center" allowSort="true" align="center" renderer="onActionRenderer">审核状态</div>
+					<div field="remark" width="300" headerAlign="center" allowSort="true" align="center">备注</div>
 				</div>
 			</div>
 		</div>

@@ -82,12 +82,12 @@ html,body {
 		</div>
 
 	</div>
-	
+
 	<form name="viewlist1" id="viewlist1" action="com.primeton.eos.ame_common.ameExportCommon.flow" method="post">
 		<input type="hidden" name="_eosFlowAction" value="action0" filter="false" />
 		<input type="hidden" name="downloadFile" filter="false" />
 		<input type="hidden" name="fileName" filter="false" />
-	</form>	
+	</form>
 
 	<script type="text/javascript">
 		nui.parse();
@@ -183,19 +183,23 @@ html,body {
 				return;
 			}else{
 				var data = rows[0];
-				nui.open({
-					url : "/default/kaohe/incomeCorrection/incomeCorrectionEdit.jsp",
-					width : '450',
-					height : '350',
-					title : "考核收入修正 - 编辑",
-					onload : function() {
-						var iframe = this.getIFrameEl();
-						iframe.contentWindow.setEditData(data);
-					},
-					ondestroy : function(action) {
-						search();
-					}
-				})
+				if(data.correctionType != "虚拟产值"){
+					nui.open({
+						url : "/default/kaohe/incomeCorrection/incomeCorrectionEdit.jsp",
+						width : '450',
+						height : '350',
+						title : "考核收入修正 - 编辑",
+						onload : function() {
+							var iframe = this.getIFrameEl();
+							iframe.contentWindow.setEditData(data);
+						},
+						ondestroy : function(action) {
+							search();
+						}
+					})					
+				}else{
+					showTips("该记录修正类型为[虚拟产值]，无法进行维护操作！", "danger");
+				}
 			}
 		}
 		
@@ -204,27 +208,32 @@ html,body {
 			if (rows.length == 0) {
 				showTips("请选中需要删除的数据记录", "danger");
 			}else{
-				if (!confirm("是否删除？")) {
-					return;
-				}else{
-					var datas = rows.map(row => ({ id: row.id }));
-					var json = nui.encode({
-							'datas' : datas
-					});
-					nui.ajax({
-						url : "com.zhonghe.ame.kaohe.incomeCorrection.deleteIncomeCorrectionById.biz.ext",
-						type : 'POST',
-						data : json,
-						contentType : 'text/json',
-						success : function(o) {
-							if (o.result == 1) {
-								showTips("删除成功");
-								search();
-							} else {
-								showTips("删除失败，请联系系统管理员！", "danger");
+				var status = rows.every(item => item.correctionType  != "虚拟产值");
+				if (status) {
+					if (!confirm("是否删除？")) {
+						return;
+					}else{
+						var datas = rows.map(row => ({ id: row.id }));
+						var json = nui.encode({
+								'datas' : datas
+						});
+						nui.ajax({
+							url : "com.zhonghe.ame.kaohe.incomeCorrection.deleteIncomeCorrectionById.biz.ext",
+							type : 'POST',
+							data : json,
+							contentType : 'text/json',
+							success : function(o) {
+								if (o.result == 1) {
+									showTips("删除成功");
+									search();
+								} else {
+									showTips("删除失败，请联系系统管理员！", "danger");
+								}
 							}
-						}
-					});
+						});
+					}				
+				}else{
+					showTips("存在修正类型为[虚拟产值]的数据，无法进行删除操作！", "danger");
 				}
 			}
 		}				

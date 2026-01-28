@@ -41,13 +41,13 @@ html,body {
 						<tr>
 							<td align="right" style="width: 100px">修正类型：</td>
 							<td>
-								<input name="correctionType" class="nui-dictcombobox" dictTypeId="correction_type" style="width: 260px" required="true" />
+								<input name="correctionType" class="nui-dictcombobox" dictTypeId="correction_type_no_xn" style="width: 260px" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td align="right" style="width: 100px">集团内外：</td>
 							<td>
-								<input name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP" style="width: 260px" required="true" />
+								<input name="headquarterGroup" class="nui-dictcombobox" dictTypeId="ZH_GROUP_NEW" style="width: 260px" required="true" />
 							</td>
 						</tr>
 						<tr>
