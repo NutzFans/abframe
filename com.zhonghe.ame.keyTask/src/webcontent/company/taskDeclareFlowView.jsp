@@ -53,6 +53,7 @@ html,body {
 					<div property="columns">
 						<div field="taskSource" name="taskSource" width="100" align="center" headerAlign="center">任务来源</div>
 						<div field="actionPlanNumber" name="actionPlanNumber" width="150" align="center" headerAlign="center">任务名称</div>
+						<div field="taskNum" name="taskNum" width="60" align="center" headerAlign="center">行动编号</div>
 						<div field="taskName" name="taskName" width="250" align="center" headerAlign="center">行动计划</div>
 						<div field="annualTarget" name="annualTarget" width="300" align="left" headerAlign="center">衡量标准</div>
 						<div field="taskMonth" width="50" headeralign="center" align="center" renderer="renderMonth">时间节点</div>
@@ -71,7 +72,7 @@ html,body {
 		var itemGrid = nui.get("itemGrid");
 
 		itemGrid.on("load", function() {
-			itemGrid.mergeColumns([ "checkcolumn","taskSource", "actionPlanNumber", "taskName", "annualTarget" ]);
+			itemGrid.mergeColumns(["taskSource", "actionPlanNumber", "taskNum", "taskName", "annualTarget" ]);
 		});
 
 		init();

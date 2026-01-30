@@ -31,7 +31,9 @@ html,body {
 								<div style="display: inline-table; padding: 1px; margin-left: 10px">任务来源：</div>
 								<input name="taskSource" class="nui-dictcombobox" dictTypeId="C_KEYTASK_SOURCE" style="width: 120px" required="true" />
 								<div style="display: inline-table; padding: 1px; margin-left: 10px">任务名称：</div>
-								<input name="actionPlanNumber" class="nui-textbox" style="width: 600px" required="true" />
+								<input name="actionPlanNumber" class="nui-textbox" style="width: 400px" required="true" />
+								<div style="display: inline-table; padding: 1px; margin-left: 10px">行动编号：</div>
+								<input name="taskNum" class="nui-spinner" style="width: 100px" minValue="1" allowInput="false" required="true" />
 							</td>
 						</tr>
 						<tr>

@@ -24,6 +24,7 @@ public class AddItem {
 			insert.set("main_id", mainData.getStr("mainId"));
 			insert.set("task_source", mainData.getStr("taskSource"));
 			insert.set("action_plan_number", mainData.getStr("actionPlanNumber"));
+			insert.set("task_num", mainData.getStr("taskNum"));
 			insert.set("task_name", mainData.getStr("taskName"));
 			insert.set("annual_target", mainData.getStr("annualTarget"));
 			insert.set("task_month", itemDatas[i].getInt("taskMonth"));
